@@ -25,6 +25,7 @@ sqldelight {
         create("DesktopLibraryDatabase") {
             packageName.set("mihon.desktop.library.db")
             dialect(libs.sqldelight.sqliteDialect338)
+            schemaOutputDirectory.set(project.file("./src/main/sqldelight"))
             verifyMigrations.set(true)
         }
     }

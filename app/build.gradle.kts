@@ -3,6 +3,7 @@ import mihon.gradle.getBuildTime
 import mihon.gradle.getLatestCommitCount
 import mihon.gradle.getLatestCommitSha
 import mihon.gradle.tasks.ReplaceShortcutsPlaceholderTask
+import org.gradle.api.tasks.testing.Test
 import java.io.FileInputStream
 import java.util.Properties
 import kotlin.io.encoding.Base64
@@ -337,6 +338,21 @@ dependencies {
     implementation(libs.leakCanary.plumber)
 
     testImplementation(libs.kotlinx.coroutines.test)
+}
+
+tasks.withType<Test>().configureEach {
+    providers.gradleProperty("mihonPlan2FixtureDir").orNull?.let { output ->
+        systemProperty("mihon.plan2.fixtureDir", output)
+    }
+    doFirst {
+        val commandLinePatterns = filter.javaClass.methods
+            .singleOrNull { it.name == "getCommandLineIncludePatterns" && it.parameterCount == 0 }
+            ?.invoke(filter) as? Iterable<*>
+        val writerSelected = (commandLinePatterns ?: emptyList<Any?>()).any { pattern ->
+            pattern.toString().contains("DesktopBackupFixtureWriterTest")
+        }
+        systemProperty("mihon.plan2.fixtureWriterSelected", writerSelected)
+    }
 }
 
 androidComponents {
