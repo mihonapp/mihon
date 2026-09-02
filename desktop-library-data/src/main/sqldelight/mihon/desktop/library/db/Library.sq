@@ -169,6 +169,104 @@ selectChaptersForManga:
 SELECT * FROM chapter WHERE manga_id = ?
 ORDER BY source_order DESC, chapter_number DESC, name COLLATE NOCASE, id DESC;
 
+selectReaderChapterAsset:
+SELECT manga.id AS manga_id,
+       chapter.id AS chapter_id,
+       manga.title AS manga_title,
+       chapter.name AS chapter_name,
+       local_manga_entry.storage_path AS storage_path,
+       local_chapter_asset.relative_path AS relative_path,
+       local_chapter_asset.asset_kind AS asset_kind,
+       local_chapter_asset.size_bytes AS size_bytes,
+       local_chapter_asset.modified_at AS modified_at,
+       chapter.last_page_read AS last_page_read,
+       chapter.read AS read
+FROM chapter
+JOIN manga ON manga.id = chapter.manga_id
+JOIN local_manga_entry ON local_manga_entry.manga_id = manga.id
+JOIN local_chapter_asset ON local_chapter_asset.chapter_id = chapter.id
+WHERE chapter.id = ?;
+
+selectPreviousReaderChapterAsset:
+SELECT candidate_manga.id AS manga_id,
+       candidate.id AS chapter_id,
+       candidate_manga.title AS manga_title,
+       candidate.name AS chapter_name,
+       local_manga_entry.storage_path AS storage_path,
+       local_chapter_asset.relative_path AS relative_path,
+       local_chapter_asset.asset_kind AS asset_kind,
+       local_chapter_asset.size_bytes AS size_bytes,
+       local_chapter_asset.modified_at AS modified_at,
+       candidate.last_page_read AS last_page_read,
+       candidate.read AS read
+FROM chapter AS current
+JOIN local_chapter_asset AS current_asset ON current_asset.chapter_id = current.id
+JOIN chapter AS candidate ON candidate.manga_id = current.manga_id
+JOIN manga AS candidate_manga ON candidate_manga.id = candidate.manga_id
+JOIN local_manga_entry ON local_manga_entry.manga_id = candidate_manga.id
+JOIN local_chapter_asset ON local_chapter_asset.chapter_id = candidate.id
+WHERE current.id = :chapter_id
+  AND (
+    candidate.source_order > current.source_order
+    OR (candidate.source_order = current.source_order AND candidate.chapter_number > current.chapter_number)
+    OR (
+      candidate.source_order = current.source_order
+      AND candidate.chapter_number = current.chapter_number
+      AND candidate.name COLLATE NOCASE < current.name COLLATE NOCASE
+    )
+    OR (
+      candidate.source_order = current.source_order
+      AND candidate.chapter_number = current.chapter_number
+      AND candidate.name COLLATE NOCASE = current.name COLLATE NOCASE
+      AND candidate.id > current.id
+    )
+  )
+ORDER BY candidate.source_order ASC,
+         candidate.chapter_number ASC,
+         candidate.name COLLATE NOCASE DESC,
+         candidate.id ASC
+LIMIT 1;
+
+selectNextReaderChapterAsset:
+SELECT candidate_manga.id AS manga_id,
+       candidate.id AS chapter_id,
+       candidate_manga.title AS manga_title,
+       candidate.name AS chapter_name,
+       local_manga_entry.storage_path AS storage_path,
+       local_chapter_asset.relative_path AS relative_path,
+       local_chapter_asset.asset_kind AS asset_kind,
+       local_chapter_asset.size_bytes AS size_bytes,
+       local_chapter_asset.modified_at AS modified_at,
+       candidate.last_page_read AS last_page_read,
+       candidate.read AS read
+FROM chapter AS current
+JOIN local_chapter_asset AS current_asset ON current_asset.chapter_id = current.id
+JOIN chapter AS candidate ON candidate.manga_id = current.manga_id
+JOIN manga AS candidate_manga ON candidate_manga.id = candidate.manga_id
+JOIN local_manga_entry ON local_manga_entry.manga_id = candidate_manga.id
+JOIN local_chapter_asset ON local_chapter_asset.chapter_id = candidate.id
+WHERE current.id = :chapter_id
+  AND (
+    candidate.source_order < current.source_order
+    OR (candidate.source_order = current.source_order AND candidate.chapter_number < current.chapter_number)
+    OR (
+      candidate.source_order = current.source_order
+      AND candidate.chapter_number = current.chapter_number
+      AND candidate.name COLLATE NOCASE > current.name COLLATE NOCASE
+    )
+    OR (
+      candidate.source_order = current.source_order
+      AND candidate.chapter_number = current.chapter_number
+      AND candidate.name COLLATE NOCASE = current.name COLLATE NOCASE
+      AND candidate.id < current.id
+    )
+  )
+ORDER BY candidate.source_order DESC,
+         candidate.chapter_number DESC,
+         candidate.name COLLATE NOCASE,
+         candidate.id DESC
+LIMIT 1;
+
 selectChapterByIdentity:
 SELECT * FROM chapter WHERE manga_id = ? AND url = ?;
 
@@ -241,6 +339,23 @@ ON CONFLICT(chapter_id) DO UPDATE SET
 
 selectHistoryByChapter:
 SELECT * FROM history WHERE chapter_id = ?;
+
+updateReaderChapterProgress:
+UPDATE chapter
+SET last_page_read = :last_page_read,
+    read = (read OR :completed)
+WHERE id = :chapter_id;
+
+accumulateReaderHistory:
+INSERT INTO history(chapter_id, last_read, read_duration)
+VALUES (:chapter_id, :last_read, :read_duration_delta)
+ON CONFLICT(chapter_id) DO UPDATE SET
+  last_read = MAX(history.last_read, excluded.last_read),
+  read_duration = CASE
+    WHEN history.read_duration > 9223372036854775807 - excluded.read_duration
+      THEN 9223372036854775807
+    ELSE history.read_duration + excluded.read_duration
+  END;
 
 insertTracking:
 INSERT INTO tracking(

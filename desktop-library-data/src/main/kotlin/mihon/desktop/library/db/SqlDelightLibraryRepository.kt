@@ -8,6 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import mihon.desktop.library.model.CategoryRecord
 import mihon.desktop.library.model.ChapterRecord
 import mihon.desktop.library.model.HistoryRecord
@@ -28,14 +30,22 @@ import mihon.desktop.library.model.PreferenceSnapshotRecord
 import mihon.desktop.library.model.SourcePreferenceSnapshotRecord
 import mihon.desktop.library.model.SourceRecord
 import mihon.desktop.library.model.TrackingRecord
+import mihon.desktop.library.reader.ReaderLibraryPort
 import mihon.desktop.library.repository.LibraryMutationPort
 import mihon.desktop.library.repository.LibraryRepository
+import mihon.reader.session.ProgressWriteResult
+import mihon.reader.session.ReaderProgressUpdate
+import mihon.reader.source.ChapterDirection
+import mihon.reader.source.ReaderChapterAsset
+import java.nio.file.Path
 
 class SqlDelightLibraryRepository(
     private val driver: SqlDriver,
     private val database: DesktopLibraryDatabase,
-) : LibraryRepository, LibraryMutationPort, AutoCloseable {
+) : LibraryRepository, LibraryMutationPort, ReaderLibraryPort, AutoCloseable {
     private val queries = database.libraryQueries
+    private val readerProgressMutex = Mutex()
+    private val acceptedReaderProgress = mutableMapOf<Long, ReaderProgressVersion>()
 
     override fun observeLibrary(): Flow<List<LibraryManga>> =
         queries.selectLibrary().asFlow().mapToList(Dispatchers.IO).map { rows -> rows.map(SelectLibrary::toModel) }
@@ -59,6 +69,43 @@ class SqlDelightLibraryRepository(
 
     override fun chapterSnapshot(mangaId: Long): List<LibraryChapter> =
         queries.selectChaptersForManga(mangaId).executeAsList().map(Chapter::toModel)
+
+    override fun chapterAsset(chapterId: Long): ReaderChapterAsset? =
+        queries.selectReaderChapterAsset(chapterId).executeAsOneOrNull()?.toReaderChapterAsset()
+
+    override fun adjacentReadableChapter(
+        chapterId: Long,
+        direction: ChapterDirection,
+    ): ReaderChapterAsset? = when (direction) {
+        ChapterDirection.PREVIOUS ->
+            queries.selectPreviousReaderChapterAsset(chapterId).executeAsOneOrNull()?.toReaderChapterAsset()
+        ChapterDirection.NEXT ->
+            queries.selectNextReaderChapterAsset(chapterId).executeAsOneOrNull()?.toReaderChapterAsset()
+    }
+
+    override suspend fun record(update: ReaderProgressUpdate): ProgressWriteResult {
+        validateReaderProgress(update)
+        return readerProgressMutex.withLock {
+            val incoming = ReaderProgressVersion(update.generation, update.sequence)
+            val accepted = acceptedReaderProgress[update.chapterId]
+            if (accepted != null && incoming <= accepted) return@withLock ProgressWriteResult.STALE
+
+            database.transaction {
+                queries.updateReaderChapterProgress(
+                    last_page_read = update.pageIndex,
+                    completed = update.completed,
+                    chapter_id = update.chapterId,
+                )
+                queries.accumulateReaderHistory(
+                    chapter_id = update.chapterId,
+                    last_read = update.lastReadEpochMillis,
+                    read_duration_delta = update.readDurationDeltaMillis,
+                )
+            }
+            acceptedReaderProgress[update.chapterId] = incoming
+            ProgressWriteResult.APPLIED
+        }
+    }
 
     override fun latestImportReport(): ImportReport? {
         val report = queries.selectLatestImportReport().executeAsOneOrNull() ?: return null
@@ -300,6 +347,100 @@ class SqlDelightLibraryRepository(
 
     private fun lastInsertRowId(): Long = queries.lastInsertRowId().executeAsOne()
 }
+
+private data class ReaderProgressVersion(
+    val generation: Long,
+    val sequence: Long,
+) : Comparable<ReaderProgressVersion> {
+    override fun compareTo(other: ReaderProgressVersion): Int =
+        compareValuesBy(this, other, ReaderProgressVersion::generation, ReaderProgressVersion::sequence)
+}
+
+private fun validateReaderProgress(update: ReaderProgressUpdate) {
+    require(update.chapterId >= 0) { "chapterId must not be negative" }
+    require(update.pageIndex in 0..Int.MAX_VALUE.toLong()) { "pageIndex must be between 0 and Int.MAX_VALUE" }
+    require(update.lastReadEpochMillis >= 0) { "lastReadEpochMillis must not be negative" }
+    require(update.readDurationDeltaMillis in 0..86_400_000L) {
+        "readDurationDeltaMillis must be between 0 and 86400000"
+    }
+    require(update.generation >= 0) { "generation must not be negative" }
+    require(update.sequence >= 0) { "sequence must not be negative" }
+}
+
+private fun SelectReaderChapterAsset.toReaderChapterAsset(): ReaderChapterAsset? = readerChapterAsset(
+    manga_id,
+    chapter_id,
+    manga_title,
+    chapter_name,
+    storage_path,
+    relative_path,
+    asset_kind,
+    size_bytes,
+    modified_at,
+    last_page_read,
+    read,
+)
+
+private fun SelectPreviousReaderChapterAsset.toReaderChapterAsset(): ReaderChapterAsset? = readerChapterAsset(
+    manga_id,
+    chapter_id,
+    manga_title,
+    chapter_name,
+    storage_path,
+    relative_path,
+    asset_kind,
+    size_bytes,
+    modified_at,
+    last_page_read,
+    read,
+)
+
+private fun SelectNextReaderChapterAsset.toReaderChapterAsset(): ReaderChapterAsset? = readerChapterAsset(
+    manga_id,
+    chapter_id,
+    manga_title,
+    chapter_name,
+    storage_path,
+    relative_path,
+    asset_kind,
+    size_bytes,
+    modified_at,
+    last_page_read,
+    read,
+)
+
+private fun readerChapterAsset(
+    mangaId: Long,
+    chapterId: Long,
+    mangaTitle: String,
+    chapterName: String,
+    storagePath: String,
+    relativePath: String,
+    assetKind: String,
+    sizeBytes: Long,
+    modifiedAt: Long,
+    lastPageRead: Long,
+    read: Boolean,
+): ReaderChapterAsset? = runCatching {
+    val storageRoot = Path.of(storagePath).toAbsolutePath().normalize()
+    val storedRelativePath = Path.of(relativePath)
+    if (storedRelativePath.isAbsolute) return null
+    val resolvedPath = storageRoot.resolve(storedRelativePath).normalize()
+    if (!resolvedPath.startsWith(storageRoot)) return null
+    ReaderChapterAsset(
+        mangaId = mangaId,
+        chapterId = chapterId,
+        mangaTitle = mangaTitle,
+        chapterName = chapterName,
+        storageRoot = storageRoot,
+        relativePath = storageRoot.relativize(resolvedPath),
+        assetKind = assetKind,
+        sizeBytes = sizeBytes,
+        modifiedAt = modifiedAt,
+        lastPageRead = lastPageRead,
+        read = read,
+    )
+}.getOrNull()
 
 private fun SelectLibrary.toModel() = LibraryManga(
     id = id,

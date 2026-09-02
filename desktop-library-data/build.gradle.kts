@@ -8,6 +8,7 @@ plugins {
 kotlin { jvmToolchain(mihonx.versions.java.get().toInt()) }
 
 dependencies {
+    implementation(project(":reader-core"))
     implementation(libs.sqldelight.jdbcDriver)
     implementation(libs.sqldelight.coroutines)
     implementation(libs.kotlinx.coroutines.core)

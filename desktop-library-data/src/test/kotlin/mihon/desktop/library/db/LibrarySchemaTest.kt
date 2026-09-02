@@ -2,9 +2,15 @@ package mihon.desktop.library.db
 
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class LibrarySchemaTest {
+    @Test
+    fun `reader queries do not change the version one schema`() {
+        DesktopLibraryDatabase.Schema.version shouldBe 1L
+    }
+
     @Test
     fun `schema creates every Plan 2 table`() {
         val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
