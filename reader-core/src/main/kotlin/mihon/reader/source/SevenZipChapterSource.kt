@@ -1,5 +1,6 @@
 package mihon.reader.source
 
+import kotlinx.coroutines.CancellationException
 import mihon.reader.memory.MemoryKind
 import mihon.reader.memory.MemoryLease
 import mihon.reader.memory.ReaderMemoryBudget
@@ -36,8 +37,15 @@ class SevenZipChapterSource(
             throw error
         }
         try {
-            val entry = archive.entries.singleOrNull { it.name == wanted.rawName }
-                ?: throw ReaderFailure.PageNotFound(wanted.logicalName)
+            var entry: SevenZArchiveEntry? = null
+            for (candidate in archive.entries) {
+                scanCheckpoint()
+                if (candidate.name == wanted.rawName) {
+                    if (entry != null) throw ReaderFailure.DuplicateEntry(wanted.logicalName)
+                    entry = candidate
+                }
+            }
+            entry ?: throw ReaderFailure.PageNotFound(wanted.logicalName)
             validateSevenZEntry(entry)
             val input = archive.getInputStream(entry)
             return boundedInput(input, entry.size) {
@@ -70,6 +78,7 @@ class SevenZipChapterSource(
             val duplicateKeys = mutableSetOf<String>()
             var count = 0
             archive.entries.forEach { entry ->
+                synchronousScanCheckpoint()
                 count += 1
                 if (count > ReaderLimits.MAX_ENTRIES) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
                 validateSevenZEntry(entry)
@@ -127,6 +136,7 @@ private fun validateSevenZEntry(entry: SevenZArchiveEntry) {
 }
 
 private fun classifySevenZFailure(error: Throwable): ReaderFailure = when (error) {
+    is CancellationException -> throw error
     is ReaderFailure -> error
     is PasswordRequiredException -> ReaderFailure.EncryptedContainer("7z")
     is MemoryLimitException -> ReaderFailure.LimitExceeded(

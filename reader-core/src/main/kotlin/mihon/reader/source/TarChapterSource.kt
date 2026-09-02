@@ -1,5 +1,6 @@
 package mihon.reader.source
 
+import kotlinx.coroutines.CancellationException
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import org.apache.commons.compress.MemoryLimitException
@@ -31,6 +32,7 @@ class TarChapterSource(
         val archive = openArchive()
         try {
             while (true) {
+                scanCheckpoint()
                 val entry = archive.nextEntry ?: break
                 validateTarEntry(entry)
                 if (entry.name == wanted.rawName) {
@@ -52,6 +54,7 @@ class TarChapterSource(
             val duplicateKeys = mutableSetOf<String>()
             var count = 0
             while (true) {
+                synchronousScanCheckpoint()
                 val entry = archive.nextEntry ?: break
                 count += 1
                 if (count > ReaderLimits.MAX_ENTRIES) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
@@ -138,6 +141,7 @@ private fun openTarContent(raw: InputStream, compression: TarCompression): Input
 }
 
 private fun classifyTarFailure(error: Throwable): ReaderFailure = when (error) {
+    is CancellationException -> throw error
     is ReaderFailure -> error
     is MemoryLimitException -> ReaderFailure.LimitExceeded(
         "XZ decoder memory KiB",

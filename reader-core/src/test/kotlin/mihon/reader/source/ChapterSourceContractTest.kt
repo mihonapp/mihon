@@ -50,23 +50,30 @@ class ChapterSourceContractTest {
             )
         }
         ArchiveFixtures.copyCommittedFixture(temporaryDirectory, "valid-rar4.rar")
+        val directImageOpf = """<?xml version="1.0"?>
+            <package xmlns="http://www.idpf.org/2007/opf">
+              <manifest><item id="image" href="images/2.png" media-type="image/png"/></manifest>
+              <spine><itemref idref="image"/></spine>
+            </package>"""
+        ArchiveFixtures.writeEpub(temporaryDirectory.resolve("chapter.epub"), opf = directImageOpf)
 
         val assets = listOf(
-            ArchiveFixtures.asset(temporaryDirectory, "page.png", "IMAGE"),
-            ArchiveFixtures.asset(temporaryDirectory, "chapter", "DIRECTORY"),
-            ArchiveFixtures.asset(temporaryDirectory, "chapter.cbz"),
-            ArchiveFixtures.asset(temporaryDirectory, "chapter.tar"),
-            ArchiveFixtures.asset(temporaryDirectory, "chapter.7z"),
-            ArchiveFixtures.asset(temporaryDirectory, "chapter.gzip"),
-            ArchiveFixtures.asset(temporaryDirectory, "chapter.bzip2"),
-            ArchiveFixtures.asset(temporaryDirectory, "chapter.xz"),
-            ArchiveFixtures.asset(temporaryDirectory, "valid-rar4.rar"),
+            ArchiveFixtures.asset(temporaryDirectory, "page.png", "IMAGE") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "chapter", "DIRECTORY") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "chapter.cbz") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "chapter.tar") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "chapter.7z") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "chapter.gzip") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "chapter.bzip2") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "chapter.xz") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "valid-rar4.rar") to "page.png",
+            ArchiveFixtures.asset(temporaryDirectory, "chapter.epub") to "OPS/images/2.png",
         )
         val factory = LocalChapterSourceFactory(BoundedReaderMemoryBudget())
-        assets.forEach { asset ->
+        assets.forEach { (asset, expectedPage) ->
             val source = factory.create(asset)
             val pages = source.pages()
-            pages.map { it.id.entryName }.shouldContainExactly("page.png")
+            pages.map { it.id.entryName }.shouldContainExactly(expectedPage)
             source.open(pages.single().id).use { input -> input.input.readBytes().isNotEmpty() shouldBe true }
             source.close()
             shouldThrow<ReaderFailure.SourceClosed> { source.pages() }

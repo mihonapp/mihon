@@ -57,8 +57,9 @@ class BoundedReaderMemoryBudget(
         }
         pressure?.let(onPressure)
         immediate?.let {
-            deferred.complete(it)
-            return it
+            if (deferred.complete(it)) return it
+            it.close()
+            return deferred.await()
         }
         try {
             return deferred.await()

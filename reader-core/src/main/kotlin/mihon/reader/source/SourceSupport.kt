@@ -1,5 +1,6 @@
 package mihon.reader.source
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import mihon.reader.layout.NaturalPageComparator
@@ -35,6 +36,7 @@ abstract class ManagedChapterSource(
     private val lock = Any()
     private val activeInputs = mutableSetOf<InputStream>()
     private var closed = false
+    internal var scanObserver: () -> Unit = {}
 
     protected fun checkOpen() {
         synchronized(lock) {
@@ -44,6 +46,17 @@ abstract class ManagedChapterSource(
 
     protected suspend fun checkOpenAndCancellation() {
         currentCoroutineContext().ensureActive()
+        checkOpen()
+    }
+
+    protected suspend fun scanCheckpoint() {
+        scanObserver()
+        currentCoroutineContext().ensureActive()
+        checkOpen()
+    }
+
+    protected fun synchronousScanCheckpoint() {
+        if (Thread.currentThread().isInterrupted) throw CancellationException("Archive scan interrupted")
         checkOpen()
     }
 
@@ -101,14 +114,23 @@ abstract class ManagedChapterSource(
             }
 
             private fun charge(byteCount: Long) {
-                if (chargeChapterBudget) expansionBudget.charge(byteCount)
-                if (byteCount > pageLimitBytes - pageBytes) {
-                    val actual = if (Long.MAX_VALUE - pageBytes < byteCount) Long.MAX_VALUE else pageBytes + byteCount
-                    pageBytes = pageLimitBytes
-                    close()
-                    throw ReaderFailure.LimitExceeded("expanded page bytes", pageLimitBytes, actual)
+                try {
+                    if (chargeChapterBudget) expansionBudget.charge(byteCount)
+                    if (byteCount > pageLimitBytes - pageBytes) {
+                        val actual =
+                            if (Long.MAX_VALUE - pageBytes < byteCount) Long.MAX_VALUE else pageBytes + byteCount
+                        pageBytes = pageLimitBytes
+                        throw ReaderFailure.LimitExceeded("expanded page bytes", pageLimitBytes, actual)
+                    }
+                    pageBytes += byteCount
+                } catch (error: Throwable) {
+                    try {
+                        close()
+                    } catch (closeError: Throwable) {
+                        error.addSuppressed(closeError)
+                    }
+                    throw error
                 }
-                pageBytes += byteCount
             }
 
             override fun close() {
@@ -154,10 +176,10 @@ internal class ChapterBudgetInputStream(
     input: InputStream,
     private val budget: ChapterExpansionBudget,
 ) : FilterInputStream(input) {
-    override fun read(): Int = super.read().also { if (it >= 0) budget.charge(1) }
+    override fun read(): Int = super.read().also { if (it >= 0) charge(1) }
 
     override fun read(bytes: ByteArray, offset: Int, length: Int): Int =
-        super.read(bytes, offset, length).also { if (it > 0) budget.charge(it.toLong()) }
+        super.read(bytes, offset, length).also { if (it > 0) charge(it.toLong()) }
 
     override fun skip(byteCount: Long): Long {
         if (byteCount <= 0) return 0
@@ -169,6 +191,19 @@ internal class ChapterBudgetInputStream(
             remaining -= count
         }
         return byteCount - remaining
+    }
+
+    private fun charge(byteCount: Long) {
+        try {
+            budget.charge(byteCount)
+        } catch (error: Throwable) {
+            try {
+                close()
+            } catch (closeError: Throwable) {
+                error.addSuppressed(closeError)
+            }
+            throw error
+        }
     }
 }
 

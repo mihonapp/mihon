@@ -4,12 +4,16 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import mihon.reader.source.ReaderFailure
 import org.junit.jupiter.api.Test
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.startCoroutine
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BoundedReaderMemoryBudgetTest {
@@ -50,6 +54,29 @@ class BoundedReaderMemoryBudgetTest {
     fun `immediate suspending reservation does not leave a child job behind`() = runTest {
         val budget = BoundedReaderMemoryBudget(10)
         budget.reserve(MemoryKind.DECODED_OUTPUT, 2).close()
+        budget.metrics shouldBe ReaderMemoryMetrics(10, 0, 0)
+    }
+
+    @Test
+    fun `immediate reservation cannot orphan a lease when its continuation is cancelled`() {
+        val budget = BoundedReaderMemoryBudget(10)
+        val cancelledJob = Job().apply { cancel() }
+        var completion: Result<MemoryLease>? = null
+        val reservation: suspend () -> MemoryLease = {
+            budget.reserve(MemoryKind.DECODED_OUTPUT, 4)
+        }
+
+        reservation.startCoroutine(
+            object : Continuation<MemoryLease> {
+                override val context: CoroutineContext = cancelledJob
+
+                override fun resumeWith(result: Result<MemoryLease>) {
+                    completion = result
+                }
+            },
+        )
+
+        requireNotNull(completion).isFailure shouldBe true
         budget.metrics shouldBe ReaderMemoryMetrics(10, 0, 0)
     }
 

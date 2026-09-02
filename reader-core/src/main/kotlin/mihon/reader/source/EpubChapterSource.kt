@@ -1,5 +1,6 @@
 package mihon.reader.source
 
+import kotlinx.coroutines.CancellationException
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
@@ -29,8 +30,15 @@ class EpubChapterSource(
         val wanted = requireEntry(pageId, entries)
         val archive = openZip()
         try {
-            val entry = archive.entries.asSequence().singleOrNull { it.name == wanted.rawName }
-                ?: throw ReaderFailure.PageNotFound(wanted.logicalName)
+            var entry: ZipArchiveEntry? = null
+            for (candidate in archive.entries) {
+                scanCheckpoint()
+                if (candidate.name == wanted.rawName) {
+                    if (entry != null) throw ReaderFailure.DuplicateEntry(wanted.logicalName)
+                    entry = candidate
+                }
+            }
+            entry ?: throw ReaderFailure.PageNotFound(wanted.logicalName)
             validateZipEntry(entry)
             if (!archive.canReadEntryData(entry)) throw ReaderFailure.UnsupportedFormat("ZIP entry compression")
             return boundedInput(archive.getInputStream(entry), entry.size) { archive.close() }
@@ -60,6 +68,8 @@ class EpubChapterSource(
             buildSpine(archive, allEntries, opfName, opf)
         } catch (error: ReaderFailure) {
             throw error
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: Throwable) {
             throw ReaderFailure.CorruptContainer("EPUB", error)
         } finally {
@@ -71,6 +81,7 @@ class EpubChapterSource(
         val indexed = linkedMapOf<String, ZipArchiveEntry>()
         var count = 0
         archive.entries.asSequence().forEach { entry ->
+            synchronousScanCheckpoint()
             count += 1
             if (count > ReaderLimits.MAX_ENTRIES) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
             validateZipEntry(entry)
@@ -92,6 +103,7 @@ class EpubChapterSource(
         val result = mutableListOf<SourceEntry>()
         val emitted = mutableSetOf<String>()
         opf.elements("itemref").forEach { itemRef ->
+            synchronousScanCheckpoint()
             val item = manifest[itemRef.getAttribute("idref")] ?: throw ReaderFailure.XmlRejected(opfName)
             val mediaType = item.getAttribute("media-type").lowercase(Locale.ROOT)
             val itemName = resolveReference(parentOf(opfName), item.getAttribute("href"))
@@ -141,7 +153,11 @@ class EpubChapterSource(
     }
 
     private fun parseEntry(archive: ZipFile, entry: ZipArchiveEntry, documentName: String): Document =
-        archive.getInputStream(entry).use { SecureXml.parse(documentName, it) }
+        archive.getInputStream(entry).use { input ->
+            ChapterBudgetInputStream(input, expansionBudget).use { bounded ->
+                SecureXml.parse(documentName, bounded)
+            }
+        }
 
     private fun openZip(): ZipFile {
         val channel = securePath.openRegularFile(asset.relativePath)

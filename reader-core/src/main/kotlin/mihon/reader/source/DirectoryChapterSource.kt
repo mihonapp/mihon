@@ -3,8 +3,6 @@ package mihon.reader.source
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import java.nio.channels.Channels
-import java.nio.file.DirectoryStream
-import java.nio.file.Files
 import java.nio.file.Path
 
 class DirectoryChapterSource(
@@ -27,36 +25,34 @@ class DirectoryChapterSource(
     }
 
     private fun enumerate(): List<SourceEntry> {
-        val chapterDirectory = securePath.resolveDirectory(asset.relativePath)
         val found = mutableListOf<SourceEntry>()
         val duplicateKeys = mutableSetOf<String>()
         var count = 0
 
-        fun visit(directory: Path, logicalPrefix: String) {
-            Files.newDirectoryStream(directory).use { stream: DirectoryStream<Path> ->
-                stream.forEach { child ->
-                    count += 1
-                    if (count > ReaderLimits.MAX_ENTRIES) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
-                    val attributes = securePath.secureAttributes(child)
-                    val rawLogical = if (logicalPrefix.isEmpty()) {
-                        child.fileName.toString()
-                    } else {
-                        "$logicalPrefix/${child.fileName}"
-                    }
-                    val logical = ImageEntryPolicy.normalize(rawLogical)
-                    val key = ImageEntryPolicy.duplicateKey(logical)
-                    if (!duplicateKeys.add(key)) throw ReaderFailure.DuplicateEntry(logical)
-                    when {
-                        attributes.isDirectory -> visit(child, logical)
-                        attributes.isRegularFile && ImageEntryPolicy.isSupportedImage(logical) ->
-                            found += SourceEntry(logical, logical, attributes.size())
-                        attributes.isRegularFile -> Unit
-                        else -> throw ReaderFailure.UnsafePath(logical, "non-regular directory entry")
-                    }
+        fun visit(relativeDirectory: Path, logicalPrefix: String) {
+            securePath.listDirectory(relativeDirectory).forEach { child ->
+                synchronousScanCheckpoint()
+                count += 1
+                if (count > ReaderLimits.MAX_ENTRIES) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
+                val attributes = securePath.secureAttributes(child)
+                val rawLogical = if (logicalPrefix.isEmpty()) {
+                    child.fileName.toString()
+                } else {
+                    "$logicalPrefix/${child.fileName}"
+                }
+                val logical = ImageEntryPolicy.normalize(rawLogical)
+                val key = ImageEntryPolicy.duplicateKey(logical)
+                if (!duplicateKeys.add(key)) throw ReaderFailure.DuplicateEntry(logical)
+                when {
+                    attributes.isDirectory -> visit(relativeDirectory.resolve(child.fileName), logical)
+                    attributes.isRegularFile && ImageEntryPolicy.isSupportedImage(logical) ->
+                        found += SourceEntry(logical, logical, attributes.size())
+                    attributes.isRegularFile -> Unit
+                    else -> throw ReaderFailure.UnsafePath(logical, "non-regular directory entry")
                 }
             }
         }
-        visit(chapterDirectory, "")
+        visit(asset.relativePath, "")
         return found
     }
 }

@@ -10,6 +10,7 @@ import java.net.ServerSocket
 import java.net.SocketTimeoutException
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 
 class EpubChapterSourceTest {
     @TempDir
@@ -108,6 +109,38 @@ class EpubChapterSourceTest {
         shouldThrow<ReaderFailure.XmlRejected> {
             LocalChapterSourceFactory().create(ArchiveFixtures.asset(temporaryDirectory, "deep.epub"))
         }
+    }
+
+    @Test
+    fun `EPUB XML expansion is charged to the source lifetime budget`() {
+        val path = temporaryDirectory.resolve("budget.epub")
+        ArchiveFixtures.writeEpub(path)
+
+        shouldThrow<ReaderFailure.LimitExceeded> {
+            EpubChapterSource(
+                ArchiveFixtures.asset(temporaryDirectory, path.fileName.toString()),
+                expansionBudget = ChapterExpansionBudget(64),
+            )
+        }
+    }
+
+    @Test
+    fun `EPUB validation failure releases the container immediately`() {
+        val path = temporaryDirectory.resolve("rejected.epub")
+        val malicious = insertDoctype(
+            ArchiveFixtures.DEFAULT_XHTML,
+            "html",
+            "<!ENTITY xxe SYSTEM \"file:///C:/Windows/win.ini\">",
+        )
+        ArchiveFixtures.writeEpub(path, xhtml = malicious)
+
+        shouldThrow<ReaderFailure.XmlRejected> {
+            LocalChapterSourceFactory().create(ArchiveFixtures.asset(temporaryDirectory, path.fileName.toString()))
+        }
+
+        val renamed = temporaryDirectory.resolve("rejected-renamed.epub")
+        Files.move(path, renamed, StandardCopyOption.ATOMIC_MOVE)
+        Files.delete(renamed)
     }
 }
 

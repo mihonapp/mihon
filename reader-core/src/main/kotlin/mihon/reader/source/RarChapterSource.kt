@@ -2,13 +2,21 @@ package mihon.reader.source
 
 import com.github.junrar.Archive
 import com.github.junrar.ArchiveOptions
+import com.github.junrar.exception.MissingNextVolumeException
+import com.github.junrar.exception.MissingPreviousVolumeException
 import com.github.junrar.exception.RarException
+import com.github.junrar.exception.UnsafeLinkException
+import com.github.junrar.exception.UnsupportedDictionarySizeException
+import com.github.junrar.exception.UnsupportedRarEncryptedException
+import com.github.junrar.exception.UnsupportedRarMethodException
+import com.github.junrar.exception.UnsupportedRarVersionException
 import com.github.junrar.exception.WrongPasswordException
 import com.github.junrar.io.SeekableReadOnlyByteChannel
 import com.github.junrar.rarfile.FileHeader
 import com.github.junrar.rarfile.HostSystem
 import com.github.junrar.volume.Volume
 import com.github.junrar.volume.VolumeManager
+import kotlinx.coroutines.CancellationException
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import java.io.EOFException
@@ -33,8 +41,15 @@ class RarChapterSource(
         val archive = openArchive()
         try {
             rejectEncryption(archive)
-            val header = archive.fileHeaders.singleOrNull { it.fileName == wanted.rawName }
-                ?: throw ReaderFailure.PageNotFound(wanted.logicalName)
+            var header: FileHeader? = null
+            for (candidate in archive.fileHeaders) {
+                scanCheckpoint()
+                if (candidate.fileName == wanted.rawName) {
+                    if (header != null) throw ReaderFailure.DuplicateEntry(wanted.logicalName)
+                    header = candidate
+                }
+            }
+            header ?: throw ReaderFailure.PageNotFound(wanted.logicalName)
             validateRarEntry(header)
             val input = archive.getInputStream(header)
             return boundedInput(input, header.fullUnpackSize) { archive.close() }
@@ -52,6 +67,7 @@ class RarChapterSource(
             val duplicateKeys = mutableSetOf<String>()
             var count = 0
             archive.fileHeaders.forEach { header ->
+                synchronousScanCheckpoint()
                 count += 1
                 if (count > ReaderLimits.MAX_ENTRIES) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
                 validateRarEntry(header)
@@ -148,9 +164,16 @@ private fun validateRarEntry(header: FileHeader) {
     }
 }
 
-private fun classifyRarFailure(error: Throwable): ReaderFailure = when (error) {
+internal fun classifyRarFailure(error: Throwable): ReaderFailure = when (error) {
+    is CancellationException -> throw error
     is ReaderFailure -> error
-    is WrongPasswordException -> ReaderFailure.EncryptedContainer("RAR")
+    is WrongPasswordException, is UnsupportedRarEncryptedException -> ReaderFailure.EncryptedContainer("RAR")
+    is UnsupportedRarVersionException -> ReaderFailure.UnsupportedFormat("RAR version")
+    is UnsupportedRarMethodException -> ReaderFailure.UnsupportedFormat("RAR compression method")
+    is UnsupportedDictionarySizeException -> ReaderFailure.UnsupportedFormat("RAR dictionary size")
+    is MissingNextVolumeException, is MissingPreviousVolumeException ->
+        ReaderFailure.UnsupportedFormat("multi-volume RAR")
+    is UnsafeLinkException -> ReaderFailure.UnsafePath("RAR entry", error.message ?: "unsafe archive link")
     is RarException -> ReaderFailure.CorruptContainer("RAR", error)
     else -> ReaderFailure.CorruptContainer("RAR", error)
 }

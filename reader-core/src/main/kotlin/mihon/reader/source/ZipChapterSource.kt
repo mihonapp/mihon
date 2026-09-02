@@ -1,5 +1,6 @@
 package mihon.reader.source
 
+import kotlinx.coroutines.CancellationException
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
@@ -28,8 +29,15 @@ class ZipChapterSource(
             throw classifyZipFailure(error)
         }
         try {
-            val entry = archive.entries.asSequence().singleOrNull { it.name == wanted.rawName }
-                ?: throw ReaderFailure.PageNotFound(wanted.logicalName)
+            var entry: ZipArchiveEntry? = null
+            for (candidate in archive.entries) {
+                scanCheckpoint()
+                if (candidate.name == wanted.rawName) {
+                    if (entry != null) throw ReaderFailure.DuplicateEntry(wanted.logicalName)
+                    entry = candidate
+                }
+            }
+            entry ?: throw ReaderFailure.PageNotFound(wanted.logicalName)
             validateZipEntry(entry)
             if (!archive.canReadEntryData(entry)) throw ReaderFailure.UnsupportedFormat("ZIP entry compression")
             val input = archive.getInputStream(entry)
@@ -53,6 +61,7 @@ class ZipChapterSource(
             val duplicateKeys = mutableSetOf<String>()
             var count = 0
             archive.entries.asSequence().forEach { entry ->
+                synchronousScanCheckpoint()
                 count += 1
                 if (count > ReaderLimits.MAX_ENTRIES) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
                 validateZipEntry(entry)
@@ -89,6 +98,7 @@ internal fun validateZipEntry(entry: ZipArchiveEntry) {
 }
 
 internal fun classifyZipFailure(error: Throwable): ReaderFailure = when (error) {
+    is CancellationException -> throw error
     is ReaderFailure -> error
     else -> ReaderFailure.CorruptContainer("ZIP", error)
 }

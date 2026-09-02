@@ -45,6 +45,7 @@ image-decoder = "10"
 injekt = "91edab2317"
 jsoup = "1.23.2"
 junrar = "8.0.0"
+jna = "5.19.1"
 junit = "6.1.3"
 kim = "0.38.1"
 kotest-assertions = "6.2.4"
@@ -148,6 +149,7 @@ image-decoder = { module = "ca.mpreg:imagedecoder", version.ref = "image-decoder
 injekt = { module = "com.github.mihonapp:injekt", version.ref = "injekt" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junrar = { module = "com.github.junrar:junrar", version.ref = "junrar" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 kim = { module = "de.stefan-oltmann:kim", version.ref = "kim" }
