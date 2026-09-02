@@ -82,6 +82,7 @@ valkyrie = "0.5.2"
 voyager = "2.2.21-1.10.3"
 webgpuviewer = "39"
 xmlutil = "1.0.2"
+xz = "1.10"
 
 [libraries]
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
@@ -206,6 +207,7 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 webgpuviewer = { module = "ca.mpreg:webgpuviewer", version.ref = "webgpuviewer" }
 xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xmlutil" }
 xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil" }
+xz = { module = "org.tukaani:xz", version.ref = "xz" }
 
 [plugins]
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }

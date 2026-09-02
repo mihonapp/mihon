@@ -6,7 +6,10 @@ plugins {
 kotlin { jvmToolchain(mihonx.versions.java.get().toInt()) }
 
 dependencies {
+    implementation(libs.commonsCompress)
+    implementation(libs.junrar)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.xz)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.bundles.test)
     testRuntimeOnly(libs.junit.platform.launcher)
