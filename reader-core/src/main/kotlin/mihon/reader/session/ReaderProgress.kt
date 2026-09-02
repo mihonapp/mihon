@@ -1,25 +1,29 @@
 package mihon.reader.session
 
 enum class ProgressWriteResult {
-    WRITTEN,
-    UNCHANGED,
-    REJECTED,
+    APPLIED,
+    STALE,
 }
 
 data class ReaderProgressUpdate(
-    val chapterId: String,
+    val chapterId: Long,
     val pageIndex: Long,
+    val completed: Boolean,
+    val lastReadEpochMillis: Long,
+    val readDurationDeltaMillis: Long,
     val generation: Long,
     val sequence: Long,
 ) {
     init {
-        require(chapterId.isNotBlank()) { "chapterId must not be blank" }
+        require(chapterId >= 0) { "chapterId must not be negative" }
         require(pageIndex >= 0) { "pageIndex must not be negative" }
+        require(lastReadEpochMillis >= 0) { "lastReadEpochMillis must not be negative" }
+        require(readDurationDeltaMillis >= 0) { "readDurationDeltaMillis must not be negative" }
         require(generation >= 0) { "generation must not be negative" }
         require(sequence >= 0) { "sequence must not be negative" }
     }
 }
 
 fun interface ReaderProgressSink {
-    suspend fun write(update: ReaderProgressUpdate): ProgressWriteResult
+    suspend fun record(update: ReaderProgressUpdate): ProgressWriteResult
 }
