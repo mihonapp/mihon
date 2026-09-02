@@ -439,8 +439,7 @@ open class WebGpuViewer(
         }
     }
 
-    inner class ProgressPage(foregroundColor: Int = readerOnBackgroundColor()) :
-        ImagePage.Render(0, 0) {
+    inner class ProgressPage(foregroundColor: Int = readerOnBackgroundColor()) : ImagePage.Render(0, 0) {
         override val width: Int
             get() = viewportPageWidth(isDualPageMode())
         override val height: Int
@@ -632,8 +631,7 @@ open class WebGpuViewer(
     }
 
     /** Read live: these pages are built before the surface has a size, and outlive a rotation. */
-    private fun viewportPageWidth(half: Boolean): Int =
-        if (half) pager.state.width / 2 else pager.state.width
+    private fun viewportPageWidth(half: Boolean): Int = if (half) pager.state.width / 2 else pager.state.width
 
     /**
      * Check if dual page mode is currently active based on config and view dimensions.
@@ -1408,7 +1406,8 @@ open class WebGpuViewer(
                 val maxX = page.maxX(page.scale)
                 val currentX = page.animationJob?.let { page.animationTargetX } ?: page.x
 
-                val x = (currentX - 1 / page.scale).coerceIn(minX, maxX)
+                val c = if (isVertical && config.imageZoomType == ZoomStartPosition.RIGHT) -1 else 1
+                val x = (currentX - c / page.scale).coerceIn(minX, maxX)
 
                 if (!currentX.closeTo(x)) {
                     page.animateTo(targetX = x, targetY = page.y)
@@ -1430,7 +1429,8 @@ open class WebGpuViewer(
                 val maxX = page.maxX(page.scale)
                 val currentX = page.animationJob?.isActive?.let { page.animationTargetX } ?: page.x
 
-                val x = (currentX + 1 / page.scale).coerceIn(minX, maxX)
+                val c = if (isVertical && config.imageZoomType == ZoomStartPosition.RIGHT) -1 else 1
+                val x = (currentX + c / page.scale).coerceIn(minX, maxX)
 
                 if (!currentX.closeTo(x)) {
                     page.animateTo(targetX = x, targetY = page.y)
