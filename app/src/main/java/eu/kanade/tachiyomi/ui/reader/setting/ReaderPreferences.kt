@@ -204,8 +204,8 @@ class ReaderPreferences(
     val transitionAnimation: Preference<TransitionAnimation> =
         preferenceStore.getEnum("webgpu_transition_animation", TransitionAnimation.BASIC)
 
-    val transitionAnimationDual: Preference<TransitionAnimationDual> =
-        preferenceStore.getEnum("webgpu_dual_transition_animation", TransitionAnimationDual.BASIC)
+    val transitionAnimationDual: Preference<TransitionAnimation> =
+        preferenceStore.getEnum("webgpu_dual_transition_animation", TransitionAnimation.BASIC)
 
     val cutoutMode: Preference<CutoutMode> = preferenceStore.getEnum("webgpu_cutout_mode", CutoutMode.AVOID)
 
@@ -247,31 +247,11 @@ class ReaderPreferences(
 
     enum class TransitionAnimation(val titleRes: StringResource) {
         BASIC(MR.strings.transition_animation_basic),
+        FLIP(MR.strings.transition_animation_flip),
         FLIP_LEFT(MR.strings.transition_animation_flip_left),
         FLIP_RIGHT(
             MR.strings.transition_animation_flip_right,
         ),
-        STACK_LEFT(MR.strings.transition_animation_stack_left),
-        STACK_RIGHT(MR.strings.transition_animation_stack_right),
-        STACK_UP(
-            MR.strings.transition_animation_stack_up,
-        ),
-        STACK_DOWN(MR.strings.transition_animation_stack_down),
-        SPHERE(MR.strings.transition_animation_sphere),
-        CUBE_INSIDE(
-            MR.strings.transition_animation_cube_inside,
-        ),
-        CUBE_OUTSIDE(MR.strings.transition_animation_cube_outside),
-        FADE(MR.strings.transition_animation_fade),
-        FADE_WHITE(
-            MR.strings.transition_animation_fade_white,
-        ),
-        NONE(MR.strings.transition_animation_none),
-    }
-
-    enum class TransitionAnimationDual(val titleRes: StringResource) {
-        BASIC(MR.strings.transition_animation_basic),
-        FLIP(MR.strings.transition_animation_flip),
         STACK_LEFT(MR.strings.transition_animation_stack_left),
         STACK_RIGHT(MR.strings.transition_animation_stack_right),
         STACK_UP(

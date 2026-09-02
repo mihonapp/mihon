@@ -294,7 +294,10 @@ private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel)
     if (isDual) {
         val transitionAnimation by viewModel.preferences.transitionAnimationDual.collectAsState()
         SettingsChipRow(MR.strings.pref_transition_animation_dual) {
-            ReaderPreferences.TransitionAnimationDual.entries.forEach {
+            (
+                ReaderPreferences.TransitionAnimation.entries - ReaderPreferences.TransitionAnimation.FLIP_LEFT -
+                    ReaderPreferences.TransitionAnimation.FLIP_RIGHT
+                ).forEach {
                 FilterChip(
                     selected = it == transitionAnimation,
                     onClick = { viewModel.preferences.transitionAnimationDual.set(it) },

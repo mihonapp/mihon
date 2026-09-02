@@ -49,7 +49,7 @@ class WebGpuConfig(
     var transitionAnimation = ReaderPreferences.TransitionAnimation.BASIC
         private set
 
-    var transitionAnimationDual = ReaderPreferences.TransitionAnimationDual.BASIC
+    var transitionAnimationDual = ReaderPreferences.TransitionAnimation.BASIC
         private set
 
     var cutoutMode = ReaderPreferences.CutoutMode.AVOID
