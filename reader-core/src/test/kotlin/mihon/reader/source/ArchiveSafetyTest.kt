@@ -223,6 +223,17 @@ class ArchiveSafetyTest {
     }
 
     @Test
+    fun `Windows directory enumeration rejects limit plus one before returning names`() {
+        assumeTrue(System.getProperty("os.name").startsWith("Windows"), "Windows native-handle test")
+        val directory = Files.createDirectory(temporaryDirectory.resolve("bounded-directory"))
+        repeat(3) { index -> Files.write(directory.resolve("$index.png"), byteArrayOf(index.toByte())) }
+
+        shouldThrow<ReaderFailure.TooManyEntries> {
+            SecureLocalPath(temporaryDirectory).listDirectory(Path.of("bounded-directory"), maxEntries = 2)
+        }
+    }
+
+    @Test
     fun `directory and container symlinks are rejected without following them`() {
         val realDirectory = Files.createDirectory(temporaryDirectory.resolve("real"))
         Files.write(realDirectory.resolve("page.png"), byteArrayOf(1))

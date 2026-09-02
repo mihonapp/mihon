@@ -105,6 +105,19 @@ class BoundedReaderMemoryBudgetTest {
     }
 
     @Test
+    fun `throwing pressure callback cannot leave a queued waiter or orphaned lease`() = runTest {
+        val budget = BoundedReaderMemoryBudget(1) { error("pressure callback failed") }
+        val blocker = requireNotNull(budget.tryReserve(MemoryKind.DECODED_OUTPUT, 1))
+
+        val failure = runCatching { budget.reserve(MemoryKind.CACHE_RESIDENT, 1) }.exceptionOrNull()
+        failure?.message shouldBe "pressure callback failed"
+
+        blocker.close()
+        budget.metrics shouldBe ReaderMemoryMetrics(1, 0, 0)
+        requireNotNull(budget.tryReserve(MemoryKind.CACHE_RESIDENT, 1)).close()
+    }
+
+    @Test
     fun `oversized and closed reservations fail deterministically`() {
         val budget = BoundedReaderMemoryBudget(4)
         shouldThrow<ReaderFailure.LimitExceeded> { budget.tryReserve(MemoryKind.DECODED_OUTPUT, 5) }

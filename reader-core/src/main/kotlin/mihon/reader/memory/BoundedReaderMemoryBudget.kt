@@ -55,7 +55,15 @@ class BoundedReaderMemoryBudget(
                 pressure = metricsLocked()
             }
         }
-        pressure?.let(onPressure)
+        try {
+            pressure?.let(onPressure)
+        } catch (error: Throwable) {
+            synchronized(lock) {
+                waiters.removeAll { it.deferred === deferred }
+            }
+            deferred.cancel()
+            throw error
+        }
         immediate?.let {
             if (deferred.complete(it)) return it
             it.close()

@@ -20,7 +20,8 @@ class SecureLocalPath(
     private val windowsAccess = if (isWindows()) WindowsNativePathAccess else null
     private val trustedRootIdentity: WindowsFileIdentity?
     private var windowsChannelOpener: (Path) -> WindowsNativeFileChannel = WindowsNativePathAccess::openFileChannel
-    private var windowsDirectoryLister: (Path) -> WindowsDirectorySnapshot = WindowsNativePathAccess::listDirectory
+    private var windowsDirectoryLister: (Path, Int) -> WindowsDirectorySnapshot =
+        WindowsNativePathAccess::listDirectory
 
     init {
         trustedRootIdentity = windowsAccess?.let { validateWindowsWalk(root, expectDirectory = true).last().identity }
@@ -49,23 +50,36 @@ class SecureLocalPath(
         return validateWalk(normalized, expectDirectory = null)
     }
 
-    fun listDirectory(relativePath: Path): List<Path> {
+    fun listDirectory(
+        relativePath: Path,
+        maxEntries: Int = ReaderLimits.MAX_ENTRIES,
+    ): List<Path> {
+        require(maxEntries >= 0) { "maxEntries must not be negative" }
         val resolved = resolve(relativePath)
         val windows = windowsAccess
         return if (windows == null) {
             val before = validateNioWalk(resolved, expectDirectory = true)
-            val children = Files.newDirectoryStream(resolved).use { it.toList() }
+            val children = mutableListOf<Path>()
+            Files.newDirectoryStream(resolved).use { stream ->
+                stream.forEach { child ->
+                    if (children.size >= maxEntries) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
+                    children.add(child)
+                }
+            }
             val after = validateNioWalk(resolved, expectDirectory = true)
             if (!before.sameIdentity(after)) throw ReaderFailure.ResourceChanged(relativePath.toString())
             children
         } else {
             val before = validateWindowsWalk(resolved, expectDirectory = true)
             val snapshot = try {
-                windowsDirectoryLister(resolved)
+                windowsDirectoryLister(resolved, maxEntries)
+            } catch (error: ReaderFailure) {
+                throw error
             } catch (error: Exception) {
                 throw ReaderFailure.UnsafePath(relativePath.toString(), error.message ?: "cannot list directory")
             }
             val after = validateWindowsWalk(resolved, expectDirectory = true)
+            if (snapshot.names.size > maxEntries) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
             if (
                 snapshot.identity != before.last().identity ||
                 before.map { it.identity } != after.map { it.identity }
@@ -193,7 +207,9 @@ class SecureLocalPath(
         fun forWindowsDirectoryTesting(
             trustedRoot: Path,
             lister: (Path) -> WindowsDirectorySnapshot,
-        ): SecureLocalPath = SecureLocalPath(trustedRoot).also { it.windowsDirectoryLister = lister }
+        ): SecureLocalPath = SecureLocalPath(trustedRoot).also { securePath ->
+            securePath.windowsDirectoryLister = { path, _ -> lister(path) }
+        }
     }
 }
 

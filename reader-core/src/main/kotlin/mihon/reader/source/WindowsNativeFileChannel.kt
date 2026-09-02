@@ -53,12 +53,16 @@ internal object WindowsNativePathAccess {
         }
     }
 
-    fun listDirectory(path: Path): WindowsDirectorySnapshot {
+    fun listDirectory(
+        path: Path,
+        maxEntries: Int = ReaderLimits.MAX_ENTRIES,
+    ): WindowsDirectorySnapshot {
+        require(maxEntries >= 0) { "maxEntries must not be negative" }
         val handle = openHandle(path, WinNT.FILE_LIST_DIRECTORY)
         return try {
             val metadata = inspect(handle)
             if (!metadata.attributes.isDirectory) throw IOException("Path is not a directory")
-            WindowsDirectorySnapshot(metadata.identity, readDirectoryNames(handle))
+            WindowsDirectorySnapshot(metadata.identity, readDirectoryNames(handle, maxEntries))
         } finally {
             closeHandle(handle)
         }
@@ -121,7 +125,7 @@ internal object WindowsNativePathAccess {
         }
     }
 
-    private fun readDirectoryNames(handle: HANDLE): List<String> {
+    private fun readDirectoryNames(handle: HANDLE, maxEntries: Int): List<String> {
         val names = mutableListOf<String>()
         val buffer = Memory(DIRECTORY_BUFFER_BYTES.toLong())
         var informationClass = WinBase.FileIdBothDirectoryRestartInfo
@@ -146,7 +150,10 @@ internal object WindowsNativePathAccess {
                     throw IOException("Invalid Windows directory entry")
                 }
                 val name = String(buffer.getCharArray(offset + DIRECTORY_NAME_OFFSET, nameBytes / 2))
-                if (name != "." && name != "..") names += name
+                if (name != "." && name != "..") {
+                    if (names.size >= maxEntries) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
+                    names += name
+                }
                 if (nextOffset == 0L) break
                 if (nextOffset < DIRECTORY_NAME_OFFSET || offset + nextOffset >= buffer.size()) {
                     throw IOException("Invalid Windows directory entry offset")

@@ -30,7 +30,7 @@ class DirectoryChapterSource(
         var count = 0
 
         fun visit(relativeDirectory: Path, logicalPrefix: String) {
-            securePath.listDirectory(relativeDirectory).forEach { child ->
+            securePath.listDirectory(relativeDirectory, ReaderLimits.MAX_ENTRIES - count).forEach { child ->
                 synchronousScanCheckpoint()
                 count += 1
                 if (count > ReaderLimits.MAX_ENTRIES) throw ReaderFailure.TooManyEntries(ReaderLimits.MAX_ENTRIES)
