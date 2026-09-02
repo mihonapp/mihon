@@ -2,6 +2,7 @@ package mihon.reader.image
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
@@ -446,6 +447,106 @@ class ImageIoPageDecoderTest {
     }
 
     @Test
+    fun `probe marks gif region decode unavailable when the canvas exceeds the sixteen mib cap`() = runTest {
+        val bytes = ImageFixtures.forgedGifCanvas(4096, 2048)
+
+        val metadata = decoder.probe(trackedInput(bytes).first)
+
+        metadata.width shouldBe 4096
+        metadata.height shouldBe 2048
+        metadata.width * metadata.height * 4L shouldBe 32L * 1024L * 1024L
+        metadata.supportsRegionDecode shouldBe false
+    }
+
+    @Test
+    fun `gif region decode rejects a canvas above the sixteen mib cap without compositing`() = runTest {
+        val pageId = PageId("1", "big.gif")
+        val bytes = ImageFixtures.forgedGifCanvas(4096, 2048)
+        // Even a caller-supplied metadata claiming region support must not open the region path.
+        val metadata = ImageMetadata(4096, 2048)
+        val key = TileKey(pageId, null, IntRect(0, 0, 1024, 1024))
+        val (input, stream) = trackedInput(bytes)
+
+        shouldThrow<ReaderFailure.RegionUnavailable> {
+            decoder.decodeRegion(input, metadata, TileRequest(key, 1024, 1024))
+        }
+        budget.metrics shouldBe ReaderMemoryMetrics(ReaderLimits.READER_MEMORY_BYTES, 0, 0)
+        stream.closeCount shouldBe 1
+    }
+
+    @Test
+    fun `probe rejects a forged pixel count above four billion with a typed limit failure`() = runTest {
+        val forged = temporaryDirectory.resolve("forged-pixels.png")
+        ImageFixtures.writeForgedPngHeader(forged, width = 100_000, height = 100_000)
+        val bytes = Files.readAllBytes(forged)
+
+        val failure = shouldThrow<ReaderFailure.LimitExceeded> {
+            decoder.probe(trackedInput(bytes).first)
+        }
+        failure.limitName shouldBe "image pixel count"
+        failure.limitBytes shouldBe ReaderLimits.MAX_IMAGE_PIXELS
+    }
+
+    @Test
+    fun `full decode wraps a runtime exception from a broken reader as a typed corrupt image`() = runTest {
+        val spi = RuntimeThrowingReaderSpi { throw IndexOutOfBoundsException("simulated JDK reader bug") }
+        val registry = IIORegistry.getDefaultInstance()
+        registry.registerServiceProvider(spi)
+        try {
+            val pageId = PageId("1", "page.rte")
+            val bytes = byteArrayOf(8, 8, 8, 8, 1, 2, 3, 4)
+            val metadata = decoder.probe(trackedInput(bytes).first)
+            metadata shouldBe ImageMetadata(8, 8, frameCount = 1, frameDurationsMillis = listOf(0))
+
+            shouldThrow<ReaderFailure.CorruptImage> {
+                decoder.decodeFull(trackedInput(bytes).first, metadata, FrameId(pageId, 0))
+            }
+            budget.metrics shouldBe ReaderMemoryMetrics(ReaderLimits.READER_MEMORY_BYTES, 0, 0)
+        } finally {
+            registry.deregisterServiceProvider(spi)
+        }
+    }
+
+    @Test
+    fun `region decode wraps a runtime exception from a broken reader as a typed corrupt image`() = runTest {
+        val spi = RuntimeThrowingReaderSpi { throw IllegalArgumentException("simulated JDK reader bug") }
+        val registry = IIORegistry.getDefaultInstance()
+        registry.registerServiceProvider(spi)
+        try {
+            val pageId = PageId("1", "page.rte")
+            val bytes = byteArrayOf(8, 8, 8, 8, 1, 2, 3, 4)
+            val metadata = decoder.probe(trackedInput(bytes).first)
+            val key = TileKey(pageId, null, IntRect(0, 0, 8, 8))
+
+            shouldThrow<ReaderFailure.CorruptImage> {
+                decoder.decodeRegion(trackedInput(bytes).first, metadata, TileRequest(key, 8, 8))
+            }
+            budget.metrics shouldBe ReaderMemoryMetrics(ReaderLimits.READER_MEMORY_BYTES, 0, 0)
+        } finally {
+            registry.deregisterServiceProvider(spi)
+        }
+    }
+
+    @Test
+    fun `a reader cancellation is never swallowed as a typed corrupt image`() = runTest {
+        val spi = RuntimeThrowingReaderSpi { throw CancellationException("reader cancelled") }
+        val registry = IIORegistry.getDefaultInstance()
+        registry.registerServiceProvider(spi)
+        try {
+            val pageId = PageId("1", "page.rte")
+            val bytes = byteArrayOf(8, 8, 8, 8, 1, 2, 3, 4)
+            val metadata = decoder.probe(trackedInput(bytes).first)
+
+            shouldThrow<CancellationException> {
+                decoder.decodeFull(trackedInput(bytes).first, metadata, FrameId(pageId, 0))
+            }
+            budget.metrics shouldBe ReaderMemoryMetrics(ReaderLimits.READER_MEMORY_BYTES, 0, 0)
+        } finally {
+            registry.deregisterServiceProvider(spi)
+        }
+    }
+
+    @Test
     fun `gif frame index beyond the frame count is rejected`() = runTest {
         val pageId = PageId("1", "anim.gif")
         val bytes = ImageFixtures.animatedGif()
@@ -626,6 +727,62 @@ private class CountingChapterSource(
     }
 
     override fun close() = delegate.close()
+}
+
+private class RuntimeThrowingReaderSpi(
+    private val failure: () -> Nothing,
+) : ImageReaderSpi(
+    "mihon-test",
+    "1.0",
+    arrayOf("runtime-throwing-test"),
+    arrayOf("rte"),
+    null,
+    RuntimeThrowingReader::class.java.name,
+    arrayOf(ImageInputStream::class.java),
+    null,
+    false,
+    null,
+    null,
+    null,
+    null,
+    false,
+    null,
+    null,
+    null,
+    null,
+) {
+    override fun canDecodeInput(source: Any): Boolean {
+        if (source !is ImageInputStream) return false
+        val header = ByteArray(4)
+        source.mark()
+        val count = source.read(header)
+        source.reset()
+        return count == 4 && header.contentEquals(byteArrayOf(8, 8, 8, 8))
+    }
+
+    override fun createReaderInstance(extension: Any?): ImageReader = RuntimeThrowingReader(this, failure)
+
+    override fun getDescription(locale: Locale?): String = "test reader throwing runtime exceptions"
+}
+
+private class RuntimeThrowingReader(
+    owner: ImageReaderSpi,
+    private val failure: () -> Nothing,
+) : ImageReader(owner) {
+    override fun getNumImages(allowSearch: Boolean): Int = 1
+
+    override fun getWidth(imageIndex: Int): Int = 8
+
+    override fun getHeight(imageIndex: Int): Int = 8
+
+    override fun getImageTypes(imageIndex: Int): Iterator<ImageTypeSpecifier> =
+        listOf(ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_ARGB)).iterator()
+
+    override fun getStreamMetadata(): IIOMetadata? = null
+
+    override fun getImageMetadata(imageIndex: Int): IIOMetadata? = null
+
+    override fun read(imageIndex: Int, param: ImageReadParam?): BufferedImage = failure()
 }
 
 private class OversizedReaderSpi : ImageReaderSpi(

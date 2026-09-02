@@ -204,6 +204,28 @@ internal object ImageFixtures {
         return output.toByteArray()
     }
 
+    /**
+     * A structurally valid single-frame 1x1 GIF whose logical screen descriptor claims a
+     * [width] x [height] composition canvas (both at most 65,535, the GIF u16 limit).
+     */
+    fun forgedGifCanvas(width: Int, height: Int): ByteArray {
+        require(width in 1..65_535 && height in 1..65_535) { "gif logical screen is a u16" }
+        val output = ByteArrayOutputStream()
+        output.write("GIF89a".toByteArray(Charsets.US_ASCII))
+        output.write(width and 0xFF)
+        output.write((width shr 8) and 0xFF)
+        output.write(height and 0xFF)
+        output.write((height shr 8) and 0xFF)
+        output.write(0x80) // global color table present, 2 entries
+        output.write(0) // background color index
+        output.write(0) // pixel aspect ratio
+        output.write(byteArrayOf(0, 0, 0, 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte()))
+        // Minimal 1x1 image: descriptor, LZW minimum code size 2, one data sub-block.
+        output.write(byteArrayOf(0x2C, 0, 0, 0, 0, 1, 0, 1, 0, 0, 2, 2, 0x44, 0x01, 0))
+        output.write(0x3B) // trailer
+        return output.toByteArray()
+    }
+
     /** Valid PNG signature followed by garbage: a reader exists but header parsing must fail. */
     fun corruptPngBytes(): ByteArray = PNG_SIGNATURE + byteArrayOf(1, 2, 3, 4, 5, 6, 7, 8)
 

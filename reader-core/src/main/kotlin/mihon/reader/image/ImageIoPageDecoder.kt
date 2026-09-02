@@ -1,5 +1,6 @@
 package mihon.reader.image
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
@@ -39,7 +40,7 @@ class ImageIoPageDecoder(
                 } else {
                     List(frameCount) { 0L }
                 }
-                val supportsRegion = !isGif || gifRegionPeakBytes(width, height) <= budget.metrics.limitBytes
+                val supportsRegion = !isGif || gifRegionDecodeSupported(width, height)
                 ImageMetadata(width, height, frameCount, durations, supportsRegion)
             }
         }
@@ -89,6 +90,7 @@ class ImageIoPageDecoder(
         val (finalLease, scratchLease) = reservePeak(rasterBytes, rasterBytes)
         var decoded: BufferedImage? = null
         var normalized: BufferedImage? = null
+        var failed = true
         try {
             decoded = guarded { reader.read(0) } ?: throw ReaderFailure.CorruptImage()
             if (decoded.width > width || decoded.height > height) {
@@ -104,9 +106,10 @@ class ImageIoPageDecoder(
             val tile = BudgetedDecodedTile(key, normalized, finalLease)
             normalized = null
             decoded = null
+            failed = false
             return tile
         } finally {
-            if (normalized != null || decoded != null) {
+            if (failed) {
                 normalized?.flush()
                 if (decoded !== normalized) decoded?.flush()
                 finalLease.close()
@@ -295,6 +298,11 @@ class ImageIoPageDecoder(
                 }
                 val region = IntRect(bounds.left, bounds.top, right, bottom)
                 if (isGif) {
+                    if (checkedRasterBytes(width, height) > ReaderLimits.FULL_DECODE_MAX_BYTES) {
+                        throw ReaderFailure.RegionUnavailable(
+                            "gif composition canvas exceeds the full decode raster limit",
+                        )
+                    }
                     if (!metadata.supportsRegionDecode) {
                         throw ReaderFailure.RegionUnavailable(
                             "gif composition canvas exceeds the reader memory budget",
@@ -327,6 +335,7 @@ class ImageIoPageDecoder(
         val (finalLease, scratchLease) = reservePeak(rasterBytes, rasterBytes)
         var decoded: BufferedImage? = null
         var output: BufferedImage? = null
+        var failed = true
         try {
             val param = reader.defaultReadParam
             param.setSourceRegion(Rectangle(region.left, region.top, region.width, region.height))
@@ -348,9 +357,10 @@ class ImageIoPageDecoder(
             scratchLease.close()
             val tile = BudgetedDecodedTile(request.key, output, finalLease)
             output = null
+            failed = false
             return tile
         } finally {
-            if (output != null || decoded != null) {
+            if (failed) {
                 output?.flush()
                 decoded?.flush()
                 finalLease.close()
@@ -417,11 +427,24 @@ class ImageIoPageDecoder(
         return Math.multiplyExact(canvas, 4L)
     }
 
+    /**
+     * Region decode composites the full GIF canvas, so the canvas must satisfy the same
+     * 16 MiB raster cap as a full decode; above it the canvas is never composited.
+     */
+    private fun gifRegionDecodeSupported(width: Int, height: Int): Boolean {
+        if (checkedRasterBytes(width, height) > ReaderLimits.FULL_DECODE_MAX_BYTES) return false
+        return gifRegionPeakBytes(width, height) <= budget.metrics.limitBytes
+    }
+
     private fun validateDimensions(width: Int, height: Int) {
         if (width <= 0 || height <= 0) throw ReaderFailure.CorruptImage()
         val largest = maxOf(width, height).toLong()
         if (largest > ReaderLimits.MAX_IMAGE_DIMENSION) {
             throw ReaderFailure.LimitExceeded("image dimension", ReaderLimits.MAX_IMAGE_DIMENSION.toLong(), largest)
+        }
+        val pixels = width.toLong() * height.toLong()
+        if (pixels > ReaderLimits.MAX_IMAGE_PIXELS) {
+            throw ReaderFailure.LimitExceeded("image pixel count", ReaderLimits.MAX_IMAGE_PIXELS, pixels)
         }
         checkedRasterBytes(width, height)
     }
@@ -435,6 +458,12 @@ class ImageIoPageDecoder(
     private fun <T> guarded(block: () -> T): T = try {
         block()
     } catch (error: IOException) {
+        throw ReaderFailure.CorruptImage(error)
+    } catch (error: CancellationException) {
+        throw error
+    } catch (error: RuntimeException) {
+        // Documented JDK GIF/PNG reader bugs surface as unchecked exceptions on malformed
+        // streams; a corrupt page must become a typed retryable failure, never a crash.
         throw ReaderFailure.CorruptImage(error)
     }
 

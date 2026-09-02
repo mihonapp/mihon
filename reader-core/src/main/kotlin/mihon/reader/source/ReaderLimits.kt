@@ -10,5 +10,6 @@ object ReaderLimits {
     const val READER_MEMORY_BYTES: Long = 256L * 1024L * 1024L
     const val SEVEN_Z_MEMORY_KIB: Int = 131_072
     const val MAX_IMAGE_DIMENSION: Int = 200_000
+    const val MAX_IMAGE_PIXELS: Long = 4_000_000_000L
     const val FULL_DECODE_MAX_BYTES: Long = 16L * 1024L * 1024L
 }
