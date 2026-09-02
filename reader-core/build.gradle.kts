@@ -16,4 +16,16 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
-tasks.test { useJUnitPlatform() }
+tasks.test {
+    useJUnitPlatform { excludeTags("extreme-image") }
+}
+
+tasks.register<Test>("extremeImageTest") {
+    description = "Decodes extreme-size images under a constrained 384 MiB heap."
+    group = "verification"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    useJUnitPlatform { includeTags("extreme-image") }
+    maxHeapSize = "384m"
+    maxParallelForks = 1
+}

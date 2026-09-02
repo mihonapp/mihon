@@ -35,4 +35,10 @@ sealed class ReaderFailure(
     class SourceClosed : ReaderFailure("Chapter source is closed")
 
     class MemoryBudgetClosed : ReaderFailure("Reader memory budget is closed")
+
+    class UnsupportedImage(reason: String) : ReaderFailure("Unsupported image: $reason")
+
+    class CorruptImage(cause: Throwable? = null) : ReaderFailure("Corrupt or unreadable image", cause)
+
+    class RegionUnavailable(reason: String) : ReaderFailure("Region decode unavailable: $reason")
 }

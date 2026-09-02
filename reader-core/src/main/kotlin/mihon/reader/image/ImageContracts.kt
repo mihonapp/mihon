@@ -4,6 +4,7 @@ import mihon.reader.memory.MemoryLease
 import mihon.reader.model.FrameId
 import mihon.reader.model.PageId
 import mihon.reader.source.BoundedPageInput
+import java.awt.image.BufferedImage
 import java.io.Closeable
 
 data class IntRect(
@@ -27,14 +28,18 @@ data class ImageMetadata(
     val width: Int,
     val height: Int,
     val frameCount: Int = 1,
-    val durationMillis: Long = 0,
+    val frameDurationsMillis: List<Long> = List(frameCount) { 0L },
+    val supportsRegionDecode: Boolean = true,
 ) {
     init {
         require(width > 0) { "width must be positive" }
         require(height > 0) { "height must be positive" }
         require(frameCount > 0) { "frameCount must be positive" }
-        require(durationMillis >= 0) { "durationMillis must not be negative" }
+        require(frameDurationsMillis.size == frameCount) { "frameDurationsMillis must cover every frame" }
+        require(frameDurationsMillis.all { it >= 0L }) { "frame durations must not be negative" }
     }
+
+    val isAnimated: Boolean get() = frameCount > 1
 }
 
 data class TileKey(
@@ -62,6 +67,7 @@ data class TileRequest(
 
 interface DecodedTile : Closeable {
     val key: TileKey
+    val image: BufferedImage
     val outputReservation: MemoryLease
 
     fun adoptAsCacheResident()
@@ -69,6 +75,10 @@ interface DecodedTile : Closeable {
     override fun close()
 }
 
-fun interface PageDecoder {
-    suspend fun decode(input: BoundedPageInput, request: TileRequest): DecodedTile
+interface PageDecoder {
+    suspend fun probe(input: BoundedPageInput): ImageMetadata
+
+    suspend fun decodeFull(input: BoundedPageInput, metadata: ImageMetadata, frameId: FrameId): DecodedTile
+
+    suspend fun decodeRegion(input: BoundedPageInput, metadata: ImageMetadata, request: TileRequest): DecodedTile
 }
