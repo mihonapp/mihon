@@ -224,8 +224,7 @@ WHERE current.id = :chapter_id
 ORDER BY candidate.source_order ASC,
          candidate.chapter_number ASC,
          candidate.name COLLATE NOCASE DESC,
-         candidate.id ASC
-LIMIT 1;
+         candidate.id ASC;
 
 selectNextReaderChapterAsset:
 SELECT candidate_manga.id AS manga_id,
@@ -264,8 +263,7 @@ WHERE current.id = :chapter_id
 ORDER BY candidate.source_order DESC,
          candidate.chapter_number DESC,
          candidate.name COLLATE NOCASE,
-         candidate.id DESC
-LIMIT 1;
+         candidate.id DESC;
 
 selectChapterByIdentity:
 SELECT * FROM chapter WHERE manga_id = ? AND url = ?;

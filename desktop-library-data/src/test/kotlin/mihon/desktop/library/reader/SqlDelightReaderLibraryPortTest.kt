@@ -135,6 +135,47 @@ class SqlDelightReaderLibraryPortTest {
     }
 
     @Test
+    fun `adjacency skips a path-invalid nearest candidate`() {
+        open("unsafe-candidate.db").use { repository ->
+            val root = tempDir.resolve("unsafe-candidate-root").toAbsolutePath()
+            val mangaId = repository.insertManga(MangaRecord(sourceId = 3, url = "/m", title = "Manga"))
+            repository.insertLocalManga(LocalMangaRecord(mangaId, root.toString(), "hash", 1))
+            val current = readableChapter(repository, mangaId, "/current", "Current", 3, 3.0)
+            val unsafePrevious = readableChapter(repository, mangaId, "/unsafe-previous", "Unsafe Previous", 4, 4.0)
+            val safePreceding = readableChapter(repository, mangaId, "/safe-previous", "Safe Previous", 5, 5.0)
+            val unsafeNearest = readableChapter(repository, mangaId, "/unsafe", "Unsafe", 2, 2.0)
+            val safeFollowing = readableChapter(repository, mangaId, "/safe", "Safe", 1, 1.0)
+            repository.insertLocalChapter(
+                LocalChapterRecord(unsafePrevious, "../outside-previous.cbz", "ARCHIVE", 1, 1),
+            )
+            repository.insertLocalChapter(
+                LocalChapterRecord(unsafeNearest, "../outside.cbz", "ARCHIVE", 1, 1),
+            )
+
+            repository.adjacentReadableChapter(current, ChapterDirection.PREVIOUS)?.chapterId shouldBe safePreceding
+            repository.adjacentReadableChapter(current, ChapterDirection.NEXT)?.chapterId shouldBe safeFollowing
+        }
+    }
+
+    @Test
+    fun `adjacency rejects a path-invalid current asset`() {
+        open("unsafe-current.db").use { repository ->
+            val root = tempDir.resolve("unsafe-current-root").toAbsolutePath()
+            val mangaId = repository.insertManga(MangaRecord(sourceId = 4, url = "/m", title = "Manga"))
+            repository.insertLocalManga(LocalMangaRecord(mangaId, root.toString(), "hash", 1))
+            val unsafeCurrent = readableChapter(repository, mangaId, "/current", "Current", 2, 2.0)
+            readableChapter(repository, mangaId, "/previous", "Previous", 3, 3.0)
+            readableChapter(repository, mangaId, "/next", "Next", 1, 1.0)
+            repository.insertLocalChapter(
+                LocalChapterRecord(unsafeCurrent, "../outside.cbz", "ARCHIVE", 1, 1),
+            )
+
+            repository.adjacentReadableChapter(unsafeCurrent, ChapterDirection.PREVIOUS) shouldBe null
+            repository.adjacentReadableChapter(unsafeCurrent, ChapterDirection.NEXT) shouldBe null
+        }
+    }
+
+    @Test
     fun `progress stores backward position keeps completion monotonic and accumulates duration`(): Unit = runBlocking {
         open("progress.db").use { repository ->
             val chapterId = chapter(repository)
@@ -217,30 +258,43 @@ class SqlDelightReaderLibraryPortTest {
     }
 
     @Test
-    fun `failed transaction rolls back database and accepted version so the same pair can retry`(): Unit = runBlocking {
-        open("rollback.db").use { repository ->
-            val chapterId = chapter(repository)
-            execute(
-                "rollback.db",
-                "CREATE TRIGGER fail_reader_progress BEFORE UPDATE OF last_page_read ON chapter " +
-                    "BEGIN SELECT RAISE(FAIL, 'forced rollback'); END",
-            )
-            val attempted =
-                update(chapterId, page = 8, completed = true, readAt = 9, duration = 10, generation = 3, sequence = 4)
+    fun `later history failure rolls back chapter mutation and accepted version so the same pair can retry`(): Unit =
+        runBlocking {
+            open("rollback.db").use { repository ->
+                val chapterId = chapter(repository)
+                repository.upsertHistory(HistoryRecord(chapterId, lastRead = 5, readDuration = 6))
+                execute(
+                    "rollback.db",
+                    "CREATE TRIGGER fail_reader_progress BEFORE UPDATE OF last_read, read_duration ON history " +
+                        "BEGIN SELECT RAISE(FAIL, 'forced rollback'); END",
+                )
+                val attempted =
+                    update(
+                        chapterId,
+                        page = 8,
+                        completed = true,
+                        readAt = 9,
+                        duration = 10,
+                        generation = 3,
+                        sequence = 4,
+                    )
 
-            shouldThrowAny { repository.record(attempted) }
-            repository.chapterSnapshot(repository.librarySnapshot().single().id).single().run {
-                lastPageRead shouldBe 0
-                read shouldBe false
+                shouldThrowAny { repository.record(attempted) }
+                repository.chapterSnapshot(repository.librarySnapshot().single().id).single().run {
+                    lastPageRead shouldBe 0
+                    read shouldBe false
+                }
+                history("rollback.db", chapterId) shouldBe (5L to 6L)
+
+                execute("rollback.db", "DROP TRIGGER fail_reader_progress")
+                repository.record(attempted) shouldBe ProgressWriteResult.APPLIED
+                repository.chapterSnapshot(repository.librarySnapshot().single().id).single().run {
+                    lastPageRead shouldBe 8
+                    read shouldBe true
+                }
+                history("rollback.db", chapterId) shouldBe (9L to 16L)
             }
-            historyOrNull("rollback.db", chapterId) shouldBe null
-
-            execute("rollback.db", "DROP TRIGGER fail_reader_progress")
-            repository.record(attempted) shouldBe ProgressWriteResult.APPLIED
-            repository.chapterSnapshot(repository.librarySnapshot().single().id).single().lastPageRead shouldBe 8
-            history("rollback.db", chapterId) shouldBe (9L to 10L)
         }
-    }
 
     @Test
     fun `mutex serializes concurrent writes and rejects a delayed older pair`(): Unit = runBlocking {

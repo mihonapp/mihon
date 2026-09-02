@@ -76,16 +76,21 @@ class SqlDelightLibraryRepository(
     override fun adjacentReadableChapter(
         chapterId: Long,
         direction: ChapterDirection,
-    ): ReaderChapterAsset? = when (direction) {
-        ChapterDirection.PREVIOUS ->
-            queries.selectPreviousReaderChapterAsset(chapterId).executeAsOneOrNull()?.toReaderChapterAsset()
-        ChapterDirection.NEXT ->
-            queries.selectNextReaderChapterAsset(chapterId).executeAsOneOrNull()?.toReaderChapterAsset()
+    ): ReaderChapterAsset? = database.transactionWithResult {
+        if (chapterAsset(chapterId) == null) return@transactionWithResult null
+        when (direction) {
+            ChapterDirection.PREVIOUS ->
+                queries.selectPreviousReaderChapterAsset(chapterId).executeAsList()
+                    .firstNotNullOfOrNull(SelectPreviousReaderChapterAsset::toReaderChapterAsset)
+            ChapterDirection.NEXT ->
+                queries.selectNextReaderChapterAsset(chapterId).executeAsList()
+                    .firstNotNullOfOrNull(SelectNextReaderChapterAsset::toReaderChapterAsset)
+        }
     }
 
     override suspend fun record(update: ReaderProgressUpdate): ProgressWriteResult {
-        validateReaderProgress(update)
         return readerProgressMutex.withLock {
+            validateReaderProgress(update)
             val incoming = ReaderProgressVersion(update.generation, update.sequence)
             val accepted = acceptedReaderProgress[update.chapterId]
             if (accepted != null && incoming <= accepted) return@withLock ProgressWriteResult.STALE
