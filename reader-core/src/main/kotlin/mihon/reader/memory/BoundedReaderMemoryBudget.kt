@@ -62,6 +62,11 @@ class BoundedReaderMemoryBudget(
                 waiters.removeAll { it.deferred === deferred }
             }
             deferred.cancel()
+            // The callback may have drained this waiter (e.g. by closing leases to evict),
+            // in which case the deferred already holds a granted lease that must be released.
+            if (deferred.isCompleted && !deferred.isCancelled) {
+                runCatching { deferred.getCompleted().close() }
+            }
             throw error
         }
         immediate?.let {
