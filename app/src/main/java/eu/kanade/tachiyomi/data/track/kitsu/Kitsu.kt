@@ -187,7 +187,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
         val ratingSystem = currentUser.ratingSystem
         if (ratingSystem.lowercase() in listOf(RATING_SIMPLE, RATING_REGULAR, RATING_ADVANCED)) {
-            scorePreference.set(ratingSystem)
+            scorePreference.set(ratingSystem.lowercase())
         } else {
             logcat(LogPriority.ERROR) { "Unsupported Kitsu score type: $ratingSystem" }
             scorePreference.set(RATING_ADVANCED)
