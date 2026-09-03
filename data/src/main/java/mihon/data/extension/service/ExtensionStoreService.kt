@@ -1,5 +1,8 @@
 package mihon.data.extension.service
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -20,6 +23,8 @@ import okio.gzip
 import tachiyomi.core.common.util.system.logcat
 import kotlin.coroutines.cancellation.CancellationException
 
+@Inject
+@SingleIn(AppScope::class)
 class ExtensionStoreService(
     private val network: NetworkHelper,
     private val json: Json,

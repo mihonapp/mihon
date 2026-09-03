@@ -1,5 +1,8 @@
 package eu.kanade.tachiyomi.data.track
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import eu.kanade.tachiyomi.data.track.bangumi.Bangumi
 import eu.kanade.tachiyomi.data.track.hikka.Hikka
@@ -13,6 +16,8 @@ import eu.kanade.tachiyomi.data.track.shikimori.Shikimori
 import eu.kanade.tachiyomi.data.track.suwayomi.Suwayomi
 import kotlinx.coroutines.flow.combine
 
+@Inject
+@SingleIn(AppScope::class)
 class TrackerManager {
 
     companion object {

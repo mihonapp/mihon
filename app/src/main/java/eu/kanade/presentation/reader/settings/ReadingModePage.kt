@@ -8,13 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
+import mihon.app.di.appGraph
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
@@ -28,6 +31,7 @@ import java.text.NumberFormat
 internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
     HeadingItem(MR.strings.pref_category_for_this_series)
     val manga by viewModel.mangaFlow.collectAsState()
+    val viewer by viewModel.viewerFlow.collectAsState()
 
     val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
     SettingsChipRow(MR.strings.pref_category_reading_mode) {
@@ -37,6 +41,28 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
                 onClick = { viewModel.onChangeReadingMode(it) },
                 label = { Text(stringResource(it.stringRes)) },
             )
+        }
+    }
+
+    if (viewer is WebGpuViewer) {
+        val default = LocalContext.current.appGraph.readerPreferences.defaultReadingMode.get()
+        val resolved = ReadingMode.fromPreference(
+            when {
+                readingMode == ReadingMode.DEFAULT -> default
+                else -> manga?.readingMode?.toInt() ?: default
+            },
+        )
+        if (resolved == ReadingMode.LEFT_TO_RIGHT || resolved == ReadingMode.RIGHT_TO_LEFT) {
+            val dualPageView by viewModel.preferences.dualPageView.collectAsState()
+            SettingsChipRow(MR.strings.pref_dual_page_view) {
+                ReaderPreferences.DualPageView.entries.map {
+                    FilterChip(
+                        selected = it == dualPageView,
+                        onClick = { viewModel.preferences.dualPageView.set(it) },
+                        label = { Text(stringResource(it.titleRes)) },
+                    )
+                }
+            }
         }
     }
 
@@ -51,11 +77,10 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
         }
     }
 
-    val viewer by viewModel.viewerFlow.collectAsState()
-    if (viewer is WebtoonViewer) {
-        WebtoonViewerSettings(viewModel)
-    } else {
-        PagerViewerSettings(viewModel)
+    when (viewer) {
+        is WebtoonViewer -> WebtoonViewerSettings(viewModel)
+        is WebGpuViewer -> WebGpuViewerSettings(viewModel)
+        else -> PagerViewerSettings(viewModel)
     }
 }
 
@@ -230,6 +255,81 @@ private fun ColumnScope.TapZonesItems(
                     label = { Text(stringResource(it.titleRes)) },
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel) {
+    HeadingItem(MR.strings.webgpu_viewer)
+
+    val navigationModePager by viewModel.preferences.navigationModePager.collectAsState()
+    val pagerNavInverted by viewModel.preferences.pagerNavInverted.collectAsState()
+    TapZonesItems(
+        selected = navigationModePager,
+        onSelect = viewModel.preferences.navigationModePager::set,
+        invertMode = pagerNavInverted,
+        onSelectInvertMode = viewModel.preferences.pagerNavInverted::set,
+    )
+
+    val imageScaleType by viewModel.preferences.imageScaleType.collectAsState()
+    SettingsChipRow(MR.strings.pref_image_scale_type) {
+        ReaderPreferences.ImageScaleTypeWebGpuViewer.forEach {
+            FilterChip(
+                selected = ReaderPreferences.ImageScaleType[imageScaleType - 1] == it,
+                onClick = {
+                    viewModel.preferences.imageScaleType.set(ReaderPreferences.ImageScaleType.indexOf(it) + 1)
+                },
+                label = { Text(stringResource(it)) },
+            )
+        }
+    }
+
+    val zoomStart by viewModel.preferences.zoomStart.collectAsState()
+    SettingsChipRow(MR.strings.pref_zoom_start) {
+        ReaderPreferences.ZoomStart.mapIndexed { index, it ->
+            FilterChip(
+                selected = zoomStart == index + 1,
+                onClick = { viewModel.preferences.zoomStart.set(index + 1) },
+                label = { Text(stringResource(it)) },
+            )
+        }
+    }
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_crop_borders),
+        pref = viewModel.preferences.cropBorders,
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_landscape_zoom),
+        pref = viewModel.preferences.landscapeZoom,
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_navigate_pan),
+        pref = viewModel.preferences.navigateToPan,
+    )
+
+    val transitionAnimation by viewModel.preferences.transitionAnimation.collectAsState()
+    SettingsChipRow(MR.strings.pref_transition_animation) {
+        ReaderPreferences.TransitionAnimation.entries.forEach {
+            FilterChip(
+                selected = it == transitionAnimation,
+                onClick = { viewModel.preferences.transitionAnimation.set(it) },
+                label = { Text(stringResource(it.titleRes)) },
+            )
+        }
+    }
+
+    val cutoutMode by viewModel.preferences.cutoutMode.collectAsState()
+    SettingsChipRow(MR.strings.pref_cutout_mode) {
+        ReaderPreferences.CutoutMode.entries.forEach {
+            FilterChip(
+                selected = it == cutoutMode,
+                onClick = { viewModel.preferences.cutoutMode.set(it) },
+                label = { Text(stringResource(it.titleRes)) },
+            )
         }
     }
 }
