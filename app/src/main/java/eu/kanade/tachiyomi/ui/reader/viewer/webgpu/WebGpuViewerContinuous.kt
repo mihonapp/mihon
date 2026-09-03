@@ -2,16 +2,25 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
 import ca.mpreg.webgpuviewer.ImageViewContinuous
 import ca.mpreg.webgpuviewer.viewer.ImagePage
+import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuousState
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import kotlin.math.max
 
 class WebGpuViewerContinuous(activity: ReaderActivity) :
     WebGpuViewer(activity, isReversed = false, isVertical = true, pager = ImageViewContinuous(activity)) {
 
     override val isContinuous: Boolean = true
 
-    override val preloadAhead = 3
-    override val preloadBehind = 1
+    // How many pages the viewport shows depends on the zoom, and a page on screen has to be
+    // decoded rather than merely reserved - so the window follows what the last frame reached.
+    override val preloadAhead get() = max(3, state.pagesBelow)
+    override val preloadBehind get() = max(1, state.pagesAbove)
+
+    // The state reaches MAX_VISIBLE_PAGES either side of the current page whatever the zoom - to
+    // measure the document's end as well as to draw - and every page in that reach is created on
+    // demand here. Sized under it, each frame evicts exactly what the next one asks for.
+    override val cacheSize get() = 2 + 2 * ImageViewerContinuousState.MAX_VISIBLE_PAGES
 
     private val state get() = (pager as ImageViewContinuous).state
 
