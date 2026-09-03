@@ -1176,6 +1176,9 @@ open class WebGpuViewer(
             image.width.toFloat() / image.height.toFloat(),
         )
 
+        // not wide enough
+        if (aspectRatio < 1.1) return false
+
         // Wide page: half the image width is wider than the screen aspect ratio
         if (aspectRatio <= 2f * screenW.toFloat() / screenH) return false
 
