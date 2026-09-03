@@ -15,6 +15,17 @@ class WebGpuViewerContinuous(activity: ReaderActivity) :
 
     private val state get() = (pager as ImageViewContinuous).state
 
+    init {
+        // Scrolling clear of a transition page is the only point this mode can call the chapter
+        // before it finished - reaching a page's top comes a screen too early. Reported on every
+        // change, so scrolling back up over it and down again selects that last page again.
+        state.onPageScrolledThrough = onScrolledThrough@{ imagePage ->
+            val chapter = (imagePage as? TransitionPage)?.prevChapter ?: return@onScrolledThrough
+            val lastPage = chapter.pages?.lastOrNull() ?: return@onScrolledThrough
+            activity.onPageSelected(lastPage)
+        }
+    }
+
     private fun scrollByHalfPage(direction: Int) {
         state.animateScroll(direction * state.height / 2f)
     }
