@@ -94,7 +94,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
     override fun getCompletionStatus(): Long = COMPLETED
 
     private fun getCurrentRatingSystem(): RatingSystem {
-        val ratingSystem = scorePreference.get()
+        val ratingSystem = scorePreference.get().lowercase()
         return ratingSystems[ratingSystem] ?: throw Exception("Unknown score type $ratingSystem")
     }
 
