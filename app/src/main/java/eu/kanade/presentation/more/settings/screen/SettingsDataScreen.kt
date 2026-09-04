@@ -54,7 +54,9 @@ import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.appGraph
@@ -63,6 +65,7 @@ import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
@@ -114,31 +117,68 @@ object SettingsDataScreen : SearchableSettings {
         storageDirPref: tachiyomi.core.common.preference.Preference<String>,
     ): ManagedActivityResultLauncher<Uri?, Uri?> {
         val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+        val storageManager = remember { context.appGraph.storageManager }
+        var storageCheckJob by remember { mutableStateOf<Job?>(null) }
+        var showStorageUnavailableDialog by remember { mutableStateOf(false) }
+
+        if (showStorageUnavailableDialog) {
+            AlertDialog(
+                onDismissRequest = { showStorageUnavailableDialog = false },
+                title = { Text(text = stringResource(MR.strings.storage_location_unavailable)) },
+                text = { Text(text = stringResource(MR.strings.storage_location_unavailable_message)) },
+                confirmButton = {
+                    TextButton(onClick = { showStorageUnavailableDialog = false }) {
+                        Text(text = stringResource(MR.strings.action_ok))
+                    }
+                },
+            )
+        }
 
         return rememberLauncherForActivityResult(
             contract = ActivityResultContracts.OpenDocumentTree(),
         ) { uri ->
-            if (uri != null) {
-                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            storageCheckJob?.cancel()
+            showStorageUnavailableDialog = false
+            storageCheckJob = uri?.let { selectedUri ->
+                scope.launch {
+                    try {
+                        val canWrite = withIOContext {
+                            storageManager.canWriteTo(selectedUri)
+                        }
 
-                // For some reason InkBook devices do not implement the SAF properly. Persistable URI grants do not
-                // work. However, simply retrieving the URI and using it works fine for these devices. Access is not
-                // revoked after the app is closed or the device is restarted.
-                // This also holds for some Samsung devices. Thus, we simply execute inside of a try-catch block and
-                // ignore the exception if it is thrown.
-                try {
-                    context.contentResolver.takePersistableUriPermission(uri, flags)
-                } catch (e: SecurityException) {
-                    logcat(LogPriority.ERROR, e)
-                    context.toast(MR.strings.file_picker_uri_permission_unsupported)
-                }
-
-                UniFile.fromUri(context, uri)?.let {
-                    storageDirPref.set(it.uri.toString())
+                        if (!canWrite || !persistStorageLocation(context, storageDirPref, selectedUri)) {
+                            showStorageUnavailableDialog = true
+                        }
+                    } catch (e: Exception) {
+                        if (e is CancellationException) throw e
+                        logcat(LogPriority.ERROR, e)
+                        showStorageUnavailableDialog = true
+                    }
                 }
             }
         }
+    }
+
+    private fun persistStorageLocation(
+        context: Context,
+        storageDirPref: tachiyomi.core.common.preference.Preference<String>,
+        uri: Uri,
+    ): Boolean {
+        val directory = UniFile.fromUri(context, uri) ?: return false
+        val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+
+        // InkBook and some Samsung devices can access the selected URI even when persistable grants are unsupported.
+        try {
+            context.contentResolver.takePersistableUriPermission(uri, flags)
+        } catch (e: SecurityException) {
+            logcat(LogPriority.ERROR, e)
+            context.toast(MR.strings.file_picker_uri_permission_unsupported)
+        }
+
+        storageDirPref.set(directory.uri.toString())
+        return true
     }
 
     @Composable
