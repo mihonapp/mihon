@@ -1,44 +1,69 @@
 package eu.kanade.tachiyomi.ui.failedupdate
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import logcat.LogPriority
-import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
 import tachiyomi.domain.updates.interactor.GetMangaUpdateErrors
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class FailedUpdatesViewModel(
-    private val getMangaUpdateErrors: GetMangaUpdateErrors = Injekt.get(),
-    private val deleteMangaUpdateError: DeleteMangaUpdateError = Injekt.get(),
-) : StateViewModel<FailedUpdatesViewModel.State>(State()) {
+    private val getMangaUpdateErrors: GetMangaUpdateErrors,
+    private val deleteMangaUpdateError: DeleteMangaUpdateError,
+) : ViewModel() {
 
-    private val selectedMangaIds = mutableSetOf<Long>()
+    val state: StateFlow<State>
+        field = MutableStateFlow(State())
+
+    val snackbarHostState = SnackbarHostState()
+
+    private val _events = Channel<Unit>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
     init {
-        cleanupNonFavorites()
-
         viewModelScope.launchIO {
+            try {
+                deleteMangaUpdateError.awaitNonFavorites()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
+                _events.send(Unit)
+            }
+
             getMangaUpdateErrors.subscribeWithManga()
                 .catch {
                     logcat(LogPriority.ERROR, it)
+                    state.update { it.copy(isLoading = false, hasError = true) }
                 }
                 .collectLatest { errorWithManga ->
                     val validMangaIds = errorWithManga.map { it.manga.id }.toSet()
-                    selectedMangaIds.retainAll(validMangaIds)
 
-                    mutableState.update {
+                    state.update {
                         it.copy(
                             isLoading = false,
                             items = errorWithManga,
-                            selectedIds = selectedMangaIds.toSet(),
+                            selectedIds = it.selectedIds.intersect(validMangaIds),
                         )
                     }
                 }
@@ -46,75 +71,65 @@ class FailedUpdatesViewModel(
     }
 
     fun clearError(mangaId: Long) {
-        viewModelScope.launchIO {
-            deleteMangaUpdateError.await(mangaId)
-        }
+        clearErrors { deleteMangaUpdateError.await(mangaId) }
     }
 
     fun clearAllErrors() {
-        viewModelScope.launchIO {
-            deleteMangaUpdateError.awaitAll()
-        }
+        clearErrors { deleteMangaUpdateError.awaitAll() }
     }
 
     fun clearSelectedErrors() {
-        viewModelScope.launchIO {
-            selectedMangaIds.forEach { mangaId ->
-                deleteMangaUpdateError.await(mangaId)
-            }
-            selectedMangaIds.clear()
-            mutableState.update { it.copy(selectedIds = emptySet()) }
+        val selectedIds = state.value.selectedIds.toList()
+        clearErrors {
+            deleteMangaUpdateError.await(selectedIds)
+            state.update { it.copy(selectedIds = it.selectedIds - selectedIds.toSet()) }
         }
     }
 
-    fun cleanupNonFavorites() {
+    private fun clearErrors(block: suspend () -> Unit) {
         viewModelScope.launchIO {
             try {
-                deleteMangaUpdateError.awaitNonFavorites()
+                block()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "Failed to clean up non-favorite errors" }
+                logcat(LogPriority.ERROR, e)
+                _events.send(Unit)
             }
         }
     }
 
     fun setDialog(dialog: Dialog?) {
-        mutableState.update { it.copy(dialog = dialog) }
+        state.update { it.copy(dialog = dialog) }
     }
 
     fun toggleSelection(item: MangaUpdateErrorWithManga, selected: Boolean) {
-        if (selected) {
-            selectedMangaIds.add(item.manga.id)
-        } else {
-            selectedMangaIds.remove(item.manga.id)
+        state.update { state ->
+            val selectedIds = if (selected && state.items.any { it.manga.id == item.manga.id }) {
+                state.selectedIds + item.manga.id
+            } else {
+                state.selectedIds - item.manga.id
+            }
+            state.copy(selectedIds = selectedIds)
         }
-        mutableState.update { it.copy(selectedIds = selectedMangaIds.toSet()) }
     }
 
     fun toggleAllSelection(selected: Boolean) {
-        if (selected) {
-            selectedMangaIds.clear()
-            selectedMangaIds.addAll(state.value.items.map { it.manga.id })
-        } else {
-            selectedMangaIds.clear()
+        state.update { state ->
+            state.copy(selectedIds = if (selected) state.items.map { it.manga.id }.toSet() else emptySet())
         }
-        mutableState.update { it.copy(selectedIds = selectedMangaIds.toSet()) }
     }
 
     fun invertSelection() {
-        val allIds = state.value.items.map { it.manga.id }.toSet()
-        val currentSelection = selectedMangaIds.toSet()
-        selectedMangaIds.clear()
-        selectedMangaIds.addAll(allIds - currentSelection)
-        mutableState.update { it.copy(selectedIds = selectedMangaIds.toSet()) }
-    }
-
-    fun getSelectedMangaIds(): List<Long> {
-        return selectedMangaIds.toList()
+        state.update { state ->
+            state.copy(selectedIds = state.items.map { it.manga.id }.toSet() - state.selectedIds)
+        }
     }
 
     @Immutable
     data class State(
         val isLoading: Boolean = true,
+        val hasError: Boolean = false,
         val items: List<MangaUpdateErrorWithManga> = emptyList(),
         val selectedIds: Set<Long> = emptySet(),
         val dialog: Dialog? = null,
@@ -125,6 +140,5 @@ class FailedUpdatesViewModel(
     sealed interface Dialog {
         data object ClearAllConfirmation : Dialog
         data object DeleteSelectedConfirmation : Dialog
-        data class MigrateSelected(val mangaIds: List<Long>) : Dialog
     }
 }

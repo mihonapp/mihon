@@ -13,7 +13,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import kotlin.text.toInt
 
 @Suppress("UNUSED")
 class PluginKotlinMultiplatform : Plugin<Project> {

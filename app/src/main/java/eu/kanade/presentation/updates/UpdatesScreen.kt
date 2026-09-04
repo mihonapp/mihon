@@ -3,13 +3,6 @@ package eu.kanade.presentation.updates
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Error
-import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material.icons.outlined.FlipToBack
-import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
@@ -33,6 +26,14 @@ import eu.kanade.tachiyomi.ui.updates.UpdatesItem
 import eu.kanade.tachiyomi.ui.updates.UpdatesViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.CalendarMonth
+import mihon.icons.materialsymbols.rounded.Error
+import mihon.icons.materialsymbols.rounded.FilterList
+import mihon.icons.materialsymbols.rounded.FlipToBack
+import mihon.icons.materialsymbols.rounded.Refresh
+import mihon.icons.materialsymbols.rounded.SelectAll
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.PullRefresh
@@ -42,7 +43,6 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.theme.active
-import java.time.LocalDate
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -165,13 +165,13 @@ private fun UpdatesAppBar(
                 listOf(
                     AppBar.Action(
                         title = stringResource(MR.strings.action_filter),
-                        icon = Icons.Outlined.FilterList,
+                        icon = MaterialSymbols.Rounded.FilterList,
                         iconTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current,
                         onClick = onFilterClicked,
                     ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_view_upcoming),
-                        icon = Icons.Outlined.CalendarMonth,
+                        icon = MaterialSymbols.Rounded.CalendarMonth,
                         onClick = onCalendarClicked,
                     ),
                     AppBar.Action(
@@ -180,12 +180,12 @@ private fun UpdatesAppBar(
                             count = failedUpdatesCount.toInt(),
                             failedUpdatesCount.toInt(),
                         ),
-                        icon = Icons.Outlined.Error,
+                        icon = MaterialSymbols.Rounded.Error,
                         onClick = onFailedUpdatesClicked,
                     ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_update_library),
-                        icon = Icons.Outlined.Refresh,
+                        icon = MaterialSymbols.Rounded.Refresh,
                         onClick = onUpdateLibrary,
                     ),
                 ),
@@ -198,12 +198,12 @@ private fun UpdatesAppBar(
                 listOf(
                     AppBar.Action(
                         title = stringResource(MR.strings.action_select_all),
-                        icon = Icons.Outlined.SelectAll,
+                        icon = MaterialSymbols.Rounded.SelectAll,
                         onClick = onSelectAll,
                     ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_select_inverse),
-                        icon = Icons.Outlined.FlipToBack,
+                        icon = MaterialSymbols.Rounded.FlipToBack,
                         onClick = onInvertSelection,
                     ),
                 ),

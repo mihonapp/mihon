@@ -205,9 +205,6 @@
     <string name="file_select_backup">Pilih berkas cadangan</string>
     <string name="update_check_confirm">Unduh</string>
     <string name="update_check_no_new_updates">Pembaruan tidak tersedia</string>
-    <string name="update_check_notification_download_in_progress">Mengunduh…</string>
-    <string name="update_check_notification_download_complete">Ketuk untuk menginstal pembaruan</string>
-    <string name="update_check_notification_download_error">Terjadi kesalahan saat mengunduh</string>
     <string name="update_check_notification_update_available">Versi baru tersedia!</string>
     <string name="information_no_downloads">Tidak ada unduhan</string>
     <string name="information_no_recent">Tidak ada pembaruan terkini</string>
@@ -542,7 +539,6 @@
     <string name="action_display_language_badge">Bahasa</string>
     <string name="update_72hour">Tiap 3 hari</string>
     <string name="connected_to_wifi">Hanya pada Wi-FI</string>
-    <string name="channel_app_updates">Pembaruan aplikasi</string>
     <string name="ext_update_all">Perbarui semuanya</string>
     <string name="pref_auto_clear_chapter_cache">Bersihkan cache bab saat aplikasi dibuka</string>
     <string name="database_clean">Tidak ada yang perlu dibersihkan</string>
@@ -810,13 +806,8 @@
     <string name="ext_confirm_remove">Hapus Ekstensi?</string>
     <string name="pref_auto_update_manga_on_mark_read">Kemajuan pembaruan saat ditandai sebagai telah dibaca</string>
     <string name="trackers_updated_summary">Pelacak diperbarui ke bab %d</string>
-    <string name="pref_hardware_bitmap_threshold">Batas bitmap perangkat keras kustom</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Jika pembaca memuat gambar kosong, kurangi threshold secara bertahap.\nPilih: %s</string>
-    <string name="pref_hardware_bitmap_threshold_default">Bawaan (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Mempengaruhi performa. Aktifkan hanya jika menurunkan batas bitmap tidak memperbaiki gambar kosong</string>
     <string name="pref_incognito_mode_extension_summary">Jeda riwayat pembacaan untuk ekstensi</string>
     <string name="label_auto">Otomatis</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Gunakan dekoder lama untuk bacaan strip panjang</string>
     <string name="pref_mark_duplicate_read_chapter_read">Tandai bab duplikat sebagai sudah dibaca</string>
     <string name="theme_monochrome">Monokrom</string>
     <string name="export">Ekspor</string>

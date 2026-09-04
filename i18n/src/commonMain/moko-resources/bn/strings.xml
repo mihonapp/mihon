@@ -213,9 +213,6 @@
     <string name="file_select_backup">ব্যাকআপ ফাইল নির্বাচন করুন</string>
     <string name="update_check_confirm">ডাউনলোড</string>
     <string name="update_check_no_new_updates">নতুন কোন হালনাগাদ নেই</string>
-    <string name="update_check_notification_download_in_progress">ডাউনলোড হচ্ছে…</string>
-    <string name="update_check_notification_download_complete">ডাউনলোড সম্পন্ন হয়ে গেছে</string>
-    <string name="update_check_notification_download_error">ডাউনলোড ত্রুটি দেখা গিয়েছে</string>
     <string name="update_check_notification_update_available">নতুন সংস্করণ উপলভ্য!</string>
     <string name="information_no_downloads">ডাউনলোড নেই</string>
     <string name="information_no_recent">কোন নতুন হালনাগাদ নেই</string>
@@ -525,7 +522,6 @@
     <string name="ext_update_all">শব উপদাতে কর</string>
     <string name="backup_info">স্বয়ংক্রিয় ব্যাকআপ অত্যন্ত সুপারিশময়. আপনি অন্যান্য জায়গায়ও কপি রাখা উচিত।</string>
     <string name="getting_started_guide">শুরু হওয়ার গাইড</string>
-    <string name="channel_app_updates">অ্যাপ আপডেট</string>
     <string name="ext_installer_pref">ইন্সটলআর</string>
     <string name="ext_installer_legacy">লেগাছি</string>
     <string name="ext_installer_shizuku_stopped">শিজুকু চলছে না</string>
@@ -683,8 +679,6 @@
     <string name="pref_flash_style_black">কালো</string>
     <string name="pref_flash_style_white">সাদা</string>
     <string name="pref_flash_style_white_black">সাদা আর কালো</string>
-    <string name="pref_hardware_bitmap_threshold_summary">যদি রিডার একটি ফাঁকা ছবি লোড করে, ধাপে ধাপে থ্রেশহোল্ড কমিয়ে দিন।\nসিলেক্টেড %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">পারফরম্যান্স অ্যাফেক্ট করবে। ফাঁকা ইমেজ সমস্যা থ্রেশহোল্ড কমিয়ে ঠিক না হলে কেবল এনেবল করবে</string>
     <string name="pref_downloads_summary">অটোমেটিক ডাউনলোড, আগাম ডাউনলোড</string>
     <string name="pref_tracking_summary">ওয়ান-ওয়ে প্রগ্রেস সিঙ্ক, এনহ্যান্সড সিঙ্ক</string>
     <string name="pref_browse_summary">সোর্স, এক্সটেনশন, গ্লোবাল সার্চ</string>
@@ -732,9 +726,6 @@
     <string name="crash_screen_title">উফ!</string>
     <string name="not_installed">ইনস্টল করা হয়নি</string>
     <string name="empty_screen">আরে, এখানে তো কিছুই নেই</string>
-    <string name="pref_hardware_bitmap_threshold">কাস্টম হার্ডওয়্যার বিটম্যাপ থ্রাশহোল্ড</string>
-    <string name="pref_hardware_bitmap_threshold_default">ডিফল্ট (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">লিগ্যাসি ডিকোডার ব্যবহার করুন লং স্ট্রিপ রিডারের জন্য</string>
     <string name="pref_display_profile">কাস্টম ডিসপ্লে প্রোফাইল</string>
     <string name="pref_skip_dupe_chapters">ডুপ্লিকেট চ্যাপ্টার বাদ</string>
     <string name="disabled_nav">নিষ্ক্রিয়</string>

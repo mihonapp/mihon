@@ -2,15 +2,22 @@ package eu.kanade.tachiyomi.ui.stats
 
 import androidx.compose.ui.util.fastDistinctBy
 import androidx.compose.ui.util.fastFilter
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.core.util.fastCountNot
 import eu.kanade.presentation.more.stats.StatsScreenState
 import eu.kanade.presentation.more.stats.data.StatsData
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.model.SManga
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.history.interactor.GetTotalReadDuration
 import tachiyomi.domain.library.model.LibraryManga
@@ -22,17 +29,21 @@ import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.model.Track
 import tachiyomi.source.local.isLocal
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class StatsViewModel(
-    private val downloadManager: DownloadManager = Injekt.get(),
-    private val getLibraryManga: GetLibraryManga = Injekt.get(),
-    private val getTotalReadDuration: GetTotalReadDuration = Injekt.get(),
-    private val getTracks: GetTracks = Injekt.get(),
-    private val preferences: LibraryPreferences = Injekt.get(),
-    private val trackerManager: TrackerManager = Injekt.get(),
-) : StateViewModel<StatsScreenState>(StatsScreenState.Loading) {
+    private val downloadManager: DownloadManager,
+    private val getLibraryManga: GetLibraryManga,
+    private val getTotalReadDuration: GetTotalReadDuration,
+    private val getTracks: GetTracks,
+    private val preferences: LibraryPreferences,
+    private val trackerManager: TrackerManager,
+) : ViewModel() {
+
+    val state: StateFlow<StatsScreenState>
+        field = MutableStateFlow<StatsScreenState>(StatsScreenState.Loading)
 
     private val loggedInTrackers by lazy { trackerManager.loggedInTrackers() }
 
@@ -73,7 +84,7 @@ class StatsViewModel(
                 trackerCount = loggedInTrackers.size,
             )
 
-            mutableState.update {
+            state.update {
                 StatsScreenState.Success(
                     overview = overviewStatData,
                     titles = titlesStatData,

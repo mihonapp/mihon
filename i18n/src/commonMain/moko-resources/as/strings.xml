@@ -747,10 +747,7 @@
     <string name="file_null_uri_error">কোনো ফাইল বাছনি কৰা হোৱা নাই</string>
     <string name="update_check_confirm">ডাউনলোড</string>
     <string name="update_check_eol">এই Android সংস্কৰণ আৰু সমৰ্থিত নহয়</string>
-    <string name="update_check_notification_download_complete">আপডেট ইন্সটল কৰিবলৈ টাপ কৰক</string>
-    <string name="update_check_notification_download_error">ডাউনলোড ত্ৰুটি</string>
     <string name="update_check_no_new_updates">কোনো নতুন আপডেট উপলব্ধ নহয়</string>
-    <string name="update_check_notification_download_in_progress">ডাউনলোড কৰি আছে…</string>
     <string name="update_check_notification_update_available">নতুন সংস্কৰণ উপলব্ধ!</string>
     <string name="information_no_recent">কোনো সাম্প্ৰতিক আপডেট নাই</string>
     <string name="information_no_recent_manga">শেহতীয়াকৈ একো পঢ়া হোৱা নাই</string>
@@ -778,7 +775,6 @@
     <string name="channel_common">সাধাৰণ</string>
     <string name="channel_progress">অগ্ৰগতি</string>
     <string name="channel_complete">সম্পূৰ্ণ</string>
-    <string name="channel_app_updates">এপ আপডেট</string>
     <string name="channel_ext_updates">এক্সটেনশ্বন আপডেট</string>
     <string name="spen_previous_page">পূৰ্বৰ পৃষ্ঠা</string>
     <string name="appwidget_updates_description">আপোনাৰ শেহতীয়াকৈ আপডেট কৰা পুথিভঁৰাল প্ৰৱিষ্টি চাওক</string>
@@ -802,10 +798,6 @@
     <string name="remove_private_extension_message">আপুনি সঁচাকৈয়ে \"%s\" এক্সটেনশ্বন আঁতৰাব বিচাৰে নেকি?</string>
     <string name="pref_auto_update_manga_on_mark_read">পঢ়া বুলি চিহ্নিত কৰিলে অগ্ৰগতি আপডেট কৰক</string>
     <string name="trackers_updated_summary">ট্ৰেকাৰসমূহ অধ্যায় %d লৈ আপডেট কৰা হৈছে</string>
-    <string name="pref_hardware_bitmap_threshold">কাষ্টম হাৰ্ডৱেৰ বিটমেপ থ্ৰেছহ\'ল্ড</string>
-    <string name="pref_hardware_bitmap_threshold_summary">যদি পাঠকে খালী ছবি ল\'ড কৰে তেন্তে ক্ৰমে থ্ৰেছহ\'ল্ড হ্ৰাস কৰক।\nনিৰ্বাচিত: %s</string>
-    <string name="pref_hardware_bitmap_threshold_default">ডিফল্ট (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">কাৰ্য্যক্ষমতা প্ৰভাৱিত কৰে। কেৱল সক্ষম কৰক যদি বিটমেপ থ্ৰেছহ\'ল্ড হ্ৰাস কৰিলে খালী ছবিৰ সমস্যা সমাধান নহয়</string>
     <string name="pref_incognito_mode_extension_summary">এক্সটেনশ্বনৰ বাবে পঢ়াৰ ইতিহাস বিৰাম দিয়ে</string>
     <string name="label_auto">স্বয়ংক্ৰিয়</string>
     <string name="theme_monochrome">মোন\'ক্ৰম</string>
@@ -826,7 +818,6 @@
     <string name="pref_hide_missing_chapter_indicators">নোহোৱা অধ্যায়ৰ সূচক লুকুৱাওক</string>
     <string name="pref_disallow_non_ascii_filenames">অ-ASCII ফাইলনাম অনুমতি নিদিয়ক</string>
     <string name="pref_disallow_non_ascii_filenames_details">নিৰ্দিষ্ট সংৰক্ষণ মাধ্যমৰ সৈতে সুসংগততা নিশ্চিত কৰে যিয়ে ইউনিক\'ড সমৰ্থন নকৰে। এইটো সক্ষম কৰিলে, আপুনি অ-ASCII আখৰসমূহ সিহঁতৰ সৰু আখৰ UTF-8 হেক্সাডেচিমেল প্ৰতিনিধিত্বৰে সলনি কৰি উৎস আৰু মাংগা ফোল্ডাৰৰ নাম হস্তচালিতভাৱে সলনি কৰিব লাগিব। অধ্যায় ফাইলৰ নাম সলনি কৰাৰ প্ৰয়োজন নাই।</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">দীঘল ষ্ট্ৰিপ পাঠকৰ বাবে লিগাচি ডিক\'ডাৰ ব্যৱহাৰ কৰক</string>
     <string name="storage_failed_to_create_download_directory">ডাউনলোড ডিৰেক্টৰী সৃষ্টি কৰিবলৈ বিফল</string>
     <string name="storage_failed_to_create_directory">ডিৰেক্টৰী সৃষ্টি কৰিবলৈ বিফল: %s</string>
     <string name="pref_download_concurrent_sources">সংগামী উৎস ডাউনলোড</string>

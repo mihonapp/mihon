@@ -1,16 +1,22 @@
 package eu.kanade.tachiyomi.ui.deeplink
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.ResolvableSource
 import eu.kanade.tachiyomi.source.online.UriType
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import mihon.core.viewmodel.StateViewModel
 import mihon.domain.manga.model.toDomainManga
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.util.lang.launchIO
@@ -19,27 +25,24 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@AssistedInject
 class DeepLinkViewModel(
-    query: String,
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
-    private val getChapterByUrlAndMangaId: GetChapterByUrlAndMangaId = Injekt.get(),
-    private val updateMangaFromRemote: UpdateMangaFromRemote = Injekt.get(),
-) : StateViewModel<DeepLinkViewModel.State>(State.Loading) {
+    @Assisted query: String,
+    private val sourceManager: SourceManager,
+    private val networkToLocalManga: NetworkToLocalManga,
+    private val getChapterByUrlAndMangaId: GetChapterByUrlAndMangaId,
+    private val updateMangaFromRemote: UpdateMangaFromRemote,
+) : ViewModel() {
 
-    companion object {
-        val QUERY_KEY = CreationExtras.Key<String>()
+    val state: StateFlow<DeepLinkViewModel.State>
+        field = MutableStateFlow<DeepLinkViewModel.State>(State.Loading)
 
-        val Factory = viewModelFactory {
-            initializer {
-                DeepLinkViewModel(
-                    query = get(QUERY_KEY)!!,
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(query: String): DeepLinkViewModel
     }
 
     init {
@@ -58,7 +61,7 @@ class DeepLinkViewModel(
                 null
             }
 
-            mutableState.update {
+            state.update {
                 if (manga == null) {
                     State.NoResults
                 } else {

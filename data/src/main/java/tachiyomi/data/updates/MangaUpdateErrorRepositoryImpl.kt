@@ -1,8 +1,9 @@
 package tachiyomi.data.updates
 
-import app.cash.sqldelight.async.coroutines.awaitAsList
-import app.cash.sqldelight.async.coroutines.awaitAsOne
-import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.JsonObject
@@ -14,27 +15,12 @@ import tachiyomi.domain.updates.model.MangaUpdateError
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.domain.updates.repository.MangaUpdateErrorRepository
 
+@Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class MangaUpdateErrorRepositoryImpl(
     private val database: Database,
 ) : MangaUpdateErrorRepository {
-
-    override suspend fun getAll(): List<MangaUpdateError> {
-        return database.manga_update_errorsQueries
-            .getAll(::mapMangaUpdateError)
-            .awaitAsList()
-    }
-
-    override suspend fun getByMangaId(mangaId: Long): MangaUpdateError? {
-        return database.manga_update_errorsQueries
-            .getByMangaId(mangaId, ::mapMangaUpdateError)
-            .awaitAsOneOrNull()
-    }
-
-    override fun subscribeAll(): Flow<List<MangaUpdateError>> {
-        return database.manga_update_errorsQueries
-            .getAll(::mapMangaUpdateError)
-            .subscribeToList()
-    }
 
     override fun subscribeCount(): Flow<Long> {
         return database.manga_update_errorsQueries
@@ -48,18 +34,20 @@ class MangaUpdateErrorRepositoryImpl(
             .subscribeToList()
     }
 
-    override suspend fun getCount(): Long {
-        return database.manga_update_errorsQueries
-            .getCount()
-            .awaitAsOne()
-    }
-
     override suspend fun insert(mangaId: Long, errorMessage: String?, timestamp: Long) {
-        database.manga_update_errorsQueries.insert(mangaId, errorMessage, timestamp)
+        database.manga_update_errorsQueries.insert(
+            errorMessage = errorMessage,
+            timestamp = timestamp,
+            mangaId = mangaId,
+        )
     }
 
     override suspend fun delete(mangaId: Long) {
         database.manga_update_errorsQueries.delete(mangaId)
+    }
+
+    override suspend fun deleteByMangaIds(mangaIds: List<Long>) {
+        database.manga_update_errorsQueries.deleteByMangaIds(mangaIds)
     }
 
     override suspend fun deleteAll() {

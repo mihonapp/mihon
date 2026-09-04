@@ -9,31 +9,27 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.DeleteSweep
-import androidx.compose.material.icons.outlined.FlipToBack
-import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,6 +39,11 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesViewModel
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Delete
+import mihon.icons.materialsymbols.rounded.DeleteSweep
+import mihon.icons.materialsymbols.rounded.FlipToBack
+import mihon.icons.materialsymbols.rounded.SelectAll
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -51,11 +52,13 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.util.selectedBackground
 import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
 
 @Composable
 fun FailedUpdatesScreen(
     state: FailedUpdatesViewModel.State,
+    snackbarHostState: SnackbarHostState,
     onClickCover: (MangaUpdateErrorWithManga) -> Unit,
     onClickItem: (MangaUpdateErrorWithManga) -> Unit,
     onClickMigrate: () -> Unit,
@@ -92,9 +95,14 @@ fun FailedUpdatesScreen(
                 )
             }
         },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { contentPadding ->
         when {
             state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
+            state.hasError -> EmptyScreen(
+                stringRes = MR.strings.internal_error,
+                modifier = Modifier.padding(contentPadding),
+            )
             state.items.isEmpty() -> EmptyScreen(
                 stringRes = MR.strings.information_empty_failed_updates,
                 modifier = Modifier.padding(contentPadding),
@@ -137,12 +145,12 @@ private fun FailedUpdatesAppBar(
                     listOf(
                         AppBar.Action(
                             title = stringResource(MR.strings.action_select_all),
-                            icon = Icons.Outlined.SelectAll,
+                            icon = MaterialSymbols.Rounded.SelectAll,
                             onClick = onStartSelection,
                         ),
                         AppBar.Action(
                             title = stringResource(MR.strings.action_remove_everything),
-                            icon = Icons.Outlined.DeleteSweep,
+                            icon = MaterialSymbols.Rounded.DeleteSweep,
                             onClick = onClearAll,
                         ),
                     ),
@@ -156,17 +164,17 @@ private fun FailedUpdatesAppBar(
                 listOf(
                     AppBar.Action(
                         title = stringResource(MR.strings.action_select_all),
-                        icon = Icons.Outlined.SelectAll,
+                        icon = MaterialSymbols.Rounded.SelectAll,
                         onClick = onSelectAll,
                     ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_select_inverse),
-                        icon = Icons.Outlined.FlipToBack,
+                        icon = MaterialSymbols.Rounded.FlipToBack,
                         onClick = onInvertSelection,
                     ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_delete),
-                        icon = Icons.Outlined.Delete,
+                        icon = MaterialSymbols.Rounded.Delete,
                         onClick = onDeleteSelected,
                     ),
                 ),
@@ -244,6 +252,7 @@ private fun FailedUpdateItem(
 
     Row(
         modifier = Modifier
+            .selectedBackground(selected)
             .combinedClickable(
                 onClick = {
                     if (selectionMode) {
@@ -257,9 +266,8 @@ private fun FailedUpdateItem(
                     onToggleSelection(true)
                 },
             )
-            .height(FailedUpdateItemHeight)
-            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small)
-            .alpha(if (selected) 0.38f else 1f),
+            .heightIn(min = FailedUpdateItemHeight)
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (selectionMode) {
@@ -270,7 +278,7 @@ private fun FailedUpdateItem(
         }
 
         MangaCover.Book(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier.height(FailedUpdateItemHeight - MaterialTheme.padding.small * 2),
             data = MangaCoverData(
                 mangaId = item.manga.id,
                 sourceId = item.manga.source,
@@ -313,7 +321,7 @@ private fun FailedUpdateItem(
         if (!selectionMode) {
             IconButton(onClick = onClearError) {
                 Icon(
-                    imageVector = Icons.Outlined.Delete,
+                    imageVector = MaterialSymbols.Rounded.Delete,
                     contentDescription = stringResource(MR.strings.action_delete),
                     tint = MaterialTheme.colorScheme.onSurface,
                 )

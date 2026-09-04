@@ -1,5 +1,6 @@
 package eu.kanade.domain.track.interactor
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.data.database.models.Track
@@ -8,6 +9,7 @@ import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
+import kotlinx.datetime.TimeZone
 import logcat.LogPriority
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withNonCancellableContext
@@ -16,15 +18,14 @@ import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.interactor.InsertTrack
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
-import java.time.ZoneOffset
 
+@Inject
 class AddTracks(
     private val insertTrack: InsertTrack,
     private val syncChapterProgressWithTrack: SyncChapterProgressWithTrack,
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val trackerManager: TrackerManager,
+    private val getHistory: GetHistory,
 ) {
 
     // TODO: update all trackers based on common data
@@ -55,15 +56,15 @@ class AddTracks(
                 }
 
                 if (track.startDate <= 0) {
-                    val firstReadChapterDate = Injekt.get<GetHistory>().await(mangaId)
+                    val firstReadChapterDate = getHistory.await(mangaId)
                         .sortedBy { it.readAt }
                         .firstOrNull()
                         ?.readAt
 
                     firstReadChapterDate?.let {
                         val startDate = firstReadChapterDate.time.convertEpochMillisZone(
-                            ZoneOffset.systemDefault(),
-                            ZoneOffset.UTC,
+                            TimeZone.currentSystemDefault(),
+                            TimeZone.UTC,
                         )
                         track = track.copy(
                             startDate = startDate,

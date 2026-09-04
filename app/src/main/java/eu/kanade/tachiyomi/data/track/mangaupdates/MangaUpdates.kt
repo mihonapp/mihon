@@ -32,6 +32,8 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
                     }
                 }
             }
+
+        private const val SEARCH_ID_PREFIX = "id:"
     }
 
     private val interceptor by lazy { MangaUpdatesInterceptor(this) }
@@ -89,6 +91,17 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
     }
 
     override suspend fun search(query: String): List<TrackSearch> {
+        if (query.startsWith(SEARCH_ID_PREFIX)) {
+            return try {
+                val stringId = query.substringAfter(SEARCH_ID_PREFIX).trim()
+                val searchId = stringId.toLongOrNull() ?: stringId.toLong(36)
+
+                api.getSeriesDetails(searchId)?.let { listOf(it.toTrackSearch(id)) } ?: emptyList()
+            } catch (_: NumberFormatException) {
+                emptyList()
+            }
+        }
+
         return api.search(query)
             .map {
                 it.toTrackSearch(id)

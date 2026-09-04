@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.extension
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
@@ -13,23 +16,24 @@ import eu.kanade.tachiyomi.extension.util.ExtensionInstallReceiver
 import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.util.Locale
 
 /**
@@ -39,47 +43,48 @@ import java.util.Locale
  * signature is trusted, otherwise the user will be prompted with a warning to trust it before being
  * loaded.
  */
+@Inject
+@SingleIn(AppScope::class)
 class ExtensionManager(
     private val context: Context,
-    private val preferences: SourcePreferences = Injekt.get(),
-    private val trustExtension: TrustExtension = Injekt.get(),
+    private val preferences: SourcePreferences,
+    private val trustExtension: TrustExtension,
+    private val api: ExtensionApi,
+    private val installer: ExtensionInstaller,
+    private val extensionUpdateNotifier: ExtensionUpdateNotifier,
 ) {
 
     val scope = CoroutineScope(SupervisorJob())
 
-    private val _isInitialized = MutableStateFlow(false)
-    val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
-
-    /**
-     * API where all the available extensions can be found.
-     */
-    private val api = ExtensionApi()
-
-    /**
-     * The installer which installs, updates and uninstalls the extensions.
-     */
-    private val installer by lazy { ExtensionInstaller(context) }
+    private val initialized = CompletableDeferred<Unit>()
 
     private val iconMap = mutableMapOf<String, Drawable>()
 
     private val installedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.Installed>())
-    val installedExtensionsFlow = installedExtensionMapFlow.mapExtensions(scope)
+    val installedExtensionsFlow = installedExtensionMapFlow.mapExtensionsWhenInitialized()
 
     private val availableExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.Available>())
     val availableExtensionsFlow = availableExtensionMapFlow.mapExtensions(scope)
 
     private val untrustedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.Untrusted>())
-    val untrustedExtensionsFlow = untrustedExtensionMapFlow.mapExtensions(scope)
+    val untrustedExtensionsFlow = untrustedExtensionMapFlow.mapExtensionsWhenInitialized()
 
     init {
-        initExtensions()
-        ExtensionInstallReceiver(InstallationListener()).register(context)
+        scope.launch(Dispatchers.IO) {
+            initExtensions()
+            ExtensionInstallReceiver(InstallationListener()).register(context)
+        }
     }
 
     private var subLanguagesEnabledOnFirstRun = preferences.enabledLanguages.isSet()
 
-    fun getExtensionPackage(sourceId: Long): String? {
-        return installedExtensionsFlow.value.find { extension ->
+    suspend fun getInstalledExtensions(): List<Extension.Installed> {
+        initialized.await()
+        return installedExtensionMapFlow.value.values.toList()
+    }
+
+    suspend fun getExtensionPackage(sourceId: Long): String? {
+        return getInstalledExtensions().find { extension ->
             extension.sources.any { it.id == sourceId }
         }
             ?.pkgName
@@ -94,7 +99,7 @@ class ExtensionManager(
         }
     }
 
-    fun getAppIconForSource(sourceId: Long): Drawable? {
+    suspend fun getAppIconForSource(sourceId: Long): Drawable? {
         val pkgName = getExtensionPackage(sourceId) ?: return null
 
         return iconMap[pkgName] ?: iconMap.getOrPut(pkgName) {
@@ -118,17 +123,23 @@ class ExtensionManager(
      * Loads and registers the installed extensions.
      */
     private fun initExtensions() {
-        val extensions = ExtensionLoader.loadExtensions(context)
+        try {
+            val extensions = ExtensionLoader.loadExtensions(context)
 
-        installedExtensionMapFlow.value = extensions
-            .filterIsInstance<LoadResult.Success>()
-            .associate { it.extension.pkgName to it.extension }
+            installedExtensionMapFlow.value = extensions
+                .filterIsInstance<LoadResult.Success>()
+                .associate { it.extension.pkgName to it.extension }
 
-        untrustedExtensionMapFlow.value = extensions
-            .filterIsInstance<LoadResult.Untrusted>()
-            .associate { it.extension.pkgName to it.extension }
+            untrustedExtensionMapFlow.value = extensions
+                .filterIsInstance<LoadResult.Untrusted>()
+                .associate { it.extension.pkgName to it.extension }
 
-        _isInitialized.value = true
+            initialized.complete(Unit)
+        } catch (e: Throwable) {
+            // Release anything waiting on the extensions before the failure propagates
+            initialized.complete(Unit)
+            throw e
+        }
     }
 
     /**
@@ -240,7 +251,8 @@ class ExtensionManager(
      */
     fun updateExtension(extension: Extension.Installed): Flow<InstallStep> {
         val availableExt = availableExtensionMapFlow.value[extension.pkgName] ?: return emptyFlow()
-        return installExtension(availableExt)
+        val isUpdateForPrivatelyInstalled = !extension.isShared
+        return installer.downloadAndInstall(availableExt.apkUrl, availableExt, isUpdateForPrivatelyInstalled)
     }
 
     fun cancelInstallUpdateExtension(extension: Extension) {
@@ -368,7 +380,7 @@ class ExtensionManager(
         val pendingUpdateCount = installedExtensionMapFlow.value.values.count { it.hasUpdate }
         preferences.extensionUpdatesCount.set(pendingUpdateCount)
         if (pendingUpdateCount == 0) {
-            ExtensionUpdateNotifier(context).dismiss()
+            extensionUpdateNotifier.dismiss()
         }
     }
 
@@ -376,5 +388,12 @@ class ExtensionManager(
 
     private fun <T : Extension> StateFlow<Map<String, T>>.mapExtensions(scope: CoroutineScope): StateFlow<List<T>> {
         return map { it.values.toList() }.stateIn(scope, SharingStarted.Lazily, value.values.toList())
+    }
+
+    /**
+     * Extensions are loaded in the background, so this flow only starts emitting once that finished.
+     */
+    private fun <T : Extension> StateFlow<Map<String, T>>.mapExtensionsWhenInitialized(): Flow<List<T>> {
+        return onStart { initialized.await() }.map { it.values.toList() }
     }
 }

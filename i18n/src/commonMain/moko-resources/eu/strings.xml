@@ -162,7 +162,6 @@
     <string name="page_list_empty_error">Ez dira orrialderik aurkitu</string>
     <string name="loader_not_implemented_error">Ez da iturria aurkitu</string>
     <string name="update_check_confirm">Deskargatu</string>
-    <string name="update_check_notification_download_complete">Deskarga bukatua</string>
     <string name="download_notifier_title_error">Errorea</string>
     <string name="ext_installer_legacy">Ondare</string>
     <string name="ext_nsfw_short">18+</string>
@@ -203,7 +202,6 @@
     <string name="download_notifier_unknown_error">Ezin izan da kapitulua deskargatu ustekabeko errore baten ondorioz</string>
     <string name="download_notifier_no_network">Ez dago sare-konexiorik erabilgarri</string>
     <string name="channel_new_chapters">Kapituluaren eguneraketak</string>
-    <string name="channel_app_updates">Aplikazioen eguneraketak</string>
     <string name="spen_next_page">Hurrengo orrialdea</string>
     <string name="channel_ext_updates">Luzapenen eguneraketak</string>
     <string name="filter_mode_screen">Pantaila</string>
@@ -303,8 +301,6 @@
     <string name="information_webview_outdated">Mesedez, eguneratu WebView aplikazioa bateragarritasun hobea izateko</string>
     <string name="channel_complete">Bukatua</string>
     <string name="error_category_exists">Izen hori daukan kategoria bat badago dagoeneko!</string>
-    <string name="update_check_notification_download_in_progress">Deskargatzen…</string>
-    <string name="update_check_notification_download_error">Errorea deskargan</string>
     <string name="migration_selection_prompt">Hautatu migratzeko iturri bat</string>
     <string name="notification_first_add_to_library">Mesedez, gehitu manga zure liburutegian hau egin aurretik</string>
     <string name="transition_pages_loading">Orriak kargatzen…</string>

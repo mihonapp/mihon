@@ -46,6 +46,33 @@ AND (:bookmarked IS NULL OR bookmark = :bookmarked)
 AND (
     (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
 )
+AND (
+    -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
+    :includedEmpty
+    OR EXISTS (
+        SELECT 1 FROM mangas_categories
+        WHERE mangas_categories.manga_id = mangaId
+        AND COALESCE(mangas_categories.category_id, 0) IN :includedCategories
+    )
+    OR (0 IN :includedCategories AND NOT EXISTS (
+        SELECT 1 FROM mangas_categories mc WHERE mc.manga_id = mangaId)
+    )
+)
+AND (
+    -- excludedEmpty being true expresses "don't care" state and bypasses the membership filter
+    :excludedEmpty
+    OR (
+        NOT EXISTS (
+            SELECT 1 FROM mangas_categories
+            WHERE mangas_categories.manga_id = mangaId
+            AND COALESCE(mangas_categories.category_id, 0) IN :excludedCategories
+        )
+        AND (
+            0 NOT IN :excludedCategories
+            OR EXISTS (SELECT 1 FROM mangas_categories WHERE mangas_categories.manga_id = mangaId)
+        )
+    )
+)
 LIMIT :limit;
 
 getUpdatesByReadStatus:

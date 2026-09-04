@@ -159,8 +159,6 @@
     <string name="download_notifier_title_error">Hiba</string>
     <string name="information_webview_outdated">A jobb kompatibilitás érdekében kérlek, frissítsd a WebView alkalmazást</string>
     <string name="update_check_notification_update_available">Új verzió érhető el!</string>
-    <string name="update_check_notification_download_error">Letöltési hiba</string>
-    <string name="update_check_notification_download_complete">Érints meg a telepítéshez</string>
     <string name="email">E-mail-cím</string>
     <string name="pref_category_nsfw_content">NSFW (18+) források</string>
     <string name="show_chapter_number">Fejezetszám</string>
@@ -508,7 +506,6 @@
     <string name="update_check_confirm">Letöltés</string>
     <string name="update_check_open">Megnyitás GitHub-on</string>
     <string name="update_check_eol">Ez az Android verzió már nem támogatott</string>
-    <string name="channel_app_updates">Alkalmazás frissítések</string>
     <string name="cant_open_last_read_chapter">Nem sikerült megnyitni az utoljára olvasott fejezetet</string>
     <string name="pref_navigate_pan">Széles képek pásztázása</string>
     <string name="save_chapter_as_cbz">Mentés CBZ archívumkén</string>
@@ -526,7 +523,6 @@
     <string name="migration_dialog_what_to_include">Válaszon beletartozó adatokat</string>
     <string name="chapter_settings_updated">Fejezet beállításai frissültek</string>
     <string name="download_notifier_downloader_title">Letöltő</string>
-    <string name="update_check_notification_download_in_progress">Letöltés…</string>
     <string name="source_filter_empty_screen">Nincs telepített forrás</string>
     <string name="migration_help_guide">Forrás imortálási útmutató</string>
     <string name="picture_saved">Kép elmentve</string>
@@ -790,8 +786,6 @@
     <string name="pref_security">Biztonság</string>
     <string name="pref_firebase">Analitika és összeomlási jelentések</string>
     <string name="onboarding_permission_crashlytics_description">Anonimizált összeomlási jelentés küldése a fejlesztőknek.</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Ha az olvasó üres képet tölt be, fokozatosan csökkentse a küszöbértéket.\nKijelölt: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Hosszú szalagolvasóhoz régi dekóder használata</string>
     <string name="invalid_backup_file_json">JSON biztonsági mentés nem támogatott</string>
     <string name="non_library_settings">Minden olvasott elem</string>
     <string name="library_exported">Könyvtár exportálva</string>
@@ -804,7 +798,6 @@
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="label_auto">Automatikus</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Új fejezet lekérése után</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Befolyásolja a teljesítményt. Csak akkor engedélyezze, ha a bitkép küszöbértékének csökkentése nem oldja meg az üres kép problémákat</string>
     <string name="pref_flash_style_white">Fehér</string>
     <string name="library_list">Könyvtár lista</string>
     <string name="trackers_updated_summary">Nyilvántartók frissítve a(z) %d. fejezetre</string>
@@ -824,8 +817,6 @@
     <string name="confirm_tracker_update">Nyilvántartók frissítése a(z) %d. fejezetre?</string>
     <string name="tracked_privately">Privátan nyilvántartva</string>
     <string name="remove_private_extension_message">Tényleg el akarja távolítani a(z) \"%s\" bővítményt?</string>
-    <string name="pref_hardware_bitmap_threshold_default">Alapértelmezett (%d)</string>
-    <string name="pref_hardware_bitmap_threshold">Egyedi hardveres bitmap küszöbérték</string>
     <string name="action_display_unread_badge">Olvasatlan fejezetek</string>
     <string name="clear_database_text">Elemeket készül eltávolítani az adatbázisból</string>
     <string name="clear_database_history_warning">Az elolvasott fejezetek és a nem könyvtári bejegyzések előrehaladása elveszik</string>

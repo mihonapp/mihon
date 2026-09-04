@@ -253,9 +253,6 @@
     <string name="file_select_backup">Selectează fișierul de rezervă</string>
     <string name="update_check_confirm">Descarcă</string>
     <string name="update_check_no_new_updates">Nu sunt exista actualizări noi</string>
-    <string name="update_check_notification_download_in_progress">Se descarcă…</string>
-    <string name="update_check_notification_download_complete">Apăsați pentru a instala actualizarea</string>
-    <string name="update_check_notification_download_error">Eroare la descărcare</string>
     <string name="update_check_notification_update_available">Versiune nouă disponibilă!</string>
     <string name="information_no_downloads">Fără descărcări</string>
     <string name="information_no_recent">Nu există actualizări recente</string>
@@ -477,7 +474,6 @@
     <string name="theme_monet">Dinamic</string>
     <string name="label_default">Implicit</string>
     <string name="theme_midnightdusk">Amurg de Miazănoapte</string>
-    <string name="channel_app_updates">Actualizări de aplicație</string>
     <string name="theme_tealturquoise">Teal și turcoaz</string>
     <string name="action_display_local_badge">Sursă locală</string>
     <string name="pref_category_appearance">Aspect</string>
@@ -810,10 +806,6 @@
     <string name="ext_remove">Eliminați</string>
     <string name="ext_confirm_remove">Eliminați extensia?</string>
     <string name="remove_private_extension_message">Chiar doriți să eliminați extensia „%s”?</string>
-    <string name="pref_hardware_bitmap_threshold_default">Implicit (%d)</string>
-    <string name="pref_hardware_bitmap_threshold">Prag bitmap hardware personalizat</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Dacă cititorul încarcă o imagine goală, reduceți treptat pragul.\nSelectat: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afectează performanța. Activați numai dacă reducerea pragului bitmap nu rezolvă problemele legate de imaginile goale</string>
     <string name="label_auto">Automatic</string>
     <string name="pref_incognito_mode_extension_summary">Întrerupeți istoricul de lectură pentru extensie</string>
     <string name="action_display_unread_badge">Capitole necitite</string>
@@ -827,7 +819,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_existing">După citirea unui capoitol</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">După aducerea noilor capitole</string>
     <string name="pref_hide_missing_chapter_indicators">Ascunde indicatoarele pentru capitolele absente</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Utilizați decodurul vechi pentru tipul bandă lungă</string>
     <string name="storage_failed_to_create_download_directory">Directorul pentru descărcări nu a putut fi creat</string>
     <string name="storage_failed_to_create_directory">Directorul: %s nu a putut fi creat</string>
     <string name="export">Exportă</string>

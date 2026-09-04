@@ -8,13 +8,6 @@ CREATE TABLE manga_update_errors(
 
 CREATE INDEX manga_update_errors_timestamp_index ON manga_update_errors(timestamp);
 
-getAll:
-SELECT manga_update_errors.*
-FROM manga_update_errors
-JOIN mangas ON manga_update_errors.manga_id = mangas._id
-WHERE mangas.favorite = 1
-ORDER BY manga_update_errors.timestamp DESC;
-
 getAllWithManga:
 SELECT
     manga_update_errors.manga_id,
@@ -26,11 +19,6 @@ JOIN mangas ON manga_update_errors.manga_id = mangas._id
 WHERE mangas.favorite = 1
 ORDER BY manga_update_errors.timestamp DESC;
 
-getByMangaId:
-SELECT *
-FROM manga_update_errors
-WHERE manga_id = :mangaId;
-
 getCount:
 SELECT COUNT(*)
 FROM manga_update_errors
@@ -39,7 +27,9 @@ WHERE mangas.favorite = 1;
 
 insert:
 INSERT INTO manga_update_errors(manga_id, error_message, timestamp)
-VALUES (:mangaId, :errorMessage, :timestamp)
+SELECT _id, :errorMessage, :timestamp
+FROM mangas
+WHERE _id = :mangaId AND favorite = 1
 ON CONFLICT(manga_id) DO UPDATE SET
     error_message = excluded.error_message,
     timestamp = excluded.timestamp;
@@ -47,6 +37,10 @@ ON CONFLICT(manga_id) DO UPDATE SET
 delete:
 DELETE FROM manga_update_errors
 WHERE manga_id = :mangaId;
+
+deleteByMangaIds:
+DELETE FROM manga_update_errors
+WHERE manga_id IN :mangaIds;
 
 deleteAll:
 DELETE FROM manga_update_errors;

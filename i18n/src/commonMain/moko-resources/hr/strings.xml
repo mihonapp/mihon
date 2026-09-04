@@ -219,9 +219,6 @@
     <string name="pref_skip_filtered_chapters">Preskoči filtrirana poglavlja</string>
     <string name="pref_skip_read_chapters">Preskoči pročitana poglavlja</string>
     <string name="update_check_notification_update_available">Dostupna je nova verzija!</string>
-    <string name="update_check_notification_download_error">Greška pri preuzimanju</string>
-    <string name="update_check_notification_download_complete">Dodirni za instaliranje nove verzije</string>
-    <string name="update_check_notification_download_in_progress">Preuzimanje …</string>
     <string name="update_check_no_new_updates">Nema novih verzija</string>
     <string name="update_check_confirm">Preuzmi</string>
     <string name="file_select_backup">Odaberi datoteku sigurnosne kopije</string>
@@ -536,7 +533,6 @@
     <string name="label_background_activity">Aktivnost u pozadini</string>
     <string name="pref_hide_threshold">Osjetljivost za skrivanje izbornika pri listanju</string>
     <string name="pref_auto_clear_chapter_cache">Izbriši predmemoriju poglavlja tijekom pokretanja aplikacije</string>
-    <string name="channel_app_updates">Aktualiziranja aplikacije</string>
     <string name="database_clean">Nema se što raščistiti</string>
     <string name="pref_update_only_completely_read">Preskoči unose s nepročitanim poglavljima</string>
     <string name="enhanced_services">Poboljšane usluge praćenja</string>
@@ -810,10 +806,6 @@
     <string name="ext_remove">Ukloni</string>
     <string name="ext_confirm_remove">Ukloniti proširenje?</string>
     <string name="remove_private_extension_message">Stvarno želiš ukloniti proširenje „%s”?</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Ako čitač učita praznu sliku, postupno smanji prag.\nOdabrano: %s</string>
-    <string name="pref_hardware_bitmap_threshold">Prilagođeni hardverski prag bitmapa</string>
-    <string name="pref_hardware_bitmap_threshold_default">Standardno (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Utječe na performansu. Aktiviraj samo ako smanjenje praga bitmapa ne riješi probleme s praznim slikama</string>
     <string name="label_auto">Automatski</string>
     <string name="action_display_unread_badge">Nepročitana poglavlja</string>
     <string name="action_notes">Bilješke</string>
@@ -830,7 +822,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_existing">Nakon čitanja poglavlja</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Nakon dohvaćanja novog poglavlja</string>
     <string name="pref_hide_missing_chapter_indicators">Sakrij indikatore nedostajućih poglavlja</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Koristi zastarjeli dekoder za čitač kontinuiranog listanja</string>
     <string name="clear_database_text">Uklonit ćeš unose iz baze podataka</string>
     <string name="clear_database_history_warning">Izgubit će se pročitana poglavlja i napredak unosa koji se ne nalaze u biblioteci</string>
     <string name="clear_db_exclude_read">Zadrži unose s pročitanim poglavljima</string>

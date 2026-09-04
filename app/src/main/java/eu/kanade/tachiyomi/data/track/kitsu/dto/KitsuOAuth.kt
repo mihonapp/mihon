@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.kitsu.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Clock
 
 @Serializable
 data class KitsuOAuth(
@@ -15,6 +16,6 @@ data class KitsuOAuth(
     val expiresIn: Long,
     @SerialName("refresh_token")
     val refreshToken: String?,
-)
-
-fun KitsuOAuth.isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)
+) {
+    fun isExpired(): Boolean = (Clock.System.now().toEpochMilliseconds() / 1000) > (createdAt + expiresIn - 3600)
+}

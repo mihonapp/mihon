@@ -6,32 +6,40 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.core.common.util.lang.launchIO
@@ -47,66 +55,66 @@ import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.toMangaUpdate
 import tachiyomi.domain.source.interactor.GetRemoteManga
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
-import java.time.Instant
+import kotlin.time.Clock
 import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 
+@AssistedInject
 class BrowseSourceViewModel(
-    private val sourceId: Long,
-    listingQuery: String?,
-    sourceManager: SourceManager = Injekt.get(),
-    sourcePreferences: SourcePreferences = Injekt.get(),
-    private val libraryPreferences: LibraryPreferences = Injekt.get(),
-    private val coverCache: CoverCache = Injekt.get(),
-    private val getRemoteManga: GetRemoteManga = Injekt.get(),
-    private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
-    private val getCategories: GetCategories = Injekt.get(),
-    private val setMangaCategories: SetMangaCategories = Injekt.get(),
-    private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags = Injekt.get(),
-    private val getManga: GetManga = Injekt.get(),
-    private val updateManga: UpdateManga = Injekt.get(),
-    private val addTracks: AddTracks = Injekt.get(),
-    getIncognitoState: GetIncognitoState = Injekt.get(),
-) : StateViewModel<BrowseSourceViewModel.State>(State(Listing.valueOf(listingQuery))) {
+    @Assisted private val sourceId: Long,
+    @Assisted listingQuery: String?,
+    private val sourceManager: SourceManager,
+    sourcePreferences: SourcePreferences,
+    private val libraryPreferences: LibraryPreferences,
+    private val coverCache: CoverCache,
+    private val getRemoteManga: GetRemoteManga,
+    private val getDuplicateLibraryManga: GetDuplicateLibraryManga,
+    private val getCategories: GetCategories,
+    private val setMangaCategories: SetMangaCategories,
+    private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags,
+    private val getManga: GetManga,
+    private val updateManga: UpdateManga,
+    private val addTracks: AddTracks,
+    getIncognitoState: GetIncognitoState,
+) : ViewModel() {
 
-    companion object {
-        val SOURCE_ID_KEY = CreationExtras.Key<Long>()
-        val LISTING_QUERY_KEY = CreationExtras.Key<String?>()
+    val state: StateFlow<BrowseSourceViewModel.State>
+        field = MutableStateFlow<BrowseSourceViewModel.State>(State(Listing.valueOf(listingQuery)))
 
-        val Factory = viewModelFactory {
-            initializer {
-                BrowseSourceViewModel(
-                    sourceId = get(SOURCE_ID_KEY)!!,
-                    listingQuery = get(LISTING_QUERY_KEY),
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(sourceId: Long, listingQuery: String?): BrowseSourceViewModel
     }
 
     var displayMode by sourcePreferences.sourceDisplayMode.asState(viewModelScope)
 
-    val source = sourceManager.getOrStub(sourceId)
+    private val source: Source? get() = state.value.source
 
     init {
-        mutableState.update {
-            var query: String? = null
-            var listing = it.listing
+        viewModelScope.launchIO {
+            val source = sourceManager.getOrStub(sourceId)
 
-            if (listing is Listing.Search) {
-                query = listing.query
-                listing = Listing.Search(query, source.getFilterList())
+            state.update {
+                var query: String? = null
+                var listing = it.listing
+
+                if (listing is Listing.Search) {
+                    query = listing.query
+                    listing = Listing.Search(query, source.getFilterList())
+                }
+
+                it.copy(
+                    source = source,
+                    listing = listing,
+                    filters = source.getFilterList(),
+                    toolbarQuery = query,
+                )
             }
 
-            it.copy(
-                listing = listing,
-                filters = source.getFilterList(),
-                toolbarQuery = query,
-            )
-        }
-
-        if (!getIncognitoState.await(source.id)) {
-            sourcePreferences.lastUsedSource.set(source.id)
+            if (!getIncognitoState.await(source.id)) {
+                sourcePreferences.lastUsedSource.set(source.id)
+            }
         }
     }
 
@@ -114,7 +122,9 @@ class BrowseSourceViewModel(
      * Flow of Pager flow tied to [State.listing]
      */
     private val hideInLibraryItems = sourcePreferences.hideInLibraryItems.get()
-    val mangaPagerFlowFlow = state.map { it.listing }
+    val mangaPagerFlowFlow = state.map { it.source to it.listing }
+        .filter { (source, _) -> source != null }
+        .map { (_, listing) -> listing }
         .distinctUntilChanged()
         .map { listing ->
             Pager(PagingConfig(pageSize = 25)) {
@@ -142,15 +152,16 @@ class BrowseSourceViewModel(
     }
 
     fun resetFilters() {
-        mutableState.update { it.copy(filters = source.getFilterList()) }
+        val source = source ?: return
+        state.update { it.copy(filters = source.getFilterList()) }
     }
 
     fun setListing(listing: Listing) {
-        mutableState.update { it.copy(listing = listing, toolbarQuery = null) }
+        state.update { it.copy(listing = listing, toolbarQuery = null) }
     }
 
     fun setFilters(filters: FilterList) {
-        mutableState.update {
+        state.update {
             it.copy(
                 filters = filters,
             )
@@ -159,9 +170,9 @@ class BrowseSourceViewModel(
 
     fun search(query: String? = null, filters: FilterList? = null) {
         val input = state.value.listing as? Listing.Search
-            ?: Listing.Search(query = null, filters = source.getFilterList())
+            ?: Listing.Search(query = null, filters = source?.getFilterList() ?: FilterList())
 
-        mutableState.update {
+        state.update {
             it.copy(
                 listing = input.copy(
                     query = query ?: input.query,
@@ -173,7 +184,7 @@ class BrowseSourceViewModel(
     }
 
     fun searchGenre(genreName: String) {
-        val defaultFilters = source.getFilterList()
+        val defaultFilters = source?.getFilterList() ?: return
         var genreExists = false
 
         filter@ for (sourceFilter in defaultFilters) {
@@ -201,7 +212,7 @@ class BrowseSourceViewModel(
             }
         }
 
-        mutableState.update {
+        state.update {
             val listing = if (genreExists) {
                 Listing.Search(query = null, filters = defaultFilters)
             } else {
@@ -226,7 +237,7 @@ class BrowseSourceViewModel(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
                     true -> 0
-                    false -> Instant.now().toEpochMilli()
+                    false -> Clock.System.now().toEpochMilliseconds()
                 },
             )
 
@@ -234,7 +245,7 @@ class BrowseSourceViewModel(
                 new = new.removeCovers(coverCache)
             } else {
                 setMangaDefaultChapterFlags.await(manga)
-                addTracks.bindEnhancedTrackers(manga, source)
+                addTracks.bindEnhancedTrackers(manga, sourceManager.getOrStub(manga.source))
             }
 
             updateManga.await(new.toMangaUpdate())
@@ -310,11 +321,11 @@ class BrowseSourceViewModel(
     }
 
     fun setDialog(dialog: Dialog?) {
-        mutableState.update { it.copy(dialog = dialog) }
+        state.update { it.copy(dialog = dialog) }
     }
 
     fun setToolbarQuery(query: String?) {
-        mutableState.update { it.copy(toolbarQuery = query) }
+        state.update { it.copy(toolbarQuery = query) }
     }
 
     sealed class Listing(open val query: String?, open val filters: FilterList) {
@@ -350,6 +361,7 @@ class BrowseSourceViewModel(
     @Immutable
     data class State(
         val listing: Listing,
+        val source: Source? = null,
         val filters: FilterList = FilterList(),
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
