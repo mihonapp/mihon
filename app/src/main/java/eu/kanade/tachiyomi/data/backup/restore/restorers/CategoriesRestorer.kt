@@ -1,16 +1,16 @@
 package eu.kanade.tachiyomi.data.backup.restore.restorers
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import tachiyomi.data.Database
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.library.service.LibraryPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
 class CategoriesRestorer(
-    private val database: Database = Injekt.get(),
-    private val getCategories: GetCategories = Injekt.get(),
-    private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val database: Database,
+    private val getCategories: GetCategories,
+    private val libraryPreferences: LibraryPreferences,
 ) {
 
     suspend operator fun invoke(backupCategories: List<BackupCategory>) {

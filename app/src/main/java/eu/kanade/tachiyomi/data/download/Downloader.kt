@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
 import com.hippo.unifile.UniFile
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.model.getComicInfo
 import eu.kanade.tachiyomi.data.cache.ChapterCache
@@ -17,10 +20,12 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil.NOMEDIA_FILE
 import eu.kanade.tachiyomi.util.storage.saveTo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
@@ -36,15 +41,17 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
 import mihon.core.archive.ZipWriter
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.launchNow
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
@@ -57,8 +64,6 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.File
 import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
@@ -68,35 +73,31 @@ import kotlin.time.Duration.Companion.seconds
  *
  * Its queue contains the list of chapters to download.
  */
+@Inject
+@SingleIn(AppScope::class)
 class Downloader(
     private val context: Context,
     private val provider: DownloadProvider,
     private val cache: DownloadCache,
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val chapterCache: ChapterCache = Injekt.get(),
-    private val downloadPreferences: DownloadPreferences = Injekt.get(),
-    private val xml: XML = Injekt.get(),
-    private val getCategories: GetCategories = Injekt.get(),
-    private val getTracks: GetTracks = Injekt.get(),
+    private val sourceManager: SourceManager,
+    private val chapterCache: ChapterCache,
+    private val downloadPreferences: DownloadPreferences,
+    private val xml: XML,
+    private val getCategories: GetCategories,
+    private val getTracks: GetTracks,
+    private val store: DownloadStore,
+    private val notifier: DownloadNotifier,
 ) {
-
-    /**
-     * Store for persisting downloads across restarts.
-     */
-    private val store = DownloadStore(context)
-
     /**
      * Queue where active downloads are kept.
      */
     private val _queueState = MutableStateFlow<List<Download>>(emptyList())
     val queueState = _queueState.asStateFlow()
 
-    /**
-     * Notifier for the downloader state and progress.
-     */
-    private val notifier by lazy { DownloadNotifier(context) }
-
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val downloaderMutex = Mutex()
+
+    @Volatile
     private var downloaderJob: Job? = null
 
     /**
@@ -111,12 +112,11 @@ class Downloader(
     @Volatile
     var isPaused: Boolean = false
 
-    init {
-        launchNow {
-            val chapters = async { store.restore() }
-            addAllToQueue(chapters.await())
-        }
+    private val restoreJob = scope.async {
+        addAllToQueue(store.restore())
     }
+
+    internal suspend fun awaitQueueRestored() = restoreJob.await()
 
     /**
      * Starts the downloader. It doesn't do anything if it's already running or there isn't anything
@@ -124,25 +124,22 @@ class Downloader(
      *
      * @return true if the downloader is started, false otherwise.
      */
-    fun start(): Boolean {
+    fun start(): Boolean = synchronized(DownloadJob.session.lock) {
         if (isRunning || queueState.value.isEmpty()) {
             return false
         }
-
-        val pending = queueState.value.filter { it.status != Download.State.DOWNLOADED }
-        pending.forEach { if (it.status != Download.State.QUEUE) it.status = Download.State.QUEUE }
 
         isPaused = false
 
         launchDownloaderJob()
 
-        return pending.isNotEmpty()
+        return true
     }
 
     /**
      * Stops the downloader.
      */
-    fun stop(reason: String? = null) {
+    fun stop(reason: String? = null): Unit = synchronized(DownloadJob.session.lock) {
         cancelDownloaderJob()
         queueState.value
             .filter { it.status == Download.State.DOWNLOADING }
@@ -167,7 +164,7 @@ class Downloader(
     /**
      * Pauses the downloader
      */
-    fun pause() {
+    fun pause(): Unit = synchronized(DownloadJob.session.lock) {
         cancelDownloaderJob()
         queueState.value
             .filter { it.status == Download.State.DOWNLOADING }
@@ -178,7 +175,7 @@ class Downloader(
     /**
      * Pauses active downloads while the worker waits for network recovery.
      */
-    fun pauseForNetwork(reason: String) {
+    fun pauseForNetwork(reason: String): Unit = synchronized(DownloadJob.session.lock) {
         cancelDownloaderJob()
         queueState.value
             .filter { it.status == Download.State.DOWNLOADING }
@@ -189,7 +186,7 @@ class Downloader(
     /**
      * Removes everything from the queue.
      */
-    fun clearQueue() {
+    fun clearQueue(): Unit = synchronized(DownloadJob.session.lock) {
         cancelDownloaderJob()
 
         internalClearQueue()
@@ -202,68 +199,91 @@ class Downloader(
     private fun launchDownloaderJob() {
         if (isRunning) return
 
-        downloaderJob = scope.launch {
-            val activeDownloadsFlow = combine(
-                queueState,
-                downloadPreferences.parallelSourceLimit.changes(),
-            ) { a, b -> a to b }.transformLatest { (queue, parallelCount) ->
-                while (true) {
-                    val activeDownloads = queue.asSequence()
-                        // Ignore completed downloads, leave them in the queue
-                        .filter { it.status.value <= Download.State.DOWNLOADING.value }
-                        .groupBy { it.source }
-                        .toList()
-                        .take(parallelCount)
-                        .map { (_, downloads) -> downloads.first() }
-                    emit(activeDownloads)
-
-                    if (activeDownloads.isEmpty()) break
-                    // Suspend until a download enters the ERROR state
-                    val activeDownloadsErroredFlow =
-                        combine(activeDownloads.map(Download::statusFlow)) { states ->
-                            states.contains(Download.State.ERROR)
-                        }.filter { it }
-                    activeDownloadsErroredFlow.first()
-                }
-            }
-                .distinctUntilChanged()
-
-            // Use supervisorScope to cancel child jobs when the downloader job is cancelled
-            supervisorScope {
-                val downloadJobs = mutableMapOf<Download, Job>()
-
-                activeDownloadsFlow.collectLatest { activeDownloads ->
-                    val downloadJobsToStop = downloadJobs.filter { it.key !in activeDownloads }
-                    downloadJobsToStop.forEach { (download, job) ->
-                        job.cancel()
-                        downloadJobs.remove(download)
+        downloaderJob = scope.launch(start = CoroutineStart.LAZY) {
+            val owner = currentCoroutineContext().job
+            // A cancelled download may still be closing a stream or writing a file.
+            downloaderMutex.withLock {
+                synchronized(DownloadJob.session.lock) {
+                    if (downloaderJob !== owner || !owner.isActive) return@withLock
+                    queueState.value
+                        .filter { it.status == Download.State.DOWNLOADED }
+                        .forEach(::removeFromQueue)
+                    if (queueState.value.isEmpty()) {
+                        stop()
+                        return@withLock
                     }
+                    queueState.value.forEach { it.status = Download.State.QUEUE }
+                }
 
-                    val downloadsToStart = activeDownloads.filter { it !in downloadJobs }
-                    downloadsToStart.forEach { download ->
-                        downloadJobs[download] = launchDownloadJob(download)
+                val activeDownloadsFlow = combine(
+                    queueState,
+                    downloadPreferences.parallelSourceLimit.changes(),
+                ) { a, b -> a to b }.transformLatest { (queue, parallelCount) ->
+                    while (true) {
+                        val activeDownloads = queue.asSequence()
+                            // Ignore completed downloads, leave them in the queue
+                            .filter { it.status.value <= Download.State.DOWNLOADING.value }
+                            .groupBy { it.source }
+                            .toList()
+                            .take(parallelCount)
+                            .map { (_, downloads) -> downloads.first() }
+                        emit(activeDownloads)
+
+                        if (activeDownloads.isEmpty()) break
+                        // Suspend until a download enters the ERROR state
+                        val activeDownloadsErroredFlow =
+                            combine(activeDownloads.map(Download::statusFlow)) { states ->
+                                states.contains(Download.State.ERROR)
+                            }.filter { it }
+                        activeDownloadsErroredFlow.first()
+                    }
+                }
+                    .distinctUntilChanged()
+
+                // Use supervisorScope to cancel child jobs when the downloader job is cancelled
+                supervisorScope {
+                    val downloadJobs = mutableMapOf<Download, Job>()
+
+                    activeDownloadsFlow.collectLatest { activeDownloads ->
+                        val downloadJobsToStop = downloadJobs.filter { it.key !in activeDownloads }
+                        downloadJobsToStop.forEach { (download, job) ->
+                            job.cancel()
+                            downloadJobs.remove(download)
+                        }
+
+                        val downloadsToStart = activeDownloads.filter { it !in downloadJobs }
+                        downloadsToStart.forEach { download ->
+                            downloadJobs[download] = launchDownloadJob(download, owner)
+                        }
                     }
                 }
             }
         }
+        downloaderJob?.start()
     }
 
-    private fun CoroutineScope.launchDownloadJob(download: Download) = launchIO {
+    private fun CoroutineScope.launchDownloadJob(download: Download, owner: Job) = launchIO {
         try {
             downloadChapter(download)
 
-            // Remove successful download from queue
-            if (download.status == Download.State.DOWNLOADED) {
-                removeFromQueue(download)
-            }
-            if (areAllDownloadsFinished()) {
-                stop()
+            synchronized(DownloadJob.session.lock) {
+                if (downloaderJob !== owner || !owner.isActive) return@launchIO
+                // Remove successful download from queue
+                if (download.status == Download.State.DOWNLOADED) {
+                    removeFromQueue(download)
+                }
+                if (areAllDownloadsFinished()) {
+                    stop()
+                }
             }
         } catch (e: Throwable) {
             if (e is CancellationException) throw e
-            logcat(LogPriority.ERROR, e)
-            notifier.onError(e.message)
-            stop()
+            synchronized(DownloadJob.session.lock) {
+                if (downloaderJob !== owner || !owner.isActive) return@launchIO
+                logcat(LogPriority.ERROR, e)
+                notifier.onError(e.message)
+                stop()
+            }
         }
     }
 
@@ -282,7 +302,7 @@ class Downloader(
      * @param chapters the list of chapters to download.
      * @param autoStart whether to start the downloader after enqueing the chapters.
      */
-    fun queueChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean) {
+    suspend fun queueChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean) {
         if (chapters.isEmpty()) return
 
         val source = sourceManager.get(manga.source) as? HttpSource ?: return
@@ -384,6 +404,7 @@ class Downloader(
                         try {
                             page.imageUrl = download.source.getImageUrl(page)
                         } catch (e: Throwable) {
+                            if (e is CancellationException) throw e
                             page.status = Page.State.Error(e)
                         }
                     }
@@ -744,7 +765,7 @@ class Downloader(
         }
     }
 
-    fun updateQueue(downloads: List<Download>) {
+    fun updateQueue(downloads: List<Download>): Unit = synchronized(DownloadJob.session.lock) {
         val wasRunning = isRunning
 
         if (downloads.isEmpty()) {

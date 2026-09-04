@@ -1,10 +1,12 @@
 package tachiyomi.domain.track.interactor
 
+import dev.zacsweers.metro.Inject
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.model.Track
 import tachiyomi.domain.track.repository.TrackRepository
 
+@Inject
 class InsertTrack(
     private val trackRepository: TrackRepository,
 ) {

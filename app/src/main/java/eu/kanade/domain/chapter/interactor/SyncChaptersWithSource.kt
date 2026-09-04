@@ -1,5 +1,6 @@
 package eu.kanade.domain.chapter.interactor
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.chapter.model.copyFromSChapter
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
@@ -29,6 +30,7 @@ import java.lang.Long.max
 import java.util.TreeSet
 import kotlin.time.Clock
 
+@Inject
 class SyncChaptersWithSource(
     private val downloadManager: DownloadManager,
     private val downloadProvider: DownloadProvider,

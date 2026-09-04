@@ -1,8 +1,10 @@
 package tachiyomi.domain.release.interactor
 
+import dev.zacsweers.metro.Inject
 import tachiyomi.domain.release.model.Release
 import tachiyomi.domain.release.service.ReleaseService
 
+@Inject
 class GetApplicationRelease(
     private val service: ReleaseService,
 ) {
@@ -11,7 +13,7 @@ class GetApplicationRelease(
 
         // Check if latest version is different from current version
         val isNewVersion = isNewVersion(
-            arguments.isPreview,
+            arguments.isNightly,
             arguments.commitCount,
             arguments.versionName,
             release.version,
@@ -23,15 +25,15 @@ class GetApplicationRelease(
     }
 
     private fun isNewVersion(
-        isPreview: Boolean,
+        isNightly: Boolean,
         commitCount: Int,
         versionName: String,
         versionTag: String,
     ): Boolean {
         // Removes prefixes like "r" or "v"
         val newVersion = versionTag.replace("[^\\d.]".toRegex(), "")
-        return if (isPreview) {
-            // Preview builds: based on releases in "mihonapp/mihon-preview" repo
+        return if (isNightly) {
+            // Nightly builds: based on releases in "mihonapp/mihon-preview" repo
             // tagged as something like "r1234"
             newVersion.toInt() > commitCount
         } else {
@@ -54,7 +56,7 @@ class GetApplicationRelease(
 
     data class Arguments(
         val isFoss: Boolean,
-        val isPreview: Boolean,
+        val isNightly: Boolean,
         val commitCount: Int,
         val versionName: String,
         val repository: String,

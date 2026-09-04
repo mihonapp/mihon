@@ -3,8 +3,6 @@ package eu.kanade.presentation.more.settings.screen.debug
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -20,6 +18,8 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.serialization.protobuf.schema.ProtoBufSchemaGenerator
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.ContentCopy
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -47,7 +47,7 @@ class BackupSchemaScreen : Screen() {
                             listOf(
                                 AppBar.Action(
                                     title = stringResource(MR.strings.action_copy_to_clipboard),
-                                    icon = Icons.Default.ContentCopy,
+                                    icon = MaterialSymbols.Rounded.ContentCopy,
                                     onClick = {
                                         context.copyToClipboard(TITLE, schema)
                                     },

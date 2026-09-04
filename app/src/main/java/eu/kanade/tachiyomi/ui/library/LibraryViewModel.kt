@@ -4,7 +4,13 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastFilter
 import androidx.compose.ui.util.fastMap
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.core.preference.PreferenceMutableState
 import eu.kanade.core.preference.asState
 import eu.kanade.core.util.fastFilterNot
@@ -21,21 +27,22 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import mihon.core.common.utils.mutate
-import mihon.core.viewmodel.StateViewModel
 import mihon.domain.library.model.search.QueryNode
 import mihon.feature.library.matches
 import tachiyomi.core.common.preference.CheckboxState
@@ -63,130 +70,136 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracksPerManga
 import tachiyomi.domain.track.model.Track
 import tachiyomi.source.local.isLocal
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class LibraryViewModel(
-    private val getLibraryManga: GetLibraryManga = Injekt.get(),
-    private val getCategories: GetCategories = Injekt.get(),
-    private val getTracksPerManga: GetTracksPerManga = Injekt.get(),
-    private val getNextChapters: GetNextChapters = Injekt.get(),
-    private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get(),
-    private val getBookmarkedChaptersByMangaId: GetBookmarkedChaptersByMangaId = Injekt.get(),
-    private val setReadStatus: SetReadStatus = Injekt.get(),
-    private val updateManga: UpdateManga = Injekt.get(),
-    private val setMangaCategories: SetMangaCategories = Injekt.get(),
-    private val preferences: BasePreferences = Injekt.get(),
-    private val libraryPreferences: LibraryPreferences = Injekt.get(),
-    private val coverCache: CoverCache = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val downloadManager: DownloadManager = Injekt.get(),
-    private val downloadCache: DownloadCache = Injekt.get(),
-    private val trackerManager: TrackerManager = Injekt.get(),
-) : StateViewModel<LibraryViewModel.State>(State()) {
+    private val getLibraryManga: GetLibraryManga,
+    private val getCategories: GetCategories,
+    private val getTracksPerManga: GetTracksPerManga,
+    private val getNextChapters: GetNextChapters,
+    private val getChaptersByMangaId: GetChaptersByMangaId,
+    private val getBookmarkedChaptersByMangaId: GetBookmarkedChaptersByMangaId,
+    private val setReadStatus: SetReadStatus,
+    private val updateManga: UpdateManga,
+    private val setMangaCategories: SetMangaCategories,
+    private val preferences: BasePreferences,
+    private val libraryPreferences: LibraryPreferences,
+    private val coverCache: CoverCache,
+    private val sourceManager: SourceManager,
+    private val downloadManager: DownloadManager,
+    private val downloadCache: DownloadCache,
+    private val trackerManager: TrackerManager,
+) : ViewModel() {
 
-    init {
-        mutableState.update { state ->
-            state.copy(activeCategoryIndex = libraryPreferences.lastUsedCategory.get())
-        }
-        viewModelScope.launchIO {
-            combine(
-                state.map { it.searchQuery }.distinctUntilChanged().debounce(0.25.seconds),
-                getCategories.subscribe(),
-                getFavoritesFlow(),
-                combine(getTracksPerManga.subscribe(), getTrackingFiltersFlow(), ::Pair),
-                getLibraryItemPreferencesFlow(),
-            ) { searchQuery, categories, favorites, (tracksMap, trackingFilters), itemPreferences ->
-                val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
-                val filteredFavorites = favorites
-                    .applyFilters(tracksMap, trackingFilters, itemPreferences)
-                    .let { libraryItems ->
-                        if (searchQuery.isNullOrEmpty()) {
-                            libraryItems
-                        } else {
-                            val queryNode = QueryNode.from(searchQuery)
-                            libraryItems.filter { queryNode.matches(it) }
-                        }
-                    }
+    private val searchQuery = MutableStateFlow<String?>(null)
 
-                LibraryData(
-                    isInitialized = true,
-                    showSystemCategory = showSystemCategory,
-                    categories = categories,
-                    favorites = filteredFavorites,
-                    tracksMap = tracksMap,
-                    loggedInTrackerIds = trackingFilters.keys,
-                )
-            }
-                .distinctUntilChanged()
-                .collectLatest { libraryData ->
-                    mutableState.update { state ->
-                        state.copy(libraryData = libraryData)
-                    }
-                }
-        }
+    private val selection = MutableStateFlow(emptySet</* Manga */ Long>())
 
-        viewModelScope.launchIO {
-            state
-                .dropWhile { !it.libraryData.isInitialized }
-                .map { it.libraryData }
-                .distinctUntilChanged()
-                .map { data ->
-                    data.favorites
-                        .applyGrouping(data.categories, data.showSystemCategory)
-                        .applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds)
-                }
-                .collectLatest {
-                    mutableState.update { state ->
-                        state.copy(
-                            isLoading = false,
-                            groupedFavorites = it,
-                        )
-                    }
-                }
-        }
+    private val dialog = MutableStateFlow<Dialog?>(null)
 
-        combine(
-            libraryPreferences.categoryTabs.changes(),
-            libraryPreferences.categoryNumberOfItems.changes(),
-            libraryPreferences.showContinueReadingButton.changes(),
-        ) { a, b, c -> arrayOf(a, b, c) }
-            .onEach { (showCategoryTabs, showMangaCount, showMangaContinueButton) ->
-                mutableState.update { state ->
-                    state.copy(
-                        showCategoryTabs = showCategoryTabs,
-                        showMangaCount = showMangaCount,
-                        showMangaContinueButton = showMangaContinueButton,
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
+    private val activeCategoryIndex = MutableStateFlow(libraryPreferences.lastUsedCategory.get())
 
-        combine(
-            getLibraryItemPreferencesFlow(),
-            getTrackingFiltersFlow(),
-        ) { prefs, trackFilters ->
-            listOf(
-                prefs.filterDownloaded,
-                prefs.filterUnread,
-                prefs.filterStarted,
-                prefs.filterBookmarked,
-                prefs.filterCompleted,
-                prefs.filterIntervalCustom,
-                *trackFilters.values.toTypedArray(),
-            )
-                .any { it != TriState.DISABLED }
-        }
-            .distinctUntilChanged()
-            .onEach {
-                mutableState.update { state ->
-                    state.copy(hasActiveFilters = it)
-                }
-            }
-            .launchIn(viewModelScope)
+    private val displayPreferences = combine(
+        libraryPreferences.categoryTabs.changes(),
+        libraryPreferences.categoryNumberOfItems.changes(),
+        libraryPreferences.showContinueReadingButton.changes(),
+        ::DisplayPreferences,
+    )
+
+    private val hasActiveFilters = combine(
+        getLibraryItemPreferencesFlow(),
+        getTrackingFiltersFlow(),
+    ) { prefs, trackFilters ->
+        listOf(
+            prefs.filterDownloaded,
+            prefs.filterUnread,
+            prefs.filterStarted,
+            prefs.filterBookmarked,
+            prefs.filterCompleted,
+            prefs.filterIntervalCustom,
+            *trackFilters.values.toTypedArray(),
+        )
+            .any { it != TriState.DISABLED }
     }
+        .distinctUntilChanged()
+
+    // Shared separately so search, selection and dialog changes still reach [state] before the
+    // first query result, and so returning to the tab doesn't flash empty while it restarts.
+    private val library = combine(
+        searchQuery.debounce(0.25.seconds),
+        getCategories.subscribe(),
+        getFavoritesFlow(),
+        combine(getTracksPerManga.subscribe(), getTrackingFiltersFlow(), ::Pair),
+        getLibraryItemPreferencesFlow(),
+    ) { searchQuery, categories, favorites, (tracksMap, trackingFilters), itemPreferences ->
+        val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
+        val filteredFavorites = favorites
+            .applyFilters(tracksMap, trackingFilters, itemPreferences)
+            .let { libraryItems ->
+                if (searchQuery.isNullOrEmpty()) {
+                    libraryItems
+                } else {
+                    val queryNode = QueryNode.from(searchQuery)
+                    libraryItems.filter { queryNode.matches(it) }
+                }
+            }
+
+        LibraryData(
+            isInitialized = true,
+            showSystemCategory = showSystemCategory,
+            categories = categories,
+            favorites = filteredFavorites,
+            tracksMap = tracksMap,
+            loggedInTrackerIds = trackingFilters.keys,
+        )
+    }
+        .distinctUntilChanged()
+        .map { data ->
+            Library(
+                data = data,
+                groupedFavorites = data.favorites
+                    .applyGrouping(data.categories, data.showSystemCategory)
+                    .applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds),
+            )
+        }
+        .flowOn(Dispatchers.IO)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), null)
+
+    val state: StateFlow<State> = combine(
+        library,
+        combine(searchQuery, selection, dialog, ::Triple),
+        combine(activeCategoryIndex, displayPreferences, hasActiveFilters, ::Triple),
+    ) { library, (searchQuery, selection, dialog), (activeCategoryIndex, display, hasActiveFilters) ->
+        State(
+            isLoading = library == null,
+            searchQuery = searchQuery,
+            selection = selection,
+            hasActiveFilters = hasActiveFilters,
+            showCategoryTabs = display.showCategoryTabs,
+            showMangaCount = display.showMangaCount,
+            showMangaContinueButton = display.showMangaContinueButton,
+            dialog = dialog,
+            libraryData = library?.data ?: LibraryData(),
+            activeCategoryIndex = activeCategoryIndex,
+            groupedFavorites = library?.groupedFavorites.orEmpty(),
+        )
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
+
+    private data class DisplayPreferences(
+        val showCategoryTabs: Boolean,
+        val showMangaCount: Boolean,
+        val showMangaContinueButton: Boolean,
+    )
+
+    private data class Library(
+        val data: LibraryData,
+        val groupedFavorites: Map<Category, List</* LibraryItem */ Long>>,
+    )
 
     private fun List<LibraryItem>.applyFilters(
         trackMap: Map<Long, List<Track>>,
@@ -489,7 +502,7 @@ class LibraryViewModel(
     }
 
     private fun downloadNextChapters(amount: Int?) {
-        val mangas = state.value.selectedManga
+        val mangas = selectedManga
         viewModelScope.launchNonCancellable {
             mangas.forEach { manga ->
                 val chapters = getNextChapters.await(manga.id)
@@ -511,7 +524,7 @@ class LibraryViewModel(
     }
 
     private fun downloadBookmarkedChapters() {
-        val mangas = state.value.selectedManga
+        val mangas = selectedManga
         viewModelScope.launchNonCancellable {
             mangas.forEach { manga ->
                 val chapters = getBookmarkedChaptersByMangaId.await(manga.id)
@@ -534,7 +547,7 @@ class LibraryViewModel(
      * Marks mangas' chapters read status.
      */
     fun markReadSelection(read: Boolean) {
-        val selection = state.value.selectedManga
+        val selection = selectedManga
         viewModelScope.launchNonCancellable {
             selection.forEach { manga ->
                 setReadStatus.await(
@@ -613,23 +626,33 @@ class LibraryViewModel(
     }
 
     fun showSettingsDialog() {
-        mutableState.update { it.copy(dialog = Dialog.SettingsSheet) }
+        dialog.update { Dialog.SettingsSheet }
     }
 
     private var lastSelectionCategory: Long? = null
 
+    /**
+     * Reads from [selection] rather than [state], which is derived asynchronously and can still
+     * hold the previous selection immediately after a toggle.
+     */
+    private val selectedManga: List<Manga>
+        get() {
+            val favoritesById = state.value.libraryData.favoritesById
+            return selection.value.mapNotNull { favoritesById[it]?.libraryManga?.manga }
+        }
+
     fun clearSelection() {
         lastSelectionCategory = null
-        mutableState.update { it.copy(selection = setOf()) }
+        selection.update { setOf() }
     }
 
     fun toggleSelection(category: Category, manga: LibraryManga) {
-        mutableState.update { state ->
-            val newSelection = state.selection.mutate { set ->
+        selection.update { selection ->
+            val newSelection = selection.mutate { set ->
                 if (!set.remove(manga.id)) set.add(manga.id)
             }
             lastSelectionCategory = category.id.takeIf { newSelection.isNotEmpty() }
-            state.copy(selection = newSelection)
+            newSelection
         }
     }
 
@@ -638,8 +661,9 @@ class LibraryViewModel(
      * same category as the given manga
      */
     fun toggleRangeSelection(category: Category, manga: LibraryManga) {
-        mutableState.update { state ->
-            val newSelection = state.selection.mutate { list ->
+        val state = state.value
+        selection.update { selection ->
+            val newSelection = selection.mutate { list ->
                 val lastSelected = list.lastOrNull()
                 if (lastSelectionCategory != category.id) {
                     list.add(manga.id)
@@ -659,50 +683,49 @@ class LibraryViewModel(
                 selectionRange.mapNotNull { items[it] }.let(list::addAll)
             }
             lastSelectionCategory = category.id
-            state.copy(selection = newSelection)
+            newSelection
         }
     }
 
     fun selectAll() {
         lastSelectionCategory = null
-        mutableState.update { state ->
-            val newSelection = state.selection.mutate { list ->
+        val state = state.value
+        selection.update { selection ->
+            selection.mutate { list ->
                 state.getItemsForCategoryId(state.activeCategory?.id).map { it.id }.let(list::addAll)
             }
-            state.copy(selection = newSelection)
         }
     }
 
     fun invertSelection() {
         lastSelectionCategory = null
-        mutableState.update { state ->
-            val newSelection = state.selection.mutate { list ->
+        val state = state.value
+        selection.update { selection ->
+            selection.mutate { list ->
                 val itemIds = state.getItemsForCategoryId(state.activeCategory?.id).fastMap { it.id }
                 val (toRemove, toAdd) = itemIds.partition { it in list }
                 list.removeAll(toRemove)
                 list.addAll(toAdd)
             }
-            state.copy(selection = newSelection)
         }
     }
 
     fun search(query: String?) {
-        mutableState.update { it.copy(searchQuery = query) }
+        searchQuery.update { query }
     }
 
     fun updateActiveCategoryIndex(index: Int) {
-        val newIndex = mutableState.updateAndGet { state ->
-            state.copy(activeCategoryIndex = index)
-        }
-            .coercedActiveCategoryIndex
-
-        libraryPreferences.lastUsedCategory.set(newIndex)
+        activeCategoryIndex.update { index }
+        // Coerce here rather than reading it back off [state], which is derived asynchronously
+        // and would still hold the previous index at this point.
+        val lastIndex = state.value.displayedCategories.lastIndex.coerceAtLeast(0)
+        libraryPreferences.lastUsedCategory.set(index.coerceIn(0, lastIndex))
     }
 
     fun openChangeCategoryDialog() {
         viewModelScope.launchIO {
             // Create a copy of selected manga
-            val mangaList = state.value.selectedManga
+            val mangaList = selectedManga
 
             // Hide the default category because it has a different behavior than the ones from db.
             val categories = state.value.displayedCategories.filter { it.id != 0L }
@@ -720,16 +743,16 @@ class LibraryViewModel(
                     }
                 }
 
-            mutableState.update { it.copy(dialog = Dialog.ChangeCategory(mangaList, preselected)) }
+            dialog.update { Dialog.ChangeCategory(mangaList, preselected) }
         }
     }
 
     fun openDeleteMangaDialog() {
-        mutableState.update { it.copy(dialog = Dialog.DeleteManga(state.value.selectedManga)) }
+        dialog.update { Dialog.DeleteManga(selectedManga) }
     }
 
     fun closeDialog() {
-        mutableState.update { it.copy(dialog = null) }
+        dialog.update { null }
     }
 
     sealed interface Dialog {

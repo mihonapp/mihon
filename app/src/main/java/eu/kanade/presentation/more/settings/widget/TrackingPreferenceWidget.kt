@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.data.track.Tracker
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Done
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -66,7 +66,7 @@ fun TrackingPreferenceWidget(
             }
             if (isLoggedIn) {
                 Icon(
-                    imageVector = Icons.Outlined.Done,
+                    imageVector = MaterialSymbols.Rounded.Done,
                     modifier = Modifier
                         .padding(4.dp)
                         .size(32.dp),

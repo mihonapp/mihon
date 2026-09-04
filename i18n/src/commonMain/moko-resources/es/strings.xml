@@ -145,7 +145,6 @@
     <string name="file_select_backup">Elige una copia de respaldo</string>
     <string name="update_check_confirm">Descargar</string>
     <string name="update_check_no_new_updates">Ya estás usando la última versión disponible</string>
-    <string name="update_check_notification_download_in_progress">Descargando…</string>
     <string name="update_check_notification_update_available">¡Hay una nueva versión!</string>
     <string name="information_no_downloads">No hay descargas</string>
     <string name="information_no_recent">No hay actualizaciones recientes</string>
@@ -539,7 +538,6 @@
     <string name="update_72hour">Cada 3 días</string>
     <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a %s. Toca aquí para más información.</string>
     <string name="ext_update_all">Actualizar todas</string>
-    <string name="channel_app_updates">Actualizaciones de la aplicación</string>
     <string name="pref_auto_clear_chapter_cache">Limpiar la caché de capítulos al abrir la aplicación</string>
     <string name="database_clean">Base de datos limpia</string>
     <string name="clear_database_source_item_count">%1$d títulos que no pertenecen a la biblioteca en la base de datos</string>
@@ -802,10 +800,6 @@
     <string name="non_library_settings">Todas las obras leídas</string>
     <string name="pref_auto_update_manga_on_mark_read">Actualizar el progreso al marcarlo como leído</string>
     <string name="trackers_updated_summary">El progreso de lectura ha saltado al capítulo %d</string>
-    <string name="pref_hardware_bitmap_threshold_default">Predeterminado (%d)</string>
-    <string name="pref_hardware_bitmap_threshold">Elegir un tamaño máximo con el que decodificar imágenes por hardware</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Si el visor carga una página en blanco te recomendamos ir reduciéndolo poco a poco hasta que funcione.\nLímite actual: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Empeora el rendimiento, te recomendamos activarlo solo si la imagen sigue sin verse al reducir el tamaño máximo</string>
     <string name="pref_incognito_mode_extension_summary">Pausa el historial de lectura para las obras que dependan de esta extensión</string>
     <string name="tracked_privately">Seguimiento privado</string>
     <string name="label_auto">Automático</string>
@@ -817,7 +811,6 @@
     <string name="artist">Artista</string>
     <string name="action_toggle_private_off">Seguir públicamente</string>
     <string name="action_toggle_private_on">Seguir de forma privada</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Cargar imágenes de tira vertical con el decodificador antiguo</string>
     <string name="pref_mark_duplicate_read_chapter_read">Marcar capítulos duplicados como ya leídos</string>
     <string name="action_display_unread_badge">Capítulos por leer</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Al obtener capítulos nuevos</string>

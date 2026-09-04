@@ -3,6 +3,11 @@ package eu.kanade.tachiyomi.ui.browse.source
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
@@ -24,15 +29,16 @@ import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.Pin
 import tachiyomi.domain.source.model.Source
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.util.TreeMap
 import kotlin.time.Duration.Companion.seconds
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class SourcesViewModel(
-    private val getEnabledSources: GetEnabledSources = Injekt.get(),
-    private val toggleSource: ToggleSource = Injekt.get(),
-    private val toggleSourcePin: ToggleSourcePin = Injekt.get(),
+    private val getEnabledSources: GetEnabledSources,
+    private val toggleSource: ToggleSource,
+    private val toggleSourcePin: ToggleSourcePin,
 ) : ViewModel() {
 
     private val _events = Channel<Event>(Int.MAX_VALUE)

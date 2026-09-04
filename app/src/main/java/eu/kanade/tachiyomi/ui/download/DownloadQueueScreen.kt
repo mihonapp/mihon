@@ -4,14 +4,11 @@ import android.view.LayoutInflater
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Sort
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.CloudOff
-import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,10 +43,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
@@ -57,6 +54,11 @@ import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.download.DownloadNetworkStatus
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.Sort
+import mihon.icons.materialsymbols.rounded.CloudOff
+import mihon.icons.materialsymbols.roundedfilled.Pause
+import mihon.icons.materialsymbols.roundedfilled.PlayArrow
 import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
@@ -82,7 +84,7 @@ private fun DownloadQueueNetworkWarning(
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(imageVector = Icons.Outlined.CloudOff, contentDescription = null)
+            Icon(imageVector = MaterialSymbols.Rounded.CloudOff, contentDescription = null)
             Text(
                 text = message,
                 modifier = Modifier
@@ -103,7 +105,7 @@ object DownloadQueueScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
-        val viewModel = viewModel<DownloadQueueViewModel>()
+        val viewModel = metroViewModel<DownloadQueueViewModel>()
         val downloadList by viewModel.state.collectAsStateWithLifecycle()
         val downloadCount by remember {
             derivedStateOf { downloadList.sumOf { it.subItems.size } }
@@ -228,7 +230,7 @@ object DownloadQueueScreen : Screen() {
                                 listOf(
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_sort),
-                                        icon = Icons.AutoMirrored.Outlined.Sort,
+                                        icon = MaterialSymbols.AutoMirroredRounded.Sort,
                                         onClick = { sortExpanded = true },
                                     ),
                                     AppBar.OverflowAction(
@@ -244,11 +246,10 @@ object DownloadQueueScreen : Screen() {
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             floatingActionButton = {
-                val isRunning by viewModel.isDownloaderRunning.collectAsStateWithLifecycle()
-                val isDownloadActionRunning = isRunning && resumeBlockedMessage == null
+                val isDownloadRequested by viewModel.isDownloadRequested.collectAsStateWithLifecycle()
                 SmallExtendedFloatingActionButton(
                     text = {
-                        val id = if (isDownloadActionRunning) {
+                        val id = if (isDownloadRequested) {
                             MR.strings.action_pause
                         } else {
                             MR.strings.action_resume
@@ -256,21 +257,21 @@ object DownloadQueueScreen : Screen() {
                         Text(text = stringResource(id))
                     },
                     icon = {
-                        val icon = if (isDownloadActionRunning) {
-                            Icons.Outlined.Pause
+                        val icon = if (isDownloadRequested) {
+                            MaterialSymbols.RoundedFilled.Pause
                         } else {
-                            Icons.Filled.PlayArrow
+                            MaterialSymbols.RoundedFilled.PlayArrow
                         }
                         Icon(imageVector = icon, contentDescription = null)
                     },
                     onClick = {
-                        val blockedMessage = resumeBlockedMessage
-                        when {
-                            blockedMessage != null -> scope.launchUI {
-                                snackbarHostState.showSnackbar(blockedMessage)
+                        if (isDownloadRequested) {
+                            viewModel.pauseDownloads()
+                        } else {
+                            viewModel.startDownloads()
+                            resumeBlockedMessage?.let { message ->
+                                scope.launchUI { snackbarHostState.showSnackbar(message) }
                             }
-                            isDownloadActionRunning -> viewModel.pauseDownloads()
-                            else -> viewModel.startDownloads()
                         }
                     },
                     expanded = fabExpanded,
@@ -291,12 +292,12 @@ object DownloadQueueScreen : Screen() {
 
             val density = LocalDensity.current
             val layoutDirection = LocalLayoutDirection.current
-            val startPadding = contentPadding.calculateLeftPadding(layoutDirection)
+            val startPadding = contentPadding.calculateStartPadding(layoutDirection)
             val topPadding = contentPadding.calculateTopPadding()
-            val endPadding = contentPadding.calculateRightPadding(layoutDirection)
+            val endPadding = contentPadding.calculateEndPadding(layoutDirection)
             val bottomPadding = contentPadding.calculateBottomPadding()
-            val left = with(density) { startPadding.toPx().roundToInt() }
-            val right = with(density) { endPadding.toPx().roundToInt() }
+            val left = with(density) { contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt() }
+            val right = with(density) { contentPadding.calculateRightPadding(layoutDirection).toPx().roundToInt() }
             val bottom = with(density) { bottomPadding.toPx().roundToInt() }
 
             Column(

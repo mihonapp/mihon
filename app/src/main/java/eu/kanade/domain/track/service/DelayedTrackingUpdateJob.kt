@@ -8,29 +8,35 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.store.DelayedTrackingStore
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
+import mihon.app.di.AppGraph
+import mihon.core.metro.metroGraph
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.interactor.GetTracks
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
 
 class DelayedTrackingUpdateJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
+    private val graph: AppGraph = context.metroGraph()
+
+    @Inject lateinit var getTracks: GetTracks
+
+    @Inject lateinit var trackChapter: TrackChapter
+
+    @Inject lateinit var delayedTrackingStore: DelayedTrackingStore
+
     override suspend fun doWork(): Result {
+        graph.inject(this)
+
         if (runAttemptCount > 3) {
             return Result.failure()
         }
-
-        val getTracks = Injekt.get<GetTracks>()
-        val trackChapter = Injekt.get<TrackChapter>()
-
-        val delayedTrackingStore = Injekt.get<DelayedTrackingStore>()
 
         withIOContext {
             delayedTrackingStore.getItems()

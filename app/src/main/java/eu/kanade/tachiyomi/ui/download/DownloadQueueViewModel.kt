@@ -1,9 +1,13 @@
 package eu.kanade.tachiyomi.ui.download
 
-import android.app.Application
+import android.content.Context
 import android.view.MenuItem
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -26,15 +30,16 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import tachiyomi.domain.download.service.DownloadPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
 class DownloadQueueViewModel(
-    private val downloadManager: DownloadManager = Injekt.get(),
-    context: Application = Injekt.get(),
-    downloadPreferences: DownloadPreferences = Injekt.get(),
+    private val downloadManager: DownloadManager,
+    context: Context,
+    downloadPreferences: DownloadPreferences,
 ) : ViewModel() {
 
     val state: StateFlow<List<DownloadHeaderItem>> = downloadManager.queueState
@@ -141,14 +146,13 @@ class DownloadQueueViewModel(
         adapter = null
     }
 
-    val isDownloaderRunning = downloadManager.isDownloaderRunning
+    internal val isDownloadRequested = downloadManager.isDownloadRequested
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), false)
 
     internal val networkStatus = combine(
         context.networkStateFlow()
             .onStart { emit(context.activeNetworkState()) },
-        downloadPreferences.downloadOnlyOverWifi.changes()
-            .onStart { emit(downloadPreferences.downloadOnlyOverWifi.get()) },
+        downloadPreferences.downloadOnlyOverWifi.changes(),
     ) { networkState, requireWifi ->
         networkState.toDownloadNetworkStatus(requireWifi)
     }
