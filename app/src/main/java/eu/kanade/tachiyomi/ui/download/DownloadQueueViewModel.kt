@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.download
 
+import android.content.Context
 import android.view.MenuItem
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,8 +11,11 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.download.toDownloadNetworkStatus
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.util.system.activeNetworkState
+import eu.kanade.tachiyomi.util.system.networkStateFlow
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,8 +26,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import tachiyomi.domain.download.service.DownloadPreferences
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -32,6 +38,8 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoMap(AppScope::class)
 class DownloadQueueViewModel(
     private val downloadManager: DownloadManager,
+    context: Context,
+    downloadPreferences: DownloadPreferences,
 ) : ViewModel() {
 
     val state: StateFlow<List<DownloadHeaderItem>> = downloadManager.queueState
@@ -138,8 +146,22 @@ class DownloadQueueViewModel(
         adapter = null
     }
 
-    val isDownloaderRunning = downloadManager.isDownloaderRunning
+    internal val isDownloadRequested = downloadManager.isDownloadRequested
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), false)
+
+    internal val networkStatus = combine(
+        context.networkStateFlow()
+            .onStart { emit(context.activeNetworkState()) },
+        downloadPreferences.downloadOnlyOverWifi.changes(),
+    ) { networkState, requireWifi ->
+        networkState.toDownloadNetworkStatus(requireWifi)
+    }
+        .distinctUntilChanged()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5.seconds),
+            context.activeNetworkState().toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get()),
+        )
 
     fun getDownloadStatusFlow() = downloadManager.statusFlow()
     fun getDownloadProgressFlow() = downloadManager.progressFlow()
