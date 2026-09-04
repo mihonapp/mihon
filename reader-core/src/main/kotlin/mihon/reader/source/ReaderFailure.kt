@@ -29,6 +29,8 @@ sealed class ReaderFailure(
 
     class PageNotFound(name: String) : ReaderFailure("Page '$name' does not exist in this chapter")
 
+    class EmptyChapter : ReaderFailure("Chapter contains no readable pages")
+
     class XmlRejected(document: String, cause: Throwable? = null) :
         ReaderFailure("Unsafe or invalid XML document '$document'", cause)
 

@@ -19,6 +19,7 @@ enum class ScaleMode {
 }
 
 enum class ReaderErrorCode {
+    EMPTY_CHAPTER,
     SOURCE_UNAVAILABLE,
     PAGE_NOT_FOUND,
     PAGE_DECODE_FAILED,
