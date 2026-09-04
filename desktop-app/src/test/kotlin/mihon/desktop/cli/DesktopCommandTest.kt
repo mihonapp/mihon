@@ -64,6 +64,77 @@ class DesktopCommandTest {
     }
 
     @Test
+    fun `reader verification command requires its exact opt-in environment gate`() {
+        val root = tempDir.resolve("reader fixture")
+
+        DesktopCommandParser.parse(
+            arrayOf("--verify-reader=$root"),
+            mapOf("MIHON_W_READER_VERIFY" to "1"),
+        ) shouldBe DesktopCommand.VerifyReader(root)
+
+        listOf(
+            emptyMap(),
+            mapOf("MIHON_W_READER_VERIFY" to "0"),
+            mapOf("MIHON_W_READER_VERIFY" to "true"),
+        ).forEach { environment ->
+            val error = assertThrows<CommandLineException> {
+                DesktopCommandParser.parse(arrayOf("--verify-reader=$root"), environment)
+            }
+            error.exitCode shouldBe 2
+            error.argument shouldBe "--verify-reader"
+        }
+        assertThrows<CommandLineException> {
+            DesktopCommandParser.parse(
+                arrayOf("--verify-reader="),
+                mapOf("MIHON_W_READER_VERIFY" to "1"),
+            )
+        }.exitCode shouldBe 2
+    }
+
+    @Test
+    fun `reader verification emits exactly one stable JSON summary line`() {
+        val root = tempDir.resolve("reader fixture")
+        val output = ByteArrayOutputStream()
+        var verified: Path? = null
+        newRuntime(DesktopCommand.VerifyReader(root)).use { fixture ->
+            DesktopCommandRunner(
+                runtime = fixture.runtime,
+                output = output,
+                readerVerification = { path ->
+                    verified = path
+                    ReaderVerificationSummary(
+                        phase = "initial-open",
+                        fixtureManifestSha256 = "a".repeat(64),
+                        verifiedAssets = listOf("standalone", "directory", "cbz"),
+                        verifiedModes = listOf("SINGLE_LTR"),
+                        decodedTileCount = 3,
+                        gifFrameHashes = listOf("b".repeat(64), "c".repeat(64)),
+                        cacheResidentHighWaterBytes = 4096,
+                        coreResidentAndInFlightHighWaterBytes = 8192,
+                        progressRows = listOf(
+                            ReaderProgressRow(7, "01-directory", 1, 5, completed = false),
+                        ),
+                    )
+                },
+            ).run(fixture.runtime.command) shouldBe 0
+        }
+
+        verified shouldBe root
+        val lines = output.toString(UTF_8).lineSequence().filter(String::isNotBlank).toList()
+        lines.size shouldBe 1
+        output.toString(UTF_8) shouldBe
+            "{\"command\":\"verify-reader\",\"status\":\"SUCCEEDED\",\"phase\":\"initial-open\"," +
+            "\"fixtureManifestSha256\":\"${"a".repeat(
+                64,
+            )}\",\"verifiedAssets\":[\"standalone\",\"directory\",\"cbz\"]," +
+            "\"verifiedModes\":[\"SINGLE_LTR\"],\"decodedTileCount\":3," +
+            "\"gifFrameHashes\":[\"${"b".repeat(64)}\",\"${"c".repeat(64)}\"]," +
+            "\"cacheResidentHighWaterBytes\":4096,\"coreResidentAndInFlightHighWaterBytes\":8192," +
+            "\"progressRows\":[{\"chapterId\":7,\"chapterName\":\"01-directory\"," +
+            "\"pageIndex\":1,\"pageCount\":5,\"completed\":false}]}\n"
+    }
+
+    @Test
     fun `command-line JSON redacts unknown option values`() {
         val secret = "SECRET_PREFERENCE_VALUE"
         val error = assertThrows<CommandLineException> {

@@ -8,6 +8,7 @@ sealed interface DesktopCommand {
     data class ImportBackup(val path: Path) : DesktopCommand
     data class ImportLocal(val path: Path) : DesktopCommand
     data object ListLibraryJson : DesktopCommand
+    data class VerifyReader(val fixtureRoot: Path) : DesktopCommand
 }
 
 class CommandLineException(
@@ -18,7 +19,10 @@ class CommandLineException(
 ) : IllegalArgumentException(message, cause)
 
 object DesktopCommandParser {
-    fun parse(args: Array<String>): DesktopCommand {
+    fun parse(
+        args: Array<String>,
+        environment: Map<String, String> = System.getenv(),
+    ): DesktopCommand {
         val commands = buildList {
             args.forEach { argument ->
                 when {
@@ -26,6 +30,15 @@ object DesktopCommandParser {
                     argument.startsWith("--data-dir=") -> Unit
                     argument == "--smoke-test" -> add(DesktopCommand.FoundationSmoke)
                     argument == "--list-library-json" -> add(DesktopCommand.ListLibraryJson)
+                    argument.startsWith("--verify-reader=") -> {
+                        if (environment[READER_VERIFY_ENVIRONMENT] != "1") {
+                            throw CommandLineException(
+                                "--verify-reader is an internal verification command",
+                                "--verify-reader",
+                            )
+                        }
+                        add(DesktopCommand.VerifyReader(parsePath(argument, "--verify-reader=")))
+                    }
                     argument.startsWith("--import-backup=") -> add(
                         DesktopCommand.ImportBackup(parsePath(argument, "--import-backup=")),
                     )
@@ -54,4 +67,6 @@ object DesktopCommandParser {
 
     private fun safeArgument(argument: String): String? =
         argument.takeIf { it.startsWith("--") }?.substringBefore('=')
+
+    private const val READER_VERIFY_ENVIRONMENT = "MIHON_W_READER_VERIFY"
 }

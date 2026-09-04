@@ -142,7 +142,7 @@ object DesktopRuntimeFactory {
         executableDirectory: Path,
         cleanupOrphans: (LocalMangaImporter, Path) -> Unit,
     ): DesktopRuntime {
-        val command = DesktopCommandParser.parse(args)
+        val command = DesktopCommandParser.parse(args, environment)
         val dataDirectoryArguments = args.filter { it.startsWith("--data-dir=") }
         if (dataDirectoryArguments.size > 1) {
             throw CommandLineException("--data-dir may be specified only once", "--data-dir")
@@ -166,7 +166,7 @@ object DesktopRuntimeFactory {
             val localLibraryRoot = directories.root.resolve("media").resolve("local").toAbsolutePath().normalize()
             cleanupOrphans(localImporter, localLibraryRoot)
             val preferences = DesktopPreferenceStore(directories.root.resolve("preferences.properties"))
-            val readerFactory = if (command == DesktopCommand.LaunchUi) {
+            val readerFactory = if (command == DesktopCommand.LaunchUi || command is DesktopCommand.VerifyReader) {
                 DesktopReaderFactory(
                     applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
                     library = library,

@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.bundles.test)
+    testImplementation(libs.commonsCompress)
     testImplementation(compose.desktop.uiTestJUnit4)
     testImplementation(libs.kotlinx.serialization.protobuf)
     testRuntimeOnly(libs.junit.platform.launcher)
