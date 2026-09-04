@@ -290,7 +290,6 @@ fun SearchToolbar(
                 onSearch(searchQuery)
                 focusManager.clearFocus()
                 keyboardController?.hide()
-                focusManager.moveFocus(FocusDirection.Next)
             }
 
             BasicTextField(
@@ -300,7 +299,7 @@ fun SearchToolbar(
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
                     .runOnEnterKeyPressed(action = searchAndClearFocus)
-                    .showSoftKeyboard(remember { searchQuery.isEmpty() })
+                    .showSoftKeyboard(searchQuery.isEmpty() && remember { searchQuery.isEmpty() })
                     .clearFocusOnSoftKeyboardHide(),
                 textStyle = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
