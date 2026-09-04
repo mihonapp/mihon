@@ -10,7 +10,9 @@ import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.setUserAgent
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.DelicateCoroutinesApi
 import okhttp3.Headers
+import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -19,11 +21,58 @@ import tachiyomi.i18n.MR
 import java.util.Locale
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.withLock
 
 abstract class WebViewInterceptor(
     private val context: Context,
     private val defaultUserAgentProvider: () -> String,
 ) : Interceptor {
+
+    /**
+     * A per-host lock manager that makes sure only one instance of the interceptor is run per host at a time
+     */
+    private val locks = object {
+        private val MAX_CAPACITY = 256
+
+        /**
+         * This is a mapping of host to two locks. The first lock is used to synchronize calls, and the second lock is
+         * to prevent the entry from being removed while it is used.
+         */
+        private val data = object : LinkedHashMap<String, Pair<ReentrantReadWriteLock, ReentrantReadWriteLock>>() {
+            override fun removeEldestEntry(
+                eldest: Map.Entry<String, Pair<ReentrantReadWriteLock, ReentrantReadWriteLock>>,
+            ): Boolean {
+                if (size > MAX_CAPACITY) {
+                    eldest.value.second.writeLock().withLock {
+                        if (size > MAX_CAPACITY) {
+                            remove(eldest.key)
+                        }
+                    }
+                }
+                return false
+            }
+        }
+
+        /**
+         * Runs the block while preventing the entry from being removed, which probably only happens in extreme cases.
+         */
+        inline fun <T> withLock(host: String, block: (ReentrantReadWriteLock) -> T): T {
+            val (lock, entryLock) = synchronized(data) {
+                var entry = data[host]
+                if (entry == null) {
+                    entry = ReentrantReadWriteLock() to ReentrantReadWriteLock()
+                    data.put(host, entry)
+                }
+                entry.first to entry.second.readLock().apply { lock() }
+            }
+            try {
+                return block(lock)
+            } finally {
+                entryLock.unlock()
+            }
+        }
+    }
 
     /**
      * When this is called, it initializes the WebView if it wasn't already. We use this to avoid
@@ -47,24 +96,44 @@ abstract class WebViewInterceptor(
 
     abstract fun shouldIntercept(response: Response): Boolean
 
-    abstract fun intercept(chain: Interceptor.Chain, request: Request, response: Response): Response
+    abstract fun getNonce(url: HttpUrl): String?
 
+    open fun isBypassed(url: HttpUrl, oldNonce: String?): Boolean = getNonce(url).let {
+        !it.isNullOrBlank() && it != oldNonce
+    }
+
+    abstract fun intercept(chain: Interceptor.Chain, request: Request, response: Response, nonce: String?): Response?
+
+    @OptIn(DelicateCoroutinesApi::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val response = chain.proceed(request)
-        if (!shouldIntercept(response)) {
-            return response
-        }
+        val url = request.url
 
-        if (!WebViewUtil.supportsWebView(context)) {
-            launchUI {
-                context.toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
+        return locks.withLock(url.host) { lock ->
+            val (response, nonce) = lock.readLock().withLock {
+                chain.proceed(request).also {
+                    if (!shouldIntercept(it)) {
+                        return it
+                    }
+                } to getNonce(url)
             }
-            return response
-        }
-        initWebView
 
-        return intercept(chain, request, response)
+            lock.writeLock().withLock {
+                if (isBypassed(url, nonce)) {
+                    return@withLock null
+                }
+
+                if (!WebViewUtil.supportsWebView(context)) {
+                    launchUI {
+                        context.toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
+                    }
+                    return@withLock response
+                }
+                initWebView
+
+                intercept(chain, request, response, nonce)
+            }
+        } ?: chain.proceed(request)
     }
 
     fun parseHeaders(headers: Headers): Map<String, String> {
