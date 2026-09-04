@@ -25,20 +25,9 @@ data class DesktopPreferences(
 
 class DesktopPreferenceStore(private val file: Path) {
 
+    @Synchronized
     fun load(): DesktopPreferences {
-        if (!Files.exists(file)) return DesktopPreferences()
-
-        val properties = try {
-            Properties().apply {
-                Files.newInputStream(file).use { input -> load(input) }
-            }
-        } catch (_: IOException) {
-            quarantineInvalidFile()
-            return DesktopPreferences()
-        } catch (_: IllegalArgumentException) {
-            quarantineInvalidFile()
-            return DesktopPreferences()
-        }
+        val properties = readProperties()
         return DesktopPreferences(
             themeMode = enumValueOrDefault(properties.getProperty("theme"), ThemeMode.System),
             lastDestination = enumValueOrDefault(
@@ -49,20 +38,52 @@ class DesktopPreferenceStore(private val file: Path) {
         )
     }
 
+    @Synchronized
     fun save(preferences: DesktopPreferences) {
+        val properties = readProperties()
+        properties.setProperty("theme", preferences.themeMode.name)
+        properties.setProperty("destination", preferences.lastDestination.name)
+        properties.remove("window.x")
+        properties.remove("window.y")
+        properties.remove("window.width")
+        properties.remove("window.height")
+        properties.remove("window.maximized")
+        preferences.windowPlacement?.let { placement ->
+            properties.setProperty("window.x", placement.x.toString())
+            properties.setProperty("window.y", placement.y.toString())
+            properties.setProperty("window.width", placement.width.toString())
+            properties.setProperty("window.height", placement.height.toString())
+            properties.setProperty("window.maximized", placement.maximized.toString())
+        }
+        writeProperties(properties)
+    }
+
+    @Synchronized
+    fun property(key: String): String? = readProperties().getProperty(key)
+
+    @Synchronized
+    fun update(block: Properties.() -> Unit) {
+        writeProperties(readProperties().apply(block))
+    }
+
+    private fun readProperties(): Properties {
+        if (!Files.exists(file)) return Properties()
+        return try {
+            Properties().apply {
+                Files.newInputStream(file).use { input -> load(input) }
+            }
+        } catch (_: IOException) {
+            quarantineInvalidFile()
+            Properties()
+        } catch (_: IllegalArgumentException) {
+            quarantineInvalidFile()
+            Properties()
+        }
+    }
+
+    private fun writeProperties(properties: Properties) {
         Files.createDirectories(file.parent)
         val temporary = file.resolveSibling("${file.fileName}.tmp")
-        val properties = Properties().apply {
-            setProperty("theme", preferences.themeMode.name)
-            setProperty("destination", preferences.lastDestination.name)
-            preferences.windowPlacement?.let { placement ->
-                setProperty("window.x", placement.x.toString())
-                setProperty("window.y", placement.y.toString())
-                setProperty("window.width", placement.width.toString())
-                setProperty("window.height", placement.height.toString())
-                setProperty("window.maximized", placement.maximized.toString())
-            }
-        }
         Files.newOutputStream(temporary).use { properties.store(it, "Mihon W desktop preferences") }
         try {
             Files.move(temporary, file, ATOMIC_MOVE, REPLACE_EXISTING)

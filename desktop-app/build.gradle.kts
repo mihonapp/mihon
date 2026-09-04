@@ -26,8 +26,10 @@ val desktopJavaHome = extensions
 
 dependencies {
     implementation(project(":desktop-library-data"))
+    implementation(project(":reader-core"))
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
+    implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.bundles.test)

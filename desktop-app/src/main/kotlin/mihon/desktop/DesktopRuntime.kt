@@ -1,5 +1,10 @@
 package mihon.desktop
 
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.runBlocking
 import mihon.desktop.cli.CommandLineException
 import mihon.desktop.cli.DesktopCommand
 import mihon.desktop.cli.DesktopCommandParser
@@ -13,8 +18,13 @@ import mihon.desktop.platform.AppDirectories
 import mihon.desktop.platform.AppDirectoryResolver
 import mihon.desktop.platform.DistributionMode
 import mihon.desktop.preferences.DesktopPreferenceStore
+import mihon.desktop.reader.DesktopReaderFactory
+import mihon.desktop.reader.DesktopReaderSettingsStore
+import java.awt.EventQueue
 import java.nio.file.Path
-import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class DesktopRuntime(
     val directories: AppDirectories,
@@ -24,12 +34,98 @@ class DesktopRuntime(
     val backupImporter: AndroidBackupImporter,
     val localImporter: LocalMangaImporter,
     val localLibraryRoot: Path,
+    val readerFactory: DesktopReaderFactory? = null,
+    private val closeReaderSessions: suspend () -> Unit = readerFactory?.let { it::shutdown } ?: {},
+    private val closeReaderServices: () -> Unit = readerFactory?.let { it::closeServices } ?: {},
     internal val closeLibrary: () -> Unit = library::close,
+    private val blockingShutdown: ExecutorService = BLOCKING_SHUTDOWN_EXECUTOR,
 ) : AutoCloseable {
-    private val closed = AtomicBoolean()
+    private val shutdownLock = Any()
+    private var shutdownResult: CompletableDeferred<Result<Unit>>? = null
+
+    /** Stops session admission, flushes sessions, then disposes runtime services and the database. */
+    suspend fun shutdown() {
+        val deferred: CompletableDeferred<Result<Unit>>
+        val owner: Boolean
+        synchronized(shutdownLock) {
+            val existing = shutdownResult
+            if (existing == null) {
+                deferred = CompletableDeferred()
+                shutdownResult = deferred
+                owner = true
+            } else {
+                deferred = existing
+                owner = false
+            }
+        }
+        if (!owner) return deferred.await().getOrThrow()
+
+        var failure: Throwable? = null
+        try {
+            try {
+                closeReaderSessions()
+            } catch (error: Throwable) {
+                failure = failure.append(error)
+            }
+            try {
+                closeReaderServices()
+            } catch (error: Throwable) {
+                failure = failure.append(error)
+            }
+            try {
+                closeLibrary()
+            } catch (error: Throwable) {
+                failure = failure.append(error)
+            }
+            if (failure == null) {
+                deferred.complete(Result.success(Unit))
+            } else {
+                deferred.complete(Result.failure(failure))
+            }
+        } catch (error: Throwable) {
+            deferred.complete(Result.failure(error))
+        }
+        return deferred.await().getOrThrow()
+    }
 
     override fun close() {
-        if (closed.compareAndSet(false, true)) closeLibrary()
+        check(!EventQueue.isDispatchThread()) { "DesktopRuntime.close() must not run on the EDT; use shutdown()" }
+        try {
+            blockingShutdown.submit<Unit> { runBlocking { shutdown() } }.get()
+        } catch (error: ExecutionException) {
+            throw error.cause ?: error
+        }
+    }
+
+    companion object {
+        private val BLOCKING_SHUTDOWN_EXECUTOR = Executors.newSingleThreadExecutor { runnable ->
+            Thread(runnable, "mihon-runtime-shutdown").apply { isDaemon = true }
+        }
+
+        internal fun forTesting(
+            closeSessions: suspend () -> Unit = {},
+            closeReaderServices: () -> Unit = {},
+            closeLibrary: () -> Unit = {},
+        ): DesktopRuntime {
+            val root = java.nio.file.Files.createTempDirectory("mihon-runtime-test")
+            val directories = AppDirectories(root).create()
+            val library = DesktopLibraryDatabaseFactory.open(directories.database.resolve("library.db"))
+            return DesktopRuntime(
+                directories = directories,
+                preferences = DesktopPreferenceStore(root.resolve("preferences.properties")),
+                command = DesktopCommand.FoundationSmoke,
+                library = library,
+                backupImporter = AndroidBackupImporter(AndroidBackupCodec(), AndroidBackupValidator(), library),
+                localImporter = LocalMangaImporter(library),
+                localLibraryRoot = root.resolve("media").resolve("local"),
+                closeReaderSessions = closeSessions,
+                closeReaderServices = closeReaderServices,
+                closeLibrary = {
+                    closeLibrary()
+                    library.close()
+                },
+            )
+        }
     }
 }
 
@@ -69,14 +165,25 @@ object DesktopRuntimeFactory {
             val localImporter = LocalMangaImporter(library)
             val localLibraryRoot = directories.root.resolve("media").resolve("local").toAbsolutePath().normalize()
             cleanupOrphans(localImporter, localLibraryRoot)
+            val preferences = DesktopPreferenceStore(directories.root.resolve("preferences.properties"))
+            val readerFactory = if (command == DesktopCommand.LaunchUi) {
+                DesktopReaderFactory(
+                    applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
+                    library = library,
+                    settings = DesktopReaderSettingsStore(preferences),
+                )
+            } else {
+                null
+            }
             return DesktopRuntime(
                 directories = directories,
-                preferences = DesktopPreferenceStore(directories.root.resolve("preferences.properties")),
+                preferences = preferences,
                 command = command,
                 library = library,
                 backupImporter = backupImporter,
                 localImporter = localImporter,
                 localLibraryRoot = localLibraryRoot,
+                readerFactory = readerFactory,
             )
         } catch (error: Throwable) {
             try {
@@ -94,3 +201,5 @@ object DesktopRuntimeFactory {
         throw CommandLineException("$option contains an invalid path", option, error)
     }
 }
+
+private fun Throwable?.append(error: Throwable): Throwable = this?.also { it.addSuppressed(error) } ?: error

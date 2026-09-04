@@ -1,12 +1,20 @@
 package mihon.desktop
 
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import mihon.desktop.cli.DesktopCommand
+import mihon.desktop.reader.DesktopReaderFactory
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
+import java.awt.EventQueue
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicInteger
 
 class DesktopRuntimeFactoryTest {
 
@@ -75,5 +83,92 @@ class DesktopRuntimeFactoryTest {
             runtime.library.librarySnapshot() shouldBe emptyList()
         }
         cleanupCalls shouldBe 1
+    }
+
+    @Test
+    fun `UI runtime owns isolated sessions with one shared factory and global generations`() {
+        runBlocking {
+            val runtime = DesktopRuntimeFactory.create(
+                args = emptyArray(),
+                environment = mapOf("APPDATA" to tempDir.resolve("Roaming").toString()),
+                executableDirectory = tempDir.resolve("bin"),
+            )
+            val factory = requireNotNull(runtime.readerFactory)
+
+            val first = factory.createSession()
+            val second = factory.createSession()
+
+            val generations = coroutineScope {
+                List(64) { async(Dispatchers.Default) { factory.nextGeneration() } }.awaitAll()
+            }
+            generations.sorted() shouldBe (0L until 64L).toList()
+            (first === second) shouldBe false
+            runtime.shutdown()
+            org.junit.jupiter.api.assertThrows<IllegalStateException> { factory.createSession() }
+        }
+    }
+
+    @Test
+    fun `foundation verification remains headless without reader services`() {
+        DesktopRuntimeFactory.create(
+            args = arrayOf("--smoke-test"),
+            environment = mapOf("APPDATA" to tempDir.resolve("Roaming").toString()),
+            executableDirectory = tempDir.resolve("bin"),
+        ).use { runtime ->
+            runtime.readerFactory shouldBe null
+        }
+    }
+
+    @Test
+    fun `suspending shutdown closes sessions before services and database while suppressing failures`() {
+        runBlocking {
+            val events = mutableListOf<String>()
+            val firstFailure = IllegalStateException("first")
+            val secondFailure = IllegalArgumentException("second")
+            val runtime = DesktopRuntime.forTesting(
+                closeSessions = {
+                    events += "sessions"
+                    throw firstFailure
+                },
+                closeReaderServices = {
+                    events += "services"
+                    throw secondFailure
+                },
+                closeLibrary = { events += "library" },
+            )
+
+            val thrown = try {
+                runtime.shutdown()
+                error("shutdown must surface the first failure")
+            } catch (error: IllegalStateException) {
+                error
+            }
+
+            thrown shouldBe firstFailure
+            thrown.suppressed.toList() shouldBe listOf(secondFailure)
+            events shouldBe listOf("sessions", "services", "library")
+            val repeated = try {
+                runtime.shutdown()
+                error("repeated shutdown must preserve the first failure")
+            } catch (error: IllegalStateException) {
+                error
+            }
+            repeated shouldBe firstFailure
+            events shouldBe listOf("sessions", "services", "library")
+        }
+    }
+
+    @Test
+    fun `fallback close uses shutdown once away from the EDT and rejects the EDT`() {
+        val closes = AtomicInteger()
+        val runtime = DesktopRuntime.forTesting(closeLibrary = closes::incrementAndGet)
+
+        runtime.close()
+        runtime.close()
+
+        closes.get() shouldBe 1
+        EventQueue.invokeAndWait {
+            org.junit.jupiter.api.assertThrows<IllegalStateException> { runtime.close() }
+        }
     }
 }

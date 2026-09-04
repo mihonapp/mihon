@@ -43,6 +43,18 @@ class DesktopPreferenceStoreTest {
     }
 
     @Test
+    fun `property updates preserve unrelated versioned reader preferences`() {
+        val file = tempDir.resolve("preferences.properties")
+        val store = DesktopPreferenceStore(file)
+
+        store.update { setProperty("reader.v1.mode", "DUAL_RTL") }
+        store.save(DesktopPreferences(themeMode = ThemeMode.Dark))
+
+        store.property("reader.v1.mode") shouldBe "DUAL_RTL"
+        DesktopPreferenceStore(file).load().themeMode shouldBe ThemeMode.Dark
+    }
+
+    @Test
     fun `malformed properties return defaults and quarantine the original file`() {
         val file = tempDir.resolve("preferences.properties")
         val malformedProperties = "theme=\\u12G4\ndestination=Browse\n"
