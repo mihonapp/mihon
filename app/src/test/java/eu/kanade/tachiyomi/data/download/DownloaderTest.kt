@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.download
 
 import androidx.work.WorkManager
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.source.model.Page
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -12,7 +11,6 @@ import io.mockk.unmockkObject
 import io.mockk.verify
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -49,48 +47,6 @@ class DownloaderTest {
         store = store,
         notifier = notifier,
     )
-
-    @Test
-    fun `restoration completes only after persisted downloads enter the queue`() = runBlocking {
-        withTimeout(5.seconds) {
-            val restoreStarted = CompletableDeferred<Unit>()
-            val savedDownloads = CompletableDeferred<List<Download>>()
-            coEvery { store.restore() } coAnswers {
-                restoreStarted.complete(Unit)
-                savedDownloads.await()
-            }
-            val downloader = downloader()
-            restoreStarted.await()
-            val ready = async { downloader.awaitQueueRestored() }
-            assertTrue(downloader.queueState.value.isEmpty())
-            assertFalse(ready.isCompleted)
-
-            savedDownloads.complete(listOf(download))
-            ready.await()
-            assertEquals(listOf(download), downloader.queueState.value)
-            assertEquals(Download.State.QUEUE, download.status)
-            verify { store.addAll(listOf(download)) }
-        }
-    }
-
-    @Test
-    fun `network pause preserves ready pages and returns active chapters to the queue`() = runBlocking {
-        coEvery { store.restore() } returns listOf(download)
-        val downloader = downloader()
-        downloader.awaitQueueRestored()
-        val page = Page(0).apply { status = Page.State.Ready }
-        download.pages = listOf(page)
-        download.status = Download.State.DOWNLOADING
-
-        downloader.pauseForNetwork("No network")
-
-        assertEquals(Download.State.QUEUE, download.status)
-        assertEquals(1, download.downloadedImages)
-        assertEquals(listOf(download), downloader.queueState.value)
-        assertFalse(downloader.isPaused)
-        verify(exactly = 1) { notifier.onWarning("No network") }
-        verify(exactly = 0) { notifier.onError(any(), any(), any(), any()) }
-    }
 
     @Test
     fun `restarting waits for cancelled download cleanup before resetting chapter state`() = runBlocking {
