@@ -16,6 +16,9 @@ data class WindowPlacement(
     val height: Int,
     val maximized: Boolean,
 ) {
+    /** Bounds persisted before entering reader fullscreen or borderless modes. */
+    fun normalBounds(): WindowPlacement = copy(maximized = false)
+
     fun sanitize(screen: ScreenBounds): WindowPlacement {
         val safeWidth = width.coerceIn(MIN_WIDTH.coerceAtMost(screen.width), screen.width)
         val safeHeight = height.coerceIn(MIN_HEIGHT.coerceAtMost(screen.height), screen.height)

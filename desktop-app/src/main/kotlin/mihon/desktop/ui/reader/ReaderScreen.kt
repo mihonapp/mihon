@@ -28,6 +28,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.platform.LocalDensity
@@ -38,6 +45,11 @@ import kotlinx.coroutines.launch
 import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.DesktopReaderSettingsStore
 import mihon.desktop.reader.ReaderClickAction
+import mihon.desktop.reader.input.ClickRegionPolicy
+import mihon.desktop.reader.input.ReaderInputCommand
+import mihon.desktop.reader.input.ReaderInputContext
+import mihon.desktop.reader.input.ReaderInputKey
+import mihon.desktop.reader.input.ReaderInputMapper
 import mihon.reader.model.ReaderErrorCode
 import mihon.reader.model.ReaderLayout
 import mihon.reader.session.ReaderAction
@@ -57,6 +69,7 @@ fun ReaderScreen(
     modifier: Modifier = Modifier,
     onFullscreen: () -> Unit = {},
     onBorderless: () -> Unit = {},
+    onEscape: () -> Unit = onBack,
     onRetryChapter: suspend () -> Unit = {},
     foreground: Boolean = true,
     debugEnabled: Boolean = System.getenv("MIHON_W_READER_DEBUG") == "1",
@@ -72,6 +85,7 @@ fun ReaderScreen(
     var chromeVisible by remember { mutableStateOf(true) }
     var hideGeneration by remember { mutableIntStateOf(0) }
     var showSettings by remember { mutableStateOf(false) }
+    val inputMapper = remember { ReaderInputMapper() }
 
     fun markReadingInput() {
         chromeVisible = true
@@ -100,7 +114,44 @@ fun ReaderScreen(
         onDispose { session.dispatch(ReaderAction.SetContentVisible(false)) }
     }
 
-    Box(modifier = modifier.fillMaxSize().testTag("reader-screen")) {
+    fun handleInput(command: ReaderInputCommand) {
+        when (command) {
+            is ReaderInputCommand.Core -> {
+                session.dispatch(command.action)
+                markReadingInput()
+            }
+            is ReaderInputCommand.ZoomBy -> {
+                val zoom = if (command.factor == 0f) 1f else state.zoom * command.factor
+                session.dispatch(ReaderAction.SetZoom(ReaderLayout.clampZoom(zoom)))
+                markReadingInput()
+            }
+            ReaderInputCommand.Fullscreen -> onFullscreen()
+            ReaderInputCommand.Borderless -> onBorderless()
+            ReaderInputCommand.Escape -> onEscape()
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("reader-screen")
+            .onKeyEvent { event ->
+                if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
+                val key = event.toReaderInputKey() ?: return@onKeyEvent false
+                val result = inputMapper.mapKey(
+                    key,
+                    ReaderInputContext(
+                        mode = state.mode,
+                        wheelBehavior = settings.wheelBehavior,
+                        pageCount = state.pages.size.coerceAtLeast(1),
+                        anchor = state.viewportAnchor,
+                        ctrl = event.isCtrlPressed,
+                    ),
+                )
+                result.action?.let(::handleInput)
+                result.consumed
+            },
+    ) {
         ReaderBody(
             state = state,
             session = session,
@@ -170,6 +221,24 @@ fun ReaderScreen(
     }
 }
 
+private fun KeyEvent.toReaderInputKey(): ReaderInputKey? = when (key) {
+    Key.DirectionLeft -> ReaderInputKey.LEFT
+    Key.DirectionRight -> ReaderInputKey.RIGHT
+    Key.A -> ReaderInputKey.A
+    Key.D -> ReaderInputKey.D
+    Key.PageUp -> ReaderInputKey.PAGE_UP
+    Key.PageDown -> ReaderInputKey.PAGE_DOWN
+    Key.MoveHome -> ReaderInputKey.HOME
+    Key.MoveEnd -> ReaderInputKey.END
+    Key.Plus, Key.Equals -> ReaderInputKey.PLUS
+    Key.Minus -> ReaderInputKey.MINUS
+    Key.Zero -> ReaderInputKey.ZERO
+    Key.F -> ReaderInputKey.F
+    Key.B -> ReaderInputKey.B
+    Key.Escape -> ReaderInputKey.ESCAPE
+    else -> null
+}
+
 @Composable
 private fun ReaderBody(
     state: ReaderState,
@@ -237,22 +306,23 @@ private fun ReaderErrorPanel(message: String, retryable: Boolean, onRetry: () ->
 @Composable
 private fun ReaderClickRegions(settings: DesktopReaderSettings, onAction: (ReaderClickAction) -> Unit) {
     val source = remember { MutableInteractionSource() }
+    val regions = remember(settings.clickRegions) { ClickRegionPolicy.from(settings.clickRegions).regions }
     Row(Modifier.fillMaxSize().testTag("reader-input-surface")) {
         ClickRegion(
             tag = "reader-previous-region",
-            weight = settings.clickRegions.leftEndPercent.toFloat(),
+            weight = (regions[0].end - regions[0].start) * 100f,
             source = source,
-        ) { onAction(settings.clickRegions.leftAction) }
+        ) { onAction(regions[0].action) }
         ClickRegion(
             tag = "reader-center-region",
-            weight = (settings.clickRegions.centerEndPercent - settings.clickRegions.leftEndPercent).toFloat(),
+            weight = (regions[1].end - regions[1].start) * 100f,
             source = source,
-        ) { onAction(settings.clickRegions.centerAction) }
+        ) { onAction(regions[1].action) }
         ClickRegion(
             tag = "reader-next-region",
-            weight = (100 - settings.clickRegions.centerEndPercent).toFloat(),
+            weight = (regions[2].end - regions[2].start) * 100f,
             source = source,
-        ) { onAction(settings.clickRegions.rightAction) }
+        ) { onAction(regions[2].action) }
     }
 }
 

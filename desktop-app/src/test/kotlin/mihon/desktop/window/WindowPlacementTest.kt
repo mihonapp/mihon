@@ -25,4 +25,10 @@ class WindowPlacementTest {
         WindowPlacement(0, 0, 4000, 3000, maximized = true).sanitize(screen) shouldBe
             WindowPlacement(0, 0, 1920, 1080, maximized = true)
     }
+
+    @Test
+    fun `normal bounds are preserved while transient window modes sanitize`() {
+        val normal = WindowPlacement(120, 80, 1280, 800, maximized = false)
+        normal.normalBounds() shouldBe normal
+    }
 }

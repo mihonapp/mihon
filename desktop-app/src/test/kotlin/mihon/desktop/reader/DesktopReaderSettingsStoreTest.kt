@@ -37,7 +37,7 @@ class DesktopReaderSettingsStoreTest {
                 centerEndPercent = 70,
             ),
             wheelBehavior = ReaderWheelBehavior.SCROLL,
-            lastWindowMode = ReaderWindowMode.MAXIMIZED,
+            lastWindowMode = ReaderWindowMode.FULLSCREEN,
         )
 
         store.save(expected)

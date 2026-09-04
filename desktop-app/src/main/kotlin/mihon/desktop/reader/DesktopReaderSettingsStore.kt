@@ -34,7 +34,7 @@ enum class ReaderClickAction { PREVIOUS, TOGGLE_CHROME, NEXT, NONE }
 
 enum class ReaderWheelBehavior { PAGE_NAVIGATION, SCROLL }
 
-enum class ReaderWindowMode { NORMAL, MAXIMIZED }
+enum class ReaderWindowMode { NORMAL, FULLSCREEN, BORDERLESS }
 
 class DesktopReaderSettingsStore(private val preferences: DesktopPreferenceStore) {
 
