@@ -87,9 +87,11 @@ import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import kotlin.math.floor
+import kotlin.time.Clock
 
 @AssistedInject
 class MangaViewModel(
@@ -120,6 +122,7 @@ class MangaViewModel(
     private val mangaRepository: MangaRepository,
     private val filterChaptersForDownload: FilterChaptersForDownload,
     private val updateMangaFromRemote: UpdateMangaFromRemote,
+    private val insertMangaUpdateError: InsertMangaUpdateError,
     private val sourceManager: SourceManager,
     private val refreshTracks: RefreshTracks,
     private val coverCache: CoverCache,
@@ -303,6 +306,14 @@ class MangaViewModel(
             } else {
                 logcat(LogPriority.ERROR, e)
                 with(context) { e.formattedMessage }
+            }
+
+            try {
+                insertMangaUpdateError.await(state.manga.id, message, Clock.System.now().toEpochMilliseconds())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Failed to insert update error for manga ${state.manga.title}" }
             }
 
             viewModelScope.launch {

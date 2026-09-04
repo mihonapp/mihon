@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
+import kotlinx.coroutines.CancellationException
 import logcat.LogPriority
 import mihon.domain.source.models.RemoteMangaUpdate
 import tachiyomi.core.common.util.lang.withIOContext
@@ -20,6 +21,7 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
 import tachiyomi.source.local.isLocal
 import kotlin.time.Clock
 
@@ -32,6 +34,7 @@ class UpdateMangaFromRemote(
     private val coverCache: CoverCache,
     private val libraryPreferences: LibraryPreferences,
     private val downloadManager: DownloadManager,
+    private val deleteMangaUpdateError: DeleteMangaUpdateError,
 ) {
     suspend operator fun invoke(
         manga: Manga,
@@ -78,6 +81,16 @@ class UpdateMangaFromRemote(
                 fetchWindow = fetchWindow,
             )
             val updatedManga = mangaRepository.getMangaById(manga.id)
+
+            if (fetchChapters) {
+                try {
+                    deleteMangaUpdateError.await(manga.id)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "Failed to delete update error for manga ${manga.title}" }
+                }
+            }
 
             Result.success(RemoteMangaUpdate(manga = updatedManga, newChapters = newChapters))
         } catch (e: Exception) {
