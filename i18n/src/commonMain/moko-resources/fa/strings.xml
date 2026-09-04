@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="update_check_notification_update_available">نسخه جدید موجود است!</string>
-    <string name="update_check_notification_download_error">خطا در دانلود</string>
-    <string name="update_check_notification_download_complete">دانلود کامل شد</string>
-    <string name="update_check_notification_download_in_progress">در حال دانلود…</string>
     <string name="update_check_no_new_updates">آپدیت جدیدی موجود نیست</string>
     <string name="update_check_confirm">دانلود</string>
     <string name="file_select_backup">فایل پشتیبان را انتخاب کنید</string>
@@ -453,7 +450,6 @@
     <string name="update_check_open">بازکردن در گیت هاب</string>
     <string name="getting_started_guide">راهنمای شروع</string>
     <string name="information_empty_category_dialog">شما هنوز هیچ دسته‌بندی ندارید.</string>
-    <string name="channel_app_updates">بروزرسانی برنامه</string>
     <string name="pref_navigate_pan">هنگام ضربه زدن تصاویر را عریض کنید</string>
     <string name="pref_landscape_zoom">بزرگنمایی تصویر چشم انداز</string>
     <string name="action_sort_last_manga_update">بررسی آخرین به روزرسانی</string>

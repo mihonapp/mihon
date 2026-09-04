@@ -6,10 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Sort
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +15,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,16 +36,21 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.Sort
+import mihon.icons.materialsymbols.roundedfilled.Pause
+import mihon.icons.materialsymbols.roundedfilled.PlayArrow
 import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
@@ -65,8 +65,8 @@ object DownloadQueueScreen : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
-        val screenModel = rememberScreenModel { DownloadQueueScreenModel() }
-        val downloadList by screenModel.state.collectAsState()
+        val viewModel = metroViewModel<DownloadQueueViewModel>()
+        val downloadList by viewModel.state.collectAsStateWithLifecycle()
         val downloadCount by remember {
             derivedStateOf { downloadList.sumOf { it.subItems.size } }
         }
@@ -133,7 +133,7 @@ object DownloadQueueScreen : Screen() {
                                         DropdownMenuItem(
                                             text = { Text(text = stringResource(MR.strings.action_newest)) },
                                             onClick = {
-                                                screenModel.reorderQueue(
+                                                viewModel.reorderQueue(
                                                     { it.download.chapter.dateUpload },
                                                     true,
                                                 )
@@ -143,7 +143,7 @@ object DownloadQueueScreen : Screen() {
                                         DropdownMenuItem(
                                             text = { Text(text = stringResource(MR.strings.action_oldest)) },
                                             onClick = {
-                                                screenModel.reorderQueue(
+                                                viewModel.reorderQueue(
                                                     { it.download.chapter.dateUpload },
                                                     false,
                                                 )
@@ -158,7 +158,7 @@ object DownloadQueueScreen : Screen() {
                                         DropdownMenuItem(
                                             text = { Text(text = stringResource(MR.strings.action_asc)) },
                                             onClick = {
-                                                screenModel.reorderQueue(
+                                                viewModel.reorderQueue(
                                                     { it.download.chapter.chapterNumber },
                                                     false,
                                                 )
@@ -168,7 +168,7 @@ object DownloadQueueScreen : Screen() {
                                         DropdownMenuItem(
                                             text = { Text(text = stringResource(MR.strings.action_desc)) },
                                             onClick = {
-                                                screenModel.reorderQueue(
+                                                viewModel.reorderQueue(
                                                     { it.download.chapter.chapterNumber },
                                                     true,
                                                 )
@@ -183,12 +183,12 @@ object DownloadQueueScreen : Screen() {
                                 listOf(
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_sort),
-                                        icon = Icons.AutoMirrored.Outlined.Sort,
+                                        icon = MaterialSymbols.AutoMirroredRounded.Sort,
                                         onClick = { sortExpanded = true },
                                     ),
                                     AppBar.OverflowAction(
                                         title = stringResource(MR.strings.action_cancel_all),
-                                        onClick = { screenModel.clearQueue() },
+                                        onClick = { viewModel.clearQueue() },
                                     ),
                                 ),
                             )
@@ -198,7 +198,7 @@ object DownloadQueueScreen : Screen() {
                 )
             },
             floatingActionButton = {
-                val isRunning by screenModel.isDownloaderRunning.collectAsState()
+                val isRunning by viewModel.isDownloaderRunning.collectAsStateWithLifecycle()
                 SmallExtendedFloatingActionButton(
                     text = {
                         val id = if (isRunning) {
@@ -210,17 +210,17 @@ object DownloadQueueScreen : Screen() {
                     },
                     icon = {
                         val icon = if (isRunning) {
-                            Icons.Outlined.Pause
+                            MaterialSymbols.RoundedFilled.Pause
                         } else {
-                            Icons.Filled.PlayArrow
+                            MaterialSymbols.RoundedFilled.PlayArrow
                         }
                         Icon(imageVector = icon, contentDescription = null)
                     },
                     onClick = {
                         if (isRunning) {
-                            screenModel.pauseDownloads()
+                            viewModel.pauseDownloads()
                         } else {
-                            screenModel.startDownloads()
+                            viewModel.startDownloads()
                         }
                     },
                     expanded = fabExpanded,
@@ -250,27 +250,27 @@ object DownloadQueueScreen : Screen() {
                 AndroidView(
                     modifier = Modifier.fillMaxWidth(),
                     factory = { context ->
-                        screenModel.controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(context))
-                        screenModel.adapter = DownloadAdapter(screenModel.listener)
-                        screenModel.controllerBinding.root.adapter = screenModel.adapter
-                        screenModel.adapter?.isHandleDragEnabled = true
-                        screenModel.controllerBinding.root.layoutManager = LinearLayoutManager(context)
+                        viewModel.controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(context))
+                        viewModel.adapter = DownloadAdapter(viewModel.listener)
+                        viewModel.controllerBinding.root.adapter = viewModel.adapter
+                        viewModel.adapter?.isHandleDragEnabled = true
+                        viewModel.controllerBinding.root.layoutManager = LinearLayoutManager(context)
 
-                        ViewCompat.setNestedScrollingEnabled(screenModel.controllerBinding.root, true)
+                        ViewCompat.setNestedScrollingEnabled(viewModel.controllerBinding.root, true)
 
                         scope.launchUI {
-                            screenModel.getDownloadStatusFlow()
-                                .collect(screenModel::onStatusChange)
+                            viewModel.getDownloadStatusFlow()
+                                .collect(viewModel::onStatusChange)
                         }
                         scope.launchUI {
-                            screenModel.getDownloadProgressFlow()
-                                .collect(screenModel::onUpdateDownloadedPages)
+                            viewModel.getDownloadProgressFlow()
+                                .collect(viewModel::onUpdateDownloadedPages)
                         }
 
-                        screenModel.controllerBinding.root
+                        viewModel.controllerBinding.root
                     },
                     update = {
-                        screenModel.controllerBinding.root
+                        viewModel.controllerBinding.root
                             .updatePadding(
                                 left = left,
                                 top = top,
@@ -278,7 +278,7 @@ object DownloadQueueScreen : Screen() {
                                 bottom = bottom,
                             )
 
-                        screenModel.adapter?.updateDataSet(downloadList)
+                        viewModel.adapter?.updateDataSet(downloadList)
                     },
                 )
             }

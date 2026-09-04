@@ -163,7 +163,6 @@
     <string name="file_select_backup">Selecteer back-upbestand</string>
     <string name="update_check_confirm">Download</string>
     <string name="update_check_no_new_updates">Geen nieuwe updates beschikbaar</string>
-    <string name="update_check_notification_download_complete">Tik om update te installeren</string>
     <string name="update_check_notification_update_available">Nieuwe versie beschikbaar!</string>
     <string name="information_no_downloads">Geen downloads</string>
     <string name="information_no_recent">Geen recente updates</string>
@@ -216,8 +215,6 @@
     <string name="decode_image_error">De afbeelding kon niet worden geladen</string>
     <string name="download_queue_error">Kon hoofdstukken niet downloaden. Je kan het opnieuw proberen in het downloadscherm</string>
     <string name="notification_cover_update_failed">Updaten van omslag mislukt</string>
-    <string name="update_check_notification_download_in_progress">Downloaden…</string>
-    <string name="update_check_notification_download_error">Fout bij het downloaden</string>
     <string name="action_filter_bookmarked">Met bladwijzer</string>
     <string name="login_success">Ingelogd</string>
     <string name="licensed">Gelicenseerd</string>
@@ -538,7 +535,6 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Installeer en start Shizuku om deze als extensie-installatieprogramma te gebruiken.</string>
     <string name="action_sort_count">Totaal aantal items</string>
     <string name="pref_verbose_logging_summary">Houd uitgebreide logs bij in de systeemlogs (verslechterd de werking van de app)</string>
-    <string name="channel_app_updates">App updates</string>
     <string name="download_queue_size_warning">Waarschuwing: grote bulk downloads kunnen leiden tot bronnen die trager werken en/of %s blokkeren. Tik om meer te leren.</string>
     <string name="ext_update_all">Alles updaten</string>
     <string name="update_72hour">Iedere 3 dagen</string>
@@ -808,11 +804,6 @@
     <string name="pref_hide_missing_chapter_indicators">Verberg ontbrekende hoofdstukindicatoren</string>
     <string name="pref_disallow_non_ascii_filenames">Verbied niet-ASCII-bestandsnamen</string>
     <string name="pref_disallow_non_ascii_filenames_details">Verzekert compatibiliteit met bepaalde opslagmedia die Unicode niet ondersteunen. Wanneer dit is ingeschakeld moet je manueel bron- en mangamappen hernoemen door niet-ASCII-tekens te vervangen met hun UTF-8 hexadecimale representaties in kleine letters. Hoofdstukbestanden moeten niet hernoemd worden.</string>
-    <string name="pref_hardware_bitmap_threshold">Aangepaste hardware bitmapdrempel</string>
-    <string name="pref_hardware_bitmap_threshold_default">Standaard (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Als de lezer een lege afbeelding laadt, verlaag incrementeel de drempelwaarde.\nGeselecteerd: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Gebruik verouderde decoder voor lange striplezer</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Beïnvloedt prestaties. Schakel dit alleen in als het verlagen van de bitmapdrempel problemen met lege afbeeldingen niet oplost</string>
     <string name="storage_failed_to_create_download_directory">Downloadmap kon niet worden aangemaakt</string>
     <string name="storage_failed_to_create_directory">Map kon niet worden aangemaakt: %s</string>
     <string name="private_settings">Voeg gevoelige intellingen toe (bijv. logintokens voor trackers)</string>

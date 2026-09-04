@@ -4,7 +4,11 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.util.storage.DiskUtil
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -15,8 +19,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
 import java.util.UUID
 
+@Inject
+@SingleIn(AppScope::class)
 class StorageManager(
     private val context: Context,
     storagePreferences: StoragePreferences,
@@ -54,14 +62,14 @@ class StorageManager(
     }
 
     fun canWriteTo(uri: Uri): Boolean {
-        val baseDir = UniFile.fromUri(context, uri)
-            ?.takeIf { it.exists() && it.isDirectory }
-            ?: return false
-
         var testDir: UniFile? = null
         var cleanupSuccessful = false
 
         return try {
+            val baseDir = UniFile.fromUri(context, uri)
+                ?.takeIf { it.exists() && it.isDirectory }
+                ?: return false
+
             val createdTestDir = baseDir.createDirectory("$STORAGE_TEST_DIR_PREFIX${UUID.randomUUID()}") ?: return false
             testDir = createdTestDir
 
@@ -108,13 +116,20 @@ class StorageManager(
 
             DiskUtil.createNoMediaFile(chapterDir, context)
 
-            cleanupSuccessful = createdTestDir.deleteTree()
+            cleanupSuccessful = createdTestDir.delete()
             cleanupSuccessful
-        } catch (_: Throwable) {
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            logcat(LogPriority.ERROR, e)
             false
         } finally {
             if (!cleanupSuccessful) {
-                testDir?.takeIf { it.exists() }?.deleteTree()
+                try {
+                    testDir?.delete()
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    logcat(LogPriority.ERROR, e)
+                }
             }
         }
     }
@@ -147,21 +162,3 @@ private const val STORAGE_TEST_ARCHIVE_FILE_TMP = "chapter.cbz_tmp"
 private const val STORAGE_TEST_ARCHIVE_FILE = "chapter.cbz"
 private val STORAGE_TEST_CONTENT = byteArrayOf(0)
 private val STORAGE_TEST_COMIC_INFO_CONTENT = "<ComicInfo />".toByteArray()
-
-private fun UniFile.deleteTree(): Boolean {
-    var childrenDeleted = true
-    try {
-        listFiles().orEmpty().forEach {
-            childrenDeleted = it.deleteTree() && childrenDeleted
-        }
-    } catch (_: Throwable) {
-        childrenDeleted = false
-    }
-
-    val selfDeleted = try {
-        delete()
-    } catch (_: Throwable) {
-        false
-    }
-    return childrenDeleted && selfDeleted
-}

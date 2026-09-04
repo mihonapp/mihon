@@ -1,6 +1,10 @@
 package mihon.data.extension.repository
 
 import app.cash.sqldelight.async.coroutines.awaitAsList
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -15,6 +19,9 @@ import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
 import tachiyomi.data.subscribeToOne
 
+@Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class ExtensionStoreRepositoryImpl(
     private val service: ExtensionStoreService,
     private val database: Database,

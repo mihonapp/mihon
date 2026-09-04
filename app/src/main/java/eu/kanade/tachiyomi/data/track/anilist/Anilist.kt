@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
@@ -28,9 +27,11 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         const val POINT_10_DECIMAL = "POINT_10_DECIMAL"
         const val POINT_5 = "POINT_5"
         const val POINT_3 = "POINT_3"
+
+        private const val SEARCH_ID_PREFIX = "id:"
     }
 
-    private val json: Json by injectLazy()
+    private val json: Json by lazy { appGraph.json }
 
     private val interceptor by lazy { AnilistInterceptor(this, getPassword()) }
 
@@ -40,7 +41,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override val supportsPrivateTracking: Boolean = true
 
-    private val scorePreference = trackPreferences.anilistScoreType
+    private val scorePreference by lazy { trackPreferences.anilistScoreType }
 
     init {
         // If the preference is an int from APIv1, logout user to force using APIv2
@@ -133,7 +134,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
                 else -> "😊"
             }
 
-            else -> track.toApiScore()
+            else -> track.toApiScore(appGraph.trackPreferences)
         }
     }
 
@@ -196,6 +197,12 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override suspend fun search(query: String): List<TrackSearch> {
+        if (query.startsWith(SEARCH_ID_PREFIX)) {
+            query.substringAfter(SEARCH_ID_PREFIX).trim().toIntOrNull()?.let { id ->
+                return api.getMangaDetails(id)?.let { listOf(it) } ?: emptyList()
+            }
+        }
+
         return api.search(query)
     }
 

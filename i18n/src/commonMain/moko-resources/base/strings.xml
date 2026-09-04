@@ -231,6 +231,7 @@
     <string name="theme_dark">Dark</string>
     <string name="theme_monet">Dynamic</string>
     <string name="theme_catppuccin">Catppuccin</string>
+    <string name="theme_tokyonight">Tokyo Night</string>
     <string name="theme_greenapple">Green Apple</string>
     <string name="theme_lavender">Lavender</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
@@ -361,6 +362,7 @@
     <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
     <string name="ext_revoke_trust">Revoke trusted unknown extensions</string>
+    <string name="downloading_with_progress">Downloading… (%d%%)</string>
 
     <!-- Extension repos -->
     <string name="action_open_repo">Open source repo</string>
@@ -405,11 +407,7 @@
     <string name="pref_webtoon_vertical_navigator_on_left">Place vertical navigator on the left side</string>
     <string name="pref_show_reading_mode">Show reading mode</string>
     <string name="pref_show_reading_mode_summary">Briefly show current mode when reader is opened</string>
-    <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
-    <string name="pref_hardware_bitmap_threshold_default">Default (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">If reader loads a blank image incrementally reduce the threshold.\nSelected: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Use legacy decoder for long strip reader</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Affects performance. Only enable if reducing bitmap threshold doesn\'t fix blank image issues</string>
+    <string name="pref_high_quality_renderer">Use high quality renderer</string>
     <string name="pref_display_profile">Custom display profile</string>
     <string name="pref_crop_borders">Crop borders</string>
     <string name="pref_custom_brightness">Custom brightness</string>
@@ -499,6 +497,29 @@
     <string name="pref_low">Low</string>
     <string name="pref_lowest">Lowest</string>
     <string name="pref_webtoon_disable_zoom_out">Disable zoom out</string>
+    <string name="webgpu_viewer">WebGPU</string>
+    <string name="pref_transition_animation">Transition animation</string>
+    <string name="transition_animation_default">Default</string>
+    <string name="transition_animation_flip_left">Page flip (left)</string>
+    <string name="transition_animation_flip_right">Page flip (right)</string>
+    <string name="transition_animation_stack_left">Stack (left)</string>
+    <string name="transition_animation_stack_right">Stack (right)</string>
+    <string name="transition_animation_stack_up">Stack (up)</string>
+    <string name="transition_animation_stack_down">Stack (down)</string>
+    <string name="transition_animation_sphere">Sphere</string>
+    <string name="transition_animation_cube_inside">Cube (Inside)</string>
+    <string name="transition_animation_cube_outside">Cube (Outside)</string>
+    <string name="transition_animation_fade">Fade</string>
+    <string name="transition_animation_fade_white">Fade to white</string>
+    <string name="transition_animation_none">None</string>
+    <string name="pref_cutout_mode">Display cutout mode</string>
+    <string name="cutout_mode_ignore">Ignore</string>
+    <string name="cutout_mode_avoid">Avoid</string>
+    <string name="cutout_mode_shift">Shift</string>
+    <string name="pref_dual_page_view">Dual page view</string>
+    <string name="dual_page_view_never">Never</string>
+    <string name="dual_page_view_always">Always</string>
+    <string name="dual_page_view_wide">When wide</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
@@ -861,11 +882,13 @@
     <string name="relative_time_span_never">Never</string>
     <string name="action_view_upcoming">View Upcoming Updates</string>
     <string name="action_filter_excluded_scanlators">Filter excluded scanlators</string>
+    <string name="pref_filter_update_categories_details">Updates in excluded categories will not be shown even if they are also in any included categories.</string>
 
     <!-- Upcoming -->
     <string name="upcoming_guide">Upcoming Guide</string>
     <string name="upcoming_calendar_next">Next Month</string>
     <string name="upcoming_calendar_prev">Previous Month</string>
+    <string name="pref_filter_upcoming_categories_details">Titles in excluded categories are not shown, even if they are also in any of the included categories.</string>
 
     <!-- History -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
@@ -949,9 +972,6 @@
     <string name="update_check_no_new_updates">No new updates available</string>
 
     <!--UpdateCheck Notifications-->
-    <string name="update_check_notification_download_in_progress">Downloading…</string>
-    <string name="update_check_notification_download_complete">Tap to install update</string>
-    <string name="update_check_notification_download_error">Download error</string>
     <string name="update_check_notification_update_available">New version available!</string>
 
     <!-- Information Text -->
@@ -990,7 +1010,6 @@
     <string name="channel_complete">Complete</string>
     <string name="channel_errors">Errors</string>
     <string name="channel_new_chapters">Chapter updates</string>
-    <string name="channel_app_updates">App updates</string>
     <string name="channel_ext_updates">Extension updates</string>
 
     <!-- S Pen actions -->
@@ -1040,7 +1059,6 @@
     <string name="migrationListScreen.searchManuallyActionLabel">Search manually</string>
     <string name="migrationListScreen.skipActionLabel">Don\'t migrate</string>
     <string name="migrationListScreen.migrateNowActionLabel">Migrate now</string>
-    <string name="migrationListScreen.copyNowActionLabel">Copy now</string>
     <string name="migrationListScreen.copyNowActionLabel">Copy now</string>
     <string name="migrationListScreen.exitDialogTitle">Stop migrating?</string>
     <string name="migrationListScreen.exitDialog.stopLabel">Stop</string>

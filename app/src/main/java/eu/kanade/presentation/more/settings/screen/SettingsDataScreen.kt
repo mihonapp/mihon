@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -51,32 +49,32 @@ import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
-import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.workManager
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.app.di.appGraph
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
-import tachiyomi.domain.library.service.LibraryPreferences
-import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 object SettingsDataScreen : SearchableSettings {
 
@@ -92,7 +90,7 @@ object SettingsDataScreen : SearchableSettings {
         val uriHandler = LocalUriHandler.current
         IconButton(onClick = { uriHandler.openUri(HELP_URL) }) {
             Icon(
-                imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
+                imageVector = MaterialSymbols.AutoMirroredRounded.Help,
                 contentDescription = stringResource(MR.strings.tracking_guide),
             )
         }
@@ -100,8 +98,9 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     override fun getPreferences(): List<Preference> {
-        val backupPreferences = Injekt.get<BackupPreferences>()
-        val storagePreferences = Injekt.get<StoragePreferences>()
+        val context = LocalContext.current
+        val backupPreferences = remember { context.appGraph.backupPreferences }
+        val storagePreferences = remember { context.appGraph.storagePreferences }
 
         return listOf(
             getStorageLocationPref(storagePreferences = storagePreferences),
@@ -119,7 +118,8 @@ object SettingsDataScreen : SearchableSettings {
     ): ManagedActivityResultLauncher<Uri?, Uri?> {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
-        val storageManager = remember { Injekt.get<StorageManager>() }
+        val storageManager = remember { context.appGraph.storageManager }
+        var storageCheckJob by remember { mutableStateOf<Job?>(null) }
         var showStorageUnavailableDialog by remember { mutableStateOf(false) }
 
         if (showStorageUnavailableDialog) {
@@ -138,15 +138,21 @@ object SettingsDataScreen : SearchableSettings {
         return rememberLauncherForActivityResult(
             contract = ActivityResultContracts.OpenDocumentTree(),
         ) { uri ->
-            uri?.let { selectedUri ->
+            storageCheckJob?.cancel()
+            showStorageUnavailableDialog = false
+            storageCheckJob = uri?.let { selectedUri ->
                 scope.launch {
-                    val canWrite = withContext(Dispatchers.IO) {
-                        storageManager.canWriteTo(selectedUri)
-                    }
+                    try {
+                        val canWrite = withIOContext {
+                            storageManager.canWriteTo(selectedUri)
+                        }
 
-                    if (canWrite) {
-                        persistStorageLocation(context, storageDirPref, selectedUri)
-                    } else {
+                        if (!canWrite || !persistStorageLocation(context, storageDirPref, selectedUri)) {
+                            showStorageUnavailableDialog = true
+                        }
+                    } catch (e: Exception) {
+                        if (e is CancellationException) throw e
+                        logcat(LogPriority.ERROR, e)
                         showStorageUnavailableDialog = true
                     }
                 }
@@ -158,10 +164,12 @@ object SettingsDataScreen : SearchableSettings {
         context: Context,
         storageDirPref: tachiyomi.core.common.preference.Preference<String>,
         uri: Uri,
-    ) {
+    ): Boolean {
+        val directory = UniFile.fromUri(context, uri) ?: return false
         val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
+        // InkBook and some Samsung devices can access the selected URI even when persistable grants are unsupported.
         try {
             context.contentResolver.takePersistableUriPermission(uri, flags)
         } catch (e: SecurityException) {
@@ -169,9 +177,8 @@ object SettingsDataScreen : SearchableSettings {
             context.toast(MR.strings.file_picker_uri_permission_unsupported)
         }
 
-        UniFile.fromUri(context, uri)?.let {
-            storageDirPref.set(it.uri.toString())
-        }
+        storageDirPref.set(directory.uri.toString())
+        return true
     }
 
     @Composable
@@ -261,7 +268,7 @@ object SettingsDataScreen : SearchableSettings {
                                     modifier = Modifier.fillMaxHeight(),
                                     checked = false,
                                     onCheckedChange = {
-                                        if (!BackupRestoreJob.isRunning(context)) {
+                                        if (!BackupRestoreJob.isRunning(context.workManager)) {
                                             if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
                                                 context.toast(MR.strings.restore_miui_warning)
                                             }
@@ -310,9 +317,9 @@ object SettingsDataScreen : SearchableSettings {
     private fun getDataGroup(): Preference.PreferenceGroup {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
-        val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
+        val libraryPreferences = remember { context.appGraph.libraryPreferences }
 
-        val chapterCache = remember { Injekt.get<ChapterCache>() }
+        val chapterCache = remember { context.appGraph.chapterCache }
         var cacheReadableSizeSema by remember { mutableIntStateOf(0) }
         val cacheReadableSize = remember(cacheReadableSizeSema) { chapterCache.readableSize }
 
@@ -372,7 +379,7 @@ object SettingsDataScreen : SearchableSettings {
 
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
-        val getFavorites = remember { Injekt.get<GetFavorites>() }
+        val getFavorites = remember { context.appGraph.getFavorites }
         var favorites by remember { mutableStateOf<List<Manga>>(emptyList()) }
         LaunchedEffect(Unit) {
             favorites = getFavorites.await()

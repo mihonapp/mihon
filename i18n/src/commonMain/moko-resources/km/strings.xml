@@ -180,7 +180,6 @@
     <string name="getting_started_guide">ម​គ្គុ​ទេស​ក៍​</string>
     <string name="browse">ស្វែងរក</string>
     <string name="all">ទាំងអស់</string>
-    <string name="update_check_notification_download_in_progress">កំពុងទាញយក…</string>
     <string name="label_stats">ស្ថិតិ</string>
     <string name="label_downloaded">បានទាញយក</string>
     <string name="information_cloudflare_bypass_failure">បរាជ័យក្នុងការឆ្លងកាត់Cloudflare</string>

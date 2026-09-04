@@ -22,9 +22,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenuItem
@@ -56,8 +53,13 @@ import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
+import eu.kanade.tachiyomi.util.lang.toJavaLocalDate
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import kotlinx.datetime.toJavaLocalDate
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.MoreVert
+import mihon.icons.materialsymbols.rounded.VisibilityOff
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.format.DateTimeFormatter
@@ -110,11 +112,13 @@ fun TrackInfoDialogHome(
                         .takeIf { supportsScoring && item.track.score != 0.0 },
                     onScoreClick = { onScoreClick(item) }
                         .takeIf { supportsScoring },
-                    startDate = remember(item.track.startDate) { dateFormat.format(item.track.startDate.toLocalDate()) }
+                    startDate = remember(item.track.startDate) {
+                        dateFormat.format(item.track.startDate.toLocalDate().toJavaLocalDate())
+                    }
                         .takeIf { supportsReadingDates && item.track.startDate != 0L },
                     onStartDateClick = { onStartDateEdit(item) } // TODO
                         .takeIf { supportsReadingDates },
-                    endDate = dateFormat.format(item.track.finishDate.toLocalDate())
+                    endDate = dateFormat.format(item.track.finishDate.toJavaLocalDate())
                         .takeIf { supportsReadingDates && item.track.finishDate != 0L },
                     onEndDateClick = { onEndDateEdit(item) }
                         .takeIf { supportsReadingDates },
@@ -171,7 +175,7 @@ private fun TrackInfoItem(
                             modifier = Modifier.absoluteOffset(x = (-5).dp),
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.VisibilityOff,
+                                imageVector = MaterialSymbols.Rounded.VisibilityOff,
                                 contentDescription = stringResource(MR.strings.tracked_privately),
                                 modifier = Modifier.size(14.dp),
                             )
@@ -330,7 +334,7 @@ private fun TrackInfoItemMenu(
     Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
         IconButton(onClick = { expanded = true }) {
             Icon(
-                imageVector = Icons.Default.MoreVert,
+                imageVector = MaterialSymbols.Rounded.MoreVert,
                 contentDescription = stringResource(MR.strings.label_more),
             )
         }

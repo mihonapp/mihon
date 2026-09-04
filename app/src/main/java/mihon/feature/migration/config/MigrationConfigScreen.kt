@@ -9,11 +9,6 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
-import androidx.compose.material.icons.outlined.Deselect
-import androidx.compose.material.icons.outlined.DragHandle
-import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -36,11 +31,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.components.SourceIcon
 import eu.kanade.presentation.components.AppBar
@@ -49,8 +49,15 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import mihon.feature.migration.list.MigrationListScreen
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
+import mihon.icons.materialsymbols.rounded.Deselect
+import mihon.icons.materialsymbols.rounded.DragHandle
+import mihon.icons.materialsymbols.rounded.SelectAll
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
@@ -66,8 +73,6 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.shouldExpandFAB
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
 
@@ -77,8 +82,8 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val screenModel = rememberScreenModel { ScreenModel() }
-        val state by screenModel.state.collectAsState()
+        val viewModel = metroViewModel<Model>()
+        val state by viewModel.state.collectAsState()
 
         var migrationSheetOpen by rememberSaveable { mutableStateOf(false) }
 
@@ -120,21 +125,21 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                             listOf(
                                 AppBar.Action(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectAllLabel),
-                                    icon = Icons.Outlined.SelectAll,
-                                    onClick = { screenModel.toggleSelection(ScreenModel.SelectionConfig.All) },
+                                    icon = MaterialSymbols.Rounded.SelectAll,
+                                    onClick = { viewModel.toggleSelection(Model.SelectionConfig.All) },
                                 ),
                                 AppBar.Action(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectNoneLabel),
-                                    icon = Icons.Outlined.Deselect,
-                                    onClick = { screenModel.toggleSelection(ScreenModel.SelectionConfig.None) },
+                                    icon = MaterialSymbols.Rounded.Deselect,
+                                    onClick = { viewModel.toggleSelection(Model.SelectionConfig.None) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectEnabledLabel),
-                                    onClick = { screenModel.toggleSelection(ScreenModel.SelectionConfig.Enabled) },
+                                    onClick = { viewModel.toggleSelection(Model.SelectionConfig.Enabled) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectPinnedLabel),
-                                    onClick = { screenModel.toggleSelection(ScreenModel.SelectionConfig.Pinned) },
+                                    onClick = { viewModel.toggleSelection(Model.SelectionConfig.Pinned) },
                                 ),
                             ),
                         )
@@ -144,9 +149,11 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             floatingActionButton = {
                 SmallExtendedFloatingActionButton(
                     text = { Text(text = stringResource(MR.strings.migrationConfigScreen_continueButtonText)) },
-                    icon = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null) },
+                    icon = {
+                        Icon(imageVector = MaterialSymbols.AutoMirroredRounded.ArrowForward, contentDescription = null)
+                    },
                     onClick = {
-                        screenModel.saveSources()
+                        viewModel.saveSources()
                         continueMigration(openSheet = true, extraSearchQuery = null)
                     },
                     expanded = lazyListState.shouldExpandFAB(),
@@ -157,7 +164,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                 val fromIndex = selectedSources.indexOfFirst { it.id == from.key }
                 val toIndex = selectedSources.indexOfFirst { it.id == to.key }
                 if (fromIndex == -1 || toIndex == -1) return@rememberReorderableLazyListState
-                screenModel.orderSource(fromIndex, toIndex)
+                viewModel.orderSource(fromIndex, toIndex)
             }
 
             FastScrollLazyColumn(
@@ -197,7 +204,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                             dragEnabled = selectedSourceList && sources.size > 1,
                             state = reorderableState,
                             key = { if (selectedSourceList) it.id else "available-${it.id}" },
-                            onClick = { screenModel.toggleSelection(item.id) },
+                            onClick = { viewModel.toggleSelection(item.id) },
                         )
                     }
                 }
@@ -206,7 +213,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
 
         if (migrationSheetOpen) {
             MigrationConfigScreenSheet(
-                preferences = screenModel.sourcePreferences,
+                preferences = viewModel.sourcePreferences,
                 onDismissRequest = { migrationSheetOpen = false },
                 onStartMigration = { extraSearchQuery ->
                     migrationSheetOpen = false
@@ -272,7 +279,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             trailingContent = if (dragEnabled) {
                 {
                     Icon(
-                        imageVector = Icons.Outlined.DragHandle,
+                        imageVector = MaterialSymbols.Rounded.DragHandle,
                         contentDescription = null,
                         modifier = with(scope) {
                             Modifier.draggableHandle()
@@ -306,10 +313,16 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
     }
 
-    private class ScreenModel(
-        val sourcePreferences: SourcePreferences = Injekt.get(),
-        private val sourceManager: SourceManager = Injekt.get(),
-    ) : StateScreenModel<ScreenModel.State>(State()) {
+    @Inject
+    @ViewModelKey
+    @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
+    class Model(
+        val sourcePreferences: SourcePreferences,
+        private val sourceManager: SourceManager,
+    ) : ViewModel() {
+
+        val state: StateFlow<Model.State>
+            field = MutableStateFlow<Model.State>(State())
 
         private val sourcesComparator = { includedSources: List<Long> ->
             compareBy<MigrationSource>(
@@ -320,14 +333,14 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         }
 
         init {
-            screenModelScope.launchIO {
+            viewModelScope.launchIO {
                 initSources()
-                mutableState.update { it.copy(isLoading = false) }
+                state.update { it.copy(isLoading = false) }
             }
         }
 
         private fun updateSources(action: (List<MigrationSource>) -> List<MigrationSource>) {
-            mutableState.update { state ->
+            state.update { state ->
                 val updatedSources = action(state.sources)
                 val includedSources = updatedSources.mapNotNull { if (!it.isSelected) null else it.id }
                 state.copy(sources = updatedSources.sortedWith(sourcesComparator(includedSources)))
@@ -335,7 +348,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             saveSources()
         }
 
-        private fun initSources() {
+        private suspend fun initSources() {
             val languages = sourcePreferences.enabledLanguages.get()
             val pinnedSources = sourcePreferences.pinnedSources.get().mapNotNull { it.toLongOrNull() }
             val includedSources = sourcePreferences.migrationSources.get()
@@ -364,7 +377,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                 }
                 .toList()
 
-            mutableState.update { state ->
+            state.update { state ->
                 state.copy(sources = sources.sortedWith(sourcesComparator(includedSources)))
             }
         }

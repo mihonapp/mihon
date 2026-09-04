@@ -253,9 +253,6 @@
     <string name="file_select_backup">Επιλέξτε αρχείο αντιγράφου ασφαλείας</string>
     <string name="update_check_confirm">Λήψη</string>
     <string name="update_check_no_new_updates">Δεν υπάρχουν διαθέσιμες νέες ενημερώσεις</string>
-    <string name="update_check_notification_download_in_progress">Γίνεται λήψη…</string>
-    <string name="update_check_notification_download_complete">Πατήστε για να εγκαταστήσετε την ενημέρωση</string>
-    <string name="update_check_notification_download_error">Σφάλμα λήψης</string>
     <string name="update_check_notification_update_available">Υπάρχει διαθέσιμη ενημέρωση!</string>
     <string name="information_no_downloads">Δεν υπάρχουν λήψεις</string>
     <string name="information_no_recent">Δεν υπάρχουν πρόσφατες ενημερώσεις</string>
@@ -543,7 +540,6 @@
     <string name="update_72hour">Κάθε 3 ημέρες</string>
     <string name="download_queue_size_warning">Προειδοποίηση: οι μαζικές λήψεις ενδέχεται να οδηγήσουν σε επιβράδυνση των πηγών ή/και αποκλεισμό του %s. Πατήστε για να μάθετε περισσότερα.</string>
     <string name="ext_update_all">Ενημέρωση όλων</string>
-    <string name="channel_app_updates">Ενημερώσεις εφαρμογής</string>
     <string name="pref_auto_clear_chapter_cache">Εκκαθάριση της προσωρινής μνήμης κεφαλαίων κατά την εκκίνηση της εφαρμογής</string>
     <string name="clear_database_source_item_count">%1$d καταχωρήσεις εκτός βιβλιοθήκης στη βάση δεδομένων</string>
     <string name="database_clean">Τίποτα προς εκκαθάριση</string>
@@ -811,14 +807,9 @@
     <string name="pref_auto_update_manga_on_mark_read">Ενημέρωση προόδου όταν επισημανθεί ως αναγνωσμένη</string>
     <string name="trackers_updated_summary">Οι trackers ενημερώθηκαν στο κεφάλαιο %d</string>
     <string name="pref_incognito_mode_extension_summary">Παύση ιστορικού ανάγνωσης για επέκταση</string>
-    <string name="pref_hardware_bitmap_threshold_default">Προεπιλογή (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Εάν ο αναγνώστης φορτώσει μια κενή εικόνα, μειώστε σταδιακά το όριο.\nΕπιλεγμένο: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Επηρεάζει την απόδοση. Ενεργοποιήστε το μόνο αν η μείωση του ορίου bitmap δε διορθώνει τα προβλήματα κενών εικόνων</string>
-    <string name="pref_hardware_bitmap_threshold">Προσαρμοσμένο όριο bitmap υλικού</string>
     <string name="label_auto">Αυτόματο</string>
     <string name="export">Εξαγωγή</string>
     <string name="library_list">Κατάλογος Βιβλιοθήκης</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Χρησιμοποιήστε αποκωδικοποιητή παλαιού τύπου για ανάγνωση μακριών ταινιών</string>
     <string name="theme_monochrome">Μονόχρωμο</string>
     <string name="pref_mark_duplicate_read_chapter_read">Επισήμανση διπλότυπου αναγνωσμένου κεφαλαίου ως αναγνωσμένο</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Μετά τη λήψη του νέου κεφαλαίου</string>

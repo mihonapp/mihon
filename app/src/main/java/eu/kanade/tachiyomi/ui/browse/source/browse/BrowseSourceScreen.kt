@@ -8,10 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -32,10 +28,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.core.util.ifSourcesLoaded
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.browse.MissingSourceScreen
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
@@ -46,7 +41,7 @@ import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel.Listing
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
@@ -54,6 +49,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import mihon.feature.migration.dialog.MigrateMangaDialog
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.FilterList
+import mihon.icons.materialsymbols.rounded.NewReleases
+import mihon.icons.materialsymbols.roundedfilled.Favorite
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
@@ -76,25 +75,29 @@ data class BrowseSourceScreen(
 
     @Composable
     override fun Content() {
-        if (!ifSourcesLoaded()) {
-            LoadingScreen()
-            return
-        }
-
-        val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId, listingQuery) }
-        val state by screenModel.state.collectAsState()
+        val viewModel =
+            assistedMetroViewModel<BrowseSourceViewModel, BrowseSourceViewModel.Factory> {
+                create(sourceId = sourceId, listingQuery = listingQuery)
+            }
+        val state by viewModel.state.collectAsState()
 
         val navigator = LocalNavigator.currentOrThrow
         val navigateUp: () -> Unit = {
             when {
-                !state.isUserQuery && state.toolbarQuery != null -> screenModel.setToolbarQuery(null)
+                !state.isUserQuery && state.toolbarQuery != null -> viewModel.setToolbarQuery(null)
                 else -> navigator.pop()
             }
         }
 
-        if (screenModel.source is StubSource) {
+        val source = state.source
+        if (source == null) {
+            LoadingScreen()
+            return
+        }
+
+        if (source is StubSource) {
             MissingSourceScreen(
-                source = screenModel.source,
+                source = source,
                 navigateUp = navigateUp,
             )
             return
@@ -107,18 +110,18 @@ data class BrowseSourceScreen(
 
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
         val onWebViewClick = f@{
-            val source = screenModel.source as? HttpSource ?: return@f
+            val httpSource = source as? HttpSource ?: return@f
             navigator.push(
                 WebViewScreen(
-                    url = source.getHomeUrl(),
-                    initialTitle = source.name,
-                    sourceId = source.id,
+                    url = httpSource.getHomeUrl(),
+                    initialTitle = httpSource.name,
+                    sourceId = httpSource.id,
                 ),
             )
         }
 
-        LaunchedEffect(screenModel.source) {
-            assistUrl = (screenModel.source as? HttpSource)?.getHomeUrl()
+        LaunchedEffect(source) {
+            assistUrl = (source as? HttpSource)?.getHomeUrl()
         }
 
         Scaffold(
@@ -130,15 +133,15 @@ data class BrowseSourceScreen(
                 ) {
                     BrowseSourceToolbar(
                         searchQuery = state.toolbarQuery,
-                        onSearchQueryChange = screenModel::setToolbarQuery,
-                        source = screenModel.source,
-                        displayMode = screenModel.displayMode,
-                        onDisplayModeChange = { screenModel.displayMode = it },
+                        onSearchQueryChange = viewModel::setToolbarQuery,
+                        source = source,
+                        displayMode = viewModel.displayMode,
+                        onDisplayModeChange = { viewModel.displayMode = it },
                         navigateUp = navigateUp,
                         onWebViewClick = onWebViewClick,
                         onHelpClick = onHelpClick,
                         onSettingsClick = { navigator.push(SourcePreferencesScreen(sourceId)) },
-                        onSearch = screenModel::search,
+                        onSearch = viewModel::search,
                     )
 
                     Row(
@@ -150,12 +153,12 @@ data class BrowseSourceScreen(
                         FilterChip(
                             selected = state.listing == Listing.Popular,
                             onClick = {
-                                screenModel.resetFilters()
-                                screenModel.setListing(Listing.Popular)
+                                viewModel.resetFilters()
+                                viewModel.setListing(Listing.Popular)
                             },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Outlined.Favorite,
+                                    imageVector = MaterialSymbols.RoundedFilled.Favorite,
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(FilterChipDefaults.IconSize),
@@ -165,16 +168,16 @@ data class BrowseSourceScreen(
                                 Text(text = stringResource(MR.strings.popular))
                             },
                         )
-                        if (screenModel.source.supportsLatest) {
+                        if (source.supportsLatest) {
                             FilterChip(
                                 selected = state.listing == Listing.Latest,
                                 onClick = {
-                                    screenModel.resetFilters()
-                                    screenModel.setListing(Listing.Latest)
+                                    viewModel.resetFilters()
+                                    viewModel.setListing(Listing.Latest)
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        imageVector = Icons.Outlined.NewReleases,
+                                        imageVector = MaterialSymbols.Rounded.NewReleases,
                                         contentDescription = null,
                                         modifier = Modifier
                                             .size(FilterChipDefaults.IconSize),
@@ -188,10 +191,10 @@ data class BrowseSourceScreen(
                         if (state.filters.isNotEmpty()) {
                             FilterChip(
                                 selected = state.listing is Listing.Search,
-                                onClick = screenModel::openFilterSheet,
+                                onClick = viewModel::openFilterSheet,
                                 leadingIcon = {
                                     Icon(
-                                        imageVector = Icons.Outlined.FilterList,
+                                        imageVector = MaterialSymbols.Rounded.FilterList,
                                         contentDescription = null,
                                         modifier = Modifier
                                             .size(FilterChipDefaults.IconSize),
@@ -210,10 +213,10 @@ data class BrowseSourceScreen(
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { paddingValues ->
             BrowseSourceContent(
-                source = screenModel.source,
-                mangaList = screenModel.mangaPagerFlowFlow.collectAsLazyPagingItems(),
-                columns = screenModel.getColumnsPreference(LocalConfiguration.current.orientation),
-                displayMode = screenModel.displayMode,
+                source = source,
+                mangaList = viewModel.mangaPagerFlowFlow.collectAsLazyPagingItems(),
+                columns = viewModel.getColumnsPreference(LocalConfiguration.current.orientation),
+                displayMode = viewModel.displayMode,
                 snackbarHostState = snackbarHostState,
                 contentPadding = paddingValues,
                 onWebViewClick = onWebViewClick,
@@ -222,13 +225,13 @@ data class BrowseSourceScreen(
                 onMangaClick = { navigator.push((MangaScreen(it.id, true))) },
                 onMangaLongClick = { manga ->
                     scope.launchIO {
-                        val duplicates = screenModel.getDuplicateLibraryManga(manga)
+                        val duplicates = viewModel.getDuplicateLibraryManga(manga)
                         when {
-                            manga.favorite -> screenModel.setDialog(BrowseSourceScreenModel.Dialog.RemoveManga(manga))
-                            duplicates.isNotEmpty() -> screenModel.setDialog(
-                                BrowseSourceScreenModel.Dialog.AddDuplicateManga(manga, duplicates),
+                            manga.favorite -> viewModel.setDialog(BrowseSourceViewModel.Dialog.RemoveManga(manga))
+                            duplicates.isNotEmpty() -> viewModel.setDialog(
+                                BrowseSourceViewModel.Dialog.AddDuplicateManga(manga, duplicates),
                             )
-                            else -> screenModel.addFavorite(manga)
+                            else -> viewModel.addFavorite(manga)
                         }
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     }
@@ -236,28 +239,28 @@ data class BrowseSourceScreen(
             )
         }
 
-        val onDismissRequest = { screenModel.setDialog(null) }
+        val onDismissRequest = { viewModel.setDialog(null) }
         when (val dialog = state.dialog) {
-            is BrowseSourceScreenModel.Dialog.Filter -> {
+            is BrowseSourceViewModel.Dialog.Filter -> {
                 SourceFilterDialog(
                     onDismissRequest = onDismissRequest,
                     filters = state.filters,
-                    onReset = screenModel::resetFilters,
-                    onFilter = { screenModel.search(filters = state.filters) },
-                    onUpdate = screenModel::setFilters,
+                    onReset = viewModel::resetFilters,
+                    onFilter = { viewModel.search(filters = state.filters) },
+                    onUpdate = viewModel::setFilters,
                 )
             }
-            is BrowseSourceScreenModel.Dialog.AddDuplicateManga -> {
+            is BrowseSourceViewModel.Dialog.AddDuplicateManga -> {
                 DuplicateMangaDialog(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
-                    onConfirm = { screenModel.addFavorite(dialog.manga) },
+                    onConfirm = { viewModel.addFavorite(dialog.manga) },
                     onOpenManga = { navigator.push(MangaScreen(it.id)) },
-                    onMigrate = { screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, it)) },
+                    onMigrate = { viewModel.setDialog(BrowseSourceViewModel.Dialog.Migrate(dialog.manga, it)) },
                 )
             }
 
-            is BrowseSourceScreenModel.Dialog.Migrate -> {
+            is BrowseSourceViewModel.Dialog.Migrate -> {
                 MigrateMangaDialog(
                     current = dialog.current,
                     target = dialog.target,
@@ -266,23 +269,23 @@ data class BrowseSourceScreen(
                     onDismissRequest = onDismissRequest,
                 )
             }
-            is BrowseSourceScreenModel.Dialog.RemoveManga -> {
+            is BrowseSourceViewModel.Dialog.RemoveManga -> {
                 RemoveMangaDialog(
                     onDismissRequest = onDismissRequest,
                     onConfirm = {
-                        screenModel.changeMangaFavorite(dialog.manga)
+                        viewModel.changeMangaFavorite(dialog.manga)
                     },
                     mangaToRemove = dialog.manga,
                 )
             }
-            is BrowseSourceScreenModel.Dialog.ChangeMangaCategory -> {
+            is BrowseSourceViewModel.Dialog.ChangeMangaCategory -> {
                 ChangeCategoryDialog(
                     initialSelection = dialog.initialSelection,
                     onDismissRequest = onDismissRequest,
                     onEditCategories = { navigator.push(CategoryScreen()) },
                     onConfirm = { include, _ ->
-                        screenModel.changeMangaFavorite(dialog.manga)
-                        screenModel.moveMangaToCategories(dialog.manga, include)
+                        viewModel.changeMangaFavorite(dialog.manga)
+                        viewModel.moveMangaToCategories(dialog.manga, include)
                     },
                 )
             }
@@ -293,8 +296,8 @@ data class BrowseSourceScreen(
             queryEvent.receiveAsFlow()
                 .collectLatest {
                     when (it) {
-                        is SearchType.Genre -> screenModel.searchGenre(it.txt)
-                        is SearchType.Text -> screenModel.search(it.txt)
+                        is SearchType.Genre -> viewModel.searchGenre(it.txt)
+                        is SearchType.Text -> viewModel.search(it.txt)
                     }
                 }
         }

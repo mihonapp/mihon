@@ -6,22 +6,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.manga.components.BaseMangaListItem
 import eu.kanade.presentation.util.Screen
@@ -29,6 +27,8 @@ import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
 import mihon.feature.migration.config.MigrationConfigScreen
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -47,9 +47,10 @@ data class MigrateMangaScreen(
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { MigrateMangaScreenModel(sourceId) }
+        val viewModel =
+            assistedMetroViewModel<MigrateMangaViewModel, MigrateMangaViewModel.Factory> { create(sourceId = sourceId) }
 
-        val state by screenModel.state.collectAsState()
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         if (state.isLoading) {
             LoadingScreen()
@@ -57,7 +58,7 @@ data class MigrateMangaScreen(
         }
 
         BackHandler(enabled = state.selectionMode) {
-            screenModel.clearSelection()
+            viewModel.clearSelection()
         }
 
         val lazyListState = rememberLazyListState()
@@ -68,7 +69,7 @@ data class MigrateMangaScreen(
                     title = state.source!!.name,
                     navigateUp = {
                         if (state.selectionMode) {
-                            screenModel.clearSelection()
+                            viewModel.clearSelection()
                         } else {
                             navigator.pop()
                         }
@@ -80,11 +81,11 @@ data class MigrateMangaScreen(
                 SmallExtendedFloatingActionButton(
                     text = { Text(text = stringResource(MR.strings.migrationConfigScreen_continueButtonText)) },
                     icon = {
-                        Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null)
+                        Icon(imageVector = MaterialSymbols.AutoMirroredRounded.ArrowForward, contentDescription = null)
                     },
                     onClick = {
                         val selection = state.selection
-                        screenModel.clearSelection()
+                        viewModel.clearSelection()
                         navigator.push(MigrationConfigScreen(selection))
                     },
                     expanded = lazyListState.shouldExpandFAB(),
@@ -107,13 +108,13 @@ data class MigrateMangaScreen(
                 lazyListState = lazyListState,
                 contentPadding = contentPadding,
                 state = state,
-                onClickItem = screenModel::toggleSelection,
+                onClickItem = viewModel::toggleSelection,
                 onClickCover = { navigator.push(MangaScreen(it.id)) },
             )
         }
 
         LaunchedEffect(Unit) {
-            screenModel.events.collectLatest { event ->
+            viewModel.events.collectLatest { event ->
                 when (event) {
                     MigrationMangaEvent.FailedFetchingFavorites -> {
                         context.toast(MR.strings.internal_error)
@@ -127,7 +128,7 @@ data class MigrateMangaScreen(
     private fun MigrateMangaContent(
         lazyListState: LazyListState,
         contentPadding: PaddingValues,
-        state: MigrateMangaScreenModel.State,
+        state: MigrateMangaViewModel.State,
         onClickItem: (Manga) -> Unit,
         onClickCover: (Manga) -> Unit,
     ) {

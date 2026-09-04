@@ -12,9 +12,6 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -37,10 +34,12 @@ import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.ChapterDownloadIndicator
 import eu.kanade.presentation.manga.components.DotSeparatorText
 import eu.kanade.presentation.manga.components.MangaCover
-import eu.kanade.presentation.util.animateItemFastScroll
 import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.roundedfilled.Bookmark
+import mihon.icons.materialsymbols.roundedfilled.Circle
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ListGroupHeader
@@ -92,14 +91,14 @@ internal fun LazyListScope.updatesUiItems(
         when (item) {
             is UpdatesUiModel.Header -> {
                 ListGroupHeader(
-                    modifier = Modifier.animateItemFastScroll(),
+                    modifier = Modifier.animateItem(),
                     text = relativeDateText(item.date),
                 )
             }
             is UpdatesUiModel.Item -> {
                 val updatesItem = item.item
                 UpdatesUiItem(
-                    modifier = Modifier.animateItemFastScroll(),
+                    modifier = Modifier.animateItem(),
                     update = updatesItem.update,
                     selected = updatesItem.selected,
                     readProgress = updatesItem.update.lastPageRead
@@ -187,7 +186,7 @@ private fun UpdatesUiItem(
                 var textHeight by remember { mutableIntStateOf(0) }
                 if (!update.read) {
                     Icon(
-                        imageVector = Icons.Filled.Circle,
+                        imageVector = MaterialSymbols.RoundedFilled.Circle,
                         contentDescription = stringResource(MR.strings.unread),
                         modifier = Modifier
                             .height(8.dp)
@@ -197,7 +196,7 @@ private fun UpdatesUiItem(
                 }
                 if (update.bookmark) {
                     Icon(
-                        imageVector = Icons.Filled.Bookmark,
+                        imageVector = MaterialSymbols.RoundedFilled.Bookmark,
                         contentDescription = stringResource(MR.strings.action_filter_bookmarked),
                         modifier = Modifier
                             .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp }),

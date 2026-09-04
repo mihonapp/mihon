@@ -181,9 +181,6 @@
     <string name="file_select_backup">Изберете резервно копие</string>
     <string name="update_check_confirm">Изтегли</string>
     <string name="update_check_no_new_updates">Няма налични актуализации</string>
-    <string name="update_check_notification_download_in_progress">Изтегля се…</string>
-    <string name="update_check_notification_download_complete">Изтегляне завършено</string>
-    <string name="update_check_notification_download_error">Грешка при изтегляне</string>
     <string name="update_check_notification_update_available">Има нова версия!</string>
     <string name="information_no_downloads">Нямате изтегляния</string>
     <string name="information_no_recent">Нямате нови глави</string>
@@ -545,7 +542,6 @@
     <string name="pref_tablet_ui_mode">Потребителски интерфейс на таблет</string>
     <string name="clear_database_source_item_count">%1$d небиблиотечна манга в базата данни</string>
     <string name="database_clean">Нищо за почистване</string>
-    <string name="channel_app_updates">Актуализации на приложението</string>
     <string name="pref_auto_clear_chapter_cache">Изчистване на кеша на главата при затваряне на приложението</string>
     <string name="privacy_policy">Политика за поверителност</string>
     <string name="pref_update_only_completely_read">С непрочетени глави</string>
@@ -727,7 +723,6 @@
     <string name="pref_chapter_swipe_end">Глава на дясно плъзгане</string>
     <string name="pref_double_tap_zoom">Натисни два пъти за увеличение</string>
     <string name="pref_flash_style_black">Черно</string>
-    <string name="pref_hardware_bitmap_threshold_default">По подразбиране (%d)</string>
     <string name="invalid_location">Невалидно местоположение: %s</string>
     <string name="exception_unknown_host">Не можа да достигне %s</string>
     <string name="action_display_unread_badge">Непрочетени глави</string>
