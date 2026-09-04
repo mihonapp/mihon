@@ -218,7 +218,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     suspend fun login(token: String) {
         try {
-            val oauth = api.createOAuth(token)
+            val oauth = ALOAuth(token)
             interceptor.setAuth(oauth)
             val currentUser = api.getCurrentUser()
             scorePreference.set(currentUser.mediaListOptions.scoreFormat)
