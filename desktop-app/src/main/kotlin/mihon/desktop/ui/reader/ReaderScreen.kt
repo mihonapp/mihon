@@ -40,8 +40,10 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.DesktopReaderSettingsStore
 import mihon.desktop.reader.ReaderClickAction
@@ -85,6 +87,7 @@ fun ReaderScreen(
     var chromeVisible by remember { mutableStateOf(true) }
     var hideGeneration by remember { mutableIntStateOf(0) }
     var showSettings by remember { mutableStateOf(false) }
+    var closing by remember(session) { mutableStateOf(false) }
     val inputMapper = remember { ReaderInputMapper() }
 
     fun markReadingInput() {
@@ -189,8 +192,10 @@ fun ReaderScreen(
             canRetry = state.loadState is ReaderLoadState.Failed || state.error != null,
             debugEnabled = debugEnabled,
             onBack = {
+                if (closing) return@ReaderChrome
+                closing = true
                 scope.launch {
-                    session.closeAndFlush()
+                    withContext(Dispatchers.Default) { session.closeAndFlush() }
                     onBack()
                 }
             },

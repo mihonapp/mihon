@@ -41,6 +41,7 @@ fun LibraryScreen(
     onQueryChange: (String) -> Unit,
     onMangaSelected: (Long) -> Unit,
     onBackFromDetail: () -> Unit = {},
+    onReadChapter: (Long) -> Unit = {},
     onDetailRetry: () -> Unit = {},
     onImportBackup: () -> Unit,
     onImportLocal: () -> Unit,
@@ -64,6 +65,7 @@ fun LibraryScreen(
                 MangaDetailScreen(
                     state = detailState,
                     onBack = onBackFromDetail,
+                    onReadChapter = onReadChapter,
                     onRetry = onDetailRetry,
                     showBack = false,
                     modifier = Modifier.weight(0.45f).fillMaxHeight(),
@@ -73,6 +75,7 @@ fun LibraryScreen(
             MangaDetailScreen(
                 state = detailState,
                 onBack = onBackFromDetail,
+                onReadChapter = onReadChapter,
                 onRetry = onDetailRetry,
                 showBack = true,
                 modifier = Modifier.fillMaxSize(),

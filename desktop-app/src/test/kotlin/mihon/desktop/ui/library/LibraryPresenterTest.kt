@@ -17,9 +17,16 @@ import mihon.desktop.library.model.ImportReport
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.library.model.MangaDetails
+import mihon.desktop.library.reader.ReaderLibraryPort
 import mihon.desktop.library.repository.LibraryRepository
+import mihon.reader.session.ProgressWriteResult
+import mihon.reader.session.ReaderProgressUpdate
+import mihon.reader.source.ChapterDirection
+import mihon.reader.source.ReaderChapterAsset
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicInteger
 
 class LibraryPresenterTest {
@@ -219,6 +226,41 @@ class LibraryPresenterTest {
         presenter.close()
     }
 
+    @Test
+    fun `local reader availability and returned progress are derived off the detail flow`() = runBlocking {
+        val file = Files.createTempFile("reader-presenter", ".cbz")
+        val chapters = MutableStateFlow(listOf(chapter(12, 1)))
+        val asset = ReaderChapterAsset(
+            mangaId = 1,
+            chapterId = 12,
+            mangaTitle = "One",
+            chapterName = "Chapter 12",
+            storageRoot = file.parent,
+            relativePath = file.fileName,
+            assetKind = "cbz",
+            sizeBytes = 1,
+            modifiedAt = 0,
+            lastPageRead = 0,
+            read = false,
+        )
+        val presenter = LibraryPresenter(
+            FakeLibraryRepository(
+                details = mapOf(1L to MutableStateFlow(details(1, "One"))),
+                chapters = mapOf(1L to chapters),
+                libraryFlow = { MutableStateFlow(listOf(manga(1, "One"))) },
+            ),
+            scope,
+            FakeReaderLibraryPort(mapOf(12L to asset)),
+        )
+        presenter.awaitState { !it.loading }
+        presenter.selectManga(1)
+
+        presenter.awaitDetail { it.readerAvailability[12L] == ChapterReaderAvailability.Readable }
+        chapters.value = listOf(chapter(12, 1).copy(lastPageRead = 4, read = true))
+        presenter.awaitDetail { it.chapters.singleOrNull()?.lastPageRead == 4L }.chapters.single().read shouldBe true
+        presenter.close()
+    }
+
     private suspend fun LibraryPresenter.awaitState(predicate: (LibraryUiState) -> Boolean): LibraryUiState =
         withTimeout(5_000) { state.first(predicate) }
 
@@ -249,6 +291,16 @@ class LibraryPresenterTest {
     private fun chapter(id: Long, mangaId: Long) = LibraryChapter(
         id, mangaId, "/$id", "Chapter $id", null, false, false, 0, 0, 0, id.toDouble(), id, 0, 0, "{}",
     )
+}
+
+private class FakeReaderLibraryPort(
+    private val assets: Map<Long, ReaderChapterAsset>,
+) : ReaderLibraryPort {
+    override fun chapterAsset(chapterId: Long): ReaderChapterAsset? = assets[chapterId]
+
+    override fun adjacentReadableChapter(chapterId: Long, direction: ChapterDirection): ReaderChapterAsset? = null
+
+    override suspend fun record(update: ReaderProgressUpdate): ProgressWriteResult = ProgressWriteResult.APPLIED
 }
 
 private class FakeLibraryRepository(

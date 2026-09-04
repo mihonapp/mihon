@@ -24,7 +24,9 @@ import kotlinx.coroutines.flow.update
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.library.model.MangaDetails
+import mihon.desktop.library.reader.ReaderLibraryPort
 import mihon.desktop.library.repository.LibraryRepository
+import java.nio.file.Files
 
 data class LibraryUiState(
     val loading: Boolean = true,
@@ -39,12 +41,20 @@ data class MangaDetailUiState(
     val chapters: List<LibraryChapter> = emptyList(),
     val loading: Boolean = false,
     val errorMessage: String? = null,
+    val readerAvailability: Map<Long, ChapterReaderAvailability> = emptyMap(),
 )
+
+sealed interface ChapterReaderAvailability {
+    data object Readable : ChapterReaderAvailability
+    data object MissingLocalContent : ChapterReaderAvailability
+    data object RemoteOnly : ChapterReaderAvailability
+}
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LibraryPresenter(
     private val repository: LibraryRepository,
     scope: CoroutineScope,
+    private val readerLibrary: ReaderLibraryPort? = repository as? ReaderLibraryPort,
 ) : AutoCloseable {
     private val presenterJob = SupervisorJob(scope.coroutineContext[Job])
     private val presenterScope = CoroutineScope(scope.coroutineContext + presenterJob)
@@ -109,14 +119,23 @@ class LibraryPresenter(
     ) { selected, _ -> selected }
         .flatMapLatest { selectedId ->
             if (selectedId == null) {
-                flow<SelectedRepositoryState> { emit(SelectedRepositoryState.Loaded(null, null, emptyList())) }
+                flow<SelectedRepositoryState> {
+                    emit(SelectedRepositoryState.Loaded(null, null, emptyList(), emptyMap()))
+                }
             } else {
                 flow<SelectedRepositoryState> {
                     val manga = repository.observeManga(selectedId)
                     val chapters = repository.observeChapters(selectedId)
                     emitAll(
                         combine(manga, chapters) { details, rows ->
-                            SelectedRepositoryState.Loaded(selectedId, details, rows)
+                            SelectedRepositoryState.Loaded(
+                                selectedId,
+                                details,
+                                rows,
+                                rows.associate { chapter ->
+                                    chapter.id to chapter.readerAvailability(readerLibrary)
+                                },
+                            )
                         },
                     )
                 }
@@ -141,6 +160,7 @@ class LibraryPresenter(
                 is SelectedRepositoryState.Loaded -> MangaDetailUiState(
                     manga = result.manga,
                     chapters = result.chapters,
+                    readerAvailability = result.readerAvailability,
                 )
             }
         }
@@ -183,6 +203,16 @@ private sealed interface SelectedRepositoryState {
         val selectedId: Long?,
         val manga: MangaDetails?,
         val chapters: List<LibraryChapter>,
+        val readerAvailability: Map<Long, ChapterReaderAvailability>,
     ) : SelectedRepositoryState
     data class Failed(val message: String) : SelectedRepositoryState
+}
+
+private fun LibraryChapter.readerAvailability(readerLibrary: ReaderLibraryPort?): ChapterReaderAvailability {
+    val asset = readerLibrary?.chapterAsset(id) ?: return ChapterReaderAvailability.RemoteOnly
+    return if (Files.isRegularFile(asset.storageRoot.resolve(asset.relativePath))) {
+        ChapterReaderAvailability.Readable
+    } else {
+        ChapterReaderAvailability.MissingLocalContent
+    }
 }

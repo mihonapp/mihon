@@ -29,6 +29,7 @@ import mihon.desktop.library.model.LibraryChapter
 fun MangaDetailScreen(
     state: MangaDetailUiState,
     onBack: () -> Unit,
+    onReadChapter: (Long) -> Unit = {},
     onRetry: () -> Unit = {},
     modifier: Modifier = Modifier,
     showBack: Boolean = true,
@@ -95,7 +96,11 @@ fun MangaDetailScreen(
                         }
                     }
                     items(state.chapters, key = LibraryChapter::id) { chapter ->
-                        ChapterRow(chapter)
+                        ChapterRow(
+                            chapter,
+                            state.readerAvailability[chapter.id] ?: ChapterReaderAvailability.RemoteOnly,
+                            onReadChapter,
+                        )
                     }
                     item(key = "detail-bottom-space") {
                         androidx.compose.foundation.layout.Spacer(Modifier.padding(8.dp))
@@ -115,7 +120,11 @@ private fun MetadataLine(label: String, value: String) {
 }
 
 @Composable
-private fun ChapterRow(chapter: LibraryChapter) {
+private fun ChapterRow(
+    chapter: LibraryChapter,
+    availability: ChapterReaderAvailability,
+    onReadChapter: (Long) -> Unit,
+) {
     Surface(
         modifier = Modifier.fillMaxWidth()
             .padding(horizontal = 24.dp)
@@ -138,14 +147,27 @@ private fun ChapterRow(chapter: LibraryChapter) {
                 )
             }
             FilledTonalButton(
-                onClick = {},
-                enabled = false,
+                onClick = { onReadChapter(chapter.id) },
+                enabled = availability is ChapterReaderAvailability.Readable,
                 modifier = Modifier.testTag("chapter-reader-action"),
             ) {
-                Text("Reader arrives in Plan 3")
+                Text(chapterActionLabel(chapter, availability))
             }
         }
     }
+}
+
+private fun chapterActionLabel(
+    chapter: LibraryChapter,
+    availability: ChapterReaderAvailability,
+): String = when (availability) {
+    ChapterReaderAvailability.Readable -> if (chapter.lastPageRead > 0L) {
+        "Continue · Page ${chapter.lastPageRead}"
+    } else {
+        "Read"
+    }
+    ChapterReaderAvailability.MissingLocalContent -> "Locate or re-import local content"
+    ChapterReaderAvailability.RemoteOnly -> "Available after source support"
 }
 
 @Composable

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -42,19 +41,21 @@ class MangaDetailScreenTest {
             onAllNodesWithTag("chapter-row")[0].assertTextContains("Second in repository")
             onAllNodesWithTag("chapter-row")[1].assertTextContains("First in repository")
             onNodeWithText("Read · Bookmarked · Page 7").assertExists()
-            onAllNodesWithTag("chapter-reader-action")[0].assertIsNotEnabled()
         }
 
     @Test
     fun `narrow selection pushes detail and back returns to library`() = runComposeUiTest {
         var selected: Long? = 7
-        setScreen(width = 900.dp, onBack = { selected = null })
+        var chapterId: Long? = null
+        setScreen(width = 900.dp, onBack = { selected = null }, onRead = { chapterId = it })
 
         onNodeWithTag("library-grid-pane").assertDoesNotExist()
         onNodeWithTag("manga-detail-pane").assertExists()
         onNodeWithTag("manga-detail-back").performClick()
 
         selected shouldBe null
+        onAllNodesWithTag("chapter-reader-action")[0].performClick()
+        chapterId shouldBe 72L
     }
 
     @Test
@@ -72,6 +73,7 @@ class MangaDetailScreenTest {
     private fun androidx.compose.ui.test.ComposeUiTest.setScreen(
         width: androidx.compose.ui.unit.Dp,
         onBack: () -> Unit = {},
+        onRead: (Long) -> Unit = {},
     ) {
         val item = LibraryManga(7, 107, "/7", "Real title", null, 2, 1, "Author name")
         setContent {
@@ -83,6 +85,7 @@ class MangaDetailScreenTest {
                         onQueryChange = {},
                         onMangaSelected = {},
                         onBackFromDetail = onBack,
+                        onReadChapter = onRead,
                         onImportBackup = {},
                         onImportLocal = {},
                     )
@@ -101,6 +104,7 @@ class MangaDetailScreenTest {
             chapter(72, "Second in repository", read = true, bookmark = true, page = 7),
             chapter(71, "First in repository"),
         ),
+        readerAvailability = mapOf(72L to ChapterReaderAvailability.Readable),
         loading = false,
     )
 

@@ -2,6 +2,7 @@ package mihon.desktop.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -22,13 +23,17 @@ import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberWindowState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mihon.desktop.DesktopRuntime
+import mihon.desktop.navigation.DesktopDestination
 import mihon.desktop.navigation.DesktopNavigator
 import mihon.desktop.ui.library.ImportActionState
 import mihon.desktop.ui.library.LibraryImportActions
 import mihon.desktop.ui.library.LibraryImportController
 import mihon.desktop.ui.library.LibraryPresenter
+import mihon.desktop.ui.reader.ReaderScreen
 import mihon.desktop.window.ScreenBounds
 import mihon.desktop.window.WindowPlacement
 import java.awt.Frame
@@ -99,31 +104,84 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
     ) {
         SideEffect { composeWindow = window }
         MihonDesktopTheme(preferences.themeMode) {
-            DesktopShell(
-                selected = navigator.current,
-                onDestinationSelected = navigator::navigate,
-                libraryState = libraryState,
-                mangaDetailState = mangaDetailState,
-                onLibraryQueryChange = libraryPresenter::setQuery,
-                onMangaSelected = libraryPresenter::selectManga,
-                onBackFromMangaDetail = { libraryPresenter.selectManga(null) },
-                onMangaDetailRetry = libraryPresenter::retryDetail,
-                onImportBackup = {
-                    presenterScope.launch {
-                        importState = ImportActionState.Running
-                        importState = importActions.chooseAndImportBackup()
-                    }
-                },
-                onImportLocal = {
-                    presenterScope.launch {
-                        importState = ImportActionState.Running
-                        importState = importActions.chooseAndImportLocal()
-                    }
-                },
-                onLibraryRetry = libraryPresenter::retry,
-            )
+            val destination = navigator.current
+            if (destination is DesktopDestination.Reader) {
+                ReaderDestination(
+                    destination = destination,
+                    runtime = runtime,
+                    mangaTitle = mangaDetailState.manga?.title ?: "Reader",
+                    chapterTitle = mangaDetailState.chapters.firstOrNull { it.id == destination.chapterId }?.name
+                        ?: "Chapter ${destination.chapterId}",
+                    onBack = navigator::back,
+                )
+            } else {
+                DesktopShell(
+                    selected = destination as DesktopDestination,
+                    onDestinationSelected = navigator::navigate,
+                    libraryState = libraryState,
+                    mangaDetailState = mangaDetailState,
+                    onLibraryQueryChange = libraryPresenter::setQuery,
+                    onMangaSelected = libraryPresenter::selectManga,
+                    onBackFromMangaDetail = { libraryPresenter.selectManga(null) },
+                    onReadChapter = { chapterId -> navigator.navigate(DesktopDestination.Reader(chapterId)) },
+                    onMangaDetailRetry = libraryPresenter::retryDetail,
+                    onImportBackup = {
+                        presenterScope.launch {
+                            importState = ImportActionState.Running
+                            importState = importActions.chooseAndImportBackup()
+                        }
+                    },
+                    onImportLocal = {
+                        presenterScope.launch {
+                            importState = ImportActionState.Running
+                            importState = importActions.chooseAndImportLocal()
+                        }
+                    },
+                    onLibraryRetry = libraryPresenter::retry,
+                )
+            }
             ImportStateDialog(importState) { importState = ImportActionState.Idle }
         }
+    }
+}
+
+@Composable
+private fun ReaderDestination(
+    destination: DesktopDestination.Reader,
+    runtime: DesktopRuntime,
+    mangaTitle: String,
+    chapterTitle: String,
+    onBack: () -> Unit,
+) {
+    var session by remember(destination) { mutableStateOf<mihon.reader.session.ReaderSession?>(null) }
+    val factory = runtime.readerFactory
+    if (factory == null) {
+        Text("The reader is unavailable in this runtime.")
+        return
+    }
+    androidx.compose.runtime.LaunchedEffect(destination) {
+        session = withContext(Dispatchers.Default) {
+            factory.createSession().also { it.open(destination.chapterId) }
+        }
+    }
+    val activeSession = session
+    if (activeSession == null) {
+        Column(
+            modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            CircularProgressIndicator()
+            Text("Opening chapter…")
+        }
+    } else {
+        ReaderScreen(
+            session = activeSession,
+            title = mangaTitle,
+            chapterTitle = chapterTitle,
+            settingsStore = mihon.desktop.reader.DesktopReaderSettingsStore(runtime.preferences),
+            onBack = onBack,
+        )
     }
 }
 

@@ -179,6 +179,18 @@ class ReaderScreenTest {
     }
 
     @Test
+    fun `back flushes an active reader exactly once`() = runComposeUiTest {
+        val session = FakeReaderSession(ready())
+        var returned = 0
+        setReaderScreen(session, settingsStore(), onBack = { returned++ })
+
+        onNodeWithTag("reader-back").performClick()
+        onNodeWithTag("reader-back").performClick()
+
+        waitUntil { session.closeRequests == 1 && returned == 1 }
+    }
+
+    @Test
     fun `animated page follows selected core frame pauses offscreen and owns no timer`() = runComposeUiTest {
         mainClock.autoAdvance = false
         val page = PageId("chapter", "animated.gif")
@@ -252,6 +264,7 @@ class ReaderScreenTest {
         height: Int = 700,
         onFullscreen: () -> Unit = {},
         onBorderless: () -> Unit = {},
+        onBack: () -> Unit = {},
         debugEnabled: Boolean = false,
     ) {
         setContent {
@@ -263,7 +276,7 @@ class ReaderScreenTest {
                             title = "Manga title",
                             chapterTitle = "Chapter 7",
                             settingsStore = store,
-                            onBack = {},
+                            onBack = onBack,
                             onFullscreen = onFullscreen,
                             onBorderless = onBorderless,
                             debugEnabled = debugEnabled,
@@ -291,6 +304,7 @@ class ReaderScreenTest {
         override val state: StateFlow<ReaderState> = mutable
         val actions = mutableListOf<ReaderAction>()
         var retryRequests = 0
+        var closeRequests = 0
 
         override suspend fun open(chapterId: Long) = Unit
 
@@ -305,7 +319,9 @@ class ReaderScreenTest {
 
         override suspend fun flushProgress() = Unit
 
-        override suspend fun closeAndFlush() = Unit
+        override suspend fun closeAndFlush() {
+            closeRequests++
+        }
 
         override fun cancelWithoutFlush() = Unit
     }
