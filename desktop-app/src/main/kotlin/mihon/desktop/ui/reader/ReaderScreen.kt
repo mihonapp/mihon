@@ -1,6 +1,7 @@
 package mihon.desktop.ui.reader
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
@@ -89,6 +92,7 @@ fun ReaderScreen(
     var showSettings by remember { mutableStateOf(false) }
     var closing by remember(session) { mutableStateOf(false) }
     val inputMapper = remember { ReaderInputMapper() }
+    val focusRequester = remember { FocusRequester() }
 
     fun markReadingInput() {
         chromeVisible = true
@@ -111,6 +115,9 @@ fun ReaderScreen(
     }
     LaunchedEffect(session, foreground) {
         session.dispatch(ReaderAction.SetForeground(foreground))
+    }
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
     }
     DisposableEffect(session) {
         session.dispatch(ReaderAction.SetContentVisible(true))
@@ -138,6 +145,8 @@ fun ReaderScreen(
         modifier = modifier
             .fillMaxSize()
             .testTag("reader-screen")
+            .focusRequester(focusRequester)
+            .focusable()
             .onKeyEvent { event ->
                 if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
                 val key = event.toReaderInputKey() ?: return@onKeyEvent false

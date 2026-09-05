@@ -4,9 +4,25 @@ Recorded on 2026-09-05 (Asia/Shanghai) from branch `feat/windows-reader-core`, s
 
 ## Scope and claim boundary
 
-This task verifies the packaged Windows **reader core/render pipeline**. The gated packaged command imports deterministic local sources, opens them through the production runtime/reader source/session/decoder factories, decodes real tiles, exercises every reading mode, persists progress, and reopens it in later processes. It is not a live Compose UI claim.
+The automated gate verifies the packaged Windows **reader core/render pipeline**. It imports deterministic local sources, opens them through the production runtime/reader source/session/decoder factories, decodes real tiles, exercises every reading mode, persists progress, and reopens it in later processes. Live Compose claims are limited to the separately recorded Task 12 checkpoints below.
 
-The Compose bridge remains a separately budgeted surface. The Task 8 tests included in the current 90-test desktop suite prove a 64 MiB two-dual-GIF replacement high-water and the 96 MiB tiled dual-page ceiling. Live Compose interaction/process evidence belongs to Task 12 and is not claimed here.
+The Compose bridge remains a separately budgeted surface. The Task 8 tests included in the current 90-test desktop suite prove a 64 MiB two-dual-GIF replacement high-water and the 96 MiB tiled dual-page ceiling. A checkpoint is not a claim that all Task 12 manual acceptance or the complete Windows port is finished.
+
+## Task 12 live packaged UI checkpoint
+
+The packaged executable was launched directly (not with `gradle run`) against a fresh `desktop-app/build/live-acceptance/data` directory populated with the deterministic verifier library. The production Library screen opened `reader-fixture-manga/02-pages.cbz`; the Compose reader displayed decoded content and a real mouse-region click moved the persisted reader position from page 8 of 8 to page 7 of 8.
+
+Production window controls were exercised through Windows desktop automation. This uncovered and fixed two integration defects: initial reader focus did not reliably receive shortcuts, and changing Compose `undecorated` without recreating the native window left the Windows frame visible. The reader root now requests focus, the window handles Escape at preview-key level, and entering or leaving borderless mode recreates the native window.
+
+Observed dimensions and native behavior:
+
+- Normal: 1266×793 at desktop origin (688,114), with the Windows title bar.
+- Fullscreen: 2560×1440 at (0,0); Escape restored the exact 1266×793 normal bounds even after a toolbar button held focus.
+- Borderless: 1280×800 at (681,114), with no Windows title bar. Its native window identity changed on entry, and Escape created a new decorated normal window and persisted `reader.v1.window=NORMAL`.
+
+The composite evidence is [`windows-reader-core/09-window-modes.png`](windows-reader-core/09-window-modes.png). Input in this checkpoint came from Windows automation; it is not labeled as physical keyboard or touchpad acceptance. The remaining reading-mode, edge-case, continuity, five-minute memory, and physical-input Task 12 rows remain open.
+
+After the production fixes, `spotlessApply`, `:desktop-app:test`, `:reader-core:test`, `:desktop-app:createDistributable`, and then the complete packaged verifier were run. The final verifier rebuilt all 153 actionable tasks, reported `BUILD SUCCESSFUL in 1m 20s`, and ended with exactly `Mihon W desktop reader verification passed.`
 
 ## Toolchain and archive dependencies
 
@@ -136,4 +152,4 @@ Stable generated evidence is written under `desktop-app/build/verification/reade
 
 Only the Windows job in `.github/workflows/build.yml` changed. It invokes `scripts/verify-desktop-reader.ps1` and, on failure, uploads both `desktop-app/build/compose/binaries/main/app/MihonW/MihonW.exe` and `desktop-app/build/verification/reader`. The Android job is byte-for-byte unchanged from Task 10.
 
-Per the task's rapid-completion direction, no separate review agent or review loop was used. The implementing agent performed the TDD and systematic diagnostic pass. Findings and fixes were the GIF shared-palette defect and the over-broad corrupt-name predicate recorded above; the subsequent focused scenario and complete packaged verifier both passed. No Task 12 live UI work was started.
+Per the task's rapid-completion direction, no separate review agent or review loop was used. The implementing agent performed the TDD and systematic diagnostic pass. Findings and fixes were the GIF shared-palette defect, the over-broad corrupt-name predicate, initial reader focus, and native borderless-window recreation recorded above; the subsequent focused scenario and complete packaged verifier both passed. Task 12 is now in progress, with only the explicitly evidenced checkpoint complete.

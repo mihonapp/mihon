@@ -587,7 +587,7 @@ git commit -m "ci(reader): verify packaged Windows reading flows"
 - Create: `docs/superpowers/evidence/windows-reader-core/09-window-modes.png`
 - Create: `docs/superpowers/evidence/windows-reader-core/10-missing-content.png`
 
-- [ ] Build and launch the packaged EXE, not `gradle run`, with a fresh data directory containing the verifier library.
+- [x] Build and launch the packaged EXE, not `gradle run`, with a fresh data directory containing the verifier library.
 - [ ] Capture and inspect screenshots at 1280×800 and a narrow portrait window for: manga detail with enabled Read/Continue; single LTR and RTL; dual cover offset on/off; vertical; Webtoon; transparent page; two visibly different timed frames of the same animated page; corrupt page error; zoom/pan; chrome hidden/visible; fullscreen; borderless; missing-content error.
 - [ ] Use real mouse/keyboard/touchpad input where available: click regions, side buttons if present, wheel, Ctrl+wheel, arrow/Page keys, Home/End, zoom reset, F/B/Esc. Record unavailable physical hardware explicitly; automated mappings are not mislabeled as physical acceptance.
 - [ ] Read through a chapter boundary, close mid-chapter after navigating backwards, relaunch the EXE, and verify exact page restoration, read completion, duration increase, and detail-row refresh.
