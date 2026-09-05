@@ -147,6 +147,10 @@ class IpcSession(
         }
     }
 
+    suspend fun awaitTermination() {
+        readerJob.join()
+    }
+
     override fun close() {
         readerJob.cancel()
         try {
