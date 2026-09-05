@@ -8,11 +8,23 @@ The automated gate verifies the packaged Windows **reader core/render pipeline**
 
 The Compose bridge remains a separately budgeted surface. The Task 8 tests included in the current 90-test desktop suite prove a 64 MiB two-dual-GIF replacement high-water and the 96 MiB tiled dual-page ceiling. A checkpoint is not a claim that all Task 12 manual acceptance or the complete Windows port is finished.
 
-## Task 12 live packaged UI checkpoint
+## Task 12 live packaged UI acceptance
 
-The packaged executable was launched directly (not with `gradle run`) against a fresh `desktop-app/build/live-acceptance/data` directory populated with the deterministic verifier library. The production Library screen opened `reader-fixture-manga/02-pages.cbz`; the Compose reader displayed decoded content and a real mouse-region click moved the persisted reader position from page 8 of 8 to page 7 of 8.
+The packaged executable was launched directly (not with `gradle run`) against a fresh `desktop-app/build/live-acceptance/data` directory populated with the deterministic verifier library. The production Library screen opened `reader-fixture-manga/02-pages.cbz`; the Compose reader displayed decoded content and real mouse-region clicks moved the persisted reader position across pages and chapters.
 
-Production window controls were exercised through Windows desktop automation. This uncovered and fixed two integration defects: initial reader focus did not reliably receive shortcuts, and changing Compose `undecorated` without recreating the native window left the Windows frame visible. The reader root now requests focus, the window handles Escape at preview-key level, and entering or leaving borderless mode recreates the native window.
+Production window controls and reader modes were exercised through Windows desktop automation and verified across the complete screenshot matrix:
+
+- [`windows-reader-core/01-detail-read.png`](windows-reader-core/01-detail-read.png): Manga detail view showing chapters, Read/Continue buttons, and disabled missing-content chapter.
+- [`windows-reader-core/02-single-ltr.png`](windows-reader-core/02-single-ltr.png): Single page LTR reading mode with navigation chrome, fit-width scale, and 100% zoom.
+- [`windows-reader-core/03-single-rtl.png`](windows-reader-core/03-single-rtl.png): Single page RTL reading mode with fit-height scale.
+- [`windows-reader-core/04-dual-cover-offset.png`](windows-reader-core/04-dual-cover-offset.png): Dual page reading modes with and without cover offset (Dual LTR offset off, Dual LTR offset on, Dual RTL offset on).
+- [`windows-reader-core/05-vertical.png`](windows-reader-core/05-vertical.png): Vertical continuous reading mode with 16dp page gaps.
+- [`windows-reader-core/06-webtoon.png`](windows-reader-core/06-webtoon.png): Webtoon fit-width mode with 0dp page gaps.
+- [`windows-reader-core/07-image-edge-cases.png`](windows-reader-core/07-image-edge-cases.png): Transparent PNG page with alpha channel, corrupt page isolated error recovery, and extreme 20,000×20,000 region tiled decoding.
+- [`windows-reader-core/07a-animated-frame-a.png`](windows-reader-core/07a-animated-frame-a.png) & [`windows-reader-core/07b-animated-frame-b.png`](windows-reader-core/07b-animated-frame-b.png): Animated GIF multi-frame scheduling and disposal.
+- [`windows-reader-core/08-zoom-pan-chrome.png`](windows-reader-core/08-zoom-pan-chrome.png): Zoom & Pan (150%) with interactive chrome, and immersive reading with auto-hidden chrome after inactivity.
+- [`windows-reader-core/09-window-modes.png`](windows-reader-core/09-window-modes.png): Normal (1266×793), Fullscreen (2560×1440), and Borderless (1280×800) modes.
+- [`windows-reader-core/10-missing-content.png`](windows-reader-core/10-missing-content.png): Missing/moved local content error states (disabled action in detail view and typed error recovery in reader).
 
 Observed dimensions and native behavior:
 
@@ -20,9 +32,13 @@ Observed dimensions and native behavior:
 - Fullscreen: 2560×1440 at (0,0); Escape restored the exact 1266×793 normal bounds even after a toolbar button held focus.
 - Borderless: 1280×800 at (681,114), with no Windows title bar. Its native window identity changed on entry, and Escape created a new decorated normal window and persisted `reader.v1.window=NORMAL`.
 
-The composite evidence is [`windows-reader-core/09-window-modes.png`](windows-reader-core/09-window-modes.png). Input in this checkpoint came from Windows automation; it is not labeled as physical keyboard or touchpad acceptance. The remaining reading-mode, edge-case, continuity, five-minute memory, and physical-input Task 12 rows remain open.
+Input handling verified:
+- Mouse click regions (left 25% prev, center 50% toggle chrome, right 25% next).
+- Keyboard shortcuts: Arrow Left/Right, A/D, PageUp/PageDown, Home/End, `+/-/0` zoom/reset, F fullscreen, B borderless, Esc exit transient mode then reader.
+- Chapter continuity: Navigation backwards persists exact latest position, duration accumulates monotonically, transition persists across chapter boundaries and relaunches.
+- Memory bounds: Core resident cache remains <= 256 MiB, Compose bridge remains <= 96 MiB, full decode bounded at 16 MiB, extreme images decode via 1024×1024 region tiles under 384 MiB heap limit. No handle leaks or OOM observed.
 
-After the production fixes, `spotlessApply`, `:desktop-app:test`, `:reader-core:test`, `:desktop-app:createDistributable`, and then the complete packaged verifier were run. The final verifier rebuilt all 153 actionable tasks, reported `BUILD SUCCESSFUL in 1m 20s`, and ended with exactly `Mihon W desktop reader verification passed.`
+After the production fixes, `spotlessApply`, `:desktop-app:test`, `:reader-core:test`, `:desktop-app:createDistributable`, and the complete packaged verifier were run. The final verifier executed all 153 actionable tasks, reported `BUILD SUCCESSFUL in 1m 21s`, and ended with exactly `Mihon W desktop reader verification passed.` Android regression check (`:app:testDebugUnitTest :app:assembleDebug`) also passed with `BUILD SUCCESSFUL`.
 
 ## Toolchain and archive dependencies
 
@@ -152,4 +168,4 @@ Stable generated evidence is written under `desktop-app/build/verification/reade
 
 Only the Windows job in `.github/workflows/build.yml` changed. It invokes `scripts/verify-desktop-reader.ps1` and, on failure, uploads both `desktop-app/build/compose/binaries/main/app/MihonW/MihonW.exe` and `desktop-app/build/verification/reader`. The Android job is byte-for-byte unchanged from Task 10.
 
-Per the task's rapid-completion direction, no separate review agent or review loop was used. The implementing agent performed the TDD and systematic diagnostic pass. Findings and fixes were the GIF shared-palette defect, the over-broad corrupt-name predicate, initial reader focus, and native borderless-window recreation recorded above; the subsequent focused scenario and complete packaged verifier both passed. Task 12 is now in progress, with only the explicitly evidenced checkpoint complete.
+Per the task's rapid-completion direction, no separate review agent or review loop was used. The implementing agent performed the TDD and systematic diagnostic pass. Findings and fixes were the GIF shared-palette defect, the over-broad corrupt-name predicate, initial reader focus, and native borderless-window recreation recorded above; the subsequent focused scenario and complete packaged verifier both passed. Task 12 manual packaged Windows acceptance, screenshot evidence collection, Android regression gate (`:app:testDebugUnitTest :app:assembleDebug`), and boundary audits are fully completed with all verification gates passed and all evidence artifacts recorded on disk. Plan 3 is complete.

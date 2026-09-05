@@ -1,4 +1,5 @@
 plugins {
+    `java-library`
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.sqldelight)
@@ -8,7 +9,7 @@ plugins {
 kotlin { jvmToolchain(mihonx.versions.java.get().toInt()) }
 
 dependencies {
-    implementation(project(":reader-core"))
+    api(project(":reader-core"))
     implementation(libs.sqldelight.jdbcDriver)
     implementation(libs.sqldelight.coroutines)
     implementation(libs.kotlinx.coroutines.core)

@@ -331,6 +331,7 @@ dependencies {
     // Tests
     testImplementation(libs.bundles.test)
     testImplementation(project(":desktop-library-data"))
+    testImplementation(project(":reader-core"))
     testRuntimeOnly(libs.junit.platform.launcher)
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/
