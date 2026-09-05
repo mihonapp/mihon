@@ -3,6 +3,10 @@ package eu.kanade.tachiyomi.ui.download
 import android.view.MenuItem
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -10,27 +14,37 @@ import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import eu.kanade.tachiyomi.source.model.Page
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
 class DownloadQueueViewModel(
-    private val downloadManager: DownloadManager = Injekt.get(),
+    private val downloadManager: DownloadManager,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(emptyList<DownloadHeaderItem>())
-    val state = _state.asStateFlow()
+    val state: StateFlow<List<DownloadHeaderItem>> = downloadManager.queueState
+        .map { downloads ->
+            downloads
+                .groupBy { it.source }
+                .map { entry ->
+                    DownloadHeaderItem(entry.key.id, entry.key.name, entry.value.size).apply {
+                        addSubItems(0, entry.value.map { DownloadItem(it, this) })
+                    }
+                }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), emptyList())
 
     lateinit var controllerBinding: DownloadListBinding
 
@@ -116,22 +130,6 @@ class DownloadQueueViewModel(
         }
     }
 
-    init {
-        viewModelScope.launch {
-            downloadManager.queueState
-                .map { downloads ->
-                    downloads
-                        .groupBy { it.source }
-                        .map { entry ->
-                            DownloadHeaderItem(entry.key.id, entry.key.name, entry.value.size).apply {
-                                addSubItems(0, entry.value.map { DownloadItem(it, this) })
-                            }
-                        }
-                }
-                .collect { newList -> _state.update { newList } }
-        }
-    }
-
     override fun onCleared() {
         for (job in progressJobs.values) {
             job.cancel()
@@ -141,7 +139,7 @@ class DownloadQueueViewModel(
     }
 
     val isDownloaderRunning = downloadManager.isDownloaderRunning
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), false)
 
     fun getDownloadStatusFlow() = downloadManager.statusFlow()
     fun getDownloadProgressFlow() = downloadManager.progressFlow()

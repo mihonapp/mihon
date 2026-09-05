@@ -1,7 +1,9 @@
 package tachiyomi.domain.chapter.interactor
 
+import dev.zacsweers.metro.Inject
 import tachiyomi.domain.chapter.model.Chapter
 
+@Inject
 class ShouldUpdateDbChapter {
 
     fun await(dbChapter: Chapter, sourceChapter: Chapter): Boolean {

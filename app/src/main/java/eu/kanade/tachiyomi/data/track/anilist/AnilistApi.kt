@@ -5,7 +5,6 @@ import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALAddMangaResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALCurrentUserResult
-import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALSearchResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUserListMangaQueryResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUserViewerData
@@ -283,10 +282,6 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
         return findLibManga(track, userId) ?: throw Exception("Could not find manga")
     }
 
-    fun createOAuth(token: String): ALOAuth {
-        return ALOAuth(token, "Bearer", System.currentTimeMillis() + 31536000000, 31536000000)
-    }
-
     suspend fun getCurrentUser(): ALUserViewerData {
         return withIOContext {
             val query = """
@@ -314,6 +309,73 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     .awaitSuccess()
                     .parseAs<ALCurrentUserResult>()
                     .data.viewer
+            }
+        }
+    }
+
+    suspend fun getMangaDetails(id: Int): TrackSearch? {
+        return withIOContext {
+            val query = $$"""
+            |query Search($manga_id: Int) {
+                |Page (perPage: 1) {
+                    |media(id: $manga_id, type: MANGA, format_not_in: [NOVEL]) {
+                        |id
+                        |staff {
+                            |edges {
+                                |role
+                                |id
+                                |node {
+                                    |name {
+                                        |full
+                                        |userPreferred
+                                        |native
+                                    |}
+                                |}
+                            |}
+                        |}
+                        |title {
+                            |userPreferred
+                        |}
+                        |coverImage {
+                            |large
+                        |}
+                        |format
+                        |countryOfOrigin
+                        |status
+                        |chapters
+                        |description
+                        |startDate {
+                            |year
+                            |month
+                            |day
+                        |}
+                        |averageScore
+                    |}
+                |}
+            |}
+            |
+            """.trimMargin()
+
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("manga_id", id)
+                }
+            }
+
+            with(json) {
+                authClient.newCall(
+                    POST(
+                        API_URL,
+                        body = payload.toString().toRequestBody(jsonMime),
+                    ),
+                )
+                    .awaitSuccess()
+                    .parseAs<ALSearchResult>()
+                    .data.page.media
+                    .firstOrNull()
+                    ?.toALManga()
+                    ?.toTrack()
             }
         }
     }

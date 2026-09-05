@@ -1,19 +1,23 @@
 package eu.kanade.tachiyomi.extension.api
 
 import android.content.Context
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.repository.ExtensionStoreRepository
 import tachiyomi.core.common.util.lang.withIOContext
-import uy.kohesive.injekt.injectLazy
 
-internal class ExtensionApi {
-
-    private val repository: ExtensionStoreRepository by injectLazy()
-
-    private val updateExtensionStores: UpdateExtensionStores by injectLazy()
+@Inject
+@SingleIn(AppScope::class)
+class ExtensionApi(
+    private val repository: ExtensionStoreRepository,
+    private val updateExtensionStores: UpdateExtensionStores,
+    private val extensionUpdateNotifier: ExtensionUpdateNotifier,
+) {
 
     suspend fun findExtensions(): List<Extension.Available> {
         return withIOContext { repository.fetchExtensions() }
@@ -41,7 +45,7 @@ internal class ExtensionApi {
         }
 
         if (extensionsWithUpdate.isNotEmpty()) {
-            ExtensionUpdateNotifier(context).promptUpdates(extensionsWithUpdate.map { it.name })
+            extensionUpdateNotifier.promptUpdates(extensionsWithUpdate.map { it.name })
         }
     }
 }

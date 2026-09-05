@@ -3,8 +3,6 @@ package eu.kanade.presentation.more.settings.screen.browse.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +12,8 @@ import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoreScreenState
 import mihon.domain.extension.model.ExtensionStore
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Refresh
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
@@ -43,7 +43,7 @@ fun ExtensionStoresScreen(
                 actions = {
                     IconButton(onClick = onClickRefresh) {
                         Icon(
-                            imageVector = Icons.Outlined.Refresh,
+                            imageVector = MaterialSymbols.Rounded.Refresh,
                             contentDescription = stringResource(resource = MR.strings.action_webview_refresh),
                         )
                     }

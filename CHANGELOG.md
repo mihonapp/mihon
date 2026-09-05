@@ -11,6 +11,21 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Add `id:` prefix search to remaining trackers (AniList, Bangumi, Kitsu, MangaUpdates, Shikimori, and Hikka) ([@MajorTanya](https://github.com/MajorTanya)) ([#3776](https://github.com/mihonapp/mihon/pull/3776))
+  - Allow `id:` to search for slugs on Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3792](https://github.com/mihonapp/mihon/pull/3792))
+- Add support for using the user's chosen rating system for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3818](https://github.com/mihonapp/mihon/pull/3818))
+
+### Improved
+- Show updates and upcoming filter icon as active for categories ([@Secozzi](https://github.com/Secozzi)) ([#3772](https://github.com/mihonapp/mihon/pull/3772))
+- Show scores in MangaUpdates search results (and authors for `id:` prefix searches) ([@MajorTanya](https://github.com/MajorTanya)) ([#3795](https://github.com/mihonapp/mihon/pull/3795))
+- Remove whitespace from MAL and MB `id:` prefix search inputs before searching ([@MajorTanya](https://github.com/MajorTanya)) ([#3793](https://github.com/mihonapp/mihon/pull/3793))
+- Show a helpful error message for expired AniList credentials ([@MajorTanya](https://github.com/MajorTanya)) ([#3888](https://github.com/mihonapp/mihon/pull/3888))
+
+### Fixed
+- Fixed app and extension update check running again on configuration change ([@AntsyLich](https://github.com/AntsyLich)) ([#3708](https://github.com/mihonapp/mihon/pull/3708))
+- Fixed MangaBaka user start/finish dates drifting in negative offset timezones ([@MajorTanya](https://github.com/MajorTanya)) ([#3711](https://github.com/mihonapp/mihon/pull/3711))
+- Fixed MangaBaka scores being wrong when score step size was set to > 1 ([@MajorTanya](https://github.com/MajorTanya)) ([#3740](https://github.com/mihonapp/mihon/pull/3740))
 
 ## [v0.20.4] - 2026-08-05
 ### Fixed
@@ -511,7 +526,7 @@ Same as v0.19.6
   - Fix MigratorTest after updating to Kotlin 2 ([@cuong-tran](https://github.com/cuong-tran)) ([#896](https://github.com/mihonapp/mihon/pull/896))
   - Add MigratorTest to build script ([@cuong-tran](https://github.com/cuong-tran)) ([#896](https://github.com/mihonapp/mihon/pull/896))
   - Fix UI freeze after migration ([@AntsyLich](https://github.com/AntsyLich)) ([`3f1d28c`](https://github.com/mihonapp/mihon/commit/3f1d28c3833e6b868152149ed02b3fb8c54eccef))
-  - Fix some migrations never running ([@MajorTanya](https://github.com/MajorTanya), [@AntsyLich](https://github.com/AntsyLich)) ([#1030](https://github.com/mihonapp/mihon/pull/1030))
+  - Fix some migrations never running ([@MajorTanya](https://github.com/MajorTanya), [@AntsyLich](https://github.com/AntsyLich)) ([#1114](https://github.com/mihonapp/mihon/pull/1114))
 - Add ProGuard rule to keep `mihon` namespace classes ([@MajorTanya](https://github.com/MajorTanya)) ([#605](https://github.com/mihonapp/mihon/pull/605))
 - Use gradle plugins to share build configuration instead of subprojects ([@AntsyLich](https://github.com/AntsyLich)) ([`e448e40`](https://github.com/mihonapp/mihon/commit/e448e40406e8d9916120a278e42829a6f1b25a7a))
 - Remove dependency on compose material 2 components ([@AntsyLich](https://github.com/AntsyLich)) ([`fb94230`](https://github.com/mihonapp/mihon/commit/fb9423028eb017c110cb805f2d0601e5b02e50f9))

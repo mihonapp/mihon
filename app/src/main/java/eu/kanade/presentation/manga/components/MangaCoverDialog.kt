@@ -10,11 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,7 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -38,6 +35,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
+import ca.mpreg.webgpuviewer.renderer.Image
+import ca.mpreg.webgpuviewer.viewer.ImagePage
+import ca.mpreg.webgpuviewer.viewer.ImageViewer
+import ca.mpreg.webgpuviewer.viewer.ImageViewerState
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.CachePolicy
@@ -47,7 +48,17 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.EditCoverAction
+import eu.kanade.tachiyomi.data.coil.ImageDecoder
+import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import mihon.app.di.appGraph
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Close
+import mihon.icons.materialsymbols.rounded.Edit
+import mihon.icons.materialsymbols.rounded.Save
+import mihon.icons.materialsymbols.rounded.Share
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -64,6 +75,9 @@ fun MangaCoverDialog(
     onEditClick: ((EditCoverAction) -> Unit)?,
     onDismissRequest: () -> Unit,
 ) {
+    val useNewRenderer = LocalContext.current.appGraph.basePreferences.highQualityRenderer.get()
+    val view = LocalView.current
+
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -84,7 +98,7 @@ fun MangaCoverDialog(
                     ActionsPill {
                         IconButton(onClick = onDismissRequest) {
                             Icon(
-                                imageVector = Icons.Outlined.Close,
+                                imageVector = MaterialSymbols.Rounded.Close,
                                 contentDescription = stringResource(MR.strings.action_close),
                             )
                         }
@@ -95,12 +109,12 @@ fun MangaCoverDialog(
                             actions = listOf(
                                 AppBar.Action(
                                     title = stringResource(MR.strings.action_share),
-                                    icon = Icons.Outlined.Share,
+                                    icon = MaterialSymbols.Rounded.Share,
                                     onClick = onShareClick,
                                 ),
                                 AppBar.Action(
                                     title = stringResource(MR.strings.action_save),
-                                    icon = Icons.Outlined.Save,
+                                    icon = MaterialSymbols.Rounded.Save,
                                     onClick = onSaveClick,
                                 ),
                             ),
@@ -118,7 +132,7 @@ fun MangaCoverDialog(
                                     },
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Outlined.Edit,
+                                        imageVector = MaterialSymbols.Rounded.Edit,
                                         contentDescription = stringResource(MR.strings.action_edit_cover),
                                     )
                                 }
@@ -148,6 +162,41 @@ fun MangaCoverDialog(
                 }
             },
         ) { contentPadding ->
+            if (useNewRenderer) {
+                val state = ImageViewerState()
+
+                ImageRequest.Builder(view.context)
+                    .data(manga)
+                    .size(Size.ORIGINAL)
+                    .memoryCachePolicy(CachePolicy.DISABLED)
+                    .newDecoder(true)
+                    .target { result ->
+                        val res = (result as ImageDecoder.DecodeResultImage).res
+                        val page = runBlocking(Dispatchers.Default) {
+                            ImagePage.ImageSingle(
+                                Image(
+                                    res.image,
+                                    res.width,
+                                    res.height,
+                                    createMipMaps = true,
+                                    backgroundColor = 0,
+                                ),
+                            )
+                        }
+                        state.apply {
+                            fetchPage = { index ->
+                                if (index == 0) page else null
+                            }
+                            invalidate()
+                        }
+                    }
+                    .build()
+                    .let(view.context.imageLoader::enqueue)
+
+                ImageViewer(state = state)
+                return@Scaffold
+            }
+
             val statusBarPaddingPx = with(LocalDensity.current) { contentPadding.calculateTopPadding().roundToPx() }
             val bottomPaddingPx = with(LocalDensity.current) { contentPadding.calculateBottomPadding().roundToPx() }
 

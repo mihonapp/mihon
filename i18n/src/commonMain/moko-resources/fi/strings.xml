@@ -51,7 +51,6 @@
     <string name="file_select_backup">Valitse varmuuskopio-tiedosto</string>
     <string name="update_check_confirm">Lataa</string>
     <string name="update_check_no_new_updates">Ei päivityksiä saatavilla</string>
-    <string name="update_check_notification_download_in_progress">Ladataan…</string>
     <string name="update_check_notification_update_available">Uusi versio saatavilla!</string>
     <string name="information_no_downloads">Ei latauksia</string>
     <string name="information_no_recent">Ei viimeisimpiä päivityksiä</string>
@@ -578,7 +577,6 @@
     <string name="help_translate">Auta kääntämisessä</string>
     <string name="pref_clear_webview_data">Tyhjennä WebView-tiedot</string>
     <string name="privacy_policy">Tietosuojakäytäntö</string>
-    <string name="channel_app_updates">Sovelluspäivitykset</string>
     <string name="clear_database_source_item_count">%1$d sarjaa joita ei olla lisätty kirjastoon tietokanassa</string>
     <string name="database_clean">Ei mitään tyhjennettävää</string>
     <string name="pref_reset_viewer_flags">Poista sarjakohtaiset lukijan asetukset</string>

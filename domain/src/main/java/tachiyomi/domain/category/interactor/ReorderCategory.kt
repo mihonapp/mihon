@@ -1,5 +1,6 @@
 package tachiyomi.domain.category.interactor
 
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
@@ -8,6 +9,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.category.repository.CategoryRepository
 
+@Inject
 class ReorderCategory(
     private val categoryRepository: CategoryRepository,
 ) {

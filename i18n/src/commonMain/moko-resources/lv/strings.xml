@@ -502,7 +502,6 @@
     <string name="empty_screen">Nu, šis ir neveikli</string>
     <string name="update_check_open">Atvērt vietnē GitHub</string>
     <string name="update_check_eol">Šī Android versija vairs netiek atbalstīta</string>
-    <string name="update_check_notification_download_in_progress">Lejupielādē…</string>
     <string name="channel_progress">Progress</string>
     <string name="decode_image_error">Attēlu nevarēja ielādēt</string>
     <string name="confirm_set_image_as_cover">Vai izmantot šo attēlu kā vāku?</string>
@@ -556,7 +555,6 @@
     <string name="download_notifier_split_page_not_found">Sadalīšanas laikā netika atrasta lapa %d</string>
     <string name="skipped_reason_not_caught_up">Izlaists, jo ir nelasītas nodaļas</string>
     <string name="learn_more">Pieskarieties, lai uzzinātu vairāk</string>
-    <string name="channel_app_updates">Lietotnes atjauninājumi</string>
     <string name="update_check_notification_update_available">Ir pieejama jauna versija!</string>
     <string name="chapter_settings_updated">Atjaunināti noklusējuma nodaļu iestatījumi</string>
     <string name="pref_landscape_zoom">Automātiski tuvināt ainavas attēlus</string>
