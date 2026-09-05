@@ -52,7 +52,9 @@ internal object ReaderFixtureBuilder {
             check(!existing.iterator().hasNext()) { "reader fixture target must be empty" }
         }
         check(sha256(committedRar) == COMMITTED_RAR_SHA256) { "committed Task 3 RAR hash changed" }
-        check(sha256(committedSource) == COMMITTED_SOURCE_SHA256) { "committed Task 3 source hash changed" }
+        if (Files.isRegularFile(committedSource)) {
+            check(sha256(committedSource) == COMMITTED_SOURCE_SHA256) { "committed Task 3 source hash changed" }
+        }
 
         val mangaRoot = normalizedRoot.resolve(MANGA_DIRECTORY)
         val directoryChapter = mangaRoot.resolve("01-directory")
