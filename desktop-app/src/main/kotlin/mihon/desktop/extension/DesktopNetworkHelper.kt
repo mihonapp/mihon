@@ -1,4 +1,4 @@
-﻿package mihon.desktop.extension
+package mihon.desktop.extension
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,7 +22,9 @@ class DesktopNetworkHelper(
         .followRedirects(true)
         .followSslRedirects(true)
         .build(),
-    private val defaultUserAgent: String = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 MihonW/1.0",
+    private val defaultUserAgent: String =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+            "Chrome/128.0.0.0 Safari/537.36 MihonW/1.0",
 ) {
     // Whitelist per package: pkg -> Set of allowed domains
     private val packageWhitelists = ConcurrentHashMap<String, Set<String>>()

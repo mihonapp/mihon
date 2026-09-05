@@ -17,16 +17,16 @@
 
 ## Fixed scope and invariants
 
-- [ ] Extensions execute exclusively in a separate host process. An extension never receives direct database access, main process memory handles, or raw filesystem access outside its private directory.
-- [ ] Network access from extensions is strictly brokered. The extension host requests HTTP operations across the authenticated local IPC pipe; the main process enforces declared domain whitelists, rate limits, timeouts, and cookie jars.
-- [ ] Extension package format is `.mext`: a ZIP container with `manifest.json`, compiled classes/JAR, `icon.png`, and a SHA-256 digest.
-- [ ] Manifest validation strictly enforces: valid semantic versioning, positive source IDs, valid package name (matching `^[a-zA-Z0-9_.]+$`), non-empty name, and explicit declared network domains.
-- [ ] Extension host process failure, crash, OOM, or timeout never crashes the main desktop application. The process manager detects abnormal exit, logs structured diagnostics, and cleanly restarts or displays typed recovery UI.
-- [ ] IPC protocol uses Windows Named Pipes (`\\.\pipe\mihon-w-ext-{guid}`) with length-prefixed JSON-lines framing, monotonic request sequence IDs, cancellation support, and strict 30-second default call deadlines.
-- [ ] Extensions require explicit user approval before installation: the permission UI must display package name, publisher, version, declared network domains, and untrusted signature warnings.
-- [ ] Online chapters seamlessly integrate into `reader-core`: `OnlineChapterSource` loads page lists via IPC, streams image data through the memory-budgeted decoder pipeline, and renders across all 6 reading modes.
-- [ ] Adding an online manga to the library creates or merges database records with `source = sourceId`, preserving compatibility with backup schemas.
-- [ ] No regression on Android: `:app:testDebugUnitTest :app:assembleDebug` and `spotlessCheck` must pass cleanly throughout.
+- [x] Extensions execute exclusively in a separate host process. An extension never receives direct database access, main process memory handles, or raw filesystem access outside its private directory.
+- [x] Network access from extensions is strictly brokered. The extension host requests HTTP operations across the authenticated local IPC pipe; the main process enforces declared domain whitelists, rate limits, timeouts, and cookie jars.
+- [x] Extension package format is `.mext`: a ZIP container with `manifest.json`, compiled classes/JAR, `icon.png`, and a SHA-256 digest.
+- [x] Manifest validation strictly enforces: valid semantic versioning, positive source IDs, valid package name (matching `^[a-zA-Z0-9_.]+$`), non-empty name, and explicit declared network domains.
+- [x] Extension host process failure, crash, OOM, or timeout never crashes the main desktop application. The process manager detects abnormal exit, logs structured diagnostics, and cleanly restarts or displays typed recovery UI.
+- [x] IPC protocol uses Windows Named Pipes (`\\.\pipe\mihon-w-ext-{guid}`) with length-prefixed JSON-lines framing, monotonic request sequence IDs, cancellation support, and strict 30-second default call deadlines.
+- [x] Extensions require explicit user approval before installation: the permission UI must display package name, publisher, version, declared network domains, and untrusted signature warnings.
+- [x] Online chapters seamlessly integrate into `reader-core`: `OnlineChapterSource` loads page lists via IPC, streams image data through the memory-budgeted decoder pipeline, and renders across all 6 reading modes.
+- [x] Adding an online manga to the library creates or merges database records with `source = sourceId`, preserving compatibility with backup schemas.
+- [x] No regression on Android: `:app:testDebugUnitTest :app:assembleDebug` and `spotlessCheck` must pass cleanly throughout.
 
 ---
 
@@ -196,13 +196,13 @@ data class IpcResponse(
 
 Phase 4 is complete only when all of the following are simultaneously true:
 
-- [ ] All checkboxes above are checked with matching evidence.
-- [ ] `:extension-sdk`, `:extension-host`, `:desktop-library-data`, `:reader-core`, and `:desktop-app` unit tests pass cleanly.
-- [ ] Brokered HTTP engine correctly restricts network requests to declared extension domains.
-- [ ] Windows sandbox Job Object correctly enforces memory and process lifecycle bounds.
-- [ ] Online chapter reading works smoothly across all 6 reading modes with progress persistence.
-- [ ] Adding online manga to library updates local database and library views without errors.
-- [ ] Host process crash recovery is verified without UI hang or application exit.
-- [ ] Android regression suite (`:app:testDebugUnitTest :app:assembleDebug`) passes.
-- [ ] Spotless check passes across all modules.
-- [ ] Working tree is clean after the final documentation commit; no branch is pushed unless explicitly requested.
+- [x] All checkboxes above are checked with matching evidence.
+- [x] `:extension-sdk`, `:extension-host`, `:desktop-library-data`, `:reader-core`, and `:desktop-app` unit tests pass cleanly.
+- [x] Brokered HTTP engine correctly restricts network requests to declared extension domains.
+- [x] Windows sandbox Job Object correctly enforces memory and process lifecycle bounds.
+- [x] Online chapter reading works smoothly across all 6 reading modes with progress persistence.
+- [x] Adding online manga to library updates local database and library views without errors.
+- [x] Host process crash recovery is verified without UI hang or application exit.
+- [x] Android regression suite (`:app:testDebugUnitTest :app:assembleDebug`) passes.
+- [x] Spotless check passes across all modules.
+- [x] Working tree is clean after the final documentation commit; no branch is pushed unless explicitly requested.

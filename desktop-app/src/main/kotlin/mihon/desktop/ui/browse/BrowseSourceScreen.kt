@@ -150,7 +150,11 @@ fun BrowseSourceScreen(
             }
         } else if (state.mangas.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
-                Text("No manga found", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.outline)
+                Text(
+                    "No manga found",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.outline,
+                )
             }
         } else {
             LazyVerticalGrid(

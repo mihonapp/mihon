@@ -43,7 +43,9 @@ class OnlineChapterSourceTest {
     }
 
     @Test
-    fun `loads pages and streams page image through brokered network helper and caches locally`(@TempDir tempDir: Path) {
+    fun `loads pages and streams page image through brokered network helper and caches locally`(
+        @TempDir tempDir: Path,
+    ) {
         runBlocking {
             val cacheDir = tempDir.resolve("cache").toFile()
             val dummyWorkingDir = tempDir.resolve("work").toFile()
@@ -76,7 +78,8 @@ class OnlineChapterSourceTest {
                 networkHelper = networkHelper,
                 cacheDir = cacheDir,
             )
-            onlineSource.cachedPages = listOf(Page(index = 0, imageUrl = "http://127.0.0.1:" + serverPort + "/page1.jpg"))
+            onlineSource.cachedPages =
+                listOf(Page(index = 0, imageUrl = "http://127.0.0.1:" + serverPort + "/page1.jpg"))
 
             val pages = onlineSource.pages()
             pages shouldHaveSize 1

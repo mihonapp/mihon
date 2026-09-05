@@ -154,13 +154,20 @@ fun OnlineMangaDetailScreen(
             }
         } else if (state.chapters.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
-                Text("No chapters found", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.outline)
+                Text(
+                    "No chapters found",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                )
             }
         } else {
             LazyColumn(modifier = Modifier.fillMaxSize().weight(1f).testTag("chapters-list")) {
                 items(state.chapters, key = { it.url }) { chapter ->
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 8.dp).testTag("chapter-row-" + chapter.url),
+                        modifier = Modifier.fillMaxWidth().padding(
+                            vertical = 12.dp,
+                            horizontal = 8.dp,
+                        ).testTag("chapter-row-" + chapter.url),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {

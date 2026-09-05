@@ -1,4 +1,4 @@
-﻿package mihon.desktop.ui.browse
+package mihon.desktop.ui.browse
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -175,7 +175,8 @@ fun BrowseScreen(
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Caution: Only install extensions from repositories you trust. Extensions run in a sandboxed host with brokered network access.",
+                        text = "Caution: Only install extensions from repositories you trust. " +
+                            "Extensions run in a sandboxed host with brokered network access.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.outline,
                     )

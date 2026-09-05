@@ -2,8 +2,8 @@ package mihon.desktop.extension
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import mihon.desktop.extension.WindowsExtensionProcessManager
 import mihon.desktop.extension.DesktopNetworkHelper
+import mihon.desktop.extension.WindowsExtensionProcessManager
 import mihon.extension.ipc.BrokerHttpRequest
 import mihon.extension.source.model.Page
 import mihon.extension.source.model.SChapter

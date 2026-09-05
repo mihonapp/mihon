@@ -82,8 +82,20 @@ class OnlineMangaSyncService(
                         artist = detailedManga.artist ?: existingManga.artist,
                         author = detailedManga.author ?: existingManga.author,
                         description = detailedManga.description ?: existingManga.description,
-                        genreJson = if (detailedManga.genre.isNotEmpty()) json.encodeToString(detailedManga.genre) else existingManga.genreJson,
-                        status = if (detailedManga.status != SManga.UNKNOWN) detailedManga.status.toLong() else existingManga.status,
+                        genreJson = if (detailedManga.genre.isNotEmpty()) {
+                            json.encodeToString(
+                                detailedManga.genre,
+                            )
+                        } else {
+                            existingManga.genreJson
+                        },
+                        status = if (detailedManga.status !=
+                            SManga.UNKNOWN
+                        ) {
+                            detailedManga.status.toLong()
+                        } else {
+                            existingManga.status
+                        },
                         thumbnailUrl = detailedManga.thumbnailUrl ?: existingManga.thumbnailUrl,
                         favorite = true,
                         lastModifiedAt = now,
@@ -120,8 +132,20 @@ class OnlineMangaSyncService(
                         existingChapter.copy(
                             name = sChapter.name,
                             scanlator = sChapter.scanlator ?: existingChapter.scanlator,
-                            dateUpload = if (sChapter.dateUpload > 0L) sChapter.dateUpload else existingChapter.dateUpload,
-                            chapterNumber = if (sChapter.chapterNumber >= 0f) sChapter.chapterNumber.toDouble() else existingChapter.chapterNumber,
+                            dateUpload = if (sChapter.dateUpload >
+                                0L
+                            ) {
+                                sChapter.dateUpload
+                            } else {
+                                existingChapter.dateUpload
+                            },
+                            chapterNumber = if (sChapter.chapterNumber >=
+                                0f
+                            ) {
+                                sChapter.chapterNumber.toDouble()
+                            } else {
+                                existingChapter.chapterNumber
+                            },
                             sourceOrder = index.toLong(),
                             lastModifiedAt = now,
                         ),
