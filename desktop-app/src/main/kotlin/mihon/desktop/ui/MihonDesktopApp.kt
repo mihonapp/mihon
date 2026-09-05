@@ -33,6 +33,7 @@ import mihon.desktop.ui.library.ImportActionState
 import mihon.desktop.ui.library.LibraryImportActions
 import mihon.desktop.ui.library.LibraryImportController
 import mihon.desktop.ui.library.LibraryPresenter
+import mihon.desktop.ui.reader.DecodedReaderPage
 import mihon.desktop.ui.reader.ReaderScreen
 import mihon.desktop.window.ScreenBounds
 import mihon.desktop.window.WindowPlacement
@@ -181,6 +182,14 @@ private fun ReaderDestination(
             chapterTitle = chapterTitle,
             settingsStore = mihon.desktop.reader.DesktopReaderSettingsStore(runtime.preferences),
             onBack = onBack,
+            pageContent = { page, _, modifier ->
+                DecodedReaderPage(
+                    factory = factory,
+                    page = page,
+                    foreground = true,
+                    modifier = modifier,
+                )
+            },
         )
     }
 }
