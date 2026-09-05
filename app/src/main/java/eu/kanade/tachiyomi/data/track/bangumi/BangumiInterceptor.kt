@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.bangumi
 
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
+import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -24,7 +25,9 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
         if (currAuth.isExpired()) {
             val response = chain.proceed(BangumiApi.refreshTokenRequest(currAuth.refreshToken!!))
             if (response.isSuccessful) {
-                currAuth = json.decodeFromString<BGMOAuth>(response.body.string())
+                currAuth = with(json) {
+                    response.parseAs<BGMOAuth>()
+                }
                 newAuth(currAuth)
             } else {
                 response.close()
