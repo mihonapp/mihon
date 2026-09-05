@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
@@ -21,6 +23,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.BaseMangaListItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -29,6 +32,7 @@ import kotlinx.coroutines.flow.collectLatest
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
+import mihon.icons.materialsymbols.rounded.FilterList
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -36,6 +40,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.theme.active
 import tachiyomi.presentation.core.util.selectedBackground
 import tachiyomi.presentation.core.util.shouldExpandFAB
 
@@ -75,6 +80,22 @@ data class MigrateMangaScreen(
                         }
                     },
                     scrollBehavior = scrollBehavior,
+                    actions = {
+                        AppBarActions(
+                            listOf(
+                                AppBar.Action(
+                                    title = stringResource(MR.strings.action_filter),
+                                    icon = MaterialSymbols.Rounded.FilterList,
+                                    iconTint = if (state.hasActiveFilters) {
+                                        MaterialTheme.colorScheme.active
+                                    } else {
+                                        LocalContentColor.current
+                                    },
+                                    onClick = viewModel::showFilterDialog,
+                                ),
+                            ),
+                        )
+                    },
                 )
             },
             floatingActionButton = {
@@ -111,6 +132,16 @@ data class MigrateMangaScreen(
                 onClickItem = viewModel::toggleSelection,
                 onClickCover = { navigator.push(MangaScreen(it.id)) },
             )
+        }
+
+        when (state.dialog) {
+            MigrateMangaViewModel.Dialog.Filter -> {
+                MigrateMangaFilterDialog(
+                    onDismissRequest = viewModel::dismissDialog,
+                    viewModel = viewModel,
+                )
+            }
+            null -> {}
         }
 
         LaunchedEffect(Unit) {
