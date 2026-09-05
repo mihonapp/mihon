@@ -8,8 +8,6 @@ import kotlin.time.Clock
 data class KitsuOAuth(
     @SerialName("access_token")
     val accessToken: String,
-    @SerialName("token_type")
-    val tokenType: String,
     @SerialName("created_at")
     val createdAt: Long,
     @SerialName("expires_in")
