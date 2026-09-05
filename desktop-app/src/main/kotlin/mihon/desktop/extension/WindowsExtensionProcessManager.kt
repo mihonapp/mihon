@@ -218,7 +218,8 @@ class WindowsExtensionProcessManager(
     }
 
     suspend fun restart() {
-        close()
+        closeInternal()
+        state = HostProcessState.STOPPED
         start()
     }
 
