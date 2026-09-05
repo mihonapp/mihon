@@ -6,7 +6,6 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.apollographql.apollo.network.okHttpClient
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUser
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.dataOrElse
@@ -157,10 +156,6 @@ class AnilistApi(
                     ?.firstOrNull()
                     ?.toTrack(trackId)
             }
-    }
-
-    fun createOAuth(token: String): ALOAuth {
-        return ALOAuth(token, "Bearer", System.currentTimeMillis() + 31536000000, 31536000000)
     }
 
     suspend fun getCurrentUser(): ALUser {

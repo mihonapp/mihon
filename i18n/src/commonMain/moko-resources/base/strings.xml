@@ -499,7 +499,8 @@
     <string name="pref_webtoon_disable_zoom_out">Disable zoom out</string>
     <string name="webgpu_viewer">WebGPU</string>
     <string name="pref_transition_animation">Transition animation</string>
-    <string name="transition_animation_default">Default</string>
+    <string name="pref_transition_animation_dual">Transition animation (dual)</string>
+    <string name="transition_animation_basic">Basic</string>
     <string name="transition_animation_flip_left">Page flip (left)</string>
     <string name="transition_animation_flip_right">Page flip (right)</string>
     <string name="transition_animation_stack_left">Stack (left)</string>
@@ -512,7 +513,9 @@
     <string name="transition_animation_fade">Fade</string>
     <string name="transition_animation_fade_white">Fade to white</string>
     <string name="transition_animation_none">None</string>
+    <string name="transition_animation_flip">Page flip</string>
     <string name="pref_cutout_mode">Display cutout mode</string>
+    <string name="pref_cutout_mode_dual">Display cutout mode (dual)</string>
     <string name="cutout_mode_ignore">Ignore</string>
     <string name="cutout_mode_avoid">Avoid</string>
     <string name="cutout_mode_shift">Shift</string>
@@ -520,6 +523,7 @@
     <string name="dual_page_view_never">Never</string>
     <string name="dual_page_view_always">Always</string>
     <string name="dual_page_view_wide">When wide</string>
+    <string name="pref_continuous_minwidth">Min width</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
