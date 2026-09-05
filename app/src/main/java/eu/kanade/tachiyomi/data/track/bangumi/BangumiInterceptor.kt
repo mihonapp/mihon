@@ -44,19 +44,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
     }
 
     fun newAuth(oauth: BGMOAuth?) {
-        this.oauth = if (oauth == null) {
-            null
-        } else {
-            BGMOAuth(
-                oauth.accessToken,
-                oauth.tokenType,
-                System.currentTimeMillis() / 1000,
-                oauth.expiresIn,
-                oauth.refreshToken,
-                this.oauth?.userId,
-            )
-        }
-
+        this.oauth = oauth
         bangumi.saveToken(oauth)
     }
 }
