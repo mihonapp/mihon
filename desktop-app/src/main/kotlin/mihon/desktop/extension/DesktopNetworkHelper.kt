@@ -1,4 +1,4 @@
-package mihon.desktop.extension
+﻿package mihon.desktop.extension
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,6 +9,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
@@ -63,11 +64,38 @@ class DesktopNetworkHelper(
         if (pattern == host) return true
         if (pattern.startsWith("*.")) {
             val root = pattern.removePrefix("*.")
-            if (host == root || host.endsWith(".$root")) {
+            if (host == root || host.endsWith("." + root)) {
                 return true
             }
         }
         return false
+    }
+
+    suspend fun downloadRawBytes(request: BrokerHttpRequest): ByteArray = withContext(Dispatchers.IO) {
+        val uri = URI(request.url)
+        val host = uri.host ?: throw IllegalArgumentException("Target URL has no host: ${request.url}")
+        if (!isDomainAllowed(host)) {
+            throw SecurityException("Access denied: domain '$host' is not in declared extension domains")
+        }
+
+        val builder = Request.Builder().url(request.url)
+        var userAgentSet = false
+        request.headers.forEach { (k, v) ->
+            if (k.equals("User-Agent", ignoreCase = true)) {
+                userAgentSet = true
+            }
+            builder.addHeader(k, v)
+        }
+        if (!userAgentSet) {
+            builder.header("User-Agent", defaultUserAgent)
+        }
+
+        client.newCall(builder.build()).execute().use { response ->
+            if (!response.isSuccessful) {
+                throw IllegalStateException("HTTP ${response.code} downloading ${request.url}")
+            }
+            response.body.bytes()
+        }
     }
 
     suspend fun executeBrokeredRequest(request: BrokerHttpRequest): BrokerHttpResponse = withContext(Dispatchers.IO) {
