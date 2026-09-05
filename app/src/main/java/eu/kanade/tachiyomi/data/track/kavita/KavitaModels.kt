@@ -70,14 +70,7 @@ class OAuth(
         SourceAuth(3),
     ),
 ) {
-    fun getToken(apiUrl: String): String? {
-        for (authentication in authentications) {
-            if (authentication.apiUrl == apiUrl) {
-                return authentication.jwtToken
-            }
-        }
-        return null
-    }
+    fun getToken(apiUrl: String): String? = authentications.find { it.apiUrl == apiUrl }?.jwtToken
 }
 
 data class SourceAuth(

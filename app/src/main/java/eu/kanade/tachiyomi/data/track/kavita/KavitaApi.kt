@@ -5,11 +5,11 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import okhttp3.Dns
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.common.util.lang.withIOContext
@@ -21,7 +21,7 @@ import java.net.SocketTimeoutException
 class KavitaApi(
     private val trackerId: Long,
     private val client: OkHttpClient,
-    interceptor: KavitaInterceptor
+    interceptor: KavitaInterceptor,
 ) {
 
     private val json: Json by injectLazy()
@@ -44,7 +44,7 @@ class KavitaApi(
     fun getNewToken(apiUrl: String, apiKey: String): String? {
         val request = POST(
             "$apiUrl/Plugin/authenticate?apiKey=$apiKey&pluginName=Tachiyomi-Kavita",
-            body = "{}".toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+            body = EMPTY_JSON_BODY,
         )
         try {
             with(json) {
@@ -58,9 +58,9 @@ class KavitaApi(
                             throw IOException("Unauthorized / api key not valid")
                         }
                         500 -> {
-                            logcat(
-                                LogPriority.WARN,
-                            ) { "Error fetching JWT token. API URL: $apiUrl, empty API key: ${apiKey.isEmpty()}" }
+                            logcat(LogPriority.WARN) {
+                                "Error fetching JWT token. API URL: $apiUrl, empty API key: ${apiKey.isEmpty()}"
+                            }
                             throw IOException("Error fetching JWT token")
                         }
                         else -> {}
@@ -137,10 +137,9 @@ class KavitaApi(
                 }
             }
         } catch (e: Exception) {
-            logcat(
-                LogPriority.WARN,
-                e,
-            ) { "Exception getting latest chapter read. Could not get itemRequest: $requestUrl" }
+            logcat(LogPriority.WARN, e) {
+                "Exception getting latest chapter read. Could not get itemRequest: $requestUrl"
+            }
             throw e
         }
         return 0.0
@@ -181,9 +180,13 @@ class KavitaApi(
             track.tracking_url,
         )}&chapterNumber=${track.last_chapter_read}"
         authClient.newCall(
-            POST(requestUrl, body = "{}".toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())),
+            POST(requestUrl, body = EMPTY_JSON_BODY),
         )
             .awaitSuccess()
         return getTrackSearch(track.tracking_url)
+    }
+
+    companion object {
+        private val EMPTY_JSON_BODY = "{}".toRequestBody(jsonMime)
     }
 }
