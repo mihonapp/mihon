@@ -477,3 +477,31 @@ LEFT JOIN chapter ON chapter.manga_id = manga.id
 WHERE manga.favorite = 1 AND manga_category.category_id = ?
 GROUP BY manga.id
 ORDER BY manga.title COLLATE NOCASE, manga.id;
+
+selectAllMangaForExport:
+SELECT * FROM manga ORDER BY id ASC;
+
+selectAllChaptersForExport:
+SELECT * FROM chapter ORDER BY manga_id ASC, source_order ASC, id ASC;
+
+selectAllCategoriesForExport:
+SELECT * FROM category ORDER BY sort_order ASC, id ASC;
+
+selectAllMangaCategoriesForExport:
+SELECT manga_id, category_id FROM manga_category ORDER BY manga_id ASC, category_id ASC;
+
+selectAllHistoryForExport:
+SELECT * FROM history ORDER BY chapter_id ASC;
+
+selectAllTrackingForExport:
+SELECT * FROM tracking ORDER BY manga_id ASC, tracker_id ASC;
+
+selectAllSourcesForExport:
+SELECT * FROM source_metadata ORDER BY source_id ASC;
+
+selectAllPreferenceSnapshotsForExport:
+SELECT * FROM preference_snapshot ORDER BY key ASC;
+
+selectAllSourcePreferenceSnapshotsForExport:
+SELECT * FROM source_preference_snapshot ORDER BY source_key ASC, key ASC;
+

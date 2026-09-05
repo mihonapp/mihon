@@ -42,6 +42,9 @@ class DesktopRuntime(
     val categoryService: mihon.desktop.category.DesktopCategoryService? = null,
     val trackerManager: mihon.desktop.track.DesktopTrackerManager? = null,
     val trackingQueue: mihon.desktop.track.OfflineTrackingQueue? = null,
+    val diagnosticService: mihon.desktop.diagnostics.DiagnosticBundleService? = null,
+    val backupExporter: mihon.desktop.library.backup.AndroidBackupExporter =
+        mihon.desktop.library.backup.AndroidBackupExporter(library),
     private val closeReaderSessions: suspend () -> Unit = readerFactory?.let { it::shutdown } ?: {},
     private val closeReaderServices: () -> Unit = readerFactory?.let { it::closeServices } ?: {},
     internal val closeLibrary: () -> Unit = library::close,
@@ -223,6 +226,10 @@ object DesktopRuntimeFactory {
             val trackingQueue = mihon.desktop.track.OfflineTrackingQueue(
                 queueFile = directories.root.resolve("tracking-queue.json"),
             )
+            val diagnosticService = mihon.desktop.diagnostics.DiagnosticBundleService(
+                directories = directories,
+                repository = library,
+            )
             return DesktopRuntime(
                 directories = directories,
                 preferences = preferences,
@@ -239,6 +246,7 @@ object DesktopRuntimeFactory {
                 categoryService = categoryService,
                 trackerManager = trackerManager,
                 trackingQueue = trackingQueue,
+                diagnosticService = diagnosticService,
             )
         } catch (error: Throwable) {
             try {

@@ -165,6 +165,14 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
         }
         ).collectAsState()
 
+    val historyService = runtime.historyService
+    val historyState by (
+        historyService?.state ?: remember {
+            kotlinx.coroutines.flow.MutableStateFlow(mihon.desktop.history.HistoryUiState())
+        }
+        ).collectAsState()
+    var exportNotification: String? by remember { mutableStateOf(null) }
+
     key(readerWindowMode == ReaderWindowMode.BORDERLESS) {
         Window(
             onCloseRequest = {
@@ -265,9 +273,44 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                         onCheckForUpdates = {
                             presenterScope.launch { updateScheduler?.triggerNow() }
                         },
+                        // History
+                        historyGroups = historyState.groups,
+                        historyQuery = historyState.query,
+                        onHistoryQueryChange = { historyService?.setQuery(it) },
+                        onDeleteHistoryItem = { historyService?.deleteItem(it) },
+                        onClearAllHistory = { historyService?.clearAll() },
+                        // Settings & Diagnostics
+                        preferenceStore = runtime.preferences,
+                        readerSettingsStore = remember { DesktopReaderSettingsStore(runtime.preferences) },
+                        diagnosticService = runtime.diagnosticService,
+                        onExportBackup = {
+                            presenterScope.launch {
+                                val path = mihon.desktop.ui.library.chooseExportBackup() ?: return@launch
+                                try {
+                                    withContext(Dispatchers.IO) {
+                                        runtime.backupExporter.export(path)
+                                    }
+                                    exportNotification = "Backup successfully exported to:\n$path"
+                                } catch (e: Exception) {
+                                    exportNotification = "Backup export failed:\n${e.message}"
+                                }
+                            }
+                        },
                     )
                 }
                 ImportStateDialog(importState) { importState = ImportActionState.Idle }
+                exportNotification?.let { msg ->
+                    AlertDialog(
+                        onDismissRequest = { exportNotification = null },
+                        confirmButton = {
+                            TextButton(onClick = { exportNotification = null }) {
+                                Text("OK")
+                            }
+                        },
+                        title = { Text("Backup Export") },
+                        text = { Text(msg) },
+                    )
+                }
             }
         }
     }

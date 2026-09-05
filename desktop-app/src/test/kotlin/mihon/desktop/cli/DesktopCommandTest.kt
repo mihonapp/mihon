@@ -40,6 +40,8 @@ class DesktopCommandTest {
             arrayOf("--smoke-test") to DesktopCommand.FoundationSmoke,
             arrayOf("--import-backup=C:\\备份\\a.tachibk") to
                 DesktopCommand.ImportBackup(Path.of("C:\\备份\\a.tachibk")),
+            arrayOf("--export-backup=C:\\备份\\out.tachibk") to
+                DesktopCommand.ExportBackup(Path.of("C:\\备份\\out.tachibk")),
             arrayOf("--import-local=C:\\漫画\\作品") to DesktopCommand.ImportLocal(Path.of("C:\\漫画\\作品")),
             arrayOf("--import-local=C:\\漫画\\作品=a") to DesktopCommand.ImportLocal(Path.of("C:\\漫画\\作品=a")),
             arrayOf("--list-library-json") to DesktopCommand.ListLibraryJson,
@@ -186,6 +188,21 @@ class DesktopCommandTest {
         output.toString(UTF_8) shouldBe
             "{\"command\":\"import-backup\",\"status\":\"SUCCEEDED\",\"reportId\":1," +
             "\"path\":${jsonString(backup.toString())},\"counts\":$ONE_MANGA_COUNTS}\n"
+    }
+
+    @Test
+    fun `successful backup export emits stable JSON`() {
+        val exportFile = tempDir.resolve("export.tachibk")
+        val output = ByteArrayOutputStream()
+
+        newRuntime(DesktopCommand.ExportBackup(exportFile)).use { fixture ->
+            DesktopCommandRunner(fixture.runtime, output, nowMillis = { 123L })
+                .run(fixture.runtime.command) shouldBe 0
+        }
+
+        output.toString(UTF_8) shouldBe
+            "{\"command\":\"export-backup\",\"status\":\"SUCCEEDED\",\"path\":${jsonString(exportFile.toString())}}\n"
+        Files.exists(exportFile) shouldBe true
     }
 
     @Test

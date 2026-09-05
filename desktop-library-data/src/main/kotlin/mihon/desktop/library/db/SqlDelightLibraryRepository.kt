@@ -101,6 +101,81 @@ class SqlDelightLibraryRepository(
     override fun trackingSnapshot(mangaId: Long): List<TrackingRecord> =
         queries.selectTrackingForManga(mangaId).executeAsList().map(Tracking::toRecord)
 
+    override fun allMangaSnapshot(): List<MangaRecord> =
+        queries.selectAllMangaForExport().executeAsList().map(Manga::toRecord)
+
+    override fun allChaptersSnapshot(): List<ChapterRecord> =
+        queries.selectAllChaptersForExport().executeAsList().map(Chapter::toRecord)
+
+    override fun allCategoriesSnapshot(): List<CategoryRecord> =
+        queries.selectAllCategoriesForExport().executeAsList().map(Category::toRecord)
+
+    override fun mangaCategoryLinksSnapshot(): Map<Long, List<Long>> {
+        val links = queries.selectAllMangaCategoriesForExport().executeAsList()
+        val result = mutableMapOf<Long, MutableList<Long>>()
+        for (link in links) {
+            result.computeIfAbsent(link.manga_id) { mutableListOf() }.add(link.category_id)
+        }
+        return result
+    }
+
+    override fun allHistorySnapshot(): List<HistoryRecord> =
+        queries.selectAllHistoryForExport().executeAsList().map {
+            HistoryRecord(
+                chapterId = it.chapter_id,
+                lastRead = it.last_read,
+                readDuration = it.read_duration,
+            )
+        }
+
+    override fun allTrackingSnapshot(): List<TrackingRecord> =
+        queries.selectAllTrackingForExport().executeAsList().map(Tracking::toRecord)
+
+    override fun allSourcesSnapshot(): List<mihon.desktop.library.model.SourceRecord> =
+        queries.selectAllSourcesForExport().executeAsList().map {
+            mihon.desktop.library.model.SourceRecord(
+                sourceId = it.source_id,
+                name = it.name,
+                importedAt = it.imported_at,
+            )
+        }
+
+    override fun allPreferenceSnapshots(): List<mihon.desktop.library.model.PreferenceSnapshotRecord> =
+        queries.selectAllPreferenceSnapshotsForExport().executeAsList().map {
+            mihon.desktop.library.model.PreferenceSnapshotRecord(
+                key = it.key,
+                valueType = it.value_type,
+                valueJson = it.value_json,
+                importedAt = it.imported_at,
+            )
+        }
+
+    override fun allSourcePreferenceSnapshots(): List<mihon.desktop.library.model.SourcePreferenceSnapshotRecord> =
+        queries.selectAllSourcePreferenceSnapshotsForExport().executeAsList().map {
+            mihon.desktop.library.model.SourcePreferenceSnapshotRecord(
+                sourceKey = it.source_key,
+                key = it.key,
+                valueType = it.value_type,
+                valueJson = it.value_json,
+                importedAt = it.imported_at,
+            )
+        }
+
+    override fun checkIntegrity(): List<String> {
+        return driver.executeQuery(
+            identifier = null,
+            sql = "PRAGMA integrity_check",
+            mapper = { cursor ->
+                val results = mutableListOf<String>()
+                while (cursor.next().value) {
+                    cursor.getString(0)?.let { results.add(it) }
+                }
+                app.cash.sqldelight.db.QueryResult.Value(results)
+            },
+            parameters = 0,
+        ).value
+    }
+
     override fun chapterAsset(chapterId: Long): ReaderChapterAsset? =
         queries.selectReaderChapterAsset(chapterId).executeAsOneOrNull()?.toReaderChapterAsset()
 

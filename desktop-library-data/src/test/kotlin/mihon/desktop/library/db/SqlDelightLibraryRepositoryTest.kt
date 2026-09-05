@@ -439,4 +439,46 @@ class SqlDelightLibraryRepositoryTest {
             repo.trackingSnapshot(mangaId).shouldBeEmpty()
         }
     }
+
+    @Test
+    fun `export snapshots return full database state correctly`(): Unit = runBlocking {
+        val file = tempDir.resolve("export-snapshot.db")
+        DesktopLibraryDatabaseFactory.open(file).use { repo ->
+            val mangaId = repo.insertManga(MangaRecord(sourceId = 42, url = "/manga1", title = "Export Manga"))
+            val catId = repo.upsertCategory(CategoryRecord(name = "Export Cat", sortOrder = 1))
+            repo.linkCategory(mangaId, catId)
+            val chapterId = repo.insertChapter(ChapterRecord(mangaId = mangaId, url = "/c1", name = "Ch 1"))
+            repo.upsertHistory(HistoryRecord(chapterId, lastRead = 5000L, readDuration = 120L))
+            repo.insertTracking(TrackingRecord(mangaId = mangaId, trackerId = 2, remoteId = 20, title = "Tracked"))
+            repo.upsertSource(SourceRecord(42L, "Test Source", 1000L))
+            repo.upsertPreference(PreferenceSnapshotRecord("pref_key", "STRING", "\"val\"", 1000L))
+            repo.upsertSourcePreference(SourcePreferenceSnapshotRecord("src", "k", "INT", "1", 1000L))
+
+            repo.allMangaSnapshot().size shouldBe 1
+            repo.allMangaSnapshot().first().title shouldBe "Export Manga"
+
+            repo.allChaptersSnapshot().size shouldBe 1
+            repo.allChaptersSnapshot().first().name shouldBe "Ch 1"
+
+            repo.allCategoriesSnapshot().size shouldBe 1
+            repo.allCategoriesSnapshot().first().name shouldBe "Export Cat"
+
+            repo.mangaCategoryLinksSnapshot()[mangaId] shouldBe listOf(catId)
+
+            repo.allHistorySnapshot().size shouldBe 1
+            repo.allHistorySnapshot().first().readDuration shouldBe 120L
+
+            repo.allTrackingSnapshot().size shouldBe 1
+            repo.allTrackingSnapshot().first().remoteId shouldBe 20L
+
+            repo.allSourcesSnapshot().size shouldBe 1
+            repo.allSourcesSnapshot().first().name shouldBe "Test Source"
+
+            repo.allPreferenceSnapshots().size shouldBe 1
+            repo.allPreferenceSnapshots().first().key shouldBe "pref_key"
+
+            repo.allSourcePreferenceSnapshots().size shouldBe 1
+            repo.allSourcePreferenceSnapshots().first().sourceKey shouldBe "src"
+        }
+    }
 }

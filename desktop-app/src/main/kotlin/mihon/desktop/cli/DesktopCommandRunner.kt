@@ -61,6 +61,12 @@ class DesktopCommandRunner(
                 writeReport("import-backup", command.path, runtime.backupImporter.import(command.path, nowMillis()))
                 0
             }
+            is DesktopCommand.ExportBackup -> {
+                val exporter = mihon.desktop.library.backup.AndroidBackupExporter(runtime.library)
+                exporter.export(command.path)
+                writeJson(ExportOutput("export-backup", "SUCCEEDED", command.path.toString()))
+                0
+            }
             is DesktopCommand.ImportLocal -> {
                 val report = runtime.localImporter.import(command.path, runtime.localLibraryRoot, nowMillis())
                 writeReport("import-local", command.path, report)
@@ -134,6 +140,13 @@ class DesktopCommandRunner(
         }
     }
 }
+
+@Serializable
+private data class ExportOutput(
+    val command: String,
+    val status: String,
+    val path: String,
+)
 
 @Serializable
 private data class ImportOutput(
@@ -634,6 +647,7 @@ private fun DesktopCommand.commandName(): String = when (this) {
     DesktopCommand.LaunchUi -> "launch-ui"
     DesktopCommand.FoundationSmoke -> "foundation-smoke"
     is DesktopCommand.ImportBackup -> "import-backup"
+    is DesktopCommand.ExportBackup -> "export-backup"
     is DesktopCommand.ImportLocal -> "import-local"
     DesktopCommand.ListLibraryJson -> "list-library"
     is DesktopCommand.VerifyReader -> "verify-reader"
@@ -641,6 +655,7 @@ private fun DesktopCommand.commandName(): String = when (this) {
 
 private fun DesktopCommand.sourcePath(): String? = when (this) {
     is DesktopCommand.ImportBackup -> path.toString()
+    is DesktopCommand.ExportBackup -> path.toString()
     is DesktopCommand.ImportLocal -> path.toString()
     is DesktopCommand.VerifyReader -> fixtureRoot.toString()
     else -> null

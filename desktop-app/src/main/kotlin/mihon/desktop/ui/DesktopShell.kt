@@ -67,6 +67,11 @@ fun DesktopShell(
     onManageCategories: () -> Unit = {},
     onEditMangaCategories: () -> Unit = {},
     onOpenTracking: () -> Unit = {},
+    // Settings & Diagnostics
+    preferenceStore: mihon.desktop.preferences.DesktopPreferenceStore? = null,
+    readerSettingsStore: mihon.desktop.reader.DesktopReaderSettingsStore? = null,
+    diagnosticService: mihon.desktop.diagnostics.DiagnosticBundleService? = null,
+    onExportBackup: () -> Unit = {},
 ) {
     val primary = DesktopDestination.entries.take(5)
     val secondary = DesktopDestination.entries.drop(5)
@@ -147,6 +152,26 @@ fun DesktopShell(
                             onCheckForUpdates = onCheckForUpdates,
                             onReadChapter = onReadChapter,
                         )
+                    }
+                    DesktopDestination.Settings -> {
+                        if (preferenceStore != null && readerSettingsStore != null) {
+                            mihon.desktop.ui.settings.SettingsScreen(
+                                preferenceStore = preferenceStore,
+                                readerSettingsStore = readerSettingsStore,
+                                diagnosticService = diagnosticService,
+                                onImportBackup = onImportBackup,
+                                onExportBackup = onExportBackup,
+                            )
+                        } else {
+                            Text(
+                                text = selected.label,
+                                modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
+                                style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                            )
+                        }
+                    }
+                    DesktopDestination.About -> {
+                        mihon.desktop.ui.settings.AboutScreen()
                     }
                     DesktopDestination.Browse -> {
                         browseContent?.invoke() ?: Text(

@@ -327,4 +327,15 @@ private class FakeLibraryRepository(
     override fun historySnapshot(query: String): List<mihon.desktop.library.model.HistoryWithDetails> = emptyList()
     override fun trackingSnapshot(mangaId: Long): List<mihon.desktop.library.model.TrackingRecord> = emptyList()
     override fun latestImportReport(): ImportReport? = error("Not used")
+    override fun allMangaSnapshot(): List<mihon.desktop.library.model.MangaRecord> = emptyList()
+    override fun allChaptersSnapshot(): List<mihon.desktop.library.model.ChapterRecord> = emptyList()
+    override fun allCategoriesSnapshot(): List<mihon.desktop.library.model.CategoryRecord> = emptyList()
+    override fun mangaCategoryLinksSnapshot(): Map<Long, List<Long>> = emptyMap()
+    override fun allHistorySnapshot(): List<mihon.desktop.library.model.HistoryRecord> = emptyList()
+    override fun allTrackingSnapshot(): List<mihon.desktop.library.model.TrackingRecord> = emptyList()
+    override fun allSourcesSnapshot(): List<mihon.desktop.library.model.SourceRecord> = emptyList()
+    override fun allPreferenceSnapshots(): List<mihon.desktop.library.model.PreferenceSnapshotRecord> = emptyList()
+    override fun allSourcePreferenceSnapshots():
+        List<mihon.desktop.library.model.SourcePreferenceSnapshotRecord> = emptyList()
+    override fun checkIntegrity(): List<String> = listOf("ok")
 }

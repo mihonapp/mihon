@@ -2,11 +2,17 @@ package mihon.desktop.library.repository
 
 import kotlinx.coroutines.flow.Flow
 import mihon.desktop.library.model.CategoryRecord
+import mihon.desktop.library.model.ChapterRecord
+import mihon.desktop.library.model.HistoryRecord
 import mihon.desktop.library.model.HistoryWithDetails
 import mihon.desktop.library.model.ImportReport
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.library.model.MangaDetails
+import mihon.desktop.library.model.MangaRecord
+import mihon.desktop.library.model.PreferenceSnapshotRecord
+import mihon.desktop.library.model.SourcePreferenceSnapshotRecord
+import mihon.desktop.library.model.SourceRecord
 import mihon.desktop.library.model.TrackingRecord
 
 interface LibraryRepository {
@@ -23,4 +29,16 @@ interface LibraryRepository {
     fun historySnapshot(query: String = ""): List<HistoryWithDetails>
     fun trackingSnapshot(mangaId: Long): List<TrackingRecord>
     fun latestImportReport(): ImportReport?
+
+    // Export snapshots
+    fun allMangaSnapshot(): List<MangaRecord>
+    fun allChaptersSnapshot(): List<ChapterRecord>
+    fun allCategoriesSnapshot(): List<CategoryRecord>
+    fun mangaCategoryLinksSnapshot(): Map<Long, List<Long>>
+    fun allHistorySnapshot(): List<HistoryRecord>
+    fun allTrackingSnapshot(): List<TrackingRecord>
+    fun allSourcesSnapshot(): List<mihon.desktop.library.model.SourceRecord>
+    fun allPreferenceSnapshots(): List<mihon.desktop.library.model.PreferenceSnapshotRecord>
+    fun allSourcePreferenceSnapshots(): List<mihon.desktop.library.model.SourcePreferenceSnapshotRecord>
+    fun checkIntegrity(): List<String>
 }

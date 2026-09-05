@@ -6,6 +6,7 @@ sealed interface DesktopCommand {
     data object LaunchUi : DesktopCommand
     data object FoundationSmoke : DesktopCommand
     data class ImportBackup(val path: Path) : DesktopCommand
+    data class ExportBackup(val path: Path) : DesktopCommand
     data class ImportLocal(val path: Path) : DesktopCommand
     data object ListLibraryJson : DesktopCommand
     data class VerifyReader(val fixtureRoot: Path) : DesktopCommand
@@ -41,6 +42,9 @@ object DesktopCommandParser {
                     }
                     argument.startsWith("--import-backup=") -> add(
                         DesktopCommand.ImportBackup(parsePath(argument, "--import-backup=")),
+                    )
+                    argument.startsWith("--export-backup=") -> add(
+                        DesktopCommand.ExportBackup(parsePath(argument, "--export-backup=")),
                     )
                     argument.startsWith("--import-local=") -> add(
                         DesktopCommand.ImportLocal(parsePath(argument, "--import-local=")),

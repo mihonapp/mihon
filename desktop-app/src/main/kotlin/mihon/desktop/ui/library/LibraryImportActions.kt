@@ -132,3 +132,21 @@ private fun chooseLocalMangaDirectory(): Path? {
     val selected = chooser.selectedFile?.toPath() ?: return null
     return selected.takeIf { chooser.selectedFile.isDirectory }
 }
+
+fun chooseExportBackup(): Path? {
+    val timestamp = java.text.SimpleDateFormat("yyyy-MM-dd-HHmmss").format(java.util.Date())
+    val dialog = FileDialog(null as Frame?, "Export Android backup", FileDialog.SAVE).apply {
+        file = "mihon-backup-$timestamp.tachibk"
+    }
+    return try {
+        dialog.isVisible = true
+        val selectedDirectory = dialog.directory ?: return null
+        var selectedFile = dialog.file ?: return null
+        if (!selectedFile.endsWith(".tachibk", ignoreCase = true)) {
+            selectedFile += ".tachibk"
+        }
+        Path.of(selectedDirectory, selectedFile)
+    } finally {
+        dialog.dispose()
+    }
+}
