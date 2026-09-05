@@ -196,6 +196,19 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         saveCredentials(username, currentUser.id)
     }
 
+    override suspend fun updateUserConfig() {
+        val currentUser = api.getCurrentUser()
+
+        val ratingSystem = currentUser.ratingSystem
+        if (ratingSystem in listOf(RATING_SIMPLE, RATING_REGULAR, RATING_ADVANCED)) {
+            scorePreference.set(ratingSystem)
+        } else {
+            logcat(LogPriority.ERROR) { "Unsupported Kitsu score type: $ratingSystem" }
+            scorePreference.set(RATING_ADVANCED)
+        }
+        saveDisplayUsername(currentUser.profile.name)
+    }
+
     override fun logout() {
         super.logout()
         interceptor.newAuth(null)
