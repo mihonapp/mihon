@@ -53,4 +53,34 @@ class DesktopShellTest {
             "Selected headline must be laid out beside the navigation rail",
         )
     }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `Downloads destination renders downloads screen`() = runComposeUiTest {
+        setContent {
+            Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
+                DesktopShell(
+                    selected = DesktopDestination.Downloads,
+                    onDestinationSelected = {},
+                )
+            }
+        }
+
+        onNodeWithTag(mihon.desktop.ui.tasks.DOWNLOADS_SCREEN_TEST_TAG).assertExists()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `Updates destination renders updates screen`() = runComposeUiTest {
+        setContent {
+            Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
+                DesktopShell(
+                    selected = DesktopDestination.Updates,
+                    onDestinationSelected = {},
+                )
+            }
+        }
+
+        onNodeWithTag(mihon.desktop.ui.updates.UPDATES_SCREEN_TEST_TAG).assertExists()
+    }
 }

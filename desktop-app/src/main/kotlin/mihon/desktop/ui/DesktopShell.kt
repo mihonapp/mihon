@@ -40,6 +40,22 @@ fun DesktopShell(
     onImportBackup: () -> Unit = {},
     onImportLocal: () -> Unit = {},
     onLibraryRetry: () -> Unit = {},
+    // Downloads
+    downloadsQueue: List<mihon.desktop.download.DesktopDownload> = emptyList(),
+    isDownloaderRunning: Boolean = false,
+    downloadSpeedBytesPerSec: Double = 0.0,
+    onPauseAllDownloads: () -> Unit = {},
+    onResumeAllDownloads: () -> Unit = {},
+    onClearCompletedDownloads: () -> Unit = {},
+    onCancelDownload: (Long) -> Unit = {},
+    onRetryDownload: (Long) -> Unit = {},
+    // Updates
+    updatedChapters: List<mihon.desktop.updates.UpdatedChapterItem> = emptyList(),
+    isUpdatingLibrary: Boolean = false,
+    lastUpdateResult: mihon.desktop.updates.LibraryUpdateResult? = null,
+    onCheckForUpdates: () -> Unit = {},
+    // Browse
+    browseContent: (@Composable () -> Unit)? = null,
 ) {
     val primary = DesktopDestination.entries.take(5)
     val secondary = DesktopDestination.entries.drop(5)
@@ -71,25 +87,56 @@ fun DesktopShell(
                 modifier = Modifier.fillMaxSize().padding(32.dp),
                 contentAlignment = Alignment.TopStart,
             ) {
-                if (selected == DesktopDestination.Library) {
-                    LibraryScreen(
-                        state = libraryState,
-                        detailState = mangaDetailState,
-                        onQueryChange = onLibraryQueryChange,
-                        onMangaSelected = onMangaSelected,
-                        onBackFromDetail = onBackFromMangaDetail,
-                        onReadChapter = onReadChapter,
-                        onDetailRetry = onMangaDetailRetry,
-                        onImportBackup = onImportBackup,
-                        onImportLocal = onImportLocal,
-                        onRetry = onLibraryRetry,
-                    )
-                } else {
-                    Text(
-                        text = selected.label,
-                        modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
-                        style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
-                    )
+                when (selected) {
+                    DesktopDestination.Library -> {
+                        LibraryScreen(
+                            state = libraryState,
+                            detailState = mangaDetailState,
+                            onQueryChange = onLibraryQueryChange,
+                            onMangaSelected = onMangaSelected,
+                            onBackFromDetail = onBackFromMangaDetail,
+                            onReadChapter = onReadChapter,
+                            onDetailRetry = onMangaDetailRetry,
+                            onImportBackup = onImportBackup,
+                            onImportLocal = onImportLocal,
+                            onRetry = onLibraryRetry,
+                        )
+                    }
+                    DesktopDestination.Downloads -> {
+                        mihon.desktop.ui.tasks.DownloadsScreen(
+                            queue = downloadsQueue,
+                            isRunning = isDownloaderRunning,
+                            speedBytesPerSec = downloadSpeedBytesPerSec,
+                            onPauseAll = onPauseAllDownloads,
+                            onResumeAll = onResumeAllDownloads,
+                            onClearCompleted = onClearCompletedDownloads,
+                            onCancel = onCancelDownload,
+                            onRetry = onRetryDownload,
+                        )
+                    }
+                    DesktopDestination.Updates -> {
+                        mihon.desktop.ui.updates.UpdatesScreen(
+                            updatedChapters = updatedChapters,
+                            isUpdating = isUpdatingLibrary,
+                            lastResult = lastUpdateResult,
+                            onCheckForUpdates = onCheckForUpdates,
+                            onReadChapter = onReadChapter,
+                        )
+                    }
+                    DesktopDestination.Browse -> {
+                        browseContent?.invoke() ?: Text(
+                            text = selected.label,
+                            modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
+                            style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                        )
+                    }
+                    else -> {
+                        Text(
+                            text = selected.label,
+                            modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
+                            style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                        )
+                    }
                 }
             }
         }

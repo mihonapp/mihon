@@ -135,6 +135,36 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
         onDispose(libraryPresenter::close)
     }
 
+    val downloader = runtime.downloader
+    val downloadsQueue by (
+        downloader?.queueState ?: remember {
+            kotlinx.coroutines.flow.MutableStateFlow(emptyList())
+        }
+        ).collectAsState()
+    val isDownloaderRunning by (
+        downloader?.isRunning ?: remember {
+            kotlinx.coroutines.flow.MutableStateFlow(false)
+        }
+        ).collectAsState()
+    val downloadSpeed by (
+        downloader?.speedBytesPerSec ?: remember {
+            kotlinx.coroutines.flow.MutableStateFlow(0.0)
+        }
+        ).collectAsState()
+
+    val updateScheduler = remember(runtime.updateService) {
+        runtime.updateService?.let { mihon.desktop.updates.DesktopUpdateScheduler(it) }
+    }
+    val isUpdatingLibrary by (
+        updateScheduler?.isUpdating
+            ?: remember { kotlinx.coroutines.flow.MutableStateFlow(false) }
+        ).collectAsState()
+    val lastUpdateResult by (
+        updateScheduler?.lastResult ?: remember {
+            kotlinx.coroutines.flow.MutableStateFlow(null)
+        }
+        ).collectAsState()
+
     key(readerWindowMode == ReaderWindowMode.BORDERLESS) {
         Window(
             onCloseRequest = {
@@ -222,6 +252,19 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                             }
                         },
                         onLibraryRetry = libraryPresenter::retry,
+                        downloadsQueue = downloadsQueue,
+                        isDownloaderRunning = isDownloaderRunning,
+                        downloadSpeedBytesPerSec = downloadSpeed,
+                        onPauseAllDownloads = { downloader?.pause() },
+                        onResumeAllDownloads = { downloader?.resume() },
+                        onClearCompletedDownloads = { downloader?.clearCompleted() },
+                        onCancelDownload = { downloader?.cancel(it) },
+                        onRetryDownload = { downloader?.retry(it) },
+                        isUpdatingLibrary = isUpdatingLibrary,
+                        lastUpdateResult = lastUpdateResult,
+                        onCheckForUpdates = {
+                            presenterScope.launch { updateScheduler?.triggerNow() }
+                        },
                     )
                 }
                 ImportStateDialog(importState) { importState = ImportActionState.Idle }

@@ -35,6 +35,9 @@ class DesktopRuntime(
     val localImporter: LocalMangaImporter,
     val localLibraryRoot: Path,
     val readerFactory: DesktopReaderFactory? = null,
+    val downloader: mihon.desktop.download.DesktopDownloader? = null,
+    val updateService: mihon.desktop.updates.DesktopLibraryUpdateService? = null,
+    val notificationService: mihon.desktop.notification.DesktopNotificationService? = null,
     private val closeReaderSessions: suspend () -> Unit = readerFactory?.let { it::shutdown } ?: {},
     private val closeReaderServices: () -> Unit = readerFactory?.let { it::closeServices } ?: {},
     internal val closeLibrary: () -> Unit = library::close,
@@ -175,6 +178,32 @@ object DesktopRuntimeFactory {
             } else {
                 null
             }
+            val notificationService = mihon.desktop.notification.WindowsDesktopNotificationService()
+            val downloadsDir = directories.root.resolve("media").resolve("downloads").toAbsolutePath().normalize()
+            val downloadDiskProvider = mihon.desktop.download.DownloadDiskProvider(downloadsDir)
+            val downloadStore = mihon.desktop.download.DownloadStore(directories.root.resolve("downloads.json"))
+            val networkHelper = mihon.desktop.extension.DesktopNetworkHelper()
+            val downloader = mihon.desktop.download.DesktopDownloader(
+                store = downloadStore,
+                diskProvider = downloadDiskProvider,
+                networkHelper = networkHelper,
+                mutationPort = library,
+                onDownloadCompleted = { download ->
+                    notificationService.notifyDownloadComplete(download.mangaTitle, download.chapterName)
+                },
+                onDownloadFailed = { download, error ->
+                    notificationService.notifyDownloadError(download.mangaTitle, download.chapterName, error)
+                },
+            )
+            val updateService = mihon.desktop.updates.DesktopLibraryUpdateService(
+                repository = library,
+                mutationPort = library,
+                onUpdateCompleted = { result ->
+                    if (result.newChaptersFound > 0) {
+                        notificationService.notifyLibraryUpdate(result.newChaptersFound, result.mangaWithNewChapters)
+                    }
+                },
+            )
             return DesktopRuntime(
                 directories = directories,
                 preferences = preferences,
@@ -184,6 +213,9 @@ object DesktopRuntimeFactory {
                 localImporter = localImporter,
                 localLibraryRoot = localLibraryRoot,
                 readerFactory = readerFactory,
+                downloader = downloader,
+                updateService = updateService,
+                notificationService = notificationService,
             )
         } catch (error: Throwable) {
             try {
