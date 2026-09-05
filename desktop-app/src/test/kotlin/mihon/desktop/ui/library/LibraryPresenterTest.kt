@@ -308,12 +308,23 @@ private class FakeLibraryRepository(
     private val chapters: Map<Long, Flow<List<LibraryChapter>>> = emptyMap(),
     private val libraryFlow: () -> Flow<List<LibraryManga>>,
 ) : LibraryRepository {
-    override fun observeLibrary(): Flow<List<LibraryManga>> = libraryFlow()
+    override fun observeLibrary(categoryId: Long?): Flow<List<LibraryManga>> = libraryFlow()
     override fun observeManga(id: Long): Flow<MangaDetails?> = details[id] ?: error("Missing manga flow for $id")
     override fun observeChapters(mangaId: Long): Flow<List<LibraryChapter>> =
         chapters[mangaId] ?: error("Missing chapter flow for $mangaId")
-    override fun librarySnapshot(): List<LibraryManga> = error("Not used")
+    override fun observeCategories(): Flow<List<mihon.desktop.library.model.CategoryRecord>> =
+        kotlinx.coroutines.flow.flowOf(emptyList())
+
+    override fun observeHistory(query: String): Flow<List<mihon.desktop.library.model.HistoryWithDetails>> =
+        kotlinx.coroutines.flow.flowOf(emptyList())
+
+    override fun observeTracking(mangaId: Long): Flow<List<mihon.desktop.library.model.TrackingRecord>> =
+        kotlinx.coroutines.flow.flowOf(emptyList())
+    override fun librarySnapshot(categoryId: Long?): List<LibraryManga> = error("Not used")
     override fun mangaSnapshot(id: Long): MangaDetails? = error("Not used")
     override fun chapterSnapshot(mangaId: Long): List<LibraryChapter> = error("Not used")
+    override fun categoriesSnapshot(): List<mihon.desktop.library.model.CategoryRecord> = emptyList()
+    override fun historySnapshot(query: String): List<mihon.desktop.library.model.HistoryWithDetails> = emptyList()
+    override fun trackingSnapshot(mangaId: Long): List<mihon.desktop.library.model.TrackingRecord> = emptyList()
     override fun latestImportReport(): ImportReport? = error("Not used")
 }

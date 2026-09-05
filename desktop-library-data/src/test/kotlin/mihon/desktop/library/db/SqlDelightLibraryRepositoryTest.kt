@@ -354,4 +354,89 @@ class SqlDelightLibraryRepositoryTest {
             repository.close()
         }
     }
+
+    @Test
+    fun `category CRUD, sorting, and manga category assignment work as expected`(): Unit = runBlocking {
+        val file = tempDir.resolve("categories.db")
+        DesktopLibraryDatabaseFactory.open(file).use { repo ->
+            val cat1 = repo.upsertCategory(CategoryRecord(name = "Action", sortOrder = 2))
+            val cat2 = repo.upsertCategory(CategoryRecord(name = "Comedy", sortOrder = 1))
+
+            val categories = repo.categoriesSnapshot()
+            categories.map { it.name } shouldBe listOf("Comedy", "Action")
+
+            repo.updateCategoryName(cat1, "Action/Adventure")
+            repo.updateCategoryOrder(cat1, 0)
+            repo.categoriesSnapshot().first().name shouldBe "Action/Adventure"
+
+            val mangaId = repo.insertManga(MangaRecord(sourceId = 1, url = "/manga", title = "Manga"))
+            repo.setMangaCategories(mangaId, listOf(cat1, cat2))
+            val details = repo.mangaSnapshot(mangaId)
+            details!!.categories.map { it.id }.toSet() shouldBe setOf(cat1, cat2)
+
+            repo.deleteCategory(cat2)
+            repo.categoriesSnapshot().map { it.id } shouldBe listOf(cat1)
+            repo.mangaSnapshot(mangaId)!!.categories.map { it.id } shouldBe listOf(cat1)
+        }
+    }
+
+    @Test
+    fun `history records and details querying, deletion, and clearAll work`(): Unit = runBlocking {
+        val file = tempDir.resolve("history.db")
+        DesktopLibraryDatabaseFactory.open(file).use { repo ->
+            val mangaId = repo.insertManga(MangaRecord(sourceId = 1, url = "/manga", title = "Berserk"))
+            val chapId = repo.insertChapter(ChapterRecord(mangaId = mangaId, url = "/c1", name = "Chapter 1"))
+
+            repo.upsertHistory(HistoryRecord(chapterId = chapId, lastRead = 1000L, readDuration = 60L))
+
+            val history = repo.historySnapshot()
+            history.size shouldBe 1
+            history.first().mangaTitle shouldBe "Berserk"
+            history.first().chapterName shouldBe "Chapter 1"
+            history.first().lastRead shouldBe 1000L
+
+            val searchFiltered = repo.historySnapshot("Naruto")
+            searchFiltered.shouldBeEmpty()
+
+            val searchMatched = repo.historySnapshot("serk")
+            searchMatched.size shouldBe 1
+
+            repo.deleteHistory(chapId)
+            repo.historySnapshot().shouldBeEmpty()
+
+            repo.upsertHistory(HistoryRecord(chapterId = chapId, lastRead = 2000L, readDuration = 120L))
+            repo.historySnapshot().size shouldBe 1
+            repo.clearAllHistory()
+            repo.historySnapshot().shouldBeEmpty()
+        }
+    }
+
+    @Test
+    fun `tracking insertion, update, query and deletion work`(): Unit = runBlocking {
+        val file = tempDir.resolve("tracking.db")
+        DesktopLibraryDatabaseFactory.open(file).use { repo ->
+            val mangaId = repo.insertManga(MangaRecord(sourceId = 1, url = "/manga", title = "One Piece"))
+            repo.insertTracking(
+                TrackingRecord(
+                    mangaId = mangaId,
+                    trackerId = 1, // MAL
+                    remoteId = 13,
+                    title = "One Piece",
+                    lastChapterRead = 1000.0,
+                    score = 9.5,
+                ),
+            )
+
+            val tracks = repo.trackingSnapshot(mangaId)
+            tracks.size shouldBe 1
+            tracks.first().trackerId shouldBe 1L
+            tracks.first().lastChapterRead shouldBe 1000.0
+
+            repo.updateTracking(tracks.first().copy(lastChapterRead = 1001.0))
+            repo.trackingSnapshot(mangaId).first().lastChapterRead shouldBe 1001.0
+
+            repo.deleteTracking(mangaId, 1L)
+            repo.trackingSnapshot(mangaId).shouldBeEmpty()
+        }
+    }
 }

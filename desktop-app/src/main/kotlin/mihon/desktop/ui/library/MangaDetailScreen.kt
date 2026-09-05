@@ -33,6 +33,8 @@ fun MangaDetailScreen(
     onRetry: () -> Unit = {},
     modifier: Modifier = Modifier,
     showBack: Boolean = true,
+    onEditCategories: () -> Unit = {},
+    onOpenTracking: () -> Unit = {},
 ) {
     Surface(
         modifier = modifier.testTag("manga-detail-pane"),
@@ -71,11 +73,31 @@ fun MangaDetailScreen(
                             modifier = Modifier.fillMaxWidth().padding(24.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
-                            if (showBack) {
-                                TextButton(
-                                    onClick = onBack,
-                                    modifier = Modifier.testTag("manga-detail-back"),
-                                ) { Text("Back to Library") }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                if (showBack) {
+                                    TextButton(
+                                        onClick = onBack,
+                                        modifier = Modifier.testTag("manga-detail-back"),
+                                    ) { Text("Back to Library") }
+                                }
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    androidx.compose.material3.OutlinedButton(
+                                        onClick = onEditCategories,
+                                        modifier = Modifier.testTag("manga-detail-edit-categories-button"),
+                                    ) {
+                                        Text("Categories")
+                                    }
+                                    androidx.compose.material3.OutlinedButton(
+                                        onClick = onOpenTracking,
+                                        modifier = Modifier.testTag("manga-detail-open-tracking-button"),
+                                    ) {
+                                        Text("Tracking")
+                                    }
+                                }
                             }
                             Text(
                                 manga.title,

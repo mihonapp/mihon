@@ -21,6 +21,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import mihon.desktop.category.DesktopCategory
+import mihon.desktop.category.SYSTEM_ALL_CATEGORY
+import mihon.desktop.library.model.CategoryRecord
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.library.model.MangaDetails
@@ -34,6 +37,8 @@ data class LibraryUiState(
     val items: List<LibraryManga> = emptyList(),
     val selectedMangaId: Long? = null,
     val errorMessage: String? = null,
+    val categories: List<DesktopCategory> = listOf(SYSTEM_ALL_CATEGORY),
+    val selectedCategoryId: Long = SYSTEM_ALL_CATEGORY.id,
 )
 
 data class MangaDetailUiState(
@@ -60,12 +65,24 @@ class LibraryPresenter(
     private val presenterScope = CoroutineScope(scope.coroutineContext + presenterJob)
     private val query = MutableStateFlow("")
     private val selectedMangaId = MutableStateFlow<Long?>(null)
+    private val selectedCategoryId = MutableStateFlow(SYSTEM_ALL_CATEGORY.id)
     private val retryRequest = MutableStateFlow(0L)
     private val detailRetryRequest = MutableStateFlow(0L)
 
-    private val repositoryState: Flow<RepositoryState> = retryRequest
-        .flatMapLatest {
-            flow { emitAll(repository.observeLibrary()) }
+    private val categoriesState: Flow<List<DesktopCategory>> = repository.observeCategories()
+        .map { records ->
+            listOf(SYSTEM_ALL_CATEGORY) + records.map {
+                DesktopCategory(id = it.id, name = it.name, order = it.sortOrder, flags = it.flags)
+            }
+        }
+        .flowOn(Dispatchers.IO)
+
+    private val repositoryState: Flow<RepositoryState> = combine(
+        retryRequest,
+        selectedCategoryId,
+    ) { _, catId -> catId }
+        .flatMapLatest { catId ->
+            flow { emitAll(repository.observeLibrary(catId)) }
                 .map<List<LibraryManga>, RepositoryState>(RepositoryState::Loaded)
                 .onStart { emit(RepositoryState.Loading) }
                 .catch { error ->
@@ -81,13 +98,26 @@ class LibraryPresenter(
             }
         }
 
-    val state: StateFlow<LibraryUiState> = combine(repositoryState, query, selectedMangaId) { result, query, selected ->
+    val state: StateFlow<LibraryUiState> = combine(
+        repositoryState,
+        query,
+        selectedMangaId,
+        categoriesState,
+        selectedCategoryId,
+    ) { result, query, selected, categories, selectedCatId ->
         when (result) {
-            RepositoryState.Loading -> LibraryUiState(loading = true, query = query)
+            RepositoryState.Loading -> LibraryUiState(
+                loading = true,
+                query = query,
+                categories = categories,
+                selectedCategoryId = selectedCatId,
+            )
             is RepositoryState.Failed -> LibraryUiState(
                 loading = false,
                 query = query,
                 errorMessage = result.message,
+                categories = categories,
+                selectedCategoryId = selectedCatId,
             )
             is RepositoryState.Loaded -> {
                 val normalizedQuery = query.trim()
@@ -104,6 +134,8 @@ class LibraryPresenter(
                     query = query,
                     items = visibleItems,
                     selectedMangaId = selected?.takeIf { id -> result.items.any { it.id == id } },
+                    categories = categories,
+                    selectedCategoryId = selectedCatId,
                 )
             }
         }
@@ -176,6 +208,10 @@ class LibraryPresenter(
 
     fun selectManga(id: Long?) {
         selectedMangaId.value = id?.takeIf { selected -> state.value.items.any { it.id == selected } }
+    }
+
+    fun selectCategory(categoryId: Long) {
+        selectedCategoryId.value = categoryId
     }
 
     fun retry() {

@@ -56,6 +56,17 @@ fun DesktopShell(
     onCheckForUpdates: () -> Unit = {},
     // Browse
     browseContent: (@Composable () -> Unit)? = null,
+    // History
+    historyGroups: List<mihon.desktop.history.DesktopHistoryGroup> = emptyList(),
+    historyQuery: String = "",
+    onHistoryQueryChange: (String) -> Unit = {},
+    onDeleteHistoryItem: (Long) -> Unit = {},
+    onClearAllHistory: () -> Unit = {},
+    // Category & Tracking
+    onCategorySelected: (Long) -> Unit = {},
+    onManageCategories: () -> Unit = {},
+    onEditMangaCategories: () -> Unit = {},
+    onOpenTracking: () -> Unit = {},
 ) {
     val primary = DesktopDestination.entries.take(5)
     val secondary = DesktopDestination.entries.drop(5)
@@ -100,6 +111,20 @@ fun DesktopShell(
                             onImportBackup = onImportBackup,
                             onImportLocal = onImportLocal,
                             onRetry = onLibraryRetry,
+                            onCategorySelected = onCategorySelected,
+                            onManageCategories = onManageCategories,
+                            onEditMangaCategories = onEditMangaCategories,
+                            onOpenTracking = onOpenTracking,
+                        )
+                    }
+                    DesktopDestination.History -> {
+                        mihon.desktop.ui.history.HistoryScreen(
+                            groups = historyGroups,
+                            query = historyQuery,
+                            onQueryChange = onHistoryQueryChange,
+                            onReadChapter = onReadChapter,
+                            onDeleteItem = onDeleteHistoryItem,
+                            onClearAll = onClearAllHistory,
                         )
                     }
                     DesktopDestination.Downloads -> {

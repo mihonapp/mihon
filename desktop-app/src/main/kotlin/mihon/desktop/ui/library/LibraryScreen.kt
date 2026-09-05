@@ -14,12 +14,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,6 +36,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import mihon.desktop.category.DesktopCategory
+import mihon.desktop.category.SYSTEM_ALL_CATEGORY
 import mihon.desktop.library.model.LibraryManga
 
 @Composable
@@ -46,6 +52,10 @@ fun LibraryScreen(
     onImportBackup: () -> Unit,
     onImportLocal: () -> Unit,
     onRetry: () -> Unit = {},
+    onCategorySelected: (Long) -> Unit = {},
+    onManageCategories: () -> Unit = {},
+    onEditMangaCategories: () -> Unit = {},
+    onOpenTracking: () -> Unit = {},
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize().testTag("library-screen")) {
         val selected = state.selectedMangaId != null
@@ -53,13 +63,15 @@ fun LibraryScreen(
         if (wide && selected) {
             Row(modifier = Modifier.fillMaxSize()) {
                 LibraryPane(
-                    state,
-                    onQueryChange,
-                    onMangaSelected,
-                    onImportBackup,
-                    onImportLocal,
-                    onRetry,
-                    Modifier.weight(0.55f).fillMaxHeight().testTag("library-grid-pane"),
+                    state = state,
+                    onQueryChange = onQueryChange,
+                    onMangaSelected = onMangaSelected,
+                    onImportBackup = onImportBackup,
+                    onImportLocal = onImportLocal,
+                    onRetry = onRetry,
+                    onCategorySelected = onCategorySelected,
+                    onManageCategories = onManageCategories,
+                    modifier = Modifier.weight(0.55f).fillMaxHeight().testTag("library-grid-pane"),
                 )
                 VerticalDivider()
                 MangaDetailScreen(
@@ -68,6 +80,8 @@ fun LibraryScreen(
                     onReadChapter = onReadChapter,
                     onRetry = onDetailRetry,
                     showBack = false,
+                    onEditCategories = onEditMangaCategories,
+                    onOpenTracking = onOpenTracking,
                     modifier = Modifier.weight(0.45f).fillMaxHeight(),
                 )
             }
@@ -78,17 +92,21 @@ fun LibraryScreen(
                 onReadChapter = onReadChapter,
                 onRetry = onDetailRetry,
                 showBack = true,
+                onEditCategories = onEditMangaCategories,
+                onOpenTracking = onOpenTracking,
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
             LibraryPane(
-                state,
-                onQueryChange,
-                onMangaSelected,
-                onImportBackup,
-                onImportLocal,
-                onRetry,
-                Modifier.fillMaxSize().testTag("library-grid-pane"),
+                state = state,
+                onQueryChange = onQueryChange,
+                onMangaSelected = onMangaSelected,
+                onImportBackup = onImportBackup,
+                onImportLocal = onImportLocal,
+                onRetry = onRetry,
+                onCategorySelected = onCategorySelected,
+                onManageCategories = onManageCategories,
+                modifier = Modifier.fillMaxSize().testTag("library-grid-pane"),
             )
         }
     }
@@ -102,11 +120,13 @@ private fun LibraryPane(
     onImportBackup: () -> Unit,
     onImportLocal: () -> Unit,
     onRetry: () -> Unit,
+    onCategorySelected: (Long) -> Unit,
+    onManageCategories: () -> Unit,
     modifier: Modifier,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -131,6 +151,35 @@ private fun LibraryPane(
                 Text("Import local manga")
             }
         }
+
+        // Category Chips Row
+        Row(
+            modifier = Modifier.fillMaxWidth().testTag("library-categories-row"),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            LazyRow(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                items(state.categories, key = { it.id }) { cat ->
+                    FilterChip(
+                        selected = cat.id == state.selectedCategoryId,
+                        onClick = { onCategorySelected(cat.id) },
+                        label = { Text(cat.name) },
+                        modifier = Modifier.testTag("library-category-chip-${cat.id}"),
+                    )
+                }
+            }
+            OutlinedButton(
+                onClick = onManageCategories,
+                modifier = Modifier.testTag("library-manage-categories-button"),
+            ) {
+                Text("Categories")
+            }
+        }
+
         OutlinedTextField(
             value = state.query,
             onValueChange = onQueryChange,

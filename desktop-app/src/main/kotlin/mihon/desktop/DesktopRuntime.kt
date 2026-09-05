@@ -38,6 +38,10 @@ class DesktopRuntime(
     val downloader: mihon.desktop.download.DesktopDownloader? = null,
     val updateService: mihon.desktop.updates.DesktopLibraryUpdateService? = null,
     val notificationService: mihon.desktop.notification.DesktopNotificationService? = null,
+    val historyService: mihon.desktop.history.DesktopHistoryService? = null,
+    val categoryService: mihon.desktop.category.DesktopCategoryService? = null,
+    val trackerManager: mihon.desktop.track.DesktopTrackerManager? = null,
+    val trackingQueue: mihon.desktop.track.OfflineTrackingQueue? = null,
     private val closeReaderSessions: suspend () -> Unit = readerFactory?.let { it::shutdown } ?: {},
     private val closeReaderServices: () -> Unit = readerFactory?.let { it::closeServices } ?: {},
     internal val closeLibrary: () -> Unit = library::close,
@@ -204,6 +208,21 @@ object DesktopRuntimeFactory {
                     }
                 },
             )
+            val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+            val historyService = mihon.desktop.history.DesktopHistoryService(
+                repository = library,
+                mutationPort = library,
+                scope = appScope,
+            )
+            val categoryService = mihon.desktop.category.DesktopCategoryService(
+                repository = library,
+                mutationPort = library,
+                scope = appScope,
+            )
+            val trackerManager = mihon.desktop.track.DesktopTrackerManager()
+            val trackingQueue = mihon.desktop.track.OfflineTrackingQueue(
+                queueFile = directories.root.resolve("tracking-queue.json"),
+            )
             return DesktopRuntime(
                 directories = directories,
                 preferences = preferences,
@@ -216,6 +235,10 @@ object DesktopRuntimeFactory {
                 downloader = downloader,
                 updateService = updateService,
                 notificationService = notificationService,
+                historyService = historyService,
+                categoryService = categoryService,
+                trackerManager = trackerManager,
+                trackingQueue = trackingQueue,
             )
         } catch (error: Throwable) {
             try {

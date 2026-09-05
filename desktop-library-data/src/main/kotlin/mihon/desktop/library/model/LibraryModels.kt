@@ -163,3 +163,17 @@ data class LocalChapterRecord(
     val sizeBytes: Long,
     val modifiedAt: Long,
 )
+
+data class HistoryWithDetails(
+    val chapterId: Long,
+    val mangaId: Long,
+    val mangaTitle: String,
+    val mangaThumbnailUrl: String?,
+    val mangaSourceId: Long,
+    val chapterName: String,
+    val chapterNumber: Double,
+    val lastPageRead: Long,
+    val read: Boolean,
+    val lastRead: Long,
+    val readDuration: Long,
+)

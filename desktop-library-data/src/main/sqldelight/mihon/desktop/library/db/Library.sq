@@ -418,3 +418,62 @@ VALUES (?, ?, ?, ?, ?, ?);
 
 lastInsertRowId:
 SELECT last_insert_rowid();
+
+selectAllCategories:
+SELECT * FROM category ORDER BY sort_order ASC, name COLLATE NOCASE;
+
+deleteCategory:
+DELETE FROM category WHERE id = ?;
+
+updateCategoryName:
+UPDATE category SET name = ? WHERE id = ?;
+
+updateCategoryOrder:
+UPDATE category SET sort_order = ? WHERE id = ?;
+
+unlinkCategory:
+DELETE FROM manga_category WHERE manga_id = ? AND category_id = ?;
+
+clearCategoriesForManga:
+DELETE FROM manga_category WHERE manga_id = ?;
+
+selectHistoryWithDetails:
+SELECT
+  history.chapter_id AS chapter_id,
+  history.last_read AS last_read,
+  history.read_duration AS read_duration,
+  chapter.manga_id AS manga_id,
+  chapter.name AS chapter_name,
+  chapter.chapter_number AS chapter_number,
+  chapter.last_page_read AS last_page_read,
+  chapter.read AS read,
+  manga.title AS manga_title,
+  manga.thumbnail_url AS manga_thumbnail_url,
+  manga.source_id AS manga_source_id
+FROM history
+JOIN chapter ON chapter.id = history.chapter_id
+JOIN manga ON manga.id = chapter.manga_id
+WHERE (:query = '' OR manga.title LIKE ('%' || :query || '%') OR chapter.name LIKE ('%' || :query || '%'))
+ORDER BY history.last_read DESC;
+
+deleteHistoryByChapterId:
+DELETE FROM history WHERE chapter_id = ?;
+
+clearAllHistory:
+DELETE FROM history;
+
+selectTrackingForManga:
+SELECT * FROM tracking WHERE manga_id = ? ORDER BY tracker_id ASC;
+
+deleteTracking:
+DELETE FROM tracking WHERE manga_id = ? AND tracker_id = ?;
+
+selectLibraryByCategory:
+SELECT manga.*, COUNT(chapter.id) AS chapter_count,
+       COALESCE(SUM(CASE WHEN chapter.read = 0 THEN 1 ELSE 0 END), 0) AS unread_count
+FROM manga
+JOIN manga_category ON manga_category.manga_id = manga.id
+LEFT JOIN chapter ON chapter.manga_id = manga.id
+WHERE manga.favorite = 1 AND manga_category.category_id = ?
+GROUP BY manga.id
+ORDER BY manga.title COLLATE NOCASE, manga.id;

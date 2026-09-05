@@ -13,6 +13,7 @@ import kotlinx.coroutines.sync.withLock
 import mihon.desktop.library.model.CategoryRecord
 import mihon.desktop.library.model.ChapterRecord
 import mihon.desktop.library.model.HistoryRecord
+import mihon.desktop.library.model.HistoryWithDetails
 import mihon.desktop.library.model.ImportCounts
 import mihon.desktop.library.model.ImportReport
 import mihon.desktop.library.model.ImportReportItem
@@ -47,8 +48,13 @@ class SqlDelightLibraryRepository(
     private val readerProgressMutex = Mutex()
     private val acceptedReaderProgress = mutableMapOf<Long, ReaderProgressVersion>()
 
-    override fun observeLibrary(): Flow<List<LibraryManga>> =
-        queries.selectLibrary().asFlow().mapToList(Dispatchers.IO).map { rows -> rows.map(SelectLibrary::toModel) }
+    override fun observeLibrary(categoryId: Long?): Flow<List<LibraryManga>> =
+        if (categoryId == null || categoryId == -1L) {
+            queries.selectLibrary().asFlow().mapToList(Dispatchers.IO).map { rows -> rows.map(SelectLibrary::toModel) }
+        } else {
+            queries.selectLibraryByCategory(categoryId).asFlow().mapToList(Dispatchers.IO)
+                .map { rows -> rows.map(SelectLibraryByCategory::toModel) }
+        }
 
     override fun observeManga(id: Long): Flow<MangaDetails?> = combine(
         queries.selectMangaById(id).asFlow().mapToOneOrNull(Dispatchers.IO),
@@ -59,8 +65,24 @@ class SqlDelightLibraryRepository(
         queries.selectChaptersForManga(mangaId).asFlow().mapToList(Dispatchers.IO)
             .map { rows -> rows.map(Chapter::toModel) }
 
-    override fun librarySnapshot(): List<LibraryManga> =
-        queries.selectLibrary().executeAsList().map(SelectLibrary::toModel)
+    override fun observeCategories(): Flow<List<CategoryRecord>> =
+        queries.selectAllCategories().asFlow().mapToList(Dispatchers.IO)
+            .map { rows -> rows.map(Category::toRecord) }
+
+    override fun observeHistory(query: String): Flow<List<HistoryWithDetails>> =
+        queries.selectHistoryWithDetails(query.trim()).asFlow().mapToList(Dispatchers.IO)
+            .map { rows -> rows.map(SelectHistoryWithDetails::toModel) }
+
+    override fun observeTracking(mangaId: Long): Flow<List<TrackingRecord>> =
+        queries.selectTrackingForManga(mangaId).asFlow().mapToList(Dispatchers.IO)
+            .map { rows -> rows.map(Tracking::toRecord) }
+
+    override fun librarySnapshot(categoryId: Long?): List<LibraryManga> =
+        if (categoryId == null || categoryId == -1L) {
+            queries.selectLibrary().executeAsList().map(SelectLibrary::toModel)
+        } else {
+            queries.selectLibraryByCategory(categoryId).executeAsList().map(SelectLibraryByCategory::toModel)
+        }
 
     override fun mangaSnapshot(id: Long): MangaDetails? {
         val manga = queries.selectMangaById(id).executeAsOneOrNull() ?: return null
@@ -69,6 +91,15 @@ class SqlDelightLibraryRepository(
 
     override fun chapterSnapshot(mangaId: Long): List<LibraryChapter> =
         queries.selectChaptersForManga(mangaId).executeAsList().map(Chapter::toModel)
+
+    override fun categoriesSnapshot(): List<CategoryRecord> =
+        queries.selectAllCategories().executeAsList().map(Category::toRecord)
+
+    override fun historySnapshot(query: String): List<HistoryWithDetails> =
+        queries.selectHistoryWithDetails(query.trim()).executeAsList().map(SelectHistoryWithDetails::toModel)
+
+    override fun trackingSnapshot(mangaId: Long): List<TrackingRecord> =
+        queries.selectTrackingForManga(mangaId).executeAsList().map(Tracking::toRecord)
 
     override fun chapterAsset(chapterId: Long): ReaderChapterAsset? =
         queries.selectReaderChapterAsset(chapterId).executeAsOneOrNull()?.toReaderChapterAsset()
@@ -226,12 +257,45 @@ class SqlDelightLibraryRepository(
         return checkNotNull(queries.selectCategoryByName(value.name).executeAsOneOrNull()).id
     }
 
+    override fun deleteCategory(categoryId: Long) {
+        queries.deleteCategory(categoryId)
+    }
+
+    override fun updateCategoryName(categoryId: Long, name: String) {
+        queries.updateCategoryName(name, categoryId)
+    }
+
+    override fun updateCategoryOrder(categoryId: Long, sortOrder: Long) {
+        queries.updateCategoryOrder(sortOrder, categoryId)
+    }
+
     override fun linkCategory(mangaId: Long, categoryId: Long) {
         queries.linkMangaCategory(mangaId, categoryId)
     }
 
+    override fun unlinkCategory(mangaId: Long, categoryId: Long) {
+        queries.unlinkCategory(mangaId, categoryId)
+    }
+
+    override fun setMangaCategories(mangaId: Long, categoryIds: List<Long>) {
+        database.transaction {
+            queries.clearCategoriesForManga(mangaId)
+            categoryIds.forEach { categoryId ->
+                queries.linkMangaCategory(mangaId, categoryId)
+            }
+        }
+    }
+
     override fun upsertHistory(value: HistoryRecord) {
         queries.upsertHistory(value.chapterId, value.lastRead, value.readDuration)
+    }
+
+    override fun deleteHistory(chapterId: Long) {
+        queries.deleteHistoryByChapterId(chapterId)
+    }
+
+    override fun clearAllHistory() {
+        queries.clearAllHistory()
     }
 
     override fun findTracking(mangaId: Long, trackerId: Long): TrackingRecord? =
@@ -270,6 +334,10 @@ class SqlDelightLibraryRepository(
             tracking_url = value.trackingUrl,
             id = value.id,
         )
+    }
+
+    override fun deleteTracking(mangaId: Long, trackerId: Long) {
+        queries.deleteTracking(mangaId, trackerId)
     }
 
     override fun upsertSource(value: SourceRecord) {
@@ -458,6 +526,17 @@ private fun SelectLibrary.toModel() = LibraryManga(
     author = author,
 )
 
+private fun SelectLibraryByCategory.toModel() = LibraryManga(
+    id = id,
+    sourceId = source_id,
+    url = url,
+    title = title,
+    thumbnailUrl = thumbnail_url,
+    chapterCount = chapter_count,
+    unreadCount = unread_count,
+    author = author,
+)
+
 private fun Manga.toRecord() = MangaRecord(
     id = id,
     sourceId = source_id,
@@ -590,4 +669,18 @@ private fun Import_report_item.toModel() = ImportReportItem(
     reason = reason,
     message = message,
     id = id,
+)
+
+private fun SelectHistoryWithDetails.toModel() = HistoryWithDetails(
+    chapterId = chapter_id,
+    mangaId = manga_id,
+    mangaTitle = manga_title,
+    mangaThumbnailUrl = manga_thumbnail_url,
+    mangaSourceId = manga_source_id,
+    chapterName = chapter_name,
+    chapterNumber = chapter_number,
+    lastPageRead = last_page_read,
+    read = read,
+    lastRead = last_read,
+    readDuration = read_duration,
 )
