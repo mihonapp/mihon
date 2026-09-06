@@ -72,7 +72,9 @@ fun DesktopShell(
     readerSettingsStore: mihon.desktop.reader.DesktopReaderSettingsStore? = null,
     diagnosticService: mihon.desktop.diagnostics.DiagnosticBundleService? = null,
     onExportBackup: () -> Unit = {},
+    onPreferencesChanged: ((mihon.desktop.preferences.DesktopPreferences) -> Unit)? = null,
 ) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     val primary = DesktopDestination.entries.take(5)
     val secondary = DesktopDestination.entries.drop(5)
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -161,10 +163,11 @@ fun DesktopShell(
                                 diagnosticService = diagnosticService,
                                 onImportBackup = onImportBackup,
                                 onExportBackup = onExportBackup,
+                                onPreferencesChanged = onPreferencesChanged,
                             )
                         } else {
                             Text(
-                                text = selected.label,
+                                text = strings.destinationLabel(selected),
                                 modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
                                 style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
                             )
@@ -175,14 +178,14 @@ fun DesktopShell(
                     }
                     DesktopDestination.Browse -> {
                         browseContent?.invoke() ?: Text(
-                            text = selected.label,
+                            text = strings.destinationLabel(selected),
                             modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
                             style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
                         )
                     }
                     else -> {
                         Text(
-                            text = selected.label,
+                            text = strings.destinationLabel(selected),
                             modifier = Modifier.testTag(DESKTOP_MAIN_HEADLINE_TEST_TAG),
                             style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
                         )
@@ -199,11 +202,12 @@ private fun DestinationItem(
     selected: DesktopDestination,
     onDestinationSelected: (DesktopDestination) -> Unit,
 ) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     NavigationRailItem(
         selected = destination == selected,
         onClick = { onDestinationSelected(destination) },
-        icon = { Text(destination.shortLabel) },
-        label = { Text(destination.label) },
+        icon = { Text(strings.destinationShortLabel(destination)) },
+        label = { Text(strings.destinationLabel(destination)) },
         alwaysShowLabel = false,
     )
 }

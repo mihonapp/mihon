@@ -78,24 +78,25 @@ fun MangaDetailScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
+                                val strings = mihon.desktop.i18n.LocalStrings.current
                                 if (showBack) {
                                     TextButton(
                                         onClick = onBack,
                                         modifier = Modifier.testTag("manga-detail-back"),
-                                    ) { Text("Back to Library") }
+                                    ) { Text(strings.mangaDetailBack) }
                                 }
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     androidx.compose.material3.OutlinedButton(
                                         onClick = onEditCategories,
                                         modifier = Modifier.testTag("manga-detail-edit-categories-button"),
                                     ) {
-                                        Text("Categories")
+                                        Text(strings.mangaDetailCategories)
                                     }
                                     androidx.compose.material3.OutlinedButton(
                                         onClick = onOpenTracking,
                                         modifier = Modifier.testTag("manga-detail-open-tracking-button"),
                                     ) {
-                                        Text("Tracking")
+                                        Text(strings.mangaDetailTracking)
                                     }
                                 }
                             }

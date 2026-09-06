@@ -54,6 +54,7 @@ fun HistoryScreen(
     onClearAll: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     var showClearConfirmation by remember { mutableStateOf(false) }
 
     Column(
@@ -68,12 +69,12 @@ fun HistoryScreen(
         ) {
             Column {
                 Text(
-                    text = "History",
+                    text = strings.historyTitle,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = "Resume recently read chapters and track reading activity",
+                    text = strings.historyHeaderSubtitle,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -86,7 +87,7 @@ fun HistoryScreen(
                         contentColor = MaterialTheme.colorScheme.error,
                     ),
                 ) {
-                    Text("Clear history")
+                    Text(strings.historyClearAll)
                 }
             }
         }
@@ -96,7 +97,7 @@ fun HistoryScreen(
             value = query,
             onValueChange = onQueryChange,
             modifier = Modifier.fillMaxWidth().testTag("history-search"),
-            label = { Text("Search history by manga or chapter") },
+            label = { Text(strings.historySearchPlaceholder) },
             singleLine = true,
         )
 
@@ -107,7 +108,7 @@ fun HistoryScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = if (query.isBlank()) "No reading history recorded yet" else "No matching history found",
+                    text = if (query.isBlank()) strings.historyEmptyTitle else strings.historyNoMatch,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -121,7 +122,7 @@ fun HistoryScreen(
                 groups.forEach { group ->
                     item(key = "header-${group.title}") {
                         Text(
-                            text = group.title,
+                            text = strings.historyGroupTitle(group.title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary,
@@ -144,11 +145,9 @@ fun HistoryScreen(
     if (showClearConfirmation) {
         AlertDialog(
             onDismissRequest = { showClearConfirmation = false },
-            title = { Text("Clear reading history?") },
+            title = { Text(strings.historyClearDialogTitle) },
             text = {
-                Text(
-                    "This will permanently remove all reading history entries. Read chapters in your library will remain marked as read.",
-                )
+                Text(strings.historyClearDialogMessage)
             },
             confirmButton = {
                 TextButton(
@@ -158,12 +157,12 @@ fun HistoryScreen(
                     },
                     modifier = Modifier.testTag("history-confirm-clear-button"),
                 ) {
-                    Text("Clear all", color = MaterialTheme.colorScheme.error)
+                    Text(strings.historyClearAll, color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearConfirmation = false }) {
-                    Text("Cancel")
+                    Text(strings.dialogCancel)
                 }
             },
         )
@@ -238,18 +237,19 @@ private fun HistoryItemRow(
             }
 
             // Actions
+            val strings = mihon.desktop.i18n.LocalStrings.current
             FilledTonalButton(
                 onClick = onRead,
                 modifier = Modifier.testTag("history-resume-${item.chapterId}"),
             ) {
-                Text("Resume")
+                Text(strings.historyResumeButton)
             }
 
             OutlinedButton(
                 onClick = onDelete,
                 modifier = Modifier.testTag("history-delete-${item.chapterId}"),
             ) {
-                Text("Delete")
+                Text(strings.historyDeleteButton)
             }
         }
     }

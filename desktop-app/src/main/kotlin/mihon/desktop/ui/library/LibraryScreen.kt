@@ -124,6 +124,7 @@ private fun LibraryPane(
     onManageCategories: () -> Unit,
     modifier: Modifier,
 ) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -134,7 +135,7 @@ private fun LibraryPane(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Library",
+                text = strings.libraryTitle,
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.headlineMedium,
             )
@@ -142,13 +143,13 @@ private fun LibraryPane(
                 onClick = onImportBackup,
                 modifier = Modifier.testTag("library-import-backup"),
             ) {
-                Text("Import Android backup")
+                Text(strings.libraryImportBackup)
             }
             FilledTonalButton(
                 onClick = onImportLocal,
                 modifier = Modifier.testTag("library-import-local"),
             ) {
-                Text("Import local manga")
+                Text(strings.libraryImportLocal)
             }
         }
 
@@ -164,10 +165,11 @@ private fun LibraryPane(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 items(state.categories, key = { it.id }) { cat ->
+                    val label = if (cat.id == SYSTEM_ALL_CATEGORY.id) strings.libraryAllCategory else cat.name
                     FilterChip(
                         selected = cat.id == state.selectedCategoryId,
                         onClick = { onCategorySelected(cat.id) },
-                        label = { Text(cat.name) },
+                        label = { Text(label) },
                         modifier = Modifier.testTag("library-category-chip-${cat.id}"),
                     )
                 }
@@ -176,7 +178,7 @@ private fun LibraryPane(
                 onClick = onManageCategories,
                 modifier = Modifier.testTag("library-manage-categories-button"),
             ) {
-                Text("Categories")
+                Text(strings.libraryManageCategories)
             }
         }
 
@@ -184,7 +186,7 @@ private fun LibraryPane(
             value = state.query,
             onValueChange = onQueryChange,
             modifier = Modifier.fillMaxWidth().testTag("library-search"),
-            label = { Text("Search title or author") },
+            label = { Text(strings.librarySearchPlaceholder) },
             singleLine = true,
         )
         LibraryContent(
@@ -267,8 +269,9 @@ private fun MangaCard(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 6.dp, vertical = 12.dp),
                     contentAlignment = Alignment.Center,
                 ) {
+                    val strings = mihon.desktop.i18n.LocalStrings.current
                     Text(
-                        text = "${manga.unreadCount} unread",
+                        text = strings.libraryUnreadCount(manga.unreadCount.toInt()),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                     )
@@ -280,22 +283,23 @@ private fun MangaCard(
 
 @Composable
 private fun EmptyState(query: String, modifier: Modifier) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     Box(modifier, contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if (query.isBlank()) {
-                Text("Your library is empty", style = MaterialTheme.typography.titleLarge)
+                Text(strings.libraryEmptyTitle, style = MaterialTheme.typography.titleLarge)
                 Text(
-                    "Import an Android backup or local manga to start your collection.",
+                    strings.libraryEmptySubtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             } else {
-                Text("No manga match “$query”", style = MaterialTheme.typography.titleLarge)
+                Text(strings.libraryNoMatchTitle(query), style = MaterialTheme.typography.titleLarge)
                 Text(
-                    "Try a different title or author.",
+                    strings.libraryNoMatchSubtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -310,6 +314,7 @@ private fun ErrorState(
     onRetry: () -> Unit,
     modifier: Modifier,
 ) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     Box(modifier, contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -325,7 +330,7 @@ private fun ErrorState(
                 onClick = onRetry,
                 modifier = Modifier.testTag("library-retry"),
             ) {
-                Text("Retry")
+                Text(strings.libraryRetry)
             }
         }
     }

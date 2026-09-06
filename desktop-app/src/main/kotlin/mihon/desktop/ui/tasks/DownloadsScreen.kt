@@ -49,6 +49,7 @@ fun DownloadsScreen(
     onRetry: (chapterId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -63,7 +64,7 @@ fun DownloadsScreen(
         ) {
             Column {
                 Text(
-                    text = "Downloads",
+                    text = strings.downloadsTitle,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -73,8 +74,11 @@ fun DownloadsScreen(
                         it.status == DownloadStatus.QUEUED
                 }
                 Text(
-                    text =
-                    "$activeCount active items" + (if (isRunning && speedBytesPerSec > 0) " • $speedText" else ""),
+                    text = if (isRunning && speedBytesPerSec > 0) {
+                        strings.downloadsActiveSpeed(activeCount, speedText)
+                    } else {
+                        "$activeCount active items"
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -86,7 +90,7 @@ fun DownloadsScreen(
                         onClick = onPauseAll,
                         modifier = Modifier.testTag(DOWNLOADS_PAUSE_ALL_BUTTON_TEST_TAG),
                     ) {
-                        Text("Pause All")
+                        Text(strings.downloadsPauseAll)
                     }
                 } else {
                     Button(
@@ -96,7 +100,7 @@ fun DownloadsScreen(
                             it.status == DownloadStatus.PAUSED || it.status == DownloadStatus.QUEUED
                         },
                     ) {
-                        Text("Resume All")
+                        Text(strings.downloadsResumeAll)
                     }
                 }
 
@@ -105,7 +109,7 @@ fun DownloadsScreen(
                     modifier = Modifier.testTag(DOWNLOADS_CLEAR_COMPLETED_BUTTON_TEST_TAG),
                     enabled = queue.any { it.status == DownloadStatus.COMPLETED },
                 ) {
-                    Text("Clear Completed")
+                    Text(strings.downloadsClearCompleted)
                 }
             }
         }
@@ -118,7 +122,7 @@ fun DownloadsScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "No downloads in queue",
+                    text = strings.downloadsEmptyTitle,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -213,14 +217,15 @@ private fun DownloadCard(
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    val strings = mihon.desktop.i18n.LocalStrings.current
                     if (download.status == DownloadStatus.ERROR) {
                         TextButton(onClick = onRetry) {
-                            Text("Retry")
+                            Text(strings.downloadsRetry)
                         }
                     }
                     if (download.status != DownloadStatus.COMPLETED) {
                         TextButton(onClick = onCancel) {
-                            Text("Cancel")
+                            Text(strings.downloadsCancel)
                         }
                     }
                 }
@@ -231,12 +236,13 @@ private fun DownloadCard(
 
 @Composable
 private fun StatusBadge(status: DownloadStatus) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     val (color, label) = when (status) {
         DownloadStatus.QUEUED -> Color.Gray to "Queued"
-        DownloadStatus.DOWNLOADING -> MaterialTheme.colorScheme.primary to "Downloading"
-        DownloadStatus.PAUSED -> Color(0xFFE6A23C) to "Paused"
-        DownloadStatus.COMPLETED -> Color(0xFF67C23A) to "Completed"
-        DownloadStatus.ERROR -> MaterialTheme.colorScheme.error to "Error"
+        DownloadStatus.DOWNLOADING -> MaterialTheme.colorScheme.primary to strings.downloadsStatusDownloading
+        DownloadStatus.PAUSED -> Color(0xFFE6A23C) to strings.downloadsStatusPaused
+        DownloadStatus.COMPLETED -> Color(0xFF67C23A) to strings.downloadsStatusCompleted
+        DownloadStatus.ERROR -> MaterialTheme.colorScheme.error to strings.downloadsStatusError
     }
 
     Surface(

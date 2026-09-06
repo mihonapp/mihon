@@ -42,6 +42,7 @@ fun UpdatesScreen(
     onReadChapter: (chapterId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -56,20 +57,20 @@ fun UpdatesScreen(
         ) {
             Column {
                 Text(
-                    text = "Updates",
+                    text = strings.updatesTitle,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                 )
                 val subtitle = when {
-                    isUpdating -> "Scanning library for new chapters..."
+                    isUpdating -> strings.updatesChecking
                     lastResult != null -> {
                         if (lastResult.newChaptersFound > 0) {
                             "Found ${lastResult.newChaptersFound} new chapters across ${lastResult.mangaWithNewChapters} manga"
                         } else {
-                            "All library manga are up to date (${lastResult.totalMangaChecked} checked)"
+                            strings.updatesEmptySubtitle
                         }
                     }
-                    else -> "Check online sources for latest chapters"
+                    else -> strings.updatesEmptySubtitle
                 }
                 Text(
                     text = subtitle,
@@ -90,9 +91,9 @@ fun UpdatesScreen(
                         strokeWidth = 2.dp,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Updating...")
+                    Text(strings.updatesChecking)
                 } else {
-                    Text("Check for Updates")
+                    Text(strings.updatesCheckButton)
                 }
             }
         }
@@ -105,7 +106,7 @@ fun UpdatesScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "No recent chapter updates",
+                    text = strings.updatesEmptyTitle,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -143,7 +144,7 @@ fun UpdatesScreen(
                             }
 
                             TextButton(onClick = { onReadChapter(item.chapterId) }) {
-                                Text("Read")
+                                Text(strings.updatesReadButton)
                             }
                         }
                     }

@@ -81,4 +81,41 @@ class SettingsScreenTest {
         onNodeWithText("About Mihon W").assertExists()
         onNodeWithText("Licensed under the Apache License, Version 2.0.").assertExists()
     }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `settings screen allows selecting Simplified Chinese and saves preference`() = runComposeUiTest {
+        val prefStore = DesktopPreferenceStore(tempDir.resolve("preferences.properties"))
+        val readerSettingsStore = DesktopReaderSettingsStore(prefStore)
+
+        setContent {
+            Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
+                SettingsScreen(
+                    preferenceStore = prefStore,
+                    readerSettingsStore = readerSettingsStore,
+                    diagnosticService = null,
+                )
+            }
+        }
+
+        onNodeWithTag("language-button-SimplifiedChinese").assertExists()
+        onNodeWithTag("language-button-SimplifiedChinese").performClick()
+        prefStore.load().language shouldBe mihon.desktop.i18n.AppLanguage.SimplifiedChinese
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `about screen renders in Simplified Chinese when Chinese strings are provided`() = runComposeUiTest {
+        setContent {
+            mihon.desktop.i18n.ProvideDesktopStrings(mihon.desktop.i18n.AppLanguage.SimplifiedChinese) {
+                Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
+                    AboutScreen()
+                }
+            }
+        }
+
+        onNodeWithTag("about-screen").assertExists()
+        onNodeWithText("关于 Mihon W").assertExists()
+        onNodeWithText("开源许可证").assertExists()
+    }
 }

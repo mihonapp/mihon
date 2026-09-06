@@ -26,12 +26,21 @@ class DesktopPreferenceStoreTest {
             themeMode = ThemeMode.Dark,
             lastDestination = DesktopDestination.Browse,
             windowPlacement = WindowPlacement(120, 80, 1280, 800, maximized = true),
+            language = mihon.desktop.i18n.AppLanguage.SimplifiedChinese,
         )
 
         store.save(expected)
 
         DesktopPreferenceStore(file).load() shouldBe expected
         Files.exists(file.resolveSibling("preferences.properties.tmp")) shouldBe false
+    }
+
+    @Test
+    fun `language setting can be saved and restored`() {
+        val file = tempDir.resolve("preferences.properties")
+        val store = DesktopPreferenceStore(file)
+        store.save(DesktopPreferences(language = mihon.desktop.i18n.AppLanguage.TraditionalChinese))
+        store.load().language shouldBe mihon.desktop.i18n.AppLanguage.TraditionalChinese
     }
 
     @Test

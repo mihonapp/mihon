@@ -1,5 +1,6 @@
 package mihon.desktop.preferences
 
+import mihon.desktop.i18n.AppLanguage
 import mihon.desktop.navigation.DesktopDestination
 import mihon.desktop.window.WindowPlacement
 import java.io.IOException
@@ -21,6 +22,7 @@ data class DesktopPreferences(
     val themeMode: ThemeMode = ThemeMode.System,
     val lastDestination: DesktopDestination = DesktopDestination.Library,
     val windowPlacement: WindowPlacement? = null,
+    val language: AppLanguage = AppLanguage.System,
 )
 
 class DesktopPreferenceStore(private val file: Path) {
@@ -35,6 +37,7 @@ class DesktopPreferenceStore(private val file: Path) {
                 DesktopDestination.Library,
             ),
             windowPlacement = properties.readWindowPlacement(),
+            language = AppLanguage.fromCode(properties.getProperty("language")),
         )
     }
 
@@ -43,6 +46,7 @@ class DesktopPreferenceStore(private val file: Path) {
         val properties = readProperties()
         properties.setProperty("theme", preferences.themeMode.name)
         properties.setProperty("destination", preferences.lastDestination.name)
+        properties.setProperty("language", preferences.language.code)
         properties.remove("window.x")
         properties.remove("window.y")
         properties.remove("window.width")

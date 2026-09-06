@@ -68,6 +68,7 @@ fun BrowseScreen(
 ) {
     var showRepoDialog by remember { mutableStateOf(false) }
     var pendingInstallItem: ExtensionStoreItem? by remember { mutableStateOf(null) }
+    val strings = mihon.desktop.i18n.LocalStrings.current
 
     Column(modifier = Modifier.fillMaxSize().testTag("browse-screen")) {
         // Header
@@ -77,7 +78,7 @@ fun BrowseScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Browse",
+                text = strings.browseTitle,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
             )
@@ -86,14 +87,14 @@ fun BrowseScreen(
                     onClick = { showRepoDialog = true },
                     modifier = Modifier.testTag("manage-repos-button"),
                 ) {
-                    Text("Manage Repositories")
+                    Text(strings.browseManageRepositories)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 OutlinedButton(
                     onClick = onRefresh,
                     modifier = Modifier.testTag("refresh-browse-button"),
                 ) {
-                    Text("Refresh")
+                    Text(strings.browseRefresh)
                 }
             }
         }
@@ -106,13 +107,13 @@ fun BrowseScreen(
             Tab(
                 selected = state.selectedTab == BrowseTab.Sources,
                 onClick = { onTabSelected(BrowseTab.Sources) },
-                text = { Text("Sources") },
+                text = { Text(strings.browseTabSources) },
                 modifier = Modifier.testTag("browse-tab-sources"),
             )
             Tab(
                 selected = state.selectedTab == BrowseTab.Extensions,
                 onClick = { onTabSelected(BrowseTab.Extensions) },
-                text = { Text("Extensions (${state.availableExtensions.size})") },
+                text = { Text("${strings.browseTabExtensions} (${state.availableExtensions.size})") },
                 modifier = Modifier.testTag("browse-tab-extensions"),
             )
         }

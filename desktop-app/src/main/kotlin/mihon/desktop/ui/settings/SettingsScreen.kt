@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,10 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -45,10 +41,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.desktop.diagnostics.DiagnosticBundleService
 import mihon.desktop.diagnostics.DiagnosticSummary
+import mihon.desktop.i18n.AppLanguage
+import mihon.desktop.i18n.DesktopStrings
+import mihon.desktop.i18n.LocalStrings
 import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.desktop.preferences.DesktopPreferences
 import mihon.desktop.preferences.ThemeMode
-import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.DesktopReaderSettingsStore
 import mihon.desktop.reader.ReaderWheelBehavior
 import mihon.reader.model.ReadingMode
@@ -63,6 +61,17 @@ enum class SettingsSection(val label: String) {
     Tracking("Tracking"),
     Backup("Backup & Restore"),
     Advanced("Advanced & Diagnostics"),
+    ;
+
+    fun localized(strings: DesktopStrings): String = when (this) {
+        General -> strings.settingsSectionGeneral
+        Appearance -> strings.settingsSectionAppearance
+        Reader -> strings.settingsSectionReader
+        Downloads -> strings.settingsSectionDownloads
+        Tracking -> strings.settingsSectionTracking
+        Backup -> strings.settingsSectionBackup
+        Advanced -> strings.settingsSectionAdvanced
+    }
 }
 
 @Composable
@@ -72,8 +81,10 @@ fun SettingsScreen(
     diagnosticService: DiagnosticBundleService? = null,
     onImportBackup: () -> Unit = {},
     onExportBackup: () -> Unit = {},
+    onPreferencesChanged: ((DesktopPreferences) -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
+    val strings = LocalStrings.current
     var selectedSection by remember { mutableStateOf(SettingsSection.General) }
 
     Row(modifier = modifier.fillMaxSize().testTag("settings-screen")) {
@@ -84,7 +95,7 @@ fun SettingsScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Settings",
+                    text = strings.settingsTitle,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp),
@@ -105,7 +116,7 @@ fun SettingsScreen(
                         },
                     ) {
                         Text(
-                            text = section.label,
+                            text = section.localized(strings),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                             color = if (isSelected) {
@@ -125,8 +136,8 @@ fun SettingsScreen(
             modifier = Modifier.fillMaxSize().padding(32.dp),
         ) {
             when (selectedSection) {
-                SettingsSection.General -> GeneralSettingsPane(preferenceStore)
-                SettingsSection.Appearance -> AppearanceSettingsPane(preferenceStore)
+                SettingsSection.General -> GeneralSettingsPane(preferenceStore, onPreferencesChanged)
+                SettingsSection.Appearance -> AppearanceSettingsPane(preferenceStore, onPreferencesChanged)
                 SettingsSection.Reader -> ReaderSettingsPane(readerSettingsStore)
                 SettingsSection.Downloads -> DownloadsSettingsPane()
                 SettingsSection.Tracking -> TrackingSettingsPane()
@@ -138,56 +149,115 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun GeneralSettingsPane(preferenceStore: DesktopPreferenceStore) {
+private fun GeneralSettingsPane(
+    preferenceStore: DesktopPreferenceStore,
+    onPreferencesChanged: ((DesktopPreferences) -> Unit)?,
+) {
+    val strings = LocalStrings.current
     var preferences by remember { mutableStateOf(preferenceStore.load()) }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("General", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(
+            strings.settingsSectionGeneral,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
+
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(strings.settingsLanguageTitle, fontWeight = FontWeight.Bold)
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    listOf(
+                        AppLanguage.System to strings.settingsLanguageSystem,
+                        AppLanguage.SimplifiedChinese to strings.settingsLanguageSimplifiedChinese,
+                        AppLanguage.TraditionalChinese to strings.settingsLanguageTraditionalChinese,
+                        AppLanguage.English to strings.settingsLanguageEnglish,
+                    ).forEach { (lang, label) ->
+                        val isSelected = preferences.language == lang
+                        if (isSelected) {
+                            Button(
+                                onClick = {},
+                                modifier = Modifier.testTag("language-button-${lang.name}"),
+                            ) {
+                                Text(label)
+                            }
+                        } else {
+                            OutlinedButton(
+                                onClick = {
+                                    val updated = preferences.copy(language = lang)
+                                    preferences = updated
+                                    preferenceStore.save(updated)
+                                    onPreferencesChanged?.invoke(updated)
+                                },
+                                modifier = Modifier.testTag("language-button-${lang.name}"),
+                            ) {
+                                Text(label)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Application Info", fontWeight = FontWeight.Bold)
-                Text("Version: 1.0.0-desktop (Phase 7)")
-                Text("Platform: Windows x64")
+                Text(strings.settingsAppInfoTitle, fontWeight = FontWeight.Bold)
+                Text(strings.settingsVersionLabel("1.0.0-desktop (Phase 8)"))
+                Text(strings.settingsPlatformLabel("Windows x64"))
             }
         }
     }
 }
 
 @Composable
-private fun AppearanceSettingsPane(preferenceStore: DesktopPreferenceStore) {
+private fun AppearanceSettingsPane(
+    preferenceStore: DesktopPreferenceStore,
+    onPreferencesChanged: ((DesktopPreferences) -> Unit)?,
+) {
+    val strings = LocalStrings.current
     var preferences by remember { mutableStateOf(preferenceStore.load()) }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("Appearance", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(
+            strings.settingsSectionAppearance,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
 
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Theme Mode", fontWeight = FontWeight.Bold)
+                Text(strings.settingsThemeModeTitle, fontWeight = FontWeight.Bold)
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    ThemeMode.entries.forEach { mode ->
+                    listOf(
+                        ThemeMode.System to strings.settingsThemeSystem,
+                        ThemeMode.Light to strings.settingsThemeLight,
+                        ThemeMode.Dark to strings.settingsThemeDark,
+                    ).forEach { (mode, label) ->
                         val isSelected = preferences.themeMode == mode
                         if (isSelected) {
                             Button(
                                 onClick = {},
                                 modifier = Modifier.testTag("theme-button-${mode.name}"),
                             ) {
-                                Text(mode.name)
+                                Text(label)
                             }
                         } else {
                             OutlinedButton(
                                 onClick = {
-                                    preferences = preferences.copy(themeMode = mode)
-                                    preferenceStore.save(preferences)
+                                    val updated = preferences.copy(themeMode = mode)
+                                    preferences = updated
+                                    preferenceStore.save(updated)
+                                    onPreferencesChanged?.invoke(updated)
                                 },
                                 modifier = Modifier.testTag("theme-button-${mode.name}"),
                             ) {
-                                Text(mode.name)
+                                Text(label)
                             }
                         }
                     }
@@ -199,22 +269,27 @@ private fun AppearanceSettingsPane(preferenceStore: DesktopPreferenceStore) {
 
 @Composable
 private fun ReaderSettingsPane(readerSettingsStore: DesktopReaderSettingsStore) {
+    val strings = LocalStrings.current
     var settings by remember { mutableStateOf(readerSettingsStore.load()) }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("Reader", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(
+            strings.settingsSectionReader,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
 
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Default Reading Mode", fontWeight = FontWeight.Bold)
+                Text(strings.settingsDefaultReadingMode, fontWeight = FontWeight.Bold)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(
-                        ReadingMode.SINGLE_LTR to "Left to Right",
-                        ReadingMode.SINGLE_RTL to "Right to Left",
-                        ReadingMode.WEBTOON to "Webtoon/Vertical",
+                        ReadingMode.SINGLE_LTR to strings.readerModeSingleLtr,
+                        ReadingMode.SINGLE_RTL to strings.readerModeSingleRtl,
+                        ReadingMode.WEBTOON to strings.readerModeWebtoon,
                     ).forEach { (mode, label) ->
                         val isSelected = settings.mode == mode
                         if (isSelected) {
@@ -234,12 +309,12 @@ private fun ReaderSettingsPane(readerSettingsStore: DesktopReaderSettingsStore) 
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                Text("Default Scale Mode", fontWeight = FontWeight.Bold)
+                Text(strings.settingsDefaultScaleMode, fontWeight = FontWeight.Bold)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(
-                        ScaleMode.FIT_WIDTH to "Fit Width",
-                        ScaleMode.FIT_HEIGHT to "Fit Height",
-                        ScaleMode.ORIGINAL to "Original Size",
+                        ScaleMode.FIT_WIDTH to strings.readerScaleFitWidth,
+                        ScaleMode.FIT_HEIGHT to strings.readerScaleFitHeight,
+                        ScaleMode.ORIGINAL to strings.readerScaleOriginal,
                     ).forEach { (scale, label) ->
                         val isSelected = settings.scaleMode == scale
                         if (isSelected) {
@@ -265,9 +340,9 @@ private fun ReaderSettingsPane(readerSettingsStore: DesktopReaderSettingsStore) 
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column {
-                        Text("Double Page Cover Offset", fontWeight = FontWeight.Bold)
+                        Text(strings.settingsDoubleSpread, fontWeight = FontWeight.Bold)
                         Text(
-                            "Shift double page spread by 1 page for covers",
+                            strings.settingsDoubleSpread,
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -282,12 +357,15 @@ private fun ReaderSettingsPane(readerSettingsStore: DesktopReaderSettingsStore) 
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                Text("Mouse Wheel Behavior", fontWeight = FontWeight.Bold)
+                Text(strings.settingsMouseWheelBehavior, fontWeight = FontWeight.Bold)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ReaderWheelBehavior.entries.forEach { behavior ->
+                    listOf(
+                        ReaderWheelBehavior.PAGE_NAVIGATION to strings.settingsWheelFlipPage,
+                        ReaderWheelBehavior.SCROLL to strings.settingsWheelScrollPage,
+                    ).forEach { (behavior, label) ->
                         val isSelected = settings.wheelBehavior == behavior
                         if (isSelected) {
-                            Button(onClick = {}) { Text(behavior.name.replace('_', ' ')) }
+                            Button(onClick = {}) { Text(label) }
                         } else {
                             OutlinedButton(
                                 onClick = {
@@ -295,7 +373,7 @@ private fun ReaderSettingsPane(readerSettingsStore: DesktopReaderSettingsStore) 
                                     readerSettingsStore.save(settings)
                                 },
                             ) {
-                                Text(behavior.name.replace('_', ' '))
+                                Text(label)
                             }
                         }
                     }
@@ -307,16 +385,20 @@ private fun ReaderSettingsPane(readerSettingsStore: DesktopReaderSettingsStore) 
 
 @Composable
 private fun DownloadsSettingsPane() {
+    val strings = LocalStrings.current
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("Downloads", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(
+            strings.settingsSectionDownloads,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Download Location", fontWeight = FontWeight.Bold)
-                Text("Default downloads folder inside app data directory.")
-                Text("Automatic resume enabled.")
+                Text(strings.settingsDownloadLocation, fontWeight = FontWeight.Bold)
+                Text(strings.settingsDefaultStorageFolder)
             }
         }
     }
@@ -324,16 +406,21 @@ private fun DownloadsSettingsPane() {
 
 @Composable
 private fun TrackingSettingsPane() {
+    val strings = LocalStrings.current
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("Tracking", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(
+            strings.settingsSectionTracking,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Supported Trackers", fontWeight = FontWeight.Bold)
-                Text("MyAnimeList, AniList, Kitsu, Shikimori, Bangumi, Komga, MangaUpdates, Kavita, Suwayomi")
-                Text("Offline synchronization queue: Active (atomic JSON persistence)")
+                Text(strings.settingsTrackingTitle, fontWeight = FontWeight.Bold)
+                Text(strings.settingsTrackingDescription)
+                Text(strings.settingsConnectedTrackers(5))
             }
         }
     }
@@ -344,17 +431,22 @@ private fun BackupSettingsPane(
     onImportBackup: () -> Unit,
     onExportBackup: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("Backup & Restore", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(
+            strings.settingsSectionBackup,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
 
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Cross-Platform Backup Exchange", fontWeight = FontWeight.Bold)
+                Text(strings.settingsBackupTitle, fontWeight = FontWeight.Bold)
                 Text(
-                    "Mihon W produces full Android-compatible ProtoBuf .tachibk backups (gzipped) containing your library, categories, reading history, tracking records, and preferences.",
+                    strings.settingsBackupDescription,
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -362,13 +454,13 @@ private fun BackupSettingsPane(
                         onClick = onExportBackup,
                         modifier = Modifier.testTag("settings-export-backup-button"),
                     ) {
-                        Text("Export Backup (.tachibk)")
+                        Text(strings.settingsExportBackupButton)
                     }
                     OutlinedButton(
                         onClick = onImportBackup,
                         modifier = Modifier.testTag("settings-import-backup-button"),
                     ) {
-                        Text("Import Backup (.tachibk)")
+                        Text(strings.settingsImportBackupButton)
                     }
                 }
             }
@@ -378,6 +470,7 @@ private fun BackupSettingsPane(
 
 @Composable
 private fun AdvancedSettingsPane(diagnosticService: DiagnosticBundleService?) {
+    val strings = LocalStrings.current
     val scope = rememberCoroutineScope()
     var summary by remember { mutableStateOf<DiagnosticSummary?>(null) }
     var checkingIntegrity by remember { mutableStateOf(false) }
@@ -387,11 +480,15 @@ private fun AdvancedSettingsPane(diagnosticService: DiagnosticBundleService?) {
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("Advanced & Diagnostics", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(
+            strings.settingsSectionAdvanced,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
 
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Database & System Diagnostics", fontWeight = FontWeight.Bold)
+                Text(strings.settingsDiagnosticsTitle, fontWeight = FontWeight.Bold)
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     FilledTonalButton(
                         onClick = {
@@ -408,7 +505,7 @@ private fun AdvancedSettingsPane(diagnosticService: DiagnosticBundleService?) {
                         if (checkingIntegrity) {
                             CircularProgressIndicator(modifier = Modifier.height(16.dp).width(16.dp))
                         } else {
-                            Text("Run Integrity Check")
+                            Text(strings.settingsRunIntegrityCheck)
                         }
                     }
 
@@ -425,24 +522,24 @@ private fun AdvancedSettingsPane(diagnosticService: DiagnosticBundleService?) {
                         },
                         modifier = Modifier.testTag("export-diagnostic-bundle-button"),
                     ) {
-                        Text("Export Diagnostic Bundle (.zip)")
+                        Text(strings.settingsExportDiagnosticBundle)
                     }
                 }
 
                 summary?.let { s ->
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     Text(
-                        "Database Integrity: ${s.databaseIntegrity.joinToString(", ")}",
+                        strings.settingsDatabaseIntegrity(s.databaseIntegrity.joinToString(", ")),
                         fontWeight = FontWeight.Medium,
                     )
-                    Text("OS: ${s.osName} ${s.osVersion} (${s.osArch})")
-                    Text("Java Runtime: ${s.javaVersion} (${s.javaVendor})")
-                    Text("Log Files Count: ${s.logFileCount}")
+                    Text(strings.settingsOsInfo("${s.osName} ${s.osVersion} (${s.osArch})"))
+                    Text(strings.settingsJavaInfo("${s.javaVersion} (${s.javaVendor})"))
+                    Text(strings.settingsLogFilesCount(s.logFileCount))
                 }
 
                 bundleExportPath?.let { path ->
                     Text(
-                        "Diagnostic bundle exported to: $path",
+                        strings.settingsBundleExportedTo(path),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary,
                     )
