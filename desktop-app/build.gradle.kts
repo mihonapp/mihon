@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp.core)
+    implementation("org.slf4j:slf4j-nop:2.0.17")
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.commonsCompress)
@@ -62,7 +63,7 @@ compose.desktop {
             modules("java.desktop", "java.logging", "java.prefs", "java.sql")
 
             windows {
-                console = true
+                console = false
                 perUserInstall = true
                 dirChooser = true
                 menuGroup = "Mihon W"
