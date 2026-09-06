@@ -5,6 +5,8 @@ import java.nio.file.Path
 sealed interface DesktopCommand {
     data object LaunchUi : DesktopCommand
     data object FoundationSmoke : DesktopCommand
+    data object Help : DesktopCommand
+    data object Version : DesktopCommand
     data class ImportBackup(val path: Path) : DesktopCommand
     data class ExportBackup(val path: Path) : DesktopCommand
     data class ImportLocal(val path: Path) : DesktopCommand
@@ -29,6 +31,8 @@ object DesktopCommandParser {
                 when {
                     argument == "--portable" -> Unit
                     argument.startsWith("--data-dir=") -> Unit
+                    argument == "--help" || argument == "-h" || argument == "/?" -> add(DesktopCommand.Help)
+                    argument == "--version" || argument == "-v" -> add(DesktopCommand.Version)
                     argument == "--smoke-test" -> add(DesktopCommand.FoundationSmoke)
                     argument == "--list-library-json" -> add(DesktopCommand.ListLibraryJson)
                     argument.startsWith("--verify-reader=") -> {
@@ -49,6 +53,12 @@ object DesktopCommandParser {
                     argument.startsWith("--import-local=") -> add(
                         DesktopCommand.ImportLocal(parsePath(argument, "--import-local=")),
                     )
+                    argument.endsWith(".tachibk", ignoreCase = true) -> add(
+                        DesktopCommand.ImportBackup(tryParsePath(argument)),
+                    )
+                    argument.endsWith(".cbz", ignoreCase = true) || argument.endsWith(".zip", ignoreCase = true) -> add(
+                        DesktopCommand.ImportLocal(tryParsePath(argument)),
+                    )
                     else -> throw CommandLineException("Unknown or incomplete argument", safeArgument(argument))
                 }
             }
@@ -57,6 +67,12 @@ object DesktopCommandParser {
             throw CommandLineException("Only one headless command may be specified")
         }
         return commands.singleOrNull() ?: DesktopCommand.LaunchUi
+    }
+
+    private fun tryParsePath(value: String): Path = try {
+        Path.of(value)
+    } catch (error: RuntimeException) {
+        throw CommandLineException("Argument contains an invalid path", value, error)
     }
 
     private fun parsePath(argument: String, prefix: String): Path {

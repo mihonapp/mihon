@@ -38,6 +38,13 @@ class DesktopCommandTest {
         val cases = listOf(
             emptyArray<String>() to DesktopCommand.LaunchUi,
             arrayOf("--smoke-test") to DesktopCommand.FoundationSmoke,
+            arrayOf("--help") to DesktopCommand.Help,
+            arrayOf("-h") to DesktopCommand.Help,
+            arrayOf("/?") to DesktopCommand.Help,
+            arrayOf("--version") to DesktopCommand.Version,
+            arrayOf("-v") to DesktopCommand.Version,
+            arrayOf("C:\\备份\\a.tachibk") to DesktopCommand.ImportBackup(Path.of("C:\\备份\\a.tachibk")),
+            arrayOf("C:\\comics\\one.cbz") to DesktopCommand.ImportLocal(Path.of("C:\\comics\\one.cbz")),
             arrayOf("--import-backup=C:\\备份\\a.tachibk") to
                 DesktopCommand.ImportBackup(Path.of("C:\\备份\\a.tachibk")),
             arrayOf("--export-backup=C:\\备份\\out.tachibk") to
@@ -302,6 +309,23 @@ class DesktopCommandTest {
             },
         ) shouldBe 0
         ui.closeCount shouldBe 1
+    }
+
+    @Test
+    fun `help and version commands emit expected stdout`() {
+        val helpOutput = ByteArrayOutputStream()
+        val versionOutput = ByteArrayOutputStream()
+
+        newRuntime(DesktopCommand.Help).use { fixture ->
+            DesktopCommandRunner(fixture.runtime, helpOutput).run(DesktopCommand.Help) shouldBe 0
+        }
+        helpOutput.toString(UTF_8) shouldContain "Mihon W - Manga Reader for Windows"
+        helpOutput.toString(UTF_8) shouldContain "--help"
+
+        newRuntime(DesktopCommand.Version).use { fixture ->
+            DesktopCommandRunner(fixture.runtime, versionOutput).run(DesktopCommand.Version) shouldBe 0
+        }
+        versionOutput.toString(UTF_8) shouldContain "Mihon W 0.1.0"
     }
 
     private fun newRuntime(command: DesktopCommand): RuntimeFixture {

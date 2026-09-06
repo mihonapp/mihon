@@ -71,3 +71,32 @@ compose.desktop {
         }
     }
 }
+
+val packagePortableZip by tasks.registering(Zip::class) {
+    dependsOn("createDistributable")
+    group = "compose desktop"
+    description = "Packages the portable distribution as a standalone ZIP archive"
+
+    archiveBaseName.set("MihonW")
+    archiveClassifier.set("windows-x64-portable")
+    archiveVersion.set("0.1.0")
+    destinationDirectory.set(layout.buildDirectory.dir("compose/binaries/main/portable"))
+
+    from(layout.buildDirectory.dir("compose/binaries/main/app/MihonW")) {
+        into("MihonW")
+    }
+
+    val markerFile = layout.buildDirectory.file("compose/tmp/portable/.portable")
+    doFirst {
+        val file = markerFile.get().asFile
+        file.parentFile.mkdirs()
+        file.writeText("")
+    }
+    from(markerFile) {
+        into("MihonW")
+    }
+
+    from(rootProject.file("scripts/MihonUpdater.ps1")) {
+        into("MihonW")
+    }
+}

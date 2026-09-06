@@ -4,6 +4,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import mihon.desktop.cli.CommandLineException
 import mihon.desktop.cli.DesktopCommand
@@ -162,7 +163,9 @@ object DesktopRuntimeFactory {
             if (value.isBlank()) throw CommandLineException("--data-dir requires a non-blank path", "--data-dir")
             commandPath(value, "--data-dir")
         }
-        val mode = if ("--portable" in args) DistributionMode.Portable else DistributionMode.Installed
+        val isPortable = "--portable" in args ||
+            java.nio.file.Files.exists(executableDirectory.resolve(".portable"))
+        val mode = if (isPortable) DistributionMode.Portable else DistributionMode.Installed
         val appData = environment["APPDATA"]
             ?.takeIf(String::isNotBlank)
             ?.let(Path::of)
@@ -247,6 +250,10 @@ object DesktopRuntimeFactory {
                 trackerManager = trackerManager,
                 trackingQueue = trackingQueue,
                 diagnosticService = diagnosticService,
+                closeReaderServices = {
+                    readerFactory?.closeServices()
+                    appScope.cancel()
+                },
             )
         } catch (error: Throwable) {
             try {

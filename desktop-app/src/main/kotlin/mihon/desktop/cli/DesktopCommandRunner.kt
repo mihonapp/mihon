@@ -53,6 +53,14 @@ class DesktopCommandRunner(
     fun run(command: DesktopCommand): Int = try {
         when (command) {
             DesktopCommand.LaunchUi -> error("LaunchUi is not a headless command")
+            DesktopCommand.Help -> {
+                writeUtf8Line(output, HELP_TEXT)
+                0
+            }
+            DesktopCommand.Version -> {
+                writeUtf8Line(output, "Mihon W 0.1.0 (Windows x64)")
+                0
+            }
             DesktopCommand.FoundationSmoke -> {
                 writeUtf8Line(output, "MIHON_DESKTOP_SMOKE_OK ${runtime.directories.root}")
                 0
@@ -646,6 +654,8 @@ private fun ByteArray.toHex(): String = joinToString("") { byte -> "%02x".format
 private fun DesktopCommand.commandName(): String = when (this) {
     DesktopCommand.LaunchUi -> "launch-ui"
     DesktopCommand.FoundationSmoke -> "foundation-smoke"
+    DesktopCommand.Help -> "help"
+    DesktopCommand.Version -> "version"
     is DesktopCommand.ImportBackup -> "import-backup"
     is DesktopCommand.ExportBackup -> "export-backup"
     is DesktopCommand.ImportLocal -> "import-local"
@@ -660,6 +670,26 @@ private fun DesktopCommand.sourcePath(): String? = when (this) {
     is DesktopCommand.VerifyReader -> fixtureRoot.toString()
     else -> null
 }
+
+private val HELP_TEXT = """
+Mihon W - Manga Reader for Windows
+Usage: MihonW.exe [options] [file]
+
+Options:
+  --help, -h                  Show this help message and exit
+  --version, -v               Show application version and exit
+  --portable                  Run in portable mode using ./data directory
+  --data-dir=<path>           Specify custom application data directory
+  --import-backup=<path>      Import Android .tachibk backup file headlessly
+  --export-backup=<path>      Export library to Android .tachibk backup file headlessly
+  --import-local=<path>       Import local manga directory or CBZ/ZIP archive headlessly
+  --list-library-json         Output library contents as JSON to stdout
+  --smoke-test                Verify database initialization and exit
+
+File Associations:
+  Passing a .tachibk file directly will import the backup.
+  Passing a .cbz or .zip file directly will import the archive into the local library.
+""".trimIndent()
 
 private fun writeUtf8Line(output: OutputStream, value: String) {
     output.write(value.toByteArray(UTF_8))

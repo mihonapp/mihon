@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
         DesktopCommandRunner.writeStartupFailure(System.out)
         1
     }
-    if (exitCode != 0) exitProcess(exitCode)
+    exitProcess(exitCode)
 }
 
 internal fun executeDesktopRuntime(
