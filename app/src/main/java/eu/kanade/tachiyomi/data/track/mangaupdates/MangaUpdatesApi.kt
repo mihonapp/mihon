@@ -32,8 +32,8 @@ import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MangaUpdatesApi(
-    interceptor: MangaUpdatesInterceptor,
     private val client: OkHttpClient,
+    interceptor: MangaUpdatesInterceptor,
 ) {
     private val json: Json by injectLazy()
 
@@ -123,7 +123,7 @@ class MangaUpdatesApi(
                     .awaitSuccess()
                     .parseAs<MURating>()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

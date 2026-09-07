@@ -224,7 +224,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
             scorePreference.set(currentUser.scoreFormat)
             saveDisplayUsername(currentUser.name)
             saveCredentials(currentUser.id.toString(), oauth.accessToken)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             logout()
         }
     }
@@ -242,7 +242,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     fun loadOAuth(): ALOAuth? {
         return try {
             json.decodeFromString<ALOAuth>(trackPreferences.trackToken(this).get())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

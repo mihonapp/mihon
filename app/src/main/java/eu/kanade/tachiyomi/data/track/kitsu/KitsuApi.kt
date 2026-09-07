@@ -32,7 +32,7 @@ import kotlin.time.Instant
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class KitsuApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val client: OkHttpClient,
     interceptor: KitsuInterceptor,
 ) {
@@ -155,7 +155,7 @@ class KitsuApi(
                 default = { emptyList() },
             ) {
                 it.searchMangaByTitle.nodes
-                    ?.mapNotNull { node -> node?.toTrackSearch(trackId) }
+                    ?.mapNotNull { node -> node?.toTrackSearch(trackerId) }
             }
             ?: emptyList()
     }
@@ -172,7 +172,7 @@ class KitsuApi(
                 errorLog = "Kitsu: Failed to find manga in library",
                 default = { null },
             ) {
-                it.findMangaById?.toTrackSearch(trackId)
+                it.findMangaById?.toTrackSearch(trackerId)
             }
     }
 
@@ -230,7 +230,7 @@ class KitsuApi(
                 errorLog = "Kitsu: Search by ID failed",
                 default = { null },
             ) {
-                it.findMangaById?.toTrackSearch(trackId)
+                it.findMangaById?.toTrackSearch(trackerId)
             }
     }
 
@@ -246,7 +246,7 @@ class KitsuApi(
                 errorLog = "Kitsu: Search by Slug failed",
                 default = { null },
             ) {
-                it.findMangaBySlug?.toTrackSearch(trackId)
+                it.findMangaBySlug?.toTrackSearch(trackerId)
             }
     }
 

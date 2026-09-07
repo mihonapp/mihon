@@ -22,7 +22,7 @@ import tachiyomi.domain.source.service.SourceManager
 import java.security.MessageDigest
 
 class SuwayomiApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val sourceManager: SourceManager,
 ) {
     // Blocking is fine here: these are only touched from OkHttp and tracker threads.
@@ -55,7 +55,7 @@ class SuwayomiApi(
                 errorLog = "Suwayomi: Failed to find manga in library",
                 default = { null },
             ) {
-                it.manga.mangaFragment.toTrackSearch(trackId, baseUrl)
+                it.manga.mangaFragment.toTrackSearch(trackerId, baseUrl)
             }
     }
 

@@ -33,7 +33,7 @@ import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class ShikimoriApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val client: OkHttpClient,
     interceptor: ShikimoriInterceptor,
 ) {
@@ -127,7 +127,7 @@ class ShikimoriApi(
                 default = { emptyList() },
             ) {
                 it.mangas.map { manga ->
-                    manga.toTrackSearch(trackId)
+                    manga.toTrackSearch(trackerId)
                 }
             }
     }
@@ -144,7 +144,7 @@ class ShikimoriApi(
             ) {
                 it.mangas
                     .firstOrNull()
-                    ?.toTrackSearch(trackId)
+                    ?.toTrackSearch(trackerId)
             }
     }
 
@@ -169,7 +169,7 @@ class ShikimoriApi(
                 if (mangaResult?.userRate == null) {
                     null
                 } else {
-                    mangaResult.toTrack(trackId)
+                    mangaResult.toTrack(trackerId)
                 }
             }
     }
