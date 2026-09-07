@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.smart.QueryNormalizer
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.smart.SmartSearchEngine
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -60,6 +63,10 @@ abstract class SearchViewModel(
 
     protected var extensionFilter: String? = null
 
+    /**
+     * Orders per-source results in [State.items]. Migration search overrides this to sort by
+     * source priority; global search keeps the default (pinned first, then alphabetical).
+     */
     open val sortComparator = { map: Map<Source, SearchItemResult> ->
         compareBy<Source>(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
@@ -67,6 +74,11 @@ abstract class SearchViewModel(
             { "${it.name.lowercase()} (${it.lang})" },
         )
     }
+
+    // Live-search: when the user keeps typing, debounce and re-run search automatically
+    // without requiring them to press search/enter. Only enabled for global search.
+    protected var liveSearchEnabled: Boolean = false
+    private var liveSearchJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -114,6 +126,21 @@ abstract class SearchViewModel(
 
     fun updateSearchQuery(query: String?) {
         state.update { it.copy(searchQuery = query) }
+        if (liveSearchEnabled) {
+            scheduleLiveSearch()
+        }
+    }
+
+    /**
+     * Debounced live search: as soon as the user stops typing (~400ms), search automatically.
+     */
+    private fun scheduleLiveSearch() {
+        liveSearchJob?.cancel()
+        val query = state.value.searchQuery?.trim().orEmpty()
+        liveSearchJob = viewModelScope.launch {
+            delay(400)
+            if (query.isNotBlank()) search()
+        }
     }
 
     fun setSourceFilter(filter: SourceFilter) {
@@ -142,61 +169,82 @@ abstract class SearchViewModel(
         searchJob = viewModelScope.launchIO {
             val sources = getSelectedSources()
 
-            // Reuse previous results if possible
-            if (sameQuery) {
-                val existingResults = state.value.items
-                updateItems(
-                    sources
-                        .associateWith { existingResults[it] ?: SearchItemResult.Loading },
-                )
-            } else {
-                updateItems(
-                    sources
-                        .associateWith { SearchItemResult.Loading },
+            // Reuse previous per-source results if re-running the same query under a new filter.
+            val previousItems = state.value.items
+
+            updateState {
+                it.copy(
+                    isSearching = true,
+                    completedSources = 0,
+                    totalSources = sources.size,
+                    items = if (sameQuery) previousItems else sources.associateWith { SearchItemResult.Loading },
+                    results = emptyList(),
+                    suggestions = emptyList(),
                 )
             }
 
-            sources.map { source ->
-                async {
-                    if (state.value.items[source] !is SearchItemResult.Loading) {
-                        return@async
-                    }
+            if (sources.isEmpty()) {
+                updateState { it.copy(isSearching = false) }
+                return@launchIO
+            }
 
-                    try {
+            // Each source pushes its raw hits when it finishes so results stream in
+            // incrementally instead of waiting for every source to complete.
+            val resultChannel = Channel<Pair<Source, List<Manga>>>(Channel.UNLIMITED)
+
+            sources.forEach { source ->
+                async {
+                    val titles = runCatching {
                         val page = withContext(coroutineDispatcher) {
                             source.getSearchManga(1, query, source.getFilterList())
                         }
-
-                        val titles = page.mangas
+                        page.mangas
                             .map { it.toDomainManga(source.id) }
                             .distinctBy { it.url }
                             .let { networkToLocalManga(it) }
+                    }.getOrDefault(emptyList())
 
-                        if (isActive) {
-                            updateItem(source, SearchItemResult.Success(titles))
-                        }
-                    } catch (e: Exception) {
-                        if (isActive) {
-                            updateItem(source, SearchItemResult.Error(e))
-                        }
+                    if (isActive) resultChannel.send(source to titles)
+                }
+            }
+
+            // Consume results as they arrive and update state incrementally.
+            val accumulator = mutableListOf<Manga>()
+            repeat(sources.size) {
+                val (source, titles) = resultChannel.receive()
+                if (isActive) {
+                    accumulator.addAll(titles)
+                    val result: SearchItemResult =
+                        if (titles.isEmpty()) SearchItemResult.Success(emptyList())
+                        else SearchItemResult.Success(titles)
+
+                    updateState {
+                        val updatedItems = (it.items + (source to result))
+                            .toSortedMap(sortComparator(it.items + (source to result)))
+                        it.copy(
+                            completedSources = it.completedSources + 1,
+                            items = updatedItems,
+                            // Smart merge recomputed from all accumulated raw hits.
+                            results = SmartSearchEngine.merge(QueryNormalizer.normalize(query), accumulator),
+                        )
                     }
                 }
             }
-                .awaitAll()
-        }
-    }
 
-    private fun updateItems(items: Map<Source, SearchItemResult>) {
-        state.update {
-            it.copy(
-                items = items
-                    .toSortedMap(sortComparator(items)),
-            )
-        }
-    }
+            // "Did you mean" suggestions when nothing matched across all sources.
+            val finalResults = state.value.results
+            val suggestions = if (finalResults.isEmpty()) {
+                SmartSearchEngine.suggest(QueryNormalizer.normalize(query))
+            } else {
+                emptyList()
+            }
 
-    private fun updateItem(source: Source, result: SearchItemResult) {
-        updateItems(state.value.items + (source to result))
+            if (isActive) {
+                updateState {
+                    it.copy(isSearching = false, suggestions = suggestions)
+                }
+            }
+        }
     }
 
     fun setMigrateDialog(currentId: Long, target: Manga) {
@@ -217,11 +265,22 @@ abstract class SearchViewModel(
         val sourceFilter: SourceFilter = SourceFilter.PinnedOnly,
         val onlyShowHasResults: Boolean = false,
         val items: Map<Source, SearchItemResult> = mapOf(),
+        val results: List<SmartSearchEngine.MergedResult> = emptyList(),
+        val suggestions: List<String> = emptyList(),
+        val isSearching: Boolean = false,
+        val completedSources: Int = 0,
+        val totalSources: Int = 0,
         val dialog: Dialog? = null,
     ) {
-        val progress: Int = items.count { it.value !is SearchItemResult.Loading }
-        val total: Int = items.size
+        val progress: Int = completedSources
+        val total: Int = totalSources
+
+        /** Per-source items filtered by the "has results" toggle (used by migration search). */
         val filteredItems = items.filter { (_, result) -> result.isVisible(onlyShowHasResults) }
+
+        /** Merged, ranked results for global search. */
+        val filteredResults: List<SmartSearchEngine.MergedResult>
+            get() = if (onlyShowHasResults) results.filter { it.score > 0f } else results
     }
 
     sealed interface Dialog {
