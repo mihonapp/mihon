@@ -4,6 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import mihon.desktop.navigation.DesktopDestination
+import mihon.desktop.reader.ReaderBackgroundColor
+import mihon.desktop.reader.ReaderClickAction
+import mihon.desktop.reader.ReaderColorFilter
+import mihon.desktop.reader.ReaderWheelBehavior
+import mihon.desktop.track.TrackStatus
+import mihon.reader.model.ReaderErrorCode
+import mihon.reader.model.ReadingMode
+import mihon.reader.model.ScaleMode
+import mihon.reader.session.ReaderSessionError
+import mihon.reader.source.ReaderFailure
 import java.util.Locale
 
 enum class AppLanguage(val code: String, val displayName: String) {
@@ -38,9 +48,51 @@ interface DesktopStrings {
     fun libraryNoMatchTitle(query: String): String
     val libraryNoMatchSubtitle: String
     val libraryRetry: String
-    fun libraryChaptersCount(count: Int): String
     fun libraryUnreadCount(count: Int): String
     val libraryAllCategory: String
+
+    // Library Display, Filter & Sort
+    val libraryDisplayMode: String
+    val libraryDisplayComfortable: String
+    val libraryDisplayCompact: String
+    val libraryDisplayCoverOnly: String
+    val libraryDisplayList: String
+    val libraryGridSize: String
+    val libraryFilterAndSort: String
+    val libraryFilterTab: String
+    val librarySortTab: String
+    val libraryFilterReset: String
+    val libraryFilterUnread: String
+    val libraryFilterDownloaded: String
+    val libraryFilterStarted: String
+    val libraryFilterCompleted: String
+    val libraryFilterBookmarked: String
+    val librarySortDefault: String
+    val librarySortAlphabetical: String
+    val librarySortLastRead: String
+    val librarySortLastUpdate: String
+    val librarySortUnreadCount: String
+    val librarySortTotalChapters: String
+    val librarySortDateAdded: String
+    val librarySortAscending: String
+    val librarySortDescending: String
+
+    // Library Batch Actions
+    val libraryBatchSelect: String
+    fun libraryBatchSelected(count: Int): String
+    val libraryBatchSelectAll: String
+    val libraryBatchDeselectAll: String
+    val libraryBatchChangeCategory: String
+    val libraryBatchMarkRead: String
+    val libraryBatchMarkUnread: String
+    val libraryBatchDownload: String
+    val libraryBatchDownloadNext1: String
+    val libraryBatchDownloadNext5: String
+    val libraryBatchDownloadAllUnread: String
+    val libraryBatchRemove: String
+    val libraryBatchRemoveConfirmTitle: String
+    fun libraryBatchRemoveConfirmMessage(count: Int): String
+    val libraryBatchDone: String
 
     // Manga Detail
     fun mangaDetailSource(name: String): String
@@ -55,6 +107,48 @@ interface DesktopStrings {
     fun mangaDetailStart(chapter: String): String
     val mangaDetailNoChapters: String
     val mangaDetailBack: String
+    val mangaDetailChangeCover: String
+    val mangaDetailResetCover: String
+    val mangaDetailEditInfo: String
+    val mangaDetailAuthor: String
+    val mangaDetailArtist: String
+    val mangaDetailStatus: String
+    val mangaDetailGenres: String
+    val mangaDetailNotes: String
+    val mangaDetailResetToSource: String
+    val mangaDetailSave: String
+
+    // Chapters & Chapter Actions
+    val chapters: String
+    val sortSourceOrder: String
+    val sortChapterNumber: String
+    val sortUploadDate: String
+    val filterUnread: String
+    val filterRead: String
+    val filterUnreadOnly: String
+    val filterReadOnly: String
+    val filterDownloaded: String
+    val filterDownloadedOnly: String
+    val filterNotDownloadedOnly: String
+    val filterBookmarked: String
+    val filterBookmarkedOnly: String
+    val filterNotBookmarkedOnly: String
+    val markAsRead: String
+    val markAsUnread: String
+    val markPreviousAsRead: String
+    val downloadChapter: String
+    val deleteDownload: String
+    val bookmarkChapter: String
+    val removeBookmark: String
+
+    // Storage & Cache Cleaner
+    val storageCleanerTitle: String
+    val storageCleanerDescription: String
+    val storageCleanerDownloadSize: String
+    val storageCleanerClearRead: String
+    val storageCleanerClearReadSuccess: String
+    val storageCleanerClearImageCache: String
+    val storageCleanerClearImageCacheSuccess: String
 
     // Updates
     val updatesTitle: String
@@ -99,6 +193,7 @@ interface DesktopStrings {
     val browseTitle: String
     val browseTabSources: String
     val browseTabExtensions: String
+    val browseTabMigration: String
     val browseManageRepositories: String
     val browseRefresh: String
     val browseInstall: String
@@ -106,6 +201,9 @@ interface DesktopStrings {
     val browseInstalledBadge: String
     val browseSearchPlaceholder: String
     val browseNetworkDomainsHeader: String
+    val browseGlobalSearch: String
+    val browseInstallFromFile: String
+    val browseUpdateAll: String
 
     // Reader
     val readerModeSingleLtr: String
@@ -116,6 +214,22 @@ interface DesktopStrings {
     val readerScaleFitHeight: String
     val readerScaleOriginal: String
     val readerEscapeHint: String
+    val readerColorFilter: String
+    val readerFilterNone: String
+    val readerFilterInvert: String
+    val readerFilterGrayscale: String
+    val readerFilterInvertGrayscale: String
+    val readerFilterSepia: String
+    val readerFilterNight: String
+    val readerBackgroundColor: String
+    val readerBgDarkGray: String
+    val readerBgBlack: String
+    val readerBgWhite: String
+    val readerBgWarmCream: String
+    val readerCropBorders: String
+    val readerCropBordersWebtoon: String
+    val readerWebtoonMaxWidth: String
+    val readerWebtoonSidePadding: String
 
     // Settings
     val settingsTitle: String
@@ -206,6 +320,261 @@ interface DesktopStrings {
     fun backupExportSuccess(path: String): String
     fun backupExportFailed(err: String): String
 
+    // Incognito mode
+    val incognitoTitle: String
+    val incognitoBannerText: String
+    val incognitoDisable: String
+    val incognitoDescription: String
+
+    // Stats
+    val statsTitle: String
+    val statsOverview: String
+    val statsTotalManga: String
+    val statsReadDuration: String
+    val statsCompletedManga: String
+    val statsChapters: String
+    val statsTotalChapters: String
+    val statsReadChapters: String
+    val statsUnreadChapters: String
+    val statsReadPercentage: String
+    val statsTopGenres: String
+    val statsNoGenres: String
+    val statsStatuses: String
+    val statsStatusOngoing: String
+    val statsStatusCompleted: String
+    val statsStatusHiatus: String
+    val statsStatusCancelled: String
+    val statsStatusUnknown: String
+    val statsReadingProgress: String
+    val statsProgressUnread: String
+    val statsProgressInProgress: String
+    val statsProgressFinished: String
+    val statsCategories: String
+    val statsNoCategories: String
+    val statsTrackers: String
+    val statsTrackedTitles: String
+    val statsMeanScore: String
+    val statsActiveTrackers: String
+    val statsRefresh: String
+
+    // Backup Automation
+    val backupAutoTitle: String
+    val backupAutoDescription: String
+    val backupInterval: String
+    val backupIntervalOff: String
+    val backupInterval6Hours: String
+    val backupInterval12Hours: String
+    val backupIntervalDaily: String
+    val backupInterval2Days: String
+    val backupIntervalWeekly: String
+    val backupLocation: String
+    val backupLocationDefault: String
+    val backupRetention: String
+    val backupLastAutoBackup: String
+    val backupNever: String
+    val backupNow: String
+
+    // Library Update & Automation
+    val libraryUpdateTitle: String
+    val libraryUpdateNow: String
+    val libraryUpdating: String
+    val libraryUpdateInterval: String
+    val libraryUpdateIntervalManual: String
+    val libraryUpdateInterval6Hours: String
+    val libraryUpdateInterval12Hours: String
+    val libraryUpdateIntervalDaily: String
+    val libraryUpdateInterval2Days: String
+    val libraryUpdateIntervalWeekly: String
+    val libraryUpdateSkipCompleted: String
+    val libraryUpdateSkipUnread: String
+    val libraryAutoDownloadNew: String
+    val notificationsDesktopEnabled: String
+    val libraryLastUpdate: String
+
+    // Web & Cookie Management
+    val cookieManagerTitle: String
+    val cookieManagerDescription: String
+    val cookieManagerButton: String
+    val openInBrowser: String
+
+    // Categories
+    val categoryManageTitle: String
+    val categoryNewNameLabel: String
+    val categoryAdd: String
+    val categoryEmpty: String
+    val categoryRename: String
+    val categoryDelete: String
+    val categoryRenameTitle: String
+    val categoryNameLabel: String
+    val categorySave: String
+    val categorySetTitle: String
+    val categoryNoneExist: String
+    val categoryNoneCreated: String
+
+    // Edit Manga Info
+    val mangaDetailTitleLabel: String
+    val mangaDetailStatusLicensed: String
+    val mangaDetailStatusPublishingFinished: String
+    val mangaDetailGenresLabel: String
+    val mangaDetailDescriptionLabel: String
+    val mangaDetailSaveSuccess: String
+    fun mangaDetailStatusOption(status: Long): String
+
+    // Cookie & Clearance Manager
+    fun cookieConfiguredDomains(count: Int): String
+    val cookieAddDomain: String
+    val cookieNoCustomDomains: String
+    fun cookieCountSubtitle(count: Int, hasCustomUa: Boolean): String
+    val cookieDomainLabel: String
+    val cookieRawCookiesLabel: String
+    val cookieCustomUaLabel: String
+    val cookieDelete: String
+    val cookieSave: String
+    fun cookieRemovedStatus(domain: String): String
+    fun cookieSavedStatus(count: Int, domain: String): String
+
+    // Tracker & Tracking
+    fun trackerConnectTitle(name: String): String
+    fun trackerAuthTitle(name: String): String
+    fun trackerLoginTitle(name: String): String
+    val trackerServerUrl: String
+    val trackerUsername: String
+    val trackerPasswordOrApiKey: String
+    fun trackerAuthUrl(url: String): String
+    val trackerToken: String
+    val trackerAccountName: String
+    val trackerPassword: String
+    val trackerConnect: String
+    val trackerLogin: String
+    fun trackingTitle(mangaTitle: String): String
+    val trackingNotTracking: String
+    val trackingNotLoggedIn: String
+    val trackingTrack: String
+    val trackingEdit: String
+    val trackingRemove: String
+    fun trackingSearchTitle(name: String): String
+    val trackingSearch: String
+    fun trackingTotalChapters(count: Long): String
+    fun trackingEditTitle(title: String): String
+    val trackingChaptersRead: String
+    val trackingScore: String
+    fun trackStatusLabel(status: TrackStatus): String
+
+    // Reader Chrome, Settings & Messages
+    val readerFullscreen: String
+    val readerBorderless: String
+    fun readerCropToggle(active: Boolean): String
+    fun readerCoverOffsetToggle(active: Boolean): String
+    val readerModeDualLtr: String
+    val readerModeDualRtl: String
+    val readerModeVertical: String
+    fun readerModeLabel(mode: ReadingMode): String
+    fun readerScaleLabel(scale: ScaleMode): String
+    fun readerFilterLabel(filter: ReaderColorFilter): String
+    fun readerBackgroundLabel(bg: ReaderBackgroundColor): String
+    val readerSettingsDialogTitle: String
+    val readerClickRegions: String
+    val readerRegionLeft: String
+    val readerRegionCenter: String
+    val readerRegionRight: String
+    fun readerActionLabel(action: ReaderClickAction): String
+    fun readerLeftBoundary(percent: Int): String
+    fun readerCenterBoundary(percent: Int): String
+    fun readerWheelLabel(behavior: ReaderWheelBehavior): String
+    val readerReserveCover: String
+    val readerCropBordersPaged: String
+    val readerWebtoonLayout: String
+    val readerWebtoonWidthFull: String
+    fun readerWebtoonWidthDp(width: Int): String
+    fun readerWebtoonSidePaddingPercent(padding: Int): String
+    val readerLoadingChapter: String
+    val readerClosed: String
+    fun readerErrorMessage(error: ReaderSessionError): String
+
+    // Browse, Sources, Extensions, Migration, Filters, Global Search
+    fun browseSourceLanguage(lang: String): String
+    val browseSourcePopular: String
+    val browseSourceLatest: String
+    val browseSearchTitlesPlaceholder: String
+    val browseSearchButton: String
+    fun browseFiltersButton(count: Int): String
+    val browseNoMangaFound: String
+    val browseInLibraryBadge: String
+    val browsePrevPage: String
+    fun browsePageNumber(page: Int): String
+    val browseNextPage: String
+    fun browseInstallExtensionTitle(name: String): String
+    fun browsePackageLabel(pkg: String): String
+    fun browseVersionLabel(version: String): String
+    fun browseLanguageLabel(lang: String): String
+    val browseNetworkPermissionNotice: String
+    val browseTrustAndInstall: String
+    val browseAddRepository: String
+    val browseConfiguredRepositories: String
+    val browseRemoveRepository: String
+    val browseSourceBrowse: String
+    val browsePin: String
+    val browseUnpin: String
+    val browseUpdate: String
+    val browseDisable: String
+    val browseEnable: String
+    fun onlineDetailSource(name: String, lang: String): String
+    fun onlineDetailAuthor(author: String): String
+    fun onlineDetailArtist(artist: String): String
+    fun onlineDetailGenres(genres: String): String
+    fun onlineDetailChapters(count: Int): String
+    fun onlineDetailScanlator(scanlator: String): String
+    val migrateSelectSourceHeader: String
+    val migrateNoMangaInLibrary: String
+    fun migrateMangaCount(count: Int): String
+    val migrateViewManga: String
+    val migrateBackToSources: String
+    val migrateSelectMangaHeader: String
+    val migrateAction: String
+    fun migrateDialogTitle(title: String): String
+    val migrateDialogSubtitle: String
+    val migrateNoOtherSources: String
+    val migrateTargetSourceLabel: String
+    val migrateSearchPlaceholder: String
+    val migrateSelectedBadge: String
+    val migrateConfirm: String
+    val filterDialogTitle: String
+    val filterReset: String
+    val filterNoAvailable: String
+    val filterApply: String
+    val filterAscending: String
+    val filterDescending: String
+    val globalSearchEnterQuery: String
+    val globalSearchNoSources: String
+    val globalSearchViewAll: String
+    fun globalSearchError(error: String): String
+    val globalSearchNoResults: String
+
+    // Settings & Diagnostics & Reports
+    val settingsDownloadCustomPath: String
+    val settingsDownloadCustomPathPlaceholder: String
+    val settingsDownloadAheadTitle: String
+    val settingsDownloadAheadDesc: String
+    val settingsDownloadAheadDisabled: String
+    fun settingsDownloadAheadChapters(count: Int): String
+    val settingsDeleteReadChaptersTitle: String
+    val settingsDeleteReadChaptersDesc: String
+    fun settingsTrackerLoggedInAs(user: String, server: String?): String
+    val settingsTrackerLogout: String
+    fun settingsLibraryUpdateResult(checked: Int, newChapters: Int): String
+    val settingsLibraryUpdateCompleted: String
+    fun settingsLibraryUpdateFailed(msg: String): String
+    val readerUnavailable: String
+    val readerOpeningChapter: String
+    fun importReportTitle(id: Long): String
+    fun importReportManga(inserted: Long, merged: Long): String
+    fun importReportChapters(inserted: Long, merged: Long): String
+    fun importReportCategories(count: Long): String
+    fun importReportPreferences(imported: Long, skipped: Long): String
+    fun importReportSkipCategories(categories: String): String
+    fun importReportCategory(category: String): String
+    val mangaDetailBackToLibrary: String
+
     companion object {
         fun resolve(language: AppLanguage, defaultLocale: Locale = Locale.getDefault()): DesktopStrings {
             return when (language) {
@@ -247,9 +616,52 @@ object EnglishStrings : DesktopStrings {
     override fun libraryNoMatchTitle(query: String) = "No manga match “$query”"
     override val libraryNoMatchSubtitle = "Try a different search term or clear the filter."
     override val libraryRetry = "Retry"
-    override fun libraryChaptersCount(count: Int) = "$count chapters"
     override fun libraryUnreadCount(count: Int) = "$count unread"
     override val libraryAllCategory = "All"
+
+    // Library Display, Filter & Sort
+    override val libraryDisplayMode = "Display Mode"
+    override val libraryDisplayComfortable = "Comfortable Grid"
+    override val libraryDisplayCompact = "Compact Grid"
+    override val libraryDisplayCoverOnly = "Cover Only"
+    override val libraryDisplayList = "List"
+    override val libraryGridSize = "Card Size"
+    override val libraryFilterAndSort = "Filter & Sort"
+    override val libraryFilterTab = "Filter"
+    override val librarySortTab = "Sort"
+    override val libraryFilterReset = "Reset Filters"
+    override val libraryFilterUnread = "Unread"
+    override val libraryFilterDownloaded = "Downloaded"
+    override val libraryFilterStarted = "Started"
+    override val libraryFilterCompleted = "Completed"
+    override val libraryFilterBookmarked = "Bookmarked"
+    override val librarySortDefault = "Default"
+    override val librarySortAlphabetical = "Alphabetical"
+    override val librarySortLastRead = "Last Read"
+    override val librarySortLastUpdate = "Last Update"
+    override val librarySortUnreadCount = "Unread Count"
+    override val librarySortTotalChapters = "Total Chapters"
+    override val librarySortDateAdded = "Date Added"
+    override val librarySortAscending = "Ascending"
+    override val librarySortDescending = "Descending"
+
+    // Library Batch Actions
+    override val libraryBatchSelect = "Select"
+    override fun libraryBatchSelected(count: Int) = "$count selected"
+    override val libraryBatchSelectAll = "Select All"
+    override val libraryBatchDeselectAll = "Deselect All"
+    override val libraryBatchChangeCategory = "Set Categories"
+    override val libraryBatchMarkRead = "Mark Read"
+    override val libraryBatchMarkUnread = "Mark Unread"
+    override val libraryBatchDownload = "Download"
+    override val libraryBatchDownloadNext1 = "Next chapter"
+    override val libraryBatchDownloadNext5 = "Next 5 chapters"
+    override val libraryBatchDownloadAllUnread = "All unread chapters"
+    override val libraryBatchRemove = "Remove from Library"
+    override val libraryBatchRemoveConfirmTitle = "Remove Selected Manga"
+    override fun libraryBatchRemoveConfirmMessage(count: Int) =
+        "Are you sure you want to remove $count manga from your library?"
+    override val libraryBatchDone = "Done"
 
     override fun mangaDetailSource(name: String) = "Source $name"
     override val mangaDetailStatusOngoing = "Ongoing"
@@ -263,6 +675,49 @@ object EnglishStrings : DesktopStrings {
     override fun mangaDetailStart(chapter: String) = "Start $chapter"
     override val mangaDetailNoChapters = "No chapters found"
     override val mangaDetailBack = "Back"
+    override val mangaDetailChangeCover = "Change Cover"
+    override val mangaDetailResetCover = "Reset Cover"
+    override val mangaDetailEditInfo = "Edit Info"
+    override val mangaDetailAuthor = "Author"
+    override val mangaDetailArtist = "Artist"
+    override val mangaDetailStatus = "Status"
+    override val mangaDetailGenres = "Genres"
+    override val mangaDetailNotes = "Personal Notes"
+    override val mangaDetailResetToSource = "Reset to Source"
+    override val mangaDetailSave = "Save"
+
+    // Chapters & Chapter Actions
+    override val chapters = "Chapters"
+    override val sortSourceOrder = "Source Order"
+    override val sortChapterNumber = "Chapter Number"
+    override val sortUploadDate = "Upload Date"
+    override val filterUnread = "Unread"
+    override val filterRead = "Read"
+    override val filterUnreadOnly = "Unread Only"
+    override val filterReadOnly = "Read Only"
+    override val filterDownloaded = "Downloaded"
+    override val filterDownloadedOnly = "Downloaded Only"
+    override val filterNotDownloadedOnly = "Not Downloaded"
+    override val filterBookmarked = "Bookmarked"
+    override val filterBookmarkedOnly = "Bookmarked Only"
+    override val filterNotBookmarkedOnly = "Not Bookmarked"
+    override val markAsRead = "Mark Read"
+    override val markAsUnread = "Mark Unread"
+    override val markPreviousAsRead = "Mark Previous as Read"
+    override val downloadChapter = "Download"
+    override val deleteDownload = "Delete Download"
+    override val bookmarkChapter = "Bookmark"
+    override val removeBookmark = "Remove Bookmark"
+
+    // Storage & Cache Cleaner
+    override val storageCleanerTitle = "Data & Storage Management"
+    override val storageCleanerDescription =
+        "Manage downloaded chapters and image caches to free up local disk space."
+    override val storageCleanerDownloadSize = "Downloaded Chapters Size"
+    override val storageCleanerClearRead = "Delete Read Chapters"
+    override val storageCleanerClearReadSuccess = "Deleted read chapters"
+    override val storageCleanerClearImageCache = "Clear Image Disk Cache"
+    override val storageCleanerClearImageCacheSuccess = "Image disk cache cleared"
 
     override val updatesTitle = "Updates"
     override val updatesCheckButton = "Check for updates"
@@ -304,6 +759,7 @@ object EnglishStrings : DesktopStrings {
     override val browseTitle = "Browse"
     override val browseTabSources = "Sources"
     override val browseTabExtensions = "Extensions"
+    override val browseTabMigration = "Migration"
     override val browseManageRepositories = "Manage Repositories"
     override val browseRefresh = "Refresh"
     override val browseInstall = "Install"
@@ -311,6 +767,9 @@ object EnglishStrings : DesktopStrings {
     override val browseInstalledBadge = "Installed"
     override val browseSearchPlaceholder = "Search sources or extensions"
     override val browseNetworkDomainsHeader = "Declared Network Domains:"
+    override val browseGlobalSearch = "Global Search"
+    override val browseInstallFromFile = "Install .mext"
+    override val browseUpdateAll = "Update All"
 
     override val readerModeSingleLtr = "Left to Right"
     override val readerModeSingleRtl = "Right to Left"
@@ -320,6 +779,22 @@ object EnglishStrings : DesktopStrings {
     override val readerScaleFitHeight = "Fit Height"
     override val readerScaleOriginal = "Original Size"
     override val readerEscapeHint = "Press Escape to exit fullscreen"
+    override val readerColorFilter = "Color Filter"
+    override val readerFilterNone = "None"
+    override val readerFilterInvert = "Invert"
+    override val readerFilterGrayscale = "Grayscale"
+    override val readerFilterInvertGrayscale = "Invert Grayscale"
+    override val readerFilterSepia = "Sepia"
+    override val readerFilterNight = "Night"
+    override val readerBackgroundColor = "Background Color"
+    override val readerBgDarkGray = "Dark Gray"
+    override val readerBgBlack = "Black"
+    override val readerBgWhite = "White"
+    override val readerBgWarmCream = "Warm Cream"
+    override val readerCropBorders = "Smart Crop Borders"
+    override val readerCropBordersWebtoon = "Smart Crop Borders (Webtoon)"
+    override val readerWebtoonMaxWidth = "Webtoon Max Width"
+    override val readerWebtoonSidePadding = "Webtoon Side Padding"
 
     override val settingsTitle = "Settings"
     override val settingsSectionGeneral = "General"
@@ -401,6 +876,329 @@ object EnglishStrings : DesktopStrings {
     override val backupDialogTitle = "Backup Export"
     override fun backupExportSuccess(path: String) = "Backup successfully exported to:\n$path"
     override fun backupExportFailed(err: String) = "Backup export failed:\n$err"
+
+    // Incognito mode
+    override val incognitoTitle = "Incognito Mode"
+    override val incognitoBannerText = "Incognito mode is active: Reading history and tracker updates are paused."
+    override val incognitoDisable = "Disable"
+    override val incognitoDescription = "Pauses reading history and remote tracker sync while reading manga."
+
+    // Stats
+    override val statsTitle = "Statistics"
+    override val statsOverview = "Overview"
+    override val statsTotalManga = "Titles in Library"
+    override val statsReadDuration = "Reading Time"
+    override val statsCompletedManga = "Completed Titles"
+    override val statsChapters = "Chapters"
+    override val statsTotalChapters = "Total Chapters"
+    override val statsReadChapters = "Read Chapters"
+    override val statsUnreadChapters = "Unread Chapters"
+    override val statsReadPercentage = "Completion Rate"
+    override val statsTopGenres = "Top Genres"
+    override val statsNoGenres = "No genre data available"
+    override val statsStatuses = "Status Distribution"
+    override val statsStatusOngoing = "Ongoing"
+    override val statsStatusCompleted = "Completed"
+    override val statsStatusHiatus = "On Hiatus"
+    override val statsStatusCancelled = "Cancelled"
+    override val statsStatusUnknown = "Unknown"
+    override val statsReadingProgress = "Reading Progress"
+    override val statsProgressUnread = "Unread"
+    override val statsProgressInProgress = "In Progress"
+    override val statsProgressFinished = "Finished"
+    override val statsCategories = "Categories"
+    override val statsNoCategories = "No categories configured"
+    override val statsTrackers = "Tracking"
+    override val statsTrackedTitles = "Tracked Titles"
+    override val statsMeanScore = "Average Score"
+    override val statsActiveTrackers = "Active Trackers"
+    override val statsRefresh = "Refresh"
+
+    // Backup Automation
+    override val backupAutoTitle = "Automated Backups"
+    override val backupAutoDescription = "Automatically export and prune periodic backups in the background."
+    override val backupInterval = "Backup Frequency"
+    override val backupIntervalOff = "Disabled"
+    override val backupInterval6Hours = "Every 6 hours"
+    override val backupInterval12Hours = "Every 12 hours"
+    override val backupIntervalDaily = "Daily"
+    override val backupInterval2Days = "Every 2 days"
+    override val backupIntervalWeekly = "Weekly"
+    override val backupLocation = "Backup Location"
+    override val backupLocationDefault = "Default folder (backups/)"
+    override val backupRetention = "Maximum Backups to Keep"
+    override val backupLastAutoBackup = "Last automated backup:"
+    override val backupNever = "Never"
+    override val backupNow = "Backup Now"
+
+    // Library Update & Automation
+    override val libraryUpdateTitle = "Library Update"
+    override val libraryUpdateNow = "Update Library Now"
+    override val libraryUpdating = "Updating library..."
+    override val libraryUpdateInterval = "Automatic Update Frequency"
+    override val libraryUpdateIntervalManual = "Manual only"
+    override val libraryUpdateInterval6Hours = "Every 6 hours"
+    override val libraryUpdateInterval12Hours = "Every 12 hours"
+    override val libraryUpdateIntervalDaily = "Daily"
+    override val libraryUpdateInterval2Days = "Every 2 days"
+    override val libraryUpdateIntervalWeekly = "Weekly"
+    override val libraryUpdateSkipCompleted = "Skip completed manga"
+    override val libraryUpdateSkipUnread = "Skip manga with unread chapters"
+    override val libraryAutoDownloadNew = "Automatically download new chapters"
+    override val notificationsDesktopEnabled = "Show desktop notifications for new chapters"
+    override val libraryLastUpdate = "Last library update:"
+
+    // Web & Cookie Management
+    override val cookieManagerTitle = "Cookie & Cloudflare Clearance Manager"
+    override val cookieManagerDescription =
+        "Manage cookies and custom user-agents to bypass web and anti-bot challenges."
+    override val cookieManagerButton = "Open Cookie Manager"
+    override val openInBrowser = "Open in Browser"
+
+    // Categories
+    override val categoryManageTitle = "Manage Categories"
+    override val categoryNewNameLabel = "New category name"
+    override val categoryAdd = "Add"
+    override val categoryEmpty = "No custom categories yet"
+    override val categoryRename = "Rename"
+    override val categoryDelete = "Delete"
+    override val categoryRenameTitle = "Rename Category"
+    override val categoryNameLabel = "Category name"
+    override val categorySave = "Save"
+    override val categorySetTitle = "Set Categories"
+    override val categoryNoneExist = "No categories exist. Create categories first."
+    override val categoryNoneCreated = "No custom categories created yet."
+
+    // Edit Manga Info
+    override val mangaDetailTitleLabel = "Title"
+    override val mangaDetailStatusLicensed = "Licensed"
+    override val mangaDetailStatusPublishingFinished = "Publishing Finished"
+    override val mangaDetailGenresLabel = "Genres / Tags (comma-separated)"
+    override val mangaDetailDescriptionLabel = "Description"
+    override val mangaDetailSaveSuccess = "Save Changes"
+    override fun mangaDetailStatusOption(status: Long) = when (status) {
+        1L -> mangaDetailStatusOngoing
+        2L -> mangaDetailStatusCompleted
+        3L -> mangaDetailStatusLicensed
+        4L -> mangaDetailStatusPublishingFinished
+        5L -> statsStatusCancelled
+        6L -> statsStatusHiatus
+        else -> mangaDetailStatusUnknown
+    }
+
+    // Cookie & Clearance Manager
+    override fun cookieConfiguredDomains(count: Int) = "Configured Domains ($count)"
+    override val cookieAddDomain = "+ Add"
+    override val cookieNoCustomDomains = "No custom domain cookies configured"
+    override fun cookieCountSubtitle(count: Int, hasCustomUa: Boolean) =
+        "$count cookies configured" + if (hasCustomUa) " • Custom UA" else ""
+    override val cookieDomainLabel = "Domain (e.g. mangadex.org)"
+    override val cookieRawCookiesLabel = "Raw Cookies (e.g. cf_clearance=xxx; token=yyy)"
+    override val cookieCustomUaLabel = "Custom User-Agent (Optional)"
+    override val cookieDelete = "Delete"
+    override val cookieSave = "Save Cookies"
+    override fun cookieRemovedStatus(domain: String) = "Removed cookies for $domain"
+    override fun cookieSavedStatus(count: Int, domain: String) = "Saved $count cookies for $domain"
+
+    // Tracker & Tracking
+    override fun trackerConnectTitle(name: String) = "Connect to $name"
+    override fun trackerAuthTitle(name: String) = "Authenticate with $name"
+    override fun trackerLoginTitle(name: String) = "Log in to $name"
+    override val trackerServerUrl = "Server URL (e.g. https://komga.example.com)"
+    override val trackerUsername = "Username"
+    override val trackerPasswordOrApiKey = "Password or API Key"
+    override fun trackerAuthUrl(url: String) = "Authorization URL: $url"
+    override val trackerToken = "API Token / Access Token"
+    override val trackerAccountName = "Account Name (Optional)"
+    override val trackerPassword = "Password"
+    override val trackerConnect = "Connect"
+    override val trackerLogin = "Log In"
+    override fun trackingTitle(mangaTitle: String) = "Tracking - $mangaTitle"
+    override val trackingNotTracking = "Not tracking"
+    override val trackingNotLoggedIn = "Not logged in"
+    override val trackingTrack = "Track"
+    override val trackingEdit = "Edit"
+    override val trackingRemove = "Remove"
+    override fun trackingSearchTitle(name: String) = "Search $name"
+    override val trackingSearch = "Search"
+    override fun trackingTotalChapters(count: Long) = "$count chapters"
+    override fun trackingEditTitle(title: String) = "Edit Tracking - $title"
+    override val trackingChaptersRead = "Chapters Read"
+    override val trackingScore = "Score"
+    override fun trackStatusLabel(status: TrackStatus) = when (status) {
+        TrackStatus.READING -> "Reading"
+        TrackStatus.COMPLETED -> "Completed"
+        TrackStatus.ON_HOLD -> "On Hold"
+        TrackStatus.DROPPED -> "Dropped"
+        TrackStatus.PLAN_TO_READ -> "Plan to Read"
+        TrackStatus.REREADING -> "Rereading"
+    }
+
+    // Reader Chrome, Settings & Messages
+    override val readerFullscreen = "Fullscreen"
+    override val readerBorderless = "Borderless"
+    override fun readerCropToggle(active: Boolean) = if (active) "Crop: On" else "Crop: Off"
+    override fun readerCoverOffsetToggle(active: Boolean) = if (active) "Cover offset: On" else "Cover offset: Off"
+    override val readerModeDualLtr = "Dual LTR"
+    override val readerModeDualRtl = "Dual RTL"
+    override val readerModeVertical = "Vertical"
+    override fun readerModeLabel(mode: ReadingMode) = when (mode) {
+        ReadingMode.SINGLE_LTR -> "Single LTR"
+        ReadingMode.SINGLE_RTL -> "Single RTL"
+        ReadingMode.DUAL_LTR -> readerModeDualLtr
+        ReadingMode.DUAL_RTL -> readerModeDualRtl
+        ReadingMode.VERTICAL -> readerModeVertical
+        ReadingMode.WEBTOON -> "Webtoon"
+    }
+    override fun readerScaleLabel(scale: ScaleMode) = when (scale) {
+        ScaleMode.ORIGINAL -> "Original"
+        ScaleMode.FIT_WIDTH -> "Fit width"
+        ScaleMode.FIT_HEIGHT -> "Fit height"
+    }
+    override fun readerFilterLabel(filter: ReaderColorFilter) = when (filter) {
+        ReaderColorFilter.NONE -> "None"
+        ReaderColorFilter.INVERT -> "Invert"
+        ReaderColorFilter.GRAYSCALE -> "Grayscale"
+        ReaderColorFilter.INVERT_GRAYSCALE -> "Invert grayscale"
+        ReaderColorFilter.SEPIA -> "Sepia"
+        ReaderColorFilter.NIGHT -> "Night"
+    }
+    override fun readerBackgroundLabel(bg: ReaderBackgroundColor) = when (bg) {
+        ReaderBackgroundColor.DARK_GRAY -> "Dark gray"
+        ReaderBackgroundColor.BLACK -> "Black"
+        ReaderBackgroundColor.WHITE -> "White"
+        ReaderBackgroundColor.WARM_CREAM -> "Warm cream"
+    }
+    override val readerSettingsDialogTitle = "Reader settings"
+    override val readerClickRegions = "Click regions"
+    override val readerRegionLeft = "Left"
+    override val readerRegionCenter = "Center"
+    override val readerRegionRight = "Right"
+    override fun readerActionLabel(action: ReaderClickAction) = action.name.lowercase()
+    override fun readerLeftBoundary(percent: Int) = "Left boundary $percent%"
+    override fun readerCenterBoundary(percent: Int) = "Center boundary $percent%"
+    override fun readerWheelLabel(behavior: ReaderWheelBehavior) = when (behavior) {
+        ReaderWheelBehavior.SCROLL -> "Wheel: scroll page"
+        ReaderWheelBehavior.PAGE_NAVIGATION -> "Wheel: flip page"
+    }
+    override val readerReserveCover = "Reserve cover in dual-page modes"
+    override val readerCropBordersPaged = "Smart crop borders (Paged)"
+    override val readerWebtoonLayout = "Webtoon layout"
+    override val readerWebtoonWidthFull = "Max width: Full screen"
+    override fun readerWebtoonWidthDp(width: Int) = "Max width: ${width}dp"
+    override fun readerWebtoonSidePaddingPercent(padding: Int) = "Side padding: $padding%"
+    override val readerLoadingChapter = "Loading chapter…"
+    override val readerClosed = "Reader closed"
+    override fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
+        is ReaderFailure.PageNotFound -> "This page could not be found. It may have been moved or deleted."
+        is ReaderFailure.UnsupportedFormat -> "This chapter format is not supported."
+        is ReaderFailure.EncryptedContainer -> "Encrypted chapter containers are not supported."
+        is ReaderFailure.UnsafePath,
+        is ReaderFailure.ResourceChanged -> "This local chapter is no longer available. Locate or re-import it."
+        is ReaderFailure.CorruptContainer,
+        is ReaderFailure.CorruptImage -> "This page is corrupt or unreadable."
+        is ReaderFailure.UnsupportedImage,
+        is ReaderFailure.RegionUnavailable -> "This image format is not supported."
+        is ReaderFailure.LimitExceeded,
+        is ReaderFailure.TooManyEntries -> "This chapter exceeds the safe reader limits."
+        is ReaderFailure.EmptyChapter -> "This chapter contains no readable pages."
+        else -> when (error.code) {
+            ReaderErrorCode.EMPTY_CHAPTER -> "This chapter contains no readable pages."
+            ReaderErrorCode.SOURCE_UNAVAILABLE -> "This local chapter is unavailable. Locate or re-import it."
+            ReaderErrorCode.PAGE_NOT_FOUND -> "This page could not be found."
+            ReaderErrorCode.PAGE_DECODE_FAILED -> "This page could not be decoded."
+            ReaderErrorCode.MEMORY_LIMIT_REACHED -> "The reader reached its memory limit."
+            ReaderErrorCode.INVALID_PROGRESS -> "The saved reading position is invalid."
+        }
+    }
+
+    // Browse, Sources, Extensions, Migration, Filters, Global Search
+    override fun browseSourceLanguage(lang: String) = "Language: " + lang.uppercase()
+    override val browseSourcePopular = "Popular"
+    override val browseSourceLatest = "Latest"
+    override val browseSearchTitlesPlaceholder = "Search titles..."
+    override val browseSearchButton = "Search"
+    override fun browseFiltersButton(count: Int) = if (count > 0) "Filters ($count)" else "Filters"
+    override val browseNoMangaFound = "No manga found"
+    override val browseInLibraryBadge = "IN LIBRARY"
+    override val browsePrevPage = "Previous"
+    override fun browsePageNumber(page: Int) = "Page $page"
+    override val browseNextPage = "Next"
+    override fun browseInstallExtensionTitle(name: String) = "Install Extension: $name"
+    override fun browsePackageLabel(pkg: String) = "Package: $pkg"
+    override fun browseVersionLabel(version: String) = "Version: $version"
+    override fun browseLanguageLabel(lang: String) = "Language: $lang"
+    override val browseNetworkPermissionNotice = "Review network permissions before installing extensions."
+    override val browseTrustAndInstall = "Trust & Install"
+    override val browseAddRepository = "Add"
+    override val browseConfiguredRepositories = "Configured Repositories:"
+    override val browseRemoveRepository = "Remove"
+    override val browseSourceBrowse = "Browse"
+    override val browsePin = "☆ Pin"
+    override val browseUnpin = "★ Unpin"
+    override val browseUpdate = "Update"
+    override val browseDisable = "Disable"
+    override val browseEnable = "Enable"
+    override fun onlineDetailSource(name: String, lang: String) = "Source: $name (${lang.uppercase()})"
+    override fun onlineDetailAuthor(author: String) = "Author: $author"
+    override fun onlineDetailArtist(artist: String) = "Artist: $artist"
+    override fun onlineDetailGenres(genres: String) = "Genres: $genres"
+    override fun onlineDetailChapters(count: Int) = "Chapters ($count)"
+    override fun onlineDetailScanlator(scanlator: String) = "Scanlator: $scanlator"
+    override val migrateSelectSourceHeader = "Select a source to migrate manga from:"
+    override val migrateNoMangaInLibrary = "No manga from online sources in library."
+    override fun migrateMangaCount(count: Int) = "$count manga in library"
+    override val migrateViewManga = "View Manga"
+    override val migrateBackToSources = "Back to Sources"
+    override val migrateSelectMangaHeader = "Select a manga to migrate to another source"
+    override val migrateAction = "Migrate"
+    override fun migrateDialogTitle(title: String) = "Migrate: $title"
+    override val migrateDialogSubtitle =
+        "Search for a matching title in target source to transfer reading progress, bookmarks, and categories."
+    override val migrateNoOtherSources = "No other sources available for migration."
+    override val migrateTargetSourceLabel = "Target Source:"
+    override val migrateSearchPlaceholder = "Search title..."
+    override val migrateSelectedBadge = "✓ Selected"
+    override val migrateConfirm = "Confirm Migration"
+    override val filterDialogTitle = "Source Filters"
+    override val filterReset = "Reset"
+    override val filterNoAvailable = "No filters available for this source."
+    override val filterApply = "Apply Filters"
+    override val filterAscending = "▲ Asc"
+    override val filterDescending = "▼ Desc"
+    override val globalSearchEnterQuery = "Enter a search query to search across all installed and built-in sources."
+    override val globalSearchNoSources = "No sources available or search not started."
+    override val globalSearchViewAll = "View All"
+    override fun globalSearchError(error: String) = "Error: $error"
+    override val globalSearchNoResults = "No results in this source"
+
+    // Settings & Diagnostics & Reports
+    override val settingsDownloadCustomPath = "Custom Download Path"
+    override val settingsDownloadCustomPathPlaceholder = "Leave blank for default (media/downloads)"
+    override val settingsDownloadAheadTitle = "Download Ahead While Reading"
+    override val settingsDownloadAheadDesc = "Automatically download the next unread chapters while reading."
+    override val settingsDownloadAheadDisabled = "Disabled"
+    override fun settingsDownloadAheadChapters(count: Int) = if (count == 1) "1 chapter" else "$count chapters"
+    override val settingsDeleteReadChaptersTitle = "Delete Read Chapters"
+    override val settingsDeleteReadChaptersDesc =
+        "Automatically delete downloaded chapter files when marked as read."
+    override fun settingsTrackerLoggedInAs(user: String, server: String?) =
+        "Logged in as $user" + if (!server.isNullOrBlank()) " ($server)" else ""
+    override val settingsTrackerLogout = "Log Out"
+    override fun settingsLibraryUpdateResult(checked: Int, newChapters: Int) =
+        "Checked $checked titles, $newChapters new chapters"
+    override val settingsLibraryUpdateCompleted = "Update completed"
+    override fun settingsLibraryUpdateFailed(msg: String) = "Update failed: $msg"
+    override val readerUnavailable = "The reader is unavailable in this runtime."
+    override val readerOpeningChapter = "Opening chapter…"
+    override fun importReportTitle(id: Long) = "Report $id"
+    override fun importReportManga(inserted: Long, merged: Long) = "Manga: $inserted inserted, $merged merged"
+    override fun importReportChapters(inserted: Long, merged: Long) = "Chapters: $inserted inserted, $merged merged"
+    override fun importReportCategories(count: Long) = "Categories linked: $count"
+    override fun importReportPreferences(imported: Long, skipped: Long) = "Preferences: $imported imported, $skipped skipped"
+    override fun importReportSkipCategories(categories: String) = "Skip categories: $categories"
+    override fun importReportCategory(category: String) = "Category: $category"
+    override val mangaDetailBackToLibrary = "Back to Library"
 }
 
 object SimplifiedChineseStrings : DesktopStrings {
@@ -412,6 +1210,7 @@ object SimplifiedChineseStrings : DesktopStrings {
         DesktopDestination.History -> "历史"
         DesktopDestination.Browse -> "浏览"
         DesktopDestination.Downloads -> "下载"
+        DesktopDestination.Stats -> "统计"
         DesktopDestination.Settings -> "设置"
         DesktopDestination.About -> "关于"
     }
@@ -422,6 +1221,7 @@ object SimplifiedChineseStrings : DesktopStrings {
         DesktopDestination.History -> "历"
         DesktopDestination.Browse -> "览"
         DesktopDestination.Downloads -> "载"
+        DesktopDestination.Stats -> "统"
         DesktopDestination.Settings -> "设"
         DesktopDestination.About -> "关"
     }
@@ -436,9 +1236,52 @@ object SimplifiedChineseStrings : DesktopStrings {
     override fun libraryNoMatchTitle(query: String) = "没有找到与 “$query” 匹配的漫画"
     override val libraryNoMatchSubtitle = "尝试其他搜索词或清除筛选条件。"
     override val libraryRetry = "重试"
-    override fun libraryChaptersCount(count: Int) = "$count 话"
     override fun libraryUnreadCount(count: Int) = "$count 未读"
     override val libraryAllCategory = "全部"
+
+    // Library Display, Filter & Sort
+    override val libraryDisplayMode = "展示模式"
+    override val libraryDisplayComfortable = "舒适网格"
+    override val libraryDisplayCompact = "紧凑网格"
+    override val libraryDisplayCoverOnly = "纯封面"
+    override val libraryDisplayList = "列表"
+    override val libraryGridSize = "封面大小"
+    override val libraryFilterAndSort = "筛选与排序"
+    override val libraryFilterTab = "筛选"
+    override val librarySortTab = "排序"
+    override val libraryFilterReset = "重置筛选"
+    override val libraryFilterUnread = "未读"
+    override val libraryFilterDownloaded = "已下载"
+    override val libraryFilterStarted = "开始阅读"
+    override val libraryFilterCompleted = "已完结"
+    override val libraryFilterBookmarked = "已加书签"
+    override val librarySortDefault = "默认"
+    override val librarySortAlphabetical = "字母顺序"
+    override val librarySortLastRead = "最后阅读"
+    override val librarySortLastUpdate = "最后更新"
+    override val librarySortUnreadCount = "未读话数"
+    override val librarySortTotalChapters = "总话数"
+    override val librarySortDateAdded = "添加时间"
+    override val librarySortAscending = "升序"
+    override val librarySortDescending = "降序"
+
+    // Library Batch Actions
+    override val libraryBatchSelect = "多选"
+    override fun libraryBatchSelected(count: Int) = "已选择 $count 项"
+    override val libraryBatchSelectAll = "全选"
+    override val libraryBatchDeselectAll = "取消全选"
+    override val libraryBatchChangeCategory = "设置分类"
+    override val libraryBatchMarkRead = "标记已读"
+    override val libraryBatchMarkUnread = "标记未读"
+    override val libraryBatchDownload = "下载"
+    override val libraryBatchDownloadNext1 = "下一话"
+    override val libraryBatchDownloadNext5 = "下 5 话"
+    override val libraryBatchDownloadAllUnread = "全部未读"
+    override val libraryBatchRemove = "移出书架"
+    override val libraryBatchRemoveConfirmTitle = "移出所选漫画"
+    override fun libraryBatchRemoveConfirmMessage(count: Int) =
+        "确定要将选中的 $count 本漫画从书架中移出吗？"
+    override val libraryBatchDone = "完成"
 
     override fun mangaDetailSource(name: String) = "图源 $name"
     override val mangaDetailStatusOngoing = "连载中"
@@ -452,6 +1295,48 @@ object SimplifiedChineseStrings : DesktopStrings {
     override fun mangaDetailStart(chapter: String) = "开始阅读 $chapter"
     override val mangaDetailNoChapters = "未找到任何章节"
     override val mangaDetailBack = "返回"
+    override val mangaDetailChangeCover = "更换封面"
+    override val mangaDetailResetCover = "重置封面"
+    override val mangaDetailEditInfo = "编辑信息"
+    override val mangaDetailAuthor = "作者"
+    override val mangaDetailArtist = "画师"
+    override val mangaDetailStatus = "状态"
+    override val mangaDetailGenres = "标签"
+    override val mangaDetailNotes = "个人笔记"
+    override val mangaDetailResetToSource = "恢复图源默认"
+    override val mangaDetailSave = "保存"
+
+    // Chapters & Chapter Actions
+    override val chapters = "章节"
+    override val sortSourceOrder = "图源顺序"
+    override val sortChapterNumber = "章节编号"
+    override val sortUploadDate = "更新时间"
+    override val filterUnread = "未读"
+    override val filterRead = "已读"
+    override val filterUnreadOnly = "仅未读"
+    override val filterReadOnly = "仅已读"
+    override val filterDownloaded = "已下载"
+    override val filterDownloadedOnly = "仅已下载"
+    override val filterNotDownloadedOnly = "仅未下载"
+    override val filterBookmarked = "已书签"
+    override val filterBookmarkedOnly = "仅书签"
+    override val filterNotBookmarkedOnly = "仅无书签"
+    override val markAsRead = "标为已读"
+    override val markAsUnread = "标为未读"
+    override val markPreviousAsRead = "将更早章节标为已读"
+    override val downloadChapter = "下载"
+    override val deleteDownload = "删除下载"
+    override val bookmarkChapter = "添加书签"
+    override val removeBookmark = "移除书签"
+
+    // Storage & Cache Cleaner
+    override val storageCleanerTitle = "数据与存储管理"
+    override val storageCleanerDescription = "管理已下载的漫画章节与本地图片缓存以释放存储空间。"
+    override val storageCleanerDownloadSize = "已下载章节占用"
+    override val storageCleanerClearRead = "清理已读章节下载"
+    override val storageCleanerClearReadSuccess = "已清理已读章节"
+    override val storageCleanerClearImageCache = "清理图片磁盘缓存"
+    override val storageCleanerClearImageCacheSuccess = "图片磁盘缓存已清理"
 
     override val updatesTitle = "更新"
     override val updatesCheckButton = "检查更新"
@@ -495,7 +1380,8 @@ object SimplifiedChineseStrings : DesktopStrings {
 
     override val browseTitle = "浏览"
     override val browseTabSources = "图源"
-    override val browseTabExtensions = "插件"
+    override val browseTabExtensions = "插件商店"
+    override val browseTabMigration = "图源迁移"
     override val browseManageRepositories = "图源仓库管理"
     override val browseRefresh = "刷新"
     override val browseInstall = "安装"
@@ -503,6 +1389,9 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val browseInstalledBadge = "已安装"
     override val browseSearchPlaceholder = "搜索图源或插件"
     override val browseNetworkDomainsHeader = "声明的网络域名:"
+    override val browseGlobalSearch = "全局搜索"
+    override val browseInstallFromFile = "本地安装 (.mext)"
+    override val browseUpdateAll = "全部更新"
 
     override val readerModeSingleLtr = "单页式（从左到右）"
     override val readerModeSingleRtl = "单页式（从右到左）"
@@ -512,6 +1401,22 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val readerScaleFitHeight = "适应高度"
     override val readerScaleOriginal = "原始大小"
     override val readerEscapeHint = "按 Esc 退出全屏"
+    override val readerColorFilter = "色彩滤镜"
+    override val readerFilterNone = "无"
+    override val readerFilterInvert = "反色"
+    override val readerFilterGrayscale = "黑白灰阶"
+    override val readerFilterInvertGrayscale = "反转灰阶"
+    override val readerFilterSepia = "暖色怀旧"
+    override val readerFilterNight = "夜间微光"
+    override val readerBackgroundColor = "阅读背景色"
+    override val readerBgDarkGray = "深灰"
+    override val readerBgBlack = "纯黑"
+    override val readerBgWhite = "纯白"
+    override val readerBgWarmCream = "暖米白"
+    override val readerCropBorders = "智能裁切白边"
+    override val readerCropBordersWebtoon = "智能裁切白边 (条漫)"
+    override val readerWebtoonMaxWidth = "条漫最大宽度限制"
+    override val readerWebtoonSidePadding = "条漫侧边距"
 
     override val settingsTitle = "设置"
     override val settingsSectionGeneral = "常规"
@@ -593,6 +1498,331 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val backupDialogTitle = "备份导出"
     override fun backupExportSuccess(path: String) = "备份已成功导出至:\n$path"
     override fun backupExportFailed(err: String) = "备份导出失败:\n$err"
+
+    // Incognito mode
+    override val incognitoTitle = "无痕模式"
+    override val incognitoBannerText = "无痕模式已启用：阅读历史与跟踪同步已暂停。"
+    override val incognitoDisable = "关闭"
+    override val incognitoDescription = "阅读漫画时暂停记录阅读历史并阻断外部跟踪器同步。"
+
+    // Stats
+    override val statsTitle = "统计中心"
+    override val statsOverview = "总览"
+    override val statsTotalManga = "书架漫画数"
+    override val statsReadDuration = "总阅读时长"
+    override val statsCompletedManga = "已完结作品"
+    override val statsChapters = "章节统计"
+    override val statsTotalChapters = "总章节数"
+    override val statsReadChapters = "已读章节"
+    override val statsUnreadChapters = "未读章节"
+    override val statsReadPercentage = "阅读完成率"
+    override val statsTopGenres = "题材偏好"
+    override val statsNoGenres = "暂无题材数据"
+    override val statsStatuses = "连载状态分布"
+    override val statsStatusOngoing = "连载中"
+    override val statsStatusCompleted = "已完结"
+    override val statsStatusHiatus = "休刊中"
+    override val statsStatusCancelled = "已取消"
+    override val statsStatusUnknown = "未知"
+    override val statsReadingProgress = "阅读进度分布"
+    override val statsProgressUnread = "未开始"
+    override val statsProgressInProgress = "阅读中"
+    override val statsProgressFinished = "已读完"
+    override val statsCategories = "分类分布"
+    override val statsNoCategories = "未配置分类"
+    override val statsTrackers = "跟踪统计"
+    override val statsTrackedTitles = "已追踪作品"
+    override val statsMeanScore = "平均评分"
+    override val statsActiveTrackers = "活跃跟踪器"
+    override val statsRefresh = "刷新"
+
+    // Backup Automation
+    override val backupAutoTitle = "自动定时备份"
+    override val backupAutoDescription = "在后台自动导出并修剪清理定期的漫画备份。"
+    override val backupInterval = "备份周期"
+    override val backupIntervalOff = "关闭"
+    override val backupInterval6Hours = "每 6 小时"
+    override val backupInterval12Hours = "每 12 小时"
+    override val backupIntervalDaily = "每天"
+    override val backupInterval2Days = "每 2 天"
+    override val backupIntervalWeekly = "每周"
+    override val backupLocation = "备份存储目录"
+    override val backupLocationDefault = "默认目录 (backups/)"
+    override val backupRetention = "最大保留备份数"
+    override val backupLastAutoBackup = "上次自动备份："
+    override val backupNever = "从不"
+    override val backupNow = "立即备份"
+
+    // Library Update & Automation
+    override val libraryUpdateTitle = "书架更新"
+    override val libraryUpdateNow = "立即检查书架更新"
+    override val libraryUpdating = "正在检查并同步书架更新..."
+    override val libraryUpdateInterval = "自动更新频率"
+    override val libraryUpdateIntervalManual = "仅手动"
+    override val libraryUpdateInterval6Hours = "每 6 小时"
+    override val libraryUpdateInterval12Hours = "每 12 小时"
+    override val libraryUpdateIntervalDaily = "每天"
+    override val libraryUpdateInterval2Days = "每 2 天"
+    override val libraryUpdateIntervalWeekly = "每周"
+    override val libraryUpdateSkipCompleted = "跳过已完结作品"
+    override val libraryUpdateSkipUnread = "跳过存在未读章节的作品"
+    override val libraryAutoDownloadNew = "自动下载新更新章节"
+    override val notificationsDesktopEnabled = "发现新章节时推送桌面系统通知"
+    override val libraryLastUpdate = "上次书架更新："
+
+    // Web & Cookie Management
+    override val cookieManagerTitle = "Cookie 与网络穿透管理器"
+    override val cookieManagerDescription = "管理图源域名的 Cookie 与专属 User-Agent，轻松穿透 Cloudflare 5 秒盾与防爬挑战。"
+    override val cookieManagerButton = "打开 Cookie 管理器"
+    override val openInBrowser = "在浏览器中打开"
+
+    // Categories
+    override val categoryManageTitle = "分类管理"
+    override val categoryNewNameLabel = "新分类名称"
+    override val categoryAdd = "添加"
+    override val categoryEmpty = "暂无自定义分类"
+    override val categoryRename = "重命名"
+    override val categoryDelete = "删除"
+    override val categoryRenameTitle = "重命名分类"
+    override val categoryNameLabel = "分类名称"
+    override val categorySave = "保存"
+    override val categorySetTitle = "设置分类"
+    override val categoryNoneExist = "尚无任何分类，请先创建分类。"
+    override val categoryNoneCreated = "尚未创建自定义分类。"
+
+    // Edit Manga Info
+    override val mangaDetailTitleLabel = "标题"
+    override val mangaDetailStatusLicensed = "已授权"
+    override val mangaDetailStatusPublishingFinished = "已完结(刊登结束)"
+    override val mangaDetailGenresLabel = "标签/题材 (以英文逗号分隔)"
+    override val mangaDetailDescriptionLabel = "简介"
+    override val mangaDetailSaveSuccess = "保存更改"
+    override fun mangaDetailStatusOption(status: Long) = when (status) {
+        1L -> mangaDetailStatusOngoing
+        2L -> mangaDetailStatusCompleted
+        3L -> mangaDetailStatusLicensed
+        4L -> mangaDetailStatusPublishingFinished
+        5L -> statsStatusCancelled
+        6L -> statsStatusHiatus
+        else -> mangaDetailStatusUnknown
+    }
+
+    // Cookie & Clearance Manager
+    override fun cookieConfiguredDomains(count: Int) = "已配置域名 ($count)"
+    override val cookieAddDomain = "+ 添加"
+    override val cookieNoCustomDomains = "尚未配置自定义域名 Cookie"
+    override fun cookieCountSubtitle(count: Int, hasCustomUa: Boolean) =
+        "$count 个已配置 Cookie" + if (hasCustomUa) " • 自定义 UA" else ""
+    override val cookieDomainLabel = "域名 (例如 mangadex.org)"
+    override val cookieRawCookiesLabel = "原始 Cookies (例如 cf_clearance=xxx; token=yyy)"
+    override val cookieCustomUaLabel = "自定义 User-Agent (选填)"
+    override val cookieDelete = "删除"
+    override val cookieSave = "保存 Cookie"
+    override fun cookieRemovedStatus(domain: String) = "已移除 $domain 的 Cookie"
+    override fun cookieSavedStatus(count: Int, domain: String) = "已为 $domain 保存 $count 个 Cookie"
+
+    // Tracker & Tracking
+    override fun trackerConnectTitle(name: String) = "连接到 $name"
+    override fun trackerAuthTitle(name: String) = "在 $name 认证"
+    override fun trackerLoginTitle(name: String) = "登录到 $name"
+    override val trackerServerUrl = "服务器地址 (例如 https://komga.example.com)"
+    override val trackerUsername = "用户名"
+    override val trackerPasswordOrApiKey = "密码或 API 密钥"
+    override fun trackerAuthUrl(url: String) = "授权网址: $url"
+    override val trackerToken = "API 令牌 / 访问令牌"
+    override val trackerAccountName = "账户名称 (选填)"
+    override val trackerPassword = "密码"
+    override val trackerConnect = "连接"
+    override val trackerLogin = "登录"
+    override fun trackingTitle(mangaTitle: String) = "进度记录 - $mangaTitle"
+    override val trackingNotTracking = "未记录"
+    override val trackingNotLoggedIn = "未登录"
+    override val trackingTrack = "记录"
+    override val trackingEdit = "编辑"
+    override val trackingRemove = "解绑"
+    override fun trackingSearchTitle(name: String) = "搜索 $name"
+    override val trackingSearch = "搜索"
+    override fun trackingTotalChapters(count: Long) = "$count 话"
+    override fun trackingEditTitle(title: String) = "编辑记录 - $title"
+    override val trackingChaptersRead = "已读话数"
+    override val trackingScore = "评分"
+    override fun trackStatusLabel(status: TrackStatus) = when (status) {
+        TrackStatus.READING -> "阅读中"
+        TrackStatus.COMPLETED -> "已读完"
+        TrackStatus.ON_HOLD -> "搁置"
+        TrackStatus.DROPPED -> "弃坑"
+        TrackStatus.PLAN_TO_READ -> "计划阅读"
+        TrackStatus.REREADING -> "重读中"
+    }
+
+    // Reader Chrome, Settings & Messages
+    override val readerFullscreen = "全屏"
+    override val readerBorderless = "无边框"
+    override fun readerCropToggle(active: Boolean) = if (active) "裁切白边: 开" else "裁切白边: 关"
+    override fun readerCoverOffsetToggle(active: Boolean) = if (active) "封面偏移: 开" else "封面偏移: 关"
+    override val readerModeDualLtr = "双页拼合（从左到右）"
+    override val readerModeDualRtl = "双页拼合（从右到左）"
+    override val readerModeVertical = "连续垂直"
+    override fun readerModeLabel(mode: ReadingMode) = when (mode) {
+        ReadingMode.SINGLE_LTR -> readerModeSingleLtr
+        ReadingMode.SINGLE_RTL -> readerModeSingleRtl
+        ReadingMode.DUAL_LTR -> readerModeDualLtr
+        ReadingMode.DUAL_RTL -> readerModeDualRtl
+        ReadingMode.VERTICAL -> readerModeVertical
+        ReadingMode.WEBTOON -> readerModeWebtoon
+    }
+    override fun readerScaleLabel(scale: ScaleMode) = when (scale) {
+        ScaleMode.ORIGINAL -> readerScaleOriginal
+        ScaleMode.FIT_WIDTH -> readerScaleFitWidth
+        ScaleMode.FIT_HEIGHT -> readerScaleFitHeight
+    }
+    override fun readerFilterLabel(filter: ReaderColorFilter) = when (filter) {
+        ReaderColorFilter.NONE -> readerFilterNone
+        ReaderColorFilter.INVERT -> readerFilterInvert
+        ReaderColorFilter.GRAYSCALE -> readerFilterGrayscale
+        ReaderColorFilter.INVERT_GRAYSCALE -> readerFilterInvertGrayscale
+        ReaderColorFilter.SEPIA -> readerFilterSepia
+        ReaderColorFilter.NIGHT -> readerFilterNight
+    }
+    override fun readerBackgroundLabel(bg: ReaderBackgroundColor) = when (bg) {
+        ReaderBackgroundColor.DARK_GRAY -> readerBgDarkGray
+        ReaderBackgroundColor.BLACK -> readerBgBlack
+        ReaderBackgroundColor.WHITE -> readerBgWhite
+        ReaderBackgroundColor.WARM_CREAM -> readerBgWarmCream
+    }
+    override val readerSettingsDialogTitle = "阅读器设置"
+    override val readerClickRegions = "点击翻页区域"
+    override val readerRegionLeft = "左侧"
+    override val readerRegionCenter = "中间"
+    override val readerRegionRight = "右侧"
+    override fun readerActionLabel(action: ReaderClickAction) = when (action) {
+        ReaderClickAction.PREVIOUS -> "上一页"
+        ReaderClickAction.NEXT -> "下一页"
+        ReaderClickAction.TOGGLE_CHROME -> "切换菜单"
+        ReaderClickAction.NONE -> "无操作"
+    }
+    override fun readerLeftBoundary(percent: Int) = "左侧边界 $percent%"
+    override fun readerCenterBoundary(percent: Int) = "中间边界 $percent%"
+    override fun readerWheelLabel(behavior: ReaderWheelBehavior) = when (behavior) {
+        ReaderWheelBehavior.SCROLL -> "滚轮: 滚动页面"
+        ReaderWheelBehavior.PAGE_NAVIGATION -> "滚轮: 翻页"
+    }
+    override val readerReserveCover = "双页模式下保留封面独立单页"
+    override val readerCropBordersPaged = "智能裁切白边 (单页/双页)"
+    override val readerWebtoonLayout = "条漫排版"
+    override val readerWebtoonWidthFull = "最大宽度: 全屏"
+    override fun readerWebtoonWidthDp(width: Int) = "最大宽度: ${width}dp"
+    override fun readerWebtoonSidePaddingPercent(padding: Int) = "侧边距: $padding%"
+    override val readerLoadingChapter = "正在加载章节…"
+    override val readerClosed = "阅读器已关闭"
+    override fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
+        is ReaderFailure.PageNotFound -> "无法找到此页面，可能已被移动或删除。"
+        is ReaderFailure.UnsupportedFormat -> "不支持此章节格式。"
+        is ReaderFailure.EncryptedContainer -> "不支持加密的章节压缩包。"
+        is ReaderFailure.UnsafePath,
+        is ReaderFailure.ResourceChanged -> "本地章节已不可用，请重新导入或检查文件位置。"
+        is ReaderFailure.CorruptContainer,
+        is ReaderFailure.CorruptImage -> "页面文件损坏或无法读取。"
+        is ReaderFailure.UnsupportedImage,
+        is ReaderFailure.RegionUnavailable -> "不支持此图片格式。"
+        is ReaderFailure.LimitExceeded,
+        is ReaderFailure.TooManyEntries -> "章节内容超出安全阅读限制。"
+        is ReaderFailure.EmptyChapter -> "此章节不包含任何可读取的页面。"
+        else -> when (error.code) {
+            ReaderErrorCode.EMPTY_CHAPTER -> "此章节不包含任何可读取的页面。"
+            ReaderErrorCode.SOURCE_UNAVAILABLE -> "图源或本地章节不可用，请定位或重新导入。"
+            ReaderErrorCode.PAGE_NOT_FOUND -> "未找到此页面。"
+            ReaderErrorCode.PAGE_DECODE_FAILED -> "页面解码失败。"
+            ReaderErrorCode.MEMORY_LIMIT_REACHED -> "阅读器已达到内存占用上限。"
+            ReaderErrorCode.INVALID_PROGRESS -> "保存的阅读进度无效。"
+        }
+    }
+
+    // Browse, Sources, Extensions, Migration, Filters, Global Search
+    override fun browseSourceLanguage(lang: String) = "图源语言: " + lang.uppercase()
+    override val browseSourcePopular = "热门"
+    override val browseSourceLatest = "最新"
+    override val browseSearchTitlesPlaceholder = "搜索漫画标题..."
+    override val browseSearchButton = "搜索"
+    override fun browseFiltersButton(count: Int) = if (count > 0) "筛选 ($count)" else "筛选"
+    override val browseNoMangaFound = "未找到任何漫画"
+    override val browseInLibraryBadge = "已在书架"
+    override val browsePrevPage = "上一页"
+    override fun browsePageNumber(page: Int) = "第 $page 页"
+    override val browseNextPage = "下一页"
+    override fun browseInstallExtensionTitle(name: String) = "安装插件: $name"
+    override fun browsePackageLabel(pkg: String) = "包名: $pkg"
+    override fun browseVersionLabel(version: String) = "版本: $version"
+    override fun browseLanguageLabel(lang: String) = "语言: $lang"
+    override val browseNetworkPermissionNotice = "安装插件前请确认其网络声明权限。"
+    override val browseTrustAndInstall = "信任并安装"
+    override val browseAddRepository = "添加"
+    override val browseConfiguredRepositories = "已配置的插件仓库:"
+    override val browseRemoveRepository = "移除"
+    override val browseSourceBrowse = "浏览"
+    override val browsePin = "☆ 固定"
+    override val browseUnpin = "★ 取消固定"
+    override val browseUpdate = "更新"
+    override val browseDisable = "停用"
+    override val browseEnable = "启用"
+    override fun onlineDetailSource(name: String, lang: String) = "图源: $name (${lang.uppercase()})"
+    override fun onlineDetailAuthor(author: String) = "作者: $author"
+    override fun onlineDetailArtist(artist: String) = "画师: $artist"
+    override fun onlineDetailGenres(genres: String) = "标签: $genres"
+    override fun onlineDetailChapters(count: Int) = "章节 ($count)"
+    override fun onlineDetailScanlator(scanlator: String) = "汉化组/发布方: $scanlator"
+    override val migrateSelectSourceHeader = "选择要迁出的图源："
+    override val migrateNoMangaInLibrary = "书架中暂无来自在线图源的漫画。"
+    override fun migrateMangaCount(count: Int) = "书架中有 $count 部漫画"
+    override val migrateViewManga = "查看漫画"
+    override val migrateBackToSources = "返回图源列表"
+    override val migrateSelectMangaHeader = "选择要迁移到其他图源的漫画"
+    override val migrateAction = "迁移"
+    override fun migrateDialogTitle(title: String) = "迁移: $title"
+    override val migrateDialogSubtitle = "在目标图源中搜索对应作品，以完整转移阅读进度、书签和分类。"
+    override val migrateNoOtherSources = "没有可用于迁移的其他图源。"
+    override val migrateTargetSourceLabel = "目标图源:"
+    override val migrateSearchPlaceholder = "搜索标题..."
+    override val migrateSelectedBadge = "✓ 已选择"
+    override val migrateConfirm = "确认迁移"
+    override val filterDialogTitle = "图源筛选"
+    override val filterReset = "重置"
+    override val filterNoAvailable = "该图源没有可用的筛选器。"
+    override val filterApply = "应用筛选"
+    override val filterAscending = "▲ 升序"
+    override val filterDescending = "▼ 降序"
+    override val globalSearchEnterQuery = "输入搜索关键词以在所有已安装及内置图源中查找。"
+    override val globalSearchNoSources = "没有可用图源或尚未开始搜索。"
+    override val globalSearchViewAll = "查看全部"
+    override fun globalSearchError(error: String) = "出错了: $error"
+    override val globalSearchNoResults = "该图源中无匹配结果"
+
+    // Settings & Diagnostics & Reports
+    override val settingsDownloadCustomPath = "自定义下载路径"
+    override val settingsDownloadCustomPathPlaceholder = "留空则使用默认路径 (media/downloads)"
+    override val settingsDownloadAheadTitle = "阅读时自动预下载"
+    override val settingsDownloadAheadDesc = "在阅读当前章节时，自动在后台下载后续未读章节。"
+    override val settingsDownloadAheadDisabled = "已禁用"
+    override fun settingsDownloadAheadChapters(count: Int) = "后 $count 话"
+    override val settingsDeleteReadChaptersTitle = "自动删除已读章节"
+    override val settingsDeleteReadChaptersDesc = "章节被标记为已读后，自动删除本地已下载的文件以节省存储空间。"
+    override fun settingsTrackerLoggedInAs(user: String, server: String?) =
+        "已登录为 $user" + if (!server.isNullOrBlank()) " ($server)" else ""
+    override val settingsTrackerLogout = "退出登录"
+    override fun settingsLibraryUpdateResult(checked: Int, newChapters: Int) =
+        "已检查 $checked 部漫画，发现 $newChapters 个新章节"
+    override val settingsLibraryUpdateCompleted = "书架更新已完成"
+    override fun settingsLibraryUpdateFailed(msg: String) = "更新失败: $msg"
+    override val readerUnavailable = "当前运行环境中阅读器不可用。"
+    override val readerOpeningChapter = "正在打开章节…"
+    override fun importReportTitle(id: Long) = "导入报告 $id"
+    override fun importReportManga(inserted: Long, merged: Long) = "漫画：新增 $inserted 部，合并 $merged 部"
+    override fun importReportChapters(inserted: Long, merged: Long) = "章节：新增 $inserted 话，合并 $merged 话"
+    override fun importReportCategories(count: Long) = "关联分类：$count 个"
+    override fun importReportPreferences(imported: Long, skipped: Long) = "偏好设置：导入 $imported 项，跳过 $skipped 项"
+    override fun importReportSkipCategories(categories: String) = "跳过分类：$categories"
+    override fun importReportCategory(category: String) = "分类：$category"
+    override val mangaDetailBackToLibrary = "返回书架"
 }
 
 object TraditionalChineseStrings : DesktopStrings {
@@ -604,6 +1834,7 @@ object TraditionalChineseStrings : DesktopStrings {
         DesktopDestination.History -> "歷史"
         DesktopDestination.Browse -> "瀏覽"
         DesktopDestination.Downloads -> "下載"
+        DesktopDestination.Stats -> "統計"
         DesktopDestination.Settings -> "設定"
         DesktopDestination.About -> "關於"
     }
@@ -614,6 +1845,7 @@ object TraditionalChineseStrings : DesktopStrings {
         DesktopDestination.History -> "歷"
         DesktopDestination.Browse -> "覽"
         DesktopDestination.Downloads -> "載"
+        DesktopDestination.Stats -> "統"
         DesktopDestination.Settings -> "設"
         DesktopDestination.About -> "關"
     }
@@ -628,9 +1860,52 @@ object TraditionalChineseStrings : DesktopStrings {
     override fun libraryNoMatchTitle(query: String) = "沒有找到符合 “$query” 的漫畫"
     override val libraryNoMatchSubtitle = "嘗試其他搜尋字詞或清除篩選條件。"
     override val libraryRetry = "重試"
-    override fun libraryChaptersCount(count: Int) = "$count 話"
     override fun libraryUnreadCount(count: Int) = "$count 未讀"
     override val libraryAllCategory = "全部"
+
+    // Library Display, Filter & Sort
+    override val libraryDisplayMode = "展示模式"
+    override val libraryDisplayComfortable = "舒適網格"
+    override val libraryDisplayCompact = "緊湊網格"
+    override val libraryDisplayCoverOnly = "純封面"
+    override val libraryDisplayList = "清單"
+    override val libraryGridSize = "封面大小"
+    override val libraryFilterAndSort = "篩選與排序"
+    override val libraryFilterTab = "篩選"
+    override val librarySortTab = "排序"
+    override val libraryFilterReset = "重設篩選"
+    override val libraryFilterUnread = "未讀"
+    override val libraryFilterDownloaded = "已下載"
+    override val libraryFilterStarted = "開始閱讀"
+    override val libraryFilterCompleted = "已完結"
+    override val libraryFilterBookmarked = "已加書籤"
+    override val librarySortDefault = "預設"
+    override val librarySortAlphabetical = "字母順序"
+    override val librarySortLastRead = "最後閱讀"
+    override val librarySortLastUpdate = "最後更新"
+    override val librarySortUnreadCount = "未讀話數"
+    override val librarySortTotalChapters = "總話數"
+    override val librarySortDateAdded = "新增時間"
+    override val librarySortAscending = "遞增"
+    override val librarySortDescending = "遞減"
+
+    // Library Batch Actions
+    override val libraryBatchSelect = "多選"
+    override fun libraryBatchSelected(count: Int) = "已選擇 $count 項"
+    override val libraryBatchSelectAll = "全選"
+    override val libraryBatchDeselectAll = "取消全選"
+    override val libraryBatchChangeCategory = "設定分類"
+    override val libraryBatchMarkRead = "標記已讀"
+    override val libraryBatchMarkUnread = "標記未讀"
+    override val libraryBatchDownload = "下載"
+    override val libraryBatchDownloadNext1 = "下一話"
+    override val libraryBatchDownloadNext5 = "下 5 話"
+    override val libraryBatchDownloadAllUnread = "全部未讀"
+    override val libraryBatchRemove = "移出書架"
+    override val libraryBatchRemoveConfirmTitle = "移出所選漫畫"
+    override fun libraryBatchRemoveConfirmMessage(count: Int) =
+        "確定要將選取的 $count 部漫畫從書架中移出嗎？"
+    override val libraryBatchDone = "完成"
 
     override fun mangaDetailSource(name: String) = "圖源 $name"
     override val mangaDetailStatusOngoing = "連載中"
@@ -644,6 +1919,48 @@ object TraditionalChineseStrings : DesktopStrings {
     override fun mangaDetailStart(chapter: String) = "開始閱讀 $chapter"
     override val mangaDetailNoChapters = "找不到任何章節"
     override val mangaDetailBack = "返回"
+    override val mangaDetailChangeCover = "更換封面"
+    override val mangaDetailResetCover = "重設封面"
+    override val mangaDetailEditInfo = "編輯資訊"
+    override val mangaDetailAuthor = "作者"
+    override val mangaDetailArtist = "畫師"
+    override val mangaDetailStatus = "狀態"
+    override val mangaDetailGenres = "標籤"
+    override val mangaDetailNotes = "個人筆記"
+    override val mangaDetailResetToSource = "恢復圖源預設"
+    override val mangaDetailSave = "儲存"
+
+    // Chapters & Chapter Actions
+    override val chapters = "章節"
+    override val sortSourceOrder = "圖源順序"
+    override val sortChapterNumber = "章節編號"
+    override val sortUploadDate = "更新時間"
+    override val filterUnread = "未讀"
+    override val filterRead = "已讀"
+    override val filterUnreadOnly = "僅未讀"
+    override val filterReadOnly = "僅已讀"
+    override val filterDownloaded = "已下載"
+    override val filterDownloadedOnly = "僅已下載"
+    override val filterNotDownloadedOnly = "僅未下載"
+    override val filterBookmarked = "已書籤"
+    override val filterBookmarkedOnly = "僅書籤"
+    override val filterNotBookmarkedOnly = "僅無書籤"
+    override val markAsRead = "標為已讀"
+    override val markAsUnread = "標為未讀"
+    override val markPreviousAsRead = "將更早章節標為已讀"
+    override val downloadChapter = "下載"
+    override val deleteDownload = "刪除下載"
+    override val bookmarkChapter = "添加書籤"
+    override val removeBookmark = "移除書籤"
+
+    // Storage & Cache Cleaner
+    override val storageCleanerTitle = "資料與儲存管理"
+    override val storageCleanerDescription = "管理已下載的漫畫章節與本機圖片快取以釋放儲存空間。"
+    override val storageCleanerDownloadSize = "已下載章節佔用"
+    override val storageCleanerClearRead = "清理已讀章節下載"
+    override val storageCleanerClearReadSuccess = "已清理已讀章節"
+    override val storageCleanerClearImageCache = "清理圖片磁碟快取"
+    override val storageCleanerClearImageCacheSuccess = "圖片磁碟快取已清理"
 
     override val updatesTitle = "更新"
     override val updatesCheckButton = "檢查更新"
@@ -687,7 +2004,8 @@ object TraditionalChineseStrings : DesktopStrings {
 
     override val browseTitle = "瀏覽"
     override val browseTabSources = "圖源"
-    override val browseTabExtensions = "擴充套件"
+    override val browseTabExtensions = "擴充套件商店"
+    override val browseTabMigration = "圖源遷移"
     override val browseManageRepositories = "套件庫管理"
     override val browseRefresh = "重新整理"
     override val browseInstall = "安裝"
@@ -695,6 +2013,9 @@ object TraditionalChineseStrings : DesktopStrings {
     override val browseInstalledBadge = "已安裝"
     override val browseSearchPlaceholder = "搜尋圖源或擴充套件"
     override val browseNetworkDomainsHeader = "宣告的網路網域:"
+    override val browseGlobalSearch = "全域搜尋"
+    override val browseInstallFromFile = "本機安裝 (.mext)"
+    override val browseUpdateAll = "全部更新"
 
     override val readerModeSingleLtr = "單頁式（從左到右）"
     override val readerModeSingleRtl = "單頁式（從右到左）"
@@ -704,6 +2025,22 @@ object TraditionalChineseStrings : DesktopStrings {
     override val readerScaleFitHeight = "符合高度"
     override val readerScaleOriginal = "原始大小"
     override val readerEscapeHint = "按 Esc 結束全螢幕"
+    override val readerColorFilter = "色彩濾鏡"
+    override val readerFilterNone = "無"
+    override val readerFilterInvert = "反色"
+    override val readerFilterGrayscale = "黑白灰階"
+    override val readerFilterInvertGrayscale = "反轉灰階"
+    override val readerFilterSepia = "暖色懷舊"
+    override val readerFilterNight = "夜間微光"
+    override val readerBackgroundColor = "閱讀背景色"
+    override val readerBgDarkGray = "深灰"
+    override val readerBgBlack = "純黑"
+    override val readerBgWhite = "純白"
+    override val readerBgWarmCream = "暖米白"
+    override val readerCropBorders = "智慧裁切白邊"
+    override val readerCropBordersWebtoon = "智慧裁切白邊 (條漫)"
+    override val readerWebtoonMaxWidth = "條漫最大寬度限制"
+    override val readerWebtoonSidePadding = "條漫側邊距"
 
     override val settingsTitle = "設定"
     override val settingsSectionGeneral = "一般"
@@ -785,6 +2122,331 @@ object TraditionalChineseStrings : DesktopStrings {
     override val backupDialogTitle = "備份匯出"
     override fun backupExportSuccess(path: String) = "備份已成功匯出至:\n$path"
     override fun backupExportFailed(err: String) = "備份匯出失敗:\n$err"
+
+    // Incognito mode
+    override val incognitoTitle = "無痕模式"
+    override val incognitoBannerText = "無痕模式已啟用：閱讀歷史與跟蹤同步已暫停。"
+    override val incognitoDisable = "關閉"
+    override val incognitoDescription = "閱讀漫畫時暫停記錄閱讀歷史並阻斷外部跟蹤器同步。"
+
+    // Stats
+    override val statsTitle = "統計中心"
+    override val statsOverview = "總覽"
+    override val statsTotalManga = "書架漫畫數"
+    override val statsReadDuration = "總閱讀時長"
+    override val statsCompletedManga = "已完結作品"
+    override val statsChapters = "章節統計"
+    override val statsTotalChapters = "總章節數"
+    override val statsReadChapters = "已讀章節"
+    override val statsUnreadChapters = "未讀章節"
+    override val statsReadPercentage = "閱讀完成率"
+    override val statsTopGenres = "題材偏好"
+    override val statsNoGenres = "暫無題材數據"
+    override val statsStatuses = "連載狀態分布"
+    override val statsStatusOngoing = "連載中"
+    override val statsStatusCompleted = "已完結"
+    override val statsStatusHiatus = "休刊中"
+    override val statsStatusCancelled = "已取消"
+    override val statsStatusUnknown = "未知"
+    override val statsReadingProgress = "閱讀進度分布"
+    override val statsProgressUnread = "未開始"
+    override val statsProgressInProgress = "閱讀中"
+    override val statsProgressFinished = "已讀完"
+    override val statsCategories = "分類分布"
+    override val statsNoCategories = "未配置分類"
+    override val statsTrackers = "跟蹤統計"
+    override val statsTrackedTitles = "已追蹤作品"
+    override val statsMeanScore = "平均評分"
+    override val statsActiveTrackers = "活躍跟蹤器"
+    override val statsRefresh = "刷新"
+
+    // Backup Automation
+    override val backupAutoTitle = "自動定時備份"
+    override val backupAutoDescription = "在後台自動導出並修剪清理定期的漫畫備份。"
+    override val backupInterval = "備份週期"
+    override val backupIntervalOff = "關閉"
+    override val backupInterval6Hours = "每 6 小時"
+    override val backupInterval12Hours = "每 12 小時"
+    override val backupIntervalDaily = "每天"
+    override val backupInterval2Days = "每 2 天"
+    override val backupIntervalWeekly = "每週"
+    override val backupLocation = "備份存儲目錄"
+    override val backupLocationDefault = "默認目錄 (backups/)"
+    override val backupRetention = "最大保留備份數"
+    override val backupLastAutoBackup = "上次自動備份："
+    override val backupNever = "從不"
+    override val backupNow = "立即備份"
+
+    // Library Update & Automation
+    override val libraryUpdateTitle = "書架更新"
+    override val libraryUpdateNow = "立即檢查書架更新"
+    override val libraryUpdating = "正在檢查並同步書架更新..."
+    override val libraryUpdateInterval = "自動更新頻率"
+    override val libraryUpdateIntervalManual = "僅手動"
+    override val libraryUpdateInterval6Hours = "每 6 小時"
+    override val libraryUpdateInterval12Hours = "每 12 小時"
+    override val libraryUpdateIntervalDaily = "每天"
+    override val libraryUpdateInterval2Days = "每 2 天"
+    override val libraryUpdateIntervalWeekly = "每週"
+    override val libraryUpdateSkipCompleted = "跳過已完結作品"
+    override val libraryUpdateSkipUnread = "跳過存在未讀章節的作品"
+    override val libraryAutoDownloadNew = "自動下載新更新章節"
+    override val notificationsDesktopEnabled = "發現新章節時推送桌面系統通知"
+    override val libraryLastUpdate = "上次書架更新："
+
+    // Web & Cookie Management
+    override val cookieManagerTitle = "Cookie 與網絡穿透管理器"
+    override val cookieManagerDescription = "管理圖源域名的 Cookie 與專屬 User-Agent，輕鬆穿透 Cloudflare 5 秒盾與防爬挑戰。"
+    override val cookieManagerButton = "打開 Cookie 管理器"
+    override val openInBrowser = "在瀏覽器中打開"
+
+    // Categories
+    override val categoryManageTitle = "分類管理"
+    override val categoryNewNameLabel = "新分類名稱"
+    override val categoryAdd = "新增"
+    override val categoryEmpty = "暫無自訂分類"
+    override val categoryRename = "重新命名"
+    override val categoryDelete = "刪除"
+    override val categoryRenameTitle = "重新命名分類"
+    override val categoryNameLabel = "分類名稱"
+    override val categorySave = "儲存"
+    override val categorySetTitle = "設定分類"
+    override val categoryNoneExist = "尚無任何分類，請先建立分類。"
+    override val categoryNoneCreated = "尚未建立自訂分類。"
+
+    // Edit Manga Info
+    override val mangaDetailTitleLabel = "標題"
+    override val mangaDetailStatusLicensed = "已授權"
+    override val mangaDetailStatusPublishingFinished = "已完結(刊登結束)"
+    override val mangaDetailGenresLabel = "標籤/題材 (以英文逗號分隔)"
+    override val mangaDetailDescriptionLabel = "簡介"
+    override val mangaDetailSaveSuccess = "儲存變更"
+    override fun mangaDetailStatusOption(status: Long) = when (status) {
+        1L -> mangaDetailStatusOngoing
+        2L -> mangaDetailStatusCompleted
+        3L -> mangaDetailStatusLicensed
+        4L -> mangaDetailStatusPublishingFinished
+        5L -> statsStatusCancelled
+        6L -> statsStatusHiatus
+        else -> mangaDetailStatusUnknown
+    }
+
+    // Cookie & Clearance Manager
+    override fun cookieConfiguredDomains(count: Int) = "已設定網域 ($count)"
+    override val cookieAddDomain = "+ 新增"
+    override val cookieNoCustomDomains = "尚未設定自訂網域 Cookie"
+    override fun cookieCountSubtitle(count: Int, hasCustomUa: Boolean) =
+        "$count 個已設定 Cookie" + if (hasCustomUa) " • 自訂 UA" else ""
+    override val cookieDomainLabel = "網域 (例如 mangadex.org)"
+    override val cookieRawCookiesLabel = "原始 Cookies (例如 cf_clearance=xxx; token=yyy)"
+    override val cookieCustomUaLabel = "自訂 User-Agent (選填)"
+    override val cookieDelete = "刪除"
+    override val cookieSave = "儲存 Cookie"
+    override fun cookieRemovedStatus(domain: String) = "已移除 $domain 的 Cookie"
+    override fun cookieSavedStatus(count: Int, domain: String) = "已為 $domain 儲存 $count 個 Cookie"
+
+    // Tracker & Tracking
+    override fun trackerConnectTitle(name: String) = "連線到 $name"
+    override fun trackerAuthTitle(name: String) = "在 $name 認證"
+    override fun trackerLoginTitle(name: String) = "登入到 $name"
+    override val trackerServerUrl = "伺服器位址 (例如 https://komga.example.com)"
+    override val trackerUsername = "使用者名稱"
+    override val trackerPasswordOrApiKey = "密碼或 API 金鑰"
+    override fun trackerAuthUrl(url: String) = "授權網址: $url"
+    override val trackerToken = "API 權杖 / 存取權杖"
+    override val trackerAccountName = "帳戶名稱 (選填)"
+    override val trackerPassword = "密碼"
+    override val trackerConnect = "連線"
+    override val trackerLogin = "登入"
+    override fun trackingTitle(mangaTitle: String) = "進度記錄 - $mangaTitle"
+    override val trackingNotTracking = "未記錄"
+    override val trackingNotLoggedIn = "未登入"
+    override val trackingTrack = "記錄"
+    override val trackingEdit = "編輯"
+    override val trackingRemove = "解除綁定"
+    override fun trackingSearchTitle(name: String) = "搜尋 $name"
+    override val trackingSearch = "搜尋"
+    override fun trackingTotalChapters(count: Long) = "$count 話"
+    override fun trackingEditTitle(title: String) = "編輯紀錄 - $title"
+    override val trackingChaptersRead = "已讀話數"
+    override val trackingScore = "評分"
+    override fun trackStatusLabel(status: TrackStatus) = when (status) {
+        TrackStatus.READING -> "閱讀中"
+        TrackStatus.COMPLETED -> "已讀完"
+        TrackStatus.ON_HOLD -> "擱置"
+        TrackStatus.DROPPED -> "棄坑"
+        TrackStatus.PLAN_TO_READ -> "計畫閱讀"
+        TrackStatus.REREADING -> "重讀中"
+    }
+
+    // Reader Chrome, Settings & Messages
+    override val readerFullscreen = "全螢幕"
+    override val readerBorderless = "無邊框"
+    override fun readerCropToggle(active: Boolean) = if (active) "裁切白邊: 開" else "裁切白邊: 關"
+    override fun readerCoverOffsetToggle(active: Boolean) = if (active) "封面偏移: 開" else "封面偏移: 關"
+    override val readerModeDualLtr = "雙頁拼合（從左到右）"
+    override val readerModeDualRtl = "雙頁拼合（從右到左）"
+    override val readerModeVertical = "連續垂直"
+    override fun readerModeLabel(mode: ReadingMode) = when (mode) {
+        ReadingMode.SINGLE_LTR -> readerModeSingleLtr
+        ReadingMode.SINGLE_RTL -> readerModeSingleRtl
+        ReadingMode.DUAL_LTR -> readerModeDualLtr
+        ReadingMode.DUAL_RTL -> readerModeDualRtl
+        ReadingMode.VERTICAL -> readerModeVertical
+        ReadingMode.WEBTOON -> readerModeWebtoon
+    }
+    override fun readerScaleLabel(scale: ScaleMode) = when (scale) {
+        ScaleMode.ORIGINAL -> readerScaleOriginal
+        ScaleMode.FIT_WIDTH -> readerScaleFitWidth
+        ScaleMode.FIT_HEIGHT -> readerScaleFitHeight
+    }
+    override fun readerFilterLabel(filter: ReaderColorFilter) = when (filter) {
+        ReaderColorFilter.NONE -> readerFilterNone
+        ReaderColorFilter.INVERT -> readerFilterInvert
+        ReaderColorFilter.GRAYSCALE -> readerFilterGrayscale
+        ReaderColorFilter.INVERT_GRAYSCALE -> readerFilterInvertGrayscale
+        ReaderColorFilter.SEPIA -> readerFilterSepia
+        ReaderColorFilter.NIGHT -> readerFilterNight
+    }
+    override fun readerBackgroundLabel(bg: ReaderBackgroundColor) = when (bg) {
+        ReaderBackgroundColor.DARK_GRAY -> readerBgDarkGray
+        ReaderBackgroundColor.BLACK -> readerBgBlack
+        ReaderBackgroundColor.WHITE -> readerBgWhite
+        ReaderBackgroundColor.WARM_CREAM -> readerBgWarmCream
+    }
+    override val readerSettingsDialogTitle = "閱讀器設定"
+    override val readerClickRegions = "點擊翻頁區域"
+    override val readerRegionLeft = "左側"
+    override val readerRegionCenter = "中間"
+    override val readerRegionRight = "右側"
+    override fun readerActionLabel(action: ReaderClickAction) = when (action) {
+        ReaderClickAction.PREVIOUS -> "上一頁"
+        ReaderClickAction.NEXT -> "下一頁"
+        ReaderClickAction.TOGGLE_CHROME -> "切換選單"
+        ReaderClickAction.NONE -> "無動作"
+    }
+    override fun readerLeftBoundary(percent: Int) = "左側邊界 $percent%"
+    override fun readerCenterBoundary(percent: Int) = "中間邊界 $percent%"
+    override fun readerWheelLabel(behavior: ReaderWheelBehavior) = when (behavior) {
+        ReaderWheelBehavior.SCROLL -> "滾輪: 捲動頁面"
+        ReaderWheelBehavior.PAGE_NAVIGATION -> "滾輪: 翻頁"
+    }
+    override val readerReserveCover = "雙頁模式下保留封面獨立單頁"
+    override val readerCropBordersPaged = "智慧裁切白邊 (單頁/雙頁)"
+    override val readerWebtoonLayout = "條漫排版"
+    override val readerWebtoonWidthFull = "最大寬度: 全螢幕"
+    override fun readerWebtoonWidthDp(width: Int) = "最大寬度: ${width}dp"
+    override fun readerWebtoonSidePaddingPercent(padding: Int) = "側邊距: $padding%"
+    override val readerLoadingChapter = "正在載入章節…"
+    override val readerClosed = "閱讀器已關閉"
+    override fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
+        is ReaderFailure.PageNotFound -> "找不到此頁面，可能已被移動或刪除。"
+        is ReaderFailure.UnsupportedFormat -> "不支援此章節格式。"
+        is ReaderFailure.EncryptedContainer -> "不支援加密的章節壓縮包。"
+        is ReaderFailure.UnsafePath,
+        is ReaderFailure.ResourceChanged -> "本機章節已不可用，請重新匯入或檢查檔案位置。"
+        is ReaderFailure.CorruptContainer,
+        is ReaderFailure.CorruptImage -> "頁面檔案損毀或無法讀取。"
+        is ReaderFailure.UnsupportedImage,
+        is ReaderFailure.RegionUnavailable -> "不支援此圖片格式。"
+        is ReaderFailure.LimitExceeded,
+        is ReaderFailure.TooManyEntries -> "章節內容超出安全閱讀限制。"
+        is ReaderFailure.EmptyChapter -> "此章節不包含任何可讀取的頁面。"
+        else -> when (error.code) {
+            ReaderErrorCode.EMPTY_CHAPTER -> "此章節不包含任何可讀取的頁面。"
+            ReaderErrorCode.SOURCE_UNAVAILABLE -> "圖源或本機章節不可用，請定位或重新匯入。"
+            ReaderErrorCode.PAGE_NOT_FOUND -> "找不到此頁面。"
+            ReaderErrorCode.PAGE_DECODE_FAILED -> "頁面解碼失敗。"
+            ReaderErrorCode.MEMORY_LIMIT_REACHED -> "閱讀器已達記憶體佔用上限。"
+            ReaderErrorCode.INVALID_PROGRESS -> "儲存的閱讀進度無效。"
+        }
+    }
+
+    // Browse, Sources, Extensions, Migration, Filters, Global Search
+    override fun browseSourceLanguage(lang: String) = "圖源語言: " + lang.uppercase()
+    override val browseSourcePopular = "熱門"
+    override val browseSourceLatest = "最新"
+    override val browseSearchTitlesPlaceholder = "搜尋漫畫標題..."
+    override val browseSearchButton = "搜尋"
+    override fun browseFiltersButton(count: Int) = if (count > 0) "篩選 ($count)" else "篩選"
+    override val browseNoMangaFound = "找不到任何漫畫"
+    override val browseInLibraryBadge = "已在書架"
+    override val browsePrevPage = "上一頁"
+    override fun browsePageNumber(page: Int) = "第 $page 頁"
+    override val browseNextPage = "下一頁"
+    override fun browseInstallExtensionTitle(name: String) = "安裝擴充套件: $name"
+    override fun browsePackageLabel(pkg: String) = "套件名稱: $pkg"
+    override fun browseVersionLabel(version: String) = "版本: $version"
+    override fun browseLanguageLabel(lang: String) = "語言: $lang"
+    override val browseNetworkPermissionNotice = "安裝擴充套件前請確認其網路宣告權限。"
+    override val browseTrustAndInstall = "信任並安裝"
+    override val browseAddRepository = "新增"
+    override val browseConfiguredRepositories = "已設定的套件庫:"
+    override val browseRemoveRepository = "移除"
+    override val browseSourceBrowse = "瀏覽"
+    override val browsePin = "☆ 固定"
+    override val browseUnpin = "★ 取消固定"
+    override val browseUpdate = "更新"
+    override val browseDisable = "停用"
+    override val browseEnable = "啟用"
+    override fun onlineDetailSource(name: String, lang: String) = "圖源: $name (${lang.uppercase()})"
+    override fun onlineDetailAuthor(author: String) = "作者: $author"
+    override fun onlineDetailArtist(artist: String) = "畫師: $artist"
+    override fun onlineDetailGenres(genres: String) = "標籤: $genres"
+    override fun onlineDetailChapters(count: Int) = "章節 ($count)"
+    override fun onlineDetailScanlator(scanlator: String) = "漢化組/發布方: $scanlator"
+    override val migrateSelectSourceHeader = "選擇要遷出的圖源："
+    override val migrateNoMangaInLibrary = "書架中暫無來自線上圖源的漫畫。"
+    override fun migrateMangaCount(count: Int) = "書架中有 $count 部漫畫"
+    override val migrateViewManga = "查看漫畫"
+    override val migrateBackToSources = "返回圖源清單"
+    override val migrateSelectMangaHeader = "選擇要遷移到其他圖源的漫畫"
+    override val migrateAction = "遷移"
+    override fun migrateDialogTitle(title: String) = "遷移: $title"
+    override val migrateDialogSubtitle = "在目標圖源中搜尋對應作品，以轉移閱讀進度、書籤和分類。"
+    override val migrateNoOtherSources = "沒有可用於遷移的其他圖源。"
+    override val migrateTargetSourceLabel = "目標圖源:"
+    override val migrateSearchPlaceholder = "搜尋標題..."
+    override val migrateSelectedBadge = "✓ 已選取"
+    override val migrateConfirm = "確認遷移"
+    override val filterDialogTitle = "圖源篩選"
+    override val filterReset = "重設"
+    override val filterNoAvailable = "該圖源沒有可用的篩選器。"
+    override val filterApply = "套用篩選"
+    override val filterAscending = "▲ 遞增"
+    override val filterDescending = "▼ 遞減"
+    override val globalSearchEnterQuery = "輸入關鍵字在所有已安裝及內建圖源中尋找。"
+    override val globalSearchNoSources = "沒有可用圖源或尚未開始搜尋。"
+    override val globalSearchViewAll = "查看全部"
+    override fun globalSearchError(error: String) = "發生錯誤: $error"
+    override val globalSearchNoResults = "該圖源中無相符結果"
+
+    // Settings & Diagnostics & Reports
+    override val settingsDownloadCustomPath = "自訂下載路徑"
+    override val settingsDownloadCustomPathPlaceholder = "留空則使用預設路徑 (media/downloads)"
+    override val settingsDownloadAheadTitle = "閱讀時自動預先下載"
+    override val settingsDownloadAheadDesc = "在閱讀當前章節時，自動在背景下載後續未讀章節。"
+    override val settingsDownloadAheadDisabled = "已停用"
+    override fun settingsDownloadAheadChapters(count: Int) = "後 $count 話"
+    override val settingsDeleteReadChaptersTitle = "自動刪除已讀章節"
+    override val settingsDeleteReadChaptersDesc = "章節被標記為已讀後，自動刪除本機已下載的檔案以節省空間。"
+    override fun settingsTrackerLoggedInAs(user: String, server: String?) =
+        "已登入為 $user" + if (!server.isNullOrBlank()) " ($server)" else ""
+    override val settingsTrackerLogout = "登出"
+    override fun settingsLibraryUpdateResult(checked: Int, newChapters: Int) =
+        "已檢查 $checked 部作品，發現 $newChapters 個新章節"
+    override val settingsLibraryUpdateCompleted = "書架更新已完成"
+    override fun settingsLibraryUpdateFailed(msg: String) = "更新失敗: $msg"
+    override val readerUnavailable = "目前執行環境中閱讀器無法使用。"
+    override val readerOpeningChapter = "正在開啟章節…"
+    override fun importReportTitle(id: Long) = "匯入報告 $id"
+    override fun importReportManga(inserted: Long, merged: Long) = "漫畫：新增 $inserted 部，合併 $merged 部"
+    override fun importReportChapters(inserted: Long, merged: Long) = "章節：新增 $inserted 話，合併 $merged 話"
+    override fun importReportCategories(count: Long) = "關聯分類：$count 個"
+    override fun importReportPreferences(imported: Long, skipped: Long) = "偏好設定：匯入 $imported 項，略過 $skipped 項"
+    override fun importReportSkipCategories(categories: String) = "略過分類：$categories"
+    override fun importReportCategory(category: String) = "分類：$category"
+    override val mangaDetailBackToLibrary = "返回書架"
 }
 
 val LocalStrings = staticCompositionLocalOf<DesktopStrings> { EnglishStrings }
@@ -799,3 +2461,4 @@ fun ProvideDesktopStrings(
         content()
     }
 }
+

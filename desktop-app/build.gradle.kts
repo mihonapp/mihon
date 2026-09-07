@@ -54,7 +54,7 @@ compose.desktop {
         javaHome = desktopJavaHome
 
         nativeDistributions {
-            targetFormats(TargetFormat.Exe)
+            targetFormats(TargetFormat.Exe, TargetFormat.Msi)
             packageName = "MihonW"
             packageVersion = "0.1.0"
             description = "Mihon manga reader for Windows"
@@ -64,8 +64,10 @@ compose.desktop {
 
             windows {
                 console = false
-                perUserInstall = true
                 dirChooser = true
+                perUserInstall = true
+                menu = true
+                shortcut = true
                 menuGroup = "Mihon W"
                 upgradeUuid = "07E02BEA-9179-4E54-A1AF-CFC185C91398"
             }

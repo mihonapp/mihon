@@ -40,12 +40,15 @@ import mihon.desktop.reader.DesktopReaderSettingsStore
 import mihon.desktop.reader.ReaderWindowMode
 import mihon.desktop.reader.window.ReaderWindowController
 import mihon.desktop.reader.window.ReaderWindowEscape
+import mihon.desktop.track.toDesktopTrackRecord
+import mihon.desktop.track.toTrackingRecord
 import mihon.desktop.ui.library.ImportActionState
 import mihon.desktop.ui.library.LibraryImportActions
 import mihon.desktop.ui.library.LibraryImportController
 import mihon.desktop.ui.library.LibraryPresenter
 import mihon.desktop.ui.reader.DecodedReaderPage
 import mihon.desktop.ui.reader.ReaderScreen
+import mihon.desktop.ui.track.TrackingDialog
 import mihon.desktop.window.ScreenBounds
 import mihon.desktop.window.WindowPlacement
 import java.awt.Frame
@@ -118,7 +121,14 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
         }
     }
     val presenterScope = rememberCoroutineScope()
-    val libraryPresenter = remember(runtime.library) { LibraryPresenter(runtime.library, presenterScope) }
+    val libraryPresenter = remember(runtime.library) {
+        LibraryPresenter(
+            repository = runtime.library,
+            scope = presenterScope,
+            preferences = runtime.preferences,
+            downloader = runtime.downloader,
+        )
+    }
     val libraryState by libraryPresenter.state.collectAsState()
     val mangaDetailState by libraryPresenter.detailState.collectAsState()
     val importController = remember(runtime.backupImporter, runtime.localImporter, runtime.localLibraryRoot) {
@@ -131,6 +141,7 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
         )
     }
     var importState: ImportActionState by remember { mutableStateOf(ImportActionState.Idle) }
+    var isTrackingDialogOpen by remember { mutableStateOf(false) }
     DisposableEffect(libraryPresenter) {
         onDispose(libraryPresenter::close)
     }
@@ -152,18 +163,13 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
         }
         ).collectAsState()
 
-    val updateScheduler = remember(runtime.updateService) {
-        runtime.updateService?.let { mihon.desktop.updates.DesktopUpdateScheduler(it) }
-    }
     val isUpdatingLibrary by (
-        updateScheduler?.isUpdating
+        runtime.libraryUpdateScheduler?.isUpdating
             ?: remember { kotlinx.coroutines.flow.MutableStateFlow(false) }
         ).collectAsState()
-    val lastUpdateResult by (
-        updateScheduler?.lastResult ?: remember {
-            kotlinx.coroutines.flow.MutableStateFlow(null)
-        }
-        ).collectAsState()
+    val lastUpdateResult by remember {
+        kotlinx.coroutines.flow.MutableStateFlow(null)
+    }.collectAsState()
 
     val historyService = runtime.historyService
     val historyState by (
@@ -171,6 +177,17 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
             kotlinx.coroutines.flow.MutableStateFlow(mihon.desktop.history.HistoryUiState())
         }
         ).collectAsState()
+    val statsService = runtime.statsService
+    val statsData by (
+        statsService?.stats ?: remember {
+            kotlinx.coroutines.flow.MutableStateFlow(mihon.desktop.stats.DesktopStatsData())
+        }
+        ).collectAsState()
+    LaunchedEffect(navigator.current) {
+        if (navigator.current == DesktopDestination.Stats) {
+            statsService?.refresh()
+        }
+    }
     var exportNotification: String? by remember { mutableStateOf(null) }
 
     key(readerWindowMode == ReaderWindowMode.BORDERLESS) {
@@ -204,116 +221,250 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
             SideEffect { composeWindow = window }
             MihonDesktopTheme(preferences.themeMode) {
                 mihon.desktop.i18n.ProvideDesktopStrings(preferences.language) {
-                    val strings = mihon.desktop.i18n.LocalStrings.current
-                    val destination = navigator.current
-                    LaunchedEffect(destination) {
-                        if (destination is DesktopDestination.Reader &&
-                            readerWindowController.mode == ReaderWindowMode.NORMAL
-                        ) {
-                            val savedReaderMode = DesktopReaderSettingsStore(runtime.preferences).load().lastWindowMode
-                            if (savedReaderMode != ReaderWindowMode.NORMAL) {
-                                readerWindowController.restore(savedReaderMode, currentWindowPlacement())
-                                applyReaderWindowMode(savedReaderMode)
+                    androidx.compose.runtime.CompositionLocalProvider(
+                        mihon.desktop.image.LocalImageLoader provides runtime.imageLoader,
+                        mihon.desktop.image.LocalCustomCoverManager provides runtime.customCoverManager,
+                    ) {
+                        val strings = mihon.desktop.i18n.LocalStrings.current
+                        val destination = navigator.current
+                        LaunchedEffect(destination) {
+                            if (destination is DesktopDestination.Reader &&
+                                readerWindowController.mode == ReaderWindowMode.NORMAL
+                            ) {
+                                val savedReaderMode =
+                                    DesktopReaderSettingsStore(runtime.preferences).load().lastWindowMode
+                                if (savedReaderMode != ReaderWindowMode.NORMAL) {
+                                    readerWindowController.restore(savedReaderMode, currentWindowPlacement())
+                                    applyReaderWindowMode(savedReaderMode)
+                                }
                             }
                         }
-                    }
-                    if (destination is DesktopDestination.Reader) {
-                        ReaderDestination(
-                            destination = destination,
-                            runtime = runtime,
-                            mangaTitle = mangaDetailState.manga?.title ?: "Reader",
-                            chapterTitle =
-                            mangaDetailState.chapters.firstOrNull { it.id == destination.chapterId }?.name
-                                ?: "Chapter ${destination.chapterId}",
-                            onBack = {
-                                transitionReaderWindow(ReaderWindowMode.NORMAL)
-                                navigator.back()
-                            },
-                            onFullscreen = {
-                                val mode = readerWindowController.toggleFullscreen(currentWindowPlacement())
-                                applyReaderWindowMode(mode)
-                            },
-                            onBorderless = {
-                                val mode = readerWindowController.toggleBorderless(currentWindowPlacement())
-                                applyReaderWindowMode(mode)
-                            },
-                            onEscape = ::handleReaderEscape,
-                        )
-                    } else {
-                        DesktopShell(
-                            selected = destination as DesktopDestination,
-                            onDestinationSelected = navigator::navigate,
-                            libraryState = libraryState,
-                            mangaDetailState = mangaDetailState,
-                            onLibraryQueryChange = libraryPresenter::setQuery,
-                            onMangaSelected = libraryPresenter::selectManga,
-                            onBackFromMangaDetail = { libraryPresenter.selectManga(null) },
-                            onReadChapter = { chapterId -> navigator.navigate(DesktopDestination.Reader(chapterId)) },
-                            onMangaDetailRetry = libraryPresenter::retryDetail,
-                            onImportBackup = {
-                                presenterScope.launch {
-                                    importState = ImportActionState.Running
-                                    importState = importActions.chooseAndImportBackup()
-                                }
-                            },
-                            onImportLocal = {
-                                presenterScope.launch {
-                                    importState = ImportActionState.Running
-                                    importState = importActions.chooseAndImportLocal()
-                                }
-                            },
-                            onLibraryRetry = libraryPresenter::retry,
-                            downloadsQueue = downloadsQueue,
-                            isDownloaderRunning = isDownloaderRunning,
-                            downloadSpeedBytesPerSec = downloadSpeed,
-                            onPauseAllDownloads = { downloader?.pause() },
-                            onResumeAllDownloads = { downloader?.resume() },
-                            onClearCompletedDownloads = { downloader?.clearCompleted() },
-                            onCancelDownload = { downloader?.cancel(it) },
-                            onRetryDownload = { downloader?.retry(it) },
-                            isUpdatingLibrary = isUpdatingLibrary,
-                            lastUpdateResult = lastUpdateResult,
-                            onCheckForUpdates = {
-                                presenterScope.launch { updateScheduler?.triggerNow() }
-                            },
-                            // History
-                            historyGroups = historyState.groups,
-                            historyQuery = historyState.query,
-                            onHistoryQueryChange = { historyService?.setQuery(it) },
-                            onDeleteHistoryItem = { historyService?.deleteItem(it) },
-                            onClearAllHistory = { historyService?.clearAll() },
-                            // Settings & Diagnostics
-                            preferenceStore = runtime.preferences,
-                            readerSettingsStore = remember { DesktopReaderSettingsStore(runtime.preferences) },
-                            diagnosticService = runtime.diagnosticService,
-                            onExportBackup = {
-                                presenterScope.launch {
-                                    val path = mihon.desktop.ui.library.chooseExportBackup() ?: return@launch
-                                    try {
-                                        withContext(Dispatchers.IO) {
-                                            runtime.backupExporter.export(path)
-                                        }
-                                        exportNotification = strings.backupExportSuccess(path.toString())
-                                    } catch (e: Exception) {
-                                        exportNotification = strings.backupExportFailed(e.message ?: "")
+                        if (destination is DesktopDestination.Reader) {
+                            ReaderDestination(
+                                destination = destination,
+                                runtime = runtime,
+                                mangaTitle = mangaDetailState.manga?.title ?: "Reader",
+                                chapterTitle =
+                                mangaDetailState.chapters.firstOrNull { it.id == destination.chapterId }?.name
+                                    ?: "Chapter ${destination.chapterId}",
+                                onBack = {
+                                    val chapter = mangaDetailState.chapters.firstOrNull {
+                                        it.id == destination.chapterId
                                     }
-                                }
-                            },
-                            onPreferencesChanged = { preferences = it },
-                        )
-                    }
-                    ImportStateDialog(importState) { importState = ImportActionState.Idle }
-                    exportNotification?.let { msg ->
-                        AlertDialog(
-                            onDismissRequest = { exportNotification = null },
-                            confirmButton = {
-                                TextButton(onClick = { exportNotification = null }) {
-                                    Text(strings.dialogOk)
-                                }
-                            },
-                            title = { Text(strings.backupDialogTitle) },
-                            text = { Text(msg) },
-                        )
+                                    val manga = mangaDetailState.manga
+                                    if (chapter != null && manga != null) {
+                                        presenterScope.launch {
+                                            val prefs = runtime.preferences.load()
+                                            if (!prefs.incognitoMode) {
+                                                runtime.trackSyncService?.onChapterRead(manga.id, chapter.chapterNumber)
+                                            }
+                                            if (prefs.downloadAhead > 0) {
+                                                runtime.downloader?.checkAndDownloadAhead(
+                                                    manga = manga,
+                                                    currentChapter = chapter,
+                                                    allChapters = mangaDetailState.chapters,
+                                                    count = prefs.downloadAhead,
+                                                )
+                                            }
+                                            if (prefs.deleteDownloadedRead && !prefs.incognitoMode) {
+                                                runtime.downloader?.deleteDownloadedChapter(manga, chapter)
+                                            }
+                                        }
+                                    }
+                                    transitionReaderWindow(ReaderWindowMode.NORMAL)
+                                    navigator.back()
+                                },
+                                onFullscreen = {
+                                    val mode = readerWindowController.toggleFullscreen(currentWindowPlacement())
+                                    applyReaderWindowMode(mode)
+                                },
+                                onBorderless = {
+                                    val mode = readerWindowController.toggleBorderless(currentWindowPlacement())
+                                    applyReaderWindowMode(mode)
+                                },
+                                onEscape = ::handleReaderEscape,
+                            )
+                        } else {
+                            DesktopShell(
+                                selected = destination as DesktopDestination,
+                                onDestinationSelected = navigator::navigate,
+                                libraryState = libraryState,
+                                mangaDetailState = mangaDetailState,
+                                onLibraryQueryChange = libraryPresenter::setQuery,
+                                onMangaSelected = libraryPresenter::selectManga,
+                                onBackFromMangaDetail = { libraryPresenter.selectManga(null) },
+                                onReadChapter = { chapterId ->
+                                    navigator.navigate(DesktopDestination.Reader(chapterId))
+                                },
+                                onMangaDetailRetry = libraryPresenter::retryDetail,
+                                onImportBackup = {
+                                    presenterScope.launch {
+                                        importState = ImportActionState.Running
+                                        importState = importActions.chooseAndImportBackup()
+                                    }
+                                },
+                                onImportLocal = {
+                                    presenterScope.launch {
+                                        importState = ImportActionState.Running
+                                        importState = importActions.chooseAndImportLocal()
+                                    }
+                                },
+                                onLibraryRetry = libraryPresenter::retry,
+                                onDisplayModeChange = libraryPresenter::setDisplayMode,
+                                onGridSizeChange = libraryPresenter::setGridSize,
+                                onOpenFilterDialog = { libraryPresenter.setFilterDialogOpen(true) },
+                                onCloseFilterDialog = { libraryPresenter.setFilterDialogOpen(false) },
+                                onFilterChange = libraryPresenter::setFilterState,
+                                onSortChange = libraryPresenter::setSortState,
+                                onToggleSelectionMode = libraryPresenter::toggleSelectionMode,
+                                onToggleMangaSelection = libraryPresenter::toggleMangaSelection,
+                                onSelectAll = libraryPresenter::selectAll,
+                                onDeselectAll = libraryPresenter::clearSelection,
+                                onBatchChangeCategories = { libraryPresenter.setBatchCategoryDialogOpen(true) },
+                                onBatchSetCategories = libraryPresenter::batchSetCategories,
+                                onBatchCloseCategoryDialog = { libraryPresenter.setBatchCategoryDialogOpen(false) },
+                                onBatchMarkRead = libraryPresenter::batchMarkRead,
+                                onBatchDownload = libraryPresenter::batchDownload,
+                                onBatchRemoveFromLibrary = libraryPresenter::batchRemoveFromLibrary,
+                                downloadsQueue = downloadsQueue,
+                                isDownloaderRunning = isDownloaderRunning,
+                                downloadSpeedBytesPerSec = downloadSpeed,
+                                onPauseAllDownloads = { downloader?.pause() },
+                                onResumeAllDownloads = { downloader?.resume() },
+                                onClearCompletedDownloads = { downloader?.clearCompleted() },
+                                onCancelDownload = { downloader?.cancel(it) },
+                                onRetryDownload = { downloader?.retry(it) },
+                                isUpdatingLibrary = isUpdatingLibrary,
+                                lastUpdateResult = lastUpdateResult,
+                                onCheckForUpdates = {
+                                    presenterScope.launch { runtime.libraryUpdateScheduler?.triggerUpdateNow() }
+                                },
+                                // Browse
+                                browseContent = {
+                                    mihon.desktop.ui.browse.BrowseContentView(
+                                        runtime = runtime,
+                                        onReadChapter = { chapterId ->
+                                            navigator.navigate(DesktopDestination.Reader(chapterId))
+                                        },
+                                    )
+                                },
+                                // History
+                                historyGroups = historyState.groups,
+                                historyQuery = historyState.query,
+                                onHistoryQueryChange = { historyService?.setQuery(it) },
+                                onDeleteHistoryItem = { historyService?.deleteItem(it) },
+                                onClearAllHistory = { historyService?.clearAll() },
+                                // Settings & Diagnostics
+                                preferenceStore = runtime.preferences,
+                                readerSettingsStore = remember { DesktopReaderSettingsStore(runtime.preferences) },
+                                diagnosticService = runtime.diagnosticService,
+                                trackerManager = runtime.trackerManager,
+                                backupScheduler = runtime.backupScheduler,
+                                updateScheduler = runtime.libraryUpdateScheduler,
+                                cookieStore = runtime.cookieStore,
+                                onUpdateLibrary = {
+                                    presenterScope.launch {
+                                        runtime.libraryUpdateScheduler?.triggerUpdateNow()
+                                    }
+                                },
+                                onEditInfo = { libraryPresenter.setEditInfoDialogOpen(true) },
+                                onDismissEditInfo = { libraryPresenter.setEditInfoDialogOpen(false) },
+                                onSaveMangaInfo = libraryPresenter::updateSelectedMangaInfo,
+                                onResetMangaInfo = libraryPresenter::resetSelectedMangaInfo,
+                                onChapterFilterChange = libraryPresenter::setChapterFilter,
+                                onChapterSortChange = libraryPresenter::setChapterSort,
+                                onToggleBookmark = libraryPresenter::toggleChapterBookmark,
+                                onToggleRead = libraryPresenter::toggleChapterRead,
+                                onMarkPreviousRead = libraryPresenter::markPreviousChaptersRead,
+                                onDownloadChapter = libraryPresenter::downloadChapter,
+                                onDeleteDownload = libraryPresenter::deleteChapterDownload,
+                                downloadCacheCleaner = runtime.downloadCacheCleaner,
+                                downloadsDir = runtime.downloader?.diskProvider?.downloadsDir
+                                    ?: runtime.directories.root.resolve("media").resolve("downloads"),
+                                diskCacheDir = runtime.directories.cache,
+                                onOpenTracking = { isTrackingDialogOpen = true },
+                                onExportBackup = {
+                                    presenterScope.launch {
+                                        val path = mihon.desktop.ui.library.chooseExportBackup() ?: return@launch
+                                        try {
+                                            withContext(Dispatchers.IO) {
+                                                runtime.backupExporter.export(path)
+                                            }
+                                            exportNotification = strings.backupExportSuccess(path.toString())
+                                        } catch (e: Exception) {
+                                            exportNotification = strings.backupExportFailed(e.message ?: "")
+                                        }
+                                    }
+                                },
+                                onPreferencesChanged = { preferences = it },
+                                // Phase 14: Stats & Incognito
+                                statsData = statsData,
+                                onRefreshStats = { presenterScope.launch { statsService?.refresh() } },
+                                incognitoMode = preferences.incognitoMode,
+                                onToggleIncognito = {
+                                    val updated = preferences.copy(incognitoMode = !preferences.incognitoMode)
+                                    preferences = updated
+                                    runtime.preferences.save(updated)
+                                },
+                            )
+                        }
+                        val currentTrackingManga = mangaDetailState.manga
+                        val trackerMgr = runtime.trackerManager
+                        if (isTrackingDialogOpen && currentTrackingManga != null && trackerMgr != null) {
+                            val tracksFlow = remember(currentTrackingManga.id) {
+                                runtime.library.observeTracking(currentTrackingManga.id)
+                            }
+                            val tracksList by tracksFlow.collectAsState(initial = emptyList())
+                            val desktopTracks = tracksList.map { it.toDesktopTrackRecord() }
+
+                            TrackingDialog(
+                                mangaTitle = currentTrackingManga.title,
+                                trackers = trackerMgr.trackers,
+                                currentTracks = desktopTracks,
+                                onDismiss = { isTrackingDialogOpen = false },
+                                onSaveTrack = { track ->
+                                    val record = track.copy(mangaId = currentTrackingManga.id).toTrackingRecord()
+                                    val existing = runtime.library.findTracking(
+                                        currentTrackingManga.id,
+                                        track.trackerId,
+                                    )
+                                    if (existing != null) {
+                                        runtime.library.updateTracking(record)
+                                    } else {
+                                        runtime.library.insertTracking(record)
+                                    }
+                                    presenterScope.launch {
+                                        val tracker = trackerMgr.get(track.trackerId)
+                                        if (tracker != null && tracker.isLoggedIn) {
+                                            try {
+                                                tracker.updateRemote(track)
+                                            } catch (_: Exception) {
+                                                runtime.trackingQueue?.enqueue(track)
+                                            }
+                                        }
+                                    }
+                                },
+                                onUnbindTrack = { trackerId ->
+                                    runtime.library.deleteTracking(currentTrackingManga.id, trackerId)
+                                },
+                                onSearchTrack = { tracker, query ->
+                                    tracker.search(query)
+                                },
+                            )
+                        }
+                        ImportStateDialog(importState) { importState = ImportActionState.Idle }
+                        exportNotification?.let { msg ->
+                            AlertDialog(
+                                onDismissRequest = { exportNotification = null },
+                                confirmButton = {
+                                    TextButton(onClick = { exportNotification = null }) {
+                                        Text(strings.dialogOk)
+                                    }
+                                },
+                                title = { Text(strings.backupDialogTitle) },
+                                text = { Text(msg) },
+                            )
+                        }
                     }
                 }
             }
@@ -332,15 +483,17 @@ private fun ReaderDestination(
     onBorderless: () -> Unit,
     onEscape: () -> Unit,
 ) {
+    val strings = mihon.desktop.i18n.LocalStrings.current
     var session by remember(destination) { mutableStateOf<mihon.reader.session.ReaderSession?>(null) }
     val factory = runtime.readerFactory
     if (factory == null) {
-        Text("The reader is unavailable in this runtime.")
+        Text(strings.readerUnavailable)
         return
     }
     LaunchedEffect(destination) {
+        val isIncognito = runtime.preferences.load().incognitoMode
         session = withContext(Dispatchers.Default) {
-            factory.createSession().also { it.open(destination.chapterId) }
+            factory.createSession(isIncognito = isIncognito).also { it.open(destination.chapterId) }
         }
     }
     val activeSession = session
@@ -351,7 +504,7 @@ private fun ReaderDestination(
             verticalArrangement = Arrangement.Center,
         ) {
             CircularProgressIndicator()
-            Text("Opening chapter…")
+            Text(strings.readerOpeningChapter)
         }
     } else {
         ReaderScreen(
@@ -402,18 +555,17 @@ private fun ImportStateDialog(state: ImportActionState, onDismiss: () -> Unit) {
                 title = { Text(strings.importDialogCompleteTitle) },
                 text = {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text("Report ${result.reportId}")
-                        Text("Manga: ${result.counts.mangaInserted} inserted, ${result.counts.mangaMerged} merged")
+                        Text(strings.importReportTitle(result.reportId))
+                        Text(strings.importReportManga(result.counts.mangaInserted, result.counts.mangaMerged))
                         Text(
-                            "Chapters: ${result.counts.chaptersInserted} inserted, ${result.counts.chaptersMerged} merged",
+                            strings.importReportChapters(result.counts.chaptersInserted, result.counts.chaptersMerged),
                         )
-                        Text("Categories linked: ${result.counts.categoriesLinked}")
+                        Text(strings.importReportCategories(result.counts.categoriesLinked))
                         Text(
-                            "Preferences: ${result.counts.preferencesImported} imported, " +
-                                "${result.counts.preferencesSkipped} skipped",
+                            strings.importReportPreferences(result.counts.preferencesImported, result.counts.preferencesSkipped),
                         )
                         if (result.skipCategories.isNotEmpty()) {
-                            Text("Skip categories: ${result.skipCategories.joinToString()}")
+                            Text(strings.importReportSkipCategories(result.skipCategories.joinToString()))
                         }
                     }
                 },
@@ -423,7 +575,7 @@ private fun ImportStateDialog(state: ImportActionState, onDismiss: () -> Unit) {
             onDismissRequest = onDismiss,
             confirmButton = { TextButton(onClick = onDismiss) { Text(strings.dialogClose) } },
             title = { Text(strings.importDialogRejectedTitle) },
-            text = { Text("Category: ${state.category}") },
+            text = { Text(strings.importReportCategory(state.category)) },
         )
         is ImportActionState.Failed -> AlertDialog(
             onDismissRequest = onDismiss,

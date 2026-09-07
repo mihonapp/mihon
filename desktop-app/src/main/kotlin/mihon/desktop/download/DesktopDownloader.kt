@@ -17,10 +17,12 @@ import mihon.desktop.extension.DesktopNetworkHelper
 import mihon.desktop.extension.WindowsExtensionProcessManager
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
+import mihon.desktop.library.model.MangaDetails
 import mihon.desktop.library.repository.LibraryMutationPort
 import mihon.extension.ipc.BrokerHttpRequest
 import mihon.extension.source.model.Page
 import mihon.extension.source.model.SChapter
+import kotlinx.coroutines.cancel
 import java.io.IOException
 import java.nio.file.Files
 
@@ -34,7 +36,7 @@ class DesktopDownloader(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
     val onDownloadCompleted: ((DesktopDownload) -> Unit)? = null,
     val onDownloadFailed: ((DesktopDownload, String) -> Unit)? = null,
-) {
+) : AutoCloseable {
     private val _queueState = MutableStateFlow<List<DesktopDownload>>(emptyList())
     val queueState: StateFlow<List<DesktopDownload>> = _queueState.asStateFlow()
 
@@ -52,7 +54,13 @@ class DesktopDownloader(
         _queueState.value = restored
     }
 
-    suspend fun enqueue(manga: LibraryManga, chapters: List<LibraryChapter>, autoStart: Boolean = true) {
+    suspend fun enqueue(
+        sourceId: Long,
+        mangaId: Long,
+        mangaTitle: String,
+        chapters: List<LibraryChapter>,
+        autoStart: Boolean = true,
+    ) {
         queueMutex.withLock {
             val current = _queueState.value
             val newItems = mutableListOf<DesktopDownload>()
@@ -60,14 +68,14 @@ class DesktopDownloader(
             for (chapter in chapters) {
                 // Deduplicate: check if already in queue or already downloaded
                 if (current.any { it.chapterId == chapter.id }) continue
-                if (diskProvider.isChapterDownloaded(manga.sourceId, manga.title, chapter.name)) continue
+                if (diskProvider.isChapterDownloaded(sourceId, mangaTitle, chapter.name)) continue
 
                 newItems.add(
                     DesktopDownload(
                         chapterId = chapter.id,
-                        mangaId = manga.id,
-                        sourceId = manga.sourceId,
-                        mangaTitle = manga.title,
+                        mangaId = mangaId,
+                        sourceId = sourceId,
+                        mangaTitle = mangaTitle,
                         chapterName = chapter.name,
                         chapterUrl = chapter.url,
                         status = DownloadStatus.QUEUED,
@@ -86,6 +94,63 @@ class DesktopDownloader(
             start()
         }
     }
+
+    suspend fun enqueue(manga: LibraryManga, chapters: List<LibraryChapter>, autoStart: Boolean = true) {
+        enqueue(manga.sourceId, manga.id, manga.title, chapters, autoStart)
+    }
+
+    suspend fun enqueue(manga: MangaDetails, chapters: List<LibraryChapter>, autoStart: Boolean = true) {
+        enqueue(manga.sourceId, manga.id, manga.title, chapters, autoStart)
+    }
+
+    suspend fun checkAndDownloadAhead(
+        sourceId: Long,
+        mangaId: Long,
+        mangaTitle: String,
+        currentChapter: LibraryChapter,
+        allChapters: List<LibraryChapter>,
+        count: Int,
+        autoStart: Boolean = true,
+    ) {
+        if (count <= 0) return
+        val sorted = allChapters.sortedWith(compareBy<LibraryChapter> { it.chapterNumber }.thenBy { it.sourceOrder })
+        val currentIndex = sorted.indexOfFirst { it.id == currentChapter.id }
+        if (currentIndex < 0) return
+
+        val nextChapters = sorted.drop(currentIndex + 1)
+            .filter { !it.read && !diskProvider.isChapterDownloaded(sourceId, mangaTitle, it.name) }
+            .take(count)
+
+        if (nextChapters.isNotEmpty()) {
+            enqueue(sourceId, mangaId, mangaTitle, nextChapters, autoStart = autoStart)
+        }
+    }
+
+    suspend fun checkAndDownloadAhead(
+        manga: LibraryManga,
+        currentChapter: LibraryChapter,
+        allChapters: List<LibraryChapter>,
+        count: Int,
+        autoStart: Boolean = true,
+    ) = checkAndDownloadAhead(manga.sourceId, manga.id, manga.title, currentChapter, allChapters, count, autoStart)
+
+    suspend fun checkAndDownloadAhead(
+        manga: MangaDetails,
+        currentChapter: LibraryChapter,
+        allChapters: List<LibraryChapter>,
+        count: Int,
+        autoStart: Boolean = true,
+    ) = checkAndDownloadAhead(manga.sourceId, manga.id, manga.title, currentChapter, allChapters, count, autoStart)
+
+    fun deleteDownloadedChapter(sourceId: Long, mangaTitle: String, chapterName: String): Boolean {
+        return diskProvider.deleteChapter(sourceId, mangaTitle, chapterName)
+    }
+
+    fun deleteDownloadedChapter(manga: LibraryManga, chapter: LibraryChapter): Boolean =
+        deleteDownloadedChapter(manga.sourceId, manga.title, chapter.name)
+
+    fun deleteDownloadedChapter(manga: MangaDetails, chapter: LibraryChapter): Boolean =
+        deleteDownloadedChapter(manga.sourceId, manga.title, chapter.name)
 
     fun start(): Boolean {
         if (_isRunning.value) return false
@@ -321,5 +386,12 @@ class DesktopDownloader(
             }
             download.copy(pages = updatedPages)
         }
+    }
+
+    override fun close() {
+        downloadJob?.cancel()
+        downloadJob = null
+        _isRunning.value = false
+        scope.cancel()
     }
 }

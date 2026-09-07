@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -36,11 +39,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mihon.desktop.extension.ExtensionStoreItem
 import mihon.desktop.extension.InstalledExtension
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.library.model.LibraryManga
 import mihon.extension.model.SourceDescriptor
+import mihon.extension.source.model.SManga
+import java.io.File
 
 enum class BrowseTab {
     Sources,
     Extensions,
+    Migration,
 }
 
 data class BrowseUiState(
@@ -48,32 +56,99 @@ data class BrowseUiState(
     val installedExtensions: List<InstalledExtension> = emptyList(),
     val availableExtensions: List<ExtensionStoreItem> = emptyList(),
     val repositories: List<String> = emptyList(),
+    val sources: List<SourceDescriptor> = emptyList(),
+    val pinnedSourceIds: Set<Long> = emptySet(),
     val isLoading: Boolean = false,
+    val isInstalling: Boolean = false,
+    val installingPkg: String? = null,
     val errorMessage: String? = null,
     val searchQuery: String = "",
+    // Migration state
+    val sourcesWithMangaCounts: List<SourceWithMangaCount> = emptyList(),
+    val selectedMigrationSource: SourceWithMangaCount? = null,
+    val mangasForSelectedMigrationSource: List<LibraryManga> = emptyList(),
+    // Global search
+    val isGlobalSearchOpen: Boolean = false,
+    val globalSearchQuery: String = "",
+    val isGlobalSearching: Boolean = false,
+    val globalSearchResults: List<GlobalSearchSourceResult> = emptyList(),
 )
+
+fun chooseMextFile(): File? {
+    val dialog = java.awt.FileDialog(
+        null as java.awt.Frame?,
+        "Select Extension Package (.mext)",
+        java.awt.FileDialog.LOAD,
+    )
+    dialog.setFilenameFilter { _, name -> name.endsWith(".mext", ignoreCase = true) }
+    dialog.isVisible = true
+    val file = dialog.file ?: return null
+    val dir = dialog.directory ?: return null
+    return File(dir, file)
+}
 
 @Composable
 fun BrowseScreen(
     state: BrowseUiState,
     onTabSelected: (BrowseTab) -> Unit,
     onSearchQueryChange: (String) -> Unit,
-    onSourceSelected: (SourceDescriptor) -> Unit,
-    onInstallExtension: (ExtensionStoreItem) -> Unit,
-    onUninstallExtension: (String) -> Unit,
-    onToggleExtensionEnabled: (String, Boolean) -> Unit,
-    onAddRepository: (String) -> Unit,
-    onRemoveRepository: (String) -> Unit,
+    onSourceSelected: (SourceDescriptor, SourceListingMode) -> Unit = { _, _ -> },
+    onTogglePinSource: (Long) -> Unit = {},
+    onInstallExtension: (ExtensionStoreItem) -> Unit = {},
+    onInstallFromFile: (File) -> Unit = {},
+    onUninstallExtension: (String) -> Unit = {},
+    onToggleExtensionEnabled: (String, Boolean) -> Unit = { _, _ -> },
+    onAddRepository: (String) -> Unit = {},
+    onRemoveRepository: (String) -> Unit = {},
+    onUpdateAllPending: () -> Unit = {},
     onRefresh: () -> Unit = {},
+    // Global search handlers
+    onOpenGlobalSearch: () -> Unit = {},
+    onCloseGlobalSearch: () -> Unit = {},
+    onGlobalSearchQueryChange: (String) -> Unit = {},
+    onPerformGlobalSearch: () -> Unit = {},
+    onGlobalMangaSelected: (SourceDescriptor, SManga) -> Unit = { _, _ -> },
+    // Migration handlers
+    onSelectMigrationSource: (SourceWithMangaCount?) -> Unit = {},
+    onSearchTargetMigrationSource: suspend (sourceId: Long, query: String) -> List<SManga> = { _, _ -> emptyList() },
+    onPerformMigration: (
+        oldManga: LibraryManga,
+        targetSource: SourceDescriptor,
+        targetManga: SManga,
+    ) -> Unit = { _, _, _ -> },
 ) {
+    if (state.isGlobalSearchOpen) {
+        GlobalSearchScreen(
+            query = state.globalSearchQuery,
+            onQueryChange = onGlobalSearchQueryChange,
+            onSearch = onPerformGlobalSearch,
+            onBack = onCloseGlobalSearch,
+            isSearching = state.isGlobalSearching,
+            sourceResults = state.globalSearchResults,
+            onMangaSelected = onGlobalMangaSelected,
+            onViewSource = { source ->
+                onCloseGlobalSearch()
+                onSourceSelected(source, SourceListingMode.Popular)
+            },
+        )
+        return
+    }
+
     var showRepoDialog by remember { mutableStateOf(false) }
     var pendingInstallItem: ExtensionStoreItem? by remember { mutableStateOf(null) }
-    val strings = mihon.desktop.i18n.LocalStrings.current
+    val strings = LocalStrings.current
 
-    Column(modifier = Modifier.fillMaxSize().testTag("browse-screen")) {
-        // Header
+    // Compute update count
+    val installedPkgMap = state.installedExtensions.associateBy { it.pkg }
+    val pendingUpdates = state.availableExtensions.filter { available ->
+        val installed = installedPkgMap[available.pkg]
+        installed != null && available.versionCode > installed.manifest.versionCode
+    }
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp).testTag("browse-screen")) {
+        // Top Header
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -82,7 +157,26 @@ fun BrowseScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
             )
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                OutlinedButton(
+                    onClick = onOpenGlobalSearch,
+                    modifier = Modifier.testTag("open-global-search-button"),
+                ) {
+                    Text(strings.browseGlobalSearch)
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                OutlinedButton(
+                    onClick = {
+                        val file = chooseMextFile()
+                        if (file != null) {
+                            onInstallFromFile(file)
+                        }
+                    },
+                    modifier = Modifier.testTag("install-file-button"),
+                ) {
+                    Text(strings.browseInstallFromFile)
+                }
+                Spacer(modifier = Modifier.width(8.dp))
                 OutlinedButton(
                     onClick = { showRepoDialog = true },
                     modifier = Modifier.testTag("manage-repos-button"),
@@ -107,25 +201,41 @@ fun BrowseScreen(
             Tab(
                 selected = state.selectedTab == BrowseTab.Sources,
                 onClick = { onTabSelected(BrowseTab.Sources) },
-                text = { Text(strings.browseTabSources) },
+                text = { Text("${strings.browseTabSources} (${state.sources.size})") },
                 modifier = Modifier.testTag("browse-tab-sources"),
             )
             Tab(
                 selected = state.selectedTab == BrowseTab.Extensions,
                 onClick = { onTabSelected(BrowseTab.Extensions) },
-                text = { Text("${strings.browseTabExtensions} (${state.availableExtensions.size})") },
+                text = {
+                    if (pendingUpdates.isNotEmpty()) {
+                        BadgedBox(badge = { Badge { Text(pendingUpdates.size.toString()) } }) {
+                            Text("${strings.browseTabExtensions} (${state.availableExtensions.size})")
+                        }
+                    } else {
+                        Text("${strings.browseTabExtensions} (${state.availableExtensions.size})")
+                    }
+                },
                 modifier = Modifier.testTag("browse-tab-extensions"),
+            )
+            Tab(
+                selected = state.selectedTab == BrowseTab.Migration,
+                onClick = { onTabSelected(BrowseTab.Migration) },
+                text = { Text(strings.browseTabMigration) },
+                modifier = Modifier.testTag("browse-tab-migration"),
             )
         }
 
-        // Search Bar
-        OutlinedTextField(
-            value = state.searchQuery,
-            onValueChange = onSearchQueryChange,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp).testTag("browse-search-bar"),
-            placeholder = { Text("Search sources or extensions...") },
-            singleLine = true,
-        )
+        // Filter / Search Bar (for Sources & Extensions tabs)
+        if (state.selectedTab != BrowseTab.Migration) {
+            OutlinedTextField(
+                value = state.searchQuery,
+                onValueChange = onSearchQueryChange,
+                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp).testTag("browse-search-bar"),
+                placeholder = { Text(strings.browseSearchPlaceholder) },
+                singleLine = true,
+            )
+        }
 
         // Error Banner
         state.errorMessage?.let { error ->
@@ -143,12 +253,30 @@ fun BrowseScreen(
             }
         } else {
             when (state.selectedTab) {
-                BrowseTab.Sources -> SourcesListView(state, onSourceSelected)
+                BrowseTab.Sources -> SourcesListView(
+                    sources = state.sources,
+                    pinnedIds = state.pinnedSourceIds,
+                    searchQuery = state.searchQuery,
+                    onSourceSelected = onSourceSelected,
+                    onTogglePin = onTogglePinSource,
+                )
                 BrowseTab.Extensions -> ExtensionsListView(
                     state = state,
+                    pendingUpdates = pendingUpdates,
                     onRequestInstall = { item -> pendingInstallItem = item },
                     onUninstallExtension = onUninstallExtension,
                     onToggleEnabled = onToggleExtensionEnabled,
+                    onUpdateAllPending = onUpdateAllPending,
+                )
+                BrowseTab.Migration -> MigrateSourceScreen(
+                    sourcesWithCounts = state.sourcesWithMangaCounts,
+                    selectedSource = state.selectedMigrationSource,
+                    mangasForSelectedSource = state.mangasForSelectedMigrationSource,
+                    availableTargetSources = state.sources,
+                    onSelectSource = { onSelectMigrationSource(it) },
+                    onBackToSourceList = { onSelectMigrationSource(null) },
+                    onSearchTargetSource = onSearchTargetMigrationSource,
+                    onPerformMigration = onPerformMigration,
                 )
             }
         }
@@ -158,26 +286,25 @@ fun BrowseScreen(
     pendingInstallItem?.let { item ->
         AlertDialog(
             onDismissRequest = { pendingInstallItem = null },
-            title = { Text("Install Extension: " + item.name) },
+            title = { Text(strings.browseInstallExtensionTitle(item.name)) },
             text = {
                 Column {
-                    Text("Package: " + item.pkg)
-                    Text("Version: " + item.version)
-                    Text("Language: " + item.lang)
+                    Text(strings.browsePackageLabel(item.pkg))
+                    Text(strings.browseVersionLabel(item.version))
+                    Text(strings.browseLanguageLabel(item.lang.uppercase()))
                     if (item.declaredDomains.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Declared Network Domains:",
+                            text = strings.browseNetworkDomainsHeader,
                             fontWeight = FontWeight.SemiBold,
                         )
                         item.declaredDomains.forEach { domain ->
-                            Text(" - " + domain, style = MaterialTheme.typography.bodySmall)
+                            Text(" • $domain", style = MaterialTheme.typography.bodySmall)
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Caution: Only install extensions from repositories you trust. " +
-                            "Extensions run in a sandboxed host with brokered network access.",
+                        text = strings.browseNetworkPermissionNotice,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.outline,
                     )
@@ -192,12 +319,12 @@ fun BrowseScreen(
                     },
                     modifier = Modifier.testTag("confirm-install-button"),
                 ) {
-                    Text("Trust & Install")
+                    Text(strings.browseTrustAndInstall)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { pendingInstallItem = null }) {
-                    Text("Cancel")
+                    Text(strings.dialogCancel)
                 }
             },
         )
@@ -208,7 +335,7 @@ fun BrowseScreen(
         var newRepoUrl by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showRepoDialog = false },
-            title = { Text("Manage Extension Repositories") },
+            title = { Text(strings.browseManageRepositories) },
             text = {
                 Column(modifier = Modifier.fillMaxWidth().height(350.dp)) {
                     Row(
@@ -232,12 +359,12 @@ fun BrowseScreen(
                             },
                             modifier = Modifier.testTag("add-repo-button"),
                         ) {
-                            Text("Add")
+                            Text(strings.browseAddRepository)
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Configured Repositories:", fontWeight = FontWeight.SemiBold)
+                    Text(strings.browseConfiguredRepositories, fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.height(8.dp))
 
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -254,9 +381,9 @@ fun BrowseScreen(
                                 )
                                 TextButton(
                                     onClick = { onRemoveRepository(repo) },
-                                    modifier = Modifier.testTag("remove-repo-" + repo),
+                                    modifier = Modifier.testTag("remove-repo-$repo"),
                                 ) {
-                                    Text("Remove", color = MaterialTheme.colorScheme.error)
+                                    Text(strings.browseRemoveRepository, color = MaterialTheme.colorScheme.error)
                                 }
                             }
                             HorizontalDivider()
@@ -266,7 +393,7 @@ fun BrowseScreen(
             },
             confirmButton = {
                 Button(onClick = { showRepoDialog = false }) {
-                    Text("Close")
+                    Text(strings.dialogClose)
                 }
             },
         )
@@ -275,58 +402,138 @@ fun BrowseScreen(
 
 @Composable
 private fun SourcesListView(
-    state: BrowseUiState,
-    onSourceSelected: (SourceDescriptor) -> Unit,
+    sources: List<SourceDescriptor>,
+    pinnedIds: Set<Long>,
+    searchQuery: String,
+    onSourceSelected: (SourceDescriptor, SourceListingMode) -> Unit,
+    onTogglePin: (Long) -> Unit,
 ) {
-    val enabledSources = state.installedExtensions
-        .filter { it.isEnabled }
-        .flatMap { it.manifest.sources }
-        .filter { source ->
-            state.searchQuery.isBlank() ||
-                source.name.contains(state.searchQuery, ignoreCase = true) ||
-                source.lang.contains(state.searchQuery, ignoreCase = true)
-        }
+    val strings = LocalStrings.current
+    val filteredSources = sources.filter { source ->
+        searchQuery.isBlank() ||
+            source.name.contains(searchQuery, ignoreCase = true) ||
+            source.lang.contains(searchQuery, ignoreCase = true)
+    }
 
-    if (enabledSources.isEmpty()) {
+    val pinnedSources = filteredSources.filter { pinnedIds.contains(it.id) }
+    val otherSources = filteredSources.filterNot { pinnedIds.contains(it.id) }
+
+    if (filteredSources.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
             Text(
-                text = if (state.installedExtensions.isEmpty()) {
-                    "No extensions installed. Go to the Extensions tab to install sources."
-                } else {
-                    "No sources matching query."
-                },
+                text = strings.browseNoMangaFound,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.outline,
             )
         }
     } else {
         LazyColumn(modifier = Modifier.fillMaxSize().testTag("sources-list")) {
-            items(enabledSources, key = { it.id }) { source ->
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                        .clickable { onSourceSelected(source) }
-                        .padding(16.dp)
-                        .testTag("source-item-" + source.id),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Column {
-                        Text(
-                            text = source.name,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        Text(
-                            text = "Lang: " + source.lang.uppercase() + " (ID: " + source.id + ")",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.outline,
-                        )
-                    }
-                    OutlinedButton(onClick = { onSourceSelected(source) }) {
-                        Text("Browse")
-                    }
+            // Pinned Section
+            if (pinnedSources.isNotEmpty()) {
+                item {
+                    Text(
+                        text = strings.browsePin.replace("☆", "").trim(),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(vertical = 8.dp),
+                    )
                 }
-                HorizontalDivider()
+                items(pinnedSources, key = { "pinned_${it.id}" }) { source ->
+                    SourceListItem(
+                        source = source,
+                        isPinned = true,
+                        onSourceSelected = onSourceSelected,
+                        onTogglePin = onTogglePin,
+                    )
+                    HorizontalDivider()
+                }
+            }
+
+            // All/Other Sources Grouped by Lang
+            val grouped = otherSources.groupBy { it.lang.uppercase() }
+            grouped.forEach { (lang, langSources) ->
+                item {
+                    Text(
+                        text = strings.browseSourceLanguage(lang),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
+                    )
+                }
+                items(langSources, key = { it.id }) { source ->
+                    SourceListItem(
+                        source = source,
+                        isPinned = false,
+                        onSourceSelected = onSourceSelected,
+                        onTogglePin = onTogglePin,
+                    )
+                    HorizontalDivider()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SourceListItem(
+    source: SourceDescriptor,
+    isPinned: Boolean,
+    onSourceSelected: (SourceDescriptor, SourceListingMode) -> Unit,
+    onTogglePin: (Long) -> Unit,
+) {
+    val strings = LocalStrings.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onSourceSelected(source, SourceListingMode.Popular) }
+            .padding(vertical = 12.dp, horizontal = 8.dp)
+            .testTag("source-item-${source.id}"),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = source.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                if (source.id == 2499283573021220255L) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "[Built-in]",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
+            Text(
+                text = "${strings.browseSourceLanguage(source.lang)} • ID: ${source.id}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.outline,
+            )
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            OutlinedButton(
+                onClick = { onSourceSelected(source, SourceListingMode.Latest) },
+                enabled = source.supportsLatest,
+                modifier = Modifier.padding(end = 6.dp),
+            ) {
+                Text(strings.browseSourceLatest)
+            }
+            Button(
+                onClick = { onSourceSelected(source, SourceListingMode.Popular) },
+                modifier = Modifier.padding(end = 6.dp),
+            ) {
+                Text(strings.browseSourceBrowse)
+            }
+            TextButton(
+                onClick = { onTogglePin(source.id) },
+                modifier = Modifier.testTag("pin-btn-${source.id}"),
+            ) {
+                Text(if (isPinned) strings.browseUnpin else strings.browsePin)
             }
         }
     }
@@ -335,12 +542,15 @@ private fun SourcesListView(
 @Composable
 private fun ExtensionsListView(
     state: BrowseUiState,
+    pendingUpdates: List<ExtensionStoreItem>,
     onRequestInstall: (ExtensionStoreItem) -> Unit,
     onUninstallExtension: (String) -> Unit,
     onToggleEnabled: (String, Boolean) -> Unit,
+    onUpdateAllPending: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     val installedPkgMap = state.installedExtensions.associateBy { it.pkg }
-    val filtered = state.availableExtensions.filter { item ->
+    val filteredAvailable = state.availableExtensions.filter { item ->
         state.searchQuery.isBlank() ||
             item.name.contains(state.searchQuery, ignoreCase = true) ||
             item.pkg.contains(state.searchQuery, ignoreCase = true) ||
@@ -348,67 +558,213 @@ private fun ExtensionsListView(
     }
 
     LazyColumn(modifier = Modifier.fillMaxSize().testTag("extensions-list")) {
-        items(filtered, key = { it.pkg }) { item ->
-            val installed = installedPkgMap[item.pkg]
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp).testTag("extension-item-" + item.pkg),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = item.name,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "v" + item.version,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
+        // 1. Pending Updates Section
+        if (pendingUpdates.isNotEmpty()) {
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Text(
-                        text = item.pkg + " (" + item.lang.uppercase() + ")",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.outline,
+                        text = "${strings.browseUpdate} (${pendingUpdates.size})",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
                     )
-                    if (item.sources.isNotEmpty()) {
-                        Text(
-                            text = "Sources: " + item.sources.joinToString(", ") { it.name },
-                            style = MaterialTheme.typography.bodySmall,
-                        )
-                    }
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (installed == null) {
-                        Button(
-                            onClick = { onRequestInstall(item) },
-                            modifier = Modifier.testTag("install-btn-" + item.pkg),
-                        ) {
-                            Text("Install")
-                        }
-                    } else {
-                        // Installed: Show enable switch and uninstall button
-                        OutlinedButton(
-                            onClick = { onToggleEnabled(item.pkg, !installed.isEnabled) },
-                            modifier = Modifier.testTag("toggle-btn-" + item.pkg),
-                        ) {
-                            Text(if (installed.isEnabled) "Disable" else "Enable")
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        TextButton(
-                            onClick = { onUninstallExtension(item.pkg) },
-                            modifier = Modifier.testTag("uninstall-btn-" + item.pkg),
-                        ) {
-                            Text("Uninstall", color = MaterialTheme.colorScheme.error)
-                        }
+                    Button(onClick = onUpdateAllPending, modifier = Modifier.testTag("update-all-button")) {
+                        Text(strings.browseUpdateAll)
                     }
                 }
             }
-            HorizontalDivider()
+            items(pendingUpdates, key = { "update_${it.pkg}" }) { item ->
+                ExtensionItemRow(
+                    item = item,
+                    installed = installedPkgMap[item.pkg],
+                    isInstalling = state.isInstalling && state.installingPkg == item.pkg,
+                    onRequestInstall = onRequestInstall,
+                    onUninstallExtension = onUninstallExtension,
+                    onToggleEnabled = onToggleEnabled,
+                )
+                HorizontalDivider()
+            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+        }
+
+        // 2. Installed Extensions Section
+        if (state.installedExtensions.isNotEmpty()) {
+            item {
+                Text(
+                    text = "${strings.browseInstalledBadge} (${state.installedExtensions.size})",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(vertical = 8.dp),
+                )
+            }
+            items(state.installedExtensions, key = { "installed_${it.pkg}" }) { installed ->
+                val availableMatch = state.availableExtensions.find { it.pkg == installed.pkg }
+                val item = availableMatch ?: ExtensionStoreItem(
+                    pkg = installed.pkg,
+                    name = installed.manifest.name,
+                    version = installed.manifest.version,
+                    versionCode = installed.manifest.versionCode,
+                    lang = installed.manifest.lang,
+                    sources = installed.manifest.sources,
+                )
+                ExtensionItemRow(
+                    item = item,
+                    installed = installed,
+                    isInstalling = state.isInstalling && state.installingPkg == item.pkg,
+                    onRequestInstall = onRequestInstall,
+                    onUninstallExtension = onUninstallExtension,
+                    onToggleEnabled = onToggleEnabled,
+                )
+                HorizontalDivider()
+            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+        }
+
+        // 3. Available Extensions (The Store)
+        val notInstalled = filteredAvailable.filter { !installedPkgMap.containsKey(it.pkg) }
+        val groupedAvailable = notInstalled.groupBy { it.lang.uppercase() }
+
+        item {
+            Text(
+                text = "${strings.browseTabExtensions} (${notInstalled.size})",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 8.dp),
+            )
+        }
+
+        if (notInstalled.isEmpty()) {
+            item {
+                Text(
+                    text = if (state.availableExtensions.isEmpty()) {
+                        "No extension repositories loaded. Add a repository or install a .mext file from your disk."
+                    } else {
+                        strings.browseNoMangaFound
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.padding(vertical = 12.dp),
+                )
+            }
+        } else {
+            groupedAvailable.forEach { (lang, items) ->
+                item {
+                    Text(
+                        text = "${strings.browseSourceLanguage(lang)} (${items.size})",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.padding(top = 10.dp, bottom = 4.dp),
+                    )
+                }
+                items(items, key = { it.pkg }) { item ->
+                    ExtensionItemRow(
+                        item = item,
+                        installed = null,
+                        isInstalling = state.isInstalling && state.installingPkg == item.pkg,
+                        onRequestInstall = onRequestInstall,
+                        onUninstallExtension = onUninstallExtension,
+                        onToggleEnabled = onToggleEnabled,
+                    )
+                    HorizontalDivider()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExtensionItemRow(
+    item: ExtensionStoreItem,
+    installed: InstalledExtension?,
+    isInstalling: Boolean,
+    onRequestInstall: (ExtensionStoreItem) -> Unit,
+    onUninstallExtension: (String) -> Unit,
+    onToggleEnabled: (String, Boolean) -> Unit,
+) {
+    val strings = LocalStrings.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp, horizontal = 8.dp)
+            .testTag("extension-item-${item.pkg}"),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = item.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "v${item.version}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                if (item.isNsfw) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "18+",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            }
+            Text(
+                text = "${item.pkg} • ${item.lang.uppercase()}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.outline,
+            )
+            if (item.sources.isNotEmpty()) {
+                Text(
+                    text = "Sources: ${item.sources.joinToString(", ") { it.name }}",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (isInstalling) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
+            } else if (installed == null) {
+                Button(
+                    onClick = { onRequestInstall(item) },
+                    modifier = Modifier.testTag("install-btn-${item.pkg}"),
+                ) {
+                    Text(strings.browseInstall)
+                }
+            } else {
+                val hasUpdate = item.versionCode > installed.manifest.versionCode
+                if (hasUpdate) {
+                    Button(
+                        onClick = { onRequestInstall(item) },
+                        modifier = Modifier.testTag("update-btn-${item.pkg}"),
+                    ) {
+                        Text(strings.browseUpdate)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                OutlinedButton(
+                    onClick = { onToggleEnabled(item.pkg, !installed.isEnabled) },
+                    modifier = Modifier.testTag("toggle-btn-${item.pkg}"),
+                ) {
+                    Text(if (installed.isEnabled) strings.browseDisable else strings.browseEnable)
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                TextButton(
+                    onClick = { onUninstallExtension(item.pkg) },
+                    modifier = Modifier.testTag("uninstall-btn-${item.pkg}"),
+                ) {
+                    Text(strings.browseUninstall, color = MaterialTheme.colorScheme.error)
+                }
+            }
         }
     }
 }

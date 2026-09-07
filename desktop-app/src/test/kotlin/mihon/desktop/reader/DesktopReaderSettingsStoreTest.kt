@@ -38,12 +38,24 @@ class DesktopReaderSettingsStoreTest {
             ),
             wheelBehavior = ReaderWheelBehavior.SCROLL,
             lastWindowMode = ReaderWindowMode.FULLSCREEN,
+            colorFilter = ReaderColorFilter.SEPIA,
+            backgroundColor = ReaderBackgroundColor.WARM_CREAM,
+            cropBorders = true,
+            cropBordersWebtoon = true,
+            webtoonMaxWidth = 1000,
+            webtoonSidePadding = 15,
         )
 
         store.save(expected)
 
         DesktopReaderSettingsStore(DesktopPreferenceStore(file)).load() shouldBe expected
         Files.readString(file).contains("reader.v1.mode=DUAL_RTL") shouldBe true
+        Files.readString(file).contains("reader.v1.color-filter=SEPIA") shouldBe true
+        Files.readString(file).contains("reader.v1.background-color=WARM_CREAM") shouldBe true
+        Files.readString(file).contains("reader.v1.crop-borders=true") shouldBe true
+        Files.readString(file).contains("reader.v1.crop-borders-webtoon=true") shouldBe true
+        Files.readString(file).contains("reader.v1.webtoon-max-width=1000") shouldBe true
+        Files.readString(file).contains("reader.v1.webtoon-side-padding=15") shouldBe true
     }
 
     @Test

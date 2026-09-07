@@ -65,6 +65,19 @@ class DownloadDiskProvider(
         return Files.exists(chapterDir) && Files.isDirectory(chapterDir)
     }
 
+    fun deleteChapter(sourceId: Long, mangaTitle: String, chapterName: String): Boolean {
+        val chapterDir = getChapterDir(sourceId, mangaTitle, chapterName)
+        if (!Files.exists(chapterDir)) return false
+        return try {
+            Files.walk(chapterDir)
+                .sorted(Comparator.reverseOrder())
+                .forEach { Files.deleteIfExists(it) }
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     fun finalizeChapter(
         sourceId: Long,
         mangaId: Long,

@@ -1,4 +1,4 @@
-﻿package mihon.desktop.ui.browse
+package mihon.desktop.ui.browse
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +32,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
 import mihon.extension.model.SourceDescriptor
+import mihon.extension.source.model.Filter
+import mihon.extension.source.model.FilterList
 import mihon.extension.source.model.SManga
 
 enum class SourceListingMode {
@@ -51,7 +54,33 @@ data class BrowseSourceUiState(
     val inLibraryUrls: Set<String> = emptySet(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-)
+    val filterList: FilterList = FilterList(),
+    val isFilterDialogOpen: Boolean = false,
+) {
+    val activeFilterCount: Int
+        get() {
+            var count = 0
+            for (f in filterList) {
+                when (f) {
+                    is Filter.CheckBox -> if (f.state) count++
+                    is Filter.Select<*> -> if (f.state > 0) count++
+                    is Filter.Text -> if (f.state.isNotBlank()) count++
+                    is Filter.TriState -> if (f.state != Filter.TriState.STATE_IGNORE) count++
+                    is Filter.Group<*> -> {
+                        for (child in f.state) {
+                            if (child is Filter.CheckBox && child.state) count++
+                            if (child is Filter.TriState && child.state != Filter.TriState.STATE_IGNORE) count++
+                        }
+                    }
+                    is Filter.Sort -> {
+                        if (f.state != null && (f.state!!.index != 0 || f.state!!.ascending)) count++
+                    }
+                    else -> {}
+                }
+            }
+            return count
+        }
+}
 
 @Composable
 fun BrowseSourceScreen(
@@ -63,7 +92,13 @@ fun BrowseSourceScreen(
     onPageChange: (Int) -> Unit,
     onMangaSelected: (SManga) -> Unit,
     onRetry: () -> Unit = {},
+    onOpenFilters: () -> Unit = {},
+    onCloseFilters: () -> Unit = {},
+    onResetFilters: () -> Unit = {},
+    onApplyFilters: (FilterList) -> Unit = {},
 ) {
+    val strings = LocalStrings.current
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp).testTag("browse-source-screen")) {
         // Header
         Row(
@@ -73,7 +108,7 @@ fun BrowseSourceScreen(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedButton(onClick = onBack, modifier = Modifier.testTag("source-back-btn")) {
-                    Text("Back")
+                    Text(strings.mangaDetailBack)
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
@@ -83,7 +118,7 @@ fun BrowseSourceScreen(
                         fontWeight = FontWeight.Bold,
                     )
                     Text(
-                        text = "Language: " + state.source.lang.uppercase(),
+                        text = strings.browseSourceLanguage(state.source.lang.uppercase()),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.outline,
                     )
@@ -95,7 +130,7 @@ fun BrowseSourceScreen(
                 FilterChip(
                     selected = state.mode == SourceListingMode.Popular,
                     onClick = { onModeChange(SourceListingMode.Popular) },
-                    label = { Text("Popular") },
+                    label = { Text(strings.browseSourcePopular) },
                     modifier = Modifier.testTag("mode-popular-chip"),
                 )
                 if (state.source.supportsLatest) {
@@ -103,7 +138,7 @@ fun BrowseSourceScreen(
                     FilterChip(
                         selected = state.mode == SourceListingMode.Latest,
                         onClick = { onModeChange(SourceListingMode.Latest) },
-                        label = { Text("Latest") },
+                        label = { Text(strings.browseSourceLatest) },
                         modifier = Modifier.testTag("mode-latest-chip"),
                     )
                 }
@@ -118,7 +153,7 @@ fun BrowseSourceScreen(
             OutlinedTextField(
                 value = state.query,
                 onValueChange = onQueryChange,
-                placeholder = { Text("Search titles...") },
+                placeholder = { Text(strings.browseSearchTitlesPlaceholder) },
                 modifier = Modifier.weight(1f).testTag("source-search-input"),
                 singleLine = true,
             )
@@ -127,7 +162,17 @@ fun BrowseSourceScreen(
                 onClick = onSearch,
                 modifier = Modifier.testTag("source-search-btn"),
             ) {
-                Text("Search")
+                Text(strings.browseSearchButton)
+            }
+            if (state.filterList.isNotEmpty()) {
+                Spacer(modifier = Modifier.width(8.dp))
+                OutlinedButton(
+                    onClick = onOpenFilters,
+                    modifier = Modifier.testTag("source-filter-btn"),
+                ) {
+                    val count = state.activeFilterCount
+                    Text(strings.browseFiltersButton(count))
+                }
             }
         }
 
@@ -139,7 +184,7 @@ fun BrowseSourceScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = error, color = MaterialTheme.colorScheme.error)
-                Button(onClick = onRetry) { Text("Retry") }
+                Button(onClick = onRetry) { Text(strings.libraryRetry) }
             }
         }
 
@@ -151,7 +196,7 @@ fun BrowseSourceScreen(
         } else if (state.mangas.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
                 Text(
-                    "No manga found",
+                    strings.browseNoMangaFound,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -180,18 +225,11 @@ fun BrowseSourceScreen(
                                     .height(200.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Surface(
-                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                mihon.desktop.ui.common.MangaCover(
+                                    thumbnailUrl = manga.thumbnailUrl,
+                                    contentDescription = manga.title,
                                     modifier = Modifier.fillMaxSize(),
-                                ) {
-                                    Box(contentAlignment = Alignment.Center) {
-                                        Text(
-                                            text = manga.title.take(2).uppercase(),
-                                            style = MaterialTheme.typography.headlineMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                    }
-                                }
+                                )
                                 if (inLibrary) {
                                     Surface(
                                         color = MaterialTheme.colorScheme.primary,
@@ -199,7 +237,7 @@ fun BrowseSourceScreen(
                                         modifier = Modifier.align(Alignment.TopEnd).padding(4.dp),
                                     ) {
                                         Text(
-                                            text = "IN LIBRARY",
+                                            text = strings.browseInLibraryBadge,
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onPrimary,
                                             modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
@@ -232,11 +270,11 @@ fun BrowseSourceScreen(
                 enabled = state.page > 1 && !state.isLoading,
                 modifier = Modifier.testTag("prev-page-btn"),
             ) {
-                Text("Previous")
+                Text(strings.browsePrevPage)
             }
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = "Page " + state.page,
+                text = strings.browsePageNumber(state.page),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -246,8 +284,19 @@ fun BrowseSourceScreen(
                 enabled = state.hasNextPage && !state.isLoading,
                 modifier = Modifier.testTag("next-page-btn"),
             ) {
-                Text("Next")
+                Text(strings.browseNextPage)
             }
+        }
+
+        if (state.isFilterDialogOpen) {
+            SourceFilterDialog(
+                filterList = state.filterList,
+                onDismissRequest = onCloseFilters,
+                onReset = onResetFilters,
+                onApply = { applied ->
+                    onApplyFilters(applied)
+                },
+            )
         }
     }
 }

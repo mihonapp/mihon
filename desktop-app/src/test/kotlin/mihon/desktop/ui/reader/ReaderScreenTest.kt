@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.DesktopReaderSettingsStore
+import mihon.desktop.reader.ReaderColorFilter
 import mihon.reader.image.IntRect
 import mihon.reader.image.TileKey
 import mihon.reader.model.FrameId
@@ -76,6 +77,9 @@ class ReaderScreenTest {
         onNodeWithTag("reader-cover-toggle").performClick()
         onNodeWithTag("reader-scale-menu").performClick()
         onNodeWithTag("reader-scale-FIT_HEIGHT").performClick()
+        onNodeWithTag("reader-filter-menu").performClick()
+        onNodeWithTag("reader-filter-INVERT").performClick()
+        onNodeWithTag("reader-crop-toggle").performClick()
         onNodeWithTag("reader-zoom-in").performClick()
         onNodeWithTag("reader-fullscreen").performClick()
         onNodeWithTag("reader-borderless").performClick()
@@ -87,6 +91,8 @@ class ReaderScreenTest {
         store.load().mode shouldBe ReadingMode.DUAL_RTL
         store.load().coverOffset shouldBe true
         store.load().scaleMode shouldBe ScaleMode.FIT_HEIGHT
+        store.load().colorFilter shouldBe ReaderColorFilter.INVERT
+        store.load().cropBorders shouldBe true
         fullscreen shouldBe 1
         borderless shouldBe 1
     }
@@ -107,6 +113,12 @@ class ReaderScreenTest {
         onNodeWithTag("reader-setting-mode").assertExists()
         onNodeWithTag("reader-setting-scale").assertExists()
         onNodeWithTag("reader-setting-cover").assertExists()
+        onNodeWithTag("reader-setting-filter").assertExists()
+        onNodeWithTag("reader-setting-bg").assertExists()
+        onNodeWithTag("reader-setting-crop-paged").assertExists()
+        onNodeWithTag("reader-setting-crop-webtoon").assertExists()
+        onNodeWithTag("reader-setting-webtoon-max-width").assertExists()
+        onNodeWithTag("reader-setting-webtoon-side-padding").assertExists()
         onNodeWithTag("reader-setting-left-boundary")
             .performSemanticsAction(SemanticsActions.SetProgress) { it(40f) }
         onNodeWithTag("reader-setting-center-boundary")

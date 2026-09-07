@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import mihon.desktop.reader.ReaderBackgroundColor
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.ReaderLayout
 import mihon.reader.model.ReaderPan
@@ -68,6 +69,9 @@ fun ReaderCanvas(
     state: ReaderState,
     onAction: (ReaderAction) -> Unit,
     modifier: Modifier = Modifier,
+    backgroundColor: ReaderBackgroundColor = ReaderBackgroundColor.DARK_GRAY,
+    webtoonMaxWidth: Int = 800,
+    webtoonSidePadding: Int = 0,
     pageContent: ReaderPageContent = { _, pageIndex, contentModifier ->
         DefaultReaderPage(pageIndex, contentModifier)
     },
@@ -75,7 +79,7 @@ fun ReaderCanvas(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(READER_SURFACE_COLOR)
+            .background(backgroundColor.toComposeColor())
             .testTag("reader-canvas")
             .onSizeChanged { size ->
                 if (size.width > 0 && size.height > 0) {
@@ -91,6 +95,8 @@ fun ReaderCanvas(
                     viewportHeight = maxHeight,
                     onAction = onAction,
                     pageContent = pageContent,
+                    webtoonMaxWidth = webtoonMaxWidth,
+                    webtoonSidePadding = webtoonSidePadding,
                     modifier = Modifier.fillMaxSize().testTag("reader-continuous"),
                 )
             } else {

@@ -42,6 +42,14 @@ class OfflineTrackingQueue(
         saveUnsafe(current)
     }
 
+    suspend fun enqueue(track: DesktopTrackRecord) = enqueue(
+        QueuedTrackingUpdate(
+            mangaId = track.mangaId,
+            trackerId = track.trackerId,
+            chapterNumber = track.lastChapterRead,
+        ),
+    )
+
     suspend fun peekAll(): List<QueuedTrackingUpdate> = mutex.withLock {
         loadUnsafe()
     }

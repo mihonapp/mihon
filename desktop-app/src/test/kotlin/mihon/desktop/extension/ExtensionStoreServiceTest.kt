@@ -1,4 +1,4 @@
-﻿package mihon.desktop.extension
+package mihon.desktop.extension
 
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
@@ -73,6 +73,39 @@ class ExtensionStoreServiceTest {
         item.sources.shouldHaveSize(1)
         item.sources[0].id shouldBe 24992835730212389L
         item.sources[0].className shouldBe ".MangaDex"
+    }
+
+    @Test
+    fun `hides unsupported desktop meta packages from parsed store index`(@TempDir tempDir: Path) {
+        val prefStore = DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
+        val service = ExtensionStoreService(prefStore)
+
+        val sampleJson = """
+        [
+            {
+                "name": "Outdated App",
+                "pkg": "eu.kanade.tachiyomi.extension.all.keiyoushi",
+                "version": "1.4.1",
+                "code": 104
+            },
+            {
+                "name": "Update to Mihon 0.20.1+",
+                "pkg": "eu.kanade.tachiyomi.extension.all.mihon",
+                "version": "1.4.1",
+                "code": 104
+            },
+            {
+                "name": "MangaDex",
+                "pkg": "eu.kanade.tachiyomi.extension.all.mangadex",
+                "version": "1.4.1",
+                "code": 104
+            }
+        ]
+        """.trimIndent()
+
+        val items = service.parseIndex(sampleJson, "https://repo.mihon.app/extensions")
+        items.shouldHaveSize(1)
+        items[0].pkg shouldBe "eu.kanade.tachiyomi.extension.all.mangadex"
     }
 
     @Test

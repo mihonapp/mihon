@@ -25,12 +25,20 @@ class DesktopNetworkHelper(
     private val defaultUserAgent: String =
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
             "Chrome/128.0.0.0 Safari/537.36 MihonW/1.0",
+    private val cookieStore: DesktopCookieStore? = null,
 ) {
     // Whitelist per package: pkg -> Set of allowed domains
     private val packageWhitelists = ConcurrentHashMap<String, Set<String>>()
 
     // Global allowed domains across all active extensions: Set of allowed domains
     private val activeWhitelists = ConcurrentHashMap.newKeySet<String>()
+
+    init {
+        registerExtensionDomains(
+            "builtin",
+            listOf("api.mangadex.org", "uploads.mangadex.org", "*.mangadex.org", "*.mangadex.network"),
+        )
+    }
 
     fun registerExtensionDomains(pkg: String, domains: List<String>) {
         val cleanDomains = domains.map { it.trim().lowercase() }.filter { it.isNotEmpty() }.toSet()
@@ -82,14 +90,22 @@ class DesktopNetworkHelper(
 
         val builder = Request.Builder().url(request.url)
         var userAgentSet = false
+        var cookieSet = false
         request.headers.forEach { (k, v) ->
             if (k.equals("User-Agent", ignoreCase = true)) {
                 userAgentSet = true
             }
+            if (k.equals("Cookie", ignoreCase = true)) {
+                cookieSet = true
+            }
             builder.addHeader(k, v)
         }
         if (!userAgentSet) {
-            builder.header("User-Agent", defaultUserAgent)
+            val customUa = cookieStore?.getUserAgent(host) ?: defaultUserAgent
+            builder.header("User-Agent", customUa)
+        }
+        if (!cookieSet) {
+            cookieStore?.getCookieHeader(host)?.let { builder.header("Cookie", it) }
         }
 
         client.newCall(builder.build()).execute().use { response ->
@@ -130,14 +146,22 @@ class DesktopNetworkHelper(
 
         // Headers
         var userAgentSet = false
+        var cookieSet = false
         request.headers.forEach { (k, v) ->
             if (k.equals("User-Agent", ignoreCase = true)) {
                 userAgentSet = true
             }
+            if (k.equals("Cookie", ignoreCase = true)) {
+                cookieSet = true
+            }
             builder.addHeader(k, v)
         }
         if (!userAgentSet) {
-            builder.header("User-Agent", defaultUserAgent)
+            val customUa = cookieStore?.getUserAgent(host) ?: defaultUserAgent
+            builder.header("User-Agent", customUa)
+        }
+        if (!cookieSet) {
+            cookieStore?.getCookieHeader(host)?.let { builder.header("Cookie", it) }
         }
 
         // Body

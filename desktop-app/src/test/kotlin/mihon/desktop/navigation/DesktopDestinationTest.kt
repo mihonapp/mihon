@@ -14,6 +14,7 @@ class DesktopDestinationTest {
             "History",
             "Browse",
             "Downloads",
+            "Stats",
             "Settings",
             "About",
         )

@@ -8,6 +8,7 @@ enum class DesktopDestination(val label: String, val shortLabel: String) : Deskt
     History("History", "H"),
     Browse("Browse", "B"),
     Downloads("Downloads", "D"),
+    Stats("Stats", "St"),
     Settings("Settings", "S"),
     About("About", "A"),
 

@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import mihon.desktop.i18n.LocalStrings
 import mihon.desktop.track.DesktopTrackRecord
 import mihon.desktop.track.DesktopTracker
 import mihon.desktop.track.TrackSearchResult
@@ -48,12 +49,13 @@ fun TrackingDialog(
     onUnbindTrack: (Long) -> Unit, // trackerId
     onSearchTrack: suspend (DesktopTracker, String) -> List<TrackSearchResult>,
 ) {
+    val strings = LocalStrings.current
     var editingTrack by remember { mutableStateOf<DesktopTrackRecord?>(null) }
     var searchingTracker by remember { mutableStateOf<DesktopTracker?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Tracking - $mangaTitle") },
+        title = { Text(strings.trackingTitle(mangaTitle)) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth().testTag("tracking-dialog"),
@@ -78,7 +80,7 @@ fun TrackingDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss, modifier = Modifier.testTag("tracking-dialog-close")) {
-                Text("Close")
+                Text(strings.dialogClose)
             }
         },
     )
@@ -126,6 +128,7 @@ private fun TrackerRow(
     onEdit: () -> Unit,
     onUnbind: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -141,7 +144,7 @@ private fun TrackerRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(tracker.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
                 if (track != null) {
-                    val statusStr = TrackStatus.fromValue(track.status).label
+                    val statusStr = strings.trackStatusLabel(TrackStatus.fromValue(track.status))
                     Text(
                         "${track.title} • Ch. ${track.lastChapterRead.toInt()} / ${if (track.totalChapters > 0) track.totalChapters else "?"} • $statusStr",
                         style = MaterialTheme.typography.bodySmall,
@@ -149,7 +152,7 @@ private fun TrackerRow(
                     )
                 } else {
                     Text(
-                        if (tracker.isLoggedIn) "Not tracking" else "Not logged in",
+                        if (tracker.isLoggedIn) strings.trackingNotTracking else strings.trackingNotLoggedIn,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.outline,
                     )
@@ -162,20 +165,20 @@ private fun TrackerRow(
                         onClick = onBind,
                         modifier = Modifier.testTag("tracker-bind-${tracker.id}"),
                     ) {
-                        Text("Track")
+                        Text(strings.trackingTrack)
                     }
                 } else {
                     TextButton(
                         onClick = onEdit,
                         modifier = Modifier.testTag("tracker-edit-${tracker.id}"),
                     ) {
-                        Text("Edit")
+                        Text(strings.trackingEdit)
                     }
                     TextButton(
                         onClick = onUnbind,
                         modifier = Modifier.testTag("tracker-unbind-${tracker.id}"),
                     ) {
-                        Text("Remove", color = MaterialTheme.colorScheme.error)
+                        Text(strings.trackingRemove, color = MaterialTheme.colorScheme.error)
                     }
                 }
             }
@@ -191,13 +194,14 @@ private fun SearchTrackDialog(
     onSelect: (TrackSearchResult) -> Unit,
     onSearch: suspend (String) -> List<TrackSearchResult>,
 ) {
+    val strings = LocalStrings.current
     var query by remember { mutableStateOf(initialQuery) }
     var results by remember { mutableStateOf<List<TrackSearchResult>>(emptyList()) }
     val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Search ${tracker.name}") },
+        title = { Text(strings.trackingSearchTitle(tracker.name)) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth().height(300.dp),
@@ -218,7 +222,7 @@ private fun SearchTrackDialog(
                         },
                         modifier = Modifier.testTag("track-search-button"),
                     ) {
-                        Text("Search")
+                        Text(strings.trackingSearch)
                     }
                 }
 
@@ -236,7 +240,7 @@ private fun SearchTrackDialog(
                             Column {
                                 Text(res.title, fontWeight = FontWeight.Medium)
                                 if (res.totalChapters > 0) {
-                                    Text("${res.totalChapters} chapters", style = MaterialTheme.typography.bodySmall)
+                                    Text(strings.trackingTotalChapters(res.totalChapters), style = MaterialTheme.typography.bodySmall)
                                 }
                             }
                         }
@@ -246,7 +250,7 @@ private fun SearchTrackDialog(
         },
         confirmButton = {},
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(strings.dialogCancel) }
         },
     )
 }
@@ -257,26 +261,27 @@ private fun EditTrackDetailsDialog(
     onDismiss: () -> Unit,
     onSave: (DesktopTrackRecord) -> Unit,
 ) {
+    val strings = LocalStrings.current
     var lastChapterRead by remember { mutableStateOf(track.lastChapterRead.toString()) }
     var score by remember { mutableStateOf(track.score.toString()) }
     var status by remember { mutableStateOf(track.status) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit Tracking - ${track.title}") },
+        title = { Text(strings.trackingEditTitle(track.title)) },
         text = {
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = lastChapterRead,
                     onValueChange = { lastChapterRead = it },
-                    label = { Text("Chapters Read") },
+                    label = { Text(strings.trackingChaptersRead) },
                     modifier = Modifier.fillMaxWidth().testTag("track-chapter-read-input"),
                     singleLine = true,
                 )
                 OutlinedTextField(
                     value = score,
                     onValueChange = { score = it },
-                    label = { Text("Score") },
+                    label = { Text(strings.trackingScore) },
                     modifier = Modifier.fillMaxWidth().testTag("track-score-input"),
                     singleLine = true,
                 )
@@ -290,7 +295,7 @@ private fun EditTrackDetailsDialog(
                             modifier = Modifier.weight(1f).testTag("track-status-${s.value}"),
                         ) {
                             Text(
-                                s.label,
+                                strings.trackStatusLabel(s),
                                 fontWeight = if (status == s.value) FontWeight.Bold else FontWeight.Normal,
                                 color = if (status ==
                                     s.value
@@ -314,11 +319,11 @@ private fun EditTrackDetailsDialog(
                 },
                 modifier = Modifier.testTag("track-save-details-button"),
             ) {
-                Text("Save")
+                Text(strings.categorySave)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(strings.dialogCancel) }
         },
     )
 }

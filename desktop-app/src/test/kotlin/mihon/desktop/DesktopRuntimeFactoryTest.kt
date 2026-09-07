@@ -171,4 +171,19 @@ class DesktopRuntimeFactoryTest {
             org.junit.jupiter.api.assertThrows<IllegalStateException> { runtime.close() }
         }
     }
+
+    @Test
+    fun `runtime initializes sourceManager with bundled MangaDex source`() {
+        val runtime = DesktopRuntimeFactory.create(
+            args = emptyArray(),
+            environment = mapOf("APPDATA" to tempDir.resolve("Roaming").toString()),
+            executableDirectory = tempDir.resolve("bin"),
+        )
+        try {
+            val sources = runtime.sourceManager.getSources()
+            sources.any { it.name.contains("MangaDex") } shouldBe true
+        } finally {
+            runtime.close()
+        }
+    }
 }

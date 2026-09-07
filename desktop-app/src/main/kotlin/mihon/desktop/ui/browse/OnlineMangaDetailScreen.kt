@@ -1,4 +1,4 @@
-﻿package mihon.desktop.ui.browse
+package mihon.desktop.ui.browse
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
 import mihon.extension.model.SourceDescriptor
 import mihon.extension.source.model.SChapter
 import mihon.extension.source.model.SManga
@@ -47,6 +48,8 @@ fun OnlineMangaDetailScreen(
     onReadChapter: (SChapter) -> Unit,
     onRefresh: () -> Unit = {},
 ) {
+    val strings = LocalStrings.current
+
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp).testTag("online-manga-detail-screen"),
     ) {
@@ -57,7 +60,7 @@ fun OnlineMangaDetailScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             OutlinedButton(onClick = onBack, modifier = Modifier.testTag("detail-back-btn")) {
-                Text("Back")
+                Text(strings.mangaDetailBack)
             }
             Row {
                 Button(
@@ -73,31 +76,33 @@ fun OnlineMangaDetailScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                     }
-                    Text(if (state.inLibrary) "In Library" else "Add to Library")
+                    Text(if (state.inLibrary) strings.mangaDetailInLibrary else strings.mangaDetailAddToLibrary)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
+                if (state.manga.url.startsWith("http")) {
+                    OutlinedButton(
+                        onClick = { mihon.desktop.platform.DesktopBrowserHelper.openInBrowser(state.manga.url) },
+                        modifier = Modifier.testTag("detail-open-browser-btn"),
+                    ) {
+                        Text(strings.openInBrowser)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
                 OutlinedButton(onClick = onRefresh, modifier = Modifier.testTag("detail-refresh-btn")) {
-                    Text("Refresh")
+                    Text(strings.browseRefresh)
                 }
             }
         }
 
         // Header info
         Row(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
-            // Thumbnail placeholder
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceVariant,
+            // Thumbnail
+            mihon.desktop.ui.common.MangaCover(
+                thumbnailUrl = state.manga.thumbnailUrl,
+                contentDescription = state.manga.title,
                 modifier = Modifier.width(140.dp).height(200.dp),
                 shape = MaterialTheme.shapes.medium,
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = state.manga.title.take(2).uppercase(),
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
+            )
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -110,19 +115,19 @@ fun OnlineMangaDetailScreen(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Source: " + state.source.name + " (" + state.source.lang.uppercase() + ")",
+                    text = strings.onlineDetailSource(state.source.name, state.source.lang),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
                 state.manga.author?.let {
-                    Text(text = "Author: " + it, style = MaterialTheme.typography.bodySmall)
+                    Text(text = strings.onlineDetailAuthor(it), style = MaterialTheme.typography.bodySmall)
                 }
                 state.manga.artist?.let {
-                    Text(text = "Artist: " + it, style = MaterialTheme.typography.bodySmall)
+                    Text(text = strings.onlineDetailArtist(it), style = MaterialTheme.typography.bodySmall)
                 }
                 if (state.manga.genre.isNotEmpty()) {
                     Text(
-                        text = "Genres: " + state.manga.genre.joinToString(", "),
+                        text = strings.onlineDetailGenres(state.manga.genre.joinToString(", ")),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.outline,
                     )
@@ -142,7 +147,7 @@ fun OnlineMangaDetailScreen(
 
         // Chapters Section
         Text(
-            text = "Chapters (" + state.chapters.size + ")",
+            text = strings.onlineDetailChapters(state.chapters.size),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(vertical = 8.dp),
@@ -155,7 +160,7 @@ fun OnlineMangaDetailScreen(
         } else if (state.chapters.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
                 Text(
-                    "No chapters found",
+                    strings.mangaDetailNoChapters,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -179,7 +184,7 @@ fun OnlineMangaDetailScreen(
                             )
                             chapter.scanlator?.let {
                                 Text(
-                                    text = "Scanlator: " + it,
+                                    text = strings.onlineDetailScanlator(it),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.outline,
                                 )
@@ -189,7 +194,7 @@ fun OnlineMangaDetailScreen(
                             onClick = { onReadChapter(chapter) },
                             modifier = Modifier.testTag("read-chapter-btn-" + chapter.url),
                         ) {
-                            Text("Read")
+                            Text(strings.updatesReadButton)
                         }
                     }
                     HorizontalDivider()

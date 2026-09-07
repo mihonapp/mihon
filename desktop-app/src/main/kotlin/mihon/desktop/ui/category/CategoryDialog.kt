@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mihon.desktop.category.DesktopCategory
+import mihon.desktop.i18n.LocalStrings
 
 @Composable
 fun ManageCategoriesDialog(
@@ -39,13 +40,14 @@ fun ManageCategoriesDialog(
     onRenameCategory: (Long, String) -> Unit,
     onDeleteCategory: (Long) -> Unit,
 ) {
+    val strings = LocalStrings.current
     var newCategoryName by remember { mutableStateOf("") }
     var editingCategory by remember { mutableStateOf<DesktopCategory?>(null) }
     var renameValue by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Manage Categories") },
+        title = { Text(strings.categoryManageTitle) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth().testTag("manage-categories-dialog"),
@@ -61,7 +63,7 @@ fun ManageCategoriesDialog(
                         value = newCategoryName,
                         onValueChange = { newCategoryName = it },
                         modifier = Modifier.weight(1f).testTag("create-category-input"),
-                        label = { Text("New category name") },
+                        label = { Text(strings.categoryNewNameLabel) },
                         singleLine = true,
                     )
                     FilledTonalButton(
@@ -73,14 +75,14 @@ fun ManageCategoriesDialog(
                         },
                         modifier = Modifier.testTag("create-category-button"),
                     ) {
-                        Text("Add")
+                        Text(strings.categoryAdd)
                     }
                 }
 
                 // Existing categories list
                 if (categories.isEmpty()) {
                     Text(
-                        text = "No custom categories yet",
+                        text = strings.categoryEmpty,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -109,13 +111,13 @@ fun ManageCategoriesDialog(
                                         },
                                         modifier = Modifier.testTag("rename-category-${cat.id}"),
                                     ) {
-                                        Text("Rename")
+                                        Text(strings.categoryRename)
                                     }
                                     TextButton(
                                         onClick = { onDeleteCategory(cat.id) },
                                         modifier = Modifier.testTag("delete-category-${cat.id}"),
                                     ) {
-                                        Text("Delete", color = MaterialTheme.colorScheme.error)
+                                        Text(strings.categoryDelete, color = MaterialTheme.colorScheme.error)
                                     }
                                 }
                             }
@@ -126,7 +128,7 @@ fun ManageCategoriesDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss, modifier = Modifier.testTag("close-manage-categories-button")) {
-                Text("Done")
+                Text(strings.dialogDone)
             }
         },
     )
@@ -134,13 +136,13 @@ fun ManageCategoriesDialog(
     editingCategory?.let { target ->
         AlertDialog(
             onDismissRequest = { editingCategory = null },
-            title = { Text("Rename Category") },
+            title = { Text(strings.categoryRenameTitle) },
             text = {
                 OutlinedTextField(
                     value = renameValue,
                     onValueChange = { renameValue = it },
                     modifier = Modifier.fillMaxWidth().testTag("rename-category-input"),
-                    label = { Text("Category name") },
+                    label = { Text(strings.categoryNameLabel) },
                     singleLine = true,
                 )
             },
@@ -154,12 +156,12 @@ fun ManageCategoriesDialog(
                     },
                     modifier = Modifier.testTag("confirm-rename-category-button"),
                 ) {
-                    Text("Save")
+                    Text(strings.categorySave)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { editingCategory = null }) {
-                    Text("Cancel")
+                    Text(strings.dialogCancel)
                 }
             },
         )
@@ -173,14 +175,15 @@ fun EditMangaCategoriesDialog(
     onDismiss: () -> Unit,
     onSave: (List<Long>) -> Unit,
 ) {
+    val strings = LocalStrings.current
     var selectedIds by remember { mutableStateOf(assignedCategoryIds) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Set Categories") },
+        title = { Text(strings.categorySetTitle) },
         text = {
             if (allCategories.isEmpty()) {
-                Text("No categories exist. Create categories first.")
+                Text(strings.categoryNoneExist)
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth().height(240.dp).testTag("edit-manga-categories-dialog"),
@@ -219,12 +222,12 @@ fun EditMangaCategoriesDialog(
                 },
                 modifier = Modifier.testTag("save-manga-categories-button"),
             ) {
-                Text("Save")
+                Text(strings.categorySave)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(strings.dialogCancel)
             }
         },
     )

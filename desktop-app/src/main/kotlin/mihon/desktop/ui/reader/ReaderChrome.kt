@@ -30,8 +30,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
 import mihon.desktop.reader.DesktopReaderSettings
+import mihon.desktop.reader.ReaderBackgroundColor
 import mihon.desktop.reader.ReaderClickAction
+import mihon.desktop.reader.ReaderColorFilter
 import mihon.desktop.reader.ReaderWheelBehavior
 import mihon.reader.model.ReadingMode
 import mihon.reader.model.ScaleMode
@@ -55,7 +58,12 @@ internal fun ReaderChrome(
     onFullscreen: () -> Unit,
     onBorderless: () -> Unit,
     onOpenSettings: () -> Unit,
+    onColorFilter: (ReaderColorFilter) -> Unit = {},
+    onBackgroundColor: (ReaderBackgroundColor) -> Unit = {},
+    onCropBorders: (Boolean) -> Unit = {},
+    onCropBordersWebtoon: (Boolean) -> Unit = {},
 ) {
+    val strings = LocalStrings.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,7 +81,7 @@ internal fun ReaderChrome(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                TextButton(onClick = onBack, modifier = Modifier.testTag("reader-back")) { Text("Back") }
+                TextButton(onClick = onBack, modifier = Modifier.testTag("reader-back")) { Text(strings.mangaDetailBack) }
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         title,
@@ -97,13 +105,13 @@ internal fun ReaderChrome(
                     style = MaterialTheme.typography.labelLarge,
                 )
                 TextButton(onClick = onFullscreen, modifier = Modifier.testTag("reader-fullscreen")) {
-                    Text("Fullscreen")
+                    Text(strings.readerFullscreen)
                 }
                 TextButton(onClick = onBorderless, modifier = Modifier.testTag("reader-borderless")) {
-                    Text("Borderless")
+                    Text(strings.readerBorderless)
                 }
                 TextButton(onClick = onOpenSettings, modifier = Modifier.testTag("reader-settings")) {
-                    Text("Settings")
+                    Text(strings.settingsTitle)
                 }
             }
         }
@@ -119,12 +127,27 @@ internal fun ReaderChrome(
             ) {
                 ReadingModeMenu(state.mode, onMode)
                 ScaleModeMenu(state.scaleMode, onScale)
+                ColorFilterMenu(settings.colorFilter, onColorFilter)
+                val isWebtoon = state.mode == ReadingMode.WEBTOON
+                val cropActive = if (isWebtoon) settings.cropBordersWebtoon else settings.cropBorders
+                TextButton(
+                    onClick = {
+                        if (isWebtoon) {
+                            onCropBordersWebtoon(!settings.cropBordersWebtoon)
+                        } else {
+                            onCropBorders(!settings.cropBorders)
+                        }
+                    },
+                    modifier = Modifier.testTag("reader-crop-toggle"),
+                ) {
+                    Text(strings.readerCropToggle(cropActive))
+                }
                 if (state.mode.isDualPage) {
                     TextButton(
                         onClick = { onCoverOffset(!state.coverOffset) },
                         modifier = Modifier.testTag("reader-cover-toggle"),
                     ) {
-                        Text(if (state.coverOffset) "Cover offset: On" else "Cover offset: Off")
+                        Text(strings.readerCoverOffsetToggle(state.coverOffset))
                     }
                 }
                 TextButton(
@@ -139,7 +162,7 @@ internal fun ReaderChrome(
                     modifier = Modifier.testTag("reader-zoom-in"),
                 ) { Text("+") }
                 if (canRetry) {
-                    TextButton(onClick = onRetry, modifier = Modifier.testTag("reader-retry")) { Text("Retry") }
+                    TextButton(onClick = onRetry, modifier = Modifier.testTag("reader-retry")) { Text(strings.downloadsRetry) }
                 }
                 if (debugEnabled) {
                     Text(
@@ -156,15 +179,16 @@ internal fun ReaderChrome(
 
 @Composable
 private fun ReadingModeMenu(current: ReadingMode, onSelected: (ReadingMode) -> Unit) {
+    val strings = LocalStrings.current
     var expanded by remember { mutableStateOf(false) }
     Box {
         TextButton(onClick = { expanded = true }, modifier = Modifier.testTag("reader-mode-menu")) {
-            Text(modeLabel(current))
+            Text(strings.readerModeLabel(current))
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             ReadingMode.entries.forEach { mode ->
                 DropdownMenuItem(
-                    text = { Text(modeLabel(mode)) },
+                    text = { Text(strings.readerModeLabel(mode)) },
                     onClick = {
                         expanded = false
                         onSelected(mode)
@@ -178,15 +202,16 @@ private fun ReadingModeMenu(current: ReadingMode, onSelected: (ReadingMode) -> U
 
 @Composable
 private fun ScaleModeMenu(current: ScaleMode, onSelected: (ScaleMode) -> Unit) {
+    val strings = LocalStrings.current
     var expanded by remember { mutableStateOf(false) }
     Box {
         TextButton(onClick = { expanded = true }, modifier = Modifier.testTag("reader-scale-menu")) {
-            Text(scaleLabel(current))
+            Text(strings.readerScaleLabel(current))
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             ScaleMode.entries.forEach { scale ->
                 DropdownMenuItem(
-                    text = { Text(scaleLabel(scale)) },
+                    text = { Text(strings.readerScaleLabel(scale)) },
                     onClick = {
                         expanded = false
                         onSelected(scale)
@@ -204,26 +229,27 @@ internal fun ReaderSettingsDialog(
     onDismiss: () -> Unit,
     onSave: (DesktopReaderSettings) -> Unit,
 ) {
+    val strings = LocalStrings.current
     var draft by remember(settings) { mutableStateOf(settings) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Reader settings") },
+        title = { Text(strings.readerSettingsDialogTitle) },
         text = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text("Click regions", style = MaterialTheme.typography.titleSmall)
-                ClickActionMenu("Left", "reader-setting-left-action", draft.clickRegions.leftAction) {
+                Text(strings.readerClickRegions, style = MaterialTheme.typography.titleSmall)
+                ClickActionMenu(strings.readerRegionLeft, "reader-setting-left-action", draft.clickRegions.leftAction) {
                     draft = draft.copy(clickRegions = draft.clickRegions.copy(leftAction = it))
                 }
-                ClickActionMenu("Center", "reader-setting-center-action", draft.clickRegions.centerAction) {
+                ClickActionMenu(strings.readerRegionCenter, "reader-setting-center-action", draft.clickRegions.centerAction) {
                     draft = draft.copy(clickRegions = draft.clickRegions.copy(centerAction = it))
                 }
-                ClickActionMenu("Right", "reader-setting-right-action", draft.clickRegions.rightAction) {
+                ClickActionMenu(strings.readerRegionRight, "reader-setting-right-action", draft.clickRegions.rightAction) {
                     draft = draft.copy(clickRegions = draft.clickRegions.copy(rightAction = it))
                 }
-                Text("Left boundary ${draft.clickRegions.leftEndPercent}%")
+                Text(strings.readerLeftBoundary(draft.clickRegions.leftEndPercent))
                 Slider(
                     value = draft.clickRegions.leftEndPercent.toFloat(),
                     onValueChange = { value ->
@@ -233,7 +259,7 @@ internal fun ReaderSettingsDialog(
                     valueRange = 1f..98f,
                     modifier = Modifier.testTag("reader-setting-left-boundary"),
                 )
-                Text("Center boundary ${draft.clickRegions.centerEndPercent}%")
+                Text(strings.readerCenterBoundary(draft.clickRegions.centerEndPercent))
                 Slider(
                     value = draft.clickRegions.centerEndPercent.toFloat(),
                     onValueChange = { value ->
@@ -252,24 +278,64 @@ internal fun ReaderSettingsDialog(
                         onCheckedChange = { draft = draft.copy(coverOffset = it) },
                         modifier = Modifier.testTag("reader-setting-cover"),
                     )
-                    Text("Reserve cover in dual-page modes")
+                    Text(strings.readerReserveCover)
                 }
+                Text(strings.settingsSectionAppearance, style = MaterialTheme.typography.titleSmall)
+                SettingColorFilterMenu(draft.colorFilter) { draft = draft.copy(colorFilter = it) }
+                SettingBackgroundColorMenu(draft.backgroundColor) { draft = draft.copy(backgroundColor = it) }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = draft.cropBorders,
+                        onCheckedChange = { draft = draft.copy(cropBorders = it) },
+                        modifier = Modifier.testTag("reader-setting-crop-paged"),
+                    )
+                    Text(strings.readerCropBordersPaged)
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = draft.cropBordersWebtoon,
+                        onCheckedChange = { draft = draft.copy(cropBordersWebtoon = it) },
+                        modifier = Modifier.testTag("reader-setting-crop-webtoon"),
+                    )
+                    Text(strings.readerCropBordersWebtoon)
+                }
+                Text(strings.readerWebtoonLayout, style = MaterialTheme.typography.titleSmall)
+                Text(
+                    text = if (draft.webtoonMaxWidth == 0) {
+                        strings.readerWebtoonWidthFull
+                    } else {
+                        strings.readerWebtoonWidthDp(draft.webtoonMaxWidth)
+                    },
+                )
+                Slider(
+                    value = draft.webtoonMaxWidth.toFloat(),
+                    onValueChange = { draft = draft.copy(webtoonMaxWidth = it.toInt()) },
+                    valueRange = 0f..1600f,
+                    modifier = Modifier.testTag("reader-setting-webtoon-max-width"),
+                )
+                Text(strings.readerWebtoonSidePaddingPercent(draft.webtoonSidePadding))
+                Slider(
+                    value = draft.webtoonSidePadding.toFloat(),
+                    onValueChange = { draft = draft.copy(webtoonSidePadding = it.toInt()) },
+                    valueRange = 0f..30f,
+                    modifier = Modifier.testTag("reader-setting-webtoon-side-padding"),
+                )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = { onSave(draft) },
                 modifier = Modifier.testTag("reader-settings-save"),
-            ) { Text("Save") }
+            ) { Text(strings.categorySave) }
         },
         dismissButton = {
             Row {
                 TextButton(
                     onClick = { draft = DesktopReaderSettings() },
                     modifier = Modifier.testTag("reader-settings-reset"),
-                ) { Text("Reset") }
+                ) { Text(strings.libraryFilterReset) }
                 TextButton(onClick = onDismiss, modifier = Modifier.testTag("reader-settings-cancel")) {
-                    Text("Cancel")
+                    Text(strings.dialogCancel)
                 }
             }
         },
@@ -283,15 +349,16 @@ private fun ClickActionMenu(
     current: ReaderClickAction,
     onSelected: (ReaderClickAction) -> Unit,
 ) {
+    val strings = LocalStrings.current
     var expanded by remember { mutableStateOf(false) }
     Box {
         TextButton(onClick = { expanded = true }, modifier = Modifier.testTag(tag)) {
-            Text("$label: ${current.name.lowercase()}")
+            Text("$label: ${strings.readerActionLabel(current)}")
         }
         DropdownMenu(expanded, { expanded = false }) {
             ReaderClickAction.entries.forEach { action ->
                 DropdownMenuItem(
-                    text = { Text(action.name.lowercase()) },
+                    text = { Text(strings.readerActionLabel(action)) },
                     onClick = {
                         expanded = false
                         onSelected(action)
@@ -304,15 +371,16 @@ private fun ClickActionMenu(
 
 @Composable
 private fun WheelMenu(current: ReaderWheelBehavior, onSelected: (ReaderWheelBehavior) -> Unit) {
+    val strings = LocalStrings.current
     var expanded by remember { mutableStateOf(false) }
     Box {
         TextButton(onClick = { expanded = true }, modifier = Modifier.testTag("reader-setting-wheel")) {
-            Text("Wheel: ${current.name.lowercase()}")
+            Text(strings.readerWheelLabel(current))
         }
         DropdownMenu(expanded, { expanded = false }) {
             ReaderWheelBehavior.entries.forEach { value ->
                 DropdownMenuItem(
-                    text = { Text(value.name.lowercase()) },
+                    text = { Text(strings.readerWheelLabel(value)) },
                     onClick = {
                         expanded = false
                         onSelected(value)
@@ -325,15 +393,16 @@ private fun WheelMenu(current: ReaderWheelBehavior, onSelected: (ReaderWheelBeha
 
 @Composable
 private fun SettingModeMenu(current: ReadingMode, onSelected: (ReadingMode) -> Unit) {
+    val strings = LocalStrings.current
     var expanded by remember { mutableStateOf(false) }
     Box {
         TextButton(onClick = { expanded = true }, modifier = Modifier.testTag("reader-setting-mode")) {
-            Text("Mode: ${modeLabel(current)}")
+            Text("${strings.settingsDefaultReadingMode}: ${strings.readerModeLabel(current)}")
         }
         DropdownMenu(expanded, { expanded = false }) {
             ReadingMode.entries.forEach { value ->
                 DropdownMenuItem(
-                    text = { Text(modeLabel(value)) },
+                    text = { Text(strings.readerModeLabel(value)) },
                     onClick = {
                         expanded = false
                         onSelected(value)
@@ -346,15 +415,16 @@ private fun SettingModeMenu(current: ReadingMode, onSelected: (ReadingMode) -> U
 
 @Composable
 private fun SettingScaleMenu(current: ScaleMode, onSelected: (ScaleMode) -> Unit) {
+    val strings = LocalStrings.current
     var expanded by remember { mutableStateOf(false) }
     Box {
         TextButton(onClick = { expanded = true }, modifier = Modifier.testTag("reader-setting-scale")) {
-            Text("Scale: ${scaleLabel(current)}")
+            Text("${strings.settingsDefaultScaleMode}: ${strings.readerScaleLabel(current)}")
         }
         DropdownMenu(expanded, { expanded = false }) {
             ScaleMode.entries.forEach { value ->
                 DropdownMenuItem(
-                    text = { Text(scaleLabel(value)) },
+                    text = { Text(strings.readerScaleLabel(value)) },
                     onClick = {
                         expanded = false
                         onSelected(value)
@@ -365,19 +435,73 @@ private fun SettingScaleMenu(current: ScaleMode, onSelected: (ScaleMode) -> Unit
     }
 }
 
-private fun modeLabel(mode: ReadingMode): String = when (mode) {
-    ReadingMode.SINGLE_LTR -> "Single LTR"
-    ReadingMode.SINGLE_RTL -> "Single RTL"
-    ReadingMode.DUAL_LTR -> "Dual LTR"
-    ReadingMode.DUAL_RTL -> "Dual RTL"
-    ReadingMode.VERTICAL -> "Vertical"
-    ReadingMode.WEBTOON -> "Webtoon"
+@Composable
+private fun ColorFilterMenu(current: ReaderColorFilter, onSelected: (ReaderColorFilter) -> Unit) {
+    val strings = LocalStrings.current
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        TextButton(onClick = { expanded = true }, modifier = Modifier.testTag("reader-filter-menu")) {
+            Text("${strings.readerColorFilter}: ${strings.readerFilterLabel(current)}")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            ReaderColorFilter.entries.forEach { filter ->
+                DropdownMenuItem(
+                    text = { Text(strings.readerFilterLabel(filter)) },
+                    onClick = {
+                        expanded = false
+                        onSelected(filter)
+                    },
+                    modifier = Modifier.testTag("reader-filter-${filter.name}"),
+                )
+            }
+        }
+    }
 }
 
-private fun scaleLabel(scale: ScaleMode): String = when (scale) {
-    ScaleMode.ORIGINAL -> "Original"
-    ScaleMode.FIT_WIDTH -> "Fit width"
-    ScaleMode.FIT_HEIGHT -> "Fit height"
+@Composable
+private fun SettingColorFilterMenu(current: ReaderColorFilter, onSelected: (ReaderColorFilter) -> Unit) {
+    val strings = LocalStrings.current
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        TextButton(onClick = { expanded = true }, modifier = Modifier.testTag("reader-setting-filter")) {
+            Text("${strings.readerColorFilter}: ${strings.readerFilterLabel(current)}")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            ReaderColorFilter.entries.forEach { filter ->
+                DropdownMenuItem(
+                    text = { Text(strings.readerFilterLabel(filter)) },
+                    onClick = {
+                        expanded = false
+                        onSelected(filter)
+                    },
+                    modifier = Modifier.testTag("reader-setting-filter-${filter.name}"),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingBackgroundColorMenu(current: ReaderBackgroundColor, onSelected: (ReaderBackgroundColor) -> Unit) {
+    val strings = LocalStrings.current
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        TextButton(onClick = { expanded = true }, modifier = Modifier.testTag("reader-setting-bg")) {
+            Text("${strings.readerBackgroundColor}: ${strings.readerBackgroundLabel(current)}")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            ReaderBackgroundColor.entries.forEach { bg ->
+                DropdownMenuItem(
+                    text = { Text(strings.readerBackgroundLabel(bg)) },
+                    onClick = {
+                        expanded = false
+                        onSelected(bg)
+                    },
+                    modifier = Modifier.testTag("reader-setting-bg-${bg.name}"),
+                )
+            }
+        }
+    }
 }
 
 private const val MIB = 1024L * 1024L

@@ -40,16 +40,21 @@ class DesktopReaderFactory(
     private val sessions = linkedSetOf<TrackedReaderSession>()
     private var acceptingSessions = true
 
-    fun createSession(): ReaderSession {
+    fun createSession(isIncognito: Boolean = false): ReaderSession {
         val sessionScope = synchronized(lock) {
             check(acceptingSessions) { "reader runtime is shutting down" }
             CoroutineScope(applicationScope.coroutineContext + SupervisorJob(applicationScope.coroutineContext[Job]))
+        }
+        val effectiveSink: mihon.reader.session.ReaderProgressSink = if (isIncognito) {
+            mihon.reader.session.ReaderProgressSink { mihon.reader.session.ProgressWriteResult.APPLIED }
+        } else {
+            library
         }
         val session = DefaultReaderSession(
             scope = sessionScope,
             catalog = library,
             sourceFactory = sourceFactory,
-            progressSink = library,
+            progressSink = effectiveSink,
             generationSource = generationSource,
             settings = settings.load().toCoreSettings(),
             visibleContent = { loadFrame(it, 0).tile },
@@ -67,44 +72,55 @@ class DesktopReaderFactory(
     data class PageFrame(val tile: ComposeTileBridge.BridgeTile, val metadata: ImageMetadata)
 
     /** Resolve every read through the secure local source, including chapter-boundary navigation. */
-    suspend fun loadFrame(pageId: PageId, frameIndex: Int): PageFrame = withContext(Dispatchers.IO) {
-        val asset = requireNotNull(library.chapterAsset(pageId.chapterId.toLong()))
-        sourceFactory.create(asset).use { source ->
-            val metadata = source.open(pageId).use { decoder.probe(it) }
-            val frame = FrameId(pageId, frameIndex)
-            // Bound the display copy as well as the decoder output for very tall pages.
-            var sample = 1
-            while ((metadata.width.toLong() / sample) * (metadata.height.toLong() / sample) > MAX_DISPLAY_PIXELS) {
-                sample *= 2
-            }
-            val bounds = IntRect(0, 0, metadata.width, metadata.height)
-            val key = TileKey(pageId, frame, bounds, sample)
-            cache.pin(key).use {
-                val loaded = cache.getOrLoad(key) {
-                    source.open(pageId).use { input ->
-                        if (sample == 1) {
-                            decoder.decodeFull(input, metadata, frame)
-                        } else {
-                            decoder.decodeRegion(
-                                input,
-                                metadata,
-                                TileRequest(
-                                    key,
-                                    (metadata.width + sample - 1) / sample,
-                                    (metadata.height + sample - 1) / sample,
-                                ),
-                            )
+    suspend fun loadFrame(pageId: PageId, frameIndex: Int, cropBorders: Boolean = false): PageFrame =
+        withContext(Dispatchers.IO) {
+            val asset = requireNotNull(library.chapterAsset(pageId.chapterId.toLong()))
+            sourceFactory.create(asset).use { source ->
+                val metadata = source.open(pageId).use { decoder.probe(it) }
+                val frame = FrameId(pageId, frameIndex)
+                // Bound the display copy as well as the decoder output for very tall pages.
+                var sample = 1
+                while ((metadata.width.toLong() / sample) * (metadata.height.toLong() / sample) > MAX_DISPLAY_PIXELS) {
+                    sample *= 2
+                }
+                val bounds = IntRect(0, 0, metadata.width, metadata.height)
+                val key = TileKey(pageId, frame, bounds, sample)
+                cache.pin(key).use {
+                    val loaded = cache.getOrLoad(key) {
+                        source.open(pageId).use { input ->
+                            if (sample == 1) {
+                                decoder.decodeFull(input, metadata, frame)
+                            } else {
+                                decoder.decodeRegion(
+                                    input,
+                                    metadata,
+                                    TileRequest(
+                                        key,
+                                        (metadata.width + sample - 1) / sample,
+                                        (metadata.height + sample - 1) / sample,
+                                    ),
+                                )
+                            }
                         }
                     }
-                }
-                try {
-                    PageFrame(bridge.acquire(key, loaded.tile.image), metadata)
-                } finally {
-                    if (!loaded.resident) loaded.tile.close()
+                    try {
+                        val imageToBridge = if (cropBorders) {
+                            mihon.desktop.ui.reader.SmartBorderCropper.crop(loaded.tile.image)
+                        } else {
+                            loaded.tile.image
+                        }
+                        val bridgeKey = if (cropBorders) {
+                            key.copy(bounds = IntRect(1, 1, metadata.width, metadata.height))
+                        } else {
+                            key
+                        }
+                        PageFrame(bridge.acquire(bridgeKey, imageToBridge), metadata)
+                    } finally {
+                        if (!loaded.resident) loaded.tile.close()
+                    }
                 }
             }
         }
-    }
 
     suspend fun shutdown() {
         val active = synchronized(lock) {

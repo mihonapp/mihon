@@ -1,5 +1,6 @@
 package mihon.desktop.ui.library
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,29 +9,51 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +61,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import mihon.desktop.category.DesktopCategory
 import mihon.desktop.category.SYSTEM_ALL_CATEGORY
+import mihon.desktop.i18n.LocalStrings
 import mihon.desktop.library.model.LibraryManga
+import mihon.desktop.ui.common.MangaCover
 
 @Composable
 fun LibraryScreen(
@@ -56,6 +81,45 @@ fun LibraryScreen(
     onManageCategories: () -> Unit = {},
     onEditMangaCategories: () -> Unit = {},
     onOpenTracking: () -> Unit = {},
+    // Phase 11: Display mode, grid zoom, filter & sort, selection callbacks
+    onDisplayModeChange: (LibraryDisplayMode) -> Unit = {},
+    onGridSizeChange: (Float) -> Unit = {},
+    onOpenFilterDialog: () -> Unit = {},
+    onCloseFilterDialog: () -> Unit = {},
+    onFilterChange: (LibraryFilterState) -> Unit = {},
+    onSortChange: (LibrarySortState) -> Unit = {},
+    onToggleSelectionMode: (Boolean) -> Unit = {},
+    onToggleMangaSelection: (Long) -> Unit = {},
+    onSelectAll: () -> Unit = {},
+    onDeselectAll: () -> Unit = {},
+    onBatchChangeCategories: () -> Unit = {},
+    onBatchSetCategories: (List<Long>) -> Unit = {},
+    onBatchCloseCategoryDialog: () -> Unit = {},
+    onBatchMarkRead: (Boolean) -> Unit = {},
+    onBatchDownload: (Int) -> Unit = {},
+    onBatchRemoveFromLibrary: () -> Unit = {},
+    isUpdatingLibrary: Boolean = false,
+    onUpdateLibrary: (() -> Unit)? = null,
+    // Phase 16: Edit info, chapter filter/sort & actions
+    onEditInfo: () -> Unit = {},
+    onDismissEditInfo: () -> Unit = {},
+    onSaveMangaInfo: (
+        title: String,
+        author: String?,
+        artist: String?,
+        description: String?,
+        genres: List<String>,
+        status: Long,
+        notes: String,
+    ) -> Unit = { _, _, _, _, _, _, _ -> },
+    onResetMangaInfo: () -> Unit = {},
+    onChapterFilterChange: (ChapterFilterState) -> Unit = {},
+    onChapterSortChange: (ChapterSortState) -> Unit = {},
+    onToggleBookmark: (Long) -> Unit = {},
+    onToggleRead: (Long) -> Unit = {},
+    onMarkPreviousRead: (Long) -> Unit = {},
+    onDownloadChapter: (Long) -> Unit = {},
+    onDeleteDownload: (Long) -> Unit = {},
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize().testTag("library-screen")) {
         val selected = state.selectedMangaId != null
@@ -68,9 +132,22 @@ fun LibraryScreen(
                     onMangaSelected = onMangaSelected,
                     onImportBackup = onImportBackup,
                     onImportLocal = onImportLocal,
+                    onUpdateLibrary = onUpdateLibrary,
+                    isUpdatingLibrary = isUpdatingLibrary,
                     onRetry = onRetry,
                     onCategorySelected = onCategorySelected,
                     onManageCategories = onManageCategories,
+                    onDisplayModeChange = onDisplayModeChange,
+                    onGridSizeChange = onGridSizeChange,
+                    onOpenFilterDialog = onOpenFilterDialog,
+                    onToggleSelectionMode = onToggleSelectionMode,
+                    onToggleMangaSelection = onToggleMangaSelection,
+                    onSelectAll = onSelectAll,
+                    onDeselectAll = onDeselectAll,
+                    onBatchChangeCategories = onBatchChangeCategories,
+                    onBatchMarkRead = onBatchMarkRead,
+                    onBatchDownload = onBatchDownload,
+                    onBatchRemoveFromLibrary = onBatchRemoveFromLibrary,
                     modifier = Modifier.weight(0.55f).fillMaxHeight().testTag("library-grid-pane"),
                 )
                 VerticalDivider()
@@ -82,6 +159,17 @@ fun LibraryScreen(
                     showBack = false,
                     onEditCategories = onEditMangaCategories,
                     onOpenTracking = onOpenTracking,
+                    onEditInfo = onEditInfo,
+                    onDismissEditInfo = onDismissEditInfo,
+                    onSaveMangaInfo = onSaveMangaInfo,
+                    onResetMangaInfo = onResetMangaInfo,
+                    onChapterFilterChange = onChapterFilterChange,
+                    onChapterSortChange = onChapterSortChange,
+                    onToggleBookmark = onToggleBookmark,
+                    onToggleRead = onToggleRead,
+                    onMarkPreviousRead = onMarkPreviousRead,
+                    onDownloadChapter = onDownloadChapter,
+                    onDeleteDownload = onDeleteDownload,
                     modifier = Modifier.weight(0.45f).fillMaxHeight(),
                 )
             }
@@ -94,6 +182,17 @@ fun LibraryScreen(
                 showBack = true,
                 onEditCategories = onEditMangaCategories,
                 onOpenTracking = onOpenTracking,
+                onEditInfo = onEditInfo,
+                onDismissEditInfo = onDismissEditInfo,
+                onSaveMangaInfo = onSaveMangaInfo,
+                onResetMangaInfo = onResetMangaInfo,
+                onChapterFilterChange = onChapterFilterChange,
+                onChapterSortChange = onChapterSortChange,
+                onToggleBookmark = onToggleBookmark,
+                onToggleRead = onToggleRead,
+                onMarkPreviousRead = onMarkPreviousRead,
+                onDownloadChapter = onDownloadChapter,
+                onDeleteDownload = onDeleteDownload,
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
@@ -103,10 +202,43 @@ fun LibraryScreen(
                 onMangaSelected = onMangaSelected,
                 onImportBackup = onImportBackup,
                 onImportLocal = onImportLocal,
+                onUpdateLibrary = onUpdateLibrary,
+                isUpdatingLibrary = isUpdatingLibrary,
                 onRetry = onRetry,
                 onCategorySelected = onCategorySelected,
                 onManageCategories = onManageCategories,
+                onDisplayModeChange = onDisplayModeChange,
+                onGridSizeChange = onGridSizeChange,
+                onOpenFilterDialog = onOpenFilterDialog,
+                onToggleSelectionMode = onToggleSelectionMode,
+                onToggleMangaSelection = onToggleMangaSelection,
+                onSelectAll = onSelectAll,
+                onDeselectAll = onDeselectAll,
+                onBatchChangeCategories = onBatchChangeCategories,
+                onBatchMarkRead = onBatchMarkRead,
+                onBatchDownload = onBatchDownload,
+                onBatchRemoveFromLibrary = onBatchRemoveFromLibrary,
                 modifier = Modifier.fillMaxSize().testTag("library-grid-pane"),
+            )
+        }
+
+        // Filter & Sort Dialog
+        if (state.isFilterDialogOpen) {
+            LibraryFilterDialog(
+                filterState = state.filterState,
+                sortState = state.sortState,
+                onFilterChange = onFilterChange,
+                onSortChange = onSortChange,
+                onDismiss = onCloseFilterDialog,
+            )
+        }
+
+        // Batch Category Dialog
+        if (state.isBatchCategoryDialogOpen) {
+            BatchCategorySelectionDialog(
+                categories = state.categories.filter { it.id != SYSTEM_ALL_CATEGORY.id },
+                onDismiss = onBatchCloseCategoryDialog,
+                onConfirm = onBatchSetCategories,
             )
         }
     }
@@ -122,79 +254,210 @@ private fun LibraryPane(
     onRetry: () -> Unit,
     onCategorySelected: (Long) -> Unit,
     onManageCategories: () -> Unit,
+    onDisplayModeChange: (LibraryDisplayMode) -> Unit,
+    onGridSizeChange: (Float) -> Unit,
+    onOpenFilterDialog: () -> Unit,
+    onToggleSelectionMode: (Boolean) -> Unit,
+    onToggleMangaSelection: (Long) -> Unit,
+    onSelectAll: () -> Unit,
+    onDeselectAll: () -> Unit,
+    onBatchChangeCategories: () -> Unit,
+    onBatchMarkRead: (Boolean) -> Unit,
+    onBatchDownload: (Int) -> Unit,
+    onBatchRemoveFromLibrary: () -> Unit,
+    isUpdatingLibrary: Boolean = false,
+    onUpdateLibrary: (() -> Unit)? = null,
     modifier: Modifier,
 ) {
-    val strings = mihon.desktop.i18n.LocalStrings.current
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = strings.libraryTitle,
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.headlineMedium,
-            )
-            FilledTonalButton(
-                onClick = onImportBackup,
-                modifier = Modifier.testTag("library-import-backup"),
-            ) {
-                Text(strings.libraryImportBackup)
-            }
-            FilledTonalButton(
-                onClick = onImportLocal,
-                modifier = Modifier.testTag("library-import-local"),
-            ) {
-                Text(strings.libraryImportLocal)
-            }
-        }
+    val strings = LocalStrings.current
 
-        // Category Chips Row
-        Row(
-            modifier = Modifier.fillMaxWidth().testTag("library-categories-row"),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+    Box(modifier = modifier) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            LazyRow(
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            // Header: Title and Buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                items(state.categories, key = { it.id }) { cat ->
-                    val label = if (cat.id == SYSTEM_ALL_CATEGORY.id) strings.libraryAllCategory else cat.name
+                Text(
+                    text = strings.libraryTitle,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                if (onUpdateLibrary != null) {
+                    Button(
+                        onClick = onUpdateLibrary,
+                        enabled = !isUpdatingLibrary,
+                        modifier = Modifier.testTag("library-update-button"),
+                    ) {
+                        if (isUpdatingLibrary) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                strokeWidth = 2.dp,
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(strings.libraryUpdating)
+                        } else {
+                            Text(strings.libraryUpdateNow)
+                        }
+                    }
+                }
+                FilledTonalButton(
+                    onClick = onImportBackup,
+                    modifier = Modifier.testTag("library-import-backup"),
+                ) {
+                    Text(strings.libraryImportBackup)
+                }
+                FilledTonalButton(
+                    onClick = onImportLocal,
+                    modifier = Modifier.testTag("library-import-local"),
+                ) {
+                    Text(strings.libraryImportLocal)
+                }
+            }
+
+            // Controls Bar: Display Modes, Zoom Slider, Filter & Sort, Multi-selection
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // Display Mode Chips
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    val modes = listOf(
+                        LibraryDisplayMode.ComfortableGrid to strings.libraryDisplayComfortable,
+                        LibraryDisplayMode.CompactGrid to strings.libraryDisplayCompact,
+                        LibraryDisplayMode.CoverOnly to strings.libraryDisplayCoverOnly,
+                        LibraryDisplayMode.List to strings.libraryDisplayList,
+                    )
+                    for ((mode, label) in modes) {
+                        FilterChip(
+                            selected = state.displayMode == mode,
+                            onClick = { onDisplayModeChange(mode) },
+                            label = { Text(label, style = MaterialTheme.typography.labelMedium) },
+                            modifier = Modifier.testTag("display-mode-${mode.name}"),
+                        )
+                    }
+                }
+
+                // Right controls: Zoom Slider (if grid), Filter & Sort, Select Toggle
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (state.displayMode != LibraryDisplayMode.List) {
+                        Text(
+                            text = "${state.gridSize.toInt()}dp",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.outline,
+                        )
+                        Slider(
+                            value = state.gridSize,
+                            onValueChange = onGridSizeChange,
+                            valueRange = 120f..280f,
+                            modifier = Modifier.width(100.dp).testTag("library-grid-slider"),
+                        )
+                    }
+
+                    // Filter & Sort Button with Badge
+                    BadgedBox(
+                        badge = {
+                            if (state.filterState.hasActiveFilters) {
+                                Badge(modifier = Modifier.testTag("filter-active-badge")) {
+                                    Text(state.filterState.activeCount.toString())
+                                }
+                            }
+                        },
+                    ) {
+                        OutlinedButton(
+                            onClick = onOpenFilterDialog,
+                            modifier = Modifier.testTag("library-filter-sort-button"),
+                        ) {
+                            Text(strings.libraryFilterAndSort)
+                        }
+                    }
+
+                    // Selection Mode Toggle
                     FilterChip(
-                        selected = cat.id == state.selectedCategoryId,
-                        onClick = { onCategorySelected(cat.id) },
-                        label = { Text(label) },
-                        modifier = Modifier.testTag("library-category-chip-${cat.id}"),
+                        selected = state.selectionState.isSelectionMode,
+                        onClick = { onToggleSelectionMode(!state.selectionState.isSelectionMode) },
+                        label = { Text(strings.libraryBatchSelect) },
+                        modifier = Modifier.testTag("library-toggle-selection"),
                     )
                 }
             }
-            OutlinedButton(
-                onClick = onManageCategories,
-                modifier = Modifier.testTag("library-manage-categories-button"),
+
+            // Category Chips Row
+            Row(
+                modifier = Modifier.fillMaxWidth().testTag("library-categories-row"),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text(strings.libraryManageCategories)
+                LazyRow(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    items(state.categories, key = { it.id }) { cat ->
+                        val label = if (cat.id == SYSTEM_ALL_CATEGORY.id) strings.libraryAllCategory else cat.name
+                        FilterChip(
+                            selected = cat.id == state.selectedCategoryId,
+                            onClick = { onCategorySelected(cat.id) },
+                            label = { Text(label) },
+                            modifier = Modifier.testTag("library-category-chip-${cat.id}"),
+                        )
+                    }
+                }
+                OutlinedButton(
+                    onClick = onManageCategories,
+                    modifier = Modifier.testTag("library-manage-categories-button"),
+                ) {
+                    Text(strings.libraryManageCategories)
+                }
             }
+
+            // Search Box
+            OutlinedTextField(
+                value = state.query,
+                onValueChange = onQueryChange,
+                modifier = Modifier.fillMaxWidth().testTag("library-search"),
+                label = { Text(strings.librarySearchPlaceholder) },
+                singleLine = true,
+            )
+
+            // Manga Content Grid / List
+            LibraryContent(
+                state = state,
+                onMangaSelected = onMangaSelected,
+                onToggleMangaSelection = onToggleMangaSelection,
+                onRetry = onRetry,
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+            )
         }
 
-        OutlinedTextField(
-            value = state.query,
-            onValueChange = onQueryChange,
-            modifier = Modifier.fillMaxWidth().testTag("library-search"),
-            label = { Text(strings.librarySearchPlaceholder) },
-            singleLine = true,
-        )
-        LibraryContent(
-            state = state,
-            onMangaSelected = onMangaSelected,
-            onRetry = onRetry,
-            modifier = Modifier.weight(1f).fillMaxWidth(),
-        )
+        // Floating Batch Action Bar at bottom
+        if (state.selectionState.isSelectionMode || state.selectionState.isAnySelected) {
+            LibraryBatchActionBar(
+                selectedCount = state.selectionState.count,
+                totalCount = state.items.size,
+                onSelectAll = onSelectAll,
+                onDeselectAll = onDeselectAll,
+                onChangeCategories = onBatchChangeCategories,
+                onMarkRead = onBatchMarkRead,
+                onDownloadChapters = onBatchDownload,
+                onRemoveFromLibrary = onBatchRemoveFromLibrary,
+                onExitSelection = { onToggleSelectionMode(false) },
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp),
+            )
+        }
     }
 }
 
@@ -202,6 +465,7 @@ private fun LibraryPane(
 private fun LibraryContent(
     state: LibraryUiState,
     onMangaSelected: (Long) -> Unit,
+    onToggleMangaSelection: (Long) -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier,
 ) {
@@ -211,40 +475,154 @@ private fun LibraryContent(
         }
         state.errorMessage != null -> ErrorState(state.errorMessage, onRetry, modifier)
         state.items.isEmpty() -> EmptyState(state.query, modifier)
-        else -> LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 180.dp),
-            modifier = modifier,
-            contentPadding = PaddingValues(bottom = 24.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(state.items, key = LibraryManga::id) { manga ->
-                MangaCard(manga, onMangaSelected)
+        else -> {
+            when (state.displayMode) {
+                LibraryDisplayMode.ComfortableGrid -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = state.gridSize.dp),
+                        modifier = modifier.testTag("library-view-comfortable"),
+                        contentPadding = PaddingValues(bottom = 80.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        items(state.items, key = LibraryManga::id) { manga ->
+                            ComfortableMangaCard(
+                                manga = manga,
+                                isSelectionMode = state.selectionState.isSelectionMode,
+                                isSelected = state.selectionState.selectedMangaIds.contains(manga.id),
+                                onClick = {
+                                    if (state.selectionState.isSelectionMode) {
+                                        onToggleMangaSelection(manga.id)
+                                    } else {
+                                        onMangaSelected(manga.id)
+                                    }
+                                },
+                            )
+                        }
+                    }
+                }
+                LibraryDisplayMode.CompactGrid -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = (state.gridSize * 0.82f).dp),
+                        modifier = modifier.testTag("library-view-compact"),
+                        contentPadding = PaddingValues(bottom = 80.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        items(state.items, key = LibraryManga::id) { manga ->
+                            CompactMangaCard(
+                                manga = manga,
+                                isSelectionMode = state.selectionState.isSelectionMode,
+                                isSelected = state.selectionState.selectedMangaIds.contains(manga.id),
+                                onClick = {
+                                    if (state.selectionState.isSelectionMode) {
+                                        onToggleMangaSelection(manga.id)
+                                    } else {
+                                        onMangaSelected(manga.id)
+                                    }
+                                },
+                            )
+                        }
+                    }
+                }
+                LibraryDisplayMode.CoverOnly -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = (state.gridSize * 0.72f).dp),
+                        modifier = modifier.testTag("library-view-coveronly"),
+                        contentPadding = PaddingValues(bottom = 80.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        items(state.items, key = LibraryManga::id) { manga ->
+                            CoverOnlyMangaCard(
+                                manga = manga,
+                                isSelectionMode = state.selectionState.isSelectionMode,
+                                isSelected = state.selectionState.selectedMangaIds.contains(manga.id),
+                                onClick = {
+                                    if (state.selectionState.isSelectionMode) {
+                                        onToggleMangaSelection(manga.id)
+                                    } else {
+                                        onMangaSelected(manga.id)
+                                    }
+                                },
+                            )
+                        }
+                    }
+                }
+                LibraryDisplayMode.List -> {
+                    LazyColumn(
+                        modifier = modifier.testTag("library-view-list"),
+                        contentPadding = PaddingValues(bottom = 80.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        items(state.items, key = LibraryManga::id) { manga ->
+                            ListMangaItem(
+                                manga = manga,
+                                isSelectionMode = state.selectionState.isSelectionMode,
+                                isSelected = state.selectionState.selectedMangaIds.contains(manga.id),
+                                onClick = {
+                                    if (state.selectionState.isSelectionMode) {
+                                        onToggleMangaSelection(manga.id)
+                                    } else {
+                                        onMangaSelected(manga.id)
+                                    }
+                                },
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
 
+// 1. Comfortable Card: Horizontal cover + title, author, chapters, unread pill
 @Composable
-private fun MangaCard(
+private fun ComfortableMangaCard(
     manga: LibraryManga,
-    onMangaSelected: (Long) -> Unit,
+    isSelectionMode: Boolean,
+    isSelected: Boolean,
+    onClick: () -> Unit,
 ) {
+    val strings = LocalStrings.current
+    val containerColor = if (isSelected) {
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+    } else {
+        MaterialTheme.colorScheme.surfaceContainerLow
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 116.dp)
             .testTag("library-item-${manga.id}")
-            .clickable(role = Role.Button) { onMangaSelected(manga.id) }
+            .clickable(role = Role.Button, onClick = onClick)
             .focusable(),
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
-        tonalElevation = 1.dp,
+        color = containerColor,
+        tonalElevation = if (isSelected) 4.dp else 1.dp,
         shape = MaterialTheme.shapes.medium,
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
+            if (isSelectionMode) {
+                Box(
+                    modifier = Modifier.padding(start = 8.dp).align(Alignment.CenterVertically),
+                ) {
+                    Checkbox(
+                        checked = isSelected,
+                        onCheckedChange = { onClick() },
+                        modifier = Modifier.testTag("item-select-${manga.id}"),
+                    )
+                }
+            }
+            MangaCover(
+                thumbnailUrl = manga.thumbnailUrl,
+                mangaId = manga.id,
+                contentDescription = manga.title,
+                modifier = Modifier.width(84.dp).fillMaxHeight(),
+            )
             Column(
-                modifier = Modifier.weight(1f).padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.weight(1f).padding(14.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
                     text = manga.title,
@@ -260,7 +638,7 @@ private fun MangaCard(
                 )
             }
             Surface(
-                modifier = Modifier.width(48.dp).fillMaxHeight(),
+                modifier = Modifier.width(52.dp).fillMaxHeight(),
                 color = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 shape = MaterialTheme.shapes.extraSmall,
@@ -269,7 +647,6 @@ private fun MangaCard(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 6.dp, vertical = 12.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    val strings = mihon.desktop.i18n.LocalStrings.current
                     Text(
                         text = strings.libraryUnreadCount(manga.unreadCount.toInt()),
                         style = MaterialTheme.typography.labelMedium,
@@ -281,9 +658,308 @@ private fun MangaCard(
     }
 }
 
+// 2. Compact Card: Aspect ratio cover with dark gradient title overlay
+@Composable
+private fun CompactMangaCard(
+    manga: LibraryManga,
+    isSelectionMode: Boolean,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(0.7f)
+            .testTag("library-item-${manga.id}")
+            .clickable(role = Role.Button, onClick = onClick),
+        shape = RoundedCornerShape(10.dp),
+        tonalElevation = if (isSelected) 6.dp else 2.dp,
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            MangaCover(
+                thumbnailUrl = manga.thumbnailUrl,
+                mangaId = manga.id,
+                contentDescription = manga.title,
+                modifier = Modifier.fillMaxSize(),
+            )
+
+            // Bottom gradient overlay
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(Color.Transparent, Color(0xCC000000)),
+                        ),
+                    )
+                    .padding(8.dp),
+            ) {
+                Text(
+                    text = manga.title,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+
+            // Top-right unread badge
+            if (manga.unreadCount > 0) {
+                Surface(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(6.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape,
+                ) {
+                    Text(
+                        text = manga.unreadCount.toString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                    )
+                }
+            }
+
+            // Selection Checkbox
+            if (isSelectionMode) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(6.dp)
+                        .background(Color(0x88000000), shape = CircleShape),
+                ) {
+                    Checkbox(
+                        checked = isSelected,
+                        onCheckedChange = { onClick() },
+                        modifier = Modifier.testTag("item-select-${manga.id}"),
+                    )
+                }
+            }
+        }
+    }
+}
+
+// 3. Cover Only Card: Seamless cover image matrix
+@Composable
+private fun CoverOnlyMangaCard(
+    manga: LibraryManga,
+    isSelectionMode: Boolean,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(0.68f)
+            .testTag("library-item-${manga.id}")
+            .clickable(role = Role.Button, onClick = onClick),
+        shape = RoundedCornerShape(8.dp),
+        tonalElevation = if (isSelected) 6.dp else 1.dp,
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            MangaCover(
+                thumbnailUrl = manga.thumbnailUrl,
+                mangaId = manga.id,
+                contentDescription = manga.title,
+                modifier = Modifier.fillMaxSize(),
+            )
+
+            // Top-right unread badge
+            if (manga.unreadCount > 0) {
+                Surface(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(4.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape,
+                ) {
+                    Text(
+                        text = manga.unreadCount.toString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp),
+                    )
+                }
+            }
+
+            // Selection Checkbox
+            if (isSelectionMode) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(4.dp)
+                        .background(Color(0x88000000), shape = CircleShape),
+                ) {
+                    Checkbox(
+                        checked = isSelected,
+                        onCheckedChange = { onClick() },
+                        modifier = Modifier.testTag("item-select-${manga.id}"),
+                    )
+                }
+            }
+        }
+    }
+}
+
+// 4. List Item: Full horizontal row
+@Composable
+private fun ListMangaItem(
+    manga: LibraryManga,
+    isSelectionMode: Boolean,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    val strings = LocalStrings.current
+    val containerColor = if (isSelected) {
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+    } else {
+        MaterialTheme.colorScheme.surfaceContainerLow
+    }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("library-item-${manga.id}")
+            .clickable(role = Role.Button, onClick = onClick),
+        shape = RoundedCornerShape(8.dp),
+        color = containerColor,
+        tonalElevation = if (isSelected) 3.dp else 1.dp,
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            if (isSelectionMode) {
+                Checkbox(
+                    checked = isSelected,
+                    onCheckedChange = { onClick() },
+                    modifier = Modifier.testTag("item-select-${manga.id}"),
+                )
+            }
+
+            MangaCover(
+                thumbnailUrl = manga.thumbnailUrl,
+                mangaId = manga.id,
+                contentDescription = manga.title,
+                modifier = Modifier
+                    .width(55.dp)
+                    .height(78.dp)
+                    .clip(RoundedCornerShape(6.dp)),
+            )
+
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = manga.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = manga.author ?: "Source ${manga.sourceId}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    text = "${manga.chapterCount} ${chapterLabel(manga.chapterCount)}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.outline,
+                )
+            }
+
+            if (manga.unreadCount > 0) {
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(
+                        text = strings.libraryUnreadCount(manga.unreadCount.toInt()),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BatchCategorySelectionDialog(
+    categories: List<DesktopCategory>,
+    onDismiss: () -> Unit,
+    onConfirm: (List<Long>) -> Unit,
+) {
+    val strings = LocalStrings.current
+    var selectedCategoryIds by remember { mutableStateOf(emptySet<Long>()) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(strings.libraryBatchChangeCategory) },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                if (categories.isEmpty()) {
+                    Text(strings.categoryNoneCreated)
+                } else {
+                    LazyColumn(modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp)) {
+                        items(categories, key = { it.id }) { cat ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        selectedCategoryIds = if (selectedCategoryIds.contains(cat.id)) {
+                                            selectedCategoryIds - cat.id
+                                        } else {
+                                            selectedCategoryIds + cat.id
+                                        }
+                                    }
+                                    .padding(vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Checkbox(
+                                    checked = selectedCategoryIds.contains(cat.id),
+                                    onCheckedChange = {
+                                        selectedCategoryIds = if (it) {
+                                            selectedCategoryIds + cat.id
+                                        } else {
+                                            selectedCategoryIds - cat.id
+                                        }
+                                    },
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(cat.name, style = MaterialTheme.typography.bodyLarge)
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onConfirm(selectedCategoryIds.toList()) },
+                modifier = Modifier.testTag("batch-category-confirm"),
+            ) {
+                Text(strings.dialogDone)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(strings.dialogCancel)
+            }
+        },
+    )
+}
+
 @Composable
 private fun EmptyState(query: String, modifier: Modifier) {
-    val strings = mihon.desktop.i18n.LocalStrings.current
+    val strings = LocalStrings.current
     Box(modifier, contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -314,7 +990,7 @@ private fun ErrorState(
     onRetry: () -> Unit,
     modifier: Modifier,
 ) {
-    val strings = mihon.desktop.i18n.LocalStrings.current
+    val strings = LocalStrings.current
     Box(modifier, contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

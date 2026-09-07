@@ -1,14 +1,18 @@
 package mihon.desktop.ui.reader
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -31,6 +35,8 @@ internal fun ContinuousReader(
     onAction: (ReaderAction) -> Unit,
     pageContent: ReaderPageContent,
     modifier: Modifier = Modifier,
+    webtoonMaxWidth: Int = 800,
+    webtoonSidePadding: Int = 0,
 ) {
     val initialAnchor = state.viewportAnchor
     val listState = rememberLazyListState(
@@ -39,10 +45,24 @@ internal fun ContinuousReader(
     )
     val gap = if (state.mode == ReadingMode.WEBTOON) 0.dp else ReaderLayout.DEFAULT_CONTINUOUS_GAP_PIXELS.dp
     val scaleMode = if (state.mode == ReadingMode.WEBTOON) ScaleMode.FIT_WIDTH else state.scaleMode
+
+    val isWebtoonOrVertical = state.mode == ReadingMode.WEBTOON || state.mode == ReadingMode.VERTICAL
+    val maxWidthConstraint = if (isWebtoonOrVertical && webtoonMaxWidth > 0) {
+        minOf(viewportWidth, webtoonMaxWidth.dp)
+    } else {
+        viewportWidth
+    }
+    val sidePaddingFraction = if (isWebtoonOrVertical && webtoonSidePadding > 0) {
+        webtoonSidePadding.coerceIn(0, 30) / 100f
+    } else {
+        0f
+    }
+    val contentWidth = maxWidthConstraint * (1f - 2f * sidePaddingFraction)
+
     val density = LocalDensity.current
     val viewport = with(density) {
         ReaderViewport(
-            viewportWidth.roundToPx().coerceAtLeast(1),
+            contentWidth.roundToPx().coerceAtLeast(1),
             viewportHeight.roundToPx().coerceAtLeast(1),
         )
     }
@@ -55,38 +75,43 @@ internal fun ContinuousReader(
         }
     }
 
-    LazyColumn(
-        state = listState,
-        modifier = modifier,
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
     ) {
-        itemsIndexed(state.pages, key = { _, page -> page.id }) { pageIndex, page ->
-            val transform = calculatePageTransform(
-                page = page,
-                viewport = viewport,
-                scaleMode = scaleMode,
-                zoom = state.zoom,
-                requestedPan = ReaderPan(0f, 0f),
-            )
-            val itemHeight = with(density) { transform.heightPixels.toDp() }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(itemHeight)
-                    .then(if (pageIndex < state.pages.lastIndex) Modifier else Modifier),
-            ) {
-                ReaderPageFrame(
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.width(contentWidth).fillMaxHeight(),
+        ) {
+            itemsIndexed(state.pages, key = { _, page -> page.id }) { pageIndex, page ->
+                val transform = calculatePageTransform(
                     page = page,
-                    pageIndex = pageIndex,
-                    totalPages = state.pages.size,
+                    viewport = viewport,
                     scaleMode = scaleMode,
                     zoom = state.zoom,
                     requestedPan = ReaderPan(0f, 0f),
-                    pageContent = pageContent,
-                    modifier = Modifier.fillMaxWidth().height(itemHeight),
                 )
-            }
-            if (pageIndex < state.pages.lastIndex && gap > 0.dp) {
-                androidx.compose.foundation.layout.Spacer(Modifier.height(gap))
+                val itemHeight = with(density) { transform.heightPixels.toDp() }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(itemHeight)
+                        .then(if (pageIndex < state.pages.lastIndex) Modifier else Modifier),
+                ) {
+                    ReaderPageFrame(
+                        page = page,
+                        pageIndex = pageIndex,
+                        totalPages = state.pages.size,
+                        scaleMode = scaleMode,
+                        zoom = state.zoom,
+                        requestedPan = ReaderPan(0f, 0f),
+                        pageContent = pageContent,
+                        modifier = Modifier.fillMaxWidth().height(itemHeight),
+                    )
+                }
+                if (pageIndex < state.pages.lastIndex && gap > 0.dp) {
+                    androidx.compose.foundation.layout.Spacer(Modifier.height(gap))
+                }
             }
         }
     }

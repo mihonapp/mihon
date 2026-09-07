@@ -43,6 +43,12 @@ class ExtensionStoreService(
     companion object {
         const val PREF_KEY_REPOSITORIES = "extension.repositories"
         const val DEFAULT_REPO = "https://raw.githubusercontent.com/keiyoushi/extensions/repo"
+
+        /** Desktop can't install these promotional/meta packages; hide them from the store. */
+        val HIDDEN_EXTENSION_PACKAGES = setOf(
+            "eu.kanade.tachiyomi.extension.all.keiyoushi",
+            "eu.kanade.tachiyomi.extension.all.mihon",
+        )
     }
 
     private val json = Json {
@@ -109,6 +115,9 @@ class ExtensionStoreService(
         return jsonArray.mapNotNull { obj ->
             try {
                 val pkg = obj["pkg"]?.jsonPrimitive?.content ?: return@mapNotNull null
+                if (pkg in HIDDEN_EXTENSION_PACKAGES) {
+                    return@mapNotNull null
+                }
                 val name = obj["name"]?.jsonPrimitive?.content ?: pkg
                 val version = obj["version"]?.jsonPrimitive?.content ?: "1.0.0"
                 val code = obj["code"]?.jsonPrimitive?.longOrNull ?: 1L

@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,8 +48,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mihon.desktop.i18n.EnglishStrings
+import mihon.desktop.i18n.LocalStrings
 import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.DesktopReaderSettingsStore
+import mihon.desktop.reader.ReaderBackgroundColor
 import mihon.desktop.reader.ReaderClickAction
 import mihon.desktop.reader.input.ClickRegionPolicy
 import mihon.desktop.reader.input.ReaderInputCommand
@@ -57,6 +61,7 @@ import mihon.desktop.reader.input.ReaderInputKey
 import mihon.desktop.reader.input.ReaderInputMapper
 import mihon.reader.model.ReaderErrorCode
 import mihon.reader.model.ReaderLayout
+import mihon.reader.model.ReadingMode
 import mihon.reader.session.ReaderAction
 import mihon.reader.session.ReaderLoadState
 import mihon.reader.session.ReaderSession
@@ -164,13 +169,23 @@ fun ReaderScreen(
                 result.consumed
             },
     ) {
-        ReaderBody(
-            state = state,
-            session = session,
-            onAction = session::dispatch,
-            onRetryChapter = onRetryChapter,
-            pageContent = pageContent,
-        )
+        val isWebtoon = state.mode == ReadingMode.WEBTOON
+        val currentCrop = if (isWebtoon) settings.cropBordersWebtoon else settings.cropBorders
+        CompositionLocalProvider(
+            LocalReaderColorFilter provides settings.colorFilter,
+            LocalReaderCropBorders provides currentCrop,
+        ) {
+            ReaderBody(
+                state = state,
+                session = session,
+                onAction = session::dispatch,
+                onRetryChapter = onRetryChapter,
+                backgroundColor = settings.backgroundColor,
+                webtoonMaxWidth = settings.webtoonMaxWidth,
+                webtoonSidePadding = settings.webtoonSidePadding,
+                pageContent = pageContent,
+            )
+        }
         if (state.loadState is ReaderLoadState.Ready) {
             ReaderClickRegions(
                 settings = settings,
@@ -220,6 +235,10 @@ fun ReaderScreen(
             onFullscreen = onFullscreen,
             onBorderless = onBorderless,
             onOpenSettings = { showSettings = true },
+            onColorFilter = { applySettings(settings.copy(colorFilter = it)) },
+            onBackgroundColor = { applySettings(settings.copy(backgroundColor = it)) },
+            onCropBorders = { applySettings(settings.copy(cropBorders = it)) },
+            onCropBordersWebtoon = { applySettings(settings.copy(cropBordersWebtoon = it)) },
         )
         TopEdgeReveal { chromeVisible = true }
     }
@@ -259,8 +278,12 @@ private fun ReaderBody(
     session: ReaderSession,
     onAction: (ReaderAction) -> Unit,
     onRetryChapter: suspend () -> Unit,
+    backgroundColor: ReaderBackgroundColor,
+    webtoonMaxWidth: Int,
+    webtoonSidePadding: Int,
     pageContent: ReaderPageContent,
 ) {
+    val strings = LocalStrings.current
     val scope = rememberCoroutineScope()
     when (val load = state.loadState) {
         ReaderLoadState.Idle,
@@ -268,17 +291,20 @@ private fun ReaderBody(
         -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 CircularProgressIndicator()
-                Text("Loading chapter…", modifier = Modifier.padding(top = 12.dp).testTag("reader-loading"))
+                Text(strings.readerLoadingChapter, modifier = Modifier.padding(top = 12.dp).testTag("reader-loading"))
             }
         }
         ReaderLoadState.Ready -> ReaderCanvas(
             state = state,
             onAction = onAction,
+            backgroundColor = backgroundColor,
+            webtoonMaxWidth = webtoonMaxWidth,
+            webtoonSidePadding = webtoonSidePadding,
             modifier = Modifier.fillMaxSize(),
             pageContent = pageContent,
         )
         is ReaderLoadState.Failed -> ReaderErrorPanel(
-            message = readerErrorMessage(load.error),
+            message = strings.readerErrorMessage(load.error),
             retryable = load.error.code != ReaderErrorCode.EMPTY_CHAPTER,
             onRetry = {
                 scope.launch {
@@ -287,13 +313,14 @@ private fun ReaderBody(
             },
         )
         ReaderLoadState.Closed -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Reader closed", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(strings.readerClosed, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
 
 @Composable
 private fun ReaderErrorPanel(message: String, retryable: Boolean, onRetry: () -> Unit) {
+    val strings = LocalStrings.current
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Surface(color = MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.large, tonalElevation = 3.dp) {
             Column(
@@ -310,7 +337,7 @@ private fun ReaderErrorPanel(message: String, retryable: Boolean, onRetry: () ->
                     FilledTonalButton(
                         onClick = onRetry,
                         modifier = Modifier.padding(top = 12.dp).testTag("reader-error-retry"),
-                    ) { Text("Retry") }
+                    ) { Text(strings.downloadsRetry) }
                 }
             }
         }
@@ -389,32 +416,7 @@ private fun ReaderPagePlaceholder(pageIndex: Int, modifier: Modifier) {
     }
 }
 
-fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
-    is ReaderFailure.PageNotFound -> "This page could not be found. It may have been moved or deleted."
-    is ReaderFailure.UnsupportedFormat -> "This chapter format is not supported."
-    is ReaderFailure.EncryptedContainer -> "Encrypted chapter containers are not supported."
-    is ReaderFailure.UnsafePath,
-    is ReaderFailure.ResourceChanged,
-    -> "This local chapter is no longer available. Locate or re-import it."
-    is ReaderFailure.CorruptContainer,
-    is ReaderFailure.CorruptImage,
-    -> "This page is corrupt or unreadable."
-    is ReaderFailure.UnsupportedImage,
-    is ReaderFailure.RegionUnavailable,
-    -> "This image format is not supported."
-    is ReaderFailure.LimitExceeded,
-    is ReaderFailure.TooManyEntries,
-    -> "This chapter exceeds the safe reader limits."
-    is ReaderFailure.EmptyChapter -> "This chapter contains no readable pages."
-    else -> when (error.code) {
-        ReaderErrorCode.EMPTY_CHAPTER -> "This chapter contains no readable pages."
-        ReaderErrorCode.SOURCE_UNAVAILABLE -> "This local chapter is unavailable. Locate or re-import it."
-        ReaderErrorCode.PAGE_NOT_FOUND -> "This page could not be found."
-        ReaderErrorCode.PAGE_DECODE_FAILED -> "This page could not be decoded."
-        ReaderErrorCode.MEMORY_LIMIT_REACHED -> "The reader reached its memory limit."
-        ReaderErrorCode.INVALID_PROGRESS -> "The saved reading position is invalid."
-    }
-}
+fun readerErrorMessage(error: ReaderSessionError): String = EnglishStrings.readerErrorMessage(error)
 
 private fun ReaderState.toDesktopSettings() = DesktopReaderSettings(
     mode = mode,

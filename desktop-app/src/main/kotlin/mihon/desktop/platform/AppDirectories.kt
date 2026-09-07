@@ -14,9 +14,10 @@ data class AppDirectories(
     val logs: Path = root.resolve("logs"),
     val extensions: Path = root.resolve("extensions"),
     val database: Path = root.resolve("database"),
+    val covers: Path = root.resolve("covers"),
 ) {
     fun create(): AppDirectories = apply {
-        listOf(root, cache, logs, extensions, database).forEach(Files::createDirectories)
+        listOf(root, cache, logs, extensions, database, covers).forEach(Files::createDirectories)
     }
 }
 

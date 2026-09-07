@@ -24,18 +24,36 @@ open class OnlineChapterSource(
     asset: ReaderChapterAsset,
     private val sourceId: Long,
     private val chapter: SChapter,
-    private val processManager: WindowsExtensionProcessManager,
+    private val sourceManager: DesktopSourceManager,
     private val networkHelper: DesktopNetworkHelper,
     private val cacheDir: File,
     expansionBudget: ChapterExpansionBudget = ChapterExpansionBudget(),
 ) : ManagedChapterSource(asset, expansionBudget) {
+
+    constructor(
+        asset: ReaderChapterAsset,
+        sourceId: Long,
+        chapter: SChapter,
+        processManager: WindowsExtensionProcessManager,
+        networkHelper: DesktopNetworkHelper,
+        cacheDir: File,
+        expansionBudget: ChapterExpansionBudget = ChapterExpansionBudget(),
+    ) : this(
+        asset = asset,
+        sourceId = sourceId,
+        chapter = chapter,
+        sourceManager = DesktopSourceManager(processManager = processManager),
+        networkHelper = networkHelper,
+        cacheDir = cacheDir,
+        expansionBudget = expansionBudget,
+    )
 
     internal var cachedPages: List<Page>? = null
     private var entries: List<SourceEntry> = emptyList()
 
     override suspend fun pages(): List<PageDescriptor> = withContext(Dispatchers.IO) {
         checkOpenAndCancellation()
-        val list = cachedPages ?: processManager.getPageList(sourceId, chapter).also { cachedPages = it }
+        val list = cachedPages ?: sourceManager.getPageList(sourceId, chapter).also { cachedPages = it }
         entries = list.map { page ->
             val name = "page_%04d.jpg".format(page.index)
             SourceEntry(name, name, 0L)

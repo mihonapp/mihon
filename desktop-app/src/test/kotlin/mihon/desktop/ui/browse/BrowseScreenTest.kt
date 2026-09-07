@@ -1,4 +1,4 @@
-﻿package mihon.desktop.ui.browse
+package mihon.desktop.ui.browse
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
@@ -37,7 +37,7 @@ class BrowseScreenTest {
                     ),
                     onTabSelected = { selectedTab = it },
                     onSearchQueryChange = {},
-                    onSourceSelected = {},
+                    onSourceSelected = { _, _ -> },
                     onInstallExtension = {},
                     onUninstallExtension = {},
                     onToggleExtensionEnabled = { _, _ -> },
@@ -75,7 +75,7 @@ class BrowseScreenTest {
                     ),
                     onTabSelected = {},
                     onSearchQueryChange = {},
-                    onSourceSelected = {},
+                    onSourceSelected = { _, _ -> },
                     onInstallExtension = {},
                     onUninstallExtension = {},
                     onToggleExtensionEnabled = { _, _ -> },

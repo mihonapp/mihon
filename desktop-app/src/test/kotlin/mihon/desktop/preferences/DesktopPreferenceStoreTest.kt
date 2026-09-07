@@ -78,4 +78,46 @@ class DesktopPreferenceStoreTest {
         quarantinedFiles.size shouldBe 1
         Files.readString(quarantinedFiles.single()) shouldBe malformedProperties
     }
+
+    @Test
+    fun `incognito and backup preferences can be saved and restored`() {
+        val file = tempDir.resolve("preferences.properties")
+        val store = DesktopPreferenceStore(file)
+        val expected = DesktopPreferences(
+            incognitoMode = true,
+            backupIntervalHours = 24,
+            backupStoragePath = "D:/custom/backups",
+            backupRetentionCount = 5,
+            lastAutoBackupEpochMillis = 123456789L,
+        )
+        store.save(expected)
+        val loaded = store.load()
+        loaded.incognitoMode shouldBe true
+        loaded.backupIntervalHours shouldBe 24
+        loaded.backupStoragePath shouldBe "D:/custom/backups"
+        loaded.backupRetentionCount shouldBe 5
+        loaded.lastAutoBackupEpochMillis shouldBe 123456789L
+    }
+
+    @Test
+    fun `library update and notification preferences can be saved and restored`() {
+        val file = tempDir.resolve("preferences.properties")
+        val store = DesktopPreferenceStore(file)
+        val expected = DesktopPreferences(
+            libraryUpdateIntervalHours = 12,
+            libraryUpdateSkipCompleted = false,
+            libraryUpdateSkipUnread = true,
+            autoDownloadNewChapters = true,
+            desktopNotificationsEnabled = false,
+            lastLibraryUpdateEpochMillis = 987654321L,
+        )
+        store.save(expected)
+        val loaded = store.load()
+        loaded.libraryUpdateIntervalHours shouldBe 12
+        loaded.libraryUpdateSkipCompleted shouldBe false
+        loaded.libraryUpdateSkipUnread shouldBe true
+        loaded.autoDownloadNewChapters shouldBe true
+        loaded.desktopNotificationsEnabled shouldBe false
+        loaded.lastLibraryUpdateEpochMillis shouldBe 987654321L
+    }
 }

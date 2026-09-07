@@ -1,4 +1,4 @@
-﻿package mihon.desktop.extension
+package mihon.desktop.extension
 
 import com.sun.net.httpserver.HttpServer
 import io.kotest.matchers.shouldBe
@@ -78,5 +78,46 @@ class DesktopNetworkHelperTest {
         helper.isDomainAllowed("v2.api.example.com") shouldBe true
         helper.isDomainAllowed("evil-example.com") shouldBe false
         helper.isDomainAllowed("notexample.com") shouldBe false
+    }
+
+    @Test
+    fun `injects cookies and custom user agent from cookie store`() {
+        var receivedCookie: String? = null
+        var receivedUa: String? = null
+
+        server.createContext("/header-check") { exchange ->
+            receivedCookie = exchange.requestHeaders.getFirst("Cookie")
+            receivedUa = exchange.requestHeaders.getFirst("User-Agent")
+            val resp = "OK".toByteArray()
+            exchange.sendResponseHeaders(200, resp.size.toLong())
+            exchange.responseBody.use { it.write(resp) }
+        }
+
+        val tempCookieFile = java.nio.file.Files.createTempFile("cookies-test", ".json")
+        try {
+            val cookieStore = DesktopCookieStore(tempCookieFile)
+            cookieStore.setCookies(
+                domain = "127.0.0.1",
+                cookies = mapOf("cf_clearance" to "cf123", "token" to "tok456"),
+                customUserAgent = "MihonBypassUA/2.0",
+            )
+
+            val helperWithCookies = DesktopNetworkHelper(cookieStore = cookieStore)
+            helperWithCookies.registerExtensionDomains("local", listOf("127.0.0.1"))
+
+            runBlocking {
+                val res = helperWithCookies.executeBrokeredRequest(
+                    BrokerHttpRequest(
+                        method = "GET",
+                        url = "http://127.0.0.1:$serverPort/header-check",
+                    ),
+                )
+                res.statusCode shouldBe 200
+                receivedCookie shouldBe "cf_clearance=cf123; token=tok456"
+                receivedUa shouldBe "MihonBypassUA/2.0"
+            }
+        } finally {
+            java.nio.file.Files.deleteIfExists(tempCookieFile)
+        }
     }
 }

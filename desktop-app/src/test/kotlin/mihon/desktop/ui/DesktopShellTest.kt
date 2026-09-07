@@ -83,4 +83,36 @@ class DesktopShellTest {
 
         onNodeWithTag(mihon.desktop.ui.updates.UPDATES_SCREEN_TEST_TAG).assertExists()
     }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `Stats destination renders stats screen`() = runComposeUiTest {
+        setContent {
+            Box(modifier = Modifier.requiredSize(1000.dp, 700.dp)) {
+                DesktopShell(
+                    selected = DesktopDestination.Stats,
+                    onDestinationSelected = {},
+                    statsData = mihon.desktop.stats.DesktopStatsData(isLoading = false),
+                )
+            }
+        }
+
+        onNodeWithTag(mihon.desktop.ui.stats.STATS_SCREEN_TEST_TAG).assertExists()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `Incognito mode shows banner in DesktopShell`() = runComposeUiTest {
+        setContent {
+            Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
+                DesktopShell(
+                    selected = DesktopDestination.Library,
+                    onDestinationSelected = {},
+                    incognitoMode = true,
+                )
+            }
+        }
+
+        onNodeWithTag("incognito-banner").assertExists()
+    }
 }

@@ -1,4 +1,4 @@
-﻿package mihon.desktop.extension
+package mihon.desktop.extension
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,8 +12,13 @@ import mihon.extension.source.model.SManga
 
 class OnlineMangaSyncService(
     private val libraryRepository: SqlDelightLibraryRepository,
-    private val processManager: WindowsExtensionProcessManager,
+    private val sourceManager: DesktopSourceManager,
 ) {
+    constructor(
+        libraryRepository: SqlDelightLibraryRepository,
+        processManager: WindowsExtensionProcessManager,
+    ) : this(libraryRepository, DesktopSourceManager(processManager = processManager))
+
     private val json = Json { ignoreUnknownKeys = true }
 
     /**
@@ -33,10 +38,10 @@ class OnlineMangaSyncService(
         manga: SManga,
         forceRefresh: Boolean = false,
     ): Long = withContext(Dispatchers.IO) {
-        // Fetch detailed manga information from extension host if not initialized or forced
+        // Fetch detailed manga information from source manager if not initialized or forced
         val detailedManga = if (!manga.initialized || forceRefresh) {
             try {
-                processManager.getMangaDetails(sourceId, manga)
+                sourceManager.getMangaDetails(sourceId, manga)
             } catch (_: Exception) {
                 manga
             }
@@ -44,9 +49,9 @@ class OnlineMangaSyncService(
             manga
         }
 
-        // Fetch chapter list from extension host
+        // Fetch chapter list from source manager
         val chapters = try {
-            processManager.getChapterList(sourceId, detailedManga)
+            sourceManager.getChapterList(sourceId, detailedManga)
         } catch (_: Exception) {
             emptyList()
         }

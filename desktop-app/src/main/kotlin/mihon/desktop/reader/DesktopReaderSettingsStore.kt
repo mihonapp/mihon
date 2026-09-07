@@ -5,6 +5,22 @@ import mihon.reader.model.ReadingMode
 import mihon.reader.model.ScaleMode
 import mihon.reader.session.ReaderSettings
 
+enum class ReaderColorFilter {
+    NONE,
+    INVERT,
+    GRAYSCALE,
+    INVERT_GRAYSCALE,
+    SEPIA,
+    NIGHT,
+}
+
+enum class ReaderBackgroundColor {
+    DARK_GRAY,
+    BLACK,
+    WHITE,
+    WARM_CREAM,
+}
+
 /** Versioned desktop-only reader preferences, kept separate from the portable reader-core API. */
 data class DesktopReaderSettings(
     val mode: ReadingMode = ReadingMode.SINGLE_LTR,
@@ -13,6 +29,12 @@ data class DesktopReaderSettings(
     val clickRegions: ClickRegions = ClickRegions(),
     val wheelBehavior: ReaderWheelBehavior = ReaderWheelBehavior.PAGE_NAVIGATION,
     val lastWindowMode: ReaderWindowMode = ReaderWindowMode.NORMAL,
+    val colorFilter: ReaderColorFilter = ReaderColorFilter.NONE,
+    val backgroundColor: ReaderBackgroundColor = ReaderBackgroundColor.DARK_GRAY,
+    val cropBorders: Boolean = false,
+    val cropBordersWebtoon: Boolean = false,
+    val webtoonMaxWidth: Int = 800,
+    val webtoonSidePadding: Int = 0,
 ) {
     fun toCoreSettings(): ReaderSettings = ReaderSettings(mode, coverOffset, scaleMode)
 }
@@ -58,6 +80,14 @@ class DesktopReaderSettingsStore(private val preferences: DesktopPreferenceStore
             clickRegions = clickRegions,
             wheelBehavior = enumOrDefault(preferences.property(WHEEL), defaults.wheelBehavior),
             lastWindowMode = enumOrDefault(preferences.property(WINDOW), defaults.lastWindowMode),
+            colorFilter = enumOrDefault(preferences.property(COLOR_FILTER), defaults.colorFilter),
+            backgroundColor = enumOrDefault(preferences.property(BG_COLOR), defaults.backgroundColor),
+            cropBorders = preferences.property(CROP_BORDERS)?.toBooleanStrictOrNull() ?: defaults.cropBorders,
+            cropBordersWebtoon = preferences.property(CROP_BORDERS_WEBTOON)?.toBooleanStrictOrNull()
+                ?: defaults.cropBordersWebtoon,
+            webtoonMaxWidth = preferences.property(WEBTOON_MAX_WIDTH)?.toIntOrNull() ?: defaults.webtoonMaxWidth,
+            webtoonSidePadding = preferences.property(WEBTOON_SIDE_PADDING)?.toIntOrNull()
+                ?: defaults.webtoonSidePadding,
         )
     }
 
@@ -73,6 +103,12 @@ class DesktopReaderSettingsStore(private val preferences: DesktopPreferenceStore
             setProperty(CENTER_END, settings.clickRegions.centerEndPercent.toString())
             setProperty(WHEEL, settings.wheelBehavior.name)
             setProperty(WINDOW, settings.lastWindowMode.name)
+            setProperty(COLOR_FILTER, settings.colorFilter.name)
+            setProperty(BG_COLOR, settings.backgroundColor.name)
+            setProperty(CROP_BORDERS, settings.cropBorders.toString())
+            setProperty(CROP_BORDERS_WEBTOON, settings.cropBordersWebtoon.toString())
+            setProperty(WEBTOON_MAX_WIDTH, settings.webtoonMaxWidth.toString())
+            setProperty(WEBTOON_SIDE_PADDING, settings.webtoonSidePadding.toString())
         }
     }
 
@@ -90,5 +126,11 @@ class DesktopReaderSettingsStore(private val preferences: DesktopPreferenceStore
         const val CENTER_END = "reader.v1.click.center-end"
         const val WHEEL = "reader.v1.wheel"
         const val WINDOW = "reader.v1.window"
+        const val COLOR_FILTER = "reader.v1.color-filter"
+        const val BG_COLOR = "reader.v1.background-color"
+        const val CROP_BORDERS = "reader.v1.crop-borders"
+        const val CROP_BORDERS_WEBTOON = "reader.v1.crop-borders-webtoon"
+        const val WEBTOON_MAX_WIDTH = "reader.v1.webtoon-max-width"
+        const val WEBTOON_SIDE_PADDING = "reader.v1.webtoon-side-padding"
     }
 }

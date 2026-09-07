@@ -1,6 +1,7 @@
 package mihon.desktop.track
 
 import kotlinx.serialization.Serializable
+import mihon.desktop.library.model.TrackingRecord
 
 @Serializable
 enum class TrackStatus(val value: Long, val label: String) {
@@ -63,4 +64,52 @@ data class TrackConflict(
     val remoteStatus: Long,
     val localScore: Double,
     val remoteScore: Double,
+)
+
+enum class TrackerAuthType {
+    TOKEN,
+    CREDENTIALS,
+    SERVER,
+}
+
+@Serializable
+data class TrackerLoginInfo(
+    val trackerId: Long,
+    val username: String = "",
+    val token: String = "",
+    val serverUrl: String = "",
+)
+
+fun TrackingRecord.toDesktopTrackRecord(): DesktopTrackRecord = DesktopTrackRecord(
+    id = id,
+    mangaId = mangaId,
+    trackerId = trackerId,
+    remoteId = remoteId,
+    libraryId = libraryId,
+    title = title,
+    lastChapterRead = lastChapterRead,
+    totalChapters = totalChapters,
+    score = score,
+    status = status,
+    startedReadingDate = startedReadingDate,
+    finishedReadingDate = finishedReadingDate,
+    private = private,
+    trackingUrl = trackingUrl,
+)
+
+fun DesktopTrackRecord.toTrackingRecord(): TrackingRecord = TrackingRecord(
+    id = id,
+    mangaId = mangaId,
+    trackerId = trackerId,
+    remoteId = remoteId,
+    libraryId = libraryId,
+    title = title,
+    lastChapterRead = lastChapterRead,
+    totalChapters = totalChapters,
+    score = score,
+    status = status,
+    startedReadingDate = startedReadingDate,
+    finishedReadingDate = finishedReadingDate,
+    private = private,
+    trackingUrl = trackingUrl,
 )

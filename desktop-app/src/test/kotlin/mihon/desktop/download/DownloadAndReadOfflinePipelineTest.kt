@@ -142,7 +142,7 @@ class DownloadAndReadOfflinePipelineTest {
         downloader.enqueue(manga, listOf(chapter), autoStart = true)
 
         withTimeout(5000) {
-            while (downloader.queueState.value.firstOrNull()?.status != DownloadStatus.COMPLETED) {
+            while (!completedDownloadNotification || downloader.queueState.value.firstOrNull()?.status != DownloadStatus.COMPLETED) {
                 delay(50)
             }
         }
@@ -211,6 +211,7 @@ class DownloadAndReadOfflinePipelineTest {
 
         notificationService.recentNotifications.value.size shouldBe 2 // 1 download + 1 update
 
+        downloader.close()
         repository.close()
     }
 }

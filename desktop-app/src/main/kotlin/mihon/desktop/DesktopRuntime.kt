@@ -9,6 +9,8 @@ import kotlinx.coroutines.runBlocking
 import mihon.desktop.cli.CommandLineException
 import mihon.desktop.cli.DesktopCommand
 import mihon.desktop.cli.DesktopCommandParser
+import mihon.desktop.download.DownloadCacheCleaner
+import mihon.desktop.download.DownloadDiskProvider
 import mihon.desktop.library.backup.AndroidBackupCodec
 import mihon.desktop.library.backup.AndroidBackupImporter
 import mihon.desktop.library.backup.AndroidBackupValidator
@@ -41,11 +43,47 @@ class DesktopRuntime(
     val notificationService: mihon.desktop.notification.DesktopNotificationService? = null,
     val historyService: mihon.desktop.history.DesktopHistoryService? = null,
     val categoryService: mihon.desktop.category.DesktopCategoryService? = null,
+    val trackerStore: mihon.desktop.track.DesktopTrackerStore? = null,
     val trackerManager: mihon.desktop.track.DesktopTrackerManager? = null,
     val trackingQueue: mihon.desktop.track.OfflineTrackingQueue? = null,
+    val trackSyncService: mihon.desktop.track.TrackOnReadSyncService? = null,
     val diagnosticService: mihon.desktop.diagnostics.DiagnosticBundleService? = null,
+    val statsService: mihon.desktop.stats.DesktopStatsService? = null,
+    val backupScheduler: mihon.desktop.backup.DesktopBackupScheduler? = null,
+    val cookieStore: mihon.desktop.extension.DesktopCookieStore? = null,
+    val desktopNotificationService: mihon.desktop.platform.DesktopNotificationService? = null,
+    val libraryUpdateService: mihon.desktop.library.update.LibraryUpdateService? = null,
+    val libraryUpdateScheduler: mihon.desktop.library.update.LibraryUpdateScheduler? = null,
+    val customCoverManager: mihon.desktop.image.CustomCoverManager =
+        mihon.desktop.image.CustomCoverManager(directories.covers),
+    val imageLoader: mihon.desktop.image.DesktopImageLoader =
+        mihon.desktop.image.DesktopImageLoader(
+            diskCacheDir = directories.cache.resolve("covers"),
+            customCoverManager = customCoverManager,
+        ),
     val backupExporter: mihon.desktop.library.backup.AndroidBackupExporter =
         mihon.desktop.library.backup.AndroidBackupExporter(library),
+    val extensionInstaller: mihon.desktop.extension.DesktopExtensionInstaller =
+        mihon.desktop.extension.DesktopExtensionInstaller(
+            installRoot = directories.root.resolve("extensions").toFile(),
+            preferenceStore = preferences,
+        ),
+    val extensionStoreService: mihon.desktop.extension.ExtensionStoreService =
+        mihon.desktop.extension.ExtensionStoreService(preferenceStore = preferences),
+    val sourceManager: mihon.desktop.extension.DesktopSourceManager =
+        mihon.desktop.extension.DesktopSourceManager(
+            installer = extensionInstaller,
+            processManager = null,
+        ),
+    val onlineMangaSyncService: mihon.desktop.extension.OnlineMangaSyncService =
+        mihon.desktop.extension.OnlineMangaSyncService(
+            libraryRepository = library,
+            sourceManager = sourceManager,
+        ),
+    val diskProvider: DownloadDiskProvider =
+        downloader?.diskProvider ?: DownloadDiskProvider(directories.root.resolve("media").resolve("downloads")),
+    val downloadCacheCleaner: DownloadCacheCleaner =
+        DownloadCacheCleaner(repository = library, diskProvider = diskProvider),
     private val closeReaderSessions: suspend () -> Unit = readerFactory?.let { it::shutdown } ?: {},
     private val closeReaderServices: () -> Unit = readerFactory?.let { it::closeServices } ?: {},
     internal val closeLibrary: () -> Unit = library::close,
@@ -225,14 +263,63 @@ object DesktopRuntimeFactory {
                 mutationPort = library,
                 scope = appScope,
             )
-            val trackerManager = mihon.desktop.track.DesktopTrackerManager()
+            val trackerStore = mihon.desktop.track.DesktopTrackerStore(preferences)
+            val trackerManager = mihon.desktop.track.DesktopTrackerManager(store = trackerStore)
             val trackingQueue = mihon.desktop.track.OfflineTrackingQueue(
                 queueFile = directories.root.resolve("tracking-queue.json"),
+            )
+            val trackSyncService = mihon.desktop.track.TrackOnReadSyncService(
+                repository = library,
+                mutationPort = library,
+                trackerManager = trackerManager,
+                trackingQueue = trackingQueue,
             )
             val diagnosticService = mihon.desktop.diagnostics.DiagnosticBundleService(
                 directories = directories,
                 repository = library,
             )
+            val extensionDir = directories.root.resolve("extensions").toFile()
+            val extensionInstaller = mihon.desktop.extension.DesktopExtensionInstaller(
+                installRoot = extensionDir,
+                preferenceStore = preferences,
+            )
+            val extensionStoreService = mihon.desktop.extension.ExtensionStoreService(preferenceStore = preferences)
+            val sourceManager = mihon.desktop.extension.DesktopSourceManager(
+                installer = extensionInstaller,
+                processManager = null,
+            )
+            val onlineMangaSyncService = mihon.desktop.extension.OnlineMangaSyncService(
+                libraryRepository = library,
+                sourceManager = sourceManager,
+            )
+            val statsService = mihon.desktop.stats.DesktopStatsService(library)
+            val backupDir = directories.root.resolve("backups").toAbsolutePath().normalize()
+            java.nio.file.Files.createDirectories(backupDir)
+            val backupExporter = mihon.desktop.library.backup.AndroidBackupExporter(library)
+            val backupScheduler = mihon.desktop.backup.DesktopBackupScheduler(
+                backupExporter = backupExporter,
+                preferenceStore = preferences,
+                defaultBackupDir = backupDir,
+                scope = appScope,
+            )
+            val cookieStore = mihon.desktop.extension.DesktopCookieStore(directories.root.resolve("cookies.json"))
+            val desktopNotificationService = mihon.desktop.platform.DesktopNotificationService(
+                enabledProvider = { preferences.load().desktopNotificationsEnabled },
+            )
+            val libraryUpdateService = mihon.desktop.library.update.LibraryUpdateService(
+                repository = library,
+                syncService = onlineMangaSyncService,
+                downloader = downloader,
+                notificationService = desktopNotificationService,
+            )
+            val libraryUpdateScheduler = mihon.desktop.library.update.LibraryUpdateScheduler(
+                updateService = libraryUpdateService,
+                preferenceStore = preferences,
+                scope = appScope,
+            )
+            if (command == DesktopCommand.LaunchUi) {
+                backupScheduler.start()
+            }
             return DesktopRuntime(
                 directories = directories,
                 preferences = preferences,
@@ -247,11 +334,25 @@ object DesktopRuntimeFactory {
                 notificationService = notificationService,
                 historyService = historyService,
                 categoryService = categoryService,
+                trackerStore = trackerStore,
                 trackerManager = trackerManager,
                 trackingQueue = trackingQueue,
+                trackSyncService = trackSyncService,
                 diagnosticService = diagnosticService,
+                statsService = statsService,
+                backupScheduler = backupScheduler,
+                cookieStore = cookieStore,
+                desktopNotificationService = desktopNotificationService,
+                libraryUpdateService = libraryUpdateService,
+                libraryUpdateScheduler = libraryUpdateScheduler,
+                extensionInstaller = extensionInstaller,
+                extensionStoreService = extensionStoreService,
+                sourceManager = sourceManager,
+                onlineMangaSyncService = onlineMangaSyncService,
                 closeReaderServices = {
+                    backupScheduler.stop()
                     readerFactory?.closeServices()
+                    sourceManager.close()
                     appScope.cancel()
                 },
             )
