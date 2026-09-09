@@ -55,6 +55,7 @@ fun TrackingPreferenceWidget(
                         onClick = { onClick?.invoke() },
                     )
                     .weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 TrackLogoIcon(tracker)
                 Column(
