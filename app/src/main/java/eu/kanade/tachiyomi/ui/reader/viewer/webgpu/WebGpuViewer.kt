@@ -887,8 +887,9 @@ open class WebGpuViewer(
                 }
 
                 (this as? ImageViewerContinuousState)?.let {
-                    minZoomWidthFraction = config.continuousMinWidth / 100f
-                    scale = minScale
+                    homeScale = config.continuousMinWidth / 100f
+                    scale = homeScale
+                    minScale = if (config.zoomOutDisabled) 0f else 0.1f
                 }
             }
 

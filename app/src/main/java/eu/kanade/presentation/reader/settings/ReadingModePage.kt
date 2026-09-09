@@ -78,6 +78,10 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
                 },
                 pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
             )
+            CheckboxItem(
+                label = stringResource(MR.strings.pref_webtoon_disable_zoom_out),
+                pref = viewModel.preferences.webtoonDisableZoomOut,
+            )
         }
     }
 
@@ -278,8 +282,17 @@ private fun ColumnScope.TapZonesItems(
 private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel) {
     HeadingItem(MR.strings.webgpu_viewer)
 
+    val manga by viewModel.mangaFlow.collectAsState()
     val viewer by viewModel.viewerFlow.collectAsState()
 
+    val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
+    val default = LocalContext.current.appGraph.readerPreferences.defaultReadingMode.get()
+    val resolved = ReadingMode.fromPreference(
+        when {
+            readingMode == ReadingMode.DEFAULT -> default
+            else -> manga?.readingMode?.toInt() ?: default
+        },
+    )
     val isDual = (viewer as? WebGpuViewer)?.isDualPageMode() == true
 
     val navigationModePager by viewModel.preferences.navigationModePager.collectAsState()
@@ -318,53 +331,55 @@ private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel)
         return
     }
 
-    val imageScaleType by viewModel.preferences.imageScaleType.collectAsState()
-    SettingsChipRow(MR.strings.pref_image_scale_type) {
-        ReaderPreferences.ImageScaleTypeWebGpuViewer.forEach {
-            FilterChip(
-                selected = ReaderPreferences.ImageScaleType[imageScaleType - 1] == it,
-                onClick = {
-                    viewModel.preferences.imageScaleType.set(ReaderPreferences.ImageScaleType.indexOf(it) + 1)
-                },
-                label = { Text(stringResource(it)) },
-            )
+    if (resolved != ReadingMode.WEBTOON) {
+        val imageScaleType by viewModel.preferences.imageScaleType.collectAsState()
+        SettingsChipRow(MR.strings.pref_image_scale_type) {
+            ReaderPreferences.ImageScaleTypeWebGpuViewer.forEach {
+                FilterChip(
+                    selected = ReaderPreferences.ImageScaleType[imageScaleType - 1] == it,
+                    onClick = {
+                        viewModel.preferences.imageScaleType.set(ReaderPreferences.ImageScaleType.indexOf(it) + 1)
+                    },
+                    label = { Text(stringResource(it)) },
+                )
+            }
         }
-    }
 
-    val zoomStart by viewModel.preferences.zoomStart.collectAsState()
-    SettingsChipRow(MR.strings.pref_zoom_start) {
-        ReaderPreferences.ZoomStart.mapIndexed { index, it ->
-            FilterChip(
-                selected = zoomStart == index + 1,
-                onClick = { viewModel.preferences.zoomStart.set(index + 1) },
-                label = { Text(stringResource(it)) },
-            )
+        val zoomStart by viewModel.preferences.zoomStart.collectAsState()
+        SettingsChipRow(MR.strings.pref_zoom_start) {
+            ReaderPreferences.ZoomStart.mapIndexed { index, it ->
+                FilterChip(
+                    selected = zoomStart == index + 1,
+                    onClick = { viewModel.preferences.zoomStart.set(index + 1) },
+                    label = { Text(stringResource(it)) },
+                )
+            }
         }
-    }
 
-    CheckboxItem(
-        label = stringResource(MR.strings.pref_crop_borders),
-        pref = viewModel.preferences.cropBorders,
-    )
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_crop_borders),
+            pref = viewModel.preferences.cropBorders,
+        )
 
-    CheckboxItem(
-        label = stringResource(MR.strings.pref_landscape_zoom),
-        pref = viewModel.preferences.landscapeZoom,
-    )
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_landscape_zoom),
+            pref = viewModel.preferences.landscapeZoom,
+        )
 
-    CheckboxItem(
-        label = stringResource(MR.strings.pref_navigate_pan),
-        pref = viewModel.preferences.navigateToPan,
-    )
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_navigate_pan),
+            pref = viewModel.preferences.navigateToPan,
+        )
 
-    val transitionAnimation by viewModel.preferences.transitionAnimation.collectAsState()
-    SettingsChipRow(MR.strings.pref_transition_animation) {
-        ReaderPreferences.TransitionAnimation.entries.forEach {
-            FilterChip(
-                selected = it == transitionAnimation,
-                onClick = { viewModel.preferences.transitionAnimation.set(it) },
-                label = { Text(stringResource(it.titleRes)) },
-            )
+        val transitionAnimation by viewModel.preferences.transitionAnimation.collectAsState()
+        SettingsChipRow(MR.strings.pref_transition_animation) {
+            ReaderPreferences.TransitionAnimation.entries.forEach {
+                FilterChip(
+                    selected = it == transitionAnimation,
+                    onClick = { viewModel.preferences.transitionAnimation.set(it) },
+                    label = { Text(stringResource(it.titleRes)) },
+                )
+            }
         }
     }
 
