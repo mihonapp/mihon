@@ -25,7 +25,7 @@ import uy.kohesive.injekt.injectLazy
 import java.security.MessageDigest
 
 class SuwayomiApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val sourceManager: SourceManager,
 ) {
 
@@ -71,7 +71,7 @@ class SuwayomiApi(
                 .entry
         }
 
-        TrackSearch.create(trackId).apply {
+        TrackSearch.create(trackerId).apply {
             remote_id = mangaId
             title = manga.title
             cover_url = "$baseUrl/${manga.thumbnailUrl}"
@@ -152,15 +152,13 @@ class SuwayomiApi(
                 }
             }
         }
-        with(json) {
-            client.newCall(
-                POST(
-                    apiUrl,
-                    body = markPayload.toString().toRequestBody(jsonMime),
-                ),
-            )
-                .awaitSuccess()
-        }
+        client.newCall(
+            POST(
+                apiUrl,
+                body = markPayload.toString().toRequestBody(jsonMime),
+            ),
+        )
+            .awaitSuccess()
 
         val trackQuery = $$"""
         |mutation TrackManga($mangaId: Int!) {
@@ -175,15 +173,13 @@ class SuwayomiApi(
                 put("mangaId", mangaId)
             }
         }
-        with(json) {
-            client.newCall(
-                POST(
-                    apiUrl,
-                    body = trackPayload.toString().toRequestBody(jsonMime),
-                ),
-            )
-                .awaitSuccess()
-        }
+        client.newCall(
+            POST(
+                apiUrl,
+                body = trackPayload.toString().toRequestBody(jsonMime),
+            ),
+        )
+            .awaitSuccess()
 
         return getTrackSearch(track.remote_id)
     }

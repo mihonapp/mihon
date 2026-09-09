@@ -5,7 +5,6 @@ import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALAddMangaResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALCurrentUserResult
-import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALSearchResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUserListMangaQueryResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUserViewerData
@@ -32,7 +31,11 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
+class AnilistApi(
+    val trackerId: Long,
+    val client: OkHttpClient,
+    interceptor: AnilistInterceptor,
+) {
 
     private val json: Json by injectLazy()
 
@@ -193,7 +196,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     .awaitSuccess()
                     .parseAs<ALSearchResult>()
                     .data.page.media
-                    .map { it.toALManga().toTrack() }
+                    .map { it.toALManga().toTrack(trackerId) }
             }
         }
     }
@@ -274,17 +277,13 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     .data.page.mediaList
                     .map { it.toALUserManga() }
                     .firstOrNull()
-                    ?.toTrack()
+                    ?.toTrack(trackerId)
             }
         }
     }
 
     suspend fun getLibManga(track: Track, userId: Int): Track {
         return findLibManga(track, userId) ?: throw Exception("Could not find manga")
-    }
-
-    fun createOAuth(token: String): ALOAuth {
-        return ALOAuth(token, "Bearer", System.currentTimeMillis() + 31536000000, 31536000000)
     }
 
     suspend fun getCurrentUser(): ALUserViewerData {
@@ -380,7 +379,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     .data.page.media
                     .firstOrNull()
                     ?.toALManga()
-                    ?.toTrack()
+                    ?.toTrack(trackerId)
             }
         }
     }

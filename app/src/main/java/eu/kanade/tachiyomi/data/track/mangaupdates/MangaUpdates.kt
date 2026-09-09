@@ -7,8 +7,6 @@ import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUListItem
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MURating
-import eu.kanade.tachiyomi.data.track.mangaupdates.dto.copyTo
-import eu.kanade.tachiyomi.data.track.mangaupdates.dto.toTrackSearch
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
@@ -38,7 +36,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
 
     private val interceptor by lazy { MangaUpdatesInterceptor(this) }
 
-    private val api by lazy { MangaUpdatesApi(interceptor, client) }
+    private val api by lazy { MangaUpdatesApi(client, interceptor) }
 
     override fun getLogo(): Int = R.drawable.brand_mangaupdates
 
@@ -83,7 +81,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
         return try {
             val (series, rating) = api.getSeriesListItem(track)
             track.copyFrom(series, rating)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             track.score = 0.0
             api.addSeriesToList(track, hasReadChapters)
             track
