@@ -2,6 +2,9 @@ package mihon.desktop.reader.codec
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import mihon.reader.source.ReaderFailure
 import org.junit.jupiter.api.Test
@@ -39,6 +42,29 @@ class ProcessCodecCommandRunnerTest {
         )
         result.exitCode shouldBe 0
         result.stdout.decodeToString().trim() shouldBe "recovered"
+    }
+
+    @Test
+    fun `cancellation interrupts and destroys a running request`() = runTest {
+        val powerShell = Path.of(System.getProperty("java.home"))
+            .parent
+            .resolve("pwsh.exe")
+            .takeIf { it.toFile().isFile }
+            ?: Path.of("C:/Program Files/PowerShell/7/pwsh.exe")
+        val startedAt = System.nanoTime()
+        val job = launch {
+            ProcessCodecCommandRunner.run(
+                command(
+                    powerShell,
+                    listOf("-NoProfile", "-Command", "Start-Sleep -Seconds 30"),
+                    timeoutMillis = 60_000,
+                ),
+            )
+        }
+        delay(200)
+        job.cancelAndJoin()
+        val elapsedMillis = (System.nanoTime() - startedAt) / 1_000_000
+        (elapsedMillis < 5_000) shouldBe true
     }
 
     private fun command(
