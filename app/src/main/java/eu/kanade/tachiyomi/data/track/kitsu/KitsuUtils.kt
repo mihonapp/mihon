@@ -12,7 +12,6 @@ import mihon.graphql.kitsu.fragment.MangaFragment
 import mihon.graphql.kitsu.type.LibraryEntryStatusEnum
 import mihon.graphql.kitsu.type.MangaSubtypeEnum
 import mihon.graphql.kitsu.type.ReleaseStatusEnum
-import kotlin.time.Instant
 
 internal fun Track.toKitsuStatus() = when (this.status) {
     Kitsu.READING -> LibraryEntryStatusEnum.CURRENT
@@ -32,7 +31,7 @@ internal fun LibraryEntryStatusEnum.toLocalStatus(): Long = when (this) {
     else -> throw Exception("Unknown status: $this")
 }
 
-fun KitsuGetCurrentAccountQuery.CurrentAccount.toKitsuUser(): KitsuUser {
+internal fun KitsuGetCurrentAccountQuery.CurrentAccount.toKitsuUser(): KitsuUser {
     return KitsuUser(
         id = id,
         name = profile.name,
@@ -40,19 +39,19 @@ fun KitsuGetCurrentAccountQuery.CurrentAccount.toKitsuUser(): KitsuUser {
     )
 }
 
-fun KitsuGetMangaDetailsByIdQuery.FindMangaById.toTrackSearch(trackId: Long): TrackSearch {
+internal fun KitsuGetMangaDetailsByIdQuery.FindMangaById.toTrackSearch(trackId: Long): TrackSearch {
     return mangaFragment.toTrackSearch(trackId)
 }
 
-fun KitsuGetMangaDetailsBySlugQuery.FindMangaBySlug.toTrackSearch(trackId: Long): TrackSearch {
+internal fun KitsuGetMangaDetailsBySlugQuery.FindMangaBySlug.toTrackSearch(trackId: Long): TrackSearch {
     return mangaFragment.toTrackSearch(trackId)
 }
 
-fun KitsuSearchMangaByTitleQuery.Node.toTrackSearch(trackId: Long): TrackSearch {
+internal fun KitsuSearchMangaByTitleQuery.Node.toTrackSearch(trackId: Long): TrackSearch {
     return mangaFragment.toTrackSearch(trackId)
 }
 
-fun KitsuFindLibMangaQuery.FindMangaById.toTrackSearch(trackId: Long): TrackSearch? {
+internal fun KitsuFindLibMangaQuery.FindMangaById.toTrackSearch(trackId: Long): TrackSearch? {
     if (myLibraryEntry == null) return null
 
     return mangaFragment.toTrackSearch(trackId).apply {

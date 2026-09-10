@@ -17,7 +17,7 @@ import mihon.graphql.anilist.type.MediaListStatus
 import mihon.graphql.anilist.type.ScoreFormat
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-fun AniListGetCurrentUserQuery.Viewer.toALUser(): ALUser {
+internal fun AniListGetCurrentUserQuery.Viewer.toALUser(): ALUser {
     return ALUser(
         id = id,
         name = name,
@@ -25,7 +25,7 @@ fun AniListGetCurrentUserQuery.Viewer.toALUser(): ALUser {
     )
 }
 
-fun AniListGetLibMangaQuery.MediaList.toTrack(trackId: Long): Track {
+internal fun AniListGetLibMangaQuery.MediaList.toTrack(trackId: Long): Track {
     val mediaList = this
     requireNotNull(mediaList.media) { "Missing Media data from AniList" }
 
@@ -69,11 +69,11 @@ fun AniListGetLibMangaQuery.MediaList.toTrack(trackId: Long): Track {
         }
 }
 
-fun AniListSearchMangaQuery.Medium.toTrackSearch(trackId: Long): TrackSearch {
+internal fun AniListSearchMangaQuery.Medium.toTrackSearch(trackId: Long): TrackSearch {
     return mangaFragment.toTrackSearch(trackId)
 }
 
-fun AniListGetMangaDetailsQuery.Medium.toTrackSearch(trackId: Long): TrackSearch {
+internal fun AniListGetMangaDetailsQuery.Medium.toTrackSearch(trackId: Long): TrackSearch {
     return mangaFragment.toTrackSearch(trackId)
 }
 

@@ -10,7 +10,7 @@ import mihon.graphql.shikimori.type.MangaKindEnum
 import mihon.graphql.shikimori.type.MangaStatusEnum
 import mihon.graphql.shikimori.type.UserRateStatusEnum
 
-fun ShikimoriGetLibMangaQuery.Manga.toTrack(trackId: Long): Track {
+internal fun ShikimoriGetLibMangaQuery.Manga.toTrack(trackId: Long): Track {
     val sManga = this
     return Track.create(trackId).apply {
         remote_id = sManga.id.toLong()
@@ -29,11 +29,11 @@ fun ShikimoriGetLibMangaQuery.Manga.toTrack(trackId: Long): Track {
     }
 }
 
-fun ShikimoriGetMangaDetailsQuery.Manga.toTrackSearch(trackId: Long): TrackSearch {
+internal fun ShikimoriGetMangaDetailsQuery.Manga.toTrackSearch(trackId: Long): TrackSearch {
     return mangaFragment.toTrackSearch(trackId)
 }
 
-fun ShikimoriSearchMangaQuery.Manga.toTrackSearch(trackId: Long): TrackSearch {
+internal fun ShikimoriSearchMangaQuery.Manga.toTrackSearch(trackId: Long): TrackSearch {
     return mangaFragment.toTrackSearch(trackId)
 }
 

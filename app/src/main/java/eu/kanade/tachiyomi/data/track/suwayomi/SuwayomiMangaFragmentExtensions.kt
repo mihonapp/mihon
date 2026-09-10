@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.track.suwayomi
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import mihon.graphql.suwayomi.fragment.MangaFragment
 
-fun MangaFragment.toTrackSearch(trackId: Long, baseUrl: String): TrackSearch {
+internal fun MangaFragment.toTrackSearch(trackId: Long, baseUrl: String): TrackSearch {
     val manga = this
     return TrackSearch.create(trackId).apply {
         remote_id = manga.id.toLong()
