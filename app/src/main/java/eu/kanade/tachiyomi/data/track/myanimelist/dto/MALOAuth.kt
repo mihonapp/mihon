@@ -19,5 +19,5 @@ data class MALOAuth(
     val createdAt: Long = Clock.System.now().epochSeconds,
 ) {
     // Assumes expired a minute earlier
-    fun isExpired() = Clock.System.now().plus(1.minutes).epochSeconds <= createdAt + expiresIn
+    fun isExpired() = Clock.System.now().plus(1.minutes).epochSeconds > createdAt + expiresIn
 }
