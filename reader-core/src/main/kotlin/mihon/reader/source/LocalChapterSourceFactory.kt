@@ -1,5 +1,7 @@
 package mihon.reader.source
 
+import mihon.reader.image.ImageFormatDetector
+import mihon.reader.image.ReaderImageFormat
 import mihon.reader.memory.BoundedReaderMemoryBudget
 import mihon.reader.memory.ReaderMemoryBudget
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
@@ -81,21 +83,7 @@ private fun matchesRar(bytes: ByteArray): Boolean {
 }
 
 private fun matchesImage(bytes: ByteArray): Boolean {
-    if (bytes.size >= 8 && bytes.copyOfRange(0, 8).contentEquals(
-            byteArrayOf(0x89.toByte(), 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A),
-        )
-    ) {
-        return true
-    }
-    if (bytes.size >= 3 && bytes[0] == 0xFF.toByte() && bytes[1] == 0xD8.toByte() && bytes[2] == 0xFF.toByte()) {
-        return true
-    }
-    if (bytes.size >= 6) {
-        val gif = bytes.copyOfRange(0, 6).toString(Charsets.US_ASCII)
-        if (gif == "GIF87a" || gif == "GIF89a") return true
-    }
-    if (bytes.size >= 2 && bytes[0] == 'B'.code.toByte() && bytes[1] == 'M'.code.toByte()) return true
-    return matchesWbmp(bytes)
+    return ImageFormatDetector.detect(bytes) != ReaderImageFormat.UNKNOWN || matchesWbmp(bytes)
 }
 
 private fun matchesWbmp(bytes: ByteArray): Boolean {

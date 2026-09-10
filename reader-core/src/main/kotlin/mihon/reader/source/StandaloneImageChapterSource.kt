@@ -13,7 +13,6 @@ class StandaloneImageChapterSource(
 
     init {
         val normalized = ImageEntryPolicy.normalize(asset.relativePath.fileName.toString())
-        if (!ImageEntryPolicy.isSupportedImage(normalized)) throw ReaderFailure.UnsupportedFormat("image")
         securePath.openRegularFile(asset.relativePath).use { channel ->
             if (channel.size() > ReaderLimits.MAX_STANDALONE_BYTES) {
                 throw ReaderFailure.LimitExceeded(
