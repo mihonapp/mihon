@@ -4,7 +4,22 @@ import java.util.Locale
 
 object ImageEntryPolicy {
     private val drivePrefix = Regex("^[A-Za-z]:")
-    private val extensions = setOf("png", "jpg", "jpeg", "gif", "bmp", "wbmp")
+    private val extensions = setOf(
+        "png",
+        "apng",
+        "jpg",
+        "jpeg",
+        "gif",
+        "webp",
+        "avif",
+        "heif",
+        "heic",
+        "jxl",
+        "bmp",
+        "wbmp",
+        "tif",
+        "tiff",
+    )
 
     fun normalize(rawName: String): String {
         if (rawName.isBlank() || '\u0000' in rawName) throw ReaderFailure.UnsafePath(rawName, "empty or NUL name")
