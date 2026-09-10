@@ -260,6 +260,11 @@ class PagerPageHolder(
      */
     override fun onImageLoadError(error: Throwable?) {
         super.onImageLoadError(error)
+        // A page that failed to decode is still Ready, which hides it from the automatic retry in
+        // HttpPageLoader.loadPage and from Retry, so record the failure on the page itself.
+        if (error != null) {
+            page.status = Page.State.Error(error)
+        }
         setError(error)
     }
 

@@ -14,6 +14,7 @@ import logcat.LogPriority
 import okhttp3.Response
 import okio.buffer
 import okio.sink
+import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import java.io.File
@@ -125,6 +126,24 @@ class ChapterCache(
                 logcat(LogPriority.WARN) { "Image is in journal but file is missing: $imageUrl" }
             }
             inJournal && fileExists
+        } catch (_: IOException) {
+            false
+        }
+    }
+
+    /**
+     * Returns true if the image cached for [imageUrl] is still readable by the image decoder.
+     *
+     * A request that failed while still returning a successful response, or a download that was cut
+     * short, leaves bytes in the cache that no decoder can use. Those entries have to be fetched
+     * again instead of being served from the cache.
+     *
+     * @param imageUrl url of image.
+     */
+    fun isUsableImageInCache(imageUrl: String): Boolean {
+        if (!isImageInCache(imageUrl)) return false
+        return try {
+            ImageUtil.findImageType { getImageFile(imageUrl).inputStream() } != null
         } catch (_: IOException) {
             false
         }
