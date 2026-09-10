@@ -38,13 +38,13 @@ dependencies {
     implementation(compose.material3)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.protobuf)
     implementation(libs.okhttp.core)
     implementation("org.slf4j:slf4j-nop:2.0.17")
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.commonsCompress)
     testImplementation(compose.desktop.uiTestJUnit4)
-    testImplementation(libs.kotlinx.serialization.protobuf)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
