@@ -46,11 +46,13 @@ class ProcessCodecCommandRunnerTest {
 
     @Test
     fun `cancellation interrupts and destroys a running request`() = runTest {
-        val powerShell = Path.of(System.getProperty("java.home"))
-            .parent
-            .resolve("pwsh.exe")
-            .takeIf { it.toFile().isFile }
-            ?: Path.of("C:/Program Files/PowerShell/7/pwsh.exe")
+        val powerShell = Path.of(
+            System.getenv("SystemRoot"),
+            "System32",
+            "WindowsPowerShell",
+            "v1.0",
+            "powershell.exe",
+        )
         val startedAt = System.nanoTime()
         val job = launch {
             ProcessCodecCommandRunner.run(
