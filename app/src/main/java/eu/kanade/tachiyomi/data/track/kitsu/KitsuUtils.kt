@@ -14,7 +14,7 @@ import mihon.graphql.kitsu.type.MangaSubtypeEnum
 import mihon.graphql.kitsu.type.ReleaseStatusEnum
 import kotlin.time.Instant
 
-fun Track.toKitsuStatus() = when (this.status) {
+internal fun Track.toKitsuStatus() = when (this.status) {
     Kitsu.READING -> LibraryEntryStatusEnum.CURRENT
     Kitsu.PLAN_TO_READ -> LibraryEntryStatusEnum.PLANNED
     Kitsu.COMPLETED -> LibraryEntryStatusEnum.COMPLETED
@@ -23,7 +23,7 @@ fun Track.toKitsuStatus() = when (this.status) {
     else -> throw Exception("Unknown status: ${this.status}")
 }
 
-fun LibraryEntryStatusEnum.toLocalStatus(): Long = when (this) {
+internal fun LibraryEntryStatusEnum.toLocalStatus(): Long = when (this) {
     LibraryEntryStatusEnum.CURRENT -> Kitsu.READING
     LibraryEntryStatusEnum.PLANNED -> Kitsu.PLAN_TO_READ
     LibraryEntryStatusEnum.COMPLETED -> Kitsu.COMPLETED

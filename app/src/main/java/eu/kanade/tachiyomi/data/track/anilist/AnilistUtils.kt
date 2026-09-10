@@ -119,7 +119,7 @@ private fun MangaFragment.toTrackSearch(trackId: Long): TrackSearch {
     }
 }
 
-fun Track.toApiStatus(): MediaListStatus = when (status) {
+internal fun Track.toApiStatus(): MediaListStatus = when (status) {
     Anilist.READING -> MediaListStatus.CURRENT
     Anilist.COMPLETED -> MediaListStatus.COMPLETED
     Anilist.ON_HOLD -> MediaListStatus.PAUSED
@@ -129,7 +129,7 @@ fun Track.toApiStatus(): MediaListStatus = when (status) {
     else -> throw NotImplementedError("Unknown status: $status")
 }
 
-fun DomainTrack.toApiScore(preferences: TrackPreferences): String = when (preferences.anilistScoreType.get()) {
+internal fun DomainTrack.toApiScore(preferences: TrackPreferences): String = when (preferences.anilistScoreType.get()) {
     // 10 point
     "POINT_10" -> (score.toInt() / 10).toString()
     // 100 point

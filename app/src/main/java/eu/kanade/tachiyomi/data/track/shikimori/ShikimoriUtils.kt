@@ -84,7 +84,7 @@ private fun UserRateStatusEnum.toLocalStatus() = when (this) {
     else -> throw NotImplementedError("Unknown status: $this")
 }
 
-fun Track.toShikimoriStatus() = when (status) {
+internal fun Track.toShikimoriStatus() = when (status) {
     // rawValues because Shikimori doesn't have GraphQL mutations and this goes through the v2 API
     // if/when Shikimori adds GraphQL mutations, this should return UserRateStatusEnum members
     Shikimori.READING -> UserRateStatusEnum.watching.rawValue
