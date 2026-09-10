@@ -6,7 +6,7 @@
 
 **Architecture:** Keep `PageDecoder` as the public boundary, add magic-based format detection and capability-aware routing, strengthen the in-process ImageIO backend, and use a pinned packaged ImageMagick worker for formats or animation features that ImageIO cannot safely decode. Every output remains governed by the existing reader memory budget and typed failures.
 
-**Tech Stack:** Kotlin/JVM, coroutines, JDK ImageIO, TwelveMonkeys ImageIO 3.13.1, ImageMagick 7.1.2-24 portable Q16 x64, Compose Desktop, JUnit/Kotest, Gradle/JPackage.
+**Tech Stack:** Kotlin/JVM, coroutines, JDK ImageIO, TwelveMonkeys ImageIO 3.13.1, ImageMagick 7.1.2-31 portable Q8 x64, Compose Desktop, JUnit/Kotest, Gradle/JPackage.
 
 ## Global Constraints
 
@@ -111,7 +111,7 @@
 
 **Interfaces:**
 - Produces: Gradle tasks `downloadReaderCodec`, `verifyReaderCodec`, and `stageReaderCodec`.
-- Pins: `ImageMagick-7.1.2-24-portable-Q16-x64.7z` with SHA-256 `f5b48d5306a9ec5cee204f602456f0e1afed29b6afb228f0d865e16dfe3113fc`.
+- Pins: `ImageMagick-7.1.2-31-portable-Q8-x64.7z` with SHA-256 `4eb7914050902c52bf388bae188fdbdb04154ca89d105b2f6200a29cb774241b`.
 
 - [ ] **Step 1: Add a failing inventory test** that requires application-relative `codec/magick.exe`, delegates for HEIC, JXL, PNG, TIFF, and WEBP, the license/notice file, and the pinned inventory hash.
 - [ ] **Step 2: Run** the inventory test against a staged distribution; expect missing-codec failure.

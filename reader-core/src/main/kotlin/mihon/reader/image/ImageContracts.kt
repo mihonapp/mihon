@@ -30,6 +30,9 @@ data class ImageMetadata(
     val frameCount: Int = 1,
     val frameDurationsMillis: List<Long> = List(frameCount) { 0L },
     val supportsRegionDecode: Boolean = true,
+    val format: ReaderImageFormat = ReaderImageFormat.UNKNOWN,
+    val hasAlpha: Boolean = false,
+    val orientationApplied: Boolean = false,
 ) {
     init {
         require(width > 0) { "width must be positive" }

@@ -73,14 +73,27 @@ class ImageIoPageDecoderTest {
     fun `probe reports jpeg dimensions without decoding the raster`() = runTest {
         val bytes = ImageFixtures.opaqueJpeg(40, 24)
         val metadata = decoder.probe(trackedInput(bytes).first)
-        metadata shouldBe ImageMetadata(40, 24, frameCount = 1, frameDurationsMillis = listOf(0))
+        metadata shouldBe ImageMetadata(
+            40,
+            24,
+            frameCount = 1,
+            frameDurationsMillis = listOf(0),
+            format = ReaderImageFormat.JPEG,
+        )
     }
 
     @Test
     fun `probe reports png dimensions`() = runTest {
         val bytes = ImageFixtures.alphaPng(7, 5)
         val metadata = decoder.probe(trackedInput(bytes).first)
-        metadata shouldBe ImageMetadata(7, 5, frameCount = 1, frameDurationsMillis = listOf(0))
+        metadata shouldBe ImageMetadata(
+            7,
+            5,
+            frameCount = 1,
+            frameDurationsMillis = listOf(0),
+            format = ReaderImageFormat.PNG,
+            hasAlpha = true,
+        )
     }
 
     @Test
@@ -321,7 +334,13 @@ class ImageIoPageDecoderTest {
             val pageId = PageId("1", "page.ovr")
             val bytes = byteArrayOf(9, 9, 9, 9, 1, 2, 3, 4)
             val metadata = decoder.probe(trackedInput(bytes).first)
-            metadata shouldBe ImageMetadata(16, 16, frameCount = 1, frameDurationsMillis = listOf(0))
+            metadata shouldBe ImageMetadata(
+                16,
+                16,
+                frameCount = 1,
+                frameDurationsMillis = listOf(0),
+                hasAlpha = true,
+            )
             val key = TileKey(pageId, null, IntRect(0, 0, 8, 8))
 
             shouldThrow<ReaderFailure.CorruptImage> {
@@ -496,7 +515,13 @@ class ImageIoPageDecoderTest {
             val pageId = PageId("1", "page.rte")
             val bytes = byteArrayOf(8, 8, 8, 8, 1, 2, 3, 4)
             val metadata = decoder.probe(trackedInput(bytes).first)
-            metadata shouldBe ImageMetadata(8, 8, frameCount = 1, frameDurationsMillis = listOf(0))
+            metadata shouldBe ImageMetadata(
+                8,
+                8,
+                frameCount = 1,
+                frameDurationsMillis = listOf(0),
+                hasAlpha = true,
+            )
 
             shouldThrow<ReaderFailure.CorruptImage> {
                 decoder.decodeFull(trackedInput(bytes).first, metadata, FrameId(pageId, 0))
@@ -572,7 +597,14 @@ class ImageIoPageDecoderTest {
         val pageId = counting.pages().single().id
 
         val metadata = decoder.probe(counting.open(pageId))
-        metadata shouldBe ImageMetadata(64, 64, frameCount = 1, frameDurationsMillis = listOf(0))
+        metadata shouldBe ImageMetadata(
+            64,
+            64,
+            frameCount = 1,
+            frameDurationsMillis = listOf(0),
+            format = ReaderImageFormat.PNG,
+            hasAlpha = true,
+        )
         val full = decoder.decodeFull(counting.open(pageId), metadata, FrameId(pageId, 0))
         full.image.getRGB(63, 63) shouldBe (0xFF shl 24 or (63 shl 16) or (63 shl 8)).toInt()
         full.close()

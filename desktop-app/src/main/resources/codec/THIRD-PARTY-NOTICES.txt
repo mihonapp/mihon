@@ -1,0 +1,10 @@
+MihonW reader codec runtime
+
+The Windows distribution includes selected files from ImageMagick 7.1.2-31
+portable Q8 x64. ImageMagick is Copyright (C) 1999 ImageMagick Studio LLC and
+distributed under the ImageMagick License. The unmodified upstream LICENSE.txt
+and NOTICE.txt are included beside magick.exe in the packaged codec directory.
+
+Upstream: https://github.com/ImageMagick/ImageMagick/releases/tag/7.1.2-31
+Archive: ImageMagick-7.1.2-31-portable-Q8-x64.7z
+SHA-256: 4eb7914050902c52bf388bae188fdbdb04154ca89d105b2f6200a29cb774241b

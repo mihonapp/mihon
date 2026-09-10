@@ -16,7 +16,7 @@ The required read matrix is JPEG (RGB, grayscale, CMYK, progressive, embedded IC
 
 Formats or animation features not reliably handled by ImageIO are sent to a packaged Windows x64 codec worker. The worker is a child process with a binary stdin/stdout protocol and no network access. It returns metadata or premultiplied RGBA for one frame and one requested region. The desktop process starts it through the existing Windows process controls and places it in a Job Object with a memory limit, single-process limit, kill-on-close behavior, and per-request deadline. A worker failure becomes a typed page failure and never terminates the reader session.
 
-The initial worker implementation may reuse a pinned redistributable codec distribution rather than adding codec logic to the Kotlin process. Its license manifest, hashes, architecture, and exact codec versions are part of the packaged artifact and verification report. The application must not depend on a system-installed codec.
+The initial worker implementation uses the pinned official ImageMagick 7.1.2-31 portable Q8 x64 distribution rather than adding codec logic to the Kotlin process. Its license manifest, SHA-256, architecture, and exact codec versions are part of the packaged artifact and verification report. The application must not depend on a system-installed codec.
 
 ## Format Detection and Capabilities
 

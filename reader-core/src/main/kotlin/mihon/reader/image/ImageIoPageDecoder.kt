@@ -27,7 +27,8 @@ class ImageIoPageDecoder(
     override suspend fun probe(input: BoundedPageInput): ImageMetadata = withContext(Dispatchers.IO) {
         input.use { pageInput ->
             withReader(pageInput) { reader ->
-                val isGif = reader.formatName.equals("gif", ignoreCase = true)
+                val format = reader.readerImageFormat()
+                val isGif = format == ReaderImageFormat.GIF
                 val (width, height) = if (isGif) gifCanvasSize(reader) else readFrameSize(reader)
                 validateDimensions(width, height)
                 val frameCount = if (isGif) {
@@ -41,7 +42,15 @@ class ImageIoPageDecoder(
                     List(frameCount) { 0L }
                 }
                 val supportsRegion = !isGif || gifRegionDecodeSupported(width, height)
-                ImageMetadata(width, height, frameCount, durations, supportsRegion)
+                ImageMetadata(
+                    width = width,
+                    height = height,
+                    frameCount = frameCount,
+                    frameDurationsMillis = durations,
+                    supportsRegionDecode = supportsRegion,
+                    format = format,
+                    hasAlpha = reader.hasAlpha(),
+                )
             }
         }
     }
@@ -397,6 +406,24 @@ class ImageIoPageDecoder(
 
     private fun readFrameSize(reader: ImageReader): Pair<Int, Int> =
         guarded { reader.getWidth(0) } to guarded { reader.getHeight(0) }
+
+    private fun ImageReader.readerImageFormat(): ReaderImageFormat = when (formatName.lowercase()) {
+        "jpeg", "jpg" -> ReaderImageFormat.JPEG
+        "png" -> ReaderImageFormat.PNG
+        "gif" -> ReaderImageFormat.GIF
+        "webp" -> ReaderImageFormat.WEBP
+        "bmp", "wbmp" -> ReaderImageFormat.BMP
+        "tif", "tiff", "bigtiff" -> ReaderImageFormat.TIFF
+        else -> ReaderImageFormat.UNKNOWN
+    }
+
+    private fun ImageReader.hasAlpha(): Boolean = guarded {
+        val types = getImageTypes(0)
+        while (types.hasNext()) {
+            if (types.next().colorModel.hasAlpha()) return@guarded true
+        }
+        false
+    }
 
     private fun gifCanvasSize(reader: ImageReader): Pair<Int, Int> {
         val frameSize = readFrameSize(reader)

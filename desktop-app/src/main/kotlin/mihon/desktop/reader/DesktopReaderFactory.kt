@@ -6,8 +6,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.withContext
 import mihon.desktop.library.reader.ReaderLibraryPort
+import mihon.desktop.reader.codec.PackagedCodecPageDecoder
+import mihon.desktop.reader.codec.PackagedReaderCodec
 import mihon.desktop.ui.reader.ComposeTileBridge
 import mihon.reader.cache.WeightedTileCache
+import mihon.reader.image.ApngPageDecoder
+import mihon.reader.image.CompositePageDecoder
 import mihon.reader.image.ImageIoPageDecoder
 import mihon.reader.image.ImageMetadata
 import mihon.reader.image.IntRect
@@ -23,17 +27,23 @@ import mihon.reader.session.ReaderGenerationSource
 import mihon.reader.session.ReaderSession
 import mihon.reader.source.ChapterSourceFactory
 import mihon.reader.source.LocalChapterSourceFactory
+import java.nio.file.Path
 
 /** Owns process-wide reader resources while giving each open reader its own coroutine lifetime. */
 class DesktopReaderFactory(
     private val applicationScope: CoroutineScope,
     private val library: ReaderLibraryPort,
     private val settings: DesktopReaderSettingsStore,
+    codecExecutable: Path = PackagedReaderCodec.executablePath(),
 ) {
     val cache = WeightedTileCache()
     val memoryBudget = BoundedReaderMemoryBudget { cache.relievePressure() }
     val sourceFactory: ChapterSourceFactory = LocalChapterSourceFactory(memoryBudget)
-    val decoder: PageDecoder = ImageIoPageDecoder(memoryBudget)
+    val decoder: PageDecoder = CompositePageDecoder(
+        imageIo = ImageIoPageDecoder(memoryBudget),
+        packagedCodec = PackagedCodecPageDecoder(memoryBudget, codecExecutable),
+        animatedPng = ApngPageDecoder(memoryBudget),
+    )
     val bridge = ComposeTileBridge()
     private val generationSource: ReaderGenerationSource = AtomicReaderGenerationSource()
     private val lock = Any()
