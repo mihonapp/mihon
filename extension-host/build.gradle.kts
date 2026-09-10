@@ -15,7 +15,12 @@ dependencies {
     implementation(project(":extension-sdk"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.jsonOkio)
+    implementation(libs.okhttp.core)
+    implementation(libs.okio)
     implementation(libs.jsoup)
+    implementation(libs.injekt)
+    implementation(libs.rxJava)
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.bundles.test)
