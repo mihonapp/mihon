@@ -50,11 +50,9 @@ class OnlineMangaSyncService(
         }
 
         // Fetch chapter list from source manager
-        val chapters = try {
-            sourceManager.getChapterList(sourceId, detailedManga)
-        } catch (_: Exception) {
-            emptyList()
-        }
+        // A failed chapter request must not be converted into a successful, empty favorite.
+        // Fetch before starting the transaction so the database remains unchanged on failure.
+        val chapters = sourceManager.getChapterList(sourceId, detailedManga)
 
         // Persist to database in a single transaction
         libraryRepository.transaction {
@@ -103,6 +101,7 @@ class OnlineMangaSyncService(
                         },
                         thumbnailUrl = detailedManga.thumbnailUrl ?: existingManga.thumbnailUrl,
                         favorite = true,
+                        dateAdded = if (existingManga.favorite) existingManga.dateAdded else now,
                         lastModifiedAt = now,
                         favoriteModifiedAt = if (!existingManga.favorite) now else existingManga.favoriteModifiedAt,
                         initialized = true,
@@ -159,6 +158,24 @@ class OnlineMangaSyncService(
             }
 
             mangaId
+        }
+    }
+
+    /** Removes library membership without deleting chapters, progress, or the stable manga id. */
+    suspend fun removeFromLibrary(sourceId: Long, mangaUrl: String): Boolean = withContext(Dispatchers.IO) {
+        libraryRepository.transaction {
+            val existing = libraryRepository.findManga(sourceId, mangaUrl) ?: return@transaction false
+            if (!existing.favorite) return@transaction true
+            val now = System.currentTimeMillis()
+            libraryRepository.updateManga(
+                existing.copy(
+                    favorite = false,
+                    dateAdded = 0L,
+                    lastModifiedAt = now,
+                    favoriteModifiedAt = now,
+                ),
+            )
+            true
         }
     }
 }

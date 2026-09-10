@@ -40,6 +40,9 @@ sealed class ReaderFailure(
 
     class UnsupportedImage(reason: String) : ReaderFailure("Unsupported image: $reason")
 
+    class RemoteImage(reason: String, cause: Throwable? = null) :
+        ReaderFailure("Unable to load remote image: $reason", cause)
+
     class CorruptImage(cause: Throwable? = null) : ReaderFailure("Corrupt or unreadable image", cause)
 
     class RegionUnavailable(reason: String) : ReaderFailure("Region decode unavailable: $reason")

@@ -6,6 +6,9 @@ import androidx.compose.ui.graphics.toComposeImageBitmap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import mihon.desktop.reader.codec.PackagedReaderCodec
+import mihon.reader.image.ImageFormatDetector
+import mihon.reader.image.ReaderImageFormat
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jetbrains.skia.Image
@@ -16,6 +19,7 @@ import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 import java.util.Collections
 import java.util.LinkedHashMap
+import java.util.concurrent.TimeUnit
 import java.util.zip.ZipFile
 
 val LocalImageLoader = staticCompositionLocalOf<DesktopImageLoader?> { null }
@@ -125,7 +129,10 @@ class DesktopImageLoader(
         if (Files.isRegularFile(mangaDirOrArchive)) {
             return extractCoverFromArchive(mangaDirOrArchive)
         }
-        val coverNames = listOf("cover.jpg", "cover.png", "cover.webp", "cover.jpeg", "Folder.jpg", "cover.bmp")
+        val coverNames = listOf(
+            "cover.jpg", "cover.png", "cover.webp", "cover.jpeg", "cover.gif", "cover.avif",
+            "cover.heic", "cover.heif", "cover.jxl", "cover.bmp", "cover.tif", "cover.tiff", "Folder.jpg",
+        )
         for (name in coverNames) {
             val candidate = mangaDirOrArchive.resolve(name)
             if (Files.isRegularFile(candidate)) {
@@ -178,6 +185,7 @@ class DesktopImageLoader(
         if (Files.isRegularFile(diskFile) && Files.size(diskFile) > 0) {
             val cachedBitmap = decodeFile(diskFile)
             if (cachedBitmap != null) return cachedBitmap
+            Files.deleteIfExists(diskFile)
         }
 
         // Fetch from network
@@ -192,12 +200,14 @@ class DesktopImageLoader(
                 val bytes = body.bytes()
                 if (bytes.isEmpty()) return null
 
+                val bitmap = decodeBytes(bytes) ?: return null
+
                 // Save to disk cache atomically
                 val tmpFile = diskCacheDir.resolve("$hash.tmp")
                 Files.write(tmpFile, bytes)
                 Files.move(tmpFile, diskFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
 
-                return decodeBytes(bytes)
+                return bitmap
             }
         } catch (c: CancellationException) {
             throw c
@@ -217,17 +227,66 @@ class DesktopImageLoader(
 
     private fun decodeBytes(bytes: ByteArray): ImageBitmap? {
         if (bytes.isEmpty()) return null
-        return try {
+        val native = try {
             val skiaImage = Image.makeFromEncoded(bytes)
             skiaImage.toComposeImageBitmap()
         } catch (_: Exception) {
             null
         }
+        if (native != null) return native
+
+        return when (ImageFormatDetector.detect(bytes)) {
+            ReaderImageFormat.AVIF,
+            ReaderImageFormat.HEIF,
+            ReaderImageFormat.JXL,
+            ReaderImageFormat.TIFF,
+            -> decodeWithPackagedCodec(bytes)
+            else -> null
+        }
+    }
+
+    /** Uses the same bundled ImageMagick runtime as the reader for formats Skia cannot decode. */
+    private fun decodeWithPackagedCodec(bytes: ByteArray): ImageBitmap? {
+        val executable = PackagedReaderCodec.executablePath()
+        if (!Files.isRegularFile(executable)) return null
+        val input = Files.createTempFile(diskCacheDir, "cover-", ".img")
+        val output = Files.createTempFile(diskCacheDir, "cover-", ".png")
+        val error = Files.createTempFile(diskCacheDir, "cover-", ".log")
+        return try {
+            Files.write(input, bytes)
+            val process = ProcessBuilder(
+                executable.toString(),
+                "-limit", "memory", "128MiB",
+                "-limit", "map", "0",
+                "-limit", "disk", "256MiB",
+                input.toString(),
+                "-auto-orient",
+                "-delete", "1--1",
+                "PNG:$output",
+            ).redirectError(error.toFile()).start()
+            if (!process.waitFor(30, TimeUnit.SECONDS)) {
+                process.destroyForcibly()
+                return null
+            }
+            if (process.exitValue() != 0 || Files.size(output) == 0L || Files.size(output) > MAX_FALLBACK_BYTES) {
+                return null
+            }
+            val png = Files.readAllBytes(output)
+            Image.makeFromEncoded(png).toComposeImageBitmap()
+        } catch (_: Exception) {
+            null
+        } finally {
+            Files.deleteIfExists(input)
+            Files.deleteIfExists(output)
+            Files.deleteIfExists(error)
+        }
     }
 
     private fun isImageFile(name: String): Boolean =
         name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png") ||
-            name.endsWith(".webp") || name.endsWith(".gif") || name.endsWith(".bmp")
+            name.endsWith(".webp") || name.endsWith(".gif") || name.endsWith(".avif") ||
+            name.endsWith(".heic") || name.endsWith(".heif") || name.endsWith(".jxl") ||
+            name.endsWith(".bmp") || name.endsWith(".tif") || name.endsWith(".tiff")
 
     private fun sha256(input: String): String {
         val md = MessageDigest.getInstance("SHA-256")
@@ -251,5 +310,9 @@ class DesktopImageLoader(
                 stream.forEach { Files.deleteIfExists(it) }
             }
         } catch (_: Exception) {}
+    }
+
+    private companion object {
+        const val MAX_FALLBACK_BYTES = 64L * 1024L * 1024L
     }
 }

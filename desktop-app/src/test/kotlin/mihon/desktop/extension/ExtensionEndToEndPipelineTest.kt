@@ -11,6 +11,8 @@ import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.extension.ipc.BrokerHttpRequest
 import mihon.extension.model.ExtensionManifest
 import mihon.extension.model.SourceDescriptor
+import mihon.extension.source.WindowsCatalogueSource
+import mihon.extension.source.model.FilterList
 import mihon.extension.source.model.MangasPage
 import mihon.extension.source.model.Page
 import mihon.extension.source.model.SChapter
@@ -148,7 +150,23 @@ class ExtensionEndToEndPipelineTest {
             val libraryRepo = DesktopLibraryDatabaseFactory.open(dbFile)
             val processManager = WindowsExtensionProcessManager(tempDir.resolve("worker").toFile())
 
-            val syncService = OnlineMangaSyncService(libraryRepo, processManager)
+            val sourceManager = DesktopSourceManager(processManager = processManager).apply {
+                registerBuiltinSource(
+                    object : WindowsCatalogueSource {
+                        override val id = 9999L
+                        override val name = "E2E Source"
+                        override val lang = "en"
+                        override suspend fun getPopularManga(page: Int) = MangasPage(emptyList(), false)
+                        override suspend fun getLatestUpdates(page: Int) = MangasPage(emptyList(), false)
+                        override suspend fun searchManga(page: Int, query: String, filters: FilterList) =
+                            MangasPage(emptyList(), false)
+                        override suspend fun getMangaDetails(manga: SManga) = manga.copy(initialized = true)
+                        override suspend fun getChapterList(manga: SManga) = emptyList<SChapter>()
+                        override suspend fun getPageList(chapter: SChapter) = emptyList<Page>()
+                    },
+                )
+            }
+            val syncService = OnlineMangaSyncService(libraryRepo, sourceManager)
 
             // Add manga to library
             val onlineManga = SManga(

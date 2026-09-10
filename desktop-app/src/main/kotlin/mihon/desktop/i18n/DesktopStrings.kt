@@ -667,7 +667,7 @@ object EnglishStrings : DesktopStrings {
     override val mangaDetailStatusOngoing = "Ongoing"
     override val mangaDetailStatusCompleted = "Completed"
     override val mangaDetailStatusUnknown = "Unknown"
-    override val mangaDetailInLibrary = "In Library"
+    override val mangaDetailInLibrary = "Remove from Library"
     override val mangaDetailAddToLibrary = "Add to Library"
     override val mangaDetailCategories = "Categories"
     override val mangaDetailTracking = "Tracking"
@@ -1092,6 +1092,8 @@ object EnglishStrings : DesktopStrings {
     override fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
         is ReaderFailure.PageNotFound -> "This page could not be found. It may have been moved or deleted."
         is ReaderFailure.UnsupportedFormat -> "This chapter format is not supported."
+        is ReaderFailure.RemoteImage ->
+            "The page could not be downloaded. Check the network or source login, then retry."
         is ReaderFailure.EncryptedContainer -> "Encrypted chapter containers are not supported."
         is ReaderFailure.UnsafePath,
         is ReaderFailure.ResourceChanged -> "This local chapter is no longer available. Locate or re-import it."
@@ -1287,7 +1289,7 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val mangaDetailStatusOngoing = "连载中"
     override val mangaDetailStatusCompleted = "已完结"
     override val mangaDetailStatusUnknown = "未知"
-    override val mangaDetailInLibrary = "已在书架"
+    override val mangaDetailInLibrary = "移出书架"
     override val mangaDetailAddToLibrary = "添加到书架"
     override val mangaDetailCategories = "分类"
     override val mangaDetailTracking = "进度记录"
@@ -1718,6 +1720,7 @@ object SimplifiedChineseStrings : DesktopStrings {
     override fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
         is ReaderFailure.PageNotFound -> "无法找到此页面，可能已被移动或删除。"
         is ReaderFailure.UnsupportedFormat -> "不支持此章节格式。"
+        is ReaderFailure.RemoteImage -> "页面下载失败，请检查网络或图源登录状态后重试。"
         is ReaderFailure.EncryptedContainer -> "不支持加密的章节压缩包。"
         is ReaderFailure.UnsafePath,
         is ReaderFailure.ResourceChanged -> "本地章节已不可用，请重新导入或检查文件位置。"
@@ -1911,7 +1914,7 @@ object TraditionalChineseStrings : DesktopStrings {
     override val mangaDetailStatusOngoing = "連載中"
     override val mangaDetailStatusCompleted = "已完結"
     override val mangaDetailStatusUnknown = "未知"
-    override val mangaDetailInLibrary = "已在書架"
+    override val mangaDetailInLibrary = "移出書架"
     override val mangaDetailAddToLibrary = "加入書架"
     override val mangaDetailCategories = "分類"
     override val mangaDetailTracking = "進度記錄"
@@ -2342,6 +2345,7 @@ object TraditionalChineseStrings : DesktopStrings {
     override fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
         is ReaderFailure.PageNotFound -> "找不到此頁面，可能已被移動或刪除。"
         is ReaderFailure.UnsupportedFormat -> "不支援此章節格式。"
+        is ReaderFailure.RemoteImage -> "頁面下載失敗，請檢查網路或圖源登入狀態後重試。"
         is ReaderFailure.EncryptedContainer -> "不支援加密的章節壓縮包。"
         is ReaderFailure.UnsafePath,
         is ReaderFailure.ResourceChanged -> "本機章節已不可用，請重新匯入或檢查檔案位置。"

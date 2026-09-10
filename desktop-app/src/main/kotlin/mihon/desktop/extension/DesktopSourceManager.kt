@@ -115,12 +115,8 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext builtin.getChapterList(manga)
         }
-        val proc = processManager ?: return@withContext emptyList()
-        try {
-            proc.getChapterList(sourceId, manga)
-        } catch (_: Exception) {
-            emptyList()
-        }
+        val proc = processManager ?: throw IllegalStateException("Extension host process manager is unavailable")
+        proc.getChapterList(sourceId, manga)
     }
 
     suspend fun getPageList(sourceId: Long, chapter: SChapter): List<Page> = withContext(Dispatchers.IO) {

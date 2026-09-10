@@ -81,6 +81,44 @@ class DesktopImageLoaderTest {
     }
 
     @Test
+    fun `loads avif cover discovered in local manga directory`(@TempDir tempDir: Path) = runBlocking {
+        val codec = mihon.desktop.reader.codec.PackagedReaderCodec.executablePath().toFile()
+        assertTrue(codec.isFile, "packaged image codec fixture is required")
+        val mangaDir = tempDir.resolve("AVIF Manga")
+        Files.createDirectories(mangaDir)
+        val png = tempDir.resolve("source.png")
+        Files.write(png, createPngBytes(19, 27))
+        val avif = mangaDir.resolve("cover.avif")
+        val process = ProcessBuilder(codec.absolutePath, png.toString(), avif.toString()).start()
+        assertEquals(0, process.waitFor(), process.errorStream.readAllBytes().decodeToString())
+
+        val bitmap = DesktopImageLoader(tempDir.resolve("cache")).load(
+            ImageRequest(uri = null, localMangaPath = mangaDir),
+        )
+        assertNotNull(bitmap)
+        assertEquals(19, bitmap?.width)
+        assertEquals(27, bitmap?.height)
+    }
+
+    @Test
+    fun `decodes jpeg png webp gif and avif fixtures`(@TempDir tempDir: Path) = runBlocking {
+        val codec = mihon.desktop.reader.codec.PackagedReaderCodec.executablePath().toFile()
+        val source = tempDir.resolve("source.png")
+        Files.write(source, createPngBytes(23, 31))
+        val loader = DesktopImageLoader(tempDir.resolve("cache"))
+
+        listOf("jpg", "png", "webp", "gif", "avif").forEach { extension ->
+            val target = tempDir.resolve("fixture.$extension")
+            val process = ProcessBuilder(codec.absolutePath, source.toString(), target.toString()).start()
+            assertEquals(0, process.waitFor(), process.errorStream.readAllBytes().decodeToString())
+            val bitmap = loader.load(ImageRequest(uri = target.toString()))
+            assertNotNull(bitmap, "$extension fixture should decode")
+            assertEquals(23, bitmap?.width, extension)
+            assertEquals(31, bitmap?.height, extension)
+        }
+    }
+
+    @Test
     fun `custom cover takes priority over uri`(@TempDir tempDir: Path) = runBlocking {
         val cacheDir = tempDir.resolve("cache")
         val coversDir = tempDir.resolve("covers")

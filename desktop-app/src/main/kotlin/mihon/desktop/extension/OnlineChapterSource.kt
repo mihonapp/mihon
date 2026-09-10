@@ -7,6 +7,8 @@ import mihon.desktop.extension.WindowsExtensionProcessManager
 import mihon.extension.ipc.BrokerHttpRequest
 import mihon.extension.source.model.Page
 import mihon.extension.source.model.SChapter
+import mihon.reader.image.ImageFormatDetector
+import mihon.reader.image.ReaderImageFormat
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import mihon.reader.source.BoundedPageInput
@@ -55,7 +57,9 @@ open class OnlineChapterSource(
         checkOpenAndCancellation()
         val list = cachedPages ?: sourceManager.getPageList(sourceId, chapter).also { cachedPages = it }
         entries = list.map { page ->
-            val name = "page_%04d.jpg".format(page.index)
+            val extension = page.imageUrl.orEmpty().substringBefore('?').substringAfterLast('.', "img")
+                .lowercase().takeIf { it.matches(Regex("[a-z0-9]{2,5}")) } ?: "img"
+            val name = "page_%04d.%s".format(page.index, extension)
             SourceEntry(name, name, 0L)
         }
 
@@ -90,13 +94,14 @@ open class OnlineChapterSource(
             val req = BrokerHttpRequest(
                 method = "GET",
                 url = imageUrl,
-                headers = mapOf("Referer" to chapter.url),
+                headers = mapOf("Referer" to chapter.url) + page.headers,
             )
             val bytes = try {
                 networkHelper.downloadRawBytes(req)
             } catch (e: Exception) {
-                throw ReaderFailure.UnsupportedFormat("Failed to download page image: ${e.message}")
+                throw ReaderFailure.RemoteImage(e.message ?: "network request failed", e)
             }
+            validateImageResponse(bytes)
             try {
                 cachedFile.parentFile?.mkdirs()
                 cachedFile.writeBytes(bytes)
@@ -104,10 +109,25 @@ open class OnlineChapterSource(
             bytes
         }
 
+        validateImageResponse(imageBytes)
+
         boundedInput(ByteArrayInputStream(imageBytes), imageBytes.size.toLong())
     }
 
     override fun close() {
         // No-op
+    }
+
+    private fun validateImageResponse(bytes: ByteArray) {
+        if (bytes.isEmpty()) throw ReaderFailure.CorruptImage()
+        if (ImageFormatDetector.detect(bytes) == ReaderImageFormat.UNKNOWN) {
+            val preview = bytes.take(256).toByteArray().decodeToString().trimStart().lowercase()
+            val reason = if (preview.startsWith("<") || preview.startsWith("{") || preview.startsWith("[")) {
+                "server returned a web/error document instead of image data"
+            } else {
+                "unrecognized image signature"
+            }
+            throw ReaderFailure.UnsupportedImage(reason)
+        }
     }
 }
