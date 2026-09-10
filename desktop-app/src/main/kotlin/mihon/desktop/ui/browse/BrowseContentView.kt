@@ -219,15 +219,26 @@ fun BrowseContentView(
                     scope.launch {
                         detailUiState = detailUiState.copy(isSyncingLibrary = true)
                         try {
-                            runtime.onlineMangaSyncService.addOrUpdateOnlineManga(nav.source.id, detailUiState.manga)
+                            val adding = !detailUiState.inLibrary
+                            if (adding) {
+                                runtime.onlineMangaSyncService.addOrUpdateOnlineManga(
+                                    nav.source.id,
+                                    detailUiState.manga,
+                                )
+                            } else {
+                                runtime.onlineMangaSyncService.removeFromLibrary(
+                                    nav.source.id,
+                                    detailUiState.manga.url,
+                                )
+                            }
                             detailUiState = detailUiState.copy(
                                 isSyncingLibrary = false,
-                                inLibrary = true,
+                                inLibrary = adding,
                             )
                         } catch (e: Exception) {
                             detailUiState = detailUiState.copy(
                                 isSyncingLibrary = false,
-                                errorMessage = "Failed to add to library: ${e.message}",
+                                errorMessage = "Failed to update library: ${e.message}",
                             )
                         }
                     }
