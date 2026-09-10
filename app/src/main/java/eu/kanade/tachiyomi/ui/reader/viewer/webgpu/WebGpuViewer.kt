@@ -14,6 +14,7 @@ import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.closeTo
 import ca.mpreg.webgpuviewer.draw.TextAlign
+import ca.mpreg.webgpuviewer.renderer.GainmapInput
 import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
@@ -1071,6 +1072,22 @@ open class WebGpuViewer(
                 }
             }
 
+            // The decoder hands the map over unapplied - see ImageDecoder.Gainmap - because how
+            // much of it to use depends on the display, so the viewer applies it.
+            fun ImageDecoder.DecodeResult.gainmapInput(): GainmapInput? = gainmap?.let {
+                GainmapInput(
+                    pixels = it.pixels,
+                    width = it.width,
+                    height = it.height,
+                    channels = it.channels,
+                    gamma = it.gamma,
+                    minContentBoost = it.minContentBoost,
+                    maxContentBoost = it.maxContentBoost,
+                    offsetSdr = it.offsetSdr,
+                    offsetHdr = it.offsetHdr,
+                )
+            }
+
             val dec = ImageDecoder.new(bytes?.inputStream() ?: input)
 
             val pageCount = dec.pages
@@ -1100,6 +1117,9 @@ open class WebGpuViewer(
                     trimColors = trimColors,
                     trimThreshold = 0.15f,
                     backgroundColor = backgroundColor,
+                    hdr = firstFrame.isHdr,
+                    hdrHeadroom = firstFrame.hdrHeadroom,
+                    gainmap = firstFrame.gainmapInput(),
                 )
 
                 ImagePage.ImageSingle(firstImage)
@@ -1112,6 +1132,9 @@ open class WebGpuViewer(
                     firstFrame.height,
                     createMipMaps = false,
                     backgroundColor = backgroundColor,
+                    hdr = firstFrame.isHdr,
+                    hdrHeadroom = firstFrame.hdrHeadroom,
+                    gainmap = firstFrame.gainmapInput(),
                 )
 
                 frames.add(Pair(firstImage, firstFrame.duration))
@@ -1127,6 +1150,9 @@ open class WebGpuViewer(
                         frame.height,
                         createMipMaps = false,
                         backgroundColor = firstImage.backgroundColor,
+                        hdr = frame.isHdr,
+                        hdrHeadroom = frame.hdrHeadroom,
+                        gainmap = frame.gainmapInput(),
                     )
                     frames.add(Pair(image, frame.duration))
                 }
