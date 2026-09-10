@@ -107,4 +107,6 @@ class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
         } else {
             null
         }
+
+    override suspend fun updateUserConfig() = Unit
 }
