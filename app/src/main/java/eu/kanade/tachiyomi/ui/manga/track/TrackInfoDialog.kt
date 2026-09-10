@@ -504,12 +504,16 @@ data class TrackDateSelectorScreen(
             return when {
                 // Disallow setting start date after finish date
                 start && track.finishDate > 0 -> {
-                    val finishDate = Instant.fromEpochMilliseconds(track.finishDate).toLocalDateTime(TimeZone.UTC)
+                    val finishDate = track.finishDate
+                        .convertEpochMillisZone(TimeZone.currentSystemDefault(), TimeZone.UTC)
+                        .let { Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC) }
                     targetDate <= finishDate
                 }
                 // Disallow setting finish date before start date
                 !start && track.startDate > 0 -> {
-                    val startDate = Instant.fromEpochMilliseconds(track.startDate).toLocalDateTime(TimeZone.UTC)
+                    val startDate = track.startDate
+                        .convertEpochMillisZone(TimeZone.currentSystemDefault(), TimeZone.UTC)
+                        .let { Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC) }
                     startDate <= targetDate
                 }
                 else -> {
@@ -525,12 +529,16 @@ data class TrackDateSelectorScreen(
             return when {
                 // Disallow setting start year after finish year
                 start && track.finishDate > 0 -> {
-                    val finishDate = Instant.fromEpochMilliseconds(track.finishDate).toLocalDateTime(TimeZone.UTC)
+                    val finishDate = track.finishDate
+                        .convertEpochMillisZone(TimeZone.currentSystemDefault(), TimeZone.UTC)
+                        .let { Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC) }
                     year <= finishDate.year
                 }
                 // Disallow setting finish year before start year
                 !start && track.startDate > 0 -> {
-                    val startDate = Instant.fromEpochMilliseconds(track.startDate).toLocalDateTime(TimeZone.UTC)
+                    val startDate = track.startDate
+                        .convertEpochMillisZone(TimeZone.currentSystemDefault(), TimeZone.UTC)
+                        .let { Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC) }
                     startDate.year <= year
                 }
                 else -> {
