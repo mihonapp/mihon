@@ -7,6 +7,7 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import mihon.desktop.updates.DesktopAppUpdateService
 import mihon.extension.source.WindowsHttpSource
 import mihon.extension.source.model.Filter
 import mihon.extension.source.model.FilterList
@@ -35,7 +36,7 @@ class BundledMangaDexSource(
     override val baseUrl: String = "https://api.mangadex.org"
 
     override val headers: Map<String, String> = mapOf(
-        "User-Agent" to "MihonW/0.1.0 (Windows NT 10.0; Win64; x64)",
+        "User-Agent" to "MihonW/${DesktopAppUpdateService.CURRENT_VERSION} (Windows NT 10.0; Win64; x64)",
     )
 
     private val json = Json {
@@ -409,17 +410,20 @@ class BundledMangaDexSource(
             ?: throw IllegalStateException("Missing chapter object in MangaDex response")
         val hash = chapterObj["hash"]?.jsonPrimitive?.contentOrNull
             ?: throw IllegalStateException("Missing hash in MangaDex response")
-        val dataFiles = chapterObj["data"]?.jsonArray
+        val originalFiles = chapterObj["data"]?.jsonArray?.takeIf { it.isNotEmpty() }
+        val dataFiles = originalFiles
             ?: chapterObj["dataSaver"]?.jsonArray
             ?: return@withContext emptyList()
+        val directory = if (originalFiles != null) "data" else "data-saver"
 
         dataFiles.mapIndexed { index, fileNameElement ->
             val fileName = fileNameElement.jsonPrimitive.content
-            val imageUrl = "$baseUrlHost/data/$hash/$fileName"
+            val imageUrl = "$baseUrlHost/$directory/$hash/$fileName"
             Page(
                 index = index,
                 url = chapter.url,
                 imageUrl = imageUrl,
+                headers = headers + ("Referer" to "https://mangadex.org/"),
             )
         }
     }

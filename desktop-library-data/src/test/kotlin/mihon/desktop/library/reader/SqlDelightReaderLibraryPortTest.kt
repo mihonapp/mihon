@@ -176,6 +176,87 @@ class SqlDelightReaderLibraryPortTest {
     }
 
     @Test
+    fun `online metadata and adjacency resolve chapters without local assets`() {
+        open("online.db").use { repository ->
+            val mangaId = repository.insertManga(MangaRecord(sourceId = 77, url = "/online", title = "Online Manga"))
+            val first = repository.insertChapter(
+                ChapterRecord(
+                    mangaId = mangaId,
+                    url = "/first",
+                    name = "alpha",
+                    sourceOrder = 5,
+                    chapterNumber = 10.0,
+                    dateUpload = 111,
+                    scanlator = "Group",
+                ),
+            )
+            val second = repository.insertChapter(
+                ChapterRecord(
+                    mangaId = mangaId,
+                    url = "/second",
+                    name = "Alpha",
+                    sourceOrder = 5,
+                    chapterNumber = 10.0,
+                ),
+            )
+            val higherNumber = repository.insertChapter(
+                ChapterRecord(
+                    mangaId = mangaId,
+                    url = "/higher",
+                    name = "zulu",
+                    sourceOrder = 5,
+                    chapterNumber = 11.0,
+                ),
+            )
+            val third = repository.insertChapter(
+                ChapterRecord(
+                    mangaId = mangaId,
+                    url = "/third",
+                    name = "charlie",
+                    sourceOrder = 5,
+                    chapterNumber = 10.0,
+                ),
+            )
+            val fourth = repository.insertChapter(
+                ChapterRecord(
+                    mangaId = mangaId,
+                    url = "/fourth",
+                    name = "delta",
+                    sourceOrder = 4,
+                    chapterNumber = 99.0,
+                ),
+            )
+
+            repository.onlineChapter(second) shouldBe ReaderOnlineChapter(
+                mangaId = mangaId,
+                chapterId = second,
+                mangaTitle = "Online Manga",
+                chapterName = "Alpha",
+                chapterUrl = "/second",
+                sourceId = 77,
+                chapterNumber = 10.0,
+                sourceOrder = 5,
+                dateUpload = 0,
+                scanlator = null,
+                lastPageRead = 0,
+                read = false,
+            )
+            repository.onlineChapter(first)?.scanlator shouldBe "Group"
+            repository.onlineChapter(first)?.dateUpload shouldBe 111
+            repository.onlineChapter(Long.MAX_VALUE) shouldBe null
+
+            repository.adjacentOnlineChapter(higherNumber, ChapterDirection.PREVIOUS) shouldBe null
+            repository.adjacentOnlineChapter(higherNumber, ChapterDirection.NEXT)?.chapterId shouldBe second
+            repository.adjacentOnlineChapter(second, ChapterDirection.PREVIOUS)?.chapterId shouldBe higherNumber
+            repository.adjacentOnlineChapter(second, ChapterDirection.NEXT)?.chapterId shouldBe first
+            repository.adjacentOnlineChapter(first, ChapterDirection.PREVIOUS)?.chapterId shouldBe second
+            repository.adjacentOnlineChapter(first, ChapterDirection.NEXT)?.chapterId shouldBe third
+            repository.adjacentOnlineChapter(third, ChapterDirection.NEXT)?.chapterId shouldBe fourth
+            repository.adjacentOnlineChapter(fourth, ChapterDirection.NEXT) shouldBe null
+        }
+    }
+
+    @Test
     fun `progress stores backward position keeps completion monotonic and accumulates duration`(): Unit = runBlocking {
         open("progress.db").use { repository ->
             val chapterId = chapter(repository)

@@ -11,11 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,6 +44,7 @@ fun ManageCategoriesDialog(
     onCreateCategory: (String) -> Unit,
     onRenameCategory: (Long, String) -> Unit,
     onDeleteCategory: (Long) -> Unit,
+    onMoveCategory: (DesktopCategory, Int) -> Unit = { _, _ -> },
 ) {
     val strings = LocalStrings.current
     var newCategoryName by remember { mutableStateOf("") }
@@ -91,7 +97,7 @@ fun ManageCategoriesDialog(
                         modifier = Modifier.fillMaxWidth().height(240.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        items(categories, key = { it.id }) { cat ->
+                        itemsIndexed(categories, key = { _, cat -> cat.id }) { index, cat ->
                             Row(
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -104,6 +110,26 @@ fun ManageCategoriesDialog(
                                     modifier = Modifier.weight(1f),
                                 )
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    IconButton(
+                                        onClick = { onMoveCategory(cat, index - 1) },
+                                        enabled = index > 0,
+                                        modifier = Modifier.testTag("move-category-up-${cat.id}"),
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.KeyboardArrowUp,
+                                            contentDescription = null,
+                                        )
+                                    }
+                                    IconButton(
+                                        onClick = { onMoveCategory(cat, index + 1) },
+                                        enabled = index < categories.lastIndex,
+                                        modifier = Modifier.testTag("move-category-down-${cat.id}"),
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.KeyboardArrowDown,
+                                            contentDescription = null,
+                                        )
+                                    }
                                     TextButton(
                                         onClick = {
                                             editingCategory = cat

@@ -66,6 +66,25 @@ class OnlineMangaSyncServiceTest {
         }
     }
 
+    @Test
+    fun `preparing an online manga for reading does not add it to library or categories`() = runBlocking {
+        val repository = DesktopLibraryDatabaseFactory.open(tempDir.resolve("read-without-library.db"))
+        try {
+            val manager = DesktopSourceManager().apply { registerBuiltinSource(FakeSource()) }
+            val service = OnlineMangaSyncService(repository, manager)
+            val manga = SManga(url = "/series/read-only", title = "Read only", initialized = true)
+
+            val mangaId = service.prepareOnlineMangaForReading(FakeSource.ID, manga)
+
+            assertFalse(repository.findManga(FakeSource.ID, manga.url)!!.favorite)
+            assertEquals(0L, repository.findManga(FakeSource.ID, manga.url)!!.dateAdded)
+            assertEquals(1, repository.chapterSnapshot(mangaId).size)
+            assertTrue(repository.mangaCategoryLinksSnapshot()[mangaId].isNullOrEmpty())
+        } finally {
+            repository.close()
+        }
+    }
+
     private class FakeSource(private val failChapters: Boolean = false) : WindowsCatalogueSource {
         override val id = ID
         override val name = "Fake"

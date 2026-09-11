@@ -11,6 +11,11 @@ interface DesktopTracker {
     val authUrl: String?
     val username: String?
     val serverUrl: String?
+    val supportedStatuses: List<TrackStatus> get() = TrackStatus.entries
+    val supportsScore: Boolean get() = true
+
+    /** Restorable session credential; OAuth services return the exchanged token here. */
+    val persistenceToken: String?
     val isLoggedIn: Boolean
     val isLoggedInFlow: Flow<Boolean>
 
@@ -40,6 +45,7 @@ abstract class BaseDesktopTracker(
     override val serverUrl: String? get() = _serverUrl.value
 
     protected var token: String? = null
+    override val persistenceToken: String? get() = token
 
     protected fun setLoggedIn(
         value: Boolean,
@@ -53,7 +59,7 @@ abstract class BaseDesktopTracker(
         _serverUrl.value = url
     }
 
-    override fun restoreLogin(info: TrackerLoginInfo) {
+    open override fun restoreLogin(info: TrackerLoginInfo) {
         setLoggedIn(true, info.username, info.token, info.serverUrl)
     }
 

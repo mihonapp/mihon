@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,14 +36,41 @@ fun DecodedReaderPage(
     colorFilter: ReaderColorFilter = LocalReaderColorFilter.current,
     cropBorders: Boolean = LocalReaderCropBorders.current,
 ) {
+    val pageSizeSink = LocalReaderPageSizeSink.current
+    val imageStore = LocalReaderPageImageStore.current
     var frame by remember(page.id, cropBorders) { mutableStateOf<DesktopReaderFactory.PageFrame?>(null) }
     var failure by remember(page.id) { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(frame, imageStore) {
+        val image = frame?.tile?.image
+        if (image != null) {
+            imageStore?.put(page.id, image)
+        } else {
+            imageStore?.remove(page.id)
+        }
+    }
+    DisposableEffect(page.id, imageStore) {
+        onDispose { imageStore?.remove(page.id) }
+    }
+
+    // Promote probed intrinsic dimensions into reader layout even before the full frame decodes.
+    LaunchedEffect(factory, page.id, pageSizeSink) {
+        val sink = pageSizeSink ?: return@LaunchedEffect
+        factory.pageSizes.sizes.collect { sizes ->
+            sizes[page.id]?.let { size -> sink.onPageSize(page.id, size) }
+        }
+    }
+
     LaunchedEffect(factory, page.id, foreground, cropBorders) {
         var owned: DesktopReaderFactory.PageFrame? = null
         try {
             var index = 0
             while (true) {
                 val replacement = factory.loadFrame(page.id, index, cropBorders)
+                pageSizeSink?.onPageSize(
+                    page.id,
+                    PageSize(replacement.metadata.width, replacement.metadata.height),
+                )
                 val previous = owned
                 owned = replacement
                 frame = replacement
@@ -67,7 +95,7 @@ fun DecodedReaderPage(
                 bitmap = current.tile.image,
                 contentDescription = "Decoded page ${page.id.entryName}",
                 modifier = Modifier.matchParentSize().testTag("reader-decoded-${page.id.entryName}"),
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Fit,
                 colorFilter = colorFilter.toComposeColorFilter(),
             )
             failure != null -> Text(requireNotNull(failure))

@@ -35,8 +35,24 @@ data class DesktopReaderSettings(
     val cropBordersWebtoon: Boolean = false,
     val webtoonMaxWidth: Int = 800,
     val webtoonSidePadding: Int = 0,
+    val alwaysShowChapterTransition: Boolean = true,
+    val skipReadChapters: Boolean = false,
+    val skipFilteredChapters: Boolean = true,
+    val skipDuplicateChapters: Boolean = false,
 ) {
     fun toCoreSettings(): ReaderSettings = ReaderSettings(mode, coverOffset, scaleMode)
+}
+
+/**
+ * Persistence edge for the chapter bookmark toggle shown in the reader chrome.
+ *
+ * The reader screen accepts any implementation so the application can back it with the library
+ * repository. [DesktopReaderSettingsStore.bookmarkStore] provides a desktop-local fallback.
+ */
+interface ReaderChapterBookmarkStore {
+    fun isBookmarked(chapterId: Long): Boolean
+
+    fun setBookmarked(chapterId: Long, bookmarked: Boolean)
 }
 
 data class ClickRegions(
@@ -88,6 +104,13 @@ class DesktopReaderSettingsStore(private val preferences: DesktopPreferenceStore
             webtoonMaxWidth = preferences.property(WEBTOON_MAX_WIDTH)?.toIntOrNull() ?: defaults.webtoonMaxWidth,
             webtoonSidePadding = preferences.property(WEBTOON_SIDE_PADDING)?.toIntOrNull()
                 ?: defaults.webtoonSidePadding,
+            alwaysShowChapterTransition = preferences.property(ALWAYS_SHOW_CHAPTER_TRANSITION)
+                ?.toBooleanStrictOrNull() ?: defaults.alwaysShowChapterTransition,
+            skipReadChapters = preferences.property(SKIP_READ)?.toBooleanStrictOrNull() ?: defaults.skipReadChapters,
+            skipFilteredChapters = preferences.property(SKIP_FILTERED)?.toBooleanStrictOrNull()
+                ?: defaults.skipFilteredChapters,
+            skipDuplicateChapters = preferences.property(SKIP_DUPLICATE)?.toBooleanStrictOrNull()
+                ?: defaults.skipDuplicateChapters,
         )
     }
 
@@ -109,13 +132,41 @@ class DesktopReaderSettingsStore(private val preferences: DesktopPreferenceStore
             setProperty(CROP_BORDERS_WEBTOON, settings.cropBordersWebtoon.toString())
             setProperty(WEBTOON_MAX_WIDTH, settings.webtoonMaxWidth.toString())
             setProperty(WEBTOON_SIDE_PADDING, settings.webtoonSidePadding.toString())
+            setProperty(ALWAYS_SHOW_CHAPTER_TRANSITION, settings.alwaysShowChapterTransition.toString())
+            setProperty(SKIP_READ, settings.skipReadChapters.toString())
+            setProperty(SKIP_FILTERED, settings.skipFilteredChapters.toString())
+            setProperty(SKIP_DUPLICATE, settings.skipDuplicateChapters.toString())
         }
+    }
+
+    fun isChapterBookmarked(chapterId: Long): Boolean =
+        preferences.property(bookmarkKey(chapterId))?.toBooleanStrictOrNull() ?: false
+
+    fun setChapterBookmarked(chapterId: Long, bookmarked: Boolean) {
+        val key = bookmarkKey(chapterId)
+        preferences.update {
+            if (bookmarked) {
+                setProperty(key, true.toString())
+            } else {
+                remove(key)
+            }
+        }
+    }
+
+    fun bookmarkStore(): ReaderChapterBookmarkStore = object : ReaderChapterBookmarkStore {
+        override fun isBookmarked(chapterId: Long): Boolean = isChapterBookmarked(chapterId)
+
+        override fun setBookmarked(chapterId: Long, bookmarked: Boolean) =
+            setChapterBookmarked(chapterId, bookmarked)
     }
 
     private inline fun <reified T : Enum<T>> enumOrDefault(value: String?, default: T): T =
         enumValues<T>().firstOrNull { it.name == value } ?: default
 
+    private fun bookmarkKey(chapterId: Long): String = "$BOOKMARK_PREFIX$chapterId"
+
     private companion object {
+        const val BOOKMARK_PREFIX = "reader.bookmark.chapter."
         const val MODE = "reader.v1.mode"
         const val COVER_OFFSET = "reader.v1.cover-offset"
         const val SCALE = "reader.v1.scale"
@@ -132,5 +183,9 @@ class DesktopReaderSettingsStore(private val preferences: DesktopPreferenceStore
         const val CROP_BORDERS_WEBTOON = "reader.v1.crop-borders-webtoon"
         const val WEBTOON_MAX_WIDTH = "reader.v1.webtoon-max-width"
         const val WEBTOON_SIDE_PADDING = "reader.v1.webtoon-side-padding"
+        const val ALWAYS_SHOW_CHAPTER_TRANSITION = "reader.v1.always-show-chapter-transition"
+        const val SKIP_READ = "reader.v1.skip-read"
+        const val SKIP_FILTERED = "reader.v1.skip-filtered"
+        const val SKIP_DUPLICATE = "reader.v1.skip-duplicate"
     }
 }

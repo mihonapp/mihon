@@ -20,6 +20,7 @@ import mihon.desktop.library.model.ImportCounts
 import mihon.desktop.library.model.ImportReport
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
+import mihon.desktop.updates.DesktopAppUpdateService
 import mihon.reader.image.IntRect
 import mihon.reader.memory.ReaderMemoryMetrics
 import mihon.reader.model.ReadingMode
@@ -58,7 +59,7 @@ class DesktopCommandRunner(
                 0
             }
             DesktopCommand.Version -> {
-                writeUtf8Line(output, "Mihon W 0.1.0 (Windows x64)")
+                writeUtf8Line(output, "Mihon W ${DesktopAppUpdateService.CURRENT_VERSION} (Windows x64)")
                 0
             }
             DesktopCommand.FoundationSmoke -> {

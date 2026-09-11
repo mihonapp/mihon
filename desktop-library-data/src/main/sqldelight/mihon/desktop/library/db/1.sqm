@@ -1,0 +1,9 @@
+-- Baseline desktop library migration: introduces the metadata table used to track
+-- schema-level information. Statements are defensive so a replay cannot corrupt data.
+CREATE TABLE IF NOT EXISTS library_metadata (
+  name TEXT NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+INSERT OR IGNORE INTO library_metadata(name, value)
+VALUES ('schema_migration_1', 'applied');

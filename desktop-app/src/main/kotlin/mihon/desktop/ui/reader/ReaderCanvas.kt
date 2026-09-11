@@ -22,6 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import mihon.desktop.reader.ReaderBackgroundColor
 import mihon.reader.model.PageDescriptor
+import mihon.reader.model.PageId
 import mihon.reader.model.ReaderLayout
 import mihon.reader.model.ReaderPan
 import mihon.reader.model.ReaderViewport
@@ -72,6 +73,7 @@ fun ReaderCanvas(
     backgroundColor: ReaderBackgroundColor = ReaderBackgroundColor.DARK_GRAY,
     webtoonMaxWidth: Int = 800,
     webtoonSidePadding: Int = 0,
+    pageSizes: Map<PageId, PageSize> = emptyMap(),
     pageContent: ReaderPageContent = { _, pageIndex, contentModifier ->
         DefaultReaderPage(pageIndex, contentModifier)
     },
@@ -97,12 +99,14 @@ fun ReaderCanvas(
                     pageContent = pageContent,
                     webtoonMaxWidth = webtoonMaxWidth,
                     webtoonSidePadding = webtoonSidePadding,
+                    pageSizes = pageSizes,
                     modifier = Modifier.fillMaxSize().testTag("reader-continuous"),
                 )
             } else {
                 PagedReader(
                     state = state,
                     viewportWidth = maxWidth,
+                    pageSizes = pageSizes,
                     pageContent = pageContent,
                     modifier = Modifier.fillMaxSize().testTag("reader-paged"),
                 )
@@ -121,7 +125,9 @@ internal fun ReaderPageFrame(
     requestedPan: ReaderPan,
     pageContent: ReaderPageContent,
     modifier: Modifier = Modifier,
+    intrinsicSize: PageSize? = null,
 ) {
+    val effectivePage = page.withIntrinsicSize(intrinsicSize)
     BoxWithConstraints(
         modifier = modifier
             .clipToBounds(),
@@ -131,7 +137,7 @@ internal fun ReaderPageFrame(
         val viewport = remember(constraints.maxWidth, constraints.maxHeight) {
             ReaderViewport(constraints.maxWidth.coerceAtLeast(1), constraints.maxHeight.coerceAtLeast(1))
         }
-        val transform = calculatePageTransform(page, viewport, scaleMode, zoom, requestedPan)
+        val transform = calculatePageTransform(effectivePage, viewport, scaleMode, zoom, requestedPan)
         val width = with(density) { transform.widthPixels.toDp() }
         val height = with(density) { transform.heightPixels.toDp() }
         Box(
@@ -149,7 +155,7 @@ internal fun ReaderPageFrame(
             contentAlignment = Alignment.Center,
         ) {
             pageContent(
-                page,
+                effectivePage,
                 pageIndex,
                 Modifier
                     .requiredSize(width, height)

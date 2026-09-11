@@ -7,14 +7,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,12 +30,17 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import mihon.desktop.extension.builtin.isLocalSource
 import mihon.desktop.i18n.LocalStrings
 import mihon.extension.model.SourceDescriptor
 import mihon.extension.source.model.Filter
@@ -52,7 +61,9 @@ data class BrowseSourceUiState(
     val hasNextPage: Boolean = false,
     val mangas: List<SManga> = emptyList(),
     val inLibraryUrls: Set<String> = emptySet(),
+    val chapterCounts: Map<String, Long> = emptyMap(),
     val isLoading: Boolean = false,
+    val isLoadingMore: Boolean = false,
     val errorMessage: String? = null,
     val filterList: FilterList = FilterList(),
     val isFilterDialogOpen: Boolean = false,
@@ -91,11 +102,13 @@ fun BrowseSourceScreen(
     onSearch: () -> Unit,
     onPageChange: (Int) -> Unit,
     onMangaSelected: (SManga) -> Unit,
+    onLoadMore: () -> Unit = {},
     onRetry: () -> Unit = {},
     onOpenFilters: () -> Unit = {},
     onCloseFilters: () -> Unit = {},
     onResetFilters: () -> Unit = {},
     onApplyFilters: (FilterList) -> Unit = {},
+    onImportLocal: () -> Unit = {},
 ) {
     val strings = LocalStrings.current
 
@@ -188,6 +201,25 @@ fun BrowseSourceScreen(
             }
         }
 
+        // Auto load more when scrolling near bottom
+        val gridState = rememberLazyGridState()
+        val shouldLoadMore by remember {
+            derivedStateOf {
+                val layoutInfo = gridState.layoutInfo
+                val totalItems = layoutInfo.totalItemsCount
+                if (totalItems == 0) return@derivedStateOf false
+                val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                lastVisible >= totalItems - 4 ||
+                    (lastVisible >= totalItems - 1 && layoutInfo.visibleItemsInfo.size == totalItems)
+            }
+        }
+
+        LaunchedEffect(shouldLoadMore, state.hasNextPage, state.isLoading, state.isLoadingMore) {
+            if (shouldLoadMore && state.hasNextPage && !state.isLoading && !state.isLoadingMore) {
+                onLoadMore()
+            }
+        }
+
         // Main Grid or Loading
         if (state.isLoading) {
             Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
@@ -195,15 +227,29 @@ fun BrowseSourceScreen(
             }
         } else if (state.mangas.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
-                Text(
-                    strings.browseNoMangaFound,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.outline,
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Text(
+                        strings.browseNoMangaFound,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                    if (state.source.isLocalSource()) {
+                        Button(
+                            onClick = onImportLocal,
+                            modifier = Modifier.testTag("local-source-import-btn"),
+                        ) {
+                            Text(strings.libraryImportLocal)
+                        }
+                    }
+                }
             }
         } else {
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(160.dp),
+                state = gridState,
+                columns = GridCells.Adaptive(180.dp),
                 modifier = Modifier.weight(1f).testTag("manga-grid"),
                 contentPadding = PaddingValues(4.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -222,7 +268,7 @@ fun BrowseSourceScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(200.dp),
+                                    .aspectRatio(2f / 3f),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 mihon.desktop.ui.common.MangaCover(
@@ -253,6 +299,25 @@ fun BrowseSourceScreen(
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
                             )
+                            state.chapterCounts[manga.url]?.let { chapterCount ->
+                                Text(
+                                    text = strings.trackingTotalChapters(chapterCount),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.outline,
+                                    modifier = Modifier.testTag("manga-chapter-count-${manga.url}"),
+                                )
+                            }
+                        }
+                    }
+                }
+
+                if (state.isLoadingMore) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(modifier = Modifier.size(32.dp))
                         }
                     }
                 }
@@ -260,31 +325,38 @@ fun BrowseSourceScreen(
         }
 
         // Pagination Controls
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            OutlinedButton(
-                onClick = { if (state.page > 1) onPageChange(state.page - 1) },
-                enabled = state.page > 1 && !state.isLoading,
-                modifier = Modifier.testTag("prev-page-btn"),
+        if (state.mangas.isNotEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(strings.browsePrevPage)
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = strings.browsePageNumber(state.page),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            OutlinedButton(
-                onClick = { if (state.hasNextPage) onPageChange(state.page + 1) },
-                enabled = state.hasNextPage && !state.isLoading,
-                modifier = Modifier.testTag("next-page-btn"),
-            ) {
-                Text(strings.browseNextPage)
+                OutlinedButton(
+                    onClick = { if (state.page > 1) onPageChange(state.page - 1) },
+                    enabled = state.page > 1 && !state.isLoading && !state.isLoadingMore,
+                    modifier = Modifier.testTag("prev-page-btn"),
+                ) {
+                    Text(strings.browsePrevPage)
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = "${strings.browsePageNumber(state.page)} (${state.mangas.size})",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                OutlinedButton(
+                    onClick = {
+                        if (state.hasNextPage) {
+                            onLoadMore()
+                            onPageChange(state.page + 1)
+                        }
+                    },
+                    enabled = state.hasNextPage && !state.isLoading && !state.isLoadingMore,
+                    modifier = Modifier.testTag("next-page-btn"),
+                ) {
+                    Text(strings.browseNextPage)
+                }
             }
         }
 

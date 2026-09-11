@@ -111,6 +111,7 @@ fun TrackingDialog(
     editingTrack?.let { track ->
         EditTrackDetailsDialog(
             track = track,
+            tracker = trackers.firstOrNull { it.id == track.trackerId },
             onDismiss = { editingTrack = null },
             onSave = { updated ->
                 onSaveTrack(updated)
@@ -197,6 +198,7 @@ private fun SearchTrackDialog(
     val strings = LocalStrings.current
     var query by remember { mutableStateOf(initialQuery) }
     var results by remember { mutableStateOf<List<TrackSearchResult>>(emptyList()) }
+    var searchFailed by remember { mutableStateOf(false) }
     val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
 
     AlertDialog(
@@ -217,13 +219,27 @@ private fun SearchTrackDialog(
                     FilledTonalButton(
                         onClick = {
                             coroutineScope.launch {
-                                results = onSearch(query)
+                                searchFailed = false
+                                try {
+                                    results = onSearch(query)
+                                } catch (_: Exception) {
+                                    results = emptyList()
+                                    searchFailed = true
+                                }
                             }
                         },
                         modifier = Modifier.testTag("track-search-button"),
                     ) {
                         Text(strings.trackingSearch)
                     }
+                }
+
+                if (searchFailed) {
+                    Text(
+                        strings.trackingRequestFailed,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.testTag("track-search-error"),
+                    )
                 }
 
                 LazyColumn(modifier = Modifier.weight(1f)) {
@@ -240,7 +256,10 @@ private fun SearchTrackDialog(
                             Column {
                                 Text(res.title, fontWeight = FontWeight.Medium)
                                 if (res.totalChapters > 0) {
-                                    Text(strings.trackingTotalChapters(res.totalChapters), style = MaterialTheme.typography.bodySmall)
+                                    Text(
+                                        strings.trackingTotalChapters(res.totalChapters),
+                                        style = MaterialTheme.typography.bodySmall,
+                                    )
                                 }
                             }
                         }
@@ -258,6 +277,7 @@ private fun SearchTrackDialog(
 @Composable
 private fun EditTrackDetailsDialog(
     track: DesktopTrackRecord,
+    tracker: DesktopTracker?,
     onDismiss: () -> Unit,
     onSave: (DesktopTrackRecord) -> Unit,
 ) {
@@ -278,33 +298,38 @@ private fun EditTrackDetailsDialog(
                     modifier = Modifier.fillMaxWidth().testTag("track-chapter-read-input"),
                     singleLine = true,
                 )
-                OutlinedTextField(
-                    value = score,
-                    onValueChange = { score = it },
-                    label = { Text(strings.trackingScore) },
-                    modifier = Modifier.fillMaxWidth().testTag("track-score-input"),
-                    singleLine = true,
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    TrackStatus.entries.take(3).forEach { s ->
-                        OutlinedButton(
-                            onClick = { status = s.value },
-                            modifier = Modifier.weight(1f).testTag("track-status-${s.value}"),
+                if (tracker?.supportsScore != false) {
+                    OutlinedTextField(
+                        value = score,
+                        onValueChange = { score = it },
+                        label = { Text(strings.trackingScore) },
+                        modifier = Modifier.fillMaxWidth().testTag("track-score-input"),
+                        singleLine = true,
+                    )
+                }
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    (tracker?.supportedStatuses ?: TrackStatus.entries).chunked(3).forEach { statuses ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            Text(
-                                strings.trackStatusLabel(s),
-                                fontWeight = if (status == s.value) FontWeight.Bold else FontWeight.Normal,
-                                color = if (status ==
-                                    s.value
+                            statuses.forEach { s ->
+                                OutlinedButton(
+                                    onClick = { status = s.value },
+                                    modifier = Modifier.weight(1f).testTag("track-status-${s.value}"),
                                 ) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.onSurface
-                                },
-                            )
+                                    Text(
+                                        strings.trackStatusLabel(s),
+                                        fontWeight = if (status == s.value) FontWeight.Bold else FontWeight.Normal,
+                                        color = if (status == s.value) {
+                                            MaterialTheme.colorScheme.primary
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurface
+                                        },
+                                    )
+                                }
+                            }
+                            repeat(3 - statuses.size) { Spacer(Modifier.weight(1f)) }
                         }
                     }
                 }

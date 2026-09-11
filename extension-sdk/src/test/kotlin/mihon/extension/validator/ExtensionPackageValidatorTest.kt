@@ -112,6 +112,14 @@ class ExtensionPackageValidatorTest {
     }
 
     @Test
+    fun `validateManifest accepts wildcard declared domain`() {
+        val withWildcard = sampleManifest().copy(
+            declaredDomains = listOf("*"),
+        )
+        ExtensionPackageValidator.validateManifest(withWildcard)
+    }
+
+    @Test
     fun `validatePackageStream accepts valid package with manifest`() {
         val manifest = sampleManifest()
         val manifestBytes = json.encodeToString(manifest).encodeToByteArray()

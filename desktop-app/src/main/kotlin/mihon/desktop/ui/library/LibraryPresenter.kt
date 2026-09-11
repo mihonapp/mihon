@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -37,6 +38,7 @@ import mihon.desktop.library.reader.ReaderLibraryPort
 import mihon.desktop.library.repository.LibraryMutationPort
 import mihon.desktop.library.repository.LibraryRepository
 import mihon.desktop.preferences.DesktopPreferenceStore
+import mihon.reader.source.ReaderChapterAsset
 import java.nio.file.Files
 
 data class LibraryUiState(
@@ -54,7 +56,11 @@ data class LibraryUiState(
     val selectionState: LibrarySelectionState = LibrarySelectionState(),
     val isFilterDialogOpen: Boolean = false,
     val isBatchCategoryDialogOpen: Boolean = false,
-)
+    val duplicateDialog: DuplicateMangaDialogState? = null,
+) {
+    val duplicateTarget: DuplicateMangaCandidate? get() = duplicateDialog?.target
+    val duplicateCandidates: List<DuplicateMangaCandidate> get() = duplicateDialog?.candidates.orEmpty()
+}
 
 data class MangaDetailUiState(
     val manga: MangaDetails? = null,
@@ -67,6 +73,11 @@ data class MangaDetailUiState(
     val chapterSortState: ChapterSortState = ChapterSortState(),
     val isEditInfoDialogOpen: Boolean = false,
     val downloadedChapterIds: Set<Long> = emptySet(),
+    val readerChapters: List<LibraryChapter> = emptyList(),
+    val chapterSettings: ChapterSettings = ChapterSettings(),
+    val availableScanlators: Set<String> = emptySet(),
+    val chapterListItems: List<ChapterListItem> = emptyList(),
+    val isChapterSettingsDialogOpen: Boolean = false,
 )
 
 sealed interface ChapterReaderAvailability {
@@ -125,6 +136,32 @@ class LibraryPresenter(
     private val selectionStateFlow = MutableStateFlow(LibrarySelectionState())
     private val isFilterDialogOpenState = MutableStateFlow(false)
     private val isBatchCategoryDialogOpenState = MutableStateFlow(false)
+    private val duplicateDialogState = MutableStateFlow<DuplicateMangaDialogState?>(null)
+    private val duplicateLock = Any()
+    private val knownMangaIds = mutableSetOf<Long>()
+    private val dismissedDuplicateGroupKeys = mutableSetOf<String>()
+    private val queuedDuplicateDialogs = ArrayDeque<DuplicateMangaDialogState>()
+    private val duplicateWatcherJob = presenterScope.launch {
+        // The selected-category flow already observes the whole library when "All" is active.
+        // For a filtered category, watch the full library separately so additions outside the
+        // category still trigger duplicate detection.
+        selectedCategoryId
+            .flatMapLatest { categoryId ->
+                if (categoryId == SYSTEM_ALL_CATEGORY.id) {
+                    emptyFlow()
+                } else {
+                    repository.observeLibrary(null)
+                        .flowOn(Dispatchers.IO)
+                        .catch { }
+                }
+            }
+            .catch { }
+            .collect { items -> detectDuplicates(items) }
+    }
+    private val layoutExtrasFlow = combine(
+        isFilterDialogOpenState,
+        duplicateDialogState,
+    ) { filterOpen, duplicateDialog -> filterOpen to duplicateDialog }
 
     private val categoriesState: Flow<List<DesktopCategory>> = repository.observeCategories()
         .map { records ->
@@ -152,6 +189,9 @@ class LibraryPresenter(
                 selectedMangaId.update { selected ->
                     selected?.takeIf { id -> result.items.any { it.id == id } }
                 }
+                if (selectedCategoryId.value == SYSTEM_ALL_CATEGORY.id) {
+                    detectDuplicates(result.items)
+                }
             }
         }
 
@@ -171,9 +211,9 @@ class LibraryPresenter(
             displayModeState,
             gridSizeState,
             selectionStateFlow,
-            isFilterDialogOpenState,
-        ) { selId, mode, size, selState, filterOpen ->
-            LayoutAndSelectionData(selId, mode, size, selState, filterOpen)
+            layoutExtrasFlow,
+        ) { selId, mode, size, selState, (filterOpen, duplicateDialog) ->
+            LayoutAndSelectionData(selId, mode, size, selState, filterOpen, duplicateDialog)
         },
     ) { processed, layout ->
         when (processed.repoResult) {
@@ -189,6 +229,7 @@ class LibraryPresenter(
                 selectionState = layout.selectionState,
                 isFilterDialogOpen = layout.isFilterDialogOpen,
                 isBatchCategoryDialogOpen = isBatchCategoryDialogOpenState.value,
+                duplicateDialog = layout.duplicateDialog,
             )
             is RepositoryState.Failed -> LibraryUiState(
                 loading = false,
@@ -203,6 +244,7 @@ class LibraryPresenter(
                 selectionState = layout.selectionState,
                 isFilterDialogOpen = layout.isFilterDialogOpen,
                 isBatchCategoryDialogOpen = isBatchCategoryDialogOpenState.value,
+                duplicateDialog = layout.duplicateDialog,
             )
             is RepositoryState.Loaded -> {
                 val normalizedQuery = processed.query.trim()
@@ -232,6 +274,7 @@ class LibraryPresenter(
                     selectionState = layout.selectionState,
                     isFilterDialogOpen = layout.isFilterDialogOpen,
                     isBatchCategoryDialogOpen = isBatchCategoryDialogOpenState.value,
+                    duplicateDialog = layout.duplicateDialog,
                 )
             }
         }
@@ -280,19 +323,25 @@ class LibraryPresenter(
             }
         }
 
-    private val chapterFilterStateFlow = MutableStateFlow(ChapterFilterState())
-    private val chapterSortStateFlow = MutableStateFlow(ChapterSortState())
+    private val chapterSettingsOverrides = MutableStateFlow(ChapterSettingsOverrides())
     private val isEditInfoDialogOpenState = MutableStateFlow(false)
+    private val isChapterSettingsDialogOpenState = MutableStateFlow(false)
 
     val detailState: StateFlow<MangaDetailUiState> = combine(
         selectedRepositoryState,
-        chapterFilterStateFlow,
-        chapterSortStateFlow,
+        chapterSettingsOverrides,
         isEditInfoDialogOpenState,
-    ) { result, filter, sort, isEditInfoOpen ->
+        isChapterSettingsDialogOpenState,
+    ) { result, overrides, isEditInfoOpen, isChapterSettingsOpen ->
         when (result) {
-            SelectedRepositoryState.Loading -> MangaDetailUiState(loading = true)
-            is SelectedRepositoryState.Failed -> MangaDetailUiState(errorMessage = result.message)
+            SelectedRepositoryState.Loading -> MangaDetailUiState(
+                loading = true,
+                isChapterSettingsDialogOpen = isChapterSettingsOpen,
+            )
+            is SelectedRepositoryState.Failed -> MangaDetailUiState(
+                errorMessage = result.message,
+                isChapterSettingsDialogOpen = isChapterSettingsOpen,
+            )
             is SelectedRepositoryState.Loaded -> {
                 val manga = result.manga
                 val rawChapters = result.chapters
@@ -304,51 +353,44 @@ class LibraryPresenter(
                     emptySet()
                 }
 
-                val filtered = rawChapters.filter { ch ->
-                    val unreadMatch = when (filter.unread) {
-                        TriStateFilter.Disabled -> true
-                        TriStateFilter.Include -> !ch.read
-                        TriStateFilter.Exclude -> ch.read
-                    }
-                    val bookmarkMatch = when (filter.bookmarked) {
-                        TriStateFilter.Disabled -> true
-                        TriStateFilter.Include -> ch.bookmark
-                        TriStateFilter.Exclude -> !ch.bookmark
-                    }
-                    val downloadedMatch = when (filter.downloaded) {
-                        TriStateFilter.Disabled -> true
-                        TriStateFilter.Include -> downloadedIds.contains(ch.id)
-                        TriStateFilter.Exclude -> !downloadedIds.contains(ch.id)
-                    }
-                    unreadMatch && bookmarkMatch && downloadedMatch
+                val persistedSettings = manga?.toChapterSettings() ?: defaultChapterSettings()
+                val overrideSettings = overrides.settings
+                val settings = if (manga != null && overrides.mangaId == manga.id && overrideSettings != null) {
+                    overrideSettings
+                } else {
+                    persistedSettings
                 }
-
-                val sorted = when (sort.mode) {
-                    ChapterSortMode.SourceOrder -> if (sort.ascending) {
-                        filtered.sortedBy { it.sourceOrder }
-                    } else {
-                        filtered.sortedByDescending { it.sourceOrder }
-                    }
-                    ChapterSortMode.ChapterNumber -> if (sort.ascending) {
-                        filtered.sortedBy { it.chapterNumber }
-                    } else {
-                        filtered.sortedByDescending { it.chapterNumber }
-                    }
-                    ChapterSortMode.UploadDate -> if (sort.ascending) {
-                        filtered.sortedBy { it.dateUpload }
-                    } else {
-                        filtered.sortedByDescending { it.dateUpload }
+                val filter = settings.toFilterState()
+                val scanlatorFiltered = if (settings.excludedScanlators.isEmpty()) {
+                    rawChapters
+                } else {
+                    rawChapters.filter { chapter ->
+                        val scanlator = chapter.scanlator?.trim()
+                        scanlator.isNullOrBlank() || scanlator !in settings.excludedScanlators
                     }
                 }
+                val filtered = scanlatorFiltered.filter { chapter ->
+                    matchesChapterFilter(chapter, filter, downloadedIds)
+                }
+                val sorted = sortChapters(filtered, settings)
+                val readerChapters = sortChapters(scanlatorFiltered, settings)
+                val availableScanlators = rawChapters.mapNotNull { chapter ->
+                    chapter.scanlator?.trim()?.takeIf(String::isNotEmpty)
+                }.toSet()
 
                 MangaDetailUiState(
                     manga = manga,
                     chapters = sorted,
                     allChapters = rawChapters,
+                    readerChapters = readerChapters,
                     readerAvailability = result.readerAvailability,
                     chapterFilterState = filter,
-                    chapterSortState = sort,
+                    chapterSortState = settings.toSortState(),
+                    chapterSettings = settings,
+                    availableScanlators = availableScanlators,
+                    chapterListItems = buildChapterListItems(sorted, settings),
                     isEditInfoDialogOpen = isEditInfoOpen,
+                    isChapterSettingsDialogOpen = isChapterSettingsOpen,
                     downloadedChapterIds = downloadedIds,
                 )
             }
@@ -361,11 +403,223 @@ class LibraryPresenter(
         )
 
     fun setChapterFilter(filter: ChapterFilterState) {
-        chapterFilterStateFlow.value = filter
+        val mangaId = selectedMangaId.value ?: return
+        updateChapterSettings(mangaId) { current ->
+            current.copy(
+                unreadFilter = filter.unread,
+                downloadedFilter = filter.downloaded,
+                bookmarkedFilter = filter.bookmarked,
+            )
+        }
     }
 
     fun setChapterSort(sort: ChapterSortState) {
-        chapterSortStateFlow.value = sort
+        val mangaId = selectedMangaId.value ?: return
+        updateChapterSettings(mangaId) { current ->
+            current.copy(sortMode = sort.mode, sortAscending = sort.ascending)
+        }
+    }
+
+    fun setChapterDisplayMode(mode: ChapterDisplayMode) {
+        val mangaId = selectedMangaId.value ?: return
+        updateChapterSettings(mangaId) { it.copy(displayMode = mode) }
+    }
+
+    fun setExcludedScanlators(excludedScanlators: Set<String>) {
+        val mangaId = selectedMangaId.value ?: return
+        updateChapterSettings(mangaId) { it.copy(excludedScanlators = excludedScanlators) }
+    }
+
+    fun setShowMissingChapters(show: Boolean) {
+        val mangaId = selectedMangaId.value ?: return
+        updateChapterSettings(mangaId) { it.copy(showMissingChapters = show) }
+    }
+
+    fun setChapterSettingsDialogOpen(open: Boolean) {
+        isChapterSettingsDialogOpenState.value = open
+    }
+
+    fun setChapterSettingsAsDefault(applyToExisting: Boolean) {
+        val mangaId = selectedMangaId.value ?: return
+        val settings = currentChapterSettings(mangaId)
+        preferences?.update {
+            setProperty(CHAPTER_DEFAULT_FLAGS_KEY, encodeChapterFlags(0L, settings).toString())
+            setProperty(CHAPTER_DEFAULT_SHOW_MISSING_KEY, settings.showMissingChapters.toString())
+        }
+        if (applyToExisting) {
+            val now = System.currentTimeMillis()
+            val records = repository.allMangaSnapshot().filter { it.favorite }
+            mutationPort?.transaction {
+                for (record in records) {
+                    updateManga(
+                        record.copy(
+                            chapterFlags = encodeChapterFlags(record.chapterFlags, settings),
+                            memoJson = encodeShowMissingChapters(record.memoJson, settings.showMissingChapters),
+                        ),
+                    )
+                }
+            }
+            detailRetryRequest.value = now
+        }
+    }
+
+    fun resetChapterSettingsToDefault() {
+        val mangaId = selectedMangaId.value ?: return
+        val defaults = defaultChapterSettings().copy(excludedScanlators = emptySet())
+        chapterSettingsOverrides.update { it.copy(mangaId = mangaId, settings = defaults) }
+        persistChapterSettings(mangaId, defaults)
+    }
+
+    fun dismissDuplicateDialog() {
+        advanceDuplicateDialog(markDismissed = true)
+    }
+
+    fun addDuplicateAnyway() {
+        advanceDuplicateDialog(markDismissed = true)
+    }
+
+    fun openDuplicateManga(mangaId: Long) {
+        advanceDuplicateDialog(markDismissed = true)
+        // Duplicate candidates come from the full library, so make sure a filtered category
+        // cannot immediately clear the requested selection.
+        selectedCategoryId.value = SYSTEM_ALL_CATEGORY.id
+        selectedMangaId.value = mangaId
+    }
+
+    fun migrateDuplicateTo(existingMangaId: Long) {
+        val dialog = duplicateDialogState.value ?: return
+        val sourceMangaId = dialog.target.id
+        if (sourceMangaId != existingMangaId) {
+            migrateManga(sourceMangaId, existingMangaId)
+        }
+        advanceDuplicateDialog(markDismissed = true)
+        retry()
+    }
+
+    private fun updateChapterSettings(mangaId: Long, transform: (ChapterSettings) -> ChapterSettings) {
+        val updated = transform(currentChapterSettings(mangaId))
+        chapterSettingsOverrides.update { it.copy(mangaId = mangaId, settings = updated) }
+        persistChapterSettings(mangaId, updated)
+    }
+
+    private fun currentChapterSettings(mangaId: Long): ChapterSettings {
+        val persisted = runCatching { repository.mangaSnapshot(mangaId) }.getOrNull()?.toChapterSettings()
+            ?: detailState.value.manga?.takeIf { it.id == mangaId }?.toChapterSettings()
+            ?: defaultChapterSettings()
+        val overrides = chapterSettingsOverrides.value
+        val overrideSettings = overrides.settings
+        return if (overrides.mangaId == mangaId && overrideSettings != null) overrideSettings else persisted
+    }
+
+    private fun persistChapterSettings(mangaId: Long, settings: ChapterSettings) {
+        val record = runCatching { repository.mangaSnapshot(mangaId) }.getOrNull()
+            ?: detailState.value.manga?.takeIf { it.id == mangaId }
+            ?: return
+        val now = System.currentTimeMillis()
+        mutationPort?.updateManga(
+            record.toMangaRecord().copy(
+                chapterFlags = encodeChapterFlags(record.chapterFlags, settings),
+                excludedScanlatorsJson = encodeExcludedScanlators(settings.excludedScanlators),
+                memoJson = encodeShowMissingChapters(record.memoJson, settings.showMissingChapters),
+            ),
+        )
+        detailRetryRequest.value = now
+    }
+
+    private fun defaultChapterSettings(): ChapterSettings {
+        val flags = preferences?.property(CHAPTER_DEFAULT_FLAGS_KEY)?.toLongOrNull() ?: 0L
+        val showMissing = preferences?.property(CHAPTER_DEFAULT_SHOW_MISSING_KEY)?.toBooleanStrictOrNull() ?: true
+        return chapterSettingsFromFlags(chapterFlags = flags, showMissingChapters = showMissing)
+    }
+
+    private fun detectDuplicates(items: List<LibraryManga>) {
+        synchronized(duplicateLock) {
+            val currentIds = items.mapTo(mutableSetOf()) { it.id }
+            val newIds = currentIds - knownMangaIds
+            knownMangaIds.addAll(currentIds)
+            if (items.isEmpty()) return
+
+            findDuplicateGroups(items).forEach { (normalizedTitle, members) ->
+                val groupKey = normalizedTitle + "|" + members.map { it.id }.sorted().joinToString(",")
+                if (groupKey in dismissedDuplicateGroupKeys) return@forEach
+                if (duplicateDialogState.value?.groupKey == groupKey) return@forEach
+                if (queuedDuplicateDialogs.any { it.groupKey == groupKey }) return@forEach
+
+                val target = members.firstOrNull { it.id in newIds } ?: members.first()
+                val candidates = members
+                    .filter { it.id != target.id && it.sourceId != target.sourceId }
+                    .map { it.toDuplicateCandidate() }
+                if (candidates.isEmpty()) return@forEach
+
+                val dialog = DuplicateMangaDialogState(
+                    groupKey = groupKey,
+                    target = target.toDuplicateCandidate(),
+                    candidates = candidates,
+                )
+                if (duplicateDialogState.value == null) {
+                    duplicateDialogState.value = dialog
+                } else {
+                    queuedDuplicateDialogs.addLast(dialog)
+                }
+            }
+        }
+    }
+
+    private fun advanceDuplicateDialog(markDismissed: Boolean) {
+        synchronized(duplicateLock) {
+            val current = duplicateDialogState.value ?: return
+            if (markDismissed) {
+                dismissedDuplicateGroupKeys += current.groupKey
+            }
+            duplicateDialogState.value = queuedDuplicateDialogs.removeFirstOrNull()
+        }
+    }
+
+    private fun migrateManga(sourceMangaId: Long, targetMangaId: Long) {
+        val port = mutationPort ?: return
+        val source = repository.mangaSnapshot(sourceMangaId) ?: return
+        repository.mangaSnapshot(targetMangaId) ?: return
+        val sourceChapters = repository.chapterSnapshot(sourceMangaId)
+        val targetChaptersByUrl = repository.chapterSnapshot(targetMangaId).associateBy { it.url }
+        val now = System.currentTimeMillis()
+        port.transaction {
+            for (chapter in sourceChapters) {
+                val existing = targetChaptersByUrl[chapter.url]
+                if (existing == null) {
+                    updateChapter(chapter.copy(mangaId = targetMangaId, lastModifiedAt = now).toChapterRecord())
+                } else {
+                    updateChapter(
+                        existing.copy(
+                            read = existing.read || chapter.read,
+                            bookmark = existing.bookmark || chapter.bookmark,
+                            lastPageRead = maxOf(existing.lastPageRead, chapter.lastPageRead),
+                            lastModifiedAt = now,
+                        ).toChapterRecord(),
+                    )
+                }
+            }
+
+            val sourceCategoryIds = repository.mangaCategoryLinksSnapshot()[sourceMangaId].orEmpty()
+            val targetCategoryIds = repository.mangaCategoryLinksSnapshot()[targetMangaId].orEmpty().toSet()
+            sourceCategoryIds.filterNot { it in targetCategoryIds }.forEach { categoryId ->
+                linkCategory(targetMangaId, categoryId)
+            }
+
+            for (tracking in repository.trackingSnapshot(sourceMangaId)) {
+                if (findTracking(targetMangaId, tracking.trackerId) == null) {
+                    insertTracking(tracking.copy(id = 0L, mangaId = targetMangaId))
+                }
+                deleteTracking(sourceMangaId, tracking.trackerId)
+            }
+
+            updateManga(
+                source.toMangaRecord().copy(
+                    favorite = false,
+                    lastModifiedAt = now,
+                    favoriteModifiedAt = now,
+                ),
+            )
+        }
     }
 
     fun setEditInfoDialogOpen(open: Boolean) {
@@ -395,6 +649,56 @@ class LibraryPresenter(
         detailRetryRequest.value = System.currentTimeMillis()
     }
 
+    fun batchBookmarkChapters(chapterIds: Set<Long>, bookmark: Boolean) {
+        val mangaId = selectedMangaId.value ?: return
+        val currentChapters = repository.chapterSnapshot(mangaId)
+        val toUpdate = currentChapters.filter { it.id in chapterIds && it.bookmark != bookmark }
+        if (toUpdate.isEmpty()) return
+        mutationPort?.transaction {
+            toUpdate.forEach { ch ->
+                updateChapter(ch.copy(bookmark = bookmark).toChapterRecord())
+            }
+        }
+        detailRetryRequest.value = System.currentTimeMillis()
+    }
+
+    fun batchMarkChaptersRead(chapterIds: Set<Long>, read: Boolean) {
+        val mangaId = selectedMangaId.value ?: return
+        val currentChapters = repository.chapterSnapshot(mangaId)
+        val toUpdate = currentChapters.filter { it.id in chapterIds && it.read != read }
+        if (toUpdate.isEmpty()) return
+        val now = System.currentTimeMillis()
+        mutationPort?.transaction {
+            toUpdate.forEach { ch ->
+                updateChapter(
+                    ch.copy(
+                        read = read,
+                        lastPageRead = if (!read) 0L else ch.lastPageRead,
+                        lastModifiedAt = now,
+                    ).toChapterRecord(),
+                )
+            }
+        }
+        detailRetryRequest.value = System.currentTimeMillis()
+    }
+
+    fun batchDownloadChapters(chapterIds: Set<Long>) {
+        val manga = detailState.value.manga ?: return
+        val chapters = detailState.value.allChapters.filter { it.id in chapterIds }
+        if (chapters.isEmpty()) return
+        downloadChapters(chapters)
+    }
+
+    fun batchDeleteChapterDownloads(chapterIds: Set<Long>) {
+        val manga = detailState.value.manga ?: return
+        val chapters = detailState.value.allChapters.filter { it.id in chapterIds }
+        if (chapters.isEmpty()) return
+        chapters.forEach { ch ->
+            downloader?.diskProvider?.deleteChapter(manga.sourceId, manga.title, ch.name)
+        }
+        detailRetryRequest.value = System.currentTimeMillis()
+    }
+
     fun markPreviousChaptersRead(chapterId: Long) {
         val mangaId = selectedMangaId.value ?: return
         val currentChapters = repository.chapterSnapshot(mangaId)
@@ -415,14 +719,28 @@ class LibraryPresenter(
     fun downloadChapter(chapterId: Long) {
         val manga = detailState.value.manga ?: return
         val ch = detailState.value.allChapters.find { it.id == chapterId } ?: return
+        downloadChapters(listOf(ch))
+    }
+
+    fun downloadChapters(chapters: List<LibraryChapter>) {
+        val manga = detailState.value.manga ?: return
+        if (chapters.isEmpty()) return
         presenterScope.launch {
             downloader?.enqueue(
                 sourceId = manga.sourceId,
                 mangaId = manga.id,
                 mangaTitle = manga.title,
-                chapters = listOf(ch),
+                chapters = chapters,
             )
         }
+    }
+
+    fun downloadNextChapters(amount: Int?, unreadOnly: Boolean = true) {
+        val all = detailState.value.allChapters
+        val sorted = all.sortedBy { it.sourceOrder }
+        val target = if (unreadOnly) sorted.filter { !it.read } else sorted
+        val toDownload = if (amount != null && amount > 0) target.take(amount) else target
+        downloadChapters(toDownload)
     }
 
     fun deleteChapterDownload(chapterId: Long) {
@@ -650,6 +968,7 @@ class LibraryPresenter(
     }
 
     override fun close() {
+        duplicateWatcherJob.cancel()
         presenterScope.cancel()
     }
 }
@@ -726,7 +1045,52 @@ private data class LayoutAndSelectionData(
     val gridSize: Float,
     val selectionState: LibrarySelectionState,
     val isFilterDialogOpen: Boolean,
+    val duplicateDialog: DuplicateMangaDialogState?,
 )
+
+private data class ChapterSettingsOverrides(
+    val mangaId: Long? = null,
+    val settings: ChapterSettings? = null,
+)
+
+private fun matchesChapterFilter(
+    chapter: LibraryChapter,
+    filter: ChapterFilterState,
+    downloadedChapterIds: Set<Long>,
+): Boolean {
+    val unreadMatch = when (filter.unread) {
+        TriStateFilter.Disabled -> true
+        TriStateFilter.Include -> !chapter.read
+        TriStateFilter.Exclude -> chapter.read
+    }
+    val bookmarkMatch = when (filter.bookmarked) {
+        TriStateFilter.Disabled -> true
+        TriStateFilter.Include -> chapter.bookmark
+        TriStateFilter.Exclude -> !chapter.bookmark
+    }
+    val downloadedMatch = when (filter.downloaded) {
+        TriStateFilter.Disabled -> true
+        TriStateFilter.Include -> chapter.id in downloadedChapterIds
+        TriStateFilter.Exclude -> chapter.id !in downloadedChapterIds
+    }
+    return unreadMatch && bookmarkMatch && downloadedMatch
+}
+
+private fun sortChapters(
+    chapters: List<LibraryChapter>,
+    settings: ChapterSettings,
+): List<LibraryChapter> {
+    val comparator: Comparator<LibraryChapter> = when (settings.sortMode) {
+        ChapterSortMode.SourceOrder -> compareBy { it.sourceOrder }
+        ChapterSortMode.ChapterNumber -> compareBy { it.chapterNumber }
+        ChapterSortMode.UploadDate -> compareBy { it.dateUpload }
+    }
+    return if (settings.sortAscending) {
+        chapters.sortedWith(comparator)
+    } else {
+        chapters.sortedWith(comparator.reversed())
+    }
+}
 
 private sealed interface RepositoryState {
     data object Loading : RepositoryState
@@ -746,11 +1110,22 @@ private sealed interface SelectedRepositoryState {
 }
 
 private fun LibraryChapter.readerAvailability(readerLibrary: ReaderLibraryPort?): ChapterReaderAvailability {
-    val asset = readerLibrary?.chapterAsset(id) ?: return ChapterReaderAvailability.RemoteOnly
-    return if (Files.isRegularFile(asset.storageRoot.resolve(asset.relativePath))) {
-        ChapterReaderAvailability.Readable
-    } else {
+    val localAsset = readerLibrary?.chapterAsset(id)
+    if (localAsset != null && localAsset.hasReadableContent()) return ChapterReaderAvailability.Readable
+    if (readerLibrary?.onlineChapter(id) != null) return ChapterReaderAvailability.Readable
+    return if (localAsset != null) {
         ChapterReaderAvailability.MissingLocalContent
+    } else {
+        ChapterReaderAvailability.RemoteOnly
+    }
+}
+
+private fun ReaderChapterAsset.hasReadableContent(): Boolean {
+    val path = storageRoot.resolve(relativePath)
+    return if (assetKind == "DIRECTORY") {
+        Files.isDirectory(path)
+    } else {
+        Files.isRegularFile(path)
     }
 }
 
@@ -769,5 +1144,30 @@ private fun LibraryChapter.toChapterRecord(): ChapterRecord = ChapterRecord(
     sourceOrder = sourceOrder,
     lastModifiedAt = lastModifiedAt,
     version = version,
+    memoJson = memoJson,
+)
+
+private fun MangaDetails.toMangaRecord(): MangaRecord = MangaRecord(
+    id = id,
+    sourceId = sourceId,
+    url = url,
+    title = title,
+    artist = artist,
+    author = author,
+    description = description,
+    genreJson = genreJson,
+    status = status,
+    thumbnailUrl = thumbnailUrl,
+    favorite = favorite,
+    dateAdded = dateAdded,
+    viewerFlags = viewerFlags,
+    chapterFlags = chapterFlags,
+    updateStrategy = updateStrategy,
+    lastModifiedAt = lastModifiedAt,
+    favoriteModifiedAt = favoriteModifiedAt,
+    excludedScanlatorsJson = excludedScanlatorsJson,
+    version = version,
+    notes = notes,
+    initialized = initialized,
     memoJson = memoJson,
 )

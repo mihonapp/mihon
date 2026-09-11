@@ -17,9 +17,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.DeleteOutline
+import androidx.compose.material.icons.rounded.DeleteSweep
+import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -40,6 +47,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import mihon.desktop.history.DesktopHistoryGroup
 import mihon.desktop.library.model.HistoryWithDetails
+import mihon.desktop.ui.common.MangaCover
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -87,6 +95,12 @@ fun HistoryScreen(
                         contentColor = MaterialTheme.colorScheme.error,
                     ),
                 ) {
+                    Icon(
+                        imageVector = Icons.Rounded.DeleteSweep,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(strings.historyClearAll)
                 }
             }
@@ -98,6 +112,13 @@ fun HistoryScreen(
             onValueChange = onQueryChange,
             modifier = Modifier.fillMaxWidth().testTag("history-search"),
             label = { Text(strings.historySearchPlaceholder) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.Search,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
             singleLine = true,
         )
 
@@ -107,11 +128,29 @@ fun HistoryScreen(
                 modifier = Modifier.fillMaxSize().testTag("history-empty-state"),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    text = if (query.isBlank()) strings.historyEmptyTitle else strings.historyNoMatch,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
+                    modifier = Modifier.padding(32.dp),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.History,
+                            contentDescription = null,
+                            modifier = Modifier.size(56.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Text(
+                            text = if (query.isBlank()) strings.historyEmptyTitle else strings.historyNoMatch,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
             }
         } else {
             LazyColumn(
@@ -194,21 +233,13 @@ private fun HistoryItemRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Thumbnail placeholder or art
-            Box(
+            MangaCover(
+                thumbnailUrl = item.mangaThumbnailUrl,
+                mangaId = item.mangaId,
                 modifier = Modifier
                     .size(width = 48.dp, height = 68.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = item.mangaTitle.take(1).uppercase(),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
+                    .clip(RoundedCornerShape(6.dp)),
+            )
 
             // Details
             Column(modifier = Modifier.weight(1f)) {
@@ -242,6 +273,12 @@ private fun HistoryItemRow(
                 onClick = onRead,
                 modifier = Modifier.testTag("history-resume-${item.chapterId}"),
             ) {
+                Icon(
+                    imageVector = Icons.Rounded.PlayArrow,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(modifier = Modifier.width(6.dp))
                 Text(strings.historyResumeButton)
             }
 
@@ -249,6 +286,12 @@ private fun HistoryItemRow(
                 onClick = onDelete,
                 modifier = Modifier.testTag("history-delete-${item.chapterId}"),
             ) {
+                Icon(
+                    imageVector = Icons.Rounded.DeleteOutline,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(modifier = Modifier.width(6.dp))
                 Text(strings.historyDeleteButton)
             }
         }

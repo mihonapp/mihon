@@ -43,7 +43,7 @@ class EditMangaInfoTest {
     }
 
     @Test
-    fun `updateMangaInfo modifies fields and saves to mutation port`() = runBlocking {
+    fun `updateMangaInfo modifies fields and saves to mutation port`(): Unit = runBlocking {
         val original = MangaRecord(
             id = 42L,
             sourceId = 1L,

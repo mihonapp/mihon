@@ -15,6 +15,7 @@ data class DesktopNotificationItem(
     val title: String,
     val message: String,
     val isError: Boolean = false,
+    val progress: Float? = null,
     val timestamp: Long = System.currentTimeMillis(),
 )
 
@@ -23,11 +24,16 @@ interface DesktopNotificationService {
 
     fun notifyDownloadComplete(mangaTitle: String, chapterName: String)
     fun notifyDownloadError(mangaTitle: String, chapterName: String, error: String)
+    fun notifyDownloadProgress(mangaTitle: String, chapterName: String, progress: Float)
     fun notifyLibraryUpdate(newChaptersCount: Int, mangaCount: Int)
+    fun notifyExtensionUpdatePending(extensionCount: Int)
     fun clearNotifications()
 }
 
-class WindowsDesktopNotificationService : DesktopNotificationService {
+class WindowsDesktopNotificationService(
+    private val enabledProvider: () -> Boolean = { true },
+    private val hideContentProvider: () -> Boolean = { false },
+) : DesktopNotificationService {
 
     private val _recentNotifications = MutableStateFlow<List<DesktopNotificationItem>>(emptyList())
     override val recentNotifications: StateFlow<List<DesktopNotificationItem>> = _recentNotifications.asStateFlow()
@@ -42,7 +48,11 @@ class WindowsDesktopNotificationService : DesktopNotificationService {
         if (!GraphicsEnvironment.isHeadless() && SystemTray.isSupported()) {
             try {
                 val tray = SystemTray.getSystemTray()
-                val image: Image = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+                val image: Image = runCatching {
+                    WindowsDesktopNotificationService::class.java.getResourceAsStream("/icon.png")?.use {
+                        javax.imageio.ImageIO.read(it)
+                    }
+                }.getOrNull() ?: BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
                 val icon = TrayIcon(image, "Mihon")
                 icon.isImageAutoSize = true
                 tray.add(icon)
@@ -55,14 +65,25 @@ class WindowsDesktopNotificationService : DesktopNotificationService {
 
     override fun notifyDownloadComplete(mangaTitle: String, chapterName: String) {
         val title = "Download Complete"
-        val message = "$mangaTitle - $chapterName"
+        val message = if (hideContentProvider()) "A chapter download completed" else "$mangaTitle - $chapterName"
         dispatch(title, message, isError = false)
     }
 
     override fun notifyDownloadError(mangaTitle: String, chapterName: String, error: String) {
         val title = "Download Failed"
-        val message = "$mangaTitle - $chapterName: $error"
+        val message = if (hideContentProvider()) "A chapter download failed" else "$mangaTitle - $chapterName: $error"
         dispatch(title, message, isError = true)
+    }
+
+    override fun notifyDownloadProgress(mangaTitle: String, chapterName: String, progress: Float) {
+        val boundedProgress = progress.coerceIn(0f, 1f)
+        val percentage = (boundedProgress * 100).toInt()
+        val message = if (hideContentProvider()) {
+            "Downloading chapter: $percentage%"
+        } else {
+            "$mangaTitle - $chapterName: $percentage%"
+        }
+        dispatch("Download Progress", message, isError = false, progress = boundedProgress)
     }
 
     override fun notifyLibraryUpdate(newChaptersCount: Int, mangaCount: Int) {
@@ -71,13 +92,31 @@ class WindowsDesktopNotificationService : DesktopNotificationService {
         dispatch(title, message, isError = false)
     }
 
+    override fun notifyExtensionUpdatePending(extensionCount: Int) {
+        dispatch(
+            title = "Extension Updates Available",
+            message = "$extensionCount extension update(s) are ready",
+            isError = false,
+        )
+    }
+
     override fun clearNotifications() {
         _recentNotifications.value = emptyList()
     }
 
-    private fun dispatch(title: String, message: String, isError: Boolean) {
+    private fun dispatch(title: String, message: String, isError: Boolean, progress: Float? = null) {
+        if (!enabledProvider()) return
         _recentNotifications.update { current ->
-            (listOf(DesktopNotificationItem(title = title, message = message, isError = isError)) + current)
+            (
+                listOf(
+                    DesktopNotificationItem(
+                        title = title,
+                        message = message,
+                        isError = isError,
+                        progress = progress,
+                    ),
+                ) + current
+                )
                 .take(50) // keep last 50
         }
 

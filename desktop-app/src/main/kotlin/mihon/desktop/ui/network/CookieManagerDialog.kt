@@ -185,7 +185,10 @@ fun CookieManagerDialog(
                                                 fontWeight = FontWeight.SemiBold,
                                             )
                                             Text(
-                                                text = strings.cookieCountSubtitle(config.cookies.size, !config.customUserAgent.isNullOrBlank()),
+                                                text = strings.cookieCountSubtitle(
+                                                    config.cookies.size,
+                                                    !config.customUserAgent.isNullOrBlank(),
+                                                ),
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             )

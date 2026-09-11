@@ -1,4 +1,4 @@
-﻿package mihon.desktop.ui.browse
+package mihon.desktop.ui.browse
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredSize
@@ -71,5 +71,74 @@ class BrowseSourceScreenTest {
         // Test mode switch click
         onNodeWithTag("mode-latest-chip").performClick()
         changedMode shouldBe SourceListingMode.Latest
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `local source empty state shows import action`() = runComposeUiTest {
+        var importClicked = false
+
+        setContent {
+            Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
+                BrowseSourceScreen(
+                    state = BrowseSourceUiState(
+                        source = SourceDescriptor(
+                            id = 0L,
+                            name = "Local source",
+                            lang = "other",
+                            className = "mihon.desktop.extension.builtin.BundledLocalSource",
+                            supportsLatest = true,
+                        ),
+                    ),
+                    onBack = {},
+                    onModeChange = {},
+                    onQueryChange = {},
+                    onSearch = {},
+                    onPageChange = {},
+                    onMangaSelected = {},
+                    onImportLocal = { importClicked = true },
+                )
+            }
+        }
+
+        onNodeWithTag("local-source-import-btn").assertIsDisplayed()
+        onNodeWithTag("local-source-import-btn").performClick()
+        importClicked shouldBe true
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `local manga cards display chapter count`() = runComposeUiTest {
+        val sampleManga = SManga(
+            url = "local:alpha",
+            title = "Alpha",
+        )
+
+        setContent {
+            Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
+                BrowseSourceScreen(
+                    state = BrowseSourceUiState(
+                        source = SourceDescriptor(
+                            id = 0L,
+                            name = "Local source",
+                            lang = "other",
+                            className = "mihon.desktop.extension.builtin.BundledLocalSource",
+                            supportsLatest = true,
+                        ),
+                        mangas = listOf(sampleManga),
+                        chapterCounts = mapOf(sampleManga.url to 3L),
+                    ),
+                    onBack = {},
+                    onModeChange = {},
+                    onQueryChange = {},
+                    onSearch = {},
+                    onPageChange = {},
+                    onMangaSelected = {},
+                )
+            }
+        }
+
+        onNodeWithTag("manga-chapter-count-${sampleManga.url}", useUnmergedTree = true).assertIsDisplayed()
+        onNodeWithText("3 chapters").assertIsDisplayed()
     }
 }

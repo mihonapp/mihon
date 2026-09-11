@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Surface
@@ -25,12 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import mihon.desktop.navigation.DesktopDestination
+import mihon.desktop.security.DesktopAppLockController
 import mihon.desktop.ui.library.LibraryScreen
 import mihon.desktop.ui.library.LibraryUiState
 import mihon.desktop.ui.library.MangaDetailUiState
 
 internal const val DESKTOP_MAIN_HEADLINE_TEST_TAG = "desktop-main-headline"
 internal const val DESKTOP_NAVIGATION_RAIL_TEST_TAG = "desktop-navigation-rail"
+const val DESKTOP_LOCK_NOW_BUTTON_TEST_TAG = "desktop-lock-now-button"
 
 @Composable
 fun DesktopShell(
@@ -60,6 +65,11 @@ fun DesktopShell(
     isUpdatingLibrary: Boolean = false,
     lastUpdateResult: mihon.desktop.updates.LibraryUpdateResult? = null,
     onCheckForUpdates: () -> Unit = {},
+    // Upcoming calendar (transient view opened from Updates)
+    isUpcomingOpen: Boolean = false,
+    upcomingContent: (@Composable () -> Unit)? = null,
+    onOpenUpcoming: () -> Unit = {},
+    onCloseUpcoming: () -> Unit = {},
     // Browse
     browseContent: (@Composable () -> Unit)? = null,
     // History
@@ -127,9 +137,28 @@ fun DesktopShell(
     onMarkPreviousRead: (Long) -> Unit = {},
     onDownloadChapter: (Long) -> Unit = {},
     onDeleteDownload: (Long) -> Unit = {},
+    onDownloadBatch: (Int?) -> Unit = {},
+    onBatchBookmarkChapters: (Set<Long>, Boolean) -> Unit = { ids, _ -> ids.forEach(onToggleBookmark) },
+    onBatchMarkChaptersRead: (Set<Long>, Boolean) -> Unit = { ids, _ -> ids.forEach(onToggleRead) },
+    onBatchDownloadChapters: (Set<Long>) -> Unit = { ids -> ids.forEach(onDownloadChapter) },
+    onBatchDeleteDownloads: (Set<Long>) -> Unit = { ids -> ids.forEach(onDeleteDownload) },
+    onOpenChapterSettings: () -> Unit = {},
+    onDismissChapterSettings: () -> Unit = {},
+    onChapterDisplayModeChange: (mihon.desktop.ui.library.ChapterDisplayMode) -> Unit = {},
+    onExcludedScanlatorsChange: (Set<String>) -> Unit = {},
+    onShowMissingChaptersChange: (Boolean) -> Unit = {},
+    onSetChapterSettingsAsDefault: (Boolean) -> Unit = {},
+    onResetChapterSettingsToDefault: () -> Unit = {},
+    onDuplicateOpenManga: (Long) -> Unit = {},
+    onDuplicateMigrate: (Long) -> Unit = {},
+    onDuplicateAddAnyway: () -> Unit = {},
+    onDuplicateDismiss: () -> Unit = {},
+    sourceNameFor: (Long) -> String = { "Source #$it" },
     downloadCacheCleaner: mihon.desktop.download.DownloadCacheCleaner? = null,
     downloadsDir: java.nio.file.Path? = null,
     diskCacheDir: java.nio.file.Path? = null,
+    appLockController: DesktopAppLockController? = null,
+    onLockNow: (() -> Unit)? = null,
 ) {
     val strings = mihon.desktop.i18n.LocalStrings.current
     var isCookieManagerOpen by remember { mutableStateOf(false) }
@@ -155,6 +184,18 @@ fun DesktopShell(
                         HorizontalDivider()
                         secondary.forEach { destination ->
                             DestinationItem(destination, selected, onDestinationSelected)
+                        }
+                        if (onLockNow != null) {
+                            HorizontalDivider()
+                            IconButton(
+                                onClick = onLockNow,
+                                modifier = Modifier.testTag(DESKTOP_LOCK_NOW_BUTTON_TEST_TAG),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Lock,
+                                    contentDescription = "Lock app",
+                                )
+                            }
                         }
                     }
                 }
@@ -236,6 +277,23 @@ fun DesktopShell(
                                 onMarkPreviousRead = onMarkPreviousRead,
                                 onDownloadChapter = onDownloadChapter,
                                 onDeleteDownload = onDeleteDownload,
+                                onDownloadBatch = onDownloadBatch,
+                                onBatchBookmarkChapters = onBatchBookmarkChapters,
+                                onBatchMarkChaptersRead = onBatchMarkChaptersRead,
+                                onBatchDownloadChapters = onBatchDownloadChapters,
+                                onBatchDeleteDownloads = onBatchDeleteDownloads,
+                                onOpenChapterSettings = onOpenChapterSettings,
+                                onDismissChapterSettings = onDismissChapterSettings,
+                                onChapterDisplayModeChange = onChapterDisplayModeChange,
+                                onExcludedScanlatorsChange = onExcludedScanlatorsChange,
+                                onShowMissingChaptersChange = onShowMissingChaptersChange,
+                                onSetChapterSettingsAsDefault = onSetChapterSettingsAsDefault,
+                                onResetChapterSettingsToDefault = onResetChapterSettingsToDefault,
+                                onDuplicateOpenManga = onDuplicateOpenManga,
+                                onDuplicateMigrate = onDuplicateMigrate,
+                                onDuplicateAddAnyway = onDuplicateAddAnyway,
+                                onDuplicateDismiss = onDuplicateDismiss,
+                                sourceNameFor = sourceNameFor,
                             )
                         }
                         DesktopDestination.History -> {
@@ -261,13 +319,25 @@ fun DesktopShell(
                             )
                         }
                         DesktopDestination.Updates -> {
-                            mihon.desktop.ui.updates.UpdatesScreen(
-                                updatedChapters = updatedChapters,
-                                isUpdating = isUpdatingLibrary,
-                                lastResult = lastUpdateResult,
-                                onCheckForUpdates = onCheckForUpdates,
-                                onReadChapter = onReadChapter,
-                            )
+                            if (isUpcomingOpen || upcomingContent != null) {
+                                if (upcomingContent != null) {
+                                    upcomingContent()
+                                } else {
+                                    mihon.desktop.ui.upcoming.UpcomingScreen(
+                                        state = mihon.desktop.ui.upcoming.UpcomingUiState(loading = false),
+                                        onBack = onCloseUpcoming,
+                                    )
+                                }
+                            } else {
+                                mihon.desktop.ui.updates.UpdatesScreen(
+                                    updatedChapters = updatedChapters,
+                                    isUpdating = isUpdatingLibrary,
+                                    lastResult = lastUpdateResult,
+                                    onCheckForUpdates = onCheckForUpdates,
+                                    onReadChapter = onReadChapter,
+                                    onOpenUpcoming = onOpenUpcoming,
+                                )
+                            }
                         }
                         DesktopDestination.Settings -> {
                             if (preferenceStore != null && readerSettingsStore != null) {
@@ -285,6 +355,7 @@ fun DesktopShell(
                                     downloadCacheCleaner = downloadCacheCleaner,
                                     downloadsDir = downloadsDir,
                                     diskCacheDir = diskCacheDir,
+                                    appLockController = appLockController,
                                 )
                             } else {
                                 Text(

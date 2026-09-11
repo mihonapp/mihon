@@ -23,13 +23,15 @@ class TrackerAndQueueTest {
         assertNotNull(mal)
         assertEquals("MyAnimeList", mal?.name)
         assertEquals(false, mal?.isLoggedIn)
-
-        mal?.login(emptyMap())
-        assertEquals(true, mal?.isLoggedIn)
-        assertEquals(1, manager.loggedInTrackers().size)
-
-        mal?.logout()
+        // A real tracker refuses an empty token instead of faking a successful login.
+        assertEquals(false, mal?.login(emptyMap()))
         assertEquals(false, mal?.isLoggedIn)
+
+        val fakeManager = DesktopTrackerManager(listOf(TrackerTestFakeTracker(1L)))
+        assertEquals(true, fakeManager.login(1L, emptyMap()))
+        assertEquals(1, fakeManager.loggedInTrackers().size)
+        fakeManager.logout(1L)
+        assertEquals(false, fakeManager.get(1L)?.isLoggedIn)
     }
 
     @Test

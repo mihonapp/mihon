@@ -2,6 +2,8 @@ package mihon.desktop.preferences
 
 import mihon.desktop.i18n.AppLanguage
 import mihon.desktop.navigation.DesktopDestination
+import mihon.desktop.security.PinHasher
+import mihon.desktop.ui.theme.DesktopAppTheme
 import mihon.desktop.window.WindowPlacement
 import java.io.IOException
 import java.nio.file.AtomicMoveNotSupportedException
@@ -20,6 +22,8 @@ enum class ThemeMode {
 
 data class DesktopPreferences(
     val themeMode: ThemeMode = ThemeMode.System,
+    val appTheme: DesktopAppTheme = DesktopAppTheme.DEFAULT,
+    val themeDarkAmoled: Boolean = false,
     val lastDestination: DesktopDestination = DesktopDestination.Library,
     val windowPlacement: WindowPlacement? = null,
     val language: AppLanguage = AppLanguage.System,
@@ -34,9 +38,17 @@ data class DesktopPreferences(
     val libraryFilterBookmarked: String = "Disabled",
     val downloadStoragePath: String = "",
     val downloadParallelCount: Int = 3,
+    val downloadPageParallelCount: Int = 5,
     val downloadAhead: Int = 0,
     val deleteDownloadedRead: Boolean = false,
     val incognitoMode: Boolean = false,
+    // App lock. Only a salted PBKDF2 hash, its salt and iteration count are persisted.
+    val appLockEnabled: Boolean = false,
+    val appLockPinHash: String = "",
+    val appLockPinSalt: String = "",
+    val appLockPinIterations: Int = 0,
+    val appLockOnStartup: Boolean = true,
+    val appLockIdleTimeoutMinutes: Int = 5,
     val backupIntervalHours: Int = 0,
     val backupStoragePath: String = "",
     val backupRetentionCount: Int = 10,
@@ -44,8 +56,12 @@ data class DesktopPreferences(
     val libraryUpdateIntervalHours: Int = 0,
     val libraryUpdateSkipCompleted: Boolean = true,
     val libraryUpdateSkipUnread: Boolean = false,
+    val libraryUpdateSkipStarted: Boolean = false,
+    val libraryUpdateCategories: Set<Long> = emptySet(),
+    val libraryUpdateCategoriesExclude: Set<Long> = emptySet(),
     val autoDownloadNewChapters: Boolean = false,
     val desktopNotificationsEnabled: Boolean = true,
+    val desktopNotificationsHideContent: Boolean = false,
     val lastLibraryUpdateEpochMillis: Long = 0L,
 )
 
@@ -54,8 +70,26 @@ class DesktopPreferenceStore(private val file: Path) {
     @Synchronized
     fun load(): DesktopPreferences {
         val properties = readProperties()
+        val storedAppLockHash = properties.getProperty("security.app_lock.pin_hash") ?: ""
+        val storedAppLockSalt = properties.getProperty("security.app_lock.pin_salt") ?: ""
+        val storedAppLockIterations = properties.getProperty("security.app_lock.pin_iterations")
+            ?.toIntOrNull() ?: 0
+        val hasValidPinCredential = PinHasher.isValidCredential(
+            storedAppLockHash,
+            storedAppLockSalt,
+            storedAppLockIterations,
+        )
+        val appLockEnabled =
+            (properties.getProperty("security.app_lock.enabled")?.toBooleanStrictOrNull() ?: false) &&
+                hasValidPinCredential
+        val appLockIdleTimeoutMinutes = properties.getProperty("security.app_lock.idle_timeout_minutes")
+            ?.toIntOrNull()
+            ?.takeIf { it in 0..(24 * 60) }
+            ?: 5
         return DesktopPreferences(
             themeMode = enumValueOrDefault(properties.getProperty("theme"), ThemeMode.System),
+            appTheme = enumValueOrDefault(properties.getProperty("app_theme"), DesktopAppTheme.DEFAULT),
+            themeDarkAmoled = properties.getProperty("theme_dark_amoled")?.toBooleanStrictOrNull() ?: false,
             lastDestination = enumValueOrDefault(
                 properties.getProperty("destination"),
                 DesktopDestination.Library,
@@ -73,9 +107,20 @@ class DesktopPreferenceStore(private val file: Path) {
             libraryFilterBookmarked = properties.getProperty("library.filter_bookmarked") ?: "Disabled",
             downloadStoragePath = properties.getProperty("download.storage_path") ?: "",
             downloadParallelCount = properties.getProperty("download.parallel_count")?.toIntOrNull() ?: 3,
+            downloadPageParallelCount = properties.firstInt(
+                "download.page_parallel_count",
+                "download_parallel_page_limit",
+            ) ?: 5,
             downloadAhead = properties.getProperty("download.ahead")?.toIntOrNull() ?: 0,
             deleteDownloadedRead = properties.getProperty("download.delete_read")?.toBooleanStrictOrNull() ?: false,
             incognitoMode = properties.getProperty("security.incognito_mode")?.toBooleanStrictOrNull() ?: false,
+            appLockEnabled = appLockEnabled,
+            appLockPinHash = if (hasValidPinCredential) storedAppLockHash else "",
+            appLockPinSalt = if (hasValidPinCredential) storedAppLockSalt else "",
+            appLockPinIterations = if (hasValidPinCredential) storedAppLockIterations else 0,
+            appLockOnStartup = properties.getProperty("security.app_lock.lock_on_startup")
+                ?.toBooleanStrictOrNull() ?: true,
+            appLockIdleTimeoutMinutes = appLockIdleTimeoutMinutes,
             backupIntervalHours = properties.getProperty("backup.interval_hours")?.toIntOrNull() ?: 0,
             backupStoragePath = properties.getProperty("backup.storage_path") ?: "",
             backupRetentionCount = properties.getProperty("backup.retention_count")?.toIntOrNull() ?: 10,
@@ -85,10 +130,24 @@ class DesktopPreferenceStore(private val file: Path) {
                 ?.toBooleanStrictOrNull() ?: true,
             libraryUpdateSkipUnread = properties.getProperty("library.update_skip_unread")
                 ?.toBooleanStrictOrNull() ?: false,
+            libraryUpdateSkipStarted = properties.getProperty("library.update_skip_started")
+                ?.toBooleanStrictOrNull() ?: false,
+            libraryUpdateCategories = properties.firstLongSet(
+                "library.update_categories",
+                "library_update_categories",
+            ),
+            libraryUpdateCategoriesExclude = properties.firstLongSet(
+                "library.update_categories_exclude",
+                "library_update_categories_exclude",
+            ),
             autoDownloadNewChapters = properties.getProperty("library.auto_download_new")
                 ?.toBooleanStrictOrNull() ?: false,
             desktopNotificationsEnabled = properties.getProperty("notifications.desktop_enabled")
                 ?.toBooleanStrictOrNull() ?: true,
+            desktopNotificationsHideContent = properties.firstBoolean(
+                "notifications.desktop_hide_content",
+                "hide_notification_content",
+            ) ?: false,
             lastLibraryUpdateEpochMillis = properties.getProperty("library.last_update_epoch_millis")
                 ?.toLongOrNull() ?: 0L,
         )
@@ -98,6 +157,8 @@ class DesktopPreferenceStore(private val file: Path) {
     fun save(preferences: DesktopPreferences) {
         val properties = readProperties()
         properties.setProperty("theme", preferences.themeMode.name)
+        properties.setProperty("app_theme", preferences.appTheme.name)
+        properties.setProperty("theme_dark_amoled", preferences.themeDarkAmoled.toString())
         properties.setProperty("destination", preferences.lastDestination.name)
         properties.setProperty("language", preferences.language.code)
         properties.setProperty("library.display_mode", preferences.libraryDisplayMode)
@@ -111,9 +172,22 @@ class DesktopPreferenceStore(private val file: Path) {
         properties.setProperty("library.filter_bookmarked", preferences.libraryFilterBookmarked)
         properties.setProperty("download.storage_path", preferences.downloadStoragePath)
         properties.setProperty("download.parallel_count", preferences.downloadParallelCount.toString())
+        properties.setProperty("download.page_parallel_count", preferences.downloadPageParallelCount.toString())
         properties.setProperty("download.ahead", preferences.downloadAhead.toString())
         properties.setProperty("download.delete_read", preferences.deleteDownloadedRead.toString())
         properties.setProperty("security.incognito_mode", preferences.incognitoMode.toString())
+        properties.setProperty("security.app_lock.enabled", preferences.appLockEnabled.toString())
+        properties.setProperty("security.app_lock.pin_hash", preferences.appLockPinHash)
+        properties.setProperty("security.app_lock.pin_salt", preferences.appLockPinSalt)
+        properties.setProperty("security.app_lock.pin_iterations", preferences.appLockPinIterations.toString())
+        properties.setProperty(
+            "security.app_lock.lock_on_startup",
+            preferences.appLockOnStartup.toString(),
+        )
+        properties.setProperty(
+            "security.app_lock.idle_timeout_minutes",
+            preferences.appLockIdleTimeoutMinutes.toString(),
+        )
         properties.setProperty("backup.interval_hours", preferences.backupIntervalHours.toString())
         properties.setProperty("backup.storage_path", preferences.backupStoragePath)
         properties.setProperty("backup.retention_count", preferences.backupRetentionCount.toString())
@@ -131,12 +205,25 @@ class DesktopPreferenceStore(private val file: Path) {
             preferences.libraryUpdateSkipUnread.toString(),
         )
         properties.setProperty(
+            "library.update_skip_started",
+            preferences.libraryUpdateSkipStarted.toString(),
+        )
+        properties.setProperty("library.update_categories", preferences.libraryUpdateCategories.encodeLongSet())
+        properties.setProperty(
+            "library.update_categories_exclude",
+            preferences.libraryUpdateCategoriesExclude.encodeLongSet(),
+        )
+        properties.setProperty(
             "library.auto_download_new",
             preferences.autoDownloadNewChapters.toString(),
         )
         properties.setProperty(
             "notifications.desktop_enabled",
             preferences.desktopNotificationsEnabled.toString(),
+        )
+        properties.setProperty(
+            "notifications.desktop_hide_content",
+            preferences.desktopNotificationsHideContent.toString(),
         )
         properties.setProperty(
             "library.last_update_epoch_millis",
@@ -210,6 +297,29 @@ class DesktopPreferenceStore(private val file: Path) {
         val maximized = getProperty("window.maximized")?.toBooleanStrictOrNull() ?: false
         return WindowPlacement(x, y, width, height, maximized)
     }
+
+    private fun Properties.firstInt(vararg keys: String): Int? =
+        keys.firstNotNullOfOrNull { key -> getProperty(key)?.toIntOrNull() }
+
+    private fun Properties.firstBoolean(vararg keys: String): Boolean? =
+        keys.firstNotNullOfOrNull { key -> getProperty(key)?.toBooleanStrictOrNull() }
+
+    private fun Properties.firstLongSet(vararg keys: String): Set<Long> {
+        val raw = keys.firstNotNullOfOrNull(::getProperty) ?: return emptySet()
+        return raw.trim().removeSurrounding("[", "]")
+            .split(',', ';')
+            .asSequence()
+            .map { it.trim().trim('"', '\'', ' ') }
+            .mapNotNull(String::toLongOrNull)
+            .filter { it > 0L }
+            .toSet()
+    }
+
+    private fun Set<Long>.encodeLongSet(): String = asSequence()
+        .filter { it > 0L }
+        .distinct()
+        .sorted()
+        .joinToString(",")
 
     private inline fun <reified T : Enum<T>> enumValueOrDefault(value: String?, default: T): T {
         return enumValues<T>().firstOrNull { it.name == value } ?: default

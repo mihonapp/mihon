@@ -32,6 +32,7 @@ class DesktopNetworkHelper(
 
     // Global allowed domains across all active extensions: Set of allowed domains
     private val activeWhitelists = ConcurrentHashMap.newKeySet<String>()
+    private val runtimePageHosts = ConcurrentHashMap.newKeySet<String>()
 
     init {
         registerExtensionDomains(
@@ -51,6 +52,13 @@ class DesktopNetworkHelper(
         recomputeActiveWhitelists()
     }
 
+    /** Allows the exact host of a page URL returned by an already loaded extension. */
+    fun registerRuntimePageUrl(url: String) {
+        val uri = runCatching { URI(url) }.getOrNull() ?: return
+        if (uri.scheme !in setOf("http", "https")) return
+        uri.host?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }?.let(runtimePageHosts::add)
+    }
+
     private fun recomputeActiveWhitelists() {
         activeWhitelists.clear()
         packageWhitelists.values.forEach { set ->
@@ -60,6 +68,7 @@ class DesktopNetworkHelper(
 
     fun isDomainAllowed(host: String): Boolean {
         val cleanHost = host.trim().lowercase()
+        if (cleanHost in runtimePageHosts) return true
         if (activeWhitelists.isEmpty()) return false
 
         for (pattern in activeWhitelists) {
@@ -71,6 +80,7 @@ class DesktopNetworkHelper(
     }
 
     private fun matchesDomainPattern(host: String, pattern: String): Boolean {
+        if (pattern == "*" || pattern == "*.*") return true
         if (pattern == host) return true
         if (pattern.startsWith("*.")) {
             val root = pattern.removePrefix("*.")

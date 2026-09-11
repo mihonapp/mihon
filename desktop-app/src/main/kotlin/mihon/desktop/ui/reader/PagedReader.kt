@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import mihon.reader.layout.PageGrouping
 import mihon.reader.model.PageDescriptor
+import mihon.reader.model.PageId
 import mihon.reader.session.ReaderState
 
 data class ReaderSpread(val pageIndices: List<Int>)
@@ -30,13 +31,16 @@ internal fun PagedReader(
     viewportWidth: Dp,
     pageContent: ReaderPageContent,
     modifier: Modifier = Modifier,
+    pageSizes: Map<PageId, PageSize> = emptyMap(),
 ) {
     val spread = state.visibleSpread()
     when {
         spread.pageIndices.size == 2 -> Row(modifier = modifier.fillMaxSize()) {
             spread.pageIndices.forEach { pageIndex ->
+                val page = state.pages[pageIndex]
+                val intrinsicSize = pageSizes[page.id]
                 ReaderPageFrame(
-                    page = state.pages[pageIndex],
+                    page = page.withIntrinsicSize(intrinsicSize),
                     pageIndex = pageIndex,
                     totalPages = state.pages.size,
                     scaleMode = state.scaleMode,
@@ -44,13 +48,16 @@ internal fun PagedReader(
                     requestedPan = state.pan,
                     pageContent = pageContent,
                     modifier = Modifier.weight(1f).fillMaxHeight(),
+                    intrinsicSize = intrinsicSize,
                 )
             }
         }
         spread.pageIndices.size == 1 -> Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             val pageIndex = spread.pageIndices.single()
+            val page = state.pages[pageIndex]
+            val intrinsicSize = pageSizes[page.id]
             ReaderPageFrame(
-                page = state.pages[pageIndex],
+                page = page.withIntrinsicSize(intrinsicSize),
                 pageIndex = pageIndex,
                 totalPages = state.pages.size,
                 scaleMode = state.scaleMode,
@@ -62,6 +69,7 @@ internal fun PagedReader(
                 } else {
                     Modifier.fillMaxSize()
                 },
+                intrinsicSize = intrinsicSize,
             )
         }
     }

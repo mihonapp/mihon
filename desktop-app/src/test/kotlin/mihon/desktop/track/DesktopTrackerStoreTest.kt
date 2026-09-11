@@ -57,6 +57,7 @@ class DesktopTrackerStoreTest {
         assertTrue(komga!!.isLoggedIn)
         assertEquals("KomgaAdmin", komga.username)
         assertEquals("https://komga.local:8080", komga.serverUrl)
+        assertTrue(trackerStore.isLoggedIn(6L))
 
         // Logout MAL
         manager.logout(1L)
@@ -64,13 +65,15 @@ class DesktopTrackerStoreTest {
         assertFalse(trackerStore.isLoggedIn(1L))
         assertNull(trackerStore.getLoginInfo(1L))
 
-        // Login via manager persists to store
-        val success = manager.login(
-            2L, // AniList
+        // Login via manager persists to store (fake tracker keeps this test independent of network).
+        val fakeAniList = TrackerTestFakeTracker(id = 2L, name = "AniList")
+        val loginManager = DesktopTrackerManager(listOf(fakeAniList), store = trackerStore)
+        val success = loginManager.login(
+            2L,
             mapOf("username" to "AniUser", "token" to "oauth-token-12345"),
         )
         assertTrue(success)
-        val anilist = manager.get(2L)!!
+        val anilist = loginManager.get(2L)!!
         assertTrue(anilist.isLoggedIn)
         assertEquals("AniUser", anilist.username)
         assertTrue(trackerStore.isLoggedIn(2L))

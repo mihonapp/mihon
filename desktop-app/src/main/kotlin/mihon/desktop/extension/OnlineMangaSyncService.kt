@@ -37,11 +37,30 @@ class OnlineMangaSyncService(
         sourceId: Long,
         manga: SManga,
         forceRefresh: Boolean = false,
+    ): Long = syncOnlineManga(sourceId, manga, forceRefresh, addToLibrary = true)
+
+    /**
+     * Persists the stable manga/chapter rows required by the reader without adding the manga to
+     * the library or assigning categories. Existing library membership is preserved.
+     */
+    suspend fun prepareOnlineMangaForReading(
+        sourceId: Long,
+        manga: SManga,
+        forceRefresh: Boolean = false,
+    ): Long = syncOnlineManga(sourceId, manga, forceRefresh, addToLibrary = false)
+
+    private suspend fun syncOnlineManga(
+        sourceId: Long,
+        manga: SManga,
+        forceRefresh: Boolean,
+        addToLibrary: Boolean,
     ): Long = withContext(Dispatchers.IO) {
         // Fetch detailed manga information from source manager if not initialized or forced
         val detailedManga = if (!manga.initialized || forceRefresh) {
             try {
                 sourceManager.getMangaDetails(sourceId, manga)
+            } catch (error: kotlinx.coroutines.CancellationException) {
+                throw error
             } catch (_: Exception) {
                 manga
             }
@@ -71,10 +90,10 @@ class OnlineMangaSyncService(
                         genreJson = json.encodeToString(detailedManga.genre),
                         status = detailedManga.status.toLong(),
                         thumbnailUrl = detailedManga.thumbnailUrl,
-                        favorite = true,
-                        dateAdded = now,
+                        favorite = addToLibrary,
+                        dateAdded = if (addToLibrary) now else 0L,
                         lastModifiedAt = now,
-                        favoriteModifiedAt = now,
+                        favoriteModifiedAt = if (addToLibrary) now else 0L,
                         initialized = true,
                     ),
                 )
@@ -100,10 +119,20 @@ class OnlineMangaSyncService(
                             existingManga.status
                         },
                         thumbnailUrl = detailedManga.thumbnailUrl ?: existingManga.thumbnailUrl,
-                        favorite = true,
-                        dateAdded = if (existingManga.favorite) existingManga.dateAdded else now,
+                        favorite = existingManga.favorite || addToLibrary,
+                        dateAdded = if (existingManga.favorite) {
+                            existingManga.dateAdded
+                        } else if (addToLibrary) {
+                            now
+                        } else {
+                            0L
+                        },
                         lastModifiedAt = now,
-                        favoriteModifiedAt = if (!existingManga.favorite) now else existingManga.favoriteModifiedAt,
+                        favoriteModifiedAt = if (addToLibrary && !existingManga.favorite) {
+                            now
+                        } else {
+                            existingManga.favoriteModifiedAt
+                        },
                         initialized = true,
                     ),
                 )

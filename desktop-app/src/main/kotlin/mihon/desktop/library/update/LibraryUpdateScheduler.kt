@@ -65,6 +65,9 @@ class LibraryUpdateScheduler(
             options = LibraryUpdateOptions(
                 skipCompleted = prefs.libraryUpdateSkipCompleted,
                 skipUnread = prefs.libraryUpdateSkipUnread,
+                skipNotStarted = prefs.libraryUpdateSkipStarted,
+                includedCategoryIds = prefs.libraryUpdateCategories.takeIf(Set<Long>::isNotEmpty),
+                excludedCategoryIds = prefs.libraryUpdateCategoriesExclude.takeIf(Set<Long>::isNotEmpty),
                 autoDownloadNewChapters = prefs.autoDownloadNewChapters,
             ),
         )
@@ -76,6 +79,9 @@ class LibraryUpdateScheduler(
             options = LibraryUpdateOptions(
                 skipCompleted = prefs.libraryUpdateSkipCompleted,
                 skipUnread = prefs.libraryUpdateSkipUnread,
+                skipNotStarted = prefs.libraryUpdateSkipStarted,
+                includedCategoryIds = prefs.libraryUpdateCategories.takeIf(Set<Long>::isNotEmpty),
+                excludedCategoryIds = prefs.libraryUpdateCategoriesExclude.takeIf(Set<Long>::isNotEmpty),
                 autoDownloadNewChapters = prefs.autoDownloadNewChapters,
             ),
         )

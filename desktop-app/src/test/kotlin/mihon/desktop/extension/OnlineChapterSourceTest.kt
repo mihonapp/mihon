@@ -23,6 +23,7 @@ class OnlineChapterSourceTest {
     private lateinit var server: HttpServer
     private var serverPort: Int = 0
     private lateinit var networkHelper: DesktopNetworkHelper
+    private val managers = mutableListOf<WindowsExtensionProcessManager>()
 
     @BeforeEach
     fun setUp() {
@@ -59,6 +60,7 @@ class OnlineChapterSourceTest {
 
     @AfterEach
     fun tearDown() {
+        managers.forEach { it.close() }
         server.stop(0)
     }
 
@@ -69,7 +71,9 @@ class OnlineChapterSourceTest {
         runBlocking {
             val cacheDir = tempDir.resolve("cache").toFile()
             val dummyWorkingDir = tempDir.resolve("work").toFile()
-            val dummyManager = WindowsExtensionProcessManager(dummyWorkingDir)
+            val dummyManager = object : WindowsExtensionProcessManager(dummyWorkingDir) {
+                override suspend fun getImage(sourceId: Long, page: Page): ByteArray? = null
+            }.also { managers.add(it) }
 
             val asset = ReaderChapterAsset(
                 mangaId = 1L,
@@ -119,7 +123,7 @@ class OnlineChapterSourceTest {
     @Test
     fun `forwards source image headers and rejects html response as unsupported image`(
         @TempDir tempDir: Path,
-    ) = runBlocking {
+    ): Unit = runBlocking {
         val source = testSource(tempDir)
         source.cachedPages = listOf(
             Page(
@@ -135,8 +139,28 @@ class OnlineChapterSourceTest {
             input.input.readBytes().copyOfRange(8, 12).decodeToString() shouldBe "WEBP"
         }
         shouldThrow<ReaderFailure.UnsupportedImage> {
-            source.open(PageId("100", "page_0001.bin"))
+            source.open(PageId("100", "page_0001.img"))
         }
+    }
+
+    @Test
+    fun `corrupt cached response is evicted and fetched again`(@TempDir tempDir: Path): Unit = runBlocking {
+        val source = testSource(tempDir)
+        source.cachedPages = listOf(Page(index = 0, imageUrl = "http://127.0.0.1:$serverPort/page1.jpg"))
+        val page = source.pages().single().id
+        source.open(page).close()
+        tempDir.resolve("cache").toFile().listFiles()!!.single().writeText("<html>old failure</html>")
+        source.open(page).use { it.input.readBytes().size shouldBe 4 }
+    }
+
+    @Test
+    fun `force retry removes cached bytes before loading`(@TempDir tempDir: Path): Unit = runBlocking {
+        val source = testSource(tempDir)
+        source.cachedPages = listOf(Page(index = 0, imageUrl = "http://127.0.0.1:$serverPort/page1.jpg"))
+        val page = source.pages().single().id
+        source.open(page).close()
+        source.invalidate(page)
+        tempDir.resolve("cache").toFile().listFiles()!!.size shouldBe 0
     }
 
     private fun testSource(tempDir: Path): OnlineChapterSource {
@@ -157,7 +181,9 @@ class OnlineChapterSourceTest {
             asset = asset,
             sourceId = 1L,
             chapter = SChapter(url = "/chapter/1", name = "Chapter 1"),
-            processManager = WindowsExtensionProcessManager(tempDir.resolve("work").toFile()),
+            processManager = object : WindowsExtensionProcessManager(tempDir.resolve("work").toFile()) {
+                override suspend fun getImage(sourceId: Long, page: Page): ByteArray? = null
+            }.also { managers.add(it) },
             networkHelper = networkHelper,
             cacheDir = tempDir.resolve("cache").toFile(),
         )

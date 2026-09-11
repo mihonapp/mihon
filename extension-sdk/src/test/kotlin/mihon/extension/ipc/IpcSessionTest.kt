@@ -49,7 +49,7 @@ class IpcSessionTest {
     }
 
     @Test
-    fun `request response correlation over duplex pipe`() = runBlocking {
+    fun `request response correlation over duplex pipe`(): Unit = runBlocking {
         // Main -> Host pipe
         val mainOut = PipedOutputStream()
         val hostIn = PipedInputStream(mainOut)
@@ -106,7 +106,7 @@ class IpcSessionTest {
     }
 
     @Test
-    fun `bidirectional callback from host to main`() = runBlocking {
+    fun `bidirectional callback from host to main`(): Unit = runBlocking {
         val mainOut = PipedOutputStream()
         val hostIn = PipedInputStream(mainOut)
         val hostOut = PipedOutputStream()
@@ -150,7 +150,7 @@ class IpcSessionTest {
     }
 
     @Test
-    fun `ipc session timeout triggers exception`() = runBlocking {
+    fun `ipc session timeout triggers exception`(): Unit = runBlocking {
         val mainOut = PipedOutputStream()
         val hostIn = PipedInputStream(mainOut)
         val hostOut = PipedOutputStream()

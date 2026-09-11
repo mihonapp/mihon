@@ -194,6 +194,7 @@ private fun FilterItem(
                         filter.state = it
                         onStateChanged()
                     },
+                    modifier = Modifier.testTag("filter-checkbox-${filter.name}"),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = filter.name, style = MaterialTheme.typography.bodyMedium)
@@ -220,6 +221,7 @@ private fun FilterItem(
                                     onStateChanged()
                                 },
                                 label = { Text(child.name) },
+                                modifier = Modifier.testTag("filter-group-checkbox-${child.name}"),
                             )
                         } else if (child is Filter.TriState) {
                             TriStateChip(

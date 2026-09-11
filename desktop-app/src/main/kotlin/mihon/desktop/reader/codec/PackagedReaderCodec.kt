@@ -9,6 +9,9 @@ object PackagedReaderCodec {
         System.getProperty(CODEC_PROPERTY)?.takeIf { it.isNotBlank() }?.let {
             return Path.of(it).toAbsolutePath().normalize()
         }
+        System.getProperty("compose.application.resources.dir")?.takeIf { it.isNotBlank() }?.let {
+            return Path.of(it, "codec", "magick.exe").toAbsolutePath().normalize()
+        }
         System.getenv("APPDIR")?.takeIf { it.isNotBlank() }?.let {
             return Path.of(it, "resources", "codec", "magick.exe").toAbsolutePath().normalize()
         }

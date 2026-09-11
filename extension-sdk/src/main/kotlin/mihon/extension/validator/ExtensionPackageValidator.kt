@@ -8,7 +8,7 @@ import java.io.InputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-class ExtensionValidationException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+open class ExtensionValidationException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
 
 object ExtensionPackageValidator {
 
@@ -19,7 +19,7 @@ object ExtensionPackageValidator {
 
     private val packageIdRegex = Regex("^[a-zA-Z0-9_.]+$")
     private val domainRegex =
-        Regex("^(((\\*\\.)?[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})|([0-9]{1,3}(\\.[0-9]{1,3}){3})|localhost)$")
+        Regex("^(\\*|\\*\\.\\*|((\\*\\.)?[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})|([0-9]{1,3}(\\.[0-9]{1,3}){3})|localhost)$")
 
     const val MAX_PACKAGE_ENTRIES = 1_000
     const val MAX_EXPANDED_BYTES = 50 * 1024 * 1024L // 50 MiB
@@ -74,6 +74,9 @@ object ExtensionPackageValidator {
     private fun validateDomain(domain: String) {
         if (domain.isBlank()) {
             throw ExtensionValidationException("Declared domain must not be blank")
+        }
+        if (domain == "*" || domain == "*.*") {
+            return
         }
         if (domain.contains("://") || domain.contains("/") || domain.contains(":") || domain.contains("\\")) {
             throw ExtensionValidationException("Declared domain must be a bare hostname or pattern, got: '$domain'")

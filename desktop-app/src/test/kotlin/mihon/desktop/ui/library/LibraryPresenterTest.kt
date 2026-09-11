@@ -18,6 +18,7 @@ import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.library.model.MangaDetails
 import mihon.desktop.library.reader.ReaderLibraryPort
+import mihon.desktop.library.reader.ReaderOnlineChapter
 import mihon.desktop.library.repository.LibraryRepository
 import mihon.reader.session.ProgressWriteResult
 import mihon.reader.session.ReaderProgressUpdate
@@ -136,7 +137,7 @@ class LibraryPresenterTest {
     }
 
     @Test
-    fun `close cancels only presenter work`() = runBlocking {
+    fun `close cancels only presenter work`(): Unit = runBlocking {
         val rows = MutableStateFlow(listOf(manga(1, "One")))
         val presenter = LibraryPresenter(FakeLibraryRepository { rows }, scope)
         presenter.awaitState { !it.loading }
@@ -261,6 +262,51 @@ class LibraryPresenterTest {
         presenter.close()
     }
 
+    @Test
+    fun `online chapters without local assets are readable and fall back from a missing local file`() = runBlocking {
+        val missingLocal = ReaderChapterAsset(
+            mangaId = 1,
+            chapterId = 12,
+            mangaTitle = "One",
+            chapterName = "Chapter 12",
+            storageRoot = Files.createTempDirectory("reader-presenter-missing"),
+            relativePath = Path.of("missing.cbz"),
+            assetKind = "ARCHIVE",
+            sizeBytes = 1,
+            modifiedAt = 0,
+            lastPageRead = 0,
+            read = false,
+        )
+        val online = ReaderOnlineChapter(
+            mangaId = 1,
+            chapterId = 12,
+            mangaTitle = "One",
+            chapterName = "Chapter 12",
+            chapterUrl = "/chapter/12",
+            sourceId = 100,
+            chapterNumber = 12.0,
+            sourceOrder = 0,
+            dateUpload = 0,
+            scanlator = null,
+            lastPageRead = 0,
+            read = false,
+        )
+        val presenter = LibraryPresenter(
+            FakeLibraryRepository(
+                details = mapOf(1L to MutableStateFlow(details(1, "One"))),
+                chapters = mapOf(1L to MutableStateFlow(listOf(chapter(12, 1)))),
+                libraryFlow = { MutableStateFlow(listOf(manga(1, "One"))) },
+            ),
+            scope,
+            FakeReaderLibraryPort(assets = mapOf(12L to missingLocal), online = mapOf(12L to online)),
+        )
+        presenter.awaitState { !it.loading }
+        presenter.selectManga(1)
+
+        presenter.awaitDetail { it.readerAvailability[12L] == ChapterReaderAvailability.Readable }
+        presenter.close()
+    }
+
     private suspend fun LibraryPresenter.awaitState(predicate: (LibraryUiState) -> Boolean): LibraryUiState =
         withTimeout(5_000) { state.first(predicate) }
 
@@ -294,11 +340,14 @@ class LibraryPresenterTest {
 }
 
 private class FakeReaderLibraryPort(
-    private val assets: Map<Long, ReaderChapterAsset>,
+    private val assets: Map<Long, ReaderChapterAsset> = emptyMap(),
+    private val online: Map<Long, ReaderOnlineChapter> = emptyMap(),
 ) : ReaderLibraryPort {
     override fun chapterAsset(chapterId: Long): ReaderChapterAsset? = assets[chapterId]
 
     override fun adjacentReadableChapter(chapterId: Long, direction: ChapterDirection): ReaderChapterAsset? = null
+
+    override fun onlineChapter(chapterId: Long): ReaderOnlineChapter? = online[chapterId]
 
     override suspend fun record(update: ReaderProgressUpdate): ProgressWriteResult = ProgressWriteResult.APPLIED
 }

@@ -136,7 +136,7 @@ class ExtensionEndToEndPipelineTest {
             val mextFile = tempDir.resolve("ext-e2e-sample.mext").toFile()
             createSampleMext(mextFile, manifest)
 
-            val installed = installer.installFromLocalFile(mextFile)
+            val installed = installer.installFromLocalFile(mextFile, trustOnInstall = true)
             installed.pkg shouldBe "ext.e2e.sample"
             installed.manifest.declaredDomains shouldBe listOf("127.0.0.1")
 
@@ -222,7 +222,7 @@ class ExtensionEndToEndPipelineTest {
                 asset = asset,
                 sourceId = 9999L,
                 chapter = SChapter(url = "/chapter/1", name = "Chapter 1"),
-                processManager = processManager,
+                sourceManager = sourceManager,
                 networkHelper = networkHelper,
                 cacheDir = tempDir.resolve("reader-cache").toFile(),
             )

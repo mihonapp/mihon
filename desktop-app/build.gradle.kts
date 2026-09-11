@@ -36,10 +36,13 @@ dependencies {
     implementation(libs.jna.platform)
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
+    implementation(compose.materialIconsExtended)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.protobuf)
     implementation(libs.okhttp.core)
+    implementation("com.github.ThexXTURBOXx.dex2jar:dex-translator:v64")
+    implementation("com.github.ThexXTURBOXx.dex2jar:dex-tools:v64")
     implementation("org.slf4j:slf4j-nop:2.0.17")
 
     testImplementation(libs.bundles.test)
@@ -157,13 +160,14 @@ compose.desktop {
             appResourcesRootDir.set(readerCodecResourcesRoot)
             targetFormats(TargetFormat.Exe, TargetFormat.Msi)
             packageName = "MihonW"
-            packageVersion = "0.1.0"
+            packageVersion = "0.1.3"
             description = "Mihon manga reader for Windows"
             vendor = "Mihon W"
             licenseFile.set(rootProject.file("LICENSE"))
-            modules("java.desktop", "java.logging", "java.prefs", "java.sql")
+            modules("java.desktop", "java.logging", "java.prefs", "java.sql", "java.instrument", "jdk.unsupported")
 
             windows {
+                iconFile.set(project.file("src/main/resources/icon.ico"))
                 console = false
                 dirChooser = true
                 perUserInstall = true
@@ -197,7 +201,7 @@ val packagePortableZip by tasks.registering(Zip::class) {
 
     archiveBaseName.set("MihonW")
     archiveClassifier.set("windows-x64-portable")
-    archiveVersion.set("0.1.0")
+    archiveVersion.set("0.1.3")
     destinationDirectory.set(layout.buildDirectory.dir("compose/binaries/main/portable"))
 
     from(layout.buildDirectory.dir("compose/binaries/main/app/MihonW")) {

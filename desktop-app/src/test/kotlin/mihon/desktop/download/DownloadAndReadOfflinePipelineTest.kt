@@ -142,7 +142,9 @@ class DownloadAndReadOfflinePipelineTest {
         downloader.enqueue(manga, listOf(chapter), autoStart = true)
 
         withTimeout(5000) {
-            while (!completedDownloadNotification || downloader.queueState.value.firstOrNull()?.status != DownloadStatus.COMPLETED) {
+            while (!completedDownloadNotification ||
+                downloader.queueState.value.firstOrNull()?.status != DownloadStatus.COMPLETED
+            ) {
                 delay(50)
             }
         }

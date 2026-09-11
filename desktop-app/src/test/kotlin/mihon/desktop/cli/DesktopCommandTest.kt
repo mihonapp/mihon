@@ -325,7 +325,7 @@ class DesktopCommandTest {
         newRuntime(DesktopCommand.Version).use { fixture ->
             DesktopCommandRunner(fixture.runtime, versionOutput).run(DesktopCommand.Version) shouldBe 0
         }
-        versionOutput.toString(UTF_8) shouldContain "Mihon W 0.1.0"
+        versionOutput.toString(UTF_8) shouldContain "Mihon W 0.1.3"
     }
 
     private fun newRuntime(command: DesktopCommand): RuntimeFixture {

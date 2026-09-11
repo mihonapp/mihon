@@ -147,6 +147,11 @@ CREATE TABLE import_report_item (
   message TEXT NOT NULL
 );
 
+CREATE TABLE library_metadata (
+  name TEXT NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
 CREATE INDEX chapter_manga_order ON chapter(manga_id, source_order DESC, chapter_number DESC, id DESC);
 CREATE INDEX history_last_read ON history(last_read DESC);
 CREATE INDEX manga_title ON manga(title COLLATE NOCASE);
@@ -264,6 +269,100 @@ ORDER BY candidate.source_order DESC,
          candidate.chapter_number DESC,
          candidate.name COLLATE NOCASE,
          candidate.id DESC;
+selectReaderOnlineChapter:
+SELECT chapter.id AS chapter_id,
+       chapter.manga_id AS manga_id,
+       chapter.name AS chapter_name,
+       chapter.url AS chapter_url,
+       chapter.scanlator AS scanlator,
+       chapter.chapter_number AS chapter_number,
+       chapter.source_order AS source_order,
+       chapter.date_upload AS date_upload,
+       chapter.last_page_read AS last_page_read,
+       chapter.read AS read,
+       manga.title AS manga_title,
+       manga.source_id AS source_id
+FROM chapter
+JOIN manga ON manga.id = chapter.manga_id
+WHERE chapter.id = ?;
+
+selectPreviousReaderOnlineChapter:
+SELECT candidate_manga.id AS manga_id,
+       candidate.id AS chapter_id,
+       candidate_manga.title AS manga_title,
+       candidate.name AS chapter_name,
+       candidate.url AS chapter_url,
+       candidate.scanlator AS scanlator,
+       candidate.chapter_number AS chapter_number,
+       candidate.source_order AS source_order,
+       candidate.date_upload AS date_upload,
+       candidate.last_page_read AS last_page_read,
+       candidate.read AS read,
+       candidate_manga.source_id AS source_id
+FROM chapter AS current
+JOIN chapter AS candidate ON candidate.manga_id = current.manga_id
+JOIN manga AS candidate_manga ON candidate_manga.id = candidate.manga_id
+WHERE current.id = :chapter_id
+  AND (
+    candidate.source_order > current.source_order
+    OR (candidate.source_order = current.source_order AND candidate.chapter_number > current.chapter_number)
+    OR (
+      candidate.source_order = current.source_order
+      AND candidate.chapter_number = current.chapter_number
+      AND candidate.name COLLATE NOCASE < current.name COLLATE NOCASE
+    )
+    OR (
+      candidate.source_order = current.source_order
+      AND candidate.chapter_number = current.chapter_number
+      AND candidate.name COLLATE NOCASE = current.name COLLATE NOCASE
+      AND candidate.id > current.id
+    )
+  )
+ORDER BY candidate.source_order ASC,
+         candidate.chapter_number ASC,
+         candidate.name COLLATE NOCASE DESC,
+         candidate.id ASC
+LIMIT 1;
+
+selectNextReaderOnlineChapter:
+SELECT candidate_manga.id AS manga_id,
+       candidate.id AS chapter_id,
+       candidate_manga.title AS manga_title,
+       candidate.name AS chapter_name,
+       candidate.url AS chapter_url,
+       candidate.scanlator AS scanlator,
+       candidate.chapter_number AS chapter_number,
+       candidate.source_order AS source_order,
+       candidate.date_upload AS date_upload,
+       candidate.last_page_read AS last_page_read,
+       candidate.read AS read,
+       candidate_manga.source_id AS source_id
+FROM chapter AS current
+JOIN chapter AS candidate ON candidate.manga_id = current.manga_id
+JOIN manga AS candidate_manga ON candidate_manga.id = candidate.manga_id
+WHERE current.id = :chapter_id
+  AND (
+    candidate.source_order < current.source_order
+    OR (candidate.source_order = current.source_order AND candidate.chapter_number < current.chapter_number)
+    OR (
+      candidate.source_order = current.source_order
+      AND candidate.chapter_number = current.chapter_number
+      AND candidate.name COLLATE NOCASE > current.name COLLATE NOCASE
+    )
+    OR (
+      candidate.source_order = current.source_order
+      AND candidate.chapter_number = current.chapter_number
+      AND candidate.name COLLATE NOCASE = current.name COLLATE NOCASE
+      AND candidate.id < current.id
+    )
+  )
+ORDER BY candidate.source_order DESC,
+         candidate.chapter_number DESC,
+         candidate.name COLLATE NOCASE,
+         candidate.id DESC
+LIMIT 1;
+
+
 
 selectChapterByIdentity:
 SELECT * FROM chapter WHERE manga_id = ? AND url = ?;

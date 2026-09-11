@@ -5,10 +5,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.withContext
+import mihon.desktop.extension.DesktopNetworkHelper
+import mihon.desktop.extension.DesktopSourceManager
 import mihon.desktop.library.reader.ReaderLibraryPort
+import mihon.desktop.library.reader.ReaderOnlineChapterCatalog
 import mihon.desktop.reader.codec.PackagedCodecPageDecoder
 import mihon.desktop.reader.codec.PackagedReaderCodec
 import mihon.desktop.ui.reader.ComposeTileBridge
+import mihon.desktop.ui.reader.IntrinsicPageSizeCache
 import mihon.reader.cache.WeightedTileCache
 import mihon.reader.image.ApngPageDecoder
 import mihon.reader.image.CompositePageDecoder
@@ -27,6 +31,8 @@ import mihon.reader.session.ReaderGenerationSource
 import mihon.reader.session.ReaderSession
 import mihon.reader.source.ChapterSourceFactory
 import mihon.reader.source.LocalChapterSourceFactory
+import mihon.reader.source.ReaderChapterCatalog
+import java.io.File
 import java.nio.file.Path
 
 /** Owns process-wide reader resources while giving each open reader its own coroutine lifetime. */
@@ -34,17 +40,38 @@ class DesktopReaderFactory(
     private val applicationScope: CoroutineScope,
     private val library: ReaderLibraryPort,
     private val settings: DesktopReaderSettingsStore,
+    onlineChapters: ReaderOnlineChapterCatalog? = library as? ReaderOnlineChapterCatalog,
+    sourceManager: DesktopSourceManager? = null,
+    networkHelper: DesktopNetworkHelper? = null,
+    onlineCacheDir: File = File(System.getProperty("java.io.tmpdir"), "mihon-reader-online"),
     codecExecutable: Path = PackagedReaderCodec.executablePath(),
 ) {
     val cache = WeightedTileCache()
     val memoryBudget = BoundedReaderMemoryBudget { cache.relievePressure() }
-    val sourceFactory: ChapterSourceFactory = LocalChapterSourceFactory(memoryBudget)
+    private val catalog: ReaderChapterCatalog = DesktopReaderCatalog(
+        local = library,
+        online = onlineChapters,
+        onlineStorageRoot = onlineCacheDir.toPath().toAbsolutePath().normalize(),
+    )
+    val sourceFactory: ChapterSourceFactory = DesktopChapterSourceFactory(
+        local = LocalChapterSourceFactory(memoryBudget),
+        onlineChapters = onlineChapters,
+        sourceManager = sourceManager,
+        networkHelper = networkHelper,
+        onlineCacheDir = onlineCacheDir,
+    )
     val decoder: PageDecoder = CompositePageDecoder(
         imageIo = ImageIoPageDecoder(memoryBudget),
         packagedCodec = PackagedCodecPageDecoder(memoryBudget, codecExecutable),
         animatedPng = ApngPageDecoder(memoryBudget),
     )
     val bridge = ComposeTileBridge()
+
+    /**
+     * Intrinsic dimensions probed from each opened image, exposed for reader layout. The backing
+     * cache is a small LRU so chapter/session close cannot retain an unbounded page map.
+     */
+    val pageSizes = IntrinsicPageSizeCache()
     private val generationSource: ReaderGenerationSource = AtomicReaderGenerationSource()
     private val lock = Any()
     private val sessions = linkedSetOf<TrackedReaderSession>()
@@ -62,12 +89,19 @@ class DesktopReaderFactory(
         }
         val session = DefaultReaderSession(
             scope = sessionScope,
-            catalog = library,
+            catalog = catalog,
             sourceFactory = sourceFactory,
             progressSink = effectiveSink,
             generationSource = generationSource,
             settings = settings.load().toCoreSettings(),
             visibleContent = { loadFrame(it, 0).tile },
+            invalidateContent = { pageId ->
+                cache.invalidatePage(pageId)
+                val asset = requireNotNull(catalog.chapterAsset(pageId.chapterId.toLong()))
+                sourceFactory.create(asset).use { source ->
+                    (source as? mihon.desktop.extension.OnlineChapterSource)?.invalidate(pageId)
+                }
+            },
         )
         return TrackedReaderSession(session, sessionScope).also { tracked ->
             synchronized(lock) {
@@ -81,10 +115,10 @@ class DesktopReaderFactory(
 
     data class PageFrame(val tile: ComposeTileBridge.BridgeTile, val metadata: ImageMetadata)
 
-    /** Resolve every read through the secure local source, including chapter-boundary navigation. */
+    /** Resolve every read through the local/online chapter catalog, including boundary navigation. */
     suspend fun loadFrame(pageId: PageId, frameIndex: Int, cropBorders: Boolean = false): PageFrame =
         withContext(Dispatchers.IO) {
-            val asset = requireNotNull(library.chapterAsset(pageId.chapterId.toLong()))
+            val asset = requireNotNull(catalog.chapterAsset(pageId.chapterId.toLong()))
             sourceFactory.create(asset).use { source ->
                 val metadata = source.open(pageId).use { decoder.probe(it) }
                 val frame = FrameId(pageId, frameIndex)
@@ -119,12 +153,23 @@ class DesktopReaderFactory(
                         } else {
                             loaded.tile.image
                         }
-                        val bridgeKey = if (cropBorders) {
+                        val wasCropped = imageToBridge.width != loaded.tile.image.width ||
+                            imageToBridge.height != loaded.tile.image.height
+                        val bridgeKey = if (wasCropped) {
                             key.copy(bounds = IntRect(1, 1, metadata.width, metadata.height))
                         } else {
                             key
                         }
-                        PageFrame(bridge.acquire(bridgeKey, imageToBridge), metadata)
+                        val displayMetadata = if (wasCropped) {
+                            metadata.copy(
+                                width = Math.multiplyExact(imageToBridge.width, sample),
+                                height = Math.multiplyExact(imageToBridge.height, sample),
+                            )
+                        } else {
+                            metadata
+                        }
+                        pageSizes.record(pageId, displayMetadata)
+                        PageFrame(bridge.acquire(bridgeKey, imageToBridge), displayMetadata)
                     } finally {
                         if (!loaded.resident) loaded.tile.close()
                     }
@@ -138,17 +183,22 @@ class DesktopReaderFactory(
             sessions.toList()
         }
         var failure: Throwable? = null
-        active.forEach { session ->
-            try {
-                session.closeAndFlush()
-            } catch (error: Throwable) {
-                failure = failure.append(error)
+        try {
+            active.forEach { session ->
+                try {
+                    session.closeAndFlush()
+                } catch (error: Throwable) {
+                    failure = failure.append(error)
+                }
             }
+        } finally {
+            pageSizes.clear()
         }
         failure?.let { throw it }
     }
 
     fun closeServices() {
+        pageSizes.clear()
         bridge.close()
         cache.close()
         memoryBudget.close()

@@ -52,9 +52,11 @@ class TrackOnReadSyncServiceTest {
         )
 
         val queue = OfflineTrackingQueue(queueFile)
-        val trackerManager = DesktopTrackerManager()
+        val malTracker = TrackerTestFakeTracker(id = 1L, name = "MyAnimeList")
+        val aniListTracker = TrackerTestFakeTracker(id = 2L, name = "AniList")
+        val trackerManager = DesktopTrackerManager(listOf(malTracker, aniListTracker))
         // MAL is logged in, AniList is not
-        trackerManager.get(1L)!!.login(mapOf("username" to "MALUser", "password" to "pass"))
+        malTracker.login(mapOf("username" to "MALUser", "password" to "pass"))
 
         val syncService = TrackOnReadSyncService(
             repository = repo,
@@ -66,6 +68,7 @@ class TrackOnReadSyncServiceTest {
         // Read chapter 15 (ahead of both 10 and 5)
         val synced = syncService.onChapterRead(mangaId, 15.0)
         assertEquals(1, synced) // MAL synced remotely
+        assertEquals(15.0, malTracker.updates.single().lastChapterRead)
 
         // Both DB records are updated to chapter 15
         val updatedTracks = repo.trackingSnapshot(mangaId)
@@ -81,10 +84,11 @@ class TrackOnReadSyncServiceTest {
         assertEquals(15.0, pending.first().chapterNumber)
 
         // Now AniList logs in and queue is flushed
-        trackerManager.get(2L)!!.login(mapOf("token" to "anilist-token"))
-        val flushed = syncService.flushQueue()
+        aniListTracker.login(mapOf("token" to "anilist-token"))
+        val flushed = syncService.flushPending()
         assertEquals(1, flushed)
         assertTrue(queue.peekAll().isEmpty())
+        assertEquals(15.0, aniListTracker.updates.single().lastChapterRead)
         repo.close()
     }
 

@@ -4,8 +4,10 @@ import kotlinx.coroutines.runBlocking
 import mihon.desktop.extension.DesktopSourceManager
 import mihon.desktop.extension.OnlineMangaSyncService
 import mihon.desktop.library.db.DesktopLibraryDatabaseFactory
+import mihon.desktop.library.model.CategoryRecord
 import mihon.desktop.library.model.ChapterRecord
 import mihon.desktop.library.model.MangaRecord
+import mihon.desktop.library.model.PreferenceSnapshotRecord
 import mihon.desktop.platform.DesktopNotificationService
 import mihon.extension.source.WindowsCatalogueSource
 import mihon.extension.source.model.FilterList
@@ -237,6 +239,92 @@ class LibraryUpdateServiceTest {
             val lastNotif = notificationService.notifications.value
             assertNotNull(lastNotif)
             assertTrue(lastNotif!!.message.contains("Found 2 new chapter(s)"))
+        } finally {
+            repo.close()
+        }
+    }
+
+    @Test
+    fun `applies included excluded and not-started filters including imported preferences`() = runBlocking {
+        val repo = DesktopLibraryDatabaseFactory.open(tempDir.resolve("category-filter.db"))
+        try {
+            val now = System.currentTimeMillis()
+            fun addManga(title: String, url: String): Long = repo.insertManga(
+                MangaRecord(
+                    sourceId = 300L,
+                    url = url,
+                    title = title,
+                    status = 1L,
+                    favorite = true,
+                    dateAdded = now,
+                    lastModifiedAt = now,
+                    favoriteModifiedAt = now,
+                    initialized = true,
+                ),
+            )
+
+            val included = addManga("Included", "/included")
+            val excluded = addManga("Excluded", "/excluded")
+            val notStarted = addManga("Not Started", "/not-started")
+            val includeCategory = repo.upsertCategory(CategoryRecord(name = "Include"))
+            val excludeCategory = repo.upsertCategory(CategoryRecord(name = "Exclude"))
+            repo.linkCategory(included, includeCategory)
+            repo.linkCategory(excluded, includeCategory)
+            repo.linkCategory(excluded, excludeCategory)
+            repo.linkCategory(notStarted, includeCategory)
+
+            fun addChapter(mangaId: Long, read: Boolean) {
+                repo.insertChapter(
+                    ChapterRecord(
+                        mangaId = mangaId,
+                        url = "/chapter-$mangaId",
+                        name = "Chapter 1",
+                        read = read,
+                        dateFetch = now,
+                        dateUpload = now,
+                        chapterNumber = 1.0,
+                        lastModifiedAt = now,
+                    ),
+                )
+            }
+            addChapter(included, read = true)
+            addChapter(excluded, read = true)
+            addChapter(notStarted, read = false)
+
+            val sourceManager = DesktopSourceManager().apply { registerBuiltinSource(MockSource(300L)) }
+            val service = LibraryUpdateService(repo, OnlineMangaSyncService(repo, sourceManager))
+            val explicitReport = service.updateLibrary(
+                options = LibraryUpdateOptions(
+                    skipCompleted = false,
+                    skipNotStarted = true,
+                    includedCategoryIds = setOf(includeCategory),
+                    excludedCategoryIds = setOf(excludeCategory),
+                ),
+                throttleDelayMs = 0L,
+            )
+            assertEquals(listOf(included), explicitReport.results.map { it.mangaId })
+
+            repo.upsertPreference(
+                PreferenceSnapshotRecord(
+                    key = "library_update_categories",
+                    valueType = "STRING_SET",
+                    valueJson = "[\"$includeCategory\"]",
+                    importedAt = now,
+                ),
+            )
+            repo.upsertPreference(
+                PreferenceSnapshotRecord(
+                    key = "library_update_categories_exclude",
+                    valueType = "STRING_SET",
+                    valueJson = "[\"$excludeCategory\"]",
+                    importedAt = now,
+                ),
+            )
+            val importedReport = service.updateLibrary(
+                options = LibraryUpdateOptions(skipCompleted = false, skipNotStarted = true),
+                throttleDelayMs = 0L,
+            )
+            assertEquals(listOf(included), importedReport.results.map { it.mangaId })
         } finally {
             repo.close()
         }

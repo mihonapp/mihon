@@ -120,4 +120,12 @@ class DesktopNetworkHelperTest {
             java.nio.file.Files.deleteIfExists(tempCookieFile)
         }
     }
+
+    @Test
+    fun `allows any domain when universal wildcard pattern is registered`() {
+        helper.registerExtensionDomains("wildcard.ext", listOf("*"))
+        helper.isDomainAllowed("img.everia.club") shouldBe true
+        helper.isDomainAllowed("static.example.org") shouldBe true
+        helper.isDomainAllowed("127.0.0.1") shouldBe true
+    }
 }

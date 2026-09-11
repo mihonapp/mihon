@@ -2,6 +2,7 @@ package mihon.reader.session
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -127,6 +128,41 @@ class DefaultReaderSessionTest {
 
         session.state.value.selectedIndex shouldBe 2
         requested.last() shouldBe source.descriptors[2].id
+    }
+
+    @Test
+    fun `retry reopens a chapter after visible page decoding failed`() = runTest {
+        val asset = asset(chapterId = 7, lastPageRead = 0)
+        val descriptors = pages(7, 3)
+        var shouldFail = true
+        var sourceCreations = 0
+        val session = DefaultReaderSession(
+            scope = backgroundScope,
+            catalog = catalog(asset),
+            sourceFactory = ChapterSourceFactory {
+                sourceCreations++
+                FakeSource(asset, descriptors)
+            },
+            progressSink = ReaderProgressSink { ProgressWriteResult.APPLIED },
+            generationSource = AtomicReaderGenerationSource(),
+            visibleContent = {
+                if (shouldFail) error("decode failed")
+                null
+            },
+            invalidateContent = { shouldFail = false },
+        )
+
+        session.open(7)
+        runCurrent()
+        session.state.value.loadState.shouldBeInstanceOf<ReaderLoadState.Failed>()
+
+        session.retry(descriptors.first().id)
+        runCurrent()
+
+        session.state.value.loadState shouldBe ReaderLoadState.Ready
+        session.state.value.error shouldBe null
+        session.state.value.selectedIndex shouldBe 0
+        sourceCreations shouldBe 2
     }
 
     private fun pages(chapterId: Long, count: Int) =

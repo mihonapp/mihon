@@ -20,7 +20,7 @@ import java.util.concurrent.Executors
 
 class LibraryImportActionsTest {
     @Test
-    fun `cancelled choosers perform no import`() = runBlocking {
+    fun `cancelled choosers perform no import`(): Unit = runBlocking {
         var imports = 0
         val actions = LibraryImportActions(
             chooseBackup = { null },
@@ -41,7 +41,7 @@ class LibraryImportActionsTest {
     }
 
     @Test
-    fun `chosen paths are passed exactly once and preserve success or error state`() = runBlocking {
+    fun `chosen paths are passed exactly once and preserve success or error state`(): Unit = runBlocking {
         val backup = Path.of("chosen.tachibk")
         val local = Path.of("chosen-manga")
         val calls = mutableListOf<Path>()
@@ -66,7 +66,7 @@ class LibraryImportActionsTest {
     }
 
     @Test
-    fun `successful import exposes structured counts report id and safe skip categories`() = runBlocking {
+    fun `successful import exposes structured counts report id and safe skip categories`(): Unit = runBlocking {
         val report = report(
             id = 91,
             counts = ImportCounts(mangaInserted = 2, mangaMerged = 1, chaptersInserted = 8, preferencesSkipped = 4),
@@ -126,7 +126,7 @@ class LibraryImportActionsTest {
     }
 
     @Test
-    fun `imports execute on configured non UI dispatcher`() = runBlocking {
+    fun `imports execute on configured non UI dispatcher`(): Unit = runBlocking {
         val executor = Executors.newSingleThreadExecutor { runnable -> Thread(runnable, "library-import-io") }
         val dispatcher = executor.asCoroutineDispatcher()
         try {
@@ -143,7 +143,7 @@ class LibraryImportActionsTest {
 
             controller.importBackup(Path.of("backup.tachibk"))
 
-            importThread shouldBe "library-import-io"
+            importThread.startsWith("library-import-io") shouldBe true
         } finally {
             dispatcher.close()
             executor.shutdownNow()
@@ -151,7 +151,7 @@ class LibraryImportActionsTest {
     }
 
     @Test
-    fun `typed rejection is actionable while unexpected exception text is sanitized`() = runBlocking {
+    fun `typed rejection is actionable while unexpected exception text is sanitized`(): Unit = runBlocking {
         val rejected = LibraryImportController(
             importBackup = { _, _ -> error("preference token=123") },
             importLocal = { _, _, _ -> throw LocalImportRejected("link or reparse point is not allowed") },

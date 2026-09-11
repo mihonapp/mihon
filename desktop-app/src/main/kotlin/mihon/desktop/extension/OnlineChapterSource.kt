@@ -2,6 +2,8 @@ package mihon.desktop.extension
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import mihon.desktop.extension.DesktopNetworkHelper
 import mihon.desktop.extension.WindowsExtensionProcessManager
 import mihon.extension.ipc.BrokerHttpRequest
@@ -51,11 +53,19 @@ open class OnlineChapterSource(
     )
 
     internal var cachedPages: List<Page>? = null
+    suspend fun invalidate(pageId: PageId) = withContext(Dispatchers.IO) {
+        require(pageId.chapterId == asset.chapterId.toString())
+        val index = Regex("page_(\\d+)\\.[a-z0-9]+").matchEntire(pageId.entryName)
+            ?.groupValues?.get(1)?.toIntOrNull() ?: throw ReaderFailure.PageNotFound(pageId.entryName)
+        val file = cacheFile(index)
+        cacheLock(file).withLock { java.nio.file.Files.deleteIfExists(file.toPath()) }
+    }
     private var entries: List<SourceEntry> = emptyList()
 
     override suspend fun pages(): List<PageDescriptor> = withContext(Dispatchers.IO) {
         checkOpenAndCancellation()
-        val list = cachedPages ?: sourceManager.getPageList(sourceId, chapter).also { cachedPages = it }
+        val list = (cachedPages ?: sourceManager.getPageList(sourceId, chapter))
+            .mapIndexed { index, page -> page.copy(index = index) }.also { cachedPages = it }
         entries = list.map { page ->
             val extension = page.imageUrl.orEmpty().substringBefore('?').substringAfterLast('.', "img")
                 .lowercase().takeIf { it.matches(Regex("[a-z0-9]{2,5}")) } ?: "img"
@@ -79,32 +89,38 @@ open class OnlineChapterSource(
         val pageIndex = entries.indexOf(entry)
         val page = cachedPages?.getOrNull(pageIndex) ?: throw ReaderFailure.PageNotFound(pageId.entryName)
 
-        val imageUrl = page.imageUrl ?: page.url
-        if (imageUrl.isBlank()) {
-            throw ReaderFailure.PageNotFound("Blank image URL for ${pageId.entryName}")
-        }
-
         // Check local file cache for this page
-        val cacheKey = "online_${sourceId}_${chapter.url.hashCode()}_${page.index}.img"
-        val cachedFile = File(cacheDir, cacheKey)
-        val imageBytes = if (cachedFile.exists() && cachedFile.length() > 0L) {
-            cachedFile.readBytes()
-        } else {
-            // Fetch through brokered network helper
-            val req = BrokerHttpRequest(
-                method = "GET",
-                url = imageUrl,
-                headers = mapOf("Referer" to chapter.url) + page.headers,
-            )
+        val cachedFile = cacheFile(page.index)
+        val imageBytes = cacheLock(cachedFile).withLock {
+            val cached = if (cachedFile.isFile) {
+                try {
+                    require(cachedFile.length() in 1..MAX_IMAGE_BYTES) { "Invalid cached image size" }
+                    cachedFile.readBytes().also { validateImageResponse(it) }
+                } catch (_: Exception) {
+                    java.nio.file.Files.deleteIfExists(cachedFile.toPath())
+                    null
+                }
+            } else null
+            if (cached != null) return@withLock cached
             val bytes = try {
-                networkHelper.downloadRawBytes(req)
+                downloadSourcePage(sourceId, page, chapter.url, networkHelper, sourceManager)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: ReaderFailure) {
+                throw e
             } catch (e: Exception) {
                 throw ReaderFailure.RemoteImage(e.message ?: "network request failed", e)
             }
             validateImageResponse(bytes)
             try {
                 cachedFile.parentFile?.mkdirs()
-                cachedFile.writeBytes(bytes)
+                val temporary = java.nio.file.Files.createTempFile(cacheDir.toPath(), "page-", ".tmp")
+                try {
+                    java.nio.file.Files.write(temporary, bytes)
+                    java.nio.file.Files.move(temporary, cachedFile.toPath(), java.nio.file.StandardCopyOption.ATOMIC_MOVE, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+                } finally {
+                    java.nio.file.Files.deleteIfExists(temporary)
+                }
             } catch (_: Exception) {}
             bytes
         }
@@ -114,8 +130,17 @@ open class OnlineChapterSource(
         boundedInput(ByteArrayInputStream(imageBytes), imageBytes.size.toLong())
     }
 
-    override fun close() {
-        // No-op
+    private fun cacheFile(index: Int): File {
+        val identity = "$sourceId\n${chapter.url}"
+        val digest = java.security.MessageDigest.getInstance("SHA-256").digest(identity.toByteArray())
+            .joinToString("") { "%02x".format(it) }
+        return File(cacheDir, "online_${digest}_$index.img")
+    }
+
+    companion object {
+        private const val MAX_IMAGE_BYTES = 64L * 1024 * 1024
+        private val cacheLocks = Array(64) { Mutex() }
+        private fun cacheLock(file: File): Mutex = cacheLocks[(file.absolutePath.hashCode() and Int.MAX_VALUE) % cacheLocks.size]
     }
 
     private fun validateImageResponse(bytes: ByteArray) {

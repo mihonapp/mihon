@@ -47,7 +47,13 @@ object IpcCommands {
     const val GET_MANGA_DETAILS = "get_manga_details"
     const val GET_CHAPTER_LIST = "get_chapter_list"
     const val GET_PAGE_LIST = "get_page_list"
+    const val GET_IMAGE = "get_image"
     const val GET_FILTER_LIST = "get_filter_list"
+    const val GET_SOURCE_PREFERENCES = "get_source_preferences"
+    const val SET_SOURCE_PREFERENCE = "set_source_preference"
+
+    /** Alias for [GET_SOURCE_PREFERENCES] matching "list" terminology. */
+    const val LIST_SOURCE_PREFERENCES = GET_SOURCE_PREFERENCES
 }
 
 object IpcCallbacks {
@@ -91,6 +97,13 @@ data class ChapterPayload(
     val sourceId: Long,
     val chapterJson: String,
 )
+
+@Serializable
+data class ImagePayload(val sourceId: Long, val page: mihon.extension.source.model.Page)
+
+/** Images use a host-owned temporary file so binary data never exceeds the IPC frame limit. */
+@Serializable
+data class ImageFilePayload(val fileName: String? = null)
 
 @Serializable
 data class BrokerHttpRequest(

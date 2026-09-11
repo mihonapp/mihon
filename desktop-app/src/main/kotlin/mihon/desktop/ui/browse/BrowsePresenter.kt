@@ -14,6 +14,9 @@ import mihon.desktop.extension.DesktopExtensionInstaller
 import mihon.desktop.extension.DesktopSourceManager
 import mihon.desktop.extension.ExtensionStoreItem
 import mihon.desktop.extension.ExtensionStoreService
+import mihon.desktop.extension.InstalledExtension
+import mihon.desktop.extension.SourcePreferenceDefinition
+import mihon.desktop.extension.SourceState
 import mihon.desktop.library.db.SqlDelightLibraryRepository
 import mihon.desktop.library.model.ChapterRecord
 import mihon.desktop.library.model.LibraryChapter
@@ -21,6 +24,7 @@ import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.library.model.MangaRecord
 import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.extension.model.SourceDescriptor
+import mihon.extension.source.model.FilterList
 import mihon.extension.source.model.SManga
 import java.io.File
 
@@ -31,6 +35,7 @@ class BrowsePresenter(
     private val libraryRepository: SqlDelightLibraryRepository,
     private val preferenceStore: DesktopPreferenceStore,
     private val scope: CoroutineScope,
+    private val onExtensionUpdatesAvailable: (Int) -> Unit = {},
 ) {
     companion object {
         const val PREF_KEY_PINNED_SOURCES = "browse.pinned_sources"
@@ -39,8 +44,12 @@ class BrowsePresenter(
     private val json = Json { ignoreUnknownKeys = true }
     private val _state = MutableStateFlow(BrowseUiState())
     val state: StateFlow<BrowseUiState> = _state.asStateFlow()
+    private var lastNotifiedPendingUpdates = 0
 
     init {
+        // The runtime builds the source manager before the browse presenter, so the built-in local
+        // source is wired to the library repository as soon as the Browse tab is created.
+        sourceManager.attachLibraryRepository(libraryRepository)
         loadPinnedSources()
         refresh()
     }
@@ -87,29 +96,32 @@ class BrowsePresenter(
             try {
                 val repos = storeService.getRepositories()
                 val installed = installer.getInstalledExtensions()
-                val sources = sourceManager.getSources()
+                val snapshot = buildSourceStateSnapshot(installed)
 
-                // Fetch available extensions from configured repositories
-                val available = mutableListOf<ExtensionStoreItem>()
-                for (repo in repos) {
-                    try {
-                        val items = storeService.fetchRepository(repo)
-                        available.addAll(items)
-                    } catch (_: Exception) {
-                        // Tolerate single repo failure
-                    }
-                }
-
+                // Update local state before the network round-trip so installed extensions and
+                // sources remain usable when a repository is unreachable.
                 _state.update {
                     it.copy(
                         repositories = repos,
                         installedExtensions = installed,
-                        availableExtensions = available.distinctBy { item -> item.pkg },
-                        sources = sources,
+                        sources = snapshot.sources,
+                        sourceStates = snapshot.sourceStates,
+                        extensionSourceStates = snapshot.extensionSourceStates,
+                        incognitoExtensionPackages = snapshot.incognitoExtensionPackages,
+                        sourcePreferenceDefinitions = snapshot.sourcePreferenceDefinitions,
+                        sourcePreferenceValues = snapshot.sourcePreferenceValues,
                         isLoading = false,
                     )
                 }
                 refreshMigrationCounts()
+
+                val available = storeService.fetchAvailableExtensions()
+                _state.update { it.copy(availableExtensions = available) }
+                val pendingUpdates = countPendingExtensionUpdates(installed, available)
+                if (pendingUpdates > 0 && pendingUpdates != lastNotifiedPendingUpdates) {
+                    onExtensionUpdatesAvailable(pendingUpdates)
+                }
+                lastNotifiedPendingUpdates = pendingUpdates
             } catch (e: Exception) {
                 _state.update {
                     it.copy(
@@ -120,6 +132,63 @@ class BrowsePresenter(
             }
         }
     }
+
+    private fun buildSourceStateSnapshot(installed: List<InstalledExtension>): SourceStateSnapshot {
+        val sourceStates = sourceManager.getSourceStates()
+        val extensionSourceStates = installed.associate { extension ->
+            extension.pkg to sourceManager.getSourceStatesForExtension(extension.pkg)
+        }
+        val allStates = (sourceStates + extensionSourceStates.values.flatten()).distinctBy { it.source.id }
+
+        val definitions = allStates.associate { state ->
+            state.source.id to sourceManager.getSourcePreferenceDefinitions(state.source.id)
+        }
+        val values = definitions.mapValues { (sourceId, definitionsForSource) ->
+            definitionsForSource.associate { definition ->
+                definition.key to (
+                    sourceManager.getSourcePreferenceValue(sourceId, definition.key)
+                        ?: definition.defaultValue
+                    )
+            }
+        }
+
+        return SourceStateSnapshot(
+            sources = sourceStates.filter { it.isEnabled }.map { it.source },
+            sourceStates = sourceStates,
+            extensionSourceStates = extensionSourceStates,
+            incognitoExtensionPackages = installed
+                .filter { sourceManager.isExtensionIncognito(it.pkg) }
+                .map { it.pkg }
+                .toSet(),
+            sourcePreferenceDefinitions = definitions,
+            sourcePreferenceValues = values,
+        )
+    }
+
+    private fun refreshInstalledAndSources() {
+        val installed = installer.getInstalledExtensions()
+        val snapshot = buildSourceStateSnapshot(installed)
+        _state.update {
+            it.copy(
+                installedExtensions = installed,
+                sources = snapshot.sources,
+                sourceStates = snapshot.sourceStates,
+                extensionSourceStates = snapshot.extensionSourceStates,
+                incognitoExtensionPackages = snapshot.incognitoExtensionPackages,
+                sourcePreferenceDefinitions = snapshot.sourcePreferenceDefinitions,
+                sourcePreferenceValues = snapshot.sourcePreferenceValues,
+            )
+        }
+    }
+
+    private data class SourceStateSnapshot(
+        val sources: List<SourceDescriptor>,
+        val sourceStates: List<SourceState>,
+        val extensionSourceStates: Map<String, List<SourceState>>,
+        val incognitoExtensionPackages: Set<String>,
+        val sourcePreferenceDefinitions: Map<Long, List<SourcePreferenceDefinition>>,
+        val sourcePreferenceValues: Map<Long, Map<String, String>>,
+    )
 
     fun refreshMigrationCounts() {
         scope.launch {
@@ -172,6 +241,15 @@ class BrowsePresenter(
         } catch (_: Exception) {
             emptyList()
         }
+    }
+
+    /**
+     * Loads the filter list for a source when the source browse screen is opened. Builtin sources
+     * resolve immediately; extension sources are loaded through the extension host and decoded from
+     * the IPC filter DTOs.
+     */
+    suspend fun loadSourceFilters(sourceId: Long): FilterList {
+        return sourceManager.loadFilterList(sourceId)
     }
 
     fun performMigration(
@@ -277,14 +355,11 @@ class BrowsePresenter(
             _state.update { it.copy(isInstalling = true, installingPkg = item.pkg) }
             try {
                 if (item.downloadUrl.isNotBlank()) {
-                    installer.downloadAndInstall(item.downloadUrl, item.sha256, item.repoUrl)
+                    installer.downloadAndInstall(item.downloadUrl, item.sha256, item.repoUrl, storeItem = item)
                 }
-                val updatedInstalled = installer.getInstalledExtensions()
-                val updatedSources = sourceManager.getSources()
+                refreshInstalledAndSources()
                 _state.update {
                     it.copy(
-                        installedExtensions = updatedInstalled,
-                        sources = updatedSources,
                         isInstalling = false,
                         installingPkg = null,
                     )
@@ -306,12 +381,9 @@ class BrowsePresenter(
             _state.update { it.copy(isInstalling = true, installingPkg = file.name) }
             try {
                 installer.installFromLocalFile(file)
-                val updatedInstalled = installer.getInstalledExtensions()
-                val updatedSources = sourceManager.getSources()
+                refreshInstalledAndSources()
                 _state.update {
                     it.copy(
-                        installedExtensions = updatedInstalled,
-                        sources = updatedSources,
                         isInstalling = false,
                         installingPkg = null,
                     )
@@ -332,14 +404,8 @@ class BrowsePresenter(
         scope.launch {
             try {
                 installer.uninstall(pkg)
-                val updatedInstalled = installer.getInstalledExtensions()
-                val updatedSources = sourceManager.getSources()
-                _state.update {
-                    it.copy(
-                        installedExtensions = updatedInstalled,
-                        sources = updatedSources,
-                    )
-                }
+                sourceManager.unloadExtension(pkg)
+                refreshInstalledAndSources()
             } catch (e: Exception) {
                 _state.update { it.copy(errorMessage = "Failed to uninstall $pkg: ${e.message}") }
             }
@@ -350,17 +416,76 @@ class BrowsePresenter(
         scope.launch {
             try {
                 installer.setExtensionEnabled(pkg, enabled)
-                val updatedInstalled = installer.getInstalledExtensions()
-                val updatedSources = sourceManager.getSources()
-                _state.update {
-                    it.copy(
-                        installedExtensions = updatedInstalled,
-                        sources = updatedSources,
-                    )
+                if (!enabled) {
+                    sourceManager.unloadExtension(pkg)
                 }
+                refreshInstalledAndSources()
             } catch (e: Exception) {
                 _state.update { it.copy(errorMessage = "Failed to toggle $pkg: ${e.message}") }
             }
+        }
+    }
+
+    fun setSourceEnabled(sourceId: Long, enabled: Boolean) {
+        sourceManager.setSourceEnabled(sourceId, enabled)
+        refreshInstalledAndSources()
+    }
+
+    fun toggleSourceEnabled(sourceId: Long) {
+        setSourceEnabled(sourceId, !sourceManager.isSourceEnabled(sourceId))
+    }
+
+    fun setSourceIncognito(sourceId: Long, incognito: Boolean) {
+        sourceManager.setSourceIncognito(sourceId, incognito)
+        refreshInstalledAndSources()
+    }
+
+    fun toggleSourceIncognito(sourceId: Long) {
+        setSourceIncognito(sourceId, !sourceManager.isSourceIncognito(sourceId))
+    }
+
+    fun setExtensionIncognito(pkg: String, incognito: Boolean) {
+        sourceManager.setExtensionIncognito(pkg, incognito)
+        _state.update { current ->
+            val updated = if (incognito) {
+                current.incognitoExtensionPackages + pkg
+            } else {
+                current.incognitoExtensionPackages - pkg
+            }
+            current.copy(incognitoExtensionPackages = updated)
+        }
+    }
+
+    fun toggleExtensionIncognito(pkg: String) {
+        setExtensionIncognito(pkg, !sourceManager.isExtensionIncognito(pkg))
+    }
+
+    /** Android-style alias for toggling an extension-level incognito flag. */
+    fun toggleIncognito(pkg: String) = toggleExtensionIncognito(pkg)
+
+    /** Android-style alias for toggling a source's enabled flag. */
+    fun toggleSource(sourceId: Long) = toggleSourceEnabled(sourceId)
+
+    fun clearExtensionCookies(pkg: String) {
+        sourceManager.clearExtensionCookies(pkg)
+    }
+
+    fun clearSourceCookies(sourceId: Long) {
+        sourceManager.clearSourceCookies(sourceId)
+    }
+
+    fun clearCookies(pkg: String) = clearExtensionCookies(pkg)
+
+    fun clearCookies(sourceId: Long) = clearSourceCookies(sourceId)
+
+    fun setSourcePreferenceValue(sourceId: Long, key: String, value: String) {
+        sourceManager.setSourcePreferenceValue(sourceId, key, value)
+        _state.update { current ->
+            val updatedValues = current.sourcePreferenceValues[sourceId].orEmpty().toMutableMap()
+            updatedValues[key] = value
+            current.copy(
+                sourcePreferenceValues = current.sourcePreferenceValues + (sourceId to updatedValues),
+            )
         }
     }
 
@@ -456,5 +581,16 @@ class BrowsePresenter(
                 }
             }
         }
+    }
+}
+
+internal fun countPendingExtensionUpdates(
+    installed: List<InstalledExtension>,
+    available: List<ExtensionStoreItem>,
+): Int {
+    val installedVersions = installed.associate { extension -> extension.pkg to extension.manifest.versionCode }
+    return available.count { extension ->
+        val installedVersion = installedVersions[extension.pkg]
+        installedVersion != null && extension.versionCode > installedVersion
     }
 }

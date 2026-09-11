@@ -70,10 +70,11 @@ class DesktopRuntime(
         ),
     val extensionStoreService: mihon.desktop.extension.ExtensionStoreService =
         mihon.desktop.extension.ExtensionStoreService(preferenceStore = preferences),
+    val processManager: mihon.desktop.extension.WindowsExtensionProcessManager? = null,
     val sourceManager: mihon.desktop.extension.DesktopSourceManager =
         mihon.desktop.extension.DesktopSourceManager(
             installer = extensionInstaller,
-            processManager = null,
+            processManager = processManager,
         ),
     val onlineMangaSyncService: mihon.desktop.extension.OnlineMangaSyncService =
         mihon.desktop.extension.OnlineMangaSyncService(
@@ -217,42 +218,90 @@ object DesktopRuntimeFactory {
             val localLibraryRoot = directories.root.resolve("media").resolve("local").toAbsolutePath().normalize()
             cleanupOrphans(localImporter, localLibraryRoot)
             val preferences = DesktopPreferenceStore(directories.root.resolve("preferences.properties"))
+            val notificationService = mihon.desktop.notification.WindowsDesktopNotificationService(
+                enabledProvider = { preferences.load().desktopNotificationsEnabled },
+                hideContentProvider = { preferences.load().desktopNotificationsHideContent },
+            )
+            val downloadsDir = directories.root.resolve("media").resolve("downloads").toAbsolutePath().normalize()
+            val downloadDiskProvider = mihon.desktop.download.DownloadDiskProvider(downloadsDir)
+            val downloadStore = mihon.desktop.download.DownloadStore(directories.root.resolve("downloads.json"))
+            val cookieStore = mihon.desktop.extension.DesktopCookieStore(directories.root.resolve("cookies.json"))
+            val networkHelper = mihon.desktop.extension.DesktopNetworkHelper(cookieStore = cookieStore)
+            val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+            val extensionDir = directories.root.resolve("extensions").toFile()
+            val extensionHostDir = directories.root.resolve("extension-host").toFile()
+            val processManager = mihon.desktop.extension.WindowsExtensionProcessManager(
+                workingDirectory = extensionHostDir,
+                sourceSessionFile = directories.root.resolve("cookies.json").toFile(),
+                onBrokerHttp = { request -> networkHelper.executeBrokeredRequest(request) },
+                scope = appScope,
+            )
+            val extensionInstaller = mihon.desktop.extension.DesktopExtensionInstaller(
+                installRoot = extensionDir,
+                preferenceStore = preferences,
+            )
+            extensionInstaller.getInstalledExtensions().filter { it.isEnabled }.forEach { ext ->
+                networkHelper.registerExtensionDomains(ext.pkg, ext.manifest.declaredDomains)
+            }
+
+            val extensionStoreService = mihon.desktop.extension.ExtensionStoreService(preferenceStore = preferences)
+            val sourceManager = mihon.desktop.extension.DesktopSourceManager(
+                installer = extensionInstaller,
+                processManager = processManager,
+                cookieStore = cookieStore,
+            )
+            val onlineMangaSyncService = mihon.desktop.extension.OnlineMangaSyncService(
+                libraryRepository = library,
+                sourceManager = sourceManager,
+            )
             val readerFactory = if (command == DesktopCommand.LaunchUi || command is DesktopCommand.VerifyReader) {
                 DesktopReaderFactory(
                     applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
                     library = library,
                     settings = DesktopReaderSettingsStore(preferences),
+                    onlineChapters = library,
+                    sourceManager = sourceManager,
+                    networkHelper = networkHelper,
+                    onlineCacheDir = directories.cache.resolve("online-pages").toFile(),
                 )
             } else {
                 null
             }
-            val notificationService = mihon.desktop.notification.WindowsDesktopNotificationService()
-            val downloadsDir = directories.root.resolve("media").resolve("downloads").toAbsolutePath().normalize()
-            val downloadDiskProvider = mihon.desktop.download.DownloadDiskProvider(downloadsDir)
-            val downloadStore = mihon.desktop.download.DownloadStore(directories.root.resolve("downloads.json"))
-            val networkHelper = mihon.desktop.extension.DesktopNetworkHelper()
+
             val downloader = mihon.desktop.download.DesktopDownloader(
                 store = downloadStore,
                 diskProvider = downloadDiskProvider,
                 networkHelper = networkHelper,
+                processManager = processManager,
+                sourceManager = sourceManager,
                 mutationPort = library,
+                downloadParallelism = { preferences.load().downloadParallelCount },
+                pageParallelism = { preferences.load().downloadPageParallelCount },
                 onDownloadCompleted = { download ->
                     notificationService.notifyDownloadComplete(download.mangaTitle, download.chapterName)
                 },
                 onDownloadFailed = { download, error ->
                     notificationService.notifyDownloadError(download.mangaTitle, download.chapterName, error)
                 },
+                onDownloadProgress = { download ->
+                    notificationService.notifyDownloadProgress(
+                        download.mangaTitle,
+                        download.chapterName,
+                        download.progress,
+                    )
+                },
             )
             val updateService = mihon.desktop.updates.DesktopLibraryUpdateService(
                 repository = library,
                 mutationPort = library,
+                processManager = processManager,
                 onUpdateCompleted = { result ->
                     if (result.newChaptersFound > 0) {
                         notificationService.notifyLibraryUpdate(result.newChaptersFound, result.mangaWithNewChapters)
                     }
                 },
             )
-            val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
             val historyService = mihon.desktop.history.DesktopHistoryService(
                 repository = library,
                 mutationPort = library,
@@ -278,20 +327,6 @@ object DesktopRuntimeFactory {
                 directories = directories,
                 repository = library,
             )
-            val extensionDir = directories.root.resolve("extensions").toFile()
-            val extensionInstaller = mihon.desktop.extension.DesktopExtensionInstaller(
-                installRoot = extensionDir,
-                preferenceStore = preferences,
-            )
-            val extensionStoreService = mihon.desktop.extension.ExtensionStoreService(preferenceStore = preferences)
-            val sourceManager = mihon.desktop.extension.DesktopSourceManager(
-                installer = extensionInstaller,
-                processManager = null,
-            )
-            val onlineMangaSyncService = mihon.desktop.extension.OnlineMangaSyncService(
-                libraryRepository = library,
-                sourceManager = sourceManager,
-            )
             val statsService = mihon.desktop.stats.DesktopStatsService(library)
             val backupDir = directories.root.resolve("backups").toAbsolutePath().normalize()
             java.nio.file.Files.createDirectories(backupDir)
@@ -302,9 +337,9 @@ object DesktopRuntimeFactory {
                 defaultBackupDir = backupDir,
                 scope = appScope,
             )
-            val cookieStore = mihon.desktop.extension.DesktopCookieStore(directories.root.resolve("cookies.json"))
             val desktopNotificationService = mihon.desktop.platform.DesktopNotificationService(
                 enabledProvider = { preferences.load().desktopNotificationsEnabled },
+                hideContentProvider = { preferences.load().desktopNotificationsHideContent },
             )
             val libraryUpdateService = mihon.desktop.library.update.LibraryUpdateService(
                 repository = library,
@@ -347,12 +382,14 @@ object DesktopRuntimeFactory {
                 libraryUpdateScheduler = libraryUpdateScheduler,
                 extensionInstaller = extensionInstaller,
                 extensionStoreService = extensionStoreService,
+                processManager = processManager,
                 sourceManager = sourceManager,
                 onlineMangaSyncService = onlineMangaSyncService,
                 closeReaderServices = {
                     backupScheduler.stop()
                     readerFactory?.closeServices()
                     sourceManager.close()
+                    processManager.close()
                     appScope.cancel()
                 },
             )

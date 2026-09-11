@@ -83,7 +83,12 @@ class ReaderScreenTest {
         onNodeWithTag("reader-zoom-in").performClick()
         onNodeWithTag("reader-fullscreen").performClick()
         onNodeWithTag("reader-borderless").performClick()
+        onNodeWithTag("reader-shortcuts-btn").assertIsDisplayed()
+        onNodeWithTag("reader-scrubber-slider").assertIsDisplayed()
+        onNodeWithTag("reader-scrubber-next").assertIsDisplayed()
+        onNodeWithTag("reader-scrubber-next").performClick()
 
+        session.actions shouldContain ReaderAction.Next
         session.actions shouldContain ReaderAction.ChangeMode(ReadingMode.DUAL_RTL)
         session.actions shouldContain ReaderAction.SetCoverOffset(true)
         session.actions shouldContain ReaderAction.SetScaleMode(ScaleMode.FIT_HEIGHT)
@@ -182,6 +187,34 @@ class ReaderScreenTest {
     }
 
     @Test
+    fun `initial open failure retries the whole chapter when no page is available`() = runComposeUiTest {
+        val session = FakeReaderSession(
+            ReaderState(
+                loadState = ReaderLoadState.Failed(
+                    ReaderSessionError(
+                        ReaderErrorCode.SOURCE_UNAVAILABLE,
+                        ReaderFailure.UnsupportedFormat("online source"),
+                    ),
+                ),
+                error = ReaderSessionError(
+                    ReaderErrorCode.SOURCE_UNAVAILABLE,
+                    ReaderFailure.UnsupportedFormat("online source"),
+                ),
+            ),
+        )
+        var chapterRetries = 0
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            onRetryChapter = { chapterRetries++ },
+        )
+
+        onNodeWithTag("reader-error-retry").performClick()
+        waitForIdle()
+        chapterRetries shouldBe 1
+    }
+
+    @Test
     fun `cache diagnostic appears only for explicit debug mode`() = runComposeUiTest {
         setReaderScreen(FakeReaderSession(ready()), settingsStore(), debugEnabled = false)
         onNodeWithTag("reader-cache-diagnostic").assertDoesNotExist()
@@ -277,6 +310,7 @@ class ReaderScreenTest {
         onFullscreen: () -> Unit = {},
         onBorderless: () -> Unit = {},
         onBack: () -> Unit = {},
+        onRetryChapter: suspend () -> Unit = {},
         debugEnabled: Boolean = false,
     ) {
         setContent {
@@ -291,6 +325,7 @@ class ReaderScreenTest {
                             onBack = onBack,
                             onFullscreen = onFullscreen,
                             onBorderless = onBorderless,
+                            onRetryChapter = onRetryChapter,
                             debugEnabled = debugEnabled,
                         )
                     }

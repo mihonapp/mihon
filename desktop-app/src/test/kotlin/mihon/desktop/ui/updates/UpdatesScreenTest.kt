@@ -35,6 +35,29 @@ class UpdatesScreenTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
+    fun `upcoming entry point invokes callback`() = runComposeUiTest {
+        var opened = false
+
+        setContent {
+            Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
+                UpdatesScreen(
+                    updatedChapters = emptyList(),
+                    isUpdating = false,
+                    lastResult = null,
+                    onCheckForUpdates = {},
+                    onReadChapter = {},
+                    onOpenUpcoming = { opened = true },
+                )
+            }
+        }
+
+        onNodeWithText("Upcoming").assertExists()
+        onNodeWithTag(UPDATES_OPEN_UPCOMING_BUTTON_TEST_TAG).performClick()
+        opened shouldBe true
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
     fun `renders updated chapters and clicks check and read`() = runComposeUiTest {
         var checkedForUpdates = false
         var readChapterId: Long? = null

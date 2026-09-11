@@ -30,4 +30,33 @@ class DesktopNotificationServiceTest {
         service.clearNotifications()
         service.recentNotifications.value shouldHaveSize 0
     }
+
+    @Test
+    fun `respects disabled and hide-content preferences for every notification kind`() {
+        var enabled = false
+        var hideContent = true
+        val service = WindowsDesktopNotificationService(
+            enabledProvider = { enabled },
+            hideContentProvider = { hideContent },
+        )
+
+        service.notifyDownloadComplete("Secret Manga", "Chapter 9")
+        service.recentNotifications.value shouldHaveSize 0
+
+        enabled = true
+        service.notifyDownloadProgress("Secret Manga", "Chapter 9", 0.5f)
+        service.notifyDownloadError("Secret Manga", "Chapter 9", "private path")
+        service.notifyLibraryUpdate(3, 1)
+        service.notifyExtensionUpdatePending(2)
+
+        val notifications = service.recentNotifications.value
+        notifications shouldHaveSize 4
+        notifications.all { "Secret Manga" !in it.message } shouldBe true
+        notifications.all { "private path" !in it.message } shouldBe true
+        notifications.first().title shouldBe "Extension Updates Available"
+
+        hideContent = false
+        service.notifyDownloadComplete("Visible Manga", "Chapter 1")
+        service.recentNotifications.value.first().message shouldBe "Visible Manga - Chapter 1"
+    }
 }

@@ -9,6 +9,7 @@ import mihon.desktop.reader.ReaderClickAction
 import mihon.desktop.reader.ReaderColorFilter
 import mihon.desktop.reader.ReaderWheelBehavior
 import mihon.desktop.track.TrackStatus
+import mihon.desktop.ui.theme.DesktopAppTheme
 import mihon.reader.model.ReaderErrorCode
 import mihon.reader.model.ReadingMode
 import mihon.reader.model.ScaleMode
@@ -137,9 +138,39 @@ interface DesktopStrings {
     val markAsUnread: String
     val markPreviousAsRead: String
     val downloadChapter: String
+    val downloadNext1: String
+    val downloadNext5: String
+    val downloadNext10: String
+    val downloadNext25: String
+    val downloadUnread: String
+    val downloadAll: String
+    val readerPreviousChapter: String
+    val readerNextChapter: String
+    val readerChapterList: String
+    val readerCurrentChapter: String
+    val readerChapterDrawerSearch: String
+    val readerChapterDrawerNoResults: String
+    val mangaDetailSearchChaptersPlaceholder: String
     val deleteDownload: String
     val bookmarkChapter: String
     val removeBookmark: String
+    val chapterBatchSelect: String
+    fun chapterBatchSelected(count: Int): String
+    val chapterBatchSelectAll: String
+    val chapterBatchInvert: String
+    val chapterBatchBookmark: String
+    val chapterBatchRemoveBookmark: String
+    val chapterBatchMarkAsRead: String
+    val chapterBatchMarkAsUnread: String
+    val chapterBatchDownload: String
+    val chapterBatchDeleteDownload: String
+    val mangaDetailCoverView: String
+    val mangaDetailCoverSave: String
+    val mangaDetailCoverSaved: String
+    val mangaNotesTitle: String
+    val mangaNotesEdit: String
+    val mangaNotesSave: String
+    val mangaNotesPlaceholder: String
 
     // Storage & Cache Cleaner
     val storageCleanerTitle: String
@@ -205,6 +236,36 @@ interface DesktopStrings {
     val browseInstallFromFile: String
     val browseUpdateAll: String
 
+    // Extension Details & Source Preferences
+    val extensionInfo: String
+    val extensionOpenRepo: String
+    val extensionEnableAll: String
+    val extensionDisableAll: String
+    val extensionClearCookies: String
+    val extensionVersion: String
+    val extensionLanguage: String
+    val extensionAgeRating: String
+    val extensionNsfwShort: String
+    val extensionNsfwWarning: String
+    val extensionUninstall: String
+    val extensionUpdate: String
+    val extensionTrust: String
+    val extensionRevoke: String
+    val extensionUntrusted: String
+    val extensionObsolete: String
+    val extensionObsoleteWarning: String
+    val extensionIncognitoMode: String
+    val extensionIncognitoSummary: String
+    val extensionDebugInfoCopied: String
+    val extensionCookiesCleared: String
+    val sourcePreferencesTitle: String
+    val sourcePreferencesEmpty: String
+    val sourcePreferencesUnsupported: String
+    val sourcePreferencesSaveError: String
+    val actionOk: String
+    val actionCancel: String
+    val actionSettings: String
+
     // Reader
     val readerModeSingleLtr: String
     val readerModeSingleRtl: String
@@ -256,6 +317,10 @@ interface DesktopStrings {
     val settingsThemeSystem: String
     val settingsThemeLight: String
     val settingsThemeDark: String
+    val settingsAppThemeTitle: String
+    val settingsThemeAmoledTitle: String
+    val settingsThemeAmoledSubtitle: String
+    fun appThemeName(theme: DesktopAppTheme): String
 
     // Settings - Reader
     val settingsDefaultReadingMode: String
@@ -446,6 +511,9 @@ interface DesktopStrings {
     val trackerPassword: String
     val trackerConnect: String
     val trackerLogin: String
+    val trackerLoginFailed: String
+    val trackerServerAuthHelp: String
+    val trackingRequestFailed: String
     fun trackingTitle(mangaTitle: String): String
     val trackingNotTracking: String
     val trackingNotLoggedIn: String
@@ -463,6 +531,8 @@ interface DesktopStrings {
     // Reader Chrome, Settings & Messages
     val readerFullscreen: String
     val readerBorderless: String
+    val readerShortcutsTitle: String
+    val readerShortcutsHelp: String
     fun readerCropToggle(active: Boolean): String
     fun readerCoverOffsetToggle(active: Boolean): String
     val readerModeDualLtr: String
@@ -705,9 +775,39 @@ object EnglishStrings : DesktopStrings {
     override val markAsUnread = "Mark Unread"
     override val markPreviousAsRead = "Mark Previous as Read"
     override val downloadChapter = "Download"
+    override val downloadNext1 = "Next 1 chapter"
+    override val downloadNext5 = "Next 5 chapters"
+    override val downloadNext10 = "Next 10 chapters"
+    override val downloadNext25 = "Next 25 chapters"
+    override val downloadUnread = "All unread"
+    override val downloadAll = "All chapters"
+    override val readerPreviousChapter = "Previous chapter"
+    override val readerNextChapter = "Next chapter"
+    override val readerChapterList = "Chapters"
+    override val readerCurrentChapter = "Current"
+    override val readerChapterDrawerSearch = "Filter chapters..."
+    override val readerChapterDrawerNoResults = "No chapters found"
+    override val mangaDetailSearchChaptersPlaceholder = "Filter chapters..."
     override val deleteDownload = "Delete Download"
     override val bookmarkChapter = "Bookmark"
     override val removeBookmark = "Remove Bookmark"
+    override val chapterBatchSelect = "Select chapters"
+    override fun chapterBatchSelected(count: Int): String = "$count selected"
+    override val chapterBatchSelectAll = "Select all"
+    override val chapterBatchInvert = "Invert selection"
+    override val chapterBatchBookmark = "Bookmark"
+    override val chapterBatchRemoveBookmark = "Remove bookmark"
+    override val chapterBatchMarkAsRead = "Mark as read"
+    override val chapterBatchMarkAsUnread = "Mark as unread"
+    override val chapterBatchDownload = "Download"
+    override val chapterBatchDeleteDownload = "Delete download"
+    override val mangaDetailCoverView = "View cover"
+    override val mangaDetailCoverSave = "Save cover"
+    override val mangaDetailCoverSaved = "Cover saved successfully"
+    override val mangaNotesTitle = "Notes"
+    override val mangaNotesEdit = "Edit note"
+    override val mangaNotesSave = "Save note"
+    override val mangaNotesPlaceholder = "Add personal notes for this manga..."
 
     // Storage & Cache Cleaner
     override val storageCleanerTitle = "Data & Storage Management"
@@ -771,6 +871,35 @@ object EnglishStrings : DesktopStrings {
     override val browseInstallFromFile = "Install .mext"
     override val browseUpdateAll = "Update All"
 
+    override val extensionInfo = "Extension info"
+    override val extensionOpenRepo = "Open repository"
+    override val extensionEnableAll = "Enable all"
+    override val extensionDisableAll = "Disable all"
+    override val extensionClearCookies = "Clear cookies"
+    override val extensionVersion = "Version"
+    override val extensionLanguage = "Language"
+    override val extensionAgeRating = "Age rating"
+    override val extensionNsfwShort = "18+"
+    override val extensionNsfwWarning = "This extension contains adult (18+) content.\nProceed only if you consent to view sensitive material."
+    override val extensionUninstall = "Uninstall"
+    override val extensionUpdate = "Update"
+    override val extensionTrust = "Trust"
+    override val extensionRevoke = "Revoke"
+    override val extensionUntrusted = "Untrusted"
+    override val extensionObsolete = "Obsolete"
+    override val extensionObsoleteWarning = "This extension was deprecated and will not receive any further updates. Consider uninstalling it."
+    override val extensionIncognitoMode = "Incognito mode"
+    override val extensionIncognitoSummary = "Reading history will not be recorded for manga from this extension."
+    override val extensionDebugInfoCopied = "Extension debug information copied to clipboard"
+    override val extensionCookiesCleared = "Cookies cleared"
+    override val sourcePreferencesTitle = "Source preferences"
+    override val sourcePreferencesEmpty = "No configurable preferences for this source."
+    override val sourcePreferencesUnsupported = "This source does not support configurable preferences."
+    override val sourcePreferencesSaveError = "Failed to save preference"
+    override val actionOk = "OK"
+    override val actionCancel = "Cancel"
+    override val actionSettings = "Settings"
+
     override val readerModeSingleLtr = "Left to Right"
     override val readerModeSingleRtl = "Right to Left"
     override val readerModeWebtoon = "Webtoon/Vertical"
@@ -818,6 +947,25 @@ object EnglishStrings : DesktopStrings {
     override val settingsThemeSystem = "System"
     override val settingsThemeLight = "Light"
     override val settingsThemeDark = "Dark"
+    override val settingsAppThemeTitle = "App Theme Palette"
+    override val settingsThemeAmoledTitle = "Pure Black AMOLED Theme"
+    override val settingsThemeAmoledSubtitle = "Use pure black (#000000) for background and surfaces in dark mode"
+    override fun appThemeName(theme: DesktopAppTheme) = when (theme) {
+        DesktopAppTheme.DEFAULT -> "Mihon (Default)"
+        DesktopAppTheme.GREEN_APPLE -> "Green Apple"
+        DesktopAppTheme.CATPPUCCIN -> "Catppuccin"
+        DesktopAppTheme.TOKYONIGHT -> "Tokyo Night"
+        DesktopAppTheme.LAVENDER -> "Lavender"
+        DesktopAppTheme.MIDNIGHT_DUSK -> "Midnight Dusk"
+        DesktopAppTheme.NORD -> "Nord"
+        DesktopAppTheme.STRAWBERRY_DAIQUIRI -> "Strawberry Daiquiri"
+        DesktopAppTheme.TAKO -> "Tako"
+        DesktopAppTheme.TEALTURQUOISE -> "Teal Turquoise"
+        DesktopAppTheme.TIDAL_WAVE -> "Tidal Wave"
+        DesktopAppTheme.YINYANG -> "Yin & Yang"
+        DesktopAppTheme.YOTSUBA -> "Yotsuba"
+        DesktopAppTheme.MONOCHROME -> "Monochrome"
+    }
 
     override val settingsDefaultReadingMode = "Default Reading Mode"
     override val settingsDefaultScaleMode = "Default Scale Mode"
@@ -1013,6 +1161,9 @@ object EnglishStrings : DesktopStrings {
     override val trackerPassword = "Password"
     override val trackerConnect = "Connect"
     override val trackerLogin = "Log In"
+    override val trackerLoginFailed = "Login failed. Check the account, credential and server address, then retry."
+    override val trackerServerAuthHelp = "For an API key, leave username empty. For a password, enter both fields."
+    override val trackingRequestFailed = "The tracking request failed. Check the connection and login, then retry."
     override fun trackingTitle(mangaTitle: String) = "Tracking - $mangaTitle"
     override val trackingNotTracking = "Not tracking"
     override val trackingNotLoggedIn = "Not logged in"
@@ -1037,6 +1188,8 @@ object EnglishStrings : DesktopStrings {
     // Reader Chrome, Settings & Messages
     override val readerFullscreen = "Fullscreen"
     override val readerBorderless = "Borderless"
+    override val readerShortcutsTitle = "Keyboard Shortcuts"
+    override val readerShortcutsHelp = "Shortcuts"
     override fun readerCropToggle(active: Boolean) = if (active) "Crop: On" else "Crop: Off"
     override fun readerCoverOffsetToggle(active: Boolean) = if (active) "Cover offset: On" else "Cover offset: Off"
     override val readerModeDualLtr = "Dual LTR"
@@ -1093,16 +1246,20 @@ object EnglishStrings : DesktopStrings {
         is ReaderFailure.PageNotFound -> "This page could not be found. It may have been moved or deleted."
         is ReaderFailure.UnsupportedFormat -> "This chapter format is not supported."
         is ReaderFailure.RemoteImage ->
-            "The page could not be downloaded. Check the network or source login, then retry."
+            "The page could not be downloaded.\n${error.cause?.cause?.message ?: error.cause?.message.orEmpty()}"
         is ReaderFailure.EncryptedContainer -> "Encrypted chapter containers are not supported."
         is ReaderFailure.UnsafePath,
-        is ReaderFailure.ResourceChanged -> "This local chapter is no longer available. Locate or re-import it."
+        is ReaderFailure.ResourceChanged,
+        -> "This local chapter is no longer available. Locate or re-import it."
         is ReaderFailure.CorruptContainer,
-        is ReaderFailure.CorruptImage -> "This page is corrupt or unreadable."
+        is ReaderFailure.CorruptImage,
+        -> "This page is corrupt or unreadable."
         is ReaderFailure.UnsupportedImage,
-        is ReaderFailure.RegionUnavailable -> "This image format is not supported."
+        is ReaderFailure.RegionUnavailable,
+        -> "This image format is not supported."
         is ReaderFailure.LimitExceeded,
-        is ReaderFailure.TooManyEntries -> "This chapter exceeds the safe reader limits."
+        is ReaderFailure.TooManyEntries,
+        -> "This chapter exceeds the safe reader limits."
         is ReaderFailure.EmptyChapter -> "This chapter contains no readable pages."
         else -> when (error.code) {
             ReaderErrorCode.EMPTY_CHAPTER -> "This chapter contains no readable pages."
@@ -1197,7 +1354,10 @@ object EnglishStrings : DesktopStrings {
     override fun importReportManga(inserted: Long, merged: Long) = "Manga: $inserted inserted, $merged merged"
     override fun importReportChapters(inserted: Long, merged: Long) = "Chapters: $inserted inserted, $merged merged"
     override fun importReportCategories(count: Long) = "Categories linked: $count"
-    override fun importReportPreferences(imported: Long, skipped: Long) = "Preferences: $imported imported, $skipped skipped"
+    override fun importReportPreferences(
+        imported: Long,
+        skipped: Long,
+    ) = "Preferences: $imported imported, $skipped skipped"
     override fun importReportSkipCategories(categories: String) = "Skip categories: $categories"
     override fun importReportCategory(category: String) = "Category: $category"
     override val mangaDetailBackToLibrary = "Back to Library"
@@ -1327,9 +1487,39 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val markAsUnread = "标为未读"
     override val markPreviousAsRead = "将更早章节标为已读"
     override val downloadChapter = "下载"
+    override val downloadNext1 = "下一话"
+    override val downloadNext5 = "下 5 话"
+    override val downloadNext10 = "下 10 话"
+    override val downloadNext25 = "下 25 话"
+    override val downloadUnread = "全部未读"
+    override val downloadAll = "全部章节"
+    override val readerPreviousChapter = "上一话"
+    override val readerNextChapter = "下一话"
+    override val readerChapterList = "章节列表"
+    override val readerCurrentChapter = "当前"
+    override val readerChapterDrawerSearch = "过滤章节..."
+    override val readerChapterDrawerNoResults = "未找到匹配章节"
+    override val mangaDetailSearchChaptersPlaceholder = "过滤章节..."
     override val deleteDownload = "删除下载"
     override val bookmarkChapter = "添加书签"
     override val removeBookmark = "移除书签"
+    override val chapterBatchSelect = "多选章节"
+    override fun chapterBatchSelected(count: Int): String = "已选择 $count 话"
+    override val chapterBatchSelectAll = "全选"
+    override val chapterBatchInvert = "反选"
+    override val chapterBatchBookmark = "添加书签"
+    override val chapterBatchRemoveBookmark = "移除书签"
+    override val chapterBatchMarkAsRead = "标记已读"
+    override val chapterBatchMarkAsUnread = "标记未读"
+    override val chapterBatchDownload = "下载"
+    override val chapterBatchDeleteDownload = "删除下载"
+    override val mangaDetailCoverView = "查看封面"
+    override val mangaDetailCoverSave = "保存封面"
+    override val mangaDetailCoverSaved = "封面已成功保存"
+    override val mangaNotesTitle = "个人便签"
+    override val mangaNotesEdit = "编辑便签"
+    override val mangaNotesSave = "保存便签"
+    override val mangaNotesPlaceholder = "添加关于此漫画的个人笔记或备注..."
 
     // Storage & Cache Cleaner
     override val storageCleanerTitle = "数据与存储管理"
@@ -1395,6 +1585,35 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val browseInstallFromFile = "本地安装 (.mext)"
     override val browseUpdateAll = "全部更新"
 
+    override val extensionInfo = "插件信息"
+    override val extensionOpenRepo = "打开仓库"
+    override val extensionEnableAll = "全部启用"
+    override val extensionDisableAll = "全部禁用"
+    override val extensionClearCookies = "清除 Cookies"
+    override val extensionVersion = "版本"
+    override val extensionLanguage = "语言"
+    override val extensionAgeRating = "年龄分级"
+    override val extensionNsfwShort = "18+"
+    override val extensionNsfwWarning = "本插件包含成人（18+）内容。\n建议仅在知情且同意的情况下使用。"
+    override val extensionUninstall = "卸载"
+    override val extensionUpdate = "更新"
+    override val extensionTrust = "信任"
+    override val extensionRevoke = "撤销信任"
+    override val extensionUntrusted = "未受信任"
+    override val extensionObsolete = "已废弃"
+    override val extensionObsoleteWarning = "此扩展已过时且已被废弃。建议卸载。"
+    override val extensionIncognitoMode = "无痕模式"
+    override val extensionIncognitoSummary = "该插件的漫画将不会记录阅读历史"
+    override val extensionDebugInfoCopied = "已复制插件调试信息到剪贴板"
+    override val extensionCookiesCleared = "已清除 Cookies"
+    override val sourcePreferencesTitle = "图源偏好设置"
+    override val sourcePreferencesEmpty = "此图源没有可配置的偏好设置"
+    override val sourcePreferencesUnsupported = "此图源不支持偏好设置配置"
+    override val sourcePreferencesSaveError = "保存偏好设置失败"
+    override val actionOk = "确定"
+    override val actionCancel = "取消"
+    override val actionSettings = "设置"
+
     override val readerModeSingleLtr = "单页式（从左到右）"
     override val readerModeSingleRtl = "单页式（从右到左）"
     override val readerModeWebtoon = "条漫"
@@ -1442,6 +1661,25 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val settingsThemeSystem = "跟随系统"
     override val settingsThemeLight = "浅色"
     override val settingsThemeDark = "深色"
+    override val settingsAppThemeTitle = "应用主题配色"
+    override val settingsThemeAmoledTitle = "纯黑 AMOLED 深色模式"
+    override val settingsThemeAmoledSubtitle = "在深色模式下使用纯黑 (#000000) 背景与卡片表面"
+    override fun appThemeName(theme: DesktopAppTheme) = when (theme) {
+        DesktopAppTheme.DEFAULT -> "Mihon 经典蓝绿"
+        DesktopAppTheme.GREEN_APPLE -> "青苹果 (Green Apple)"
+        DesktopAppTheme.CATPPUCCIN -> "Catppuccin 萌系紫"
+        DesktopAppTheme.TOKYONIGHT -> "东京夜景 (Tokyo Night)"
+        DesktopAppTheme.LAVENDER -> "薰衣草 (Lavender)"
+        DesktopAppTheme.MIDNIGHT_DUSK -> "午夜暮色 (Midnight Dusk)"
+        DesktopAppTheme.NORD -> "北欧冷蓝 (Nord)"
+        DesktopAppTheme.STRAWBERRY_DAIQUIRI -> "草莓甜心 (Strawberry)"
+        DesktopAppTheme.TAKO -> "Tako 触手紫"
+        DesktopAppTheme.TEALTURQUOISE -> "青绿湖水 (Teal Turquoise)"
+        DesktopAppTheme.TIDAL_WAVE -> "潮汐深海 (Tidal Wave)"
+        DesktopAppTheme.YINYANG -> "阴阳高对比 (Yin & Yang)"
+        DesktopAppTheme.YOTSUBA -> "四叶草暖橙 (Yotsuba)"
+        DesktopAppTheme.MONOCHROME -> "极简单色 (Monochrome)"
+    }
 
     override val settingsDefaultReadingMode = "默认阅读模式"
     override val settingsDefaultScaleMode = "默认缩放模式"
@@ -1636,6 +1874,9 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val trackerPassword = "密码"
     override val trackerConnect = "连接"
     override val trackerLogin = "登录"
+    override val trackerLoginFailed = "登录失败，请检查账户、凭证和服务器地址后重试。"
+    override val trackerServerAuthHelp = "使用 API 密钥时留空用户名；使用密码时填写用户名和密码。"
+    override val trackingRequestFailed = "追踪请求失败，请检查网络和登录状态后重试。"
     override fun trackingTitle(mangaTitle: String) = "进度记录 - $mangaTitle"
     override val trackingNotTracking = "未记录"
     override val trackingNotLoggedIn = "未登录"
@@ -1660,6 +1901,8 @@ object SimplifiedChineseStrings : DesktopStrings {
     // Reader Chrome, Settings & Messages
     override val readerFullscreen = "全屏"
     override val readerBorderless = "无边框"
+    override val readerShortcutsTitle = "快捷键速查"
+    override val readerShortcutsHelp = "快捷键"
     override fun readerCropToggle(active: Boolean) = if (active) "裁切白边: 开" else "裁切白边: 关"
     override fun readerCoverOffsetToggle(active: Boolean) = if (active) "封面偏移: 开" else "封面偏移: 关"
     override val readerModeDualLtr = "双页拼合（从左到右）"
@@ -1720,16 +1963,20 @@ object SimplifiedChineseStrings : DesktopStrings {
     override fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
         is ReaderFailure.PageNotFound -> "无法找到此页面，可能已被移动或删除。"
         is ReaderFailure.UnsupportedFormat -> "不支持此章节格式。"
-        is ReaderFailure.RemoteImage -> "页面下载失败，请检查网络或图源登录状态后重试。"
+        is ReaderFailure.RemoteImage -> "页面下载失败。\n${error.cause?.cause?.message ?: error.cause?.message.orEmpty()}"
         is ReaderFailure.EncryptedContainer -> "不支持加密的章节压缩包。"
         is ReaderFailure.UnsafePath,
-        is ReaderFailure.ResourceChanged -> "本地章节已不可用，请重新导入或检查文件位置。"
+        is ReaderFailure.ResourceChanged,
+        -> "本地章节已不可用，请重新导入或检查文件位置。"
         is ReaderFailure.CorruptContainer,
-        is ReaderFailure.CorruptImage -> "页面文件损坏或无法读取。"
+        is ReaderFailure.CorruptImage,
+        -> "页面文件损坏或无法读取。"
         is ReaderFailure.UnsupportedImage,
-        is ReaderFailure.RegionUnavailable -> "不支持此图片格式。"
+        is ReaderFailure.RegionUnavailable,
+        -> "不支持此图片格式。"
         is ReaderFailure.LimitExceeded,
-        is ReaderFailure.TooManyEntries -> "章节内容超出安全阅读限制。"
+        is ReaderFailure.TooManyEntries,
+        -> "章节内容超出安全阅读限制。"
         is ReaderFailure.EmptyChapter -> "此章节不包含任何可读取的页面。"
         else -> when (error.code) {
             ReaderErrorCode.EMPTY_CHAPTER -> "此章节不包含任何可读取的页面。"
@@ -1952,9 +2199,39 @@ object TraditionalChineseStrings : DesktopStrings {
     override val markAsUnread = "標為未讀"
     override val markPreviousAsRead = "將更早章節標為已讀"
     override val downloadChapter = "下載"
+    override val downloadNext1 = "下一話"
+    override val downloadNext5 = "下 5 話"
+    override val downloadNext10 = "下 10 話"
+    override val downloadNext25 = "下 25 話"
+    override val downloadUnread = "全部未讀"
+    override val downloadAll = "全部章節"
+    override val readerPreviousChapter = "上一話"
+    override val readerNextChapter = "下一話"
+    override val readerChapterList = "章節目錄"
+    override val readerCurrentChapter = "目前"
+    override val readerChapterDrawerSearch = "過濾章節..."
+    override val readerChapterDrawerNoResults = "未找到相符章節"
+    override val mangaDetailSearchChaptersPlaceholder = "過濾章節..."
     override val deleteDownload = "刪除下載"
     override val bookmarkChapter = "添加書籤"
     override val removeBookmark = "移除書籤"
+    override val chapterBatchSelect = "多選章節"
+    override fun chapterBatchSelected(count: Int): String = "已選擇 $count 話"
+    override val chapterBatchSelectAll = "全選"
+    override val chapterBatchInvert = "反選"
+    override val chapterBatchBookmark = "加入書籤"
+    override val chapterBatchRemoveBookmark = "移除書籤"
+    override val chapterBatchMarkAsRead = "標記為已讀"
+    override val chapterBatchMarkAsUnread = "標記為未讀"
+    override val chapterBatchDownload = "下載"
+    override val chapterBatchDeleteDownload = "刪除下載"
+    override val mangaDetailCoverView = "檢視封面"
+    override val mangaDetailCoverSave = "儲存封面"
+    override val mangaDetailCoverSaved = "封面已成功儲存"
+    override val mangaNotesTitle = "個人備忘"
+    override val mangaNotesEdit = "編輯備忘"
+    override val mangaNotesSave = "儲存備忘"
+    override val mangaNotesPlaceholder = "新增關於此漫畫的個人筆記或備忘..."
 
     // Storage & Cache Cleaner
     override val storageCleanerTitle = "資料與儲存管理"
@@ -2020,6 +2297,35 @@ object TraditionalChineseStrings : DesktopStrings {
     override val browseInstallFromFile = "本機安裝 (.mext)"
     override val browseUpdateAll = "全部更新"
 
+    override val extensionInfo = "擴充套件資訊"
+    override val extensionOpenRepo = "開啟存放庫"
+    override val extensionEnableAll = "全部啟用"
+    override val extensionDisableAll = "全部停用"
+    override val extensionClearCookies = "清除 Cookie"
+    override val extensionVersion = "版本"
+    override val extensionLanguage = "語言"
+    override val extensionAgeRating = "年齡分級"
+    override val extensionNsfwShort = "18+"
+    override val extensionNsfwWarning = "此擴充套件包含成人（18+）內容。\n建議僅在知情並同意的情況下使用。"
+    override val extensionUninstall = "解除安裝"
+    override val extensionUpdate = "更新"
+    override val extensionTrust = "信任"
+    override val extensionRevoke = "撤銷信任"
+    override val extensionUntrusted = "未受信任"
+    override val extensionObsolete = "已淘汰"
+    override val extensionObsoleteWarning = "此擴充功能已淘汰，不再進行維護。建議解除安裝。"
+    override val extensionIncognitoMode = "無痕模式"
+    override val extensionIncognitoSummary = "此擴充套件的漫畫將不會記錄閱讀記錄"
+    override val extensionDebugInfoCopied = "已複製擴充套件偵錯資訊至剪貼簿"
+    override val extensionCookiesCleared = "已清除 Cookie"
+    override val sourcePreferencesTitle = "圖源偏好設定"
+    override val sourcePreferencesEmpty = "此圖源沒有可設定的偏好設定"
+    override val sourcePreferencesUnsupported = "此圖源不支援偏好設定"
+    override val sourcePreferencesSaveError = "儲存偏好設定失敗"
+    override val actionOk = "確定"
+    override val actionCancel = "取消"
+    override val actionSettings = "設定"
+
     override val readerModeSingleLtr = "單頁式（從左到右）"
     override val readerModeSingleRtl = "單頁式（從右到左）"
     override val readerModeWebtoon = "條漫"
@@ -2067,6 +2373,25 @@ object TraditionalChineseStrings : DesktopStrings {
     override val settingsThemeSystem = "跟隨系統"
     override val settingsThemeLight = "淺色"
     override val settingsThemeDark = "深色"
+    override val settingsAppThemeTitle = "應用程式主題配色"
+    override val settingsThemeAmoledTitle = "純黑 AMOLED 深色模式"
+    override val settingsThemeAmoledSubtitle = "在深色模式下使用純黑 (#000000) 背景與表面"
+    override fun appThemeName(theme: DesktopAppTheme) = when (theme) {
+        DesktopAppTheme.DEFAULT -> "Mihon 經典藍綠"
+        DesktopAppTheme.GREEN_APPLE -> "青蘋果 (Green Apple)"
+        DesktopAppTheme.CATPPUCCIN -> "Catppuccin 萌系紫"
+        DesktopAppTheme.TOKYONIGHT -> "東京夜景 (Tokyo Night)"
+        DesktopAppTheme.LAVENDER -> "薰衣草 (Lavender)"
+        DesktopAppTheme.MIDNIGHT_DUSK -> "午夜暮色 (Midnight Dusk)"
+        DesktopAppTheme.NORD -> "北歐冷藍 (Nord)"
+        DesktopAppTheme.STRAWBERRY_DAIQUIRI -> "草莓甜心 (Strawberry)"
+        DesktopAppTheme.TAKO -> "Tako 觸手紫"
+        DesktopAppTheme.TEALTURQUOISE -> "青綠湖水 (Teal Turquoise)"
+        DesktopAppTheme.TIDAL_WAVE -> "潮汐深海 (Tidal Wave)"
+        DesktopAppTheme.YINYANG -> "陰陽高對比 (Yin & Yang)"
+        DesktopAppTheme.YOTSUBA -> "四葉草暖橙 (Yotsuba)"
+        DesktopAppTheme.MONOCHROME -> "極簡單色 (Monochrome)"
+    }
 
     override val settingsDefaultReadingMode = "預設閱讀模式"
     override val settingsDefaultScaleMode = "預設縮放模式"
@@ -2261,6 +2586,9 @@ object TraditionalChineseStrings : DesktopStrings {
     override val trackerPassword = "密碼"
     override val trackerConnect = "連線"
     override val trackerLogin = "登入"
+    override val trackerLoginFailed = "登入失敗，請檢查帳戶、憑證和伺服器位址後重試。"
+    override val trackerServerAuthHelp = "使用 API 金鑰時留空使用者名稱；使用密碼時填寫使用者名稱和密碼。"
+    override val trackingRequestFailed = "追蹤請求失敗，請檢查網路和登入狀態後重試。"
     override fun trackingTitle(mangaTitle: String) = "進度記錄 - $mangaTitle"
     override val trackingNotTracking = "未記錄"
     override val trackingNotLoggedIn = "未登入"
@@ -2285,6 +2613,8 @@ object TraditionalChineseStrings : DesktopStrings {
     // Reader Chrome, Settings & Messages
     override val readerFullscreen = "全螢幕"
     override val readerBorderless = "無邊框"
+    override val readerShortcutsTitle = "快捷鍵速查"
+    override val readerShortcutsHelp = "快捷鍵"
     override fun readerCropToggle(active: Boolean) = if (active) "裁切白邊: 開" else "裁切白邊: 關"
     override fun readerCoverOffsetToggle(active: Boolean) = if (active) "封面偏移: 開" else "封面偏移: 關"
     override val readerModeDualLtr = "雙頁拼合（從左到右）"
@@ -2345,16 +2675,20 @@ object TraditionalChineseStrings : DesktopStrings {
     override fun readerErrorMessage(error: ReaderSessionError): String = when (error.cause) {
         is ReaderFailure.PageNotFound -> "找不到此頁面，可能已被移動或刪除。"
         is ReaderFailure.UnsupportedFormat -> "不支援此章節格式。"
-        is ReaderFailure.RemoteImage -> "頁面下載失敗，請檢查網路或圖源登入狀態後重試。"
+        is ReaderFailure.RemoteImage -> "頁面下載失敗。\n${error.cause?.cause?.message ?: error.cause?.message.orEmpty()}"
         is ReaderFailure.EncryptedContainer -> "不支援加密的章節壓縮包。"
         is ReaderFailure.UnsafePath,
-        is ReaderFailure.ResourceChanged -> "本機章節已不可用，請重新匯入或檢查檔案位置。"
+        is ReaderFailure.ResourceChanged,
+        -> "本機章節已不可用，請重新匯入或檢查檔案位置。"
         is ReaderFailure.CorruptContainer,
-        is ReaderFailure.CorruptImage -> "頁面檔案損毀或無法讀取。"
+        is ReaderFailure.CorruptImage,
+        -> "頁面檔案損毀或無法讀取。"
         is ReaderFailure.UnsupportedImage,
-        is ReaderFailure.RegionUnavailable -> "不支援此圖片格式。"
+        is ReaderFailure.RegionUnavailable,
+        -> "不支援此圖片格式。"
         is ReaderFailure.LimitExceeded,
-        is ReaderFailure.TooManyEntries -> "章節內容超出安全閱讀限制。"
+        is ReaderFailure.TooManyEntries,
+        -> "章節內容超出安全閱讀限制。"
         is ReaderFailure.EmptyChapter -> "此章節不包含任何可讀取的頁面。"
         else -> when (error.code) {
             ReaderErrorCode.EMPTY_CHAPTER -> "此章節不包含任何可讀取的頁面。"
@@ -2465,4 +2799,3 @@ fun ProvideDesktopStrings(
         content()
     }
 }
-

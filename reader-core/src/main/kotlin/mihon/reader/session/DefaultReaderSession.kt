@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import mihon.reader.model.PageId
@@ -36,6 +37,7 @@ class DefaultReaderSession(
     private val epochMillis: () -> Long = System::currentTimeMillis,
     private val visibleContent: suspend (PageId) -> AutoCloseable? = { null },
     private val animationCoordinator: AnimationCoordinator? = null,
+    private val invalidateContent: suspend (PageId) -> Unit = {},
 ) : ReaderSession {
     private val sessionLock = Mutex()
     private val _state = MutableStateFlow(
@@ -97,7 +99,25 @@ class DefaultReaderSession(
 
     override suspend fun retry(pageId: PageId) {
         sessionLock.withLock {
-            require(pageId in _state.value.pages.map { it.id }) { "page is not in the open chapter" }
+            val failedState = _state.value
+            require(pageId in failedState.pages.map { it.id }) { "page is not in the open chapter" }
+            visibleJob?.cancelAndJoin()
+            visibleLease?.close()
+            visibleLease = null
+            invalidateContent(pageId)
+            if (failedState.loadState is ReaderLoadState.Failed) {
+                val chapterId = requireNotNull(failedState.chapterId) { "failed reader has no chapter" }
+                val retryIndex = failedState.pages.indexOfFirst { it.id == pageId }
+                openLocked(chapterId, landAtEnd = false)
+                val reopened = _state.value
+                if (reopened.loadState is ReaderLoadState.Ready && retryIndex in reopened.pages.indices &&
+                    reopened.selectedIndex != retryIndex
+                ) {
+                    _state.value = reopened.reduce(ReaderAction.SetViewportAnchor(ReaderPosition(retryIndex)))
+                    requestVisibleLocked(pageId)
+                }
+                return@withLock
+            }
             visibleJob?.cancel()
             visibleLease?.close()
             visibleLease = null

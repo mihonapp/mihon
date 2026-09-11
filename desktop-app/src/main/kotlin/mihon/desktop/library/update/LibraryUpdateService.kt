@@ -26,8 +26,14 @@ class LibraryUpdateService(
     ): LibraryUpdateReport = withContext(Dispatchers.IO) {
         val allFavorites = repository.allMangaSnapshot().filter { it.favorite }
         val categoryLinks = repository.mangaCategoryLinksSnapshot()
+        val importedPreferences = repository.allPreferenceSnapshots().associateBy { it.key }
+        val includedCategoryIds = options.includedCategoryIds
+            ?: importedPreferences["library_update_categories"]?.valueJson.parseCategoryIds()
+        val excludedCategoryIds = options.excludedCategoryIds
+            ?: importedPreferences["library_update_categories_exclude"]?.valueJson.parseCategoryIds()
 
         val candidates = allFavorites.filter { manga ->
+            val chapters = repository.chapterSnapshot(manga.id)
             // 1. Check completed filter
             if (options.skipCompleted && isMangaCompleted(manga)) {
                 return@filter false
@@ -35,19 +41,24 @@ class LibraryUpdateService(
 
             // 2. Check unread filter
             if (options.skipUnread) {
-                val chapters = repository.chapterSnapshot(manga.id)
                 val hasUnread = chapters.any { !it.read }
                 if (hasUnread) {
                     return@filter false
                 }
             }
 
+            if (options.skipNotStarted && chapters.isNotEmpty()) {
+                val hasStarted = chapters.any { it.read || it.lastPageRead > 0L }
+                if (!hasStarted) return@filter false
+            }
+
             // 3. Check categories filter
-            if (options.categoryIds != null && options.categoryIds.isNotEmpty()) {
-                val mangaCats = categoryLinks[manga.id] ?: emptyList()
-                if (mangaCats.none { it in options.categoryIds }) {
-                    return@filter false
-                }
+            val mangaCategories = categoryLinks[manga.id].orEmpty()
+            if (!includedCategoryIds.isNullOrEmpty() && mangaCategories.none { it in includedCategoryIds }) {
+                return@filter false
+            }
+            if (!excludedCategoryIds.isNullOrEmpty() && mangaCategories.any { it in excludedCategoryIds }) {
+                return@filter false
             }
 
             true
@@ -161,5 +172,13 @@ class LibraryUpdateService(
     private fun isMangaCompleted(manga: MangaRecord): Boolean {
         // 2 = COMPLETED, 4 = PUBLISHING_FINISHED
         return manga.status == 2L || manga.status == 4L
+    }
+
+    private fun String?.parseCategoryIds(): Set<Long>? {
+        if (this == null) return null
+        return Regex("""\d+""").findAll(this)
+            .mapNotNull { match -> match.value.toLongOrNull() }
+            .filter { it > 0L }
+            .toSet()
     }
 }

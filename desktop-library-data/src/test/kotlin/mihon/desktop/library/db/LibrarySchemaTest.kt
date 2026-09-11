@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test
 
 class LibrarySchemaTest {
     @Test
-    fun `reader queries do not change the version one schema`() {
-        DesktopLibraryDatabase.Schema.version shouldBe 1L
+    fun `schema version includes the baseline migration`() {
+        DesktopLibraryDatabase.Schema.version shouldBe 2L
     }
 
     @Test
-    fun `schema creates every Plan 2 table`() {
+    fun `schema creates every Plan 2 table and the baseline metadata table`() {
         val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
         driver.use {
             DesktopLibraryDatabase.Schema.create(driver)
@@ -30,6 +30,7 @@ class LibrarySchemaTest {
                 "manga", "chapter", "category", "manga_category", "history", "tracking",
                 "source_metadata", "preference_snapshot", "source_preference_snapshot",
                 "local_manga_entry", "local_chapter_asset", "import_report", "import_report_item",
+                "library_metadata",
             )
         }
     }

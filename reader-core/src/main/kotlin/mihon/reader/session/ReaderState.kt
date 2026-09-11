@@ -70,6 +70,7 @@ data class ReaderState(
                 selectedIndex = action.index,
                 viewportAnchor = ReaderPosition(action.index),
                 visiblePages = listOf(pages[action.index].id),
+                pan = if (action.index == selectedIndex) pan else ReaderPan(0f, 0f),
             )
         }
         is ReaderAction.SetViewportAnchor -> {
@@ -78,6 +79,7 @@ data class ReaderState(
                 selectedIndex = action.position.pageIndex,
                 viewportAnchor = action.position,
                 visiblePages = listOf(pages[action.position.pageIndex].id),
+                pan = if (action.position.pageIndex == selectedIndex) pan else ReaderPan(0f, 0f),
             )
         }
         is ReaderAction.SetVisiblePages -> copy(visiblePages = action.pageIds.toList())

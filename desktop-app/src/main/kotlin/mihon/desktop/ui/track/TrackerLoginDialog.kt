@@ -9,16 +9,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 import mihon.desktop.i18n.LocalStrings
 import mihon.desktop.track.DesktopTracker
 import mihon.desktop.track.TrackerAuthType
@@ -27,15 +32,19 @@ import mihon.desktop.track.TrackerAuthType
 fun TrackerLoginDialog(
     tracker: DesktopTracker,
     onDismiss: () -> Unit,
-    onLogin: (credentials: Map<String, String>) -> Unit,
+    onLogin: suspend (credentials: Map<String, String>) -> Boolean,
 ) {
     val strings = LocalStrings.current
     var username by remember { mutableStateOf(tracker.username.orEmpty()) }
     var passwordOrToken by remember { mutableStateOf("") }
     var serverUrl by remember { mutableStateOf(tracker.serverUrl.orEmpty()) }
+    var submitting by remember { mutableStateOf(false) }
+    var failed by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val uriHandler = LocalUriHandler.current
 
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!submitting) onDismiss() },
         title = {
             Text(
                 when (tracker.authType) {
@@ -53,6 +62,7 @@ fun TrackerLoginDialog(
             ) {
                 when (tracker.authType) {
                     TrackerAuthType.SERVER -> {
+                        Text(strings.trackerServerAuthHelp, style = MaterialTheme.typography.bodySmall)
                         OutlinedTextField(
                             value = serverUrl,
                             onValueChange = { serverUrl = it },
@@ -78,11 +88,9 @@ fun TrackerLoginDialog(
                     }
                     TrackerAuthType.TOKEN -> {
                         tracker.authUrl?.let { url ->
-                            Text(
-                                text = strings.trackerAuthUrl(url),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.outline,
-                            )
+                            TextButton(onClick = { uriHandler.openUri(url) }) {
+                                Text(strings.trackerAuthTitle(tracker.name))
+                            }
                         }
                         OutlinedTextField(
                             value = passwordOrToken,
@@ -118,23 +126,34 @@ fun TrackerLoginDialog(
                         )
                     }
                 }
+                if (failed) {
+                    Text(
+                        strings.trackerLoginFailed,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.testTag("tracker-login-error"),
+                    )
+                }
             }
         },
         confirmButton = {
             Button(
                 onClick = {
-                    val creds = mutableMapOf<String, String>()
-                    if (username.isNotBlank()) creds["username"] = username.trim()
-                    if (passwordOrToken.isNotBlank()) {
-                        creds["password"] = passwordOrToken.trim()
-                        creds["token"] = passwordOrToken.trim()
+                    submitting = true
+                    failed = false
+                    val creds = trackerLoginCredentials(tracker.authType, username, passwordOrToken, serverUrl)
+                    scope.launch {
+                        try {
+                            if (onLogin(creds)) onDismiss() else failed = true
+                        } catch (error: CancellationException) {
+                            throw error
+                        } catch (_: Exception) {
+                            failed = true
+                        } finally {
+                            submitting = false
+                        }
                     }
-                    if (serverUrl.isNotBlank()) {
-                        creds["server_url"] = serverUrl.trim()
-                        creds["url"] = serverUrl.trim()
-                    }
-                    onLogin(creds)
                 },
+                enabled = !submitting,
                 modifier = Modifier.testTag("tracker-login-submit"),
             ) {
                 Text(if (tracker.authType == TrackerAuthType.SERVER) strings.trackerConnect else strings.trackerLogin)
@@ -143,10 +162,28 @@ fun TrackerLoginDialog(
         dismissButton = {
             OutlinedButton(
                 onClick = onDismiss,
+                enabled = !submitting,
                 modifier = Modifier.testTag("tracker-login-cancel"),
             ) {
                 Text(strings.dialogCancel)
             }
         },
     )
+}
+
+internal fun trackerLoginCredentials(
+    authType: TrackerAuthType,
+    username: String,
+    secret: String,
+    serverUrl: String,
+): Map<String, String> = buildMap {
+    if (username.isNotBlank()) put("username", username.trim())
+    when (authType) {
+        TrackerAuthType.CREDENTIALS -> put("password", secret)
+        TrackerAuthType.TOKEN -> put("token", secret.trim())
+        TrackerAuthType.SERVER -> {
+            put("server_url", serverUrl.trim())
+            if (username.isNotBlank()) put("password", secret) else put("token", secret.trim())
+        }
+    }
 }

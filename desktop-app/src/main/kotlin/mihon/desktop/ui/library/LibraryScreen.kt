@@ -27,6 +27,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CollectionsBookmark
+import androidx.compose.material.icons.rounded.FilterList
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -36,6 +40,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -120,6 +125,23 @@ fun LibraryScreen(
     onMarkPreviousRead: (Long) -> Unit = {},
     onDownloadChapter: (Long) -> Unit = {},
     onDeleteDownload: (Long) -> Unit = {},
+    onDownloadBatch: (Int?) -> Unit = {},
+    onBatchBookmarkChapters: (Set<Long>, Boolean) -> Unit = { ids, _ -> ids.forEach(onToggleBookmark) },
+    onBatchMarkChaptersRead: (Set<Long>, Boolean) -> Unit = { ids, _ -> ids.forEach(onToggleRead) },
+    onBatchDownloadChapters: (Set<Long>) -> Unit = { ids -> ids.forEach(onDownloadChapter) },
+    onBatchDeleteDownloads: (Set<Long>) -> Unit = { ids -> ids.forEach(onDeleteDownload) },
+    onOpenChapterSettings: () -> Unit = {},
+    onDismissChapterSettings: () -> Unit = {},
+    onChapterDisplayModeChange: (ChapterDisplayMode) -> Unit = {},
+    onExcludedScanlatorsChange: (Set<String>) -> Unit = {},
+    onShowMissingChaptersChange: (Boolean) -> Unit = {},
+    onSetChapterSettingsAsDefault: (Boolean) -> Unit = {},
+    onResetChapterSettingsToDefault: () -> Unit = {},
+    onDuplicateOpenManga: (Long) -> Unit = {},
+    onDuplicateMigrate: (Long) -> Unit = {},
+    onDuplicateAddAnyway: () -> Unit = {},
+    onDuplicateDismiss: () -> Unit = {},
+    sourceNameFor: (Long) -> String = { "Source #$it" },
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize().testTag("library-screen")) {
         val selected = state.selectedMangaId != null
@@ -170,6 +192,18 @@ fun LibraryScreen(
                     onMarkPreviousRead = onMarkPreviousRead,
                     onDownloadChapter = onDownloadChapter,
                     onDeleteDownload = onDeleteDownload,
+                    onDownloadBatch = onDownloadBatch,
+                    onBatchBookmarkChapters = onBatchBookmarkChapters,
+                    onBatchMarkChaptersRead = onBatchMarkChaptersRead,
+                    onBatchDownloadChapters = onBatchDownloadChapters,
+                    onBatchDeleteDownloads = onBatchDeleteDownloads,
+                    onOpenChapterSettings = onOpenChapterSettings,
+                    onDismissChapterSettings = onDismissChapterSettings,
+                    onChapterDisplayModeChange = onChapterDisplayModeChange,
+                    onExcludedScanlatorsChange = onExcludedScanlatorsChange,
+                    onShowMissingChaptersChange = onShowMissingChaptersChange,
+                    onSetChapterSettingsAsDefault = onSetChapterSettingsAsDefault,
+                    onResetChapterSettingsToDefault = onResetChapterSettingsToDefault,
                     modifier = Modifier.weight(0.45f).fillMaxHeight(),
                 )
             }
@@ -193,6 +227,18 @@ fun LibraryScreen(
                 onMarkPreviousRead = onMarkPreviousRead,
                 onDownloadChapter = onDownloadChapter,
                 onDeleteDownload = onDeleteDownload,
+                onDownloadBatch = onDownloadBatch,
+                onBatchBookmarkChapters = onBatchBookmarkChapters,
+                onBatchMarkChaptersRead = onBatchMarkChaptersRead,
+                onBatchDownloadChapters = onBatchDownloadChapters,
+                onBatchDeleteDownloads = onBatchDeleteDownloads,
+                onOpenChapterSettings = onOpenChapterSettings,
+                onDismissChapterSettings = onDismissChapterSettings,
+                onChapterDisplayModeChange = onChapterDisplayModeChange,
+                onExcludedScanlatorsChange = onExcludedScanlatorsChange,
+                onShowMissingChaptersChange = onShowMissingChaptersChange,
+                onSetChapterSettingsAsDefault = onSetChapterSettingsAsDefault,
+                onResetChapterSettingsToDefault = onResetChapterSettingsToDefault,
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
@@ -239,6 +285,17 @@ fun LibraryScreen(
                 categories = state.categories.filter { it.id != SYSTEM_ALL_CATEGORY.id },
                 onDismiss = onBatchCloseCategoryDialog,
                 onConfirm = onBatchSetCategories,
+            )
+        }
+
+        state.duplicateDialog?.let { duplicateDialog ->
+            DuplicateMangaDialog(
+                state = duplicateDialog,
+                sourceNameFor = sourceNameFor,
+                onDismissRequest = onDuplicateDismiss,
+                onAddAnyway = onDuplicateAddAnyway,
+                onOpenManga = onDuplicateOpenManga,
+                onMigrate = onDuplicateMigrate,
             )
         }
     }
@@ -381,6 +438,12 @@ private fun LibraryPane(
                             onClick = onOpenFilterDialog,
                             modifier = Modifier.testTag("library-filter-sort-button"),
                         ) {
+                            Icon(
+                                imageVector = Icons.Rounded.FilterList,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(Modifier.width(6.dp))
                             Text(strings.libraryFilterAndSort)
                         }
                     }
@@ -408,10 +471,46 @@ private fun LibraryPane(
                 ) {
                     items(state.categories, key = { it.id }) { cat ->
                         val label = if (cat.id == SYSTEM_ALL_CATEGORY.id) strings.libraryAllCategory else cat.name
+                        val isSelected = cat.id == state.selectedCategoryId
+                        val totalCount = if (isSelected) state.items.size else null
+                        val unreadCount = if (isSelected) state.items.sumOf { it.unreadCount }.toInt() else 0
                         FilterChip(
-                            selected = cat.id == state.selectedCategoryId,
+                            selected = isSelected,
                             onClick = { onCategorySelected(cat.id) },
-                            label = { Text(label) },
+                            label = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                ) {
+                                    Text(label)
+                                    if (isSelected && totalCount != null && totalCount > 0) {
+                                        Surface(
+                                            shape = CircleShape,
+                                            color = if (unreadCount >
+                                                0
+                                            ) {
+                                                MaterialTheme.colorScheme.primary
+                                            } else {
+                                                MaterialTheme.colorScheme.surfaceVariant
+                                            },
+                                            contentColor = if (unreadCount >
+                                                0
+                                            ) {
+                                                MaterialTheme.colorScheme.onPrimary
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                            },
+                                        ) {
+                                            Text(
+                                                text = if (unreadCount > 0) "$unreadCount" else "$totalCount",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp),
+                                            )
+                                        }
+                                    }
+                                }
+                            },
                             modifier = Modifier.testTag("library-category-chip-${cat.id}"),
                         )
                     }
@@ -963,17 +1062,40 @@ private fun EmptyState(query: String, modifier: Modifier) {
     Box(modifier, contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(32.dp),
         ) {
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                modifier = Modifier.size(80.dp),
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = if (query.isBlank()) Icons.Rounded.CollectionsBookmark else Icons.Rounded.Search,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
             if (query.isBlank()) {
-                Text(strings.libraryEmptyTitle, style = MaterialTheme.typography.titleLarge)
+                Text(
+                    strings.libraryEmptyTitle,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                )
                 Text(
                     strings.libraryEmptySubtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             } else {
-                Text(strings.libraryNoMatchTitle(query), style = MaterialTheme.typography.titleLarge)
+                Text(
+                    strings.libraryNoMatchTitle(query),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                )
                 Text(
                     strings.libraryNoMatchSubtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

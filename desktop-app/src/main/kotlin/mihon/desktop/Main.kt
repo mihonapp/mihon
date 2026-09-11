@@ -9,6 +9,11 @@ import java.nio.file.Path
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
+    if ("--extension-host" in args) {
+        val hostArgs = args.filter { it != "--extension-host" }.toTypedArray()
+        mihon.extension.host.main(hostArgs)
+        return
+    }
     val command = ProcessHandle.current().info().command().orElse(null)
     val executableDirectory = command?.let(Path::of)?.parent
         ?: Path.of(System.getProperty("user.dir"))
@@ -28,7 +33,8 @@ fun main(args: Array<String>) {
     } catch (error: CommandLineException) {
         DesktopCommandRunner.writeCommandLineError(System.out, error)
         error.exitCode
-    } catch (_: Throwable) {
+    } catch (e: Throwable) {
+        e.printStackTrace(System.err)
         DesktopCommandRunner.writeStartupFailure(System.out)
         1
     }

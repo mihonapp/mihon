@@ -32,6 +32,7 @@ import mihon.desktop.library.model.SourcePreferenceSnapshotRecord
 import mihon.desktop.library.model.SourceRecord
 import mihon.desktop.library.model.TrackingRecord
 import mihon.desktop.library.reader.ReaderLibraryPort
+import mihon.desktop.library.reader.ReaderOnlineChapter
 import mihon.desktop.library.repository.LibraryMutationPort
 import mihon.desktop.library.repository.LibraryRepository
 import mihon.reader.session.ProgressWriteResult
@@ -191,6 +192,24 @@ class SqlDelightLibraryRepository(
             ChapterDirection.NEXT ->
                 queries.selectNextReaderChapterAsset(chapterId).executeAsList()
                     .firstNotNullOfOrNull(SelectNextReaderChapterAsset::toReaderChapterAsset)
+        }
+    }
+
+    override fun onlineChapter(chapterId: Long): ReaderOnlineChapter? =
+        queries.selectReaderOnlineChapter(chapterId).executeAsOneOrNull()?.toReaderOnlineChapter()
+
+    override fun adjacentOnlineChapter(
+        chapterId: Long,
+        direction: ChapterDirection,
+    ): ReaderOnlineChapter? = database.transactionWithResult {
+        if (onlineChapter(chapterId) == null) return@transactionWithResult null
+        when (direction) {
+            ChapterDirection.PREVIOUS ->
+                queries.selectPreviousReaderOnlineChapter(chapterId).executeAsOneOrNull()
+                    ?.toReaderOnlineChapter()
+            ChapterDirection.NEXT ->
+                queries.selectNextReaderOnlineChapter(chapterId).executeAsOneOrNull()
+                    ?.toReaderOnlineChapter()
         }
     }
 
@@ -555,6 +574,79 @@ private fun SelectNextReaderChapterAsset.toReaderChapterAsset(): ReaderChapterAs
     modified_at,
     last_page_read,
     read,
+)
+
+private fun SelectReaderOnlineChapter.toReaderOnlineChapter(): ReaderOnlineChapter = readerOnlineChapter(
+    mangaId = manga_id,
+    chapterId = chapter_id,
+    mangaTitle = manga_title,
+    chapterName = chapter_name,
+    chapterUrl = chapter_url,
+    sourceId = source_id,
+    chapterNumber = chapter_number,
+    sourceOrder = source_order,
+    dateUpload = date_upload,
+    scanlator = scanlator,
+    lastPageRead = last_page_read,
+    read = read,
+)
+
+private fun SelectPreviousReaderOnlineChapter.toReaderOnlineChapter(): ReaderOnlineChapter = readerOnlineChapter(
+    mangaId = manga_id,
+    chapterId = chapter_id,
+    mangaTitle = manga_title,
+    chapterName = chapter_name,
+    chapterUrl = chapter_url,
+    sourceId = source_id,
+    chapterNumber = chapter_number,
+    sourceOrder = source_order,
+    dateUpload = date_upload,
+    scanlator = scanlator,
+    lastPageRead = last_page_read,
+    read = read,
+)
+
+private fun SelectNextReaderOnlineChapter.toReaderOnlineChapter(): ReaderOnlineChapter = readerOnlineChapter(
+    mangaId = manga_id,
+    chapterId = chapter_id,
+    mangaTitle = manga_title,
+    chapterName = chapter_name,
+    chapterUrl = chapter_url,
+    sourceId = source_id,
+    chapterNumber = chapter_number,
+    sourceOrder = source_order,
+    dateUpload = date_upload,
+    scanlator = scanlator,
+    lastPageRead = last_page_read,
+    read = read,
+)
+
+private fun readerOnlineChapter(
+    mangaId: Long,
+    chapterId: Long,
+    mangaTitle: String,
+    chapterName: String,
+    chapterUrl: String,
+    sourceId: Long,
+    chapterNumber: Double,
+    sourceOrder: Long,
+    dateUpload: Long,
+    scanlator: String?,
+    lastPageRead: Long,
+    read: Boolean,
+): ReaderOnlineChapter = ReaderOnlineChapter(
+    mangaId = mangaId,
+    chapterId = chapterId,
+    mangaTitle = mangaTitle,
+    chapterName = chapterName,
+    chapterUrl = chapterUrl,
+    sourceId = sourceId,
+    chapterNumber = chapterNumber,
+    sourceOrder = sourceOrder,
+    dateUpload = dateUpload,
+    scanlator = scanlator,
+    lastPageRead = lastPageRead,
+    read = read,
 )
 
 private fun readerChapterAsset(

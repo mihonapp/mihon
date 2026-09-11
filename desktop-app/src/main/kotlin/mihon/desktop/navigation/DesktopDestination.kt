@@ -20,4 +20,10 @@ enum class DesktopDestination(val label: String, val shortLabel: String) : Deskt
             require(chapterId > 0L) { "chapterId must be positive" }
         }
     }
+
+    /**
+     * A transient route for the Upcoming calendar. It is opened from Updates and is intentionally
+     * not part of [entries] so it can never be persisted as the shell destination.
+     */
+    data object Upcoming : DesktopRoute
 }

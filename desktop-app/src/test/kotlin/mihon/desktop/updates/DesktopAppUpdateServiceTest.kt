@@ -13,6 +13,11 @@ import java.security.MessageDigest
 
 class DesktopAppUpdateServiceTest {
 
+    @Test
+    fun `current version matches the Windows distribution version`() {
+        DesktopAppUpdateService.CURRENT_VERSION shouldBe "0.1.3"
+    }
+
     @TempDir
     lateinit var tempDir: Path
 
@@ -82,7 +87,7 @@ class DesktopAppUpdateServiceTest {
     }
 
     @Test
-    fun `checkForUpdates yields UpdateAvailable when remote is newer`() = runBlocking {
+    fun `checkForUpdates yields UpdateAvailable when remote is newer`(): Unit = runBlocking {
         val json = """
         {
           "tag_name": "v0.3.0",
@@ -110,7 +115,7 @@ class DesktopAppUpdateServiceTest {
     }
 
     @Test
-    fun `downloadAsset saves file and validates checksum`() = runBlocking {
+    fun `downloadAsset saves file and validates checksum`(): Unit = runBlocking {
         val content = "Binary update package payload".toByteArray()
         val digest = MessageDigest.getInstance("SHA-256")
         val hash = digest.digest(content).joinToString("") { "%02x".format(it) }

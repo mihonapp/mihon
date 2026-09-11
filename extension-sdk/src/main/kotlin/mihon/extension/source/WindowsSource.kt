@@ -31,3 +31,8 @@ interface WindowsHttpSource : WindowsCatalogueSource {
     val rateLimitMillis: Long
         get() = 0L
 }
+
+/** Optional image transport implemented by sources with their own HTTP client or image decoder. */
+interface WindowsImageSource : WindowsCatalogueSource {
+    suspend fun getImage(page: Page): ByteArray
+}

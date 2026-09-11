@@ -46,6 +46,7 @@ class OnlineMangaDetailScreenTest {
     fun `displays manga metadata and chapter list, triggers add to library and read chapter`() = runComposeUiTest {
         var addedToLibrary = false
         var chapterToRead: SChapter? = null
+        var chapterToDownload: SChapter? = null
 
         setContent {
             Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
@@ -59,6 +60,7 @@ class OnlineMangaDetailScreenTest {
                     onBack = {},
                     onAddToLibrary = { addedToLibrary = true },
                     onReadChapter = { chapterToRead = it },
+                    onDownloadChapter = { chapterToDownload = it },
                 )
             }
         }
@@ -76,5 +78,8 @@ class OnlineMangaDetailScreenTest {
         // Click Read Chapter
         onNodeWithTag("read-chapter-btn-/chapter/1").performClick()
         chapterToRead shouldBe testChapter
+
+        onNodeWithTag("download-chapter-btn-/chapter/1").performClick()
+        chapterToDownload shouldBe testChapter
     }
 }

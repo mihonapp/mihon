@@ -20,6 +20,7 @@ import mihon.extension.ipc.IpcSession
 import mihon.extension.ipc.MangaPayload
 import mihon.extension.ipc.SearchPayload
 import mihon.extension.ipc.SourcePayload
+import mihon.extension.ipc.decodeFilterList
 import mihon.extension.model.SourceDescriptor
 import mihon.extension.source.WindowsCatalogueSource
 import mihon.extension.source.model.Filter
@@ -29,8 +30,10 @@ import mihon.extension.source.model.Page
 import mihon.extension.source.model.SChapter
 import mihon.extension.source.model.SManga
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
+import java.nio.file.Path
 
 class ExtensionHostEngineTest {
 
@@ -182,8 +185,8 @@ class ExtensionHostEngineTest {
                 IpcRequest(8, IpcCommands.GET_FILTER_LIST, json.encodeToString(SourcePayload(1001L))),
             )
             filtersRes.success shouldBe true
-            val filterNames = json.decodeFromString<List<String>>(filtersRes.payloadJson)
-            filterNames shouldBe listOf("Author", "Completed")
+            val filterList = decodeFilterList(filtersRes.payloadJson)
+            filterList.filters.map { it.name } shouldBe listOf("Author", "Completed")
         }
     }
 
@@ -265,6 +268,87 @@ class ExtensionHostEngineTest {
                 hostSession.close()
                 appSession.close()
             }
+        }
+    }
+
+    class TestCatalogueSource2 : WindowsCatalogueSource {
+        override val id: Long = 2002L
+        override val name: String = "Test Source 2"
+        override val lang: String = "en"
+        override val supportsLatest: Boolean = true
+
+        override suspend fun getPopularManga(page: Int): MangasPage = MangasPage(
+            mangas = listOf(SManga(url = "/manga/2", title = "Manga 2")),
+            hasNextPage = false,
+        )
+        override suspend fun getLatestUpdates(page: Int): MangasPage = MangasPage(emptyList(), false)
+        override suspend fun searchManga(
+            page: Int,
+            query: String,
+            filters: FilterList,
+        ): MangasPage = MangasPage(emptyList(), false)
+        override suspend fun getMangaDetails(manga: SManga): SManga = manga
+        override suspend fun getChapterList(manga: SManga): List<SChapter> = emptyList()
+        override suspend fun getPageList(chapter: SChapter): List<Page> = emptyList()
+        override fun getFilterList(): FilterList = FilterList()
+    }
+
+    @Test
+    fun `engine loads multiple extensions concurrently without wiping sources`(@TempDir tempDir: Path) {
+        runBlocking {
+            val client = BrokeredHttpClient { null }
+            val engine = ExtensionHostEngine(client)
+
+            fun createMext(file: java.io.File, pkg: String, sourceClass: String, sourceId: Long) {
+                val manifest = mihon.extension.model.ExtensionManifest(
+                    id = pkg,
+                    name = pkg,
+                    version = "1.0.0",
+                    versionCode = 1,
+                    libVersion = 1.4,
+                    lang = "en",
+                    sources = listOf(
+                        SourceDescriptor(
+                            id = sourceId,
+                            name = "Source for $pkg",
+                            lang = "en",
+                            className = sourceClass,
+                        ),
+                    ),
+                )
+                java.util.zip.ZipOutputStream(java.io.FileOutputStream(file)).use { zos ->
+                    zos.putNextEntry(java.util.zip.ZipEntry("manifest.json"))
+                    zos.write(json.encodeToString(manifest).toByteArray())
+                    zos.closeEntry()
+                }
+            }
+
+            val mext1 = tempDir.resolve("ext1.mext").toFile()
+            val mext2 = tempDir.resolve("ext2.mext").toFile()
+            createMext(mext1, "ext.one", TestCatalogueSource::class.java.name, 1001L)
+            createMext(mext2, "ext.two", TestCatalogueSource2::class.java.name, 2002L)
+
+            val work1 = tempDir.resolve("work1").toFile()
+            val work2 = tempDir.resolve("work2").toFile()
+
+            engine.loadExtension(mext1, work1)
+            engine.loadExtension(mext2, work2)
+
+            val sourcesRes = engine.handleRequest(IpcRequest(1, IpcCommands.GET_SOURCES))
+            sourcesRes.success shouldBe true
+            val descriptors = json.decodeFromString<List<SourceDescriptor>>(sourcesRes.payloadJson)
+            descriptors.shouldHaveSize(2)
+            descriptors.map { it.id }.toSet() shouldBe setOf(1001L, 2002L)
+
+            val pop1 = engine.handleRequest(
+                IpcRequest(2, IpcCommands.GET_POPULAR, json.encodeToString(GetPagePayload(1001L, 1))),
+            )
+            pop1.success shouldBe true
+
+            val pop2 = engine.handleRequest(
+                IpcRequest(3, IpcCommands.GET_POPULAR, json.encodeToString(GetPagePayload(2002L, 1))),
+            )
+            pop2.success shouldBe true
         }
     }
 }

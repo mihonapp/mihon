@@ -2,6 +2,7 @@ package mihon.extension.compat
 
 import eu.kanade.tachiyomi.source.CatalogueSource
 import mihon.extension.source.WindowsCatalogueSource
+import mihon.extension.source.WindowsImageSource
 import mihon.extension.source.model.Filter
 import mihon.extension.source.model.FilterList
 import mihon.extension.source.model.MangasPage
@@ -16,7 +17,7 @@ import eu.kanade.tachiyomi.source.model.SManga as TSManga
 
 class TachiyomiCatalogueSourceAdapter(
     val delegate: CatalogueSource,
-) : WindowsCatalogueSource {
+) : WindowsImageSource {
 
     override val id: Long = delegate.id
     override val name: String = delegate.name
@@ -61,7 +62,7 @@ class TachiyomiCatalogueSourceAdapter(
             initialized = manga.initialized
         }
         val update = delegate.getMangaUpdate(tachiManga, emptyList(), fetchDetails = true, fetchChapters = false)
-        return update.manga.toSdkModel()
+        return update.manga.toSdkModel(manga)
     }
 
     override suspend fun getChapterList(manga: SManga): List<SChapter> {
@@ -83,17 +84,11 @@ class TachiyomiCatalogueSourceAdapter(
             scanlator = chapter.scanlator
         }
         val tachiPages = delegate.getPageList(tachiChapter)
-        return tachiPages.map { page ->
-            var imgUrl = page.imageUrl
-            if (imgUrl.isNullOrBlank() && page.url.isNotBlank()) {
-                try {
-                    imgUrl = (delegate as? eu.kanade.tachiyomi.source.online.HttpSource)?.getImageUrl(page)
-                } catch (_: Exception) {}
-            }
+        return tachiPages.mapIndexed { index, page ->
             Page(
-                index = page.index,
+                index = index,
                 url = page.url,
-                imageUrl = imgUrl,
+                imageUrl = page.imageUrl,
                 headers = (delegate as? eu.kanade.tachiyomi.source.online.HttpSource)
                     ?.headers
                     ?.toMultimap()
@@ -103,23 +98,43 @@ class TachiyomiCatalogueSourceAdapter(
         }
     }
 
+    override suspend fun getImage(page: Page): ByteArray {
+        val source = delegate as? eu.kanade.tachiyomi.source.online.HttpSource
+            ?: error("Source $name does not implement HTTP image loading")
+        val tachiPage = TPage(page.index, page.url, page.imageUrl)
+        if (tachiPage.imageUrl.isNullOrBlank()) {
+            tachiPage.imageUrl = source.getImageUrl(tachiPage)
+        }
+        require(!tachiPage.imageUrl.isNullOrBlank()) { "Source $name returned an empty image URL" }
+        return source.getImage(tachiPage).use { response ->
+            val limit = 64 * 1024 * 1024
+            response.body.byteStream().use { stream ->
+                val bytes = stream.readNBytes(limit + 1)
+                require(bytes.size <= limit) { "Source image exceeds 64 MiB" }
+                bytes
+            }
+        }
+    }
+
     override fun getFilterList(): FilterList {
         val tachiFilters = delegate.getFilterList()
         val mapped = tachiFilters.mapNotNull { it.toSdkFilter() }
         return FilterList(mapped)
     }
 
-    private fun TSManga.toSdkModel(): SManga {
+    private fun TSManga.toSdkModel(fallback: SManga? = null): SManga {
+        val mappedUrl = runCatching { url }.getOrNull()?.takeIf { it.isNotBlank() } ?: fallback?.url.orEmpty()
+        val mappedTitle = runCatching { title }.getOrNull()?.takeIf { it.isNotBlank() } ?: fallback?.title.orEmpty()
         return SManga(
-            url = url,
-            title = title,
-            artist = artist,
-            author = author,
-            description = description,
-            genre = getGenres() ?: emptyList(),
-            status = status,
-            thumbnailUrl = thumbnail_url,
-            initialized = initialized,
+            url = mappedUrl,
+            title = mappedTitle,
+            artist = artist ?: fallback?.artist,
+            author = author ?: fallback?.author,
+            description = description ?: fallback?.description,
+            genre = getGenres() ?: fallback?.genre ?: emptyList(),
+            status = status.takeUnless { it == TSManga.UNKNOWN } ?: fallback?.status ?: TSManga.UNKNOWN,
+            thumbnailUrl = thumbnail_url ?: fallback?.thumbnailUrl,
+            initialized = initialized || fallback?.initialized == true,
         )
     }
 

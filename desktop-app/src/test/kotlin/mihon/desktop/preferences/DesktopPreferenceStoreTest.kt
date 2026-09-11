@@ -44,6 +44,20 @@ class DesktopPreferenceStoreTest {
     }
 
     @Test
+    fun `appTheme and amoled settings can be saved and restored`() {
+        val file = tempDir.resolve("preferences.properties")
+        val store = DesktopPreferenceStore(file)
+        val expected = DesktopPreferences(
+            appTheme = mihon.desktop.ui.theme.DesktopAppTheme.CATPPUCCIN,
+            themeDarkAmoled = true,
+        )
+        store.save(expected)
+        val loaded = store.load()
+        loaded.appTheme shouldBe mihon.desktop.ui.theme.DesktopAppTheme.CATPPUCCIN
+        loaded.themeDarkAmoled shouldBe true
+    }
+
+    @Test
     fun `unknown enum values fall back independently`() {
         val file = tempDir.resolve("preferences.properties")
         Files.writeString(file, "theme=NEON\ndestination=UNKNOWN\n")
@@ -104,20 +118,50 @@ class DesktopPreferenceStoreTest {
         val file = tempDir.resolve("preferences.properties")
         val store = DesktopPreferenceStore(file)
         val expected = DesktopPreferences(
+            downloadPageParallelCount = 4,
             libraryUpdateIntervalHours = 12,
             libraryUpdateSkipCompleted = false,
             libraryUpdateSkipUnread = true,
+            libraryUpdateSkipStarted = true,
+            libraryUpdateCategories = setOf(2L, 7L),
+            libraryUpdateCategoriesExclude = setOf(9L),
             autoDownloadNewChapters = true,
             desktopNotificationsEnabled = false,
+            desktopNotificationsHideContent = true,
             lastLibraryUpdateEpochMillis = 987654321L,
         )
         store.save(expected)
         val loaded = store.load()
+        loaded.downloadPageParallelCount shouldBe 4
         loaded.libraryUpdateIntervalHours shouldBe 12
         loaded.libraryUpdateSkipCompleted shouldBe false
         loaded.libraryUpdateSkipUnread shouldBe true
+        loaded.libraryUpdateSkipStarted shouldBe true
+        loaded.libraryUpdateCategories shouldBe setOf(2L, 7L)
+        loaded.libraryUpdateCategoriesExclude shouldBe setOf(9L)
         loaded.autoDownloadNewChapters shouldBe true
         loaded.desktopNotificationsEnabled shouldBe false
+        loaded.desktopNotificationsHideContent shouldBe true
         loaded.lastLibraryUpdateEpochMillis shouldBe 987654321L
+    }
+
+    @Test
+    fun `Android backup preference aliases are understood`() {
+        val file = tempDir.resolve("preferences-android-aliases.properties")
+        Files.writeString(
+            file,
+            """
+            download_parallel_page_limit=3
+            library_update_categories=[\"4\",\"8\"]
+            library_update_categories_exclude=9,10
+            hide_notification_content=true
+            """.trimIndent(),
+        )
+
+        val loaded = DesktopPreferenceStore(file).load()
+        loaded.downloadPageParallelCount shouldBe 3
+        loaded.libraryUpdateCategories shouldBe setOf(4L, 8L)
+        loaded.libraryUpdateCategoriesExclude shouldBe setOf(9L, 10L)
+        loaded.desktopNotificationsHideContent shouldBe true
     }
 }

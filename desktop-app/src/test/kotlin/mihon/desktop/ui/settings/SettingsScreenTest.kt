@@ -8,12 +8,15 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.desktop.preferences.ThemeMode
 import mihon.desktop.reader.DesktopReaderSettingsStore
+import mihon.desktop.security.DesktopAppLockController
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
@@ -144,6 +147,8 @@ class SettingsScreenTest {
         onNodeWithTag("download-storage-input").assertExists()
         onNodeWithTag("parallel-downloads-5").performClick()
         prefStore.load().downloadParallelCount shouldBe 5
+        onNodeWithTag("parallel-pages-3").performClick()
+        prefStore.load().downloadPageParallelCount shouldBe 3
         onNodeWithTag("download-ahead-2").performClick()
         prefStore.load().downloadAhead shouldBe 2
         onNodeWithTag("delete-downloaded-read-switch").performScrollTo().performClick()
@@ -209,6 +214,18 @@ class SettingsScreenTest {
         onNodeWithTag("skip-completed-switch").performClick()
         prefStore.load().libraryUpdateSkipCompleted shouldBe false
 
+        onNodeWithTag("skip-started-switch").performScrollTo().performClick()
+        prefStore.load().libraryUpdateSkipStarted shouldBe true
+
+        onNodeWithTag("update-include-categories").performScrollTo().performTextInput("2,7")
+        prefStore.load().libraryUpdateCategories shouldBe setOf(2L, 7L)
+
+        onNodeWithTag("update-exclude-categories").performScrollTo().performTextInput("9")
+        prefStore.load().libraryUpdateCategoriesExclude shouldBe setOf(9L)
+
+        onNodeWithTag("desktop-notifications-hide-content-switch").performScrollTo().performClick()
+        prefStore.load().desktopNotificationsHideContent shouldBe true
+
         onNodeWithTag("auto-download-new-switch").performClick()
         prefStore.load().autoDownloadNewChapters shouldBe true
 
@@ -216,5 +233,65 @@ class SettingsScreenTest {
         onNodeWithTag("settings-section-Advanced").performClick()
         onNodeWithTag("open-cookie-manager-button").performScrollTo().performClick()
         cookieManagerOpened shouldBe true
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `settings screen configures app lock security controls`() = runComposeUiTest {
+        val prefStore = DesktopPreferenceStore(tempDir.resolve("preferences-security.properties"))
+        val readerSettingsStore = DesktopReaderSettingsStore(prefStore)
+        val appLockController = DesktopAppLockController(prefStore, clock = { 0L })
+
+        setContent {
+            Box(modifier = Modifier.requiredSize(900.dp, 800.dp)) {
+                SettingsScreen(
+                    preferenceStore = prefStore,
+                    readerSettingsStore = readerSettingsStore,
+                    appLockController = appLockController,
+                )
+            }
+        }
+
+        onNodeWithTag("settings-section-Security").performClick()
+        onNodeWithTag("security-status-text").assertExists()
+        onNodeWithTag("security-enable-switch").assertExists()
+
+        // Set a PIN and enable the lock.
+        onNodeWithTag("security-pin-field").performScrollTo().performTextInput("1234")
+        onNodeWithTag("security-pin-confirm-field").performScrollTo().performTextInput("1234")
+        onNodeWithTag("security-enable-button").performScrollTo().performClick()
+
+        val enabled = prefStore.load()
+        enabled.appLockEnabled shouldBe true
+        enabled.appLockPinHash.isNotBlank() shouldBe true
+        enabled.appLockPinHash shouldNotBe "1234"
+        enabled.appLockPinSalt.isNotBlank() shouldBe true
+        enabled.appLockPinIterations shouldBe mihon.desktop.security.PinHasher.DEFAULT_ITERATIONS
+
+        // Configure lock behavior.
+        onNodeWithTag("security-lock-on-startup-switch").performScrollTo().performClick()
+        prefStore.load().appLockOnStartup shouldBe false
+        onNodeWithTag("security-timeout-1").performScrollTo().performClick()
+        prefStore.load().appLockIdleTimeoutMinutes shouldBe 1
+
+        // Change the PIN.
+        onNodeWithTag("security-current-pin-field").performScrollTo().performTextInput("1234")
+        onNodeWithTag("security-new-pin-field").performScrollTo().performTextInput("5678")
+        onNodeWithTag("security-new-pin-confirm-field").performScrollTo().performTextInput("5678")
+        onNodeWithTag("security-change-pin-button").performScrollTo().performClick()
+        appLockController.verifyPin("5678") shouldBe true
+        appLockController.verifyPin("1234") shouldBe false
+
+        // Manual lock from settings.
+        onNodeWithTag("security-lock-now-button").performScrollTo().performClick()
+        appLockController.isLocked.value shouldBe true
+        appLockController.unlock("5678") shouldBe mihon.desktop.security.UnlockResult.Success
+
+        // Disable clears the credential but leaves the rest of the preferences alone.
+        onNodeWithTag("security-disable-button").performScrollTo().performClick()
+        prefStore.load().appLockEnabled shouldBe false
+        prefStore.load().appLockPinHash shouldBe ""
+        prefStore.load().appLockPinSalt shouldBe ""
+        prefStore.load().appLockPinIterations shouldBe 0
     }
 }

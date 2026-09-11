@@ -304,6 +304,23 @@ class DesktopImageLoader(
         memoryCache.clear()
     }
 
+    fun getCoverFile(mangaId: Long?, url: String?): Path? {
+        if (mangaId != null && customCoverManager != null) {
+            val custom = customCoverManager.getCustomCover(mangaId)
+            if (custom != null && Files.isRegularFile(custom)) return custom
+        }
+        val trimmed = url?.trim() ?: return null
+        if (trimmed.startsWith("http://", ignoreCase = true) || trimmed.startsWith("https://", ignoreCase = true)) {
+            val hash = sha256(trimmed)
+            val diskFile = diskCacheDir.resolve("$hash.img")
+            if (Files.isRegularFile(diskFile) && Files.size(diskFile) > 0) return diskFile
+        } else {
+            val candidate = try { Path.of(trimmed) } catch (_: Exception) { null }
+            if (candidate != null && Files.isRegularFile(candidate)) return candidate
+        }
+        return null
+    }
+
     fun clearDiskCache() {
         try {
             Files.list(diskCacheDir).use { stream ->

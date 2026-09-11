@@ -24,6 +24,7 @@ data class DownloadPage(
     val index: Int,
     val url: String,
     val imageUrl: String? = null,
+    val headers: Map<String, String> = emptyMap(),
     val status: PageStatus = PageStatus.QUEUE,
     val progress: Float = 0f,
     val bytesWritten: Long = 0L,

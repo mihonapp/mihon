@@ -9,6 +9,12 @@ class TrackOnReadSyncService(
     private val trackerManager: DesktopTrackerManager,
     private val trackingQueue: OfflineTrackingQueue? = null,
 ) {
+    init {
+        if (trackingQueue != null) {
+            trackerManager.setPendingSyncHandler { flushPending() }
+        }
+    }
+
     suspend fun onChapterRead(mangaId: Long, chapterNumber: Double): Int {
         val tracks = repository.trackingSnapshot(mangaId)
         if (tracks.isEmpty()) return 0
@@ -44,7 +50,11 @@ class TrackOnReadSyncService(
         return syncedCount
     }
 
-    suspend fun flushQueue(): Int {
+    /**
+     * Drains pending offline updates, updating each logged-in tracker from the current DB record.
+     * Items for trackers that are not logged in are left in the queue for a later attempt.
+     */
+    suspend fun flushPending(): Int {
         val queue = trackingQueue ?: return 0
         val pending = queue.peekAll()
         var successCount = 0
@@ -69,4 +79,10 @@ class TrackOnReadSyncService(
         }
         return successCount
     }
+
+    /** Alias for [flushPending]. */
+    suspend fun syncPending(): Int = flushPending()
+
+    @Deprecated("Use flushPending() instead", ReplaceWith("flushPending()"))
+    suspend fun flushQueue(): Int = flushPending()
 }

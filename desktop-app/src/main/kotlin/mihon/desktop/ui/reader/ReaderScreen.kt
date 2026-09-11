@@ -1,8 +1,6 @@
 package mihon.desktop.ui.reader
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,6 +44,8 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -50,17 +53,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.desktop.i18n.EnglishStrings
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.image.LocalCustomCoverManager
 import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.DesktopReaderSettingsStore
 import mihon.desktop.reader.ReaderBackgroundColor
+import mihon.desktop.reader.ReaderChapterBookmarkStore
 import mihon.desktop.reader.ReaderClickAction
 import mihon.desktop.reader.input.ClickRegionPolicy
+import mihon.desktop.reader.input.InputPoint
 import mihon.desktop.reader.input.ReaderInputCommand
 import mihon.desktop.reader.input.ReaderInputContext
 import mihon.desktop.reader.input.ReaderInputKey
 import mihon.desktop.reader.input.ReaderInputMapper
+import mihon.reader.model.PageDescriptor
+import mihon.reader.model.PageId
 import mihon.reader.model.ReaderErrorCode
 import mihon.reader.model.ReaderLayout
+import mihon.reader.model.ReaderPan
+import mihon.reader.model.ReaderViewport
 import mihon.reader.model.ReadingMode
 import mihon.reader.session.ReaderAction
 import mihon.reader.session.ReaderLoadState
@@ -79,25 +89,87 @@ fun ReaderScreen(
     modifier: Modifier = Modifier,
     onFullscreen: () -> Unit = {},
     onBorderless: () -> Unit = {},
-    onEscape: () -> Unit = onBack,
+    onEscape: () -> Boolean = { true },
+    onPreviousChapter: () -> Unit = {},
+    onNextChapter: () -> Unit = {},
+    onChapterSelected: ((Long) -> Unit)? = null,
+    hasPreviousChapter: Boolean = false,
+    hasNextChapter: Boolean = false,
     onRetryChapter: suspend () -> Unit = {},
     foreground: Boolean = true,
     debugEnabled: Boolean = System.getenv("MIHON_W_READER_DEBUG") == "1",
+    doubleTapZoom: Float = ReaderGesturePolicy.DEFAULT_DOUBLE_TAP_ZOOM,
+    knownPageSizes: Map<PageId, PageSize> = emptyMap(),
+    chapterBookmarked: Boolean = false,
+    onChapterBookmarkChanged: (Boolean) -> Unit = {},
+    bookmarkStore: ReaderChapterBookmarkStore? = null,
+    chapterCatalog: List<ReaderChapterTransitionChapter> = emptyList(),
+    previousChapter: ReaderChapterTransitionChapter? = null,
+    nextChapter: ReaderChapterTransitionChapter? = null,
+    currentChapter: ReaderChapterTransitionChapter? = null,
+    currentChapterDownloaded: Boolean = false,
+    initialTransitionDirection: ReaderChapterTransitionDirection? = null,
+    onChapterTransitionContinue: ((ReaderChapterTransitionDirection) -> Unit)? = null,
+    pageActionHandler: ReaderPageActionHandler? = null,
+    mangaId: Long? = null,
+    pageUrlResolver: (PageDescriptor) -> String? = { null },
+    pageActionTargetProvider: (PageDescriptor, Int) -> ReaderPageActionTarget = { page, index ->
+        ReaderPageActionTarget(
+            page = page,
+            pageIndex = index,
+            pageUrl = pageUrlResolver(page),
+            mangaId = mangaId,
+        )
+    },
+    pageImageStore: ReaderPageImageStore? = null,
     pageContent: ReaderPageContent = { _, pageIndex, contentModifier ->
         ReaderPagePlaceholder(pageIndex, contentModifier)
     },
 ) {
     val state by session.state.collectAsState()
+    val strings = LocalStrings.current
     val scope = rememberCoroutineScope()
+    val density = LocalDensity.current
     var settings by remember(settingsStore) {
         mutableStateOf(settingsStore?.load() ?: state.toDesktopSettings())
     }
     var chromeVisible by remember { mutableStateOf(true) }
     var hideGeneration by remember { mutableIntStateOf(0) }
     var showSettings by remember { mutableStateOf(false) }
+    var showShortcuts by remember { mutableStateOf(false) }
     var closing by remember(session) { mutableStateOf(false) }
+    var pressChromeTarget by remember { mutableStateOf<Boolean?>(null) }
+    val panAccumulator = remember { ReaderPanAccumulator() }
+    val clickPolicy = remember(settings.clickRegions) { ClickRegionPolicy.from(settings.clickRegions) }
     val inputMapper = remember { ReaderInputMapper() }
     val focusRequester = remember { FocusRequester() }
+
+    // Intrinsic sizes observed by DecodedReaderPage plus any sizes supplied directly by callers/tests.
+    val decodedPageSizes = remember(session) { mutableStateMapOf<PageId, PageSize>() }
+    val pageSizeSink = remember(session, decodedPageSizes) {
+        ReaderPageSizeSink { pageId, size -> decodedPageSizes[pageId] = size }
+    }
+    val effectivePageSizes: Map<PageId, PageSize> = knownPageSizes + decodedPageSizes
+    val sizeChapterId = remember(session) { mutableStateOf<Long?>(null) }
+    val imageStore = remember(session, pageImageStore) { pageImageStore ?: ReaderPageImageStore() }
+    val customCoverManager = LocalCustomCoverManager.current
+    val effectivePageActionHandler = remember(pageActionHandler, imageStore, customCoverManager) {
+        pageActionHandler ?: defaultReaderPageActionHandler(imageStore, customCoverManager)
+    }
+    val effectiveBookmarkStore = remember(bookmarkStore, settingsStore) {
+        bookmarkStore ?: settingsStore?.bookmarkStore()
+    }
+    var pageActionsTarget by remember(session) { mutableStateOf<ReaderPageActionTarget?>(null) }
+    var pageActionMessage by remember { mutableStateOf<String?>(null) }
+    var chapterTransition by remember(session) { mutableStateOf<ReaderChapterTransition?>(null) }
+    var pendingExternalChapterDirection by remember(session) {
+        mutableStateOf<ReaderChapterTransitionDirection?>(null)
+    }
+    var pendingChapterDirection by remember(session) { mutableStateOf<ReaderChapterTransitionDirection?>(null) }
+    var observedChapterId by remember(session) { mutableStateOf(state.chapterId) }
+    var bookmarked by remember(session, state.chapterId, effectiveBookmarkStore) {
+        mutableStateOf(state.chapterId?.let { effectiveBookmarkStore?.isBookmarked(it) } ?: chapterBookmarked)
+    }
 
     fun markReadingInput() {
         chromeVisible = true
@@ -112,6 +184,260 @@ fun ReaderScreen(
         session.dispatch(ReaderAction.SetCoverOffset(updated.coverOffset))
     }
 
+    fun transitionChapterInfo(chapterId: Long? = state.chapterId): ReaderChapterTransitionChapter {
+        val catalogChapter = chapterId?.let { id -> chapterCatalog.firstOrNull { it.id == id } }
+        if (catalogChapter != null) return catalogChapter
+        val explicit = currentChapter
+        return when {
+            explicit != null && (chapterId == null || explicit.id == chapterId) -> explicit
+            explicit != null -> explicit.copy(id = chapterId)
+            else -> ReaderChapterTransitionChapter(
+                id = chapterId,
+                title = chapterTitle,
+                downloaded = currentChapterDownloaded,
+            )
+        }
+    }
+
+    fun buildChapterTransition(
+        direction: ReaderChapterTransitionDirection,
+        chapterId: Long? = state.chapterId,
+    ): ReaderChapterTransition {
+        val current = transitionChapterInfo(chapterId)
+        val currentState = session.state.value
+        val previousFallback = previousChapter ?: if (currentState.hasPreviousChapter) {
+            ReaderChapterTransitionChapter(title = strings.readerPreviousChapter)
+        } else {
+            null
+        }
+        val nextFallback = nextChapter ?: if (currentState.hasNextChapter) {
+            ReaderChapterTransitionChapter(title = strings.readerNextChapter)
+        } else {
+            null
+        }
+        return readerChapterTransition(
+            direction = direction,
+            current = current,
+            chapters = chapterCatalog,
+            previous = previousFallback,
+            next = nextFallback,
+            settings = settings,
+        )
+    }
+
+    fun closeAndThen(afterClose: () -> Unit) {
+        if (closing) return
+        closing = true
+        scope.launch {
+            runCatching { withContext(Dispatchers.Default) { session.closeAndFlush() } }
+            afterClose()
+        }
+    }
+
+    fun navigateExternalChapter(direction: ReaderChapterTransitionDirection, targetChapterId: Long? = null) {
+        closeAndThen {
+            if (targetChapterId != null && onChapterSelected != null) {
+                onChapterSelected(targetChapterId)
+            } else {
+                when (direction) {
+                    ReaderChapterTransitionDirection.PREVIOUS -> onPreviousChapter()
+                    ReaderChapterTransitionDirection.NEXT -> onNextChapter()
+                }
+            }
+        }
+    }
+
+    fun openPageActions() {
+        val current = session.state.value
+        val page = current.pages.getOrNull(current.selectedIndex) ?: return
+        pageActionsTarget = pageActionTargetProvider(page, current.selectedIndex)
+    }
+
+    fun runPageAction(
+        target: ReaderPageActionTarget,
+        block: suspend (ReaderPageActionHandler, ReaderPageActionTarget) -> Boolean,
+    ) {
+        pageActionsTarget = null
+        scope.launch {
+            val success = runCatching { block(effectivePageActionHandler, target) }.getOrDefault(false)
+            if (!success) pageActionMessage = "Unable to complete page action"
+        }
+    }
+
+    fun toggleChapterBookmark() {
+        val chapterId = session.state.value.chapterId ?: return
+        val updated = !bookmarked
+        bookmarked = updated
+        effectiveBookmarkStore?.setBookmarked(chapterId, updated)
+        onChapterBookmarkChanged(updated)
+    }
+
+    fun dispatchCore(action: ReaderAction) {
+        val current = session.state.value
+        val boundaryDirection = when {
+            action == ReaderAction.Next && current.selectedIndex == current.pages.lastIndex -> {
+                ReaderChapterTransitionDirection.NEXT
+            }
+            action == ReaderAction.Previous && current.selectedIndex == 0 -> {
+                ReaderChapterTransitionDirection.PREVIOUS
+            }
+            else -> null
+        }
+        if (boundaryDirection != null) {
+            val hasAdjacentChapter = when (boundaryDirection) {
+                ReaderChapterTransitionDirection.PREVIOUS -> current.hasPreviousChapter || hasPreviousChapter
+                ReaderChapterTransitionDirection.NEXT -> current.hasNextChapter || hasNextChapter
+            }
+            if (settings.alwaysShowChapterTransition) {
+                if (hasAdjacentChapter) pendingExternalChapterDirection = boundaryDirection
+                chapterTransition = buildChapterTransition(boundaryDirection)
+                if (!hasAdjacentChapter) session.dispatch(action)
+            } else if (hasAdjacentChapter) {
+                navigateExternalChapter(boundaryDirection)
+            } else {
+                // Preserve the core no-op boundary action for input/progress observers.
+                session.dispatch(action)
+            }
+            return
+        }
+        session.dispatch(action)
+    }
+
+    fun handlePress(normalizedX: Float) {
+        val action = clickPolicy.actionAt(normalizedX)
+        pressChromeTarget = if (action == ReaderClickAction.TOGGLE_CHROME) !chromeVisible else null
+        markReadingInput()
+    }
+
+    fun handleClickAction(action: ReaderClickAction, pointer: Boolean = false) {
+        when (action) {
+            ReaderClickAction.PREVIOUS -> {
+                dispatchCore(ReaderAction.Previous)
+                if (!pointer) markReadingInput()
+            }
+            ReaderClickAction.NEXT -> {
+                dispatchCore(ReaderAction.Next)
+                if (!pointer) markReadingInput()
+            }
+            ReaderClickAction.TOGGLE_CHROME -> {
+                chromeVisible = if (pointer) pressChromeTarget ?: !chromeVisible else !chromeVisible
+                if (pointer) pressChromeTarget = null
+            }
+            ReaderClickAction.NONE -> if (!pointer) markReadingInput()
+        }
+    }
+
+    fun panBoundsFor(current: ReaderState, viewport: ReaderViewport, zoom: Float): ReaderPanBounds {
+        val webtoonMaxWidthPixels = with(density) { settings.webtoonMaxWidth.dp.roundToPx() }
+        val selectedPageSize = current.pages.getOrNull(current.selectedIndex)?.let { effectivePageSizes[it.id] }
+        return ReaderGesturePolicy.panBounds(
+            state = current,
+            viewport = viewport,
+            zoom = zoom,
+            webtoonMaxWidthPixels = webtoonMaxWidthPixels,
+            webtoonSidePaddingPercent = settings.webtoonSidePadding,
+            pageSize = selectedPageSize,
+        )
+    }
+
+    fun handlePan(delta: ReaderPan, viewport: ReaderViewport) {
+        val current = session.state.value
+        if (current.pages.isEmpty()) return
+        val effectiveDelta = if (current.mode == ReadingMode.VERTICAL || current.mode == ReadingMode.WEBTOON) {
+            ReaderPan(delta.x, 0f)
+        } else {
+            delta
+        }
+        if (effectiveDelta.x == 0f && effectiveDelta.y == 0f) return
+        val base = panAccumulator.value ?: current.pan
+        val target = panBoundsFor(current, viewport, current.zoom).panBy(base, effectiveDelta)
+        if (target == base) return
+        panAccumulator.value = target
+        session.dispatch(ReaderAction.SetPan(target))
+        markReadingInput()
+    }
+
+    fun applyZoom(command: ReaderInputCommand.ZoomBy, viewport: ReaderViewport?) {
+        val current = session.state.value
+        val targetZoom = if (command.factor == 0f) {
+            ReaderGesturePolicy.FIT_ZOOM
+        } else {
+            ReaderLayout.clampZoom(current.zoom * command.factor)
+        }
+        session.dispatch(ReaderAction.SetZoom(targetZoom))
+        if (command.factor == 0f) {
+            panAccumulator.value = ReaderPan(0f, 0f)
+            session.dispatch(ReaderAction.SetPan(ReaderPan(0f, 0f)))
+        } else if (viewport != null) {
+            val base = panAccumulator.value ?: current.pan
+            val targetPan = panBoundsFor(current, viewport, targetZoom)
+                .clamp(ReaderGesturePolicy.scalePan(base, current.zoom, targetZoom))
+            panAccumulator.value = targetPan
+            session.dispatch(ReaderAction.SetPan(targetPan))
+        }
+        markReadingInput()
+    }
+
+    fun handleZoomBy(factor: Float, centroid: InputPoint, viewport: ReaderViewport) {
+        val command = inputMapper.mapPinch(factor, centroid).action as? ReaderInputCommand.ZoomBy ?: return
+        applyZoom(command, viewport)
+    }
+
+    fun handleInput(command: ReaderInputCommand) {
+        when (command) {
+            is ReaderInputCommand.Core -> {
+                dispatchCore(command.action)
+                markReadingInput()
+            }
+            is ReaderInputCommand.ZoomBy -> applyZoom(command, session.state.value.viewport)
+            ReaderInputCommand.Fullscreen -> onFullscreen()
+            ReaderInputCommand.Borderless -> onBorderless()
+            ReaderInputCommand.Escape -> {
+                if (onEscape()) closeAndThen(onBack)
+            }
+        }
+    }
+
+    fun handleWheel(
+        deltaPixels: Float,
+        ctrl: Boolean,
+        centroid: InputPoint,
+        viewport: ReaderViewport,
+    ) {
+        val current = session.state.value
+        val continuous = current.mode == ReadingMode.VERTICAL || current.mode == ReadingMode.WEBTOON
+        if (!ctrl && continuous) return
+        val result = inputMapper.mapWheel(
+            deltaPixels = deltaPixels,
+            context = ReaderInputContext(
+                mode = current.mode,
+                wheelBehavior = settings.wheelBehavior,
+                pageCount = current.pages.size.coerceAtLeast(1),
+                anchor = current.viewportAnchor,
+            ),
+            ctrl = ctrl,
+            centroid = centroid,
+        )
+        when (val command = result.action) {
+            null -> Unit
+            is ReaderInputCommand.ZoomBy -> applyZoom(command, viewport)
+            else -> handleInput(command)
+        }
+    }
+
+    fun handleDoubleTap(viewport: ReaderViewport) {
+        val current = session.state.value
+        val targetZoom = ReaderGesturePolicy.doubleTapZoom(current.zoom, doubleTapZoom)
+        panAccumulator.value = ReaderPan(0f, 0f)
+        session.dispatch(ReaderAction.SetZoom(targetZoom))
+        session.dispatch(ReaderAction.SetPan(ReaderPan(0f, 0f)))
+        markReadingInput()
+    }
+
+    fun handleTap(normalizedX: Float) {
+        handleClickAction(clickPolicy.actionAt(normalizedX), pointer = true)
+    }
+
     LaunchedEffect(hideGeneration) {
         if (hideGeneration > 0) {
             delay(CHROME_HIDE_DELAY_MILLIS)
@@ -121,29 +447,52 @@ fun ReaderScreen(
     LaunchedEffect(session, foreground) {
         session.dispatch(ReaderAction.SetForeground(foreground))
     }
+    LaunchedEffect(session, state.chapterId) {
+        if (state.chapterId != null) {
+            session.dispatch(ReaderAction.SetPan(ReaderPan(0f, 0f)))
+        }
+    }
+    LaunchedEffect(session, state.chapterId) {
+        val chapterId = state.chapterId ?: return@LaunchedEffect
+        val previous = sizeChapterId.value
+        if (previous != null && previous != chapterId) {
+            // Drop only the previous chapter; a new page may already have been promoted by its sink.
+            val currentChapterKey = chapterId.toString()
+            decodedPageSizes.keys
+                .filter { it.chapterId != currentChapterKey }
+                .forEach { decodedPageSizes.remove(it) }
+        }
+        sizeChapterId.value = chapterId
+    }
+    LaunchedEffect(state.selectedIndex, state.chapterId) {
+        panAccumulator.value = null
+    }
+    LaunchedEffect(state.chapterId, chapterBookmarked, effectiveBookmarkStore) {
+        bookmarked = state.chapterId?.let { effectiveBookmarkStore?.isBookmarked(it) } ?: chapterBookmarked
+    }
+    LaunchedEffect(session, state.chapterId) {
+        val chapterId = state.chapterId
+        val previous = observedChapterId
+        if (chapterId != null && previous != null && chapterId != previous) {
+            val direction = pendingChapterDirection ?: ReaderChapterTransitionDirection.NEXT
+            if (settings.alwaysShowChapterTransition) {
+                chapterTransition = buildChapterTransition(direction, chapterId)
+            }
+        }
+        observedChapterId = chapterId
+        pendingChapterDirection = null
+    }
+    LaunchedEffect(session, state.chapterId, initialTransitionDirection) {
+        if (initialTransitionDirection != null && settings.alwaysShowChapterTransition && chapterTransition == null) {
+            chapterTransition = buildChapterTransition(initialTransitionDirection, state.chapterId)
+        }
+    }
     LaunchedEffect(focusRequester) {
         focusRequester.requestFocus()
     }
     DisposableEffect(session) {
         session.dispatch(ReaderAction.SetContentVisible(true))
         onDispose { session.dispatch(ReaderAction.SetContentVisible(false)) }
-    }
-
-    fun handleInput(command: ReaderInputCommand) {
-        when (command) {
-            is ReaderInputCommand.Core -> {
-                session.dispatch(command.action)
-                markReadingInput()
-            }
-            is ReaderInputCommand.ZoomBy -> {
-                val zoom = if (command.factor == 0f) 1f else state.zoom * command.factor
-                session.dispatch(ReaderAction.SetZoom(ReaderLayout.clampZoom(zoom)))
-                markReadingInput()
-            }
-            ReaderInputCommand.Fullscreen -> onFullscreen()
-            ReaderInputCommand.Borderless -> onBorderless()
-            ReaderInputCommand.Escape -> onEscape()
-        }
     }
 
     Box(
@@ -154,6 +503,10 @@ fun ReaderScreen(
             .focusable()
             .onKeyEvent { event ->
                 if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
+                if (event.key == Key.F1 || event.key == Key.Slash || event.key == Key.Help) {
+                    showShortcuts = true
+                    return@onKeyEvent true
+                }
                 val key = event.toReaderInputKey() ?: return@onKeyEvent false
                 val result = inputMapper.mapKey(
                     key,
@@ -171,41 +524,42 @@ fun ReaderScreen(
     ) {
         val isWebtoon = state.mode == ReadingMode.WEBTOON
         val currentCrop = if (isWebtoon) settings.cropBordersWebtoon else settings.cropBorders
-        CompositionLocalProvider(
-            LocalReaderColorFilter provides settings.colorFilter,
-            LocalReaderCropBorders provides currentCrop,
+        val ready = state.loadState is ReaderLoadState.Ready
+        ReaderGestureArea(
+            enabled = ready,
+            onPress = { handlePress(it) },
+            onTap = { handleTap(it) },
+            onDoubleTap = { handleDoubleTap(it) },
+            onPan = { delta, viewport -> handlePan(delta, viewport) },
+            onZoomBy = { factor, centroid, viewport -> handleZoomBy(factor, centroid, viewport) },
+            onWheel = { delta, ctrl, centroid, viewport -> handleWheel(delta, ctrl, centroid, viewport) },
+            modifier = Modifier.fillMaxSize().testTag("reader-gesture-area"),
+            onLongPress = { openPageActions() },
         ) {
-            ReaderBody(
-                state = state,
-                session = session,
-                onAction = session::dispatch,
-                onRetryChapter = onRetryChapter,
-                backgroundColor = settings.backgroundColor,
-                webtoonMaxWidth = settings.webtoonMaxWidth,
-                webtoonSidePadding = settings.webtoonSidePadding,
-                pageContent = pageContent,
-            )
-        }
-        if (state.loadState is ReaderLoadState.Ready) {
-            ReaderClickRegions(
-                settings = settings,
-                onAction = { action ->
-                    when (action) {
-                        ReaderClickAction.PREVIOUS -> {
-                            session.dispatch(ReaderAction.Previous)
-                            markReadingInput()
-                        }
-                        ReaderClickAction.NEXT -> {
-                            session.dispatch(ReaderAction.Next)
-                            markReadingInput()
-                        }
-                        ReaderClickAction.TOGGLE_CHROME -> {
-                            chromeVisible = !chromeVisible
-                        }
-                        ReaderClickAction.NONE -> markReadingInput()
-                    }
-                },
-            )
+            CompositionLocalProvider(
+                LocalReaderColorFilter provides settings.colorFilter,
+                LocalReaderCropBorders provides currentCrop,
+                LocalReaderPageSizeSink provides pageSizeSink,
+                LocalReaderPageImageStore provides imageStore,
+            ) {
+                ReaderBody(
+                    state = state,
+                    session = session,
+                    onAction = session::dispatch,
+                    onRetryChapter = onRetryChapter,
+                    backgroundColor = settings.backgroundColor,
+                    webtoonMaxWidth = settings.webtoonMaxWidth,
+                    webtoonSidePadding = settings.webtoonSidePadding,
+                    pageSizes = effectivePageSizes,
+                    pageContent = pageContent,
+                )
+            }
+            if (ready) {
+                ReaderClickRegions(
+                    policy = clickPolicy,
+                    onAction = { handleClickAction(it) },
+                )
+            }
         }
         ReaderChrome(
             state = state,
@@ -216,12 +570,7 @@ fun ReaderScreen(
             canRetry = state.loadState is ReaderLoadState.Failed || state.error != null,
             debugEnabled = debugEnabled,
             onBack = {
-                if (closing) return@ReaderChrome
-                closing = true
-                scope.launch {
-                    withContext(Dispatchers.Default) { session.closeAndFlush() }
-                    onBack()
-                }
+                closeAndThen(onBack)
             },
             onMode = { applySettings(settings.copy(mode = it)) },
             onScale = { applySettings(settings.copy(scaleMode = it)) },
@@ -239,8 +588,118 @@ fun ReaderScreen(
             onBackgroundColor = { applySettings(settings.copy(backgroundColor = it)) },
             onCropBorders = { applySettings(settings.copy(cropBorders = it)) },
             onCropBordersWebtoon = { applySettings(settings.copy(cropBordersWebtoon = it)) },
+            onPageSelected = {
+                session.dispatch(ReaderAction.SelectPage(it))
+                markReadingInput()
+            },
+            onPreviousPage = {
+                dispatchCore(ReaderAction.Previous)
+                markReadingInput()
+            },
+            onNextPage = {
+                dispatchCore(ReaderAction.Next)
+                markReadingInput()
+            },
+            onPreviousChapter = {
+                if (settings.alwaysShowChapterTransition) {
+                    pendingExternalChapterDirection = ReaderChapterTransitionDirection.PREVIOUS
+                    chapterTransition = buildChapterTransition(ReaderChapterTransitionDirection.PREVIOUS)
+                } else {
+                    navigateExternalChapter(ReaderChapterTransitionDirection.PREVIOUS)
+                }
+            },
+            onNextChapter = {
+                if (settings.alwaysShowChapterTransition) {
+                    pendingExternalChapterDirection = ReaderChapterTransitionDirection.NEXT
+                    chapterTransition = buildChapterTransition(ReaderChapterTransitionDirection.NEXT)
+                } else {
+                    navigateExternalChapter(ReaderChapterTransitionDirection.NEXT)
+                }
+            },
+            hasPreviousChapter = hasPreviousChapter,
+            hasNextChapter = hasNextChapter,
+            bookmarked = bookmarked,
+            onToggleBookmark = ::toggleChapterBookmark,
+            onOpenPageActions = ::openPageActions,
+            onOpenShortcuts = { showShortcuts = true },
+            chapterCatalog = chapterCatalog,
+            currentChapterId = currentChapter?.id,
+            onChapterSelected = { targetId ->
+                closeAndThen { onChapterSelected?.invoke(targetId) }
+            },
         )
         TopEdgeReveal { chromeVisible = true }
+    }
+    chapterTransition?.let { transition ->
+        ReaderChapterTransitionSurface(
+            transition = transition,
+            settings = settings,
+            allowDismiss = pendingExternalChapterDirection != null,
+            onContinue = {
+                val externalDirection = pendingExternalChapterDirection
+                chapterTransition = null
+                pendingExternalChapterDirection = null
+                onChapterTransitionContinue?.invoke(transition.direction)
+                if (externalDirection != null) {
+                    navigateExternalChapter(externalDirection, transition.target?.id)
+                }
+            },
+            onDismiss = {
+                chapterTransition = null
+                pendingExternalChapterDirection = null
+            },
+        )
+    }
+    pageActionsTarget?.let { target ->
+        ReaderPageActionsDialog(
+            onDismissRequest = { pageActionsTarget = null },
+            canSetAsCover = target.mangaId != null,
+            canOpenInBrowser = target.canOpenInBrowser,
+            onSave = {
+                runPageAction(target) { handler, pageTarget ->
+                    val image = handler.loadImage(pageTarget) ?: return@runPageAction false
+                    handler.saveImage(pageTarget, image)
+                }
+            },
+            onCopy = {
+                runPageAction(target) { handler, pageTarget ->
+                    val image = handler.loadImage(pageTarget) ?: return@runPageAction false
+                    handler.copyImage(image)
+                }
+            },
+            onShare = {
+                runPageAction(target) { handler, pageTarget ->
+                    val image = handler.loadImage(pageTarget) ?: return@runPageAction false
+                    handler.shareImage(image)
+                }
+            },
+            onSetAsCover = {
+                runPageAction(target) { handler, pageTarget ->
+                    val image = handler.loadImage(pageTarget) ?: return@runPageAction false
+                    handler.setAsCover(pageTarget, image)
+                }
+            },
+            onOpenInBrowser = {
+                runPageAction(target) { handler, pageTarget ->
+                    pageTarget.pageUrl?.let(handler::openInBrowser) ?: false
+                }
+            },
+        )
+    }
+    pageActionMessage?.let { message ->
+        AlertDialog(
+            onDismissRequest = { pageActionMessage = null },
+            title = { Text("Page action") },
+            text = { Text(message) },
+            confirmButton = {
+                TextButton(
+                    onClick = { pageActionMessage = null },
+                    modifier = Modifier.testTag("reader-page-action-message-ok"),
+                ) {
+                    Text(strings.dialogOk)
+                }
+            },
+        )
     }
     if (showSettings) {
         ReaderSettingsDialog(
@@ -250,6 +709,11 @@ fun ReaderScreen(
                 applySettings(it)
                 showSettings = false
             },
+        )
+    }
+    if (showShortcuts) {
+        ReaderShortcutsDialog(
+            onDismiss = { showShortcuts = false },
         )
     }
 }
@@ -281,6 +745,7 @@ private fun ReaderBody(
     backgroundColor: ReaderBackgroundColor,
     webtoonMaxWidth: Int,
     webtoonSidePadding: Int,
+    pageSizes: Map<PageId, PageSize>,
     pageContent: ReaderPageContent,
 ) {
     val strings = LocalStrings.current
@@ -300,6 +765,7 @@ private fun ReaderBody(
             backgroundColor = backgroundColor,
             webtoonMaxWidth = webtoonMaxWidth,
             webtoonSidePadding = webtoonSidePadding,
+            pageSizes = pageSizes,
             modifier = Modifier.fillMaxSize(),
             pageContent = pageContent,
         )
@@ -345,25 +811,27 @@ private fun ReaderErrorPanel(message: String, retryable: Boolean, onRetry: () ->
 }
 
 @Composable
-private fun ReaderClickRegions(settings: DesktopReaderSettings, onAction: (ReaderClickAction) -> Unit) {
-    val source = remember { MutableInteractionSource() }
-    val regions = remember(settings.clickRegions) { ClickRegionPolicy.from(settings.clickRegions).regions }
+private fun ReaderClickRegions(policy: ClickRegionPolicy, onAction: (ReaderClickAction) -> Unit) {
+    val regions = policy.regions
     Row(Modifier.fillMaxSize().testTag("reader-input-surface")) {
         ClickRegion(
             tag = "reader-previous-region",
             weight = (regions[0].end - regions[0].start) * 100f,
-            source = source,
-        ) { onAction(regions[0].action) }
+            action = regions[0].action,
+            onAction = onAction,
+        )
         ClickRegion(
             tag = "reader-center-region",
             weight = (regions[1].end - regions[1].start) * 100f,
-            source = source,
-        ) { onAction(regions[1].action) }
+            action = regions[1].action,
+            onAction = onAction,
+        )
         ClickRegion(
             tag = "reader-next-region",
             weight = (regions[2].end - regions[2].start) * 100f,
-            source = source,
-        ) { onAction(regions[2].action) }
+            action = regions[2].action,
+            onAction = onAction,
+        )
     }
 }
 
@@ -371,19 +839,20 @@ private fun ReaderClickRegions(settings: DesktopReaderSettings, onAction: (Reade
 private fun androidx.compose.foundation.layout.RowScope.ClickRegion(
     tag: String,
     weight: Float,
-    source: MutableInteractionSource,
-    onClick: () -> Unit,
+    action: ReaderClickAction,
+    onAction: (ReaderClickAction) -> Unit,
 ) {
     Box(
         Modifier
             .weight(weight)
             .fillMaxHeight()
             .testTag(tag)
-            .clickable(
-                interactionSource = source,
-                indication = null,
-                onClick = onClick,
-            ),
+            .semantics {
+                onClick {
+                    onAction(action)
+                    true
+                }
+            },
     )
 }
 
@@ -423,6 +892,11 @@ private fun ReaderState.toDesktopSettings() = DesktopReaderSettings(
     coverOffset = coverOffset,
     scaleMode = scaleMode,
 )
+
+/** Synchronous pan target used while asynchronous session dispatches catch up. */
+private class ReaderPanAccumulator {
+    var value: ReaderPan? = null
+}
 
 private const val CHROME_HIDE_DELAY_MILLIS = 2_500L
 private val TOP_REVEAL_HEIGHT = 24.dp

@@ -24,6 +24,7 @@ data class DesktopNotificationEvent(
 
 class DesktopNotificationService(
     private val enabledProvider: () -> Boolean = { true },
+    private val hideContentProvider: () -> Boolean = { false },
 ) {
     private val _notifications = MutableStateFlow<DesktopNotificationEvent?>(null)
     val notifications: StateFlow<DesktopNotificationEvent?> = _notifications.asStateFlow()
@@ -38,7 +39,11 @@ class DesktopNotificationService(
         try {
             if (SystemTray.isSupported()) {
                 val tray = SystemTray.getSystemTray()
-                val image: Image = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+                val image: Image = runCatching {
+                    DesktopNotificationService::class.java.getResourceAsStream("/icon.png")?.use {
+                        javax.imageio.ImageIO.read(it)
+                    }
+                }.getOrNull() ?: BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
                 val icon = TrayIcon(image, "Mihon")
                 icon.isImageAutoSize = true
                 tray.add(icon)
@@ -56,7 +61,8 @@ class DesktopNotificationService(
     ) {
         if (!enabledProvider()) return
 
-        val event = DesktopNotificationEvent(title = title, message = message, type = type)
+        val visibleMessage = if (hideContentProvider()) "Open Mihon W to view details" else message
+        val event = DesktopNotificationEvent(title = title, message = visibleMessage, type = type)
         _notifications.value = event
 
         val icon = trayIcon
@@ -67,7 +73,7 @@ class DesktopNotificationService(
                     NotificationType.WARNING -> MessageType.WARNING
                     NotificationType.ERROR -> MessageType.ERROR
                 }
-                icon.displayMessage(title, message, messageType)
+                icon.displayMessage(title, visibleMessage, messageType)
             } catch (_: Throwable) {
                 // Ignore tray display error
             }

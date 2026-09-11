@@ -1,5 +1,6 @@
 package mihon.desktop.ui.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,21 +12,35 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ChromeReaderMode
+import androidx.compose.material.icons.rounded.Backup
+import androidx.compose.material.icons.rounded.Code
+import androidx.compose.material.icons.rounded.CollectionsBookmark
+import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Palette
+import androidx.compose.material.icons.rounded.SyncAlt
+import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,8 +51,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,9 +71,15 @@ import mihon.desktop.reader.DesktopReaderSettingsStore
 import mihon.desktop.reader.ReaderBackgroundColor
 import mihon.desktop.reader.ReaderColorFilter
 import mihon.desktop.reader.ReaderWheelBehavior
+import mihon.desktop.security.APP_LOCK_TIMEOUT_OPTIONS
+import mihon.desktop.security.ChangePinResult
+import mihon.desktop.security.DesktopAppLockController
+import mihon.desktop.security.MIN_PIN_LENGTH
 import mihon.desktop.track.DesktopTracker
 import mihon.desktop.track.DesktopTrackerManager
 import mihon.desktop.track.TrackerAuthType
+import mihon.desktop.ui.theme.DesktopAppTheme
+import mihon.desktop.ui.theme.ThemeRegistry
 import mihon.desktop.ui.track.TrackerLoginDialog
 import mihon.reader.model.ReadingMode
 import mihon.reader.model.ScaleMode
@@ -64,6 +87,7 @@ import java.nio.file.Path
 
 enum class SettingsSection(val label: String) {
     General("General"),
+    Security("Security"),
     Appearance("Appearance"),
     Library("Library"),
     Reader("Reader"),
@@ -73,8 +97,22 @@ enum class SettingsSection(val label: String) {
     Advanced("Advanced & Diagnostics"),
     ;
 
+    val icon: ImageVector
+        get() = when (this) {
+            General -> Icons.Rounded.Tune
+            Security -> Icons.Rounded.Lock
+            Appearance -> Icons.Rounded.Palette
+            Library -> Icons.Rounded.CollectionsBookmark
+            Reader -> Icons.AutoMirrored.Rounded.ChromeReaderMode
+            Downloads -> Icons.Rounded.Download
+            Tracking -> Icons.Rounded.SyncAlt
+            Backup -> Icons.Rounded.Backup
+            Advanced -> Icons.Rounded.Code
+        }
+
     fun localized(strings: DesktopStrings): String = when (this) {
         General -> strings.settingsSectionGeneral
+        Security -> "Security"
         Appearance -> strings.settingsSectionAppearance
         Library -> strings.libraryTitle
         Reader -> strings.settingsSectionReader
@@ -100,9 +138,13 @@ fun SettingsScreen(
     downloadCacheCleaner: mihon.desktop.download.DownloadCacheCleaner? = null,
     downloadsDir: Path? = null,
     diskCacheDir: Path? = null,
+    appLockController: DesktopAppLockController? = null,
     modifier: Modifier = Modifier,
 ) {
     val strings = LocalStrings.current
+    val securityController = remember(preferenceStore, appLockController) {
+        appLockController ?: DesktopAppLockController(preferenceStore)
+    }
     var selectedSection by remember { mutableStateOf(SettingsSection.General) }
 
     Row(modifier = modifier.fillMaxSize().testTag("settings-screen")) {
@@ -133,16 +175,31 @@ fun SettingsScreen(
                             Color.Transparent
                         },
                     ) {
-                        Text(
-                            text = section.localized(strings),
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                            color = if (isSelected) {
-                                MaterialTheme.colorScheme.onPrimaryContainer
-                            } else {
-                                MaterialTheme.colorScheme.onSurface
-                            },
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        )
+                        Row(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            Icon(
+                                imageVector = section.icon,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = if (isSelected) {
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                },
+                            )
+                            Text(
+                                text = section.localized(strings),
+                                color = if (isSelected) {
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface
+                                },
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            )
+                        }
                     }
                 }
             }
@@ -154,6 +211,11 @@ fun SettingsScreen(
         ) {
             when (selectedSection) {
                 SettingsSection.General -> GeneralSettingsPane(preferenceStore, onPreferencesChanged)
+                SettingsSection.Security -> SecuritySettingsPane(
+                    preferenceStore = preferenceStore,
+                    appLockController = securityController,
+                    onPreferencesChanged = onPreferencesChanged,
+                )
                 SettingsSection.Appearance -> AppearanceSettingsPane(preferenceStore, onPreferencesChanged)
                 SettingsSection.Library -> LibrarySettingsPane(preferenceStore, updateScheduler, onPreferencesChanged)
                 SettingsSection.Reader -> ReaderSettingsPane(readerSettingsStore)
@@ -274,6 +336,454 @@ private fun GeneralSettingsPane(
 }
 
 @Composable
+private fun SecuritySettingsPane(
+    preferenceStore: DesktopPreferenceStore,
+    appLockController: DesktopAppLockController,
+    onPreferencesChanged: ((DesktopPreferences) -> Unit)?,
+) {
+    val strings = LocalStrings.current
+    var preferences by remember { mutableStateOf(preferenceStore.load()) }
+    var showSetPinDialog by remember { mutableStateOf(false) }
+    var setPin by remember { mutableStateOf("") }
+    var setPinConfirm by remember { mutableStateOf("") }
+    var setPinError by remember { mutableStateOf<String?>(null) }
+    var currentPin by remember { mutableStateOf("") }
+    var newPin by remember { mutableStateOf("") }
+    var newPinConfirm by remember { mutableStateOf("") }
+    var pinError by remember { mutableStateOf<String?>(null) }
+    var pinMessage by remember { mutableStateOf<String?>(null) }
+
+    fun refreshPreferences() {
+        preferences = preferenceStore.load()
+        appLockController.refresh()
+        onPreferencesChanged?.invoke(preferences)
+    }
+
+    fun enableWithPin(pin: String, confirm: String): Boolean {
+        if (pin.length < MIN_PIN_LENGTH) {
+            setPinError = "PIN must be at least $MIN_PIN_LENGTH characters."
+            return false
+        }
+        if (pin != confirm) {
+            setPinError = "PINs do not match."
+            return false
+        }
+        val enabled = appLockController.enableWithPin(
+            pin = pin,
+            lockOnStartup = preferences.appLockOnStartup,
+            idleTimeoutMinutes = preferences.appLockIdleTimeoutMinutes,
+        )
+        if (!enabled) {
+            setPinError = "Could not set PIN."
+            return false
+        }
+        setPin = ""
+        setPinConfirm = ""
+        setPinError = null
+        refreshPreferences()
+        pinMessage = "App lock enabled."
+        return true
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(
+            text = "Security",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
+
+        // Enable/disable + status
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f).padding(end = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Text("App Lock", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = if (preferences.appLockEnabled) {
+                            "App lock is on. A PIN is required to view your library."
+                        } else {
+                            "App lock is off. Anyone at this PC can view your library."
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.testTag("security-status-text"),
+                    )
+                }
+                Switch(
+                    checked = preferences.appLockEnabled,
+                    onCheckedChange = { checked ->
+                        pinError = null
+                        pinMessage = null
+                        if (checked) {
+                            when {
+                                appLockController.isPinConfigured() -> {
+                                    appLockController.enableWithStoredPin()
+                                    refreshPreferences()
+                                    pinMessage = "App lock enabled."
+                                }
+                                setPin.length >= MIN_PIN_LENGTH && setPin == setPinConfirm -> {
+                                    enableWithPin(setPin, setPinConfirm)
+                                }
+                                else -> {
+                                    setPinError = null
+                                    showSetPinDialog = true
+                                }
+                            }
+                        } else {
+                            appLockController.disableLock()
+                            refreshPreferences()
+                            pinMessage = "App lock disabled."
+                        }
+                    },
+                    modifier = Modifier.testTag("security-enable-switch"),
+                )
+            }
+        }
+
+        if (!preferences.appLockEnabled && !showSetPinDialog) {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("Set PIN", fontWeight = FontWeight.Bold)
+                    Text(
+                        "Use at least $MIN_PIN_LENGTH characters. Only a salted PBKDF2 hash is stored.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    OutlinedTextField(
+                        value = setPin,
+                        onValueChange = {
+                            setPin = it
+                            setPinError = null
+                        },
+                        label = { Text("New PIN") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth().testTag("security-pin-field"),
+                    )
+                    OutlinedTextField(
+                        value = setPinConfirm,
+                        onValueChange = {
+                            setPinConfirm = it
+                            setPinError = null
+                        },
+                        label = { Text("Confirm PIN") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth().testTag("security-pin-confirm-field"),
+                    )
+                    setPinError?.let { message ->
+                        Text(
+                            text = message,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.testTag("security-pin-error"),
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Button(
+                            onClick = { enableWithPin(setPin, setPinConfirm) },
+                            modifier = Modifier.testTag("security-enable-button"),
+                        ) {
+                            Text("Enable app lock")
+                        }
+                        OutlinedButton(
+                            onClick = {
+                                setPinError = null
+                                showSetPinDialog = true
+                            },
+                            modifier = Modifier.testTag("security-set-pin-button"),
+                        ) {
+                            Text("Set PIN...")
+                        }
+                    }
+                }
+            }
+        }
+
+        if (preferences.appLockEnabled) {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("Change PIN", fontWeight = FontWeight.Bold)
+                    OutlinedTextField(
+                        value = currentPin,
+                        onValueChange = {
+                            currentPin = it
+                            pinError = null
+                        },
+                        label = { Text("Current PIN") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth().testTag("security-current-pin-field"),
+                    )
+                    OutlinedTextField(
+                        value = newPin,
+                        onValueChange = {
+                            newPin = it
+                            pinError = null
+                        },
+                        label = { Text("New PIN") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth().testTag("security-new-pin-field"),
+                    )
+                    OutlinedTextField(
+                        value = newPinConfirm,
+                        onValueChange = {
+                            newPinConfirm = it
+                            pinError = null
+                        },
+                        label = { Text("Confirm new PIN") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth().testTag("security-new-pin-confirm-field"),
+                    )
+                    pinError?.let { message ->
+                        Text(
+                            text = message,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.testTag("security-change-pin-error"),
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Button(
+                            onClick = {
+                                pinError = null
+                                pinMessage = null
+                                when {
+                                    currentPin.length < MIN_PIN_LENGTH -> {
+                                        pinError = "Enter your current PIN."
+                                    }
+                                    newPin.length < MIN_PIN_LENGTH -> {
+                                        pinError = "New PIN must be at least $MIN_PIN_LENGTH characters."
+                                    }
+                                    newPin != newPinConfirm -> {
+                                        pinError = "New PINs do not match."
+                                    }
+                                    else -> {
+                                        when (appLockController.changePin(currentPin, newPin)) {
+                                            ChangePinResult.Success -> {
+                                                currentPin = ""
+                                                newPin = ""
+                                                newPinConfirm = ""
+                                                refreshPreferences()
+                                                pinMessage = "PIN changed."
+                                            }
+                                            ChangePinResult.WrongCurrentPin -> {
+                                                pinError = "Current PIN is incorrect."
+                                            }
+                                            ChangePinResult.InvalidNewPin -> {
+                                                pinError =
+                                                    "New PIN must be at least $MIN_PIN_LENGTH characters."
+                                            }
+                                            ChangePinResult.NotConfigured -> {
+                                                pinError = "App lock is not configured."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            modifier = Modifier.testTag("security-change-pin-button"),
+                        ) {
+                            Text("Change PIN")
+                        }
+                        OutlinedButton(
+                            onClick = {
+                                pinError = null
+                                appLockController.disableLock()
+                                refreshPreferences()
+                                pinMessage = "App lock disabled."
+                            },
+                            modifier = Modifier.testTag("security-disable-button"),
+                        ) {
+                            Text("Disable app lock")
+                        }
+                    }
+                }
+            }
+
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text("Lock behavior", fontWeight = FontWeight.Bold)
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f).padding(end = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text("Lock on startup", fontWeight = FontWeight.Medium)
+                            Text(
+                                "Require the PIN the next time the app starts.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Switch(
+                            checked = preferences.appLockOnStartup,
+                            onCheckedChange = {
+                                appLockController.setLockOnStartup(it)
+                                refreshPreferences()
+                            },
+                            modifier = Modifier.testTag("security-lock-on-startup-switch"),
+                        )
+                    }
+
+                    HorizontalDivider()
+
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("Auto-lock after inactivity", fontWeight = FontWeight.Medium)
+                        Text(
+                            "Lock automatically when there is no pointer or keyboard activity.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            APP_LOCK_TIMEOUT_OPTIONS.forEach { minutes ->
+                                val isSelected = preferences.appLockIdleTimeoutMinutes == minutes
+                                val label = if (minutes == 0) "Never" else "$minutes min"
+                                if (isSelected) {
+                                    Button(
+                                        onClick = {},
+                                        modifier = Modifier.testTag("security-timeout-$minutes"),
+                                    ) {
+                                        Text(label)
+                                    }
+                                } else {
+                                    OutlinedButton(
+                                        onClick = {
+                                            appLockController.setIdleTimeoutMinutes(minutes)
+                                            refreshPreferences()
+                                        },
+                                        modifier = Modifier.testTag("security-timeout-$minutes"),
+                                    ) {
+                                        Text(label)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    HorizontalDivider()
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f).padding(end = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text("Lock now", fontWeight = FontWeight.Medium)
+                            Text(
+                                "Lock the app immediately without closing it.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Button(
+                            onClick = { appLockController.lockNow() },
+                            modifier = Modifier.testTag("security-lock-now-button"),
+                        ) {
+                            Text("Lock now")
+                        }
+                    }
+                }
+            }
+        }
+
+        pinMessage?.let { message ->
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.testTag("security-pin-message"),
+            )
+        }
+    }
+
+    if (showSetPinDialog) {
+        AlertDialog(
+            onDismissRequest = { showSetPinDialog = false },
+            title = { Text("Set app lock PIN") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        "Use at least $MIN_PIN_LENGTH characters. Only a salted PBKDF2 hash is stored.",
+                    )
+                    OutlinedTextField(
+                        value = setPin,
+                        onValueChange = {
+                            setPin = it
+                            setPinError = null
+                        },
+                        label = { Text("New PIN") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth().testTag("security-pin-field"),
+                    )
+                    OutlinedTextField(
+                        value = setPinConfirm,
+                        onValueChange = {
+                            setPinConfirm = it
+                            setPinError = null
+                        },
+                        label = { Text("Confirm PIN") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth().testTag("security-pin-confirm-field"),
+                    )
+                    setPinError?.let { message ->
+                        Text(
+                            text = message,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.testTag("security-pin-error"),
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (enableWithPin(setPin, setPinConfirm)) {
+                            showSetPinDialog = false
+                        }
+                    },
+                    modifier = Modifier.testTag("security-set-pin-confirm-button"),
+                ) {
+                    Text(strings.dialogOk)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showSetPinDialog = false
+                        setPinError = null
+                    },
+                    modifier = Modifier.testTag("security-set-pin-cancel-button"),
+                ) {
+                    Text(strings.dialogCancel)
+                }
+            },
+        )
+    }
+}
+
+@Composable
 private fun AppearanceSettingsPane(
     preferenceStore: DesktopPreferenceStore,
     onPreferencesChanged: ((DesktopPreferences) -> Unit)?,
@@ -291,6 +801,7 @@ private fun AppearanceSettingsPane(
             fontWeight = FontWeight.Bold,
         )
 
+        // 1. Theme Mode (System / Light / Dark)
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(strings.settingsThemeModeTitle, fontWeight = FontWeight.Bold)
@@ -319,6 +830,138 @@ private fun AppearanceSettingsPane(
                                 modifier = Modifier.testTag("theme-button-${mode.name}"),
                             ) {
                                 Text(label)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. AMOLED Theme Switch
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f).padding(end = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Text(strings.settingsThemeAmoledTitle, fontWeight = FontWeight.Bold)
+                    Text(
+                        strings.settingsThemeAmoledSubtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Switch(
+                    checked = preferences.themeDarkAmoled,
+                    onCheckedChange = { isChecked ->
+                        val updated = preferences.copy(themeDarkAmoled = isChecked)
+                        preferences = updated
+                        preferenceStore.save(updated)
+                        onPreferencesChanged?.invoke(updated)
+                    },
+                    modifier = Modifier.testTag("amoled-switch"),
+                )
+            }
+        }
+
+        // 3. Theme Palette Grid Selector
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text(strings.settingsAppThemeTitle, fontWeight = FontWeight.Bold)
+
+                val themes = DesktopAppTheme.entries
+                val isDark = when (preferences.themeMode) {
+                    ThemeMode.System -> androidx.compose.foundation.isSystemInDarkTheme()
+                    ThemeMode.Light -> false
+                    ThemeMode.Dark -> true
+                }
+
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    themes.chunked(2).forEach { rowThemes ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            rowThemes.forEach { theme ->
+                                val isSelected = preferences.appTheme == theme
+                                val scheme = ThemeRegistry.getColorScheme(theme)
+                                val previewColors = scheme.getColorScheme(
+                                    isDark = isDark,
+                                    isAmoled = preferences.themeDarkAmoled,
+                                )
+
+                                Surface(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .clickable {
+                                            val updated = preferences.copy(appTheme = theme)
+                                            preferences = updated
+                                            preferenceStore.save(updated)
+                                            onPreferencesChanged?.invoke(updated)
+                                        }
+                                        .testTag("theme-palette-${theme.name}"),
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = if (isSelected) {
+                                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
+                                    } else {
+                                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
+                                    },
+                                    border = if (isSelected) {
+                                        androidx.compose.foundation.BorderStroke(
+                                            2.dp,
+                                            MaterialTheme.colorScheme.primary,
+                                        )
+                                    } else {
+                                        androidx.compose.foundation.BorderStroke(
+                                            1.dp,
+                                            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                                        )
+                                    },
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().padding(12.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Text(
+                                            text = strings.appThemeName(theme),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                            modifier = Modifier.weight(1f).padding(end = 8.dp),
+                                        )
+                                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            // Primary bubble
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(16.dp)
+                                                    .clip(androidx.compose.foundation.shape.CircleShape)
+                                                    .background(previewColors.primary),
+                                            )
+                                            // Secondary bubble
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(16.dp)
+                                                    .clip(androidx.compose.foundation.shape.CircleShape)
+                                                    .background(previewColors.secondary),
+                                            )
+                                            // Tertiary bubble
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(16.dp)
+                                                    .clip(androidx.compose.foundation.shape.CircleShape)
+                                                    .background(previewColors.tertiary),
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            if (rowThemes.size == 1) {
+                                Spacer(modifier = Modifier.weight(1f))
                             }
                         }
                     }
@@ -605,6 +1248,33 @@ private fun DownloadsSettingsPane(
                         }
                     }
                 }
+
+                Text("Parallel pages per chapter", fontWeight = FontWeight.Medium)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(1, 2, 3, 5).forEach { count ->
+                        val isSelected = preferences.downloadPageParallelCount == count
+                        if (isSelected) {
+                            Button(
+                                onClick = {},
+                                modifier = Modifier.testTag("parallel-pages-$count"),
+                            ) {
+                                Text("$count")
+                            }
+                        } else {
+                            OutlinedButton(
+                                onClick = {
+                                    val updated = preferences.copy(downloadPageParallelCount = count)
+                                    preferences = updated
+                                    preferenceStore.save(updated)
+                                    onPreferencesChanged?.invoke(updated)
+                                },
+                                modifier = Modifier.testTag("parallel-pages-$count"),
+                            ) {
+                                Text("$count")
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -750,7 +1420,15 @@ private fun TrackingSettingsPane(trackerManager: DesktopTrackerManager?) {
                             onClick = { loginTracker = tracker },
                             modifier = Modifier.testTag("tracker-login-${tracker.id}"),
                         ) {
-                            Text(if (tracker.authType == TrackerAuthType.SERVER) strings.trackerConnect else strings.trackerLogin)
+                            Text(
+                                if (tracker.authType ==
+                                    TrackerAuthType.SERVER
+                                ) {
+                                    strings.trackerConnect
+                                } else {
+                                    strings.trackerLogin
+                                },
+                            )
                         }
                     }
                 }
@@ -763,10 +1441,7 @@ private fun TrackingSettingsPane(trackerManager: DesktopTrackerManager?) {
             tracker = tracker,
             onDismiss = { loginTracker = null },
             onLogin = { creds ->
-                scope.launch {
-                    trackerManager?.login(tracker.id, creds)
-                    loginTracker = null
-                }
+                trackerManager?.login(tracker.id, creds) == true
             },
         )
     }
@@ -1087,6 +1762,50 @@ private fun LibrarySettingsPane(
                     )
                 }
 
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text("Skip manga that have not been started")
+                    Switch(
+                        checked = preferences.libraryUpdateSkipStarted,
+                        onCheckedChange = { checked ->
+                            val updated = preferences.copy(libraryUpdateSkipStarted = checked)
+                            preferences = updated
+                            preferenceStore.save(updated)
+                            onPreferencesChanged?.invoke(updated)
+                        },
+                        modifier = Modifier.testTag("skip-started-switch"),
+                    )
+                }
+
+                OutlinedTextField(
+                    value = preferences.libraryUpdateCategories.sorted().joinToString(","),
+                    onValueChange = { value ->
+                        val updated = preferences.copy(libraryUpdateCategories = parsePositiveLongSet(value))
+                        preferences = updated
+                        preferenceStore.save(updated)
+                        onPreferencesChanged?.invoke(updated)
+                    },
+                    label = { Text("Only update category IDs") },
+                    modifier = Modifier.fillMaxWidth().testTag("update-include-categories"),
+                    singleLine = true,
+                )
+
+                OutlinedTextField(
+                    value = preferences.libraryUpdateCategoriesExclude.sorted().joinToString(","),
+                    onValueChange = { value ->
+                        val updated = preferences.copy(libraryUpdateCategoriesExclude = parsePositiveLongSet(value))
+                        preferences = updated
+                        preferenceStore.save(updated)
+                        onPreferencesChanged?.invoke(updated)
+                    },
+                    label = { Text("Exclude category IDs") },
+                    modifier = Modifier.fillMaxWidth().testTag("update-exclude-categories"),
+                    singleLine = true,
+                )
+
                 HorizontalDivider()
 
                 // Auto download new chapters
@@ -1127,6 +1846,24 @@ private fun LibrarySettingsPane(
                     )
                 }
 
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text("Hide notification content")
+                    Switch(
+                        checked = preferences.desktopNotificationsHideContent,
+                        onCheckedChange = { checked ->
+                            val updated = preferences.copy(desktopNotificationsHideContent = checked)
+                            preferences = updated
+                            preferenceStore.save(updated)
+                            onPreferencesChanged?.invoke(updated)
+                        },
+                        modifier = Modifier.testTag("desktop-notifications-hide-content-switch"),
+                    )
+                }
+
                 HorizontalDivider()
 
                 // Last update & trigger button
@@ -1160,7 +1897,10 @@ private fun LibrarySettingsPane(
                                         }
                                         preferences = preferenceStore.load()
                                         updateResultMessage = if (report != null) {
-                                            strings.settingsLibraryUpdateResult(report.totalMangaChecked, report.newChaptersTotal)
+                                            strings.settingsLibraryUpdateResult(
+                                                report.totalMangaChecked,
+                                                report.newChaptersTotal,
+                                            )
                                         } else {
                                             strings.settingsLibraryUpdateCompleted
                                         }
@@ -1403,3 +2143,10 @@ private fun formatStorageSize(bytes: Long): String {
     val formatted = String.format(java.util.Locale.US, "%.1f", bytes / Math.pow(1024.0, digitGroups.toDouble()))
     return "$formatted ${units[digitGroups]}"
 }
+
+private fun parsePositiveLongSet(value: String): Set<Long> = value
+    .split(',', ';', ' ')
+    .asSequence()
+    .mapNotNull { it.trim().toLongOrNull() }
+    .filter { it > 0L }
+    .toSet()

@@ -5,7 +5,9 @@ import mihon.desktop.library.model.LibraryChapter
 data class LibraryUpdateOptions(
     val skipCompleted: Boolean = true,
     val skipUnread: Boolean = false,
-    val categoryIds: Set<Long>? = null,
+    val skipNotStarted: Boolean = false,
+    val includedCategoryIds: Set<Long>? = null,
+    val excludedCategoryIds: Set<Long>? = null,
     val autoDownloadNewChapters: Boolean = false,
 )
 

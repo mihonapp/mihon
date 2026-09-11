@@ -18,8 +18,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
+import mihon.reader.model.PageId
 import mihon.reader.model.ReaderLayout
-import mihon.reader.model.ReaderPan
 import mihon.reader.model.ReaderPosition
 import mihon.reader.model.ReaderViewport
 import mihon.reader.model.ReadingMode
@@ -37,6 +37,7 @@ internal fun ContinuousReader(
     modifier: Modifier = Modifier,
     webtoonMaxWidth: Int = 800,
     webtoonSidePadding: Int = 0,
+    pageSizes: Map<PageId, PageSize> = emptyMap(),
 ) {
     val initialAnchor = state.viewportAnchor
     val listState = rememberLazyListState(
@@ -84,12 +85,14 @@ internal fun ContinuousReader(
             modifier = Modifier.width(contentWidth).fillMaxHeight(),
         ) {
             itemsIndexed(state.pages, key = { _, page -> page.id }) { pageIndex, page ->
+                val intrinsicSize = pageSizes[page.id]
+                val effectivePage = page.withIntrinsicSize(intrinsicSize)
                 val transform = calculatePageTransform(
-                    page = page,
+                    page = effectivePage,
                     viewport = viewport,
                     scaleMode = scaleMode,
                     zoom = state.zoom,
-                    requestedPan = ReaderPan(0f, 0f),
+                    requestedPan = state.pan,
                 )
                 val itemHeight = with(density) { transform.heightPixels.toDp() }
                 Box(
@@ -99,14 +102,15 @@ internal fun ContinuousReader(
                         .then(if (pageIndex < state.pages.lastIndex) Modifier else Modifier),
                 ) {
                     ReaderPageFrame(
-                        page = page,
+                        page = effectivePage,
                         pageIndex = pageIndex,
                         totalPages = state.pages.size,
                         scaleMode = scaleMode,
                         zoom = state.zoom,
-                        requestedPan = ReaderPan(0f, 0f),
+                        requestedPan = state.pan,
                         pageContent = pageContent,
                         modifier = Modifier.fillMaxWidth().height(itemHeight),
+                        intrinsicSize = intrinsicSize,
                     )
                 }
                 if (pageIndex < state.pages.lastIndex && gap > 0.dp) {

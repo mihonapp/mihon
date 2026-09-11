@@ -9,12 +9,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.OpenInNew
+import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -26,6 +36,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.ui.common.MangaBackdropBanner
 import mihon.extension.model.SourceDescriptor
 import mihon.extension.source.model.SChapter
 import mihon.extension.source.model.SManga
@@ -46,158 +57,202 @@ fun OnlineMangaDetailScreen(
     onBack: () -> Unit,
     onAddToLibrary: () -> Unit,
     onReadChapter: (SChapter) -> Unit,
+    onDownloadChapter: (SChapter) -> Unit = {},
     onRefresh: () -> Unit = {},
 ) {
     val strings = LocalStrings.current
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp).testTag("online-manga-detail-screen"),
+    Box(
+        modifier = Modifier.fillMaxSize().testTag("online-manga-detail-screen"),
     ) {
-        // Navigation bar
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+        MangaBackdropBanner(
+            thumbnailUrl = state.manga.thumbnailUrl,
+            modifier = Modifier.align(Alignment.TopCenter),
+            bannerHeight = 280.dp,
+        )
+
+        Column(
+            modifier = Modifier.fillMaxSize().padding(16.dp),
         ) {
-            OutlinedButton(onClick = onBack, modifier = Modifier.testTag("detail-back-btn")) {
-                Text(strings.mangaDetailBack)
-            }
-            Row {
-                Button(
-                    onClick = onAddToLibrary,
-                    enabled = !state.isSyncingLibrary,
-                    modifier = Modifier.testTag("add-to-library-btn"),
-                ) {
-                    if (state.isSyncingLibrary) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.width(16.dp).height(16.dp),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            strokeWidth = 2.dp,
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-                    Text(if (state.inLibrary) strings.mangaDetailInLibrary else strings.mangaDetailAddToLibrary)
+            // Navigation bar
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                OutlinedButton(onClick = onBack, modifier = Modifier.testTag("detail-back-btn")) {
+                    Icon(
+                        Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(strings.mangaDetailBack)
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                if (state.manga.url.startsWith("http")) {
-                    OutlinedButton(
-                        onClick = { mihon.desktop.platform.DesktopBrowserHelper.openInBrowser(state.manga.url) },
-                        modifier = Modifier.testTag("detail-open-browser-btn"),
+                Row {
+                    Button(
+                        onClick = onAddToLibrary,
+                        enabled = !state.isSyncingLibrary,
+                        modifier = Modifier.testTag("add-to-library-btn"),
                     ) {
-                        Text(strings.openInBrowser)
+                        if (state.isSyncingLibrary) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.width(16.dp).height(16.dp),
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                strokeWidth = 2.dp,
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        } else {
+                            Icon(
+                                imageVector =
+                                if (state.inLibrary) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                        }
+                        Text(if (state.inLibrary) strings.mangaDetailInLibrary else strings.mangaDetailAddToLibrary)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                }
-                OutlinedButton(onClick = onRefresh, modifier = Modifier.testTag("detail-refresh-btn")) {
-                    Text(strings.browseRefresh)
+                    if (state.manga.url.startsWith("http")) {
+                        OutlinedButton(
+                            onClick = { mihon.desktop.platform.DesktopBrowserHelper.openInBrowser(state.manga.url) },
+                            modifier = Modifier.testTag("detail-open-browser-btn"),
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Rounded.OpenInNew,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(strings.openInBrowser)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    OutlinedButton(onClick = onRefresh, modifier = Modifier.testTag("detail-refresh-btn")) {
+                        Icon(Icons.Rounded.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(strings.browseRefresh)
+                    }
                 }
             }
-        }
 
-        // Header info
-        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
-            // Thumbnail
-            mihon.desktop.ui.common.MangaCover(
-                thumbnailUrl = state.manga.thumbnailUrl,
-                contentDescription = state.manga.title,
-                modifier = Modifier.width(140.dp).height(200.dp),
-                shape = MaterialTheme.shapes.medium,
+            // Header info
+            Row(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
+                // Thumbnail
+                mihon.desktop.ui.common.MangaCover(
+                    thumbnailUrl = state.manga.thumbnailUrl,
+                    contentDescription = state.manga.title,
+                    modifier = Modifier.width(140.dp).height(200.dp),
+                    shape = MaterialTheme.shapes.medium,
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                // Text Info
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = state.manga.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = strings.onlineDetailSource(state.source.name, state.source.lang),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    state.manga.author?.let {
+                        Text(text = strings.onlineDetailAuthor(it), style = MaterialTheme.typography.bodySmall)
+                    }
+                    state.manga.artist?.let {
+                        Text(text = strings.onlineDetailArtist(it), style = MaterialTheme.typography.bodySmall)
+                    }
+                    if (state.manga.genre.isNotEmpty()) {
+                        Text(
+                            text = strings.onlineDetailGenres(state.manga.genre.joinToString(", ")),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.outline,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    state.manga.description?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodySmall,
+                            maxLines = 4,
+                        )
+                    }
+                }
+            }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+            // Chapters Section
+            Text(
+                text = strings.onlineDetailChapters(state.chapters.size),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(vertical = 8.dp),
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Text Info
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = state.manga.title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = strings.onlineDetailSource(state.source.name, state.source.lang),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                state.manga.author?.let {
-                    Text(text = strings.onlineDetailAuthor(it), style = MaterialTheme.typography.bodySmall)
+            if (state.isLoading) {
+                Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(modifier = Modifier.testTag("chapters-loading-indicator"))
                 }
-                state.manga.artist?.let {
-                    Text(text = strings.onlineDetailArtist(it), style = MaterialTheme.typography.bodySmall)
-                }
-                if (state.manga.genre.isNotEmpty()) {
+            } else if (state.chapters.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
                     Text(
-                        text = strings.onlineDetailGenres(state.manga.genre.joinToString(", ")),
-                        style = MaterialTheme.typography.bodySmall,
+                        strings.mangaDetailNoChapters,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.outline,
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                state.manga.description?.let {
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 4,
-                    )
-                }
-            }
-        }
-
-        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-        // Chapters Section
-        Text(
-            text = strings.onlineDetailChapters(state.chapters.size),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(vertical = 8.dp),
-        )
-
-        if (state.isLoading) {
-            Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(modifier = Modifier.testTag("chapters-loading-indicator"))
-            }
-        } else if (state.chapters.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
-                Text(
-                    strings.mangaDetailNoChapters,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.outline,
-                )
-            }
-        } else {
-            LazyColumn(modifier = Modifier.fillMaxSize().weight(1f).testTag("chapters-list")) {
-                items(state.chapters, key = { it.url }) { chapter ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(
-                            vertical = 12.dp,
-                            horizontal = 8.dp,
-                        ).testTag("chapter-row-" + chapter.url),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = chapter.name,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium,
-                            )
-                            chapter.scanlator?.let {
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxSize().weight(1f).testTag("chapters-list")) {
+                    items(state.chapters, key = { it.url }) { chapter ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(
+                                vertical = 12.dp,
+                                horizontal = 8.dp,
+                            ).testTag("chapter-row-" + chapter.url),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = strings.onlineDetailScanlator(it),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.outline,
+                                    text = chapter.name,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Medium,
                                 )
+                                chapter.scanlator?.let {
+                                    Text(
+                                        text = strings.onlineDetailScanlator(it),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.outline,
+                                    )
+                                }
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(
+                                    onClick = { onDownloadChapter(chapter) },
+                                    modifier = Modifier.testTag("download-chapter-btn-" + chapter.url),
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Download,
+                                        contentDescription = strings.downloadChapter,
+                                    )
+                                }
+                                Button(
+                                    onClick = { onReadChapter(chapter) },
+                                    modifier = Modifier.testTag("read-chapter-btn-" + chapter.url),
+                                ) {
+                                    Text(strings.updatesReadButton)
+                                }
                             }
                         }
-                        Button(
-                            onClick = { onReadChapter(chapter) },
-                            modifier = Modifier.testTag("read-chapter-btn-" + chapter.url),
-                        ) {
-                            Text(strings.updatesReadButton)
-                        }
+                        HorizontalDivider()
                     }
-                    HorizontalDivider()
                 }
             }
         }
