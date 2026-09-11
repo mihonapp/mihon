@@ -928,6 +928,12 @@ open class WebGpuViewer(
                     homeScale = config.continuousMinWidth / 100f
                     scale = homeScale
                     minScale = if (config.zoomOutDisabled) 0f else 0.1f
+
+                    (this@WebGpuViewer as? WebGpuViewerContinuous)?.let {
+                        if (this@WebGpuViewer.useGap) {
+                            pageGap = config.continuousGap / 100f
+                        }
+                    }
                 }
             }
 

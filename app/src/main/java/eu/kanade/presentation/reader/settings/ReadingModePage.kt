@@ -65,7 +65,7 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
             }
         }
 
-        if (resolved == ReadingMode.WEBTOON) {
+        if (resolved == ReadingMode.WEBTOON || resolved == ReadingMode.CONTINUOUS_VERTICAL) {
             val numberFormat = remember { NumberFormat.getPercentInstance() }
             val continuousMinWidth by viewModel.preferences.continuousMinWidth.collectAsState()
             SliderItem(
@@ -78,6 +78,21 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
                 },
                 pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
             )
+
+            if (resolved == ReadingMode.CONTINUOUS_VERTICAL) {
+                val continuousGap by viewModel.preferences.continuousGap.collectAsState()
+                SliderItem(
+                    value = continuousGap,
+                    valueRange = ReaderPreferences.let { 1..100 },
+                    label = stringResource(MR.strings.pref_continuous_gap),
+                    valueString = numberFormat.format(continuousGap / 100f),
+                    onChange = {
+                        viewModel.preferences.continuousGap.set(it)
+                    },
+                    pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                )
+            }
+
             CheckboxItem(
                 label = stringResource(MR.strings.pref_webtoon_disable_zoom_out),
                 pref = viewModel.preferences.webtoonDisableZoomOut,
@@ -331,7 +346,7 @@ private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel)
         return
     }
 
-    if (resolved != ReadingMode.WEBTOON) {
+    if (resolved != ReadingMode.WEBTOON && resolved != ReadingMode.CONTINUOUS_VERTICAL) {
         val imageScaleType by viewModel.preferences.imageScaleType.collectAsState()
         SettingsChipRow(MR.strings.pref_image_scale_type) {
             ReaderPreferences.ImageScaleTypeWebGpuViewer.forEach {
@@ -381,16 +396,16 @@ private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel)
                 )
             }
         }
-    }
 
-    val cutoutMode by viewModel.preferences.cutoutMode.collectAsState()
-    SettingsChipRow(MR.strings.pref_cutout_mode) {
-        ReaderPreferences.CutoutMode.entries.forEach {
-            FilterChip(
-                selected = it == cutoutMode,
-                onClick = { viewModel.preferences.cutoutMode.set(it) },
-                label = { Text(stringResource(it.titleRes)) },
-            )
+        val cutoutMode by viewModel.preferences.cutoutMode.collectAsState()
+        SettingsChipRow(MR.strings.pref_cutout_mode) {
+            ReaderPreferences.CutoutMode.entries.forEach {
+                FilterChip(
+                    selected = it == cutoutMode,
+                    onClick = { viewModel.preferences.cutoutMode.set(it) },
+                    label = { Text(stringResource(it.titleRes)) },
+                )
+            }
         }
     }
 }
