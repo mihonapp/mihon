@@ -160,7 +160,7 @@ class ExtensionInstaller(
      */
     fun cancelInstall(pkgName: String) {
         activeJobs.remove(pkgName)?.cancel()
-        Installer.cancelInstallQueue(context, pkgName.hashCode().toLong())
+        Installer.cancelInstallQueue(pkgName.hashCode().toLong())
     }
 
     /**
