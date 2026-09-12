@@ -255,6 +255,10 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_mark_duplicate_read_chapter_read),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
+                    preference = libraryPreferences.historyResumeLastPage,
+                    title = stringResource(MR.strings.pref_history_resume_last_page),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.hideMissingChapters,
                     title = stringResource(MR.strings.pref_hide_missing_chapter_indicators),
                 ),

@@ -142,6 +142,7 @@ class ReaderViewModel(
      */
     val mangaId = savedState.get<Long>("manga") ?: -1L
     private val initialChapterId = savedState.get<Long>("chapter") ?: -1L
+    private val initialPage = savedState.get<Int>("page")
 
     val hasValidArgs = mangaId != -1L && initialChapterId != -1L
 
@@ -328,7 +329,7 @@ class ReaderViewModel(
 
                 loader = ChapterLoader(context, downloadManager, downloadProvider, chapterCache, manga, source)
 
-                loadChapter(loader!!, chapterList.first { chapterId == it.chapter.id })
+                loadChapter(loader!!, chapterList.first { chapterId == it.chapter.id }, initialPage)
             } catch (e: Throwable) {
                 if (e is CancellationException) {
                     throw e
@@ -345,8 +346,9 @@ class ReaderViewModel(
     private suspend fun loadChapter(
         loader: ChapterLoader,
         chapter: ReaderChapter,
+        page: Int? = null,
     ): ViewerChapters {
-        loader.loadChapter(chapter)
+        loader.loadChapter(chapter, page)
 
         val chapterPos = chapterList.indexOf(chapter)
         val newChapters = ViewerChapters(
