@@ -1,0 +1,13 @@
+query AniListSearchManga(
+  $search: String!,
+) {
+  Page (perPage: 50) {
+    media(
+      search: $search,
+      type: MANGA,
+      format_not_in: [NOVEL],
+    ) {
+      ...MangaFragment
+    }
+  }
+}

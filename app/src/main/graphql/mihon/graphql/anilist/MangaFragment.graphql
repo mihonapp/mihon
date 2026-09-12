@@ -1,0 +1,30 @@
+fragment MangaFragment on Media {
+  id
+  staff {
+    edges {
+      role
+      node {
+        name {
+          userPreferred
+        }
+      }
+    }
+  }
+  title {
+    userPreferred
+  }
+  coverImage {
+    large
+  }
+  format
+  countryOfOrigin
+  status
+  chapters
+  description
+  startDate {
+    year
+    month
+    day
+  }
+  averageScore
+}

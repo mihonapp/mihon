@@ -1,0 +1,32 @@
+fragment MangaFragment on Manga {
+  id
+  titles {
+    preferred
+  }
+  chapterCount
+  staff(first: 5) {
+    nodes {
+      role
+      person {
+        name
+      }
+    }
+  }
+  posterImage {
+    views(names: "small") {
+      name
+      url
+    }
+    original {
+      name
+      url
+    }
+  }
+  description(locales: "en")
+  status
+  subtype
+  startDate
+  endDate
+  slug
+  averageRating
+}
