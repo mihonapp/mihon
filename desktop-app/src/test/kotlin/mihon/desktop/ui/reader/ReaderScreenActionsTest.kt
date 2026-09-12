@@ -16,7 +16,9 @@ import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
+import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.rightClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import io.kotest.matchers.collections.shouldContain
@@ -62,6 +64,36 @@ class ReaderScreenActionsTest {
         onNodeWithTag("reader-gesture-area").performTouchInput { longClick(center) }
         waitForIdle()
         onNodeWithTag("reader-page-actions-dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun `secondary click opens page actions and escape dismisses it before leaving reader`() = runComposeUiTest {
+        val session = TestReaderSession(testReaderState())
+        var escapeRequests = 0
+        var backRequests = 0
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            onBack = { backRequests++ },
+            onEscape = {
+                escapeRequests++
+                true
+            },
+        )
+
+        onNodeWithTag("reader-gesture-area").performMouseInput { rightClick(center) }
+        onNodeWithTag("reader-page-actions-dialog").assertIsDisplayed()
+
+        onNodeWithTag("reader-page-actions-cancel").performKeyInput {
+            keyDown(Key.Escape)
+            keyUp(Key.Escape)
+        }
+        waitForIdle()
+
+        onNodeWithTag("reader-page-actions-dialog").assertDoesNotExist()
+        escapeRequests shouldBe 0
+        backRequests shouldBe 0
+        session.closeRequests shouldBe 0
     }
 
     @Test

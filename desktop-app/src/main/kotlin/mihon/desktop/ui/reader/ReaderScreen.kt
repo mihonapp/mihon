@@ -4,6 +4,7 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,6 +44,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.onClick
@@ -134,7 +136,7 @@ fun ReaderScreen(
     var settings by remember(settingsStore) {
         mutableStateOf(settingsStore?.load() ?: state.toDesktopSettings())
     }
-    var chromeVisible by remember { mutableStateOf(true) }
+    var overlayVisibility by remember { mutableStateOf(ReaderOverlayVisibilityState()) }
     var hideGeneration by remember { mutableIntStateOf(0) }
     var showSettings by remember { mutableStateOf(false) }
     var showShortcuts by remember { mutableStateOf(false) }
@@ -173,7 +175,7 @@ fun ReaderScreen(
     }
 
     fun markReadingInput() {
-        chromeVisible = true
+        overlayVisibility = reduceReaderOverlayVisibility(overlayVisibility, ReaderOverlayEvent.ReadingInput)
         hideGeneration++
     }
 
@@ -306,7 +308,7 @@ fun ReaderScreen(
 
     fun handlePress(normalizedX: Float) {
         val action = clickPolicy.actionAt(normalizedX)
-        pressChromeTarget = if (action == ReaderClickAction.TOGGLE_CHROME) !chromeVisible else null
+        pressChromeTarget = if (action == ReaderClickAction.TOGGLE_CHROME) !overlayVisibility.chromeVisible else null
         markReadingInput()
     }
 
@@ -321,7 +323,12 @@ fun ReaderScreen(
                 if (!pointer) markReadingInput()
             }
             ReaderClickAction.TOGGLE_CHROME -> {
-                chromeVisible = if (pointer) pressChromeTarget ?: !chromeVisible else !chromeVisible
+                val visible = if (pointer) {
+                    pressChromeTarget ?: !overlayVisibility.chromeVisible
+                } else {
+                    !overlayVisibility.chromeVisible
+                }
+                overlayVisibility = overlayVisibility.copy(chromeVisible = visible, cursorVisible = true)
                 if (pointer) pressChromeTarget = null
             }
             ReaderClickAction.NONE -> if (!pointer) markReadingInput()
@@ -443,7 +450,7 @@ fun ReaderScreen(
     LaunchedEffect(hideGeneration) {
         if (hideGeneration > 0) {
             delay(CHROME_HIDE_DELAY_MILLIS)
-            chromeVisible = false
+            overlayVisibility = reduceReaderOverlayVisibility(overlayVisibility, ReaderOverlayEvent.IdleTimeout)
         }
     }
     LaunchedEffect(session, foreground) {
@@ -500,11 +507,22 @@ fun ReaderScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
+            .pointerHoverIcon(rememberReaderPointerIcon(overlayVisibility.cursorVisible))
             .testTag("reader-screen")
             .focusRequester(focusRequester)
             .focusable()
             .onKeyEvent { event ->
                 if (event.type != KeyEventType.KeyDown) return@onKeyEvent false
+                if (event.key == Key.Escape) {
+                    val dismissedOverlay = when {
+                        pageActionsTarget != null -> true.also { pageActionsTarget = null }
+                        showSettings -> true.also { showSettings = false }
+                        showShortcuts -> true.also { showShortcuts = false }
+                        chapterTransition != null -> true.also { chapterTransition = null }
+                        else -> false
+                    }
+                    if (dismissedOverlay) return@onKeyEvent true
+                }
                 if (event.key == Key.F1 || event.key == Key.Slash || event.key == Key.Help) {
                     showShortcuts = true
                     return@onKeyEvent true
@@ -538,6 +556,14 @@ fun ReaderScreen(
             onWheel = { delta, ctrl, centroid, viewport -> handleWheel(delta, ctrl, centroid, viewport) },
             modifier = Modifier.fillMaxSize().testTag("reader-gesture-area"),
             onLongPress = { openPageActions() },
+            onSecondaryClick = { openPageActions() },
+            onPointerMove = {
+                overlayVisibility = reduceReaderOverlayVisibility(
+                    overlayVisibility,
+                    ReaderOverlayEvent.PointerMoved,
+                )
+                hideGeneration++
+            },
         ) {
             CompositionLocalProvider(
                 LocalReaderColorFilter provides settings.colorFilter,
@@ -569,7 +595,7 @@ fun ReaderScreen(
             title = title,
             chapterTitle = chapterTitle,
             settings = settings,
-            visible = chromeVisible,
+            visible = overlayVisibility.chromeVisible,
             canRetry = state.loadState is ReaderLoadState.Failed || state.error != null,
             debugEnabled = debugEnabled,
             onBack = {
@@ -631,7 +657,20 @@ fun ReaderScreen(
                 closeAndThen { onChapterSelected?.invoke(targetId) }
             },
         )
-        TopEdgeReveal { chromeVisible = true }
+        ReaderEdgeReveal(
+            tag = "reader-top-reveal",
+            modifier = Modifier.align(Alignment.TopCenter),
+        ) {
+            overlayVisibility = reduceReaderOverlayVisibility(overlayVisibility, ReaderOverlayEvent.PointerAtEdge)
+            hideGeneration++
+        }
+        ReaderEdgeReveal(
+            tag = "reader-bottom-reveal",
+            modifier = Modifier.align(Alignment.BottomCenter),
+        ) {
+            overlayVisibility = reduceReaderOverlayVisibility(overlayVisibility, ReaderOverlayEvent.PointerAtEdge)
+            hideGeneration++
+        }
     }
     chapterTransition?.let { transition ->
         ReaderChapterTransitionSurface(
@@ -864,16 +903,13 @@ private fun androidx.compose.foundation.layout.RowScope.ClickRegion(
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
-private fun TopEdgeReveal(onReveal: () -> Unit) {
-    val thresholdPixels = with(LocalDensity.current) { TOP_REVEAL_HEIGHT.roundToPx().toFloat() }
+private fun BoxScope.ReaderEdgeReveal(tag: String, modifier: Modifier = Modifier, onReveal: () -> Unit) {
     Box(
-        Modifier
+        modifier
             .fillMaxWidth()
             .height(TOP_REVEAL_HEIGHT)
-            .testTag("reader-top-reveal")
-            .onPointerEvent(PointerEventType.Move) { event ->
-                if (event.changes.any { it.position.y <= thresholdPixels }) onReveal()
-            },
+            .testTag(tag)
+            .onPointerEvent(PointerEventType.Move) { onReveal() },
     )
 }
 

@@ -9,8 +9,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.doubleClick
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pinch
+import androidx.compose.ui.test.rightClick
 import androidx.compose.ui.test.swipe
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.unit.dp
@@ -161,6 +163,34 @@ class ReaderGestureTest {
         }
         waitForIdle()
         zoomFactors.isNotEmpty() shouldBe true
+    }
+
+    @Test
+    fun `gesture area emits a secondary click without a primary tap`() = runComposeUiTest {
+        var secondaryClicks = 0
+        var primaryTaps = 0
+        setContent {
+            Box(Modifier.requiredSize(400.dp, 300.dp)) {
+                ReaderGestureArea(
+                    enabled = true,
+                    onPress = {},
+                    onTap = { primaryTaps++ },
+                    onDoubleTap = {},
+                    onPan = { _, _ -> },
+                    onZoomBy = { _, _, _ -> },
+                    onWheel = { _, _, _, _ -> },
+                    onSecondaryClick = { secondaryClicks++ },
+                    modifier = Modifier.testTag("gesture-area"),
+                    content = {},
+                )
+            }
+        }
+
+        onNodeWithTag("gesture-area").performMouseInput { rightClick(center) }
+        waitForIdle()
+
+        secondaryClicks shouldBe 1
+        primaryTaps shouldBe 0
     }
 
     @Test

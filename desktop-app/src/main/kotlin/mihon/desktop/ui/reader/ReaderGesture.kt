@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.isCtrlPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
@@ -37,12 +38,16 @@ internal fun ReaderGestureArea(
     onWheel: (deltaPixels: Float, ctrl: Boolean, centroid: InputPoint, viewport: ReaderViewport) -> Unit,
     modifier: Modifier = Modifier,
     onLongPress: (normalizedX: Float) -> Unit = {},
+    onSecondaryClick: () -> Unit = {},
+    onPointerMove: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit,
 ) {
     val currentOnPress by rememberUpdatedState(onPress)
     val currentOnTap by rememberUpdatedState(onTap)
     val currentOnDoubleTap by rememberUpdatedState(onDoubleTap)
     val currentOnLongPress by rememberUpdatedState(onLongPress)
+    val currentOnSecondaryClick by rememberUpdatedState(onSecondaryClick)
+    val currentOnPointerMove by rememberUpdatedState(onPointerMove)
     val currentOnPan by rememberUpdatedState(onPan)
     val currentOnZoomBy by rememberUpdatedState(onZoomBy)
     val currentOnWheel by rememberUpdatedState(onWheel)
@@ -62,6 +67,23 @@ internal fun ReaderGestureArea(
             if (ctrl) {
                 event.changes.forEach { it.consume() }
             }
+        }
+    } else {
+        Modifier
+    }
+    val secondaryClickModifier = if (enabled) {
+        Modifier.onPointerEvent(PointerEventType.Press, PointerEventPass.Initial) { event ->
+            if (event.button == PointerButton.Secondary) {
+                currentOnSecondaryClick()
+                event.changes.forEach { it.consume() }
+            }
+        }
+    } else {
+        Modifier
+    }
+    val pointerMoveModifier = if (enabled) {
+        Modifier.onPointerEvent(PointerEventType.Move, PointerEventPass.Initial) {
+            currentOnPointerMove()
         }
     } else {
         Modifier
@@ -107,6 +129,8 @@ internal fun ReaderGestureArea(
                     }
                 }
             }
+            .then(secondaryClickModifier)
+            .then(pointerMoveModifier)
             .then(wheelModifier),
         content = content,
     )

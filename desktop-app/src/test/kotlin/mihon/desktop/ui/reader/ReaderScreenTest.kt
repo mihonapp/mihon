@@ -148,6 +148,8 @@ class ReaderScreenTest {
         waitForIdle()
         onNodeWithTag("reader-chrome")
             .assert(SemanticsMatcher.expectValue(ReaderChromeVisibleKey, false))
+        onNodeWithTag("reader-top-reveal").assertExists()
+        onNodeWithTag("reader-bottom-reveal").assertExists()
         onNodeWithTag("reader-back")
             .assertExists()
             .assert(SemanticsMatcher.keyIsDefined(SemanticsActions.RequestFocus))

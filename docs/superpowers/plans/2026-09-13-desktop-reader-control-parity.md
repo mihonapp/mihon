@@ -100,7 +100,7 @@ git commit -m "feat(reader): add desktop navigation shortcuts"
 - Consumes: monotonic timestamps plus pointer/control events from `ReaderScreen`.
 - Produces: `ReaderOverlayVisibilityState`, `ReaderOverlayEvent`, and `reduceReaderOverlayVisibility(state, event)`.
 
-- [ ] **Step 1: Write the failing pure policy tests**
+- [x] **Step 1: Write the failing pure policy tests**
 
 Cover these transitions:
 
@@ -113,7 +113,7 @@ reduceReaderOverlayVisibility(pageIdle, ReaderOverlayEvent.IdleTimeout).cursorVi
 
 Assert that pointer movement restores the cursor and that a control-owned pointer prevents chrome hiding.
 
-- [ ] **Step 2: Run the policy test and observe RED**
+- [x] **Step 2: Run the policy test and observe RED**
 
 Run:
 
@@ -123,15 +123,15 @@ Run:
 
 Expected: compilation failure because the policy types do not exist.
 
-- [ ] **Step 3: Implement the pure reducer**
+- [x] **Step 3: Implement the pure reducer**
 
 Create immutable state/event types. The reducer must not start timers; `ReaderScreen` owns delays and dispatches `IdleTimeout`.
 
-- [ ] **Step 4: Run the policy test and observe GREEN**
+- [x] **Step 4: Run the policy test and observe GREEN**
 
 Run the Step 2 command. Expected: all overlay-policy tests pass.
 
-- [ ] **Step 5: Add failing gesture wiring tests**
+- [x] **Step 5: Add failing gesture wiring tests**
 
 Extend `ReaderGestureTest`/`ReaderScreenActionsTest` to assert:
 
@@ -139,7 +139,7 @@ Extend `ReaderGestureTest`/`ReaderScreenActionsTest` to assert:
 - moving into `reader-top-reveal` or `reader-bottom-reveal` makes chrome visible;
 - Escape dismisses page actions/settings/chapter drawer before invoking window escape.
 
-- [ ] **Step 6: Run gesture tests and observe RED**
+- [x] **Step 6: Run gesture tests and observe RED**
 
 Run:
 
@@ -149,15 +149,15 @@ Run:
 
 Expected: failures because secondary-click, bottom reveal, and staged overlay dismissal are not wired.
 
-- [ ] **Step 7: Wire pointer callbacks and staged Escape**
+- [x] **Step 7: Wire pointer callbacks and staged Escape**
 
 Add `onSecondaryClick`, `onPointerMove`, and edge callbacks at the Compose input boundary. Keep page selection and page-action resolution in `ReaderScreen`.
 
-- [ ] **Step 8: Run Task 2 tests and observe GREEN**
+- [x] **Step 8: Run Task 2 tests and observe GREEN**
 
 Run both Step 2 and Step 6 commands. Expected: zero failures.
 
-- [ ] **Step 9: Commit Task 2**
+- [x] **Step 9: Commit Task 2**
 
 ```powershell
 git add -- desktop-app/src/main/kotlin/mihon/desktop/ui/reader/ReaderOverlayVisibility.kt desktop-app/src/main/kotlin/mihon/desktop/ui/reader/ReaderGesture.kt desktop-app/src/main/kotlin/mihon/desktop/ui/reader/ReaderScreen.kt desktop-app/src/test/kotlin/mihon/desktop/ui/reader/ReaderOverlayVisibilityTest.kt desktop-app/src/test/kotlin/mihon/desktop/ui/reader/ReaderGestureTest.kt desktop-app/src/test/kotlin/mihon/desktop/ui/reader/ReaderScreenActionsTest.kt

@@ -21,9 +21,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
@@ -43,9 +52,20 @@ fun ReaderPageActionsDialog(
     canOpenInBrowser: Boolean = false,
     busy: Boolean = false,
 ) {
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        modifier = Modifier.testTag("reader-page-actions-dialog"),
+        modifier = Modifier
+            .onPreviewKeyEvent { event ->
+                if (event.type == KeyEventType.KeyDown && event.key == Key.Escape) {
+                    onDismissRequest()
+                    true
+                } else {
+                    false
+                }
+            }
+            .testTag("reader-page-actions-dialog"),
         title = {
             Text(
                 text = "Page actions",
@@ -99,7 +119,17 @@ fun ReaderPageActionsDialog(
         confirmButton = {
             TextButton(
                 onClick = onDismissRequest,
-                modifier = Modifier.testTag("reader-page-actions-cancel"),
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .onPreviewKeyEvent { event ->
+                        if (event.type == KeyEventType.KeyDown && event.key == Key.Escape) {
+                            onDismissRequest()
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                    .testTag("reader-page-actions-cancel"),
             ) {
                 Text("Cancel")
             }
