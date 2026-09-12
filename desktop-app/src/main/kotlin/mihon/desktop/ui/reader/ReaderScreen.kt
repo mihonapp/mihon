@@ -37,6 +37,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
@@ -390,6 +391,7 @@ fun ReaderScreen(
                 markReadingInput()
             }
             is ReaderInputCommand.ZoomBy -> applyZoom(command, session.state.value.viewport)
+            ReaderInputCommand.PageActions -> openPageActions()
             ReaderInputCommand.Fullscreen -> onFullscreen()
             ReaderInputCommand.Borderless -> onBorderless()
             ReaderInputCommand.Escape -> {
@@ -516,6 +518,7 @@ fun ReaderScreen(
                         pageCount = state.pages.size.coerceAtLeast(1),
                         anchor = state.viewportAnchor,
                         ctrl = event.isCtrlPressed,
+                        shift = event.isShiftPressed,
                     ),
                 )
                 result.action?.let(::handleInput)
@@ -723,6 +726,7 @@ private fun KeyEvent.toReaderInputKey(): ReaderInputKey? = when (key) {
     Key.DirectionRight -> ReaderInputKey.RIGHT
     Key.A -> ReaderInputKey.A
     Key.D -> ReaderInputKey.D
+    Key.Spacebar -> ReaderInputKey.SPACE
     Key.PageUp -> ReaderInputKey.PAGE_UP
     Key.PageDown -> ReaderInputKey.PAGE_DOWN
     Key.MoveHome -> ReaderInputKey.HOME
@@ -731,8 +735,10 @@ private fun KeyEvent.toReaderInputKey(): ReaderInputKey? = when (key) {
     Key.Minus -> ReaderInputKey.MINUS
     Key.Zero -> ReaderInputKey.ZERO
     Key.F -> ReaderInputKey.F
+    Key.F11 -> ReaderInputKey.F11
     Key.B -> ReaderInputKey.B
     Key.Escape -> ReaderInputKey.ESCAPE
+    Key.X -> ReaderInputKey.X
     else -> null
 }
 

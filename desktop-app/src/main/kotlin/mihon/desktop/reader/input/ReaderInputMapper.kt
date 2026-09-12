@@ -6,7 +6,25 @@ import mihon.reader.model.ReadingMode
 import mihon.reader.session.ReaderAction
 import kotlin.math.abs
 
-enum class ReaderInputKey { LEFT, RIGHT, A, D, PAGE_UP, PAGE_DOWN, HOME, END, PLUS, MINUS, ZERO, F, B, ESCAPE, X }
+enum class ReaderInputKey {
+    LEFT,
+    RIGHT,
+    A,
+    D,
+    SPACE,
+    PAGE_UP,
+    PAGE_DOWN,
+    HOME,
+    END,
+    PLUS,
+    MINUS,
+    ZERO,
+    F,
+    F11,
+    B,
+    ESCAPE,
+    X,
+}
 enum class ReaderInputFocus { READER, TEXT, MENU }
 enum class ReaderSideButton { BACK, FORWARD }
 data class InputPoint(val x: Float, val y: Float) {
@@ -20,6 +38,7 @@ data class ReaderInputContext(
     val wheelBehavior: ReaderWheelBehavior = ReaderWheelBehavior.PAGE_NAVIGATION,
     val focus: ReaderInputFocus = ReaderInputFocus.READER,
     val ctrl: Boolean = false,
+    val shift: Boolean = false,
     val pageCount: Int = 1,
     val anchor: ReaderPosition = ReaderPosition(0),
 ) {
@@ -31,6 +50,7 @@ data class ReaderInputContext(
 sealed interface ReaderInputCommand {
     data class Core(val action: ReaderAction) : ReaderInputCommand
     data class ZoomBy(val factor: Float, val centroid: InputPoint) : ReaderInputCommand
+    data object PageActions : ReaderInputCommand
     data object Fullscreen : ReaderInputCommand
     data object Borderless : ReaderInputCommand
     data object Escape : ReaderInputCommand
@@ -52,6 +72,7 @@ class ReaderInputMapper(private val nowMillis: () -> Long = System::currentTimeM
         val action = when (key) {
             ReaderInputKey.LEFT, ReaderInputKey.A -> if (context.mode.isRightToLeft) next else previous
             ReaderInputKey.RIGHT, ReaderInputKey.D -> if (context.mode.isRightToLeft) previous else next
+            ReaderInputKey.SPACE -> if (context.shift) previous else next
             ReaderInputKey.PAGE_UP -> previous
             ReaderInputKey.PAGE_DOWN -> next
             ReaderInputKey.HOME -> ReaderInputCommand.Core(ReaderAction.SelectPage(0))
@@ -60,9 +81,10 @@ class ReaderInputMapper(private val nowMillis: () -> Long = System::currentTimeM
             ReaderInputKey.MINUS -> ReaderInputCommand.ZoomBy(1f / 1.1f, CENTER)
             ReaderInputKey.ZERO -> ReaderInputCommand.ZoomBy(0f, CENTER)
             ReaderInputKey.F -> ReaderInputCommand.Fullscreen
+            ReaderInputKey.F11 -> ReaderInputCommand.Fullscreen
             ReaderInputKey.B -> ReaderInputCommand.Borderless
             ReaderInputKey.ESCAPE -> ReaderInputCommand.Escape
-            ReaderInputKey.X -> null
+            ReaderInputKey.X -> ReaderInputCommand.PageActions
         }
         return ReaderInputResult(action)
     }
@@ -109,19 +131,15 @@ class ReaderInputMapper(private val nowMillis: () -> Long = System::currentTimeM
         return ReaderInputResult(ReaderInputCommand.Core(if (forward) ReaderAction.Next else ReaderAction.Previous))
     }
 
-    fun mapSideButton(button: ReaderSideButton, context: ReaderInputContext): ReaderInputResult = when (context.focus) {
-        ReaderInputFocus.READER -> ReaderInputResult(
-            ReaderInputCommand.Core(
-                if (button ==
-                    ReaderSideButton.BACK
-                ) {
-                    ReaderAction.Previous
-                } else {
-                    ReaderAction.Next
-                },
-            ),
-        )
-        else -> ReaderInputResult(null)
+    fun mapSideButton(button: ReaderSideButton, context: ReaderInputContext): ReaderInputResult {
+        if (context.focus != ReaderInputFocus.READER) return ReaderInputResult(null)
+        val forward = button == ReaderSideButton.FORWARD
+        val action = when {
+            !context.mode.isRightToLeft -> if (forward) ReaderAction.Next else ReaderAction.Previous
+            forward -> ReaderAction.Previous
+            else -> ReaderAction.Next
+        }
+        return ReaderInputResult(ReaderInputCommand.Core(action))
     }
 
     fun mapPinch(scale: Float, centroid: InputPoint): ReaderInputResult {

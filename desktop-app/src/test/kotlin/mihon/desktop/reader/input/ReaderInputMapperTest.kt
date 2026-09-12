@@ -43,7 +43,28 @@ class ReaderInputMapperTest {
             ReaderInputCommand.Borderless
         mapper.mapKey(ReaderInputKey.ESCAPE, ReaderInputContext(ReadingMode.SINGLE_LTR)).action shouldBe
             ReaderInputCommand.Escape
-        mapper.mapKey(ReaderInputKey.X, ReaderInputContext(ReadingMode.SINGLE_LTR)).consumed shouldBe false
+        mapper.mapKey(ReaderInputKey.F11, ReaderInputContext(ReadingMode.SINGLE_LTR)).action shouldBe
+            ReaderInputCommand.Fullscreen
+        mapper.mapKey(ReaderInputKey.X, ReaderInputContext(ReadingMode.SINGLE_LTR)).action shouldBe
+            ReaderInputCommand.PageActions
+        mapper.mapKey(
+            ReaderInputKey.SPACE,
+            ReaderInputContext(ReadingMode.SINGLE_LTR, focus = ReaderInputFocus.MENU),
+        ).consumed shouldBe false
+    }
+
+    @Test fun `space navigation follows desktop convention while preserving explicit page keys`() {
+        val mapper = ReaderInputMapper()
+        val ltr = ReaderInputContext(ReadingMode.SINGLE_LTR)
+
+        mapper.mapKey(ReaderInputKey.SPACE, ltr).action shouldBe
+            ReaderInputCommand.Core(ReaderAction.Next)
+        mapper.mapKey(ReaderInputKey.SPACE, ltr.copy(shift = true)).action shouldBe
+            ReaderInputCommand.Core(ReaderAction.Previous)
+        mapper.mapKey(ReaderInputKey.PAGE_UP, ltr.copy(shift = true)).action shouldBe
+            ReaderInputCommand.Core(ReaderAction.Previous)
+        mapper.mapKey(ReaderInputKey.PAGE_DOWN, ltr.copy(shift = true)).action shouldBe
+            ReaderInputCommand.Core(ReaderAction.Next)
     }
 
     @Test fun `wheel uses zoom before scroll and pages only after threshold and rate limit`() {
@@ -73,6 +94,21 @@ class ReaderInputMapperTest {
             ReaderInputCommand.Core(ReaderAction.Next)
         mapper.mapPinch(1.25f, InputPoint(.2f, .7f)).action shouldBe
             ReaderInputCommand.ZoomBy(1.25f, InputPoint(.2f, .7f))
+    }
+
+    @Test fun `mouse side buttons follow visual reading direction`() {
+        val mapper = ReaderInputMapper()
+        val ltr = ReaderInputContext(ReadingMode.SINGLE_LTR)
+        val rtl = ReaderInputContext(ReadingMode.SINGLE_RTL)
+
+        mapper.mapSideButton(ReaderSideButton.BACK, ltr).action shouldBe
+            ReaderInputCommand.Core(ReaderAction.Previous)
+        mapper.mapSideButton(ReaderSideButton.FORWARD, ltr).action shouldBe
+            ReaderInputCommand.Core(ReaderAction.Next)
+        mapper.mapSideButton(ReaderSideButton.BACK, rtl).action shouldBe
+            ReaderInputCommand.Core(ReaderAction.Next)
+        mapper.mapSideButton(ReaderSideButton.FORWARD, rtl).action shouldBe
+            ReaderInputCommand.Core(ReaderAction.Previous)
     }
 
     private var now = 0L

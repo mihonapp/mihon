@@ -40,7 +40,7 @@
 - Consumes: `ReaderInputContext`, `ReaderAction`, `ReadingMode`, `InputPoint`.
 - Produces: `ReaderInputKey.SPACE`, `ReaderInputKey.F11`, `ReaderInputContext.shift`, `ReaderInputCommand.PageActions`, and reading-direction-aware `mapSideButton`.
 
-- [ ] **Step 1: Write failing input tests**
+- [x] **Step 1: Write failing input tests**
 
 Add tests proving these exact mappings:
 
@@ -57,7 +57,7 @@ mapper.mapSideButton(ReaderSideButton.BACK, rtl).action shouldBe
 
 Also assert that text/menu focus and Ctrl-modified keys remain unconsumed.
 
-- [ ] **Step 2: Run the focused test and observe RED**
+- [x] **Step 2: Run the focused test and observe RED**
 
 Run:
 
@@ -67,7 +67,7 @@ Run:
 
 Expected: compilation/test failure because `SPACE`, `F11`, `shift`, and `PageActions` do not exist and side buttons are not direction-aware.
 
-- [ ] **Step 3: Implement the minimal pure mapping**
+- [x] **Step 3: Implement the minimal pure mapping**
 
 Extend the enums/context and use one direction helper:
 
@@ -82,11 +82,11 @@ private fun directionAction(forward: Boolean, mode: ReadingMode): ReaderAction =
 
 Map Space, Shift+Space, F11, X, and side buttons without adding UI state to the mapper.
 
-- [ ] **Step 4: Run the focused test and observe GREEN**
+- [x] **Step 4: Run the focused test and observe GREEN**
 
 Run the Step 2 command. Expected: `ReaderInputMapperTest` passes with zero failures.
 
-- [ ] **Step 5: Commit Task 1**
+- [x] **Step 5: Commit Task 1**
 
 ```powershell
 git add -- desktop-app/src/main/kotlin/mihon/desktop/reader/input/ReaderInputMapper.kt desktop-app/src/test/kotlin/mihon/desktop/reader/input/ReaderInputMapperTest.kt
