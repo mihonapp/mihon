@@ -918,7 +918,6 @@
     <string name="pref_high_quality_renderer">Использовать рендер высокого качества</string>
     <string name="webgpu_viewer">WebGPU</string>
     <string name="pref_transition_animation">Анимация перехода</string>
-    <string name="transition_animation_default">По умолчанию</string>
     <string name="transition_animation_flip_left">Перелистывать страницу (влево)</string>
     <string name="transition_animation_flip_right">Перелистывать страницу (вправо)</string>
     <string name="transition_animation_stack_left">Стопка (влево)</string>
