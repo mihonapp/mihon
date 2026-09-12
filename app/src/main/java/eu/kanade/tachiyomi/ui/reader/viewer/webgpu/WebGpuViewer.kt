@@ -14,6 +14,7 @@ import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.closeTo
 import ca.mpreg.webgpuviewer.draw.TextAlign
+import ca.mpreg.webgpuviewer.renderer.GainmapInput
 import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
@@ -47,6 +48,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -74,13 +76,22 @@ open class WebGpuViewer(
 
     val readerPreferences by lazy { activity.appGraph.readerPreferences }
 
-    private fun readerBackgroundColor(): Int = activity.baseContext.readerBackgroundColor(config.theme)
+    /** Resolved once: render() asks per frame, and createReaderThemeContext builds a Resources. */
+    @Volatile
+    private var cachedBackgroundColor: Int? = null
 
-    private fun readerOnBackgroundColor(): Int = MaterialColors.getColor(
+    @Volatile
+    private var cachedOnBackgroundColor: Int? = null
+
+    private fun readerBackgroundColor(): Int =
+        cachedBackgroundColor ?: activity.baseContext.readerBackgroundColor(config.theme)
+            .also { cachedBackgroundColor = it }
+
+    private fun readerOnBackgroundColor(): Int = cachedOnBackgroundColor ?: MaterialColors.getColor(
         activity.createReaderThemeContext(),
         com.google.android.material.R.attr.colorOnBackground,
         Color.WHITE,
-    )
+    ).also { cachedOnBackgroundColor = it }
 
     private val scope = MainScope()
 
@@ -90,13 +101,16 @@ open class WebGpuViewer(
     }
     private val decodeDispatcher = decodeExecutor.asCoroutineDispatcher()
 
-    // Single lock for all page cache and queue operations
+    // Guards pageCache, decodeQueue, deferredCleanup and chapterPreloadsInFlight.
     private val lock = Object()
 
-    // Page cache - keyed by stable PageKey for O(1) lookup
+    /** Without it the worker parks in [lock].wait() after [destroy], keeping the activity alive. */
+    @Volatile
+    private var destroyed = false
+
     private val pageCache = LinkedHashMap<PageKey, ViewerPage>()
 
-    // Decode queue - pages waiting to be decoded, processed LIFO (last = highest priority)
+    // Processed LIFO - last added is highest priority.
     private val decodeQueue = ArrayDeque<ViewerReaderPage>()
 
     /**
@@ -104,6 +118,9 @@ open class WebGpuViewer(
      * Outlives [pageCache]: every page after one of these depends on it, long since evicted.
      */
     private val loneIndices = HashMap<Long?, TreeSet<Int>>()
+
+    /** Chapters [preloadChapterThenRetry] is already waiting on, by id. */
+    private val chapterPreloadsInFlight = HashSet<Long?>()
 
     /**
      * Which side of a dual-page spread a [ViewerReaderPage] belongs on - app-level bookkeeping
@@ -117,7 +134,6 @@ open class WebGpuViewer(
     /** How far two untagged pages' aspect ratios may differ and still pair. */
     private val pairAspectTolerance = 0.1f
 
-    // Stable key types for page identity - data classes provide correct equals/hashCode
     private sealed class PageKey {
         data class Reader(val chapterId: Long?, val index: Int) : PageKey()
         data class Transition(val prevId: Long?, val nextId: Long?) : PageKey()
@@ -155,44 +171,39 @@ open class WebGpuViewer(
             }
 
             PageState.QUEUED -> {
-                // Already queued - move to front if prioritizing
                 if (prioritize && decodeQueue.remove(page)) {
                     decodeQueue.addLast(page)
                 }
             }
 
-            PageState.LOADING, PageState.DECODING -> {
-                // Already being processed
-            }
+            PageState.LOADING, PageState.DECODING -> {}
         }
     }
 
     init {
-        // Decode worker thread - processes pages from the queue
         scope.launch(decodeDispatcher) {
             try {
-                while (true) {
+                while (!destroyed) {
+                    // Popped, vetted and marked under one acquisition - no window for an eviction.
                     val page = synchronized(lock) {
                         while (decodeQueue.isEmpty()) {
+                            if (destroyed) return@launch
                             lock.wait()
                         }
-                        decodeQueue.removeLast().apply { state = PageState.DECODING }
-                    }
-
-                    // Verify page is still valid (not evicted and doesn't have a decoded image yet)
-                    val shouldProcess = synchronized(lock) {
-                        pageInCache(page) && page.state == PageState.DECODING && !page.isDecoded
-                    }
-
-                    if (!shouldProcess) {
-                        synchronized(lock) {
-                            if (pageInCache(page)) page.state = PageState.IDLE
+                        val candidate = decodeQueue.removeLast()
+                        if (pageInCache(candidate) && !candidate.isDecoded) {
+                            candidate.apply { state = PageState.DECODING }
+                        } else {
+                            if (pageInCache(candidate)) candidate.state = PageState.IDLE
+                            null
                         }
-                        continue
-                    }
+                    } ?: continue
 
                     try {
                         decodeReaderPage(page)
+                    } catch (e: CancellationException) {
+                        // Caught below, the loop would park in wait() on a dead scope.
+                        throw e
                     } catch (e: Exception) {
                         logcat(LogPriority.ERROR, e) { "decodeReaderPage: ${e.message}" }
                         synchronized(lock) {
@@ -201,7 +212,7 @@ open class WebGpuViewer(
                                 val errorMessage = e.message ?: "Failed to decode image"
                                 page.imagePage = ErrorPage(errorMessage, page.spreadPosition)
                                 page.state = PageState.IDLE
-                                oldImagePage.cleanup()
+                                cleanupImage(oldImagePage)
                                 page.imagePage.invalidate()
                             } else {
                                 if (pageInCache(page)) page.state = PageState.IDLE
@@ -210,7 +221,9 @@ open class WebGpuViewer(
                     }
                 }
             } catch (_: InterruptedException) {
-                // Normal shutdown
+                // destroy()'s shutdownNow, out of lock.wait().
+            } catch (_: CancellationException) {
+                // Scope cancelled with the viewer.
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e) { "Decode worker died" }
             }
@@ -222,6 +235,8 @@ open class WebGpuViewer(
      */
     val config = WebGpuConfig(this, scope, readerPreferences)
 
+    // Read from the render and decode threads, via the prevChapter/nextChapter getters.
+    @Volatile
     var viewerChapters: ViewerChapters? = null
 
     val pages: List<ReaderPage>? get() = (currentPage as? ViewerReaderPage)?.page?.chapter?.pages
@@ -236,12 +251,34 @@ open class WebGpuViewer(
     @Volatile
     private var pinnedFromPage: ImagePage? = null
 
-    /** True while [pinnedFromPage] is drawing [page]'s image, as itself or as a spread side. */
-    private fun isPinned(page: ViewerPage): Boolean {
+    /** True while [pinnedFromPage] is drawing [image], as itself or as a spread side. */
+    private fun isPinnedImage(image: ImagePage): Boolean {
         val pinned = pinnedFromPage ?: return false
-        val image = page.imagePage
         if (pinned === image) return true
         return pinned is ImagePage.ImageSpread && (pinned.left === image || pinned.right === image)
+    }
+
+    /** True while [pinnedFromPage] is drawing [page]'s image, as itself or as a spread side. */
+    private fun isPinned(page: ViewerPage): Boolean = isPinnedImage(page.imagePage)
+
+    /** Images swapped out while [pinnedFromPage] was still drawing them, i.e. mid page turn. */
+    private val deferredCleanup = mutableListOf<ImagePage>()
+
+    /** Cleans up [image], or defers it while [pinnedFromPage] draws it. Call under [lock]. */
+    private fun cleanupImage(image: ImagePage) {
+        if (isPinnedImage(image)) deferredCleanup.add(image) else image.cleanup()
+    }
+
+    /** Releases what [pinnedFromPage] no longer protects. Call under [lock]. */
+    private fun flushDeferredCleanup() {
+        val iterator = deferredCleanup.iterator()
+        while (iterator.hasNext()) {
+            val image = iterator.next()
+            if (!isPinnedImage(image)) {
+                image.cleanup()
+                iterator.remove()
+            }
+        }
     }
 
     open val preloadAhead = 3
@@ -253,9 +290,6 @@ open class WebGpuViewer(
      */
     open val cacheSize get() = 1 + preloadAhead + preloadBehind + if (isDualPageMode()) 3 else 1
 
-    /**
-     * Page processing state
-     */
     enum class PageState {
         IDLE,
         QUEUED,
@@ -276,6 +310,9 @@ open class WebGpuViewer(
         val candidates =
             pageCache.values.filter { it !== current && it !== currentPage && !isPinned(it) }.toMutableSet()
         if (candidates.isEmpty()) return false
+
+        // Read once - the getter measures the viewport.
+        val reach = cacheSize
 
         fun findNext(page: ViewerPage): ViewerPage? = when (page) {
             is ViewerReaderPage -> {
@@ -335,7 +372,7 @@ open class WebGpuViewer(
         var forward: ViewerPage? = current
         var backward: ViewerPage? = current
 
-        for (i in 0 until cacheSize) {
+        for (i in 0 until reach) {
             if (candidates.isEmpty()) break
             forward = forward?.let { findNext(it) }
             backward = backward?.let { findPrev(it) }
@@ -349,8 +386,9 @@ open class WebGpuViewer(
         pageCache.remove(pageKey(toRemove))
         decodeQueue.remove(toRemove)
         toRemove.state = PageState.IDLE
-        (toRemove as? ViewerReaderPage)?.spreadPage?.cleanup()
-        toRemove.imagePage.cleanup()
+        // Through the pin: a decode that swapped this page's image leaves its spread unguarded.
+        (toRemove as? ViewerReaderPage)?.spreadPage?.let(::cleanupImage)
+        cleanupImage(toRemove.imagePage)
         return true
     }
 
@@ -363,7 +401,8 @@ open class WebGpuViewer(
         return synchronized(lock) {
             findInCache(key) ?: ViewerReaderPage(page).also { newPage ->
                 pageCache[key] = newPage
-                while (pageCache.size > cacheSize) {
+                val limit = cacheSize
+                while (pageCache.size > limit) {
                     if (!evictFarthestPage(referencePage ?: newPage)) break
                 }
             }
@@ -379,7 +418,8 @@ open class WebGpuViewer(
         return synchronized(lock) {
             findInCache(key) ?: ViewerTransitionPage(prevChapter, nextChapter).also { newPage ->
                 pageCache[key] = newPage
-                while (pageCache.size > cacheSize) {
+                val limit = cacheSize
+                while (pageCache.size > limit) {
                     if (!evictFarthestPage(referencePage ?: newPage)) break
                 }
             }
@@ -394,14 +434,24 @@ open class WebGpuViewer(
      * decode. Gives up after 5 seconds if the chapter never finishes loading.
      */
     private fun preloadChapterThenRetry(chapter: ReaderChapter) {
+        // fetchPage reaches prev/next per frame - unguarded, each frame starts another 5s poll.
+        val chapterId = chapter.chapter.id
+        synchronized(lock) {
+            if (!chapterPreloadsInFlight.add(chapterId)) return
+        }
+
         scope.launch(Dispatchers.Default) {
-            activity.viewModel.preload(chapter)
-            repeat(25) {
-                if (chapter.state is ReaderChapter.State.Loaded) {
-                    currentPage?.let { preloadPages(it) }
-                    return@launch
+            try {
+                activity.viewModel.preload(chapter)
+                repeat(25) {
+                    if (chapter.state is ReaderChapter.State.Loaded) {
+                        currentPage?.let { preloadPages(it) }
+                        return@launch
+                    }
+                    delay(200.milliseconds)
                 }
-                delay(200.milliseconds)
+            } finally {
+                synchronized(lock) { chapterPreloadsInFlight.remove(chapterId) }
             }
         }
     }
@@ -603,8 +653,7 @@ open class WebGpuViewer(
 
         /** True when nothing may share this page's spread - it is one already. */
         internal val standsAlone: Boolean
-            get() = taggedSpreadPosition == SpreadPosition.SINGLE ||
-                (aspectRatio ?: 0f) > wideAspect
+            get() = taggedSpreadPosition == SpreadPosition.SINGLE || (aspectRatio ?: 0f) > wideAspect
 
         override var imagePage: ImagePage = ProgressPage()
 
@@ -725,20 +774,6 @@ open class WebGpuViewer(
     }
 
     /**
-     * Check if the given page can form a spread with the next page.
-     * Uses page.spreadPosition to determine: anchor + partner = spread
-     * RTL: RIGHT is anchor, looks for LEFT on next
-     * LTR: LEFT is anchor, looks for RIGHT on next
-     */
-    private fun canFormSpread(page: ViewerReaderPage): Boolean {
-        if (!isDualPageMode()) return false
-        if (page.spreadPosition != anchorPosition) return false
-        val next = page.next as? ViewerReaderPage ?: return false
-        if (next.page.chapter != page.page.chapter) return false
-        return next.spreadPosition == partnerPosition && canPairShapes(page, next)
-    }
-
-    /**
      * Get the anchor page for a spread.
      * RTL: anchor is RIGHT, for LEFT page returns previous RIGHT
      * LTR: anchor is LEFT, for RIGHT page returns previous LEFT
@@ -747,7 +782,6 @@ open class WebGpuViewer(
         if (!isDualPageMode()) return page
         if (page !is ViewerReaderPage) return page
 
-        // If this is a partner page, check if previous is anchor
         if (page.spreadPosition == partnerPosition) {
             val prev = page.prev as? ViewerReaderPage ?: return page
             if (prev.page.chapter == page.page.chapter && prev.spreadPosition == anchorPosition &&
@@ -757,17 +791,28 @@ open class WebGpuViewer(
             }
         }
 
-        // This page is the anchor or standalone
         return page
     }
 
+    /** Who [page] pairs with, or null. One verdict for [buildSpreadPage] and [progressPage]. */
+    private fun spreadPartner(page: ViewerReaderPage): ViewerReaderPage? {
+        if (!isDualPageMode()) return null
+        if (page.spreadPosition != anchorPosition) return null
+        val next = (page.next as? ViewerReaderPage)?.takeIf { it.page.chapter == page.page.chapter } ?: return null
+        return next.takeIf { it.spreadPosition == partnerPosition && canPairShapes(page, it) }
+    }
+
+    /** Page to report progress for - the spread's lastmost page, not the anchor. */
+    private fun progressPage(page: ViewerPage): ViewerReaderPage? {
+        val readerPage = page as? ViewerReaderPage ?: return null
+        return spreadPartner(readerPage) ?: readerPage
+    }
+
     private fun buildSpreadPage(page: ViewerPage): ImagePage {
-        // For ViewerTransitionPage, return its imagePage directly
         if (page !is ViewerReaderPage) {
             return page.imagePage
         }
 
-        // Only form spreads in dual page mode
         if (!isDualPageMode()) {
             return page.imagePage
         }
@@ -782,20 +827,9 @@ open class WebGpuViewer(
             return imagePage
         }
 
-        // Only the anchor side looks for a partner on the next page. A partner-tagged page only
-        // reaches this function directly (rather than being redirected here via
-        // [getSpreadAnchor]) when it has no anchor before it - a lone RIGHT with no preceding
-        // LEFT (or vice versa), e.g. at a chapter boundary - so it renders alone on its own side
-        // instead of looking anywhere else for a partner.
-        val partnerImagePage = if (page.spreadPosition == anchorPosition) {
-            val nextReaderPage = (page.next as? ViewerReaderPage)?.takeIf { it.page.chapter == page.page.chapter }
-            nextReaderPage?.imagePage?.takeIf {
-                nextReaderPage.spreadPosition == partnerPosition &&
-                    canPairShapes(page, nextReaderPage)
-            }
-        } else {
-            null
-        }
+        // Null for a partner reaching here directly, which means no anchor before it - a lone
+        // RIGHT at a chapter boundary - so it draws alone on its own side.
+        val partnerImagePage = spreadPartner(page)?.imagePage
 
         // LEFT/RIGHT map directly to the spread's left/right slot - independent of reading
         // direction, which only decides which side is the anchor for pairing purposes above.
@@ -854,6 +888,10 @@ open class WebGpuViewer(
         }
 
         config.imagePropertyChangedListener = {
+            // A theme change comes through here.
+            cachedBackgroundColor = null
+            cachedOnBackgroundColor = null
+
             val isDual = isDualPageMode()
             pager.state.apply {
                 transition = when (if (isDual) config.transitionAnimationDual else config.transitionAnimation) {
@@ -887,8 +925,15 @@ open class WebGpuViewer(
                 }
 
                 (this as? ImageViewerContinuousState)?.let {
-                    minZoomWidthFraction = config.continuousMinWidth / 100f
-                    scale = minScale
+                    homeScale = config.continuousMinWidth / 100f
+                    scale = homeScale
+                    minScale = if (config.zoomOutDisabled) 0f else 0.1f
+
+                    (this@WebGpuViewer as? WebGpuViewerContinuous)?.let {
+                        if (this@WebGpuViewer.useGap) {
+                            pageGap = config.continuousGap / 100f
+                        }
+                    }
                 }
             }
 
@@ -896,8 +941,8 @@ open class WebGpuViewer(
                 decodeQueue.clear()
                 pageCache.values.forEach {
                     it.state = PageState.IDLE
-                    (it as? ViewerReaderPage)?.spreadPage?.cleanup()
-                    it.imagePage.cleanup()
+                    (it as? ViewerReaderPage)?.spreadPage?.let(::cleanupImage)
+                    cleanupImage(it.imagePage)
                 }
                 pageCache.clear()
 
@@ -919,44 +964,41 @@ open class WebGpuViewer(
     }
 
     override fun destroy() {
-        // Cancel scope first to stop any new operations
+        // Before the interrupt: taken mid-decode, only the flag stops the worker parking.
+        destroyed = true
         scope.cancel()
 
-        // Shutdown decode executor with interrupt to wake up the worker from wait()
+        // shutdownNow interrupts the worker out of lock.wait().
         decodeExecutor.shutdownNow()
         decodeDispatcher.close()
 
-        // Now clean up pages (cleanup() launches fire-and-forget coroutines on Dispatchers.Default)
         synchronized(lock) {
             decodeQueue.clear()
+            // Nothing can still be animating, so the pin has nothing left to protect.
+            pinnedFromPage = null
             pageCache.values.forEach {
                 it.state = PageState.IDLE
                 (it as? ViewerReaderPage)?.spreadPage?.cleanup()
                 it.imagePage.cleanup()
             }
             pageCache.clear()
+            deferredCleanup.forEach { it.cleanup() }
+            deferredCleanup.clear()
             loneIndices.clear()
-            // Notify in case worker is waiting (though it should be interrupted)
+            chapterPreloadsInFlight.clear()
             lock.notifyAll()
         }
     }
 
-    /**
-     * Returns the view this viewer uses.
-     */
     override fun getView(): View = pager
 
-    /**
-     * Start loading a page and set up listener to re-queue when ready.
-     * Called when decode worker encounters a page that isn't downloaded yet.
-     */
+    /** Downloads [page] if needed, then re-queues it for decode once ready. */
     private fun startPageLoad(page: ViewerReaderPage) {
         val loader = page.page.chapter.pageLoader ?: run {
             synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
             return
         }
 
-        // If page is already ready, just re-queue immediately
         if (page.page.status == Page.State.Ready) {
             synchronized(lock) {
                 if (pageInCache(page) && !page.isDecoded) {
@@ -969,34 +1011,33 @@ open class WebGpuViewer(
             return
         }
 
-        // Transition to LOADING state
         synchronized(lock) {
             if (!pageInCache(page)) return
             page.state = PageState.LOADING
         }
 
-        // Start the download
         if (page.page.status == Page.State.Queue) {
             scope.launch(Dispatchers.IO) {
                 loader.loadPage(page.page)
             }
         }
 
-        // Set up progress indicator and re-queue when ready
         scope.launch {
             try {
                 val downloadProgressJob = launch {
                     page.page.progressFlow.collect { value ->
-                        // Still the placeholder? Evicted or decoded, and there is nothing to fill.
-                        val progressPage = synchronized(lock) {
+                        // Set under the lookup's lock, or an eviction's cleanup() lands between.
+                        synchronized(lock) {
                             if (!pageInCache(page)) return@collect
-                            page.imagePage as? ProgressPage ?: return@collect
+                            (page.imagePage as? ProgressPage)?.progress = value / 100f
                         }
-                        progressPage.progress = value / 100f
                     }
                 }
 
                 page.page.statusFlow.takeWhile { state ->
+                    // Evicted: stop watching, rather than holding the page until the download ends.
+                    if (!synchronized(lock) { pageInCache(page) }) return@takeWhile false
+
                     when (state) {
                         Page.State.Queue, Page.State.LoadPage, Page.State.DownloadImage -> true
                         is Page.State.Error -> {
@@ -1010,7 +1051,6 @@ open class WebGpuViewer(
 
                 downloadProgressJob.cancel()
 
-                // Re-queue for decoding if ready
                 synchronized(lock) {
                     if (pageInCache(page) && page.state == PageState.LOADING) {
                         page.state = PageState.IDLE
@@ -1030,7 +1070,6 @@ open class WebGpuViewer(
     }
 
     private suspend fun decodeReaderPage(page: ViewerReaderPage) {
-        // If page isn't downloaded yet, start loading
         if (page.page.status != Page.State.Ready) {
             startPageLoad(page)
             return
@@ -1042,7 +1081,7 @@ open class WebGpuViewer(
         }
 
         stream.use { input ->
-            // Check if still valid before decoding (not evicted and doesn't have decoded image yet)
+            // Not evicted, and not already decoded by a concurrent call.
             synchronized(lock) {
                 if (!pageInCache(page) || page.isDecoded) {
                     if (pageInCache(page)) page.state = PageState.IDLE
@@ -1051,8 +1090,9 @@ open class WebGpuViewer(
             }
 
             // Buffered to read the spread tag, then decoded from the buffer. On the preference,
-            // not isDualPageMode(): WIDE is portrait-off, and a rotate never re-decodes.
-            val bytes = if (config.dualPageView != ReaderPreferences.DualPageView.NEVER) {
+            // not isDualPageMode(): WIDE is portrait-off, and a rotate never re-decodes. Never in
+            // continuous, where nothing pairs - that mode reads the stream instead of holding it.
+            val bytes = if (!isContinuous && config.dualPageView != ReaderPreferences.DualPageView.NEVER) {
                 input.readBytes()
             } else {
                 null
@@ -1068,6 +1108,22 @@ open class WebGpuViewer(
                     null -> null
                     else -> SpreadPosition.SINGLE
                 }
+            }
+
+            // The decoder hands the map over unapplied - see ImageDecoder.Gainmap - because how
+            // much of it to use depends on the display, so the viewer applies it.
+            fun ImageDecoder.DecodeResult.gainmapInput(): GainmapInput? = gainmap?.let {
+                GainmapInput(
+                    pixels = it.pixels,
+                    width = it.width,
+                    height = it.height,
+                    channels = it.channels,
+                    gamma = it.gamma,
+                    minContentBoost = it.minContentBoost,
+                    maxContentBoost = it.maxContentBoost,
+                    offsetSdr = it.offsetSdr,
+                    offsetHdr = it.offsetHdr,
+                )
             }
 
             val dec = ImageDecoder.new(bytes?.inputStream() ?: input)
@@ -1099,11 +1155,19 @@ open class WebGpuViewer(
                     trimColors = trimColors,
                     trimThreshold = 0.15f,
                     backgroundColor = backgroundColor,
+                    hdr = firstFrame.isHdr,
+                    hdrHeadroom = firstFrame.hdrHeadroom,
+                    gainmap = firstFrame.gainmapInput(),
                 )
 
                 ImagePage.ImageSingle(firstImage)
             } else {
                 val frames = ArrayList<Pair<Image, Int>>(pageCount)
+
+                // Built frames hold uploaded textures, and ImageSingle owns the only teardown.
+                fun discardFrames() {
+                    if (frames.isNotEmpty()) ImagePage.ImageSingle(frames).cleanup()
+                }
 
                 val firstImage = Image(
                     firstFrame.image,
@@ -1111,23 +1175,46 @@ open class WebGpuViewer(
                     firstFrame.height,
                     createMipMaps = false,
                     backgroundColor = backgroundColor,
+                    hdr = firstFrame.isHdr,
+                    hdrHeadroom = firstFrame.hdrHeadroom,
+                    gainmap = firstFrame.gainmapInput(),
                 )
 
                 frames.add(Pair(firstImage, firstFrame.duration))
 
-                repeat(pageCount - 1) {
-                    (page.imagePage as? ProgressPage)?.apply {
-                        progress = (it + 1).toFloat() / pageCount
+                try {
+                    for (i in 1 until pageCount) {
+                        // Under lock: a decode this long gives an eviction's cleanup() time to land.
+                        val stillWanted = synchronized(lock) {
+                            pageInCache(page).also { inCache ->
+                                if (inCache) {
+                                    (page.imagePage as? ProgressPage)?.progress = i.toFloat() / pageCount
+                                }
+                            }
+                        }
+
+                        // Scrolled past: the frames left are work nothing will draw.
+                        if (!stillWanted) {
+                            discardFrames()
+                            return
+                        }
+
+                        val frame = dec.decodeNext()
+                        val image = Image(
+                            frame.image,
+                            frame.width,
+                            frame.height,
+                            createMipMaps = false,
+                            backgroundColor = firstImage.backgroundColor,
+                            hdr = frame.isHdr,
+                            hdrHeadroom = frame.hdrHeadroom,
+                            gainmap = frame.gainmapInput(),
+                        )
+                        frames.add(Pair(image, frame.duration))
                     }
-                    val frame = dec.decodeNext()
-                    val image = Image(
-                        frame.image,
-                        frame.width,
-                        frame.height,
-                        createMipMaps = false,
-                        backgroundColor = firstImage.backgroundColor,
-                    )
-                    frames.add(Pair(image, frame.duration))
+                } catch (e: Throwable) {
+                    discardFrames()
+                    throw e
                 }
 
                 ImagePage.ImageSingle(frames)
@@ -1139,7 +1226,7 @@ open class WebGpuViewer(
                     page.imagePage = imagePage
                     noteIfLone(page)
                     page.state = PageState.IDLE
-                    oldImagePage.cleanup()
+                    cleanupImage(oldImagePage)
                     // Fade up from the placeholder's colour, if that placeholder was on screen -
                     // one that decoded out of view has nothing left to fade from.
                     if (oldImagePage.isOnScreen) imagePage.fadeIn()
@@ -1171,7 +1258,6 @@ open class WebGpuViewer(
 
         val image = page.image ?: return false
 
-        // if the untrimmed page is wide and the trimmed page is wide
         val aspectRatio = min(
             page.trimWidth.toFloat() / page.trimHeight.toFloat(),
             image.width.toFloat() / image.height.toFloat(),
@@ -1183,10 +1269,9 @@ open class WebGpuViewer(
         // Wide page: half the image width is wider than the screen aspect ratio
         if (aspectRatio <= 2f * screenW.toFloat() / screenH) return false
 
-        // need to set parent for positioning to work
         page.parent = pager.state
 
-        // Scale to fit half the image width to the full screen width
+        // Half the image width fills the screen width.
         page.homeScale = screenW.toFloat() / (page.trimWidth / 2f)
 
         page.scale = page.homeScale
@@ -1245,9 +1330,6 @@ open class WebGpuViewer(
         page.y = page.homeY
     }
 
-    /**
-     * Queue a page for decoding. If prioritize=true, moves existing queued page to front.
-     */
     protected fun preloadPage(page: ViewerPage, prioritize: Boolean = false) {
         synchronized(lock) {
             val cachedPage = findInCache(pageKey(page)) ?: return
@@ -1258,14 +1340,11 @@ open class WebGpuViewer(
     }
 
     protected fun preloadPages(page: ViewerPage) {
-        // Get the canonical page from cache to ensure we're working with current data
+        // page may be a stale copy - resolve the live cache entry.
         val key = pageKey(page)
         val cachedPage = synchronized(lock) { findInCache(key) } ?: return
 
-        // Priority order: current (highest), next1, next2, prev1, prev2 (lowest)
-        // Add in reverse for LIFO, current page gets prioritized
-
-        // Add prev pages (lowest priority)
+        // prev, then next, then current+partner - the last prioritized call ends up highest.
         val prevPages = mutableListOf<ViewerPage>()
         var p: ViewerPage? = cachedPage
         for (i in 0 until preloadBehind) {
@@ -1274,7 +1353,6 @@ open class WebGpuViewer(
         }
         prevPages.asReversed().forEach { preloadPage(it) }
 
-        // Add next pages (medium priority)
         val nextPages = mutableListOf<ViewerPage>()
         p = cachedPage
         for (i in 0 until preloadAhead) {
@@ -1283,8 +1361,6 @@ open class WebGpuViewer(
         }
         nextPages.asReversed().forEach { preloadPage(it) }
 
-        // Add current spread last with priority flag (highest priority in LIFO)
-        // Also preload the paired page
         cachedPage.next?.let { preloadPage(it, prioritize = true) }
         preloadPage(cachedPage, prioritize = true)
     }
@@ -1294,18 +1370,18 @@ open class WebGpuViewer(
      * it sets the chapters immediately, otherwise they are saved and set when it becomes idle.
      */
     override fun setChapters(chapters: ViewerChapters) {
-        val pages = chapters.currChapter.pages ?: return
+        // Empty too: lastIndex would be -1, and the requested page is read from it.
+        val pages = chapters.currChapter.pages
+        if (pages.isNullOrEmpty()) return
 
         this.viewerChapters = chapters
 
-        val requestedIndex = min(chapters.currChapter.requestedPage, pages.lastIndex)
-        val requestedPage = pages[requestedIndex]
-
-        // Get the page and align to spread anchor if needed
-        val page = currentPage ?: getPage(requestedPage)
-        currentPage = getSpreadAnchor(page)
-        (currentPage as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
-        preloadPages(currentPage!!)
+        // Only when nothing shows yet - re-setting chapters must not move the page.
+        val page = currentPage ?: getPage(pages[min(chapters.currChapter.requestedPage, pages.lastIndex)])
+        val anchor = getSpreadAnchor(page)
+        currentPage = anchor
+        progressPage(anchor)?.let { activity.onPageSelected(it.page) }
+        preloadPages(anchor)
 
         pager.state.apply {
             onPageChange = onPageChange@{ delta ->
@@ -1330,7 +1406,7 @@ open class WebGpuViewer(
                 val settled = page
                 this@WebGpuViewer.scope.launch {
                     activity.hideMenu()
-                    (settled as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+                    progressPage(settled)?.let { activity.onPageSelected(it.page) }
                     preloadPages(settled)
 
                     (settled as? ViewerTransitionPage)?.let { transitionPage ->
@@ -1352,7 +1428,6 @@ open class WebGpuViewer(
     override fun moveToPage(page: ReaderPage) {
         // Pin first: resolving a target outside the cached window trims the cache.
         pinnedFromPage = currentPage?.let { buildSpreadPage(it) }
-        // Get the page and align to spread anchor based on image position
         moveToPage(getSpreadAnchor(getPage(page)))
     }
 
@@ -1361,9 +1436,10 @@ open class WebGpuViewer(
         // Before preloadPages below trims the cache - see [pinnedFromPage].
         val fromSpread = previousPage?.let { buildSpreadPage(it) }
         pinnedFromPage = fromSpread
+        synchronized(lock) { flushDeferredCleanup() }
 
         currentPage = newPage
-        (newPage as? ViewerReaderPage)?.let { activity.onPageSelected(it.page) }
+        progressPage(newPage)?.let { activity.onPageSelected(it.page) }
         preloadPages(newPage)
 
         (newPage as? ViewerTransitionPage)?.let { ViewerTransitionPage ->
@@ -1417,29 +1493,21 @@ open class WebGpuViewer(
         pager.state.animatePageTurn(if (isReversed) direction else -direction)
     }
 
-    /**
-     * Moves to the next page.
-     */
     fun moveToNext() {
         moveRight()
     }
 
-    /**
-     * Moves to the previous page.
-     */
     fun moveToPrevious() {
         moveLeft()
     }
 
-    /**
-     * Moves to the page at the right.
-     */
     protected open fun moveRight() {
         pager.state.getPage(0)?.let { page ->
             if (config.navigateToPan) {
                 val minX = page.minX(page.scale)
                 val maxX = page.maxX(page.scale)
-                val currentX = page.animationJob?.let { page.animationTargetX } ?: page.x
+                // Where a running pan is headed, else where it sits.
+                val currentX = page.animationTargetX ?: page.x
 
                 val c = if (isVertical && config.imageZoomType == ZoomStartPosition.RIGHT) -1 else 1
                 val x = (currentX - c / page.scale).coerceIn(minX, maxX)
@@ -1454,15 +1522,12 @@ open class WebGpuViewer(
         }
     }
 
-    /**
-     * Moves to the page at the left.
-     */
     protected open fun moveLeft() {
         pager.state.getPage(0)?.let { page ->
             if (config.navigateToPan) {
                 val minX = page.minX(page.scale)
                 val maxX = page.maxX(page.scale)
-                val currentX = page.animationJob?.isActive?.let { page.animationTargetX } ?: page.x
+                val currentX = page.animationTargetX ?: page.x
 
                 val c = if (isVertical && config.imageZoomType == ZoomStartPosition.RIGHT) -1 else 1
                 val x = (currentX + c / page.scale).coerceIn(minX, maxX)
@@ -1477,49 +1542,32 @@ open class WebGpuViewer(
         }
     }
 
-    /**
-     * Get the target page when navigating by spreads from the given page.
-     * @param from Starting page
-     * @param direction Positive = forward in page numbers, negative = backward
-     * @return Target page or null if navigation not possible
-     */
+    /** Target anchor page one spread past [from], in [direction] (positive = forward). */
     private fun nextPage(from: ViewerPage, direction: Int): ViewerPage? {
         var page = getSpreadAnchor(from)
 
         page = if (direction > 0) {
-            // Going forward (next spread)
-            if (page is ViewerReaderPage && canFormSpread(page)) {
+            if (page is ViewerReaderPage && spreadPartner(page) != null) {
                 page.next?.next ?: return null
             } else {
                 page.next ?: return null
             }
         } else {
-            // Going backward (prev spread)
             page.prev ?: return null
         }
 
         return getSpreadAnchor(page)
     }
 
-    /**
-     * Navigate by spreads from current page.
-     * @param direction Positive = forward in page numbers, negative = backward
-     */
     private fun navigateSpread(direction: Int) {
         val target = currentPage?.let { nextPage(it, direction) } ?: return
         moveToPage(target)
     }
 
-    /**
-     * Moves to the page at the top (or previous).
-     */
     protected fun moveUp() {
         moveToPrevious()
     }
 
-    /**
-     * Moves to the page at the bottom (or next).
-     */
     protected fun moveDown() {
         moveToNext()
     }

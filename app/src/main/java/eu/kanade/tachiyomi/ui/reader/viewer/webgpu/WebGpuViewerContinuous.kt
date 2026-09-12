@@ -7,7 +7,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import kotlin.math.max
 
-class WebGpuViewerContinuous(activity: ReaderActivity) :
+class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = false) :
     WebGpuViewer(activity, isReversed = false, isVertical = true, pager = ImageViewContinuous(activity)) {
 
     override val isContinuous: Boolean = true

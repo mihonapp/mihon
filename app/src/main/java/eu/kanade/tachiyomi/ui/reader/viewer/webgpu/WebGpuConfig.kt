@@ -61,103 +61,102 @@ class WebGpuConfig(
     var dualPageView = ReaderPreferences.DualPageView.NEVER
         private set
 
-    var continuousMinWidth = 1
+    var continuousMinWidth = 100
+        private set
+
+    var zoomOutDisabled = false
+        private set
+
+    var continuousGap = 10
         private set
 
     init {
-        readerPreferences.readerTheme
-            .register(
-                {
-                    theme = it
-                    automaticBackground = it == 3
-                },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.readerTheme.register(
+            {
+                theme = it
+                automaticBackground = it == 3
+            },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.imageScaleType
-            .register({ imageScaleType = it }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.imageScaleType.register({ imageScaleType = it }, { imagePropertyChangedListener?.invoke() })
 
-        readerPreferences.zoomStart
-            .register({ zoomTypeFromPreference(it) }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.zoomStart.register({ zoomTypeFromPreference(it) }, { imagePropertyChangedListener?.invoke() })
 
-        readerPreferences.cropBorders
-            .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.cropBorders.register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
 
-        readerPreferences.navigateToPan
-            .register({ navigateToPan = it })
+        readerPreferences.navigateToPan.register({ navigateToPan = it })
 
-        readerPreferences.landscapeZoom
-            .register({ landscapeZoom = it }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.landscapeZoom.register({ landscapeZoom = it }, { imagePropertyChangedListener?.invoke() })
 
-        readerPreferences.navigationModePager
-            .register({ navigationMode = it }, { updateNavigation(navigationMode) })
+        readerPreferences.navigationModePager.register({ navigationMode = it }, { updateNavigation(navigationMode) })
 
-        readerPreferences.pagerNavInverted
-            .register({ tappingInverted = it }, { navigator.invertMode = it })
-        readerPreferences.pagerNavInverted.changes()
-            .drop(1)
-            .onEach { navigationModeChangedListener?.invoke() }
+        readerPreferences.pagerNavInverted.register({ tappingInverted = it }, { navigator.invertMode = it })
+        readerPreferences.pagerNavInverted.changes().drop(1).onEach { navigationModeChangedListener?.invoke() }
             .launchIn(scope)
 
-        readerPreferences.dualPageSplitPaged
-            .register(
-                { dualPageSplit = it },
-                {
-                    imagePropertyChangedListener?.invoke()
-                    dualPageSplitChangedListener?.invoke(it)
-                },
-            )
+        readerPreferences.dualPageSplitPaged.register(
+            { dualPageSplit = it },
+            {
+                imagePropertyChangedListener?.invoke()
+                dualPageSplitChangedListener?.invoke(it)
+            },
+        )
 
-        readerPreferences.dualPageInvertPaged
-            .register({ dualPageInvert = it }, { imagePropertyChangedListener?.invoke() })
+        readerPreferences.dualPageInvertPaged.register(
+            { dualPageInvert = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.dualPageRotateToFit
-            .register(
-                { dualPageRotateToFit = it },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.dualPageRotateToFit.register(
+            { dualPageRotateToFit = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.dualPageRotateToFitInvert
-            .register(
-                { dualPageRotateToFitInvert = it },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.dualPageRotateToFitInvert.register(
+            { dualPageRotateToFitInvert = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.transitionAnimation
-            .register(
-                { transitionAnimation = it },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.transitionAnimation.register(
+            { transitionAnimation = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.transitionAnimationDual
-            .register(
-                { transitionAnimationDual = it },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.transitionAnimationDual.register(
+            { transitionAnimationDual = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.cutoutMode
-            .register(
-                { cutoutMode = it },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.cutoutMode.register(
+            { cutoutMode = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.cutoutModeDual
-            .register(
-                { cutoutModeDual = it },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.cutoutModeDual.register(
+            { cutoutModeDual = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.dualPageView
-            .register(
-                { dualPageView = it },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.dualPageView.register(
+            { dualPageView = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
-        readerPreferences.continuousMinWidth
-            .register(
-                { continuousMinWidth = it },
-                { imagePropertyChangedListener?.invoke() },
-            )
+        readerPreferences.continuousMinWidth.register(
+            { continuousMinWidth = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
+
+        readerPreferences.webtoonDisableZoomOut.register(
+            { zoomOutDisabled = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
+
+        readerPreferences.continuousGap.register(
+            { continuousGap = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
     }
 
     private fun zoomTypeFromPreference(value: Int) {
