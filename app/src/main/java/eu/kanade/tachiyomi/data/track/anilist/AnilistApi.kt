@@ -41,7 +41,7 @@ class AnilistApi(
 
     private val authClient = client.newBuilder()
         .addInterceptor(interceptor)
-        .rateLimit(permits = 85, period = 1.minutes)
+        .rateLimit(permits = 25, period = 1.minutes)
         .build()
 
     suspend fun addLibManga(track: Track): Track {
