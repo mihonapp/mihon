@@ -97,9 +97,7 @@
     <string name="ext_untrusted">Opålitlig</string>
     <string name="ext_uninstall">Avinstallera</string>
     <string name="untrusted_extension">Opålitligt tillägg</string>
-    <string name="untrusted_extension_message">Ett skadligt tillägg kan läsa lagrade inloggningsuppgifter eller köra arbiträr kod.
-\n
-\nGenom att lita på detta tillägg accepterar du dessa risker.</string>
+    <string name="untrusted_extension_message">Ett skadligt tillägg kan läsa lagrade inloggningsuppgifter eller köra arbiträr kod. \n \nGenom att lita på detta tillägg accepterar du dessa risker.</string>
     <string name="pref_fullscreen">Fullskärm</string>
     <string name="pref_page_transitions">Animera sidändringar</string>
     <string name="pref_double_tap_anim_speed">Animationshastighet för dubbelklick</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">Lades till i biblioteket</string>
     <string name="manga_removed_library">Togs bort från biblioteket</string>
     <string name="delete_downloads_for_manga">Ta bort nedladdade kapitel?</string>
-    <string name="copied_to_clipboard">Kopierat till urklipp:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kopierat till urklipp: \n%1$s</string>
     <string name="source_not_installed">Källa inte installerad: %1$s</string>
     <string name="display_mode_chapter">Kapitel %1$s</string>
     <string name="chapter_downloading_progress">Laddar ner (%1$d/%2$d)</string>
@@ -646,8 +643,7 @@
     <string name="action_open_random_manga">Öppna en slumpmässig manga</string>
     <string name="pref_invalidate_download_cache">Omindexera nedladdningar</string>
     <string name="pref_invalidate_download_cache_summary">Tvinga appen att läsa in nedladdade kapitel på nytt</string>
-    <string name="fdroid_warning">F-Droid-versioner stöds inte officiellt.
-\nTryck för att få veta mer.</string>
+    <string name="fdroid_warning">F-Droid-versioner stöds inte officiellt. \nTryck för att få veta mer.</string>
     <string name="split_tall_images">Dela höga bilder</string>
     <string name="action_update_category">Uppdatera kategori</string>
     <string name="action_copy_to_clipboard">Kopiera till urklipp</string>
@@ -745,11 +741,7 @@
     <string name="onboarding_action_next">Nästa</string>
     <string name="onboarding_description">Låt oss ställa in några saker först. Du kan alltid ändra dessa i inställningarna senare.</string>
     <string name="no_location_set">Ingen lagringsplats inställd</string>
-    <string name="onboarding_storage_info">Välj en mapp där %1$s lagrar kapitelnedladdningar, säkerhetskopior och mer.
-\n
-\nEn dedikerad mapp rekommenderas.
-\n
-\nVald mapp: %2$s</string>
+    <string name="onboarding_storage_info">Välj en mapp där %1$s lagrar kapitelnedladdningar, säkerhetskopior och mer. \n \nEn dedikerad mapp rekommenderas. \n \nVald mapp: %2$s</string>
     <string name="onboarding_permission_notifications">Aviseringsbehörigheter</string>
     <string name="onboarding_permission_install_apps">Installera app behörigheter</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Undvik avbrott i långvariga biblioteksuppdateringar, nedladdningar och säkerhetskopieringsåterställningar.</string>

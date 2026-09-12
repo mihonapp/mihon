@@ -57,7 +57,6 @@
         <item quantity="other">Келесі %d тарау</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="one"/>
         <item quantity="other">Жоқ %1$s тараулары</item>
     </plurals>
     <plurals name="upcoming_relative_time">

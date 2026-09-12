@@ -194,8 +194,7 @@
     <string name="manga_added_library">Annantu a sa biblioteca</string>
     <string name="manga_removed_library">Bogadu dae sa biblioteca</string>
     <string name="delete_downloads_for_manga">Iscantzellare sos capìtulos iscarrigados?</string>
-    <string name="copied_to_clipboard">Copiadu in punta de billete:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiadu in punta de billete: \n%1$s</string>
     <string name="source_not_installed">Fonte no installada: %1$s</string>
     <string name="display_mode_chapter">Capìtulu %1$s</string>
     <string name="chapter_downloading_progress">Iscarrighende (%1$d/%2$d)</string>
@@ -635,8 +634,7 @@
     <string name="download_notifier_cache_renewal">Verifichende sos iscarrigamentos</string>
     <string name="action_open_random_manga">Aberi un\'elementu a casu</string>
     <string name="information_no_entries_found">Perunu elementu atzapadu in custa categoria</string>
-    <string name="fdroid_warning">Sas versiones de F-Droid non sunt prus suportadas in manera ufitziale.
-\nToca pro nde ischire de prus.</string>
+    <string name="fdroid_warning">Sas versiones de F-Droid non sunt prus suportadas in manera ufitziale. \nToca pro nde ischire de prus.</string>
     <string name="action_display_show_continue_reading_button">Butone pro sighire a lèghere</string>
     <string name="track_remove_date_conf_title">Bogare sa data?</string>
     <string name="pref_invalidate_download_cache">Torra a inditzizare sos iscarrigamentos</string>
@@ -751,11 +749,7 @@
     <string name="onboarding_action_next">Imbeniente</string>
     <string name="onboarding_action_finish">Incumintzemus</string>
     <string name="onboarding_action_skip">Brinca</string>
-    <string name="onboarding_storage_info">Seletziona una cartella in ue %1$s at a archiviare sos capìtulos iscarrigados, sas còpias de seguresa e àteru.
-\n
-\nSi cussìgiat una cartella dedicada.
-\n
-\nCartella seletzionada: %2$s</string>
+    <string name="onboarding_storage_info">Seletziona una cartella in ue %1$s at a archiviare sos capìtulos iscarrigados, sas còpias de seguresa e àteru. \n \nSi cussìgiat una cartella dedicada. \n \nCartella seletzionada: %2$s</string>
     <string name="onboarding_storage_help_info">Ses agiornende dae una versione betza e non ses seguru de ite seletzionare? Abbista·ti sa ghia a s\'archiviatzione pro àteras informatziones.</string>
     <string name="onboarding_storage_help_action">Ghia a s\'archiviatzione</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Èvita interrutziones a agiornamentos longos de sa biblioteca, iscarrigamentos, e riprìstinos de còpias de seguresa.</string>

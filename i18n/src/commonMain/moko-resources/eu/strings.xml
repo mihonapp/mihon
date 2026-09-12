@@ -145,8 +145,7 @@
     <string name="unknown_author">Egile ezezaguna</string>
     <string name="unknown_status">Egoera ezezaguna</string>
     <string name="delete_downloads_for_manga">Deskargatutako kapituluak ezabatu nahi dituzu?</string>
-    <string name="copied_to_clipboard">Arbelean kopiatu da:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Arbelean kopiatu da: \n%1$s</string>
     <string name="chapter_paused">Gelditurik</string>
     <string name="show_chapter_number">Kapituluaren zenbakia</string>
     <string name="download_unread">Irakurri gabea</string>
@@ -332,9 +331,7 @@
     <string name="whats_new">Zer dago berri</string>
     <string name="pref_create_backup">Sortu babeskopia</string>
     <string name="backup_restore_missing_sources">Falta diren iturriak:</string>
-    <string name="backup_restore_content_full">Babeskopia fitxategiko datuak berreskuratu egingo dira.
-\n
-\nFalta diren luzapenak instalatu eta jarraipen-zerbitzuetan saioa hasi beharko duzu ondoren horiek erabiltzeko.</string>
+    <string name="backup_restore_content_full">Babeskopia fitxategiko datuak berreskuratu egingo dira. \n \nFalta diren luzapenak instalatu eta jarraipen-zerbitzuetan saioa hasi beharko duzu ondoren horiek erabiltzeko.</string>
     <string name="chapter_downloading_progress">Deskargatzen (%1$d/%2$d)</string>
     <string name="chapter_error">Errorea</string>
     <string name="also_set_chapter_settings_for_library">Nire liburutegiko manga guztietan ere aplikatu</string>

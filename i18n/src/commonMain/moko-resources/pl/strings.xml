@@ -240,19 +240,14 @@
     <string name="manga_added_library">Dodano do biblioteki</string>
     <string name="manga_removed_library">Usunięto z biblioteki</string>
     <string name="label_migration">Migracja</string>
-    <string name="copied_to_clipboard">Skopiowano do schowka:
-\n %1$s</string>
+    <string name="copied_to_clipboard">Skopiowano do schowka: \n %1$s</string>
     <string name="copy">Kopiuj</string>
     <string name="label_extension_info">Szczegóły rozszerzenia</string>
     <string name="ext_update">Aktualizuj</string>
     <string name="ext_trust">Ufaj</string>
     <string name="ext_untrusted">Niezaufane</string>
     <string name="untrusted_extension">Niezaufane rozszerzenie</string>
-    <string name="untrusted_extension_message">To rozszerzenie było podpisane niezaufanym certyfikatem i nie zostało aktywowane.
-\n
-\nZłośliwe rozszerzenie może odczytać dane logowania albo uruchomić złośliwy kod.
-\n
-\nUfając temu rozszerzeniu akceptujesz to zagrożenie.</string>
+    <string name="untrusted_extension_message">To rozszerzenie było podpisane niezaufanym certyfikatem i nie zostało aktywowane. \n \nZłośliwe rozszerzenie może odczytać dane logowania albo uruchomić złośliwy kod. \n \nUfając temu rozszerzeniu akceptujesz to zagrożenie.</string>
     <string name="migration_dialog_what_to_include">Zaznacz dane do zawarcia</string>
     <string name="migrate">Migruj</string>
     <string name="pager_viewer">Widok stron</string>
@@ -449,9 +444,7 @@
     <string name="pref_dual_page_invert">Odwróć układ w podziale podwójnych stron</string>
     <string name="pref_dual_page_split">Podział podwójnych stron</string>
     <string name="pref_dns_over_https">DNS przez HTTPS (DoH)</string>
-    <string name="backup_restore_content_full">Dane z pliku kopii zapasowej zostaną przywrócone.
-\n
-\nBędziesz musiał zainstalować brakujące rozszerzenia i zalogować się do usług śledzących, aby móc z nich korzystać.</string>
+    <string name="backup_restore_content_full">Dane z pliku kopii zapasowej zostaną przywrócone. \n \nBędziesz musiał zainstalować brakujące rozszerzenia i zalogować się do usług śledzących, aby móc z nich korzystać.</string>
     <string name="nav_zone_right">Prawo</string>
     <string name="nav_zone_left">Lewo</string>
     <string name="nav_zone_next">Następne</string>
@@ -654,8 +647,7 @@
     <string name="action_open_random_manga">Otwórz losową pozycję</string>
     <string name="pref_library_summary">Kategorie, aktualizacja globalna, przesunięcie rozdziału</string>
     <string name="pref_invalidate_download_cache">Odbuduj indeks pobierania</string>
-    <string name="fdroid_warning">Kompilacje F-Droid nie są oficjalnie obsługiwane.
-\nNaciśnij, aby dowiedzieć się więcej.</string>
+    <string name="fdroid_warning">Kompilacje F-Droid nie są oficjalnie obsługiwane. \nNaciśnij, aby dowiedzieć się więcej.</string>
     <string name="label_read_chapters">Przeczytane</string>
     <string name="pref_downloads_summary">Automatyczne pobieranie, pobierz wstępnie</string>
     <string name="track_remove_start_date_conf_text">To spowoduje usunięcie wcześniej wybranej daty rozpoczęcia z %s</string>
@@ -751,11 +743,7 @@
     <string name="onboarding_storage_help_info">Aktualizujesz ze starszej wersji i nie jesteś pewien co wybrać? Zobacz na przewodnik po pamięci.</string>
     <string name="pref_update_only_in_release_period">Przewiduj następną aktualizację</string>
     <string name="ext_permission_install_apps_warning">Uprawnienia są wymagane aby zainstalować rozszerzenia. Kliknij tutaj aby je przyznać.</string>
-    <string name="onboarding_storage_info">Wybierz folder gdzie %1$s będzie zapisywał pobrane rozdziały, kopie zapasowe i inne.
-\n
-\nZalecany jest dedykowany folder.
-\n
-\nWybrany folder:%2$s</string>
+    <string name="onboarding_storage_info">Wybierz folder gdzie %1$s będzie zapisywał pobrane rozdziały, kopie zapasowe i inne. \n \nZalecany jest dedykowany folder. \n \nWybrany folder:%2$s</string>
     <string name="ext_revoke_trust">Unieważnij zaufanie nieznanym rozszerzeniom</string>
     <string name="action_open_repo">Repozytorium open source</string>
     <string name="pref_flash_page_summ">Redukuje ghosting na wyświetlaczach e-ink</string>

@@ -177,9 +177,7 @@
     <string name="pref_cutout_short">Ipakita ang laman sa cutout area</string>
     <string name="pref_fullscreen">Naka-fullscreen</string>
     <string name="obsolete_extension_message">Ang extension na ito ay walang kaugnayan sa anumang store. Hindi ito makatatanggap ng mga update, maaaring hindi gumana nang maayos, at pwedeng magdulot ng problema sa app. Inirerekomendang i-uninstall ito.</string>
-    <string name="untrusted_extension_message">Maaaring basahin ng mga mapanganib na extension ang anumang nakatagong kredensyal sa pag-log in o magsagawa ng arbitrary code.
-\n
-\nSa pamamagitan ng pagtitiwala sa extension na ito, tinatanggap mo ang mga panganib na ito.</string>
+    <string name="untrusted_extension_message">Maaaring basahin ng mga mapanganib na extension ang anumang nakatagong kredensyal sa pag-log in o magsagawa ng arbitrary code. \n \nSa pamamagitan ng pagtitiwala sa extension na ito, tinatanggap mo ang mga panganib na ito.</string>
     <string name="untrusted_extension">Di-pinagkakatiwalaang extension</string>
     <string name="ext_uninstall">I-uninstall</string>
     <string name="ext_trust">Itiwala</string>
@@ -322,8 +320,7 @@
     <string name="display_mode_chapter">Kabanata %1$s</string>
     <string name="snack_add_to_library">Idagdag sa Aklatan?</string>
     <string name="source_not_installed">Di naka-install ang source: %1$s</string>
-    <string name="copied_to_clipboard">Kinopya sa clipboard:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kinopya sa clipboard: \n%1$s</string>
     <string name="delete_downloads_for_manga">Burahin ang mga na-download na kabanata?</string>
     <string name="manga_info_expand">Palawakin</string>
     <string name="manga_info_collapse">Bawasan</string>
@@ -637,8 +634,7 @@
     <string name="download_notifier_cache_renewal">Tinitignan ang mga download</string>
     <string name="information_no_entries_found">Walang mga entry ang nahanap sa kategoryang ito</string>
     <string name="action_open_random_manga">Buksan ang random na entry</string>
-    <string name="fdroid_warning">Ang mga build mula sa F-Droid ay hindi opisyal na sinusuportahan.
-\nI-tap para matuto pa.</string>
+    <string name="fdroid_warning">Ang mga build mula sa F-Droid ay hindi opisyal na sinusuportahan. \nI-tap para matuto pa.</string>
     <string name="action_display_show_continue_reading_button">Magpatuloy na bumasa na button</string>
     <string name="track_remove_date_conf_title">Tanggalin ang petsa?</string>
     <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na napili mo mula sa %s</string>
@@ -745,11 +741,7 @@
     <string name="onboarding_action_next">Susunod</string>
     <string name="onboarding_description">Mag-set up muna tayo ng ilang bagay. Maaari mo ring baguhin ang mga ito anumang oras sa mga setting sa ibang pagkakataon.</string>
     <string name="no_location_set">Walang nakatakdang lokasyon ng storage</string>
-    <string name="onboarding_storage_info">Pumili ng folder kung saan mag-imbak ang %1$s ng mga na-download ng kabanata, mga backup, at higit pa.
-\n
-\nInirerekomenda ang isang nakalaang folder.
-\n
-\nNapiling folder: %2$s</string>
+    <string name="onboarding_storage_info">Pumili ng folder kung saan mag-imbak ang %1$s ng mga na-download ng kabanata, mga backup, at higit pa. \n \nInirerekomenda ang isang nakalaang folder. \n \nNapiling folder: %2$s</string>
     <string name="onboarding_permission_notifications">Pahintulot sa mga abiso</string>
     <string name="onboarding_permission_install_apps">Pahintulot sa pag-install ng mga app</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Ma-iwasan ang mga hadlang sa mahahabang pag-update ng aklatan, pag-download, at pag-restore ng mga backup.</string>

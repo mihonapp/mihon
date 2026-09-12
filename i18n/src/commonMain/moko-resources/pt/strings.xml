@@ -234,8 +234,7 @@
     <string name="manga_added_library">Adicionado à biblioteca</string>
     <string name="manga_removed_library">Removido da biblioteca</string>
     <string name="delete_downloads_for_manga">Eliminar capítulos descarregados?</string>
-    <string name="copied_to_clipboard">Copiado para área de transferência:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiado para área de transferência: \n%1$s</string>
     <string name="source_not_installed">Fonte não instalada: %1$s</string>
     <string name="chapter_paused">Pausado</string>
     <string name="manga_tracking_tab">Monitorização</string>
@@ -668,8 +667,7 @@
     <string name="information_required_plain">*obrigatório</string>
     <string name="enhanced_services_not_installed">Disponíveis, mas a fonte não está instalada: %s</string>
     <string name="pref_invalidate_download_cache_summary">Força a app a controlar novamente por capítulos disponíveis offline</string>
-    <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente.
-\nToque para saber mais.</string>
+    <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente. \nToque para saber mais.</string>
     <string name="information_no_entries_found">Nenhum item encontrado nesta categoria</string>
     <string name="action_copy_to_clipboard">Copiar para a área de transferência</string>
     <string name="pref_hide_in_library_items">Ocultar entradas existentes na biblioteca</string>
@@ -754,11 +752,7 @@
     <string name="onboarding_description">Vamos definir algumas coisas primeiro. Sempre pode fazer alterações nas configurações depois também.</string>
     <string name="onboarding_action_next">Próximo</string>
     <string name="onboarding_action_finish">Começar</string>
-    <string name="onboarding_storage_info">Escolha uma pasta onde o %1$s irá armazenar as descargas de capítulos, backups e mais.
-\n
-\nUma pasta dedicada é recomendada.
-\n
-\nPasta selecionada: %2$s</string>
+    <string name="onboarding_storage_info">Escolha uma pasta onde o %1$s irá armazenar as descargas de capítulos, backups e mais. \n \nUma pasta dedicada é recomendada. \n \nPasta selecionada: %2$s</string>
     <string name="exclude_scanlators">Apagar scanlators</string>
     <string name="no_scanlators_found">Nenhum scanlator encontrado</string>
     <string name="action_move_to_bottom_all_for_series">Mover série para o fim</string>

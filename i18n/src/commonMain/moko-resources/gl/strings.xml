@@ -78,9 +78,7 @@
     <string name="ext_nsfw_warning">As fontes desta extensión poden ter contido NSFW (+18)</string>
     <string name="ext_nsfw_short">+18</string>
     <string name="obsolete_extension_message">Esta extensión xa non está dispoñible. Pode que non funcione ben e cause problemas na aplicación. Recoméndase desinstalala.</string>
-    <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardada en Mihon ou executar calquera tipo de código.
-\n
-\nSe confías nesta extensión, aceptas estes riscos.</string>
+    <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardada en Mihon ou executar calquera tipo de código. \n \nSe confías nesta extensión, aceptas estes riscos.</string>
     <string name="untrusted_extension">Extensión non confiable</string>
     <string name="ext_untrusted">Non confiable</string>
     <string name="ext_uninstall">Desinstalar</string>
@@ -353,8 +351,7 @@
     <string name="restoring_backup_canceled">Cancelouse a restauración</string>
     <string name="label_network">Rede</string>
     <string name="password">Contrasinal</string>
-    <string name="fdroid_warning">As versións de F-Droid non teñen soporte oficial.
-\nPreme para saber máis.</string>
+    <string name="fdroid_warning">As versións de F-Droid non teñen soporte oficial. \nPreme para saber máis.</string>
     <string name="login_success">Conectado</string>
     <string name="ext_info_age_rating">Clasificación por idades</string>
     <string name="enhanced_services">Servizos de seguimento mellorados</string>
@@ -550,8 +547,7 @@
     <string name="sort_by_source">Por fonte</string>
     <string name="transition_current">Actual:</string>
     <string name="transition_next">Seguinte:</string>
-    <string name="copied_to_clipboard">Copiado ao portapapeis:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiado ao portapapeis: \n%1$s</string>
     <string name="clipboard_copy_error">Non se puido copiar ao portapapeis</string>
     <string name="complete_list">Lista de rematados</string>
     <string name="score">Puntuación</string>
@@ -715,11 +711,7 @@
     <string name="onboarding_heading">Dámosche a benvida!</string>
     <string name="onboarding_action_finish">Comecemos</string>
     <string name="onboarding_action_skip">Omitir</string>
-    <string name="onboarding_storage_info">Elixe o cartafol onde %1$s almacenará os capítulos descargados, as copias de seguridade e máis.
-\n
-\nRecoméndase usar un cartafol dedicado.
-\n
-\nElixir cartafol: %2$s</string>
+    <string name="onboarding_storage_info">Elixe o cartafol onde %1$s almacenará os capítulos descargados, as copias de seguridade e máis. \n \nRecoméndase usar un cartafol dedicado. \n \nElixir cartafol: %2$s</string>
     <string name="onboarding_storage_action_select">Elixe un cartafol</string>
     <string name="onboarding_permission_install_apps">Permiso para instalar aplicacións</string>
     <string name="onboarding_permission_install_apps_description">Para instalar as extensións das fontes.</string>

@@ -61,9 +61,7 @@
     <string name="ext_untrusted">Nedůvěryhodné</string>
     <string name="ext_uninstall">Odinstalovat</string>
     <string name="untrusted_extension">Nedůvěryhodné rozšíření</string>
-    <string name="untrusted_extension_message">Škodlivé rozšíření může přečíst jakékoliv uložené přihlašovací údaje nebo spustit libovolný kód.
-\n
-\nDůvěřováním tohoto rozšířeni přijímáte tato rizika.</string>
+    <string name="untrusted_extension_message">Škodlivé rozšíření může přečíst jakékoliv uložené přihlašovací údaje nebo spustit libovolný kód. \n \nDůvěřováním tohoto rozšířeni přijímáte tato rizika.</string>
     <string name="pref_fullscreen">Celá obrazovka</string>
     <string name="pref_page_transitions">Animovat přechody stránek</string>
     <string name="pref_show_page_number">Zobrazit číslo stránky</string>
@@ -226,8 +224,7 @@
     <string name="browse">Procházet</string>
     <string name="unknown">Neznámý</string>
     <string name="licensed">Licencovaný</string>
-    <string name="copied_to_clipboard">Zkopírováno do schránky:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Zkopírováno do schránky: \n%1$s</string>
     <string name="sort_by_number">Podle čísla kapitoly</string>
     <string name="manga_tracking_tab">Sledování</string>
     <string name="dropped">Již nečtu</string>
@@ -637,8 +634,7 @@
     <string name="download_notifier_cache_renewal">Kontrola stahování</string>
     <string name="information_no_entries_found">V této kategorii nebyly nalezeny žádné položky</string>
     <string name="action_open_random_manga">Otevřít náhodnou položku</string>
-    <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány.
-\nKlepnutím zobrazíte další informace.</string>
+    <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány. \nKlepnutím zobrazíte další informace.</string>
     <string name="action_display_show_continue_reading_button">Tlačítko Pokračovat ve čtení</string>
     <string name="track_remove_date_conf_title">Odstranit datum?</string>
     <string name="track_remove_finish_date_conf_text">Tím se odstraní dříve vybrané datum ukončení z %s</string>
@@ -755,11 +751,7 @@
     <string name="ext_permission_install_apps_warning">K instalaci rozšíření je nutné povolení. Klepněte zde pro udělení povolení.</string>
     <string name="private_settings">Zahrnout citlivé nastavení (např. přihlašovací tokeny sledovačů)</string>
     <string name="onboarding_permission_action_grant">Udělit</string>
-    <string name="onboarding_storage_info">Vyberte složku, kde %1$s bude ukládat stahování kapitol, zálohy a další.
-\n
-\nJe doporučena vyhrazená složka.
-\n
-\nVybraná složka: %2$s</string>
+    <string name="onboarding_storage_info">Vyberte složku, kde %1$s bude ukládat stahování kapitol, zálohy a další. \n \nJe doporučena vyhrazená složka. \n \nVybraná složka: %2$s</string>
     <string name="invalid_backup_file_error">Úplná chyba:</string>
     <string name="pref_library_update_smart_update">Chytrá aktualizace</string>
     <string name="manga_interval_expected_update">Předpoklad vydání nových kapitol za zhruba %1$s, kontrola co %2$s.</string>

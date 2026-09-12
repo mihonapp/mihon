@@ -4,9 +4,7 @@
     <string name="lock_always">Uvijek</string>
     <string name="pref_fullscreen">Cjeloekranski prikaz</string>
     <string name="obsolete_extension_message">Ovo proširenje više nije dostupno. Možda neće ispravno funkcionirati i može izazvati probleme s aplikacijom. Preporučuje se deinstalirati proširenje.</string>
-    <string name="untrusted_extension_message">Zlonamjerno proširenje može pročitati sve spremljene podatke za prijavu ili izvršiti proizvoljni kod.
-\n
-\nVjerujući ovom certifikatu, prihvaćaš te rizike.</string>
+    <string name="untrusted_extension_message">Zlonamjerno proširenje može pročitati sve spremljene podatke za prijavu ili izvršiti proizvoljni kod. \n \nVjerujući ovom certifikatu, prihvaćaš te rizike.</string>
     <string name="untrusted_extension">Nepovjerljivo proširenje</string>
     <string name="ext_uninstall">Deinstaliraj</string>
     <string name="ext_untrusted">Nepovjerljivo</string>
@@ -285,8 +283,7 @@
     <string name="display_mode_chapter">Poglavlje %1$s</string>
     <string name="snack_add_to_library">Dodati u biblioteku?</string>
     <string name="source_not_installed">Izvor nije instaliran: %1$s</string>
-    <string name="copied_to_clipboard">Kopirano u međuspremnik:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kopirano u međuspremnik: \n%1$s</string>
     <string name="delete_downloads_for_manga">Izbrisati preuzeta poglavlja?</string>
     <string name="manga_info_collapse">Manje</string>
     <string name="manga_info_expand">Više</string>
@@ -655,8 +652,7 @@
     <string name="crash_screen_title">Ups!</string>
     <string name="not_installed">Nije instalirano</string>
     <string name="updates_last_update_info_just_now">Upravo sada</string>
-    <string name="fdroid_warning">F-Droid verzije nisu službeno podržane.
-\nDodirnite da biste saznali više.</string>
+    <string name="fdroid_warning">F-Droid verzije nisu službeno podržane. \nDodirnite da biste saznali više.</string>
     <string name="download_notifier_cache_renewal">Provjeravanje preuzimanja</string>
     <string name="update_check_open">Otvori na GitHubu</string>
     <string name="skipped_reason_not_always_update">Preskočeno jer serija ne zahtijeva aktualiziranja</string>
@@ -752,11 +748,7 @@
     <string name="onboarding_permission_ignore_battery_opts">Upotreba baterije u pozadini</string>
     <string name="onboarding_description">Hajdemo najprije postaviti neke stvari. Ako želiš možeš ih kasnije promijeniti u postavkama.</string>
     <string name="no_location_set">Nije postavljeno mjesto spremišta</string>
-    <string name="onboarding_storage_info">Odaberi mapu u koju će %1$s spremati preuzimanja poglavlja, sigurnosne kopije i drugo.
-\n
-\nPreporučujemo koristiti zasebnu mapu.
-\n
-\nOdabrana mapa: %2$s</string>
+    <string name="onboarding_storage_info">Odaberi mapu u koju će %1$s spremati preuzimanja poglavlja, sigurnosne kopije i drugo. \n \nPreporučujemo koristiti zasebnu mapu. \n \nOdabrana mapa: %2$s</string>
     <string name="theme_nord">Nord</string>
     <string name="ext_permission_install_apps_warning">Za instaliranje proširenja su potrebne dozvole. Dodirni ovdje za odobrenje.</string>
     <string name="invalid_backup_file_error">Potpuna greška:</string>

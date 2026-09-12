@@ -102,9 +102,7 @@
     <string name="ext_untrusted">ไม่น่าเชื่อถือ</string>
     <string name="ext_uninstall">ถอนการติดตั้ง</string>
     <string name="untrusted_extension">ส่วนขยายที่ไม่น่าเชื่อถือ</string>
-    <string name="untrusted_extension_message">ส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ
-\n
-\nการเชื่อถือส่วนขยายนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
+    <string name="untrusted_extension_message">ส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ \n \nการเชื่อถือส่วนขยายนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
     <string name="pref_fullscreen">เต็มหน้าจอ</string>
     <string name="pref_page_transitions">แสดงแอนิเมชั่นเมื่อเปลี่ยนหน้า</string>
     <string name="pref_double_tap_anim_speed">ความเร็วแอนิเมชั่นเมื่อแตะ 2 ครั้ง</string>
@@ -196,8 +194,7 @@
     <string name="manga_added_library">เพิ่มไปยังคลังแล้ว</string>
     <string name="manga_removed_library">นำออกจากคลังแล้ว</string>
     <string name="delete_downloads_for_manga">ลบตอนที่ดาวน์โหลดแล้วหรือไม่?</string>
-    <string name="copied_to_clipboard">คัดลอกไปยังคลิปบอร์ดแล้ว:
-\n%1$s</string>
+    <string name="copied_to_clipboard">คัดลอกไปยังคลิปบอร์ดแล้ว: \n%1$s</string>
     <string name="source_not_installed">ไม่ได้ติดตั้งแหลงที่มา: %1$s</string>
     <string name="display_mode_chapter">ตอนที่ %1$s</string>
     <string name="chapter_downloading_progress">กำลังดาวน์โหลด (%1$d/%2$d)</string>
@@ -635,8 +632,7 @@
     <string name="updates_last_update_info_just_now">เมื่อสักครู่</string>
     <string name="error_user_agent_string_invalid">สตริงตัวแทนผู้ใช้ไม่ถูกต้อง</string>
     <string name="action_open_random_manga">สุ่มเปิดรายการ</string>
-    <string name="fdroid_warning">บิลด์ F-Droid ไม่ได้ถูกรองรับอย่างเป็นทางการ
-\nแตะเพื่อเรียนรู้เพิ่มเติม</string>
+    <string name="fdroid_warning">บิลด์ F-Droid ไม่ได้ถูกรองรับอย่างเป็นทางการ \nแตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="information_no_entries_found">ไม่พบรายการใด ๆ ในหมวดหมู่นี้</string>
     <string name="download_notifier_cache_renewal">กำลังตรวจสอบการดาวน์โหลด</string>
     <string name="action_display_show_continue_reading_button">ปุ่มอ่านต่อ</string>
@@ -757,11 +753,7 @@
     <string name="ext_permission_install_apps_warning">จำเป็นต้องมีสิทธิ์ในการติดตั้งส่วนขยาย แตะที่นี่เพื่อให้สิทธิ์</string>
     <string name="private_settings">รวมการตั้งค่าที่ละเอียดอ่อน (เช่น โทเค็นการเข้าสู่ระบบตัวติดตาม)</string>
     <string name="onboarding_permission_action_grant">อนุญาต</string>
-    <string name="onboarding_storage_info">เลือกโฟลเดอร์ที่ %1$s จะจัดเก็บการดาวน์โหลดบท การสำรองข้อมูล และอื่นๆ
-\n
-\nแนะนำให้ใช้โฟลเดอร์เฉพาะ
-\n
-\nโฟลเดอร์ที่เลือก: %2$s</string>
+    <string name="onboarding_storage_info">เลือกโฟลเดอร์ที่ %1$s จะจัดเก็บการดาวน์โหลดบท การสำรองข้อมูล และอื่นๆ \n \nแนะนำให้ใช้โฟลเดอร์เฉพาะ \n \nโฟลเดอร์ที่เลือก: %2$s</string>
     <string name="pref_library_update_smart_update">อัปเดตอัจฉริยะ</string>
     <string name="manga_interval_custom_amount">ความถี่ในการอัปเดตกำหนดเอง:</string>
     <string name="onboarding_storage_help_action">คู่มือการจัดเก็บข้อมูล</string>

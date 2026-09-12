@@ -315,8 +315,7 @@
     <string name="chapter_downloading_progress">Тиенет (%1$d/%2$d)</string>
     <string name="snack_add_to_library">Манкка вулавăша хушмалла-и?</string>
     <string name="source_not_installed">Ҫӑл куҫа лартман: %1$s</string>
-    <string name="copied_to_clipboard">Пайлашу буфере ӑтавланӑ:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Пайлашу буфере ӑтавланӑ: \n%1$s</string>
     <string name="delete_downloads_for_manga">Тиенӗ сыпӑксене катертмелле-и?</string>
     <string name="manga_info_collapse">Сахалрах</string>
     <string name="manga_info_expand">Ытларах</string>
