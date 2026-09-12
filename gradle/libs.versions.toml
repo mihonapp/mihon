@@ -37,7 +37,7 @@ directionalViewPager = "1.0.0"
 diskLruCache = "2.0.2"
 firebase-bom = "34.19.0"
 firebase-crashlytics = "3.0.8"
-flexibleAdapter = "c8013533"
+flexibleAdapter = "5.1.0"
 google-services = "4.5.0"
 image-decoder = "13"
 injekt = "91edab2317"
@@ -136,7 +136,7 @@ diskLruCache = { module = "com.jakewharton:disklrucache", version.ref = "diskLru
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-flexibleAdapter = { module = "com.github.arkon.FlexibleAdapter:flexible-adapter", version.ref = "flexibleAdapter" }
+flexibleAdapter = { module = "eu.davidea:flexible-adapter", version.ref = "flexibleAdapter" }
 image-decoder = { module = "ca.mpreg:imagedecoder", version.ref = "image-decoder" }
 injekt = { module = "com.github.mihonapp:injekt", version.ref = "injekt" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
