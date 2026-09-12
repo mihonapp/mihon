@@ -95,9 +95,7 @@
     <string name="ext_untrusted">Nesigură</string>
     <string name="ext_uninstall">Dezinstalează</string>
     <string name="untrusted_extension">Extensie nesigură</string>
-    <string name="untrusted_extension_message">Extensiile rău intenționate pot citi orice credențiale de autentificare stocate sau pot executa cod arbitrar.
-\n
-\nAcordând încredere acestei extensii, acceptați aceste riscuri.</string>
+    <string name="untrusted_extension_message">Extensiile rău intenționate pot citi orice credențiale de autentificare stocate sau pot executa cod arbitrar. \n \nAcordând încredere acestei extensii, acceptați aceste riscuri.</string>
     <string name="pref_fullscreen">Ecran complet</string>
     <string name="pref_page_transitions">Animați tranzițiile de pagini</string>
     <string name="action_display_download_badge">Capitole descărcate</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">Adăugat la bibliotecă</string>
     <string name="manga_removed_library">Eliminat din bibliotecă</string>
     <string name="delete_downloads_for_manga">Ștergeți capitolele descărcate?</string>
-    <string name="copied_to_clipboard">Copiat în clipboard:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiat în clipboard: \n%1$s</string>
     <string name="source_not_installed">Sursa nu este instalată:%1$s</string>
     <string name="display_mode_chapter">Capitolul %1$s</string>
     <string name="chapter_downloading_progress">Se descarcă (%1$d/%2$d)</string>
@@ -641,8 +638,7 @@
     <string name="download_notifier_cache_renewal">Descărcări de indexare</string>
     <string name="track_remove_date_conf_title">Eliminați data?</string>
     <string name="track_remove_start_date_conf_text">Acest lucru va elimina data de început selectată anterior din %s</string>
-    <string name="fdroid_warning">Versiunile F-Droid nu sunt acceptate oficial.
-\nApăsați pentru a afla mai multe.</string>
+    <string name="fdroid_warning">Versiunile F-Droid nu sunt acceptate oficial. \nApăsați pentru a afla mai multe.</string>
     <string name="action_open_random_manga">Deschideți aleatoriu</string>
     <string name="pref_invalidate_download_cache_summary">Obligați aplicația să refacă verificarea capitolelor descărcate</string>
     <string name="pref_library_update_show_tab_badge">Afiseaza numarul de notificari necitite pe pictorgrama Actualizari</string>
@@ -757,11 +753,7 @@
     <string name="manga_interval_custom_amount">Frecvența personalizată de actualizare:</string>
     <string name="onboarding_description">Să configurăm câteva lucruri mai întâi. Le puteți schimba oricând în setări și mai târziu.</string>
     <string name="onboarding_action_finish">Începe</string>
-    <string name="onboarding_storage_info">Selectează un folder unde %1$s va păstra capitolele descărcate, copiile de rezervă, și altele.
-\n
-\nSe recomanda folosirea unui folder dedicat.
-\n
-\nFolder-ul selectat: %2$s</string>
+    <string name="onboarding_storage_info">Selectează un folder unde %1$s va păstra capitolele descărcate, copiile de rezervă, și altele. \n \nSe recomanda folosirea unui folder dedicat. \n \nFolder-ul selectat: %2$s</string>
     <string name="onboarding_permission_notifications">Permisiune de notificare</string>
     <string name="onboarding_permission_notifications_description">Primiți notificări pentru actualizările bibliotecii și altele.</string>
     <string name="onboarding_guides_new_user">Nou pe %s? Vă recomandăm să consultați ghidul introductiv.</string>

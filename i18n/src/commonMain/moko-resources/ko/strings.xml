@@ -93,9 +93,7 @@
     <string name="ext_untrusted">신뢰되지않음</string>
     <string name="ext_uninstall">삭제</string>
     <string name="untrusted_extension">신뢰할 수 없는 확장 앱</string>
-    <string name="untrusted_extension_message">일부 악의적인 확장 앱은 Mihon에 저장된 로그인 정보를 읽거나 임의의 코드를 실행할 수도 있습니다.
-\n
-\n이 확장 앱을 신뢰하면 이러한 위험에 노출될 수 있습니다.</string>
+    <string name="untrusted_extension_message">일부 악의적인 확장 앱은 Mihon에 저장된 로그인 정보를 읽거나 임의의 코드를 실행할 수도 있습니다. \n \n이 확장 앱을 신뢰하면 이러한 위험에 노출될 수 있습니다.</string>
     <string name="pref_fullscreen">전체화면</string>
     <string name="pref_double_tap_anim_speed">더블 탭 애니메이션 속도</string>
     <string name="pref_show_page_number">페이지 번호 표시</string>
@@ -245,8 +243,7 @@
     <string name="other_source">기타</string>
     <string name="browse">찾아보기</string>
     <string name="licensed">정식 발매</string>
-    <string name="copied_to_clipboard">클립보드에 복사됨:
-\n%1$s</string>
+    <string name="copied_to_clipboard">클립보드에 복사됨: \n%1$s</string>
     <string name="show_title">소스 제목</string>
     <string name="reading">읽는 중</string>
     <string name="completed">완결</string>
@@ -637,8 +634,7 @@
     <string name="download_notifier_cache_renewal">다운로드 확인</string>
     <string name="action_open_random_manga">무작위 항목 열기</string>
     <string name="information_no_entries_found">이 카테고리에 항목이 없습니다</string>
-    <string name="fdroid_warning">F-Droid 빌드는 공식적으로 지원되지 않습니다.
-\n자세히 알아보려면 탭하세요.</string>
+    <string name="fdroid_warning">F-Droid 빌드는 공식적으로 지원되지 않습니다. \n자세히 알아보려면 탭하세요.</string>
     <string name="action_display_show_continue_reading_button">계속 읽기 버튼</string>
     <string name="track_remove_finish_date_conf_text">%s에서 이전에 선택한 완료 날짜가 제거됩니다</string>
     <string name="pref_invalidate_download_cache">다운로드 인덱스 다시 설정</string>
@@ -740,11 +736,7 @@
     <string name="manga_interval_expected_update_soon">곧 출시</string>
     <string name="onboarding_description">먼저 몇 가지 사항을 설정해 보겠습니다. 나중에 언제든지 설정에서 변경할 수도 있습니다.</string>
     <string name="onboarding_action_finish">시작하기</string>
-    <string name="onboarding_storage_info">%1$s가 다운로드, 백업 등을 할 폴더를 선택합니다.
-\n
-\n앱 전용폴더를 추천합니다.
-\n
-\n선택된 폴더: %2$s</string>
+    <string name="onboarding_storage_info">%1$s가 다운로드, 백업 등을 할 폴더를 선택합니다. \n \n앱 전용폴더를 추천합니다. \n \n선택된 폴더: %2$s</string>
     <string name="onboarding_guides_returning_user">%s를 재설치 하시겠습니까?</string>
     <string name="scanlator">스캔레이터</string>
     <string name="file_null_uri_error">선택된 파일 없음</string>

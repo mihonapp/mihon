@@ -446,17 +446,14 @@
     <string name="no_pinned_sources">אין מקורות נעוצים</string>
     <string name="chapter_not_found">פרק לא נמצא</string>
     <string name="pref_category_for_this_series">לסדרה הזאת</string>
-    <string name="backup_restore_content_full">מידע מקובץ הגיבוי ישוחזר.
-\n
-\nלאחר מכן צריך להתקין הרחבות חסרות ולהתחבר לשירותי המעקב כדי להשתמש בהם.</string>
+    <string name="backup_restore_content_full">מידע מקובץ הגיבוי ישוחזר. \n \nלאחר מכן צריך להתקין הרחבות חסרות ולהתחבר לשירותי המעקב כדי להשתמש בהם.</string>
     <string name="restore_miui_warning">יכול להיות שהגיבוי/השחזור לא יעבדו כמו שצריך אם אופטמיזציית MIUI מנועה.</string>
     <string name="creating_backup_error">הגיבוי נכשל</string>
     <string name="restoring_backup_error">שחזור הגיבוי נכשל</string>
     <string name="requires_app_restart">צריך לאתחל את האפליקציה כדי שהשינויים ייכנסו לתוקף</string>
     <string name="privacy_policy">מדיניות פרטיות</string>
     <string name="add_to_library">הוסף לספרייה</string>
-    <string name="copied_to_clipboard">הועתק ללוח:
-\n%1$s</string>
+    <string name="copied_to_clipboard">הועתק ללוח: \n%1$s</string>
     <string name="no_chapters_error">לא נמצאו פרקים</string>
     <string name="track_started_reading_date">תאריך התחלה</string>
     <string name="track_finished_reading_date">תאריך סיום</string>
@@ -654,8 +651,7 @@
     <string name="backup_restore_missing_trackers">מעקבים שדורשים התחברות:</string>
     <string name="complete_list">רשימת פריטים שהושלמו</string>
     <string name="pref_tablet_ui_mode">ממשק משתמש טאבלט</string>
-    <string name="fdroid_warning">F-Droid builds לא נתמכים באופן רשמי.
-\nלחץ כדי ללמוד עוד.</string>
+    <string name="fdroid_warning">F-Droid builds לא נתמכים באופן רשמי. \nלחץ כדי ללמוד עוד.</string>
     <string name="track_delete_title">להסיר את %s ממעקב?</string>
     <string name="track_delete_text">פעולה זו תסיר מקומית את חיבור הפריט לשירות המעקב.</string>
     <string name="track_delete_remote_text">הסר גם מ-%s</string>

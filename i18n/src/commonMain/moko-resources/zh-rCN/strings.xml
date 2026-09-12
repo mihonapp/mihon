@@ -97,9 +97,7 @@
     <string name="ext_untrusted">未信任</string>
     <string name="ext_uninstall">卸载</string>
     <string name="untrusted_extension">插件未受信任</string>
-    <string name="untrusted_extension_message">恶意插件可能会读取所有登录的账号或执行任意代码。
-\n
-\n信任此插件即代表你愿意承担上述风险。</string>
+    <string name="untrusted_extension_message">恶意插件可能会读取所有登录的账号或执行任意代码。 \n \n信任此插件即代表你愿意承担上述风险。</string>
     <string name="pref_fullscreen">全屏</string>
     <string name="pref_page_transitions">翻页动画</string>
     <string name="pref_double_tap_anim_speed">双击动画速度</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">已添加到书架</string>
     <string name="manga_removed_library">已移出书架</string>
     <string name="delete_downloads_for_manga">要删除已下载的章节吗？</string>
-    <string name="copied_to_clipboard">已复制到剪贴板：
-\n「%1$s」</string>
+    <string name="copied_to_clipboard">已复制到剪贴板： \n「%1$s」</string>
     <string name="source_not_installed">未安装图源：%1$s</string>
     <string name="display_mode_chapter">第 %1$s 章</string>
     <string name="chapter_downloading_progress">正在下载 (%1$d/%2$d)</string>
@@ -637,8 +634,7 @@
     <string name="download_notifier_cache_renewal">正在扫描已下载章节</string>
     <string name="action_open_random_manga">随机打开作品</string>
     <string name="information_no_entries_found">此分类没有作品</string>
-    <string name="fdroid_warning">F-Droid 渠道不受官方支持。
-\n点击了解详情。</string>
+    <string name="fdroid_warning">F-Droid 渠道不受官方支持。 \n点击了解详情。</string>
     <string name="action_display_show_continue_reading_button">继续阅读按钮</string>
     <string name="pref_invalidate_download_cache">重建下载索引</string>
     <string name="track_remove_date_conf_title">要删除日期吗？</string>
@@ -759,11 +755,7 @@
     <string name="onboarding_storage_help_action">存储指南</string>
     <string name="pref_storage_location">存储位置</string>
     <string name="onboarding_storage_action_select">选择文件夹</string>
-    <string name="onboarding_storage_info">选择一个文件夹供 %1$s 存放下载章节、备份文件等。
-\n
-\n推荐使用一个专门的文件夹。
-\n
-\n已选文件夹：%2$s</string>
+    <string name="onboarding_storage_info">选择一个文件夹供 %1$s 存放下载章节、备份文件等。 \n \n推荐使用一个专门的文件夹。 \n \n已选文件夹：%2$s</string>
     <string name="onboarding_storage_selection_required">必须选择一个文件夹</string>
     <string name="available_disk_space_info">%1$s / %2$s</string>
     <string name="theme_nord">Nord</string>

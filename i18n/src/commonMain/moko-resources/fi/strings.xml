@@ -138,9 +138,7 @@
     <string name="ext_untrusted">Luottamaton</string>
     <string name="ext_uninstall">Poista asennus</string>
     <string name="untrusted_extension">Luottamattomat laajennokset</string>
-    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Mihonista tai suorittaa luvatonta koodia.
-\n
-\nLuottamalla tähän laajennokseen hyväksyt nämä riskit.</string>
+    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Mihonista tai suorittaa luvatonta koodia. \n \nLuottamalla tähän laajennokseen hyväksyt nämä riskit.</string>
     <string name="pref_fullscreen">Koko näyttö</string>
     <string name="pref_page_transitions">Animoi sivusiirtymät</string>
     <string name="pref_double_tap_anim_speed">Tuplanäpäytyksen animaation nopeus</string>
@@ -226,8 +224,7 @@
     <string name="no_more_results">Ei enempää tuloksia</string>
     <string name="action_global_search_hint">Globaali haku…</string>
     <string name="delete_downloads_for_manga">Poista ladatut luvut?</string>
-    <string name="copied_to_clipboard">Kopioitu leikepöydälle
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kopioitu leikepöydälle \n%1$s</string>
     <string name="source_not_installed">Lähdettä ei ole asennettu: %1$s</string>
     <string name="display_mode_chapter">Luku %1$s</string>
     <string name="chapter_downloading_progress">Ladataan (%1$d/%2$d)</string>
@@ -446,9 +443,7 @@
     <string name="pref_dual_page_split">Jaa leveät sivut</string>
     <string name="pref_dual_page_invert_summary">Jos jaettujen leveiden sivujen sijoittelu ei vastaa lukusuuntaa</string>
     <string name="pref_dual_page_invert">Käännä jaettujen sivujen sijoittelu</string>
-    <string name="backup_restore_content_full">Varmuuskopiotiedoston tiedot palautetaan.
-\n
-\nSinun on asennattava puuttuvat laajennukset ja kirjauduttava seurantapalveluihin jälkeenpäin käyttääksesi niitä.</string>
+    <string name="backup_restore_content_full">Varmuuskopiotiedoston tiedot palautetaan. \n \nSinun on asennattava puuttuvat laajennukset ja kirjauduttava seurantapalveluihin jälkeenpäin käyttääksesi niitä.</string>
     <string name="nav_zone_right">Oikea</string>
     <string name="nav_zone_left">Vasen</string>
     <string name="nav_zone_next">Seuraava</string>

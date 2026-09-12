@@ -235,11 +235,7 @@
     <string name="ext_install">Орнату</string>
     <string name="ext_app_info">Қолданба туралы</string>
     <string name="untrusted_extension">Сенімсіз кеңейту</string>
-    <string name="untrusted_extension_message">Бұл кеңейту сенімсіз сертификатпен қол қойылған және іске қосылмаған.
-\n
-\nЗиянды кеңейту Mihon-де сақталған кез келген кіру тіркелгі деректерін оқуы немесе еркін кодты орындауы мүмкін.
-\n
-\nОсы сертификатқа сену арқылы сіз осы қауіп-қатерді қабылдайсыз.</string>
+    <string name="untrusted_extension_message">Бұл кеңейту сенімсіз сертификатпен қол қойылған және іске қосылмаған. \n \nЗиянды кеңейту Mihon-де сақталған кез келген кіру тіркелгі деректерін оқуы немесе еркін кодты орындауы мүмкін. \n \nОсы сертификатқа сену арқылы сіз осы қауіп-қатерді қабылдайсыз.</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="ext_nsfw_warning">Бұл кеңейту дереккөзінде NSFW (18+) мазмұны болуы мүмкін</string>
     <string name="ext_install_service_notif">Кеңейту орнатылуда…</string>
@@ -418,9 +414,7 @@
     <string name="pref_dns_over_https">DNS арқылы HTTPS (DoH)</string>
     <string name="restoring_backup_canceled">Қалпына келтіру күші жойылды</string>
     <string name="popular">Танымал</string>
-    <string name="backup_restore_content_full">Сақтық көшірме файлынан дерек қалпына келеді.
-\n
-\nОны қолдану үшін сізге түгел жетпей тұрған кеңейтулерді жүктеп, бақылау қызметтеріне кіру керек.</string>
+    <string name="backup_restore_content_full">Сақтық көшірме файлынан дерек қалпына келеді. \n \nОны қолдану үшін сізге түгел жетпей тұрған кеңейтулерді жүктеп, бақылау қызметтеріне кіру керек.</string>
     <string name="chapter_not_found">Тарау табылмады</string>
     <string name="action_track">Бақылау</string>
     <string name="pref_tablet_ui_mode">Планшетті интерфейс</string>
@@ -624,8 +618,7 @@
     <string name="pref_downloads_summary">Автоматты жүктеу, алдын ала жүктеу</string>
     <string name="manga_info_expand">Көбірек</string>
     <string name="delete_downloads_for_manga">Жүктелген тарауларды жоямыз ба?</string>
-    <string name="copied_to_clipboard">Буферге көшірілді:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Буферге көшірілді: \n%1$s</string>
     <string name="clipboard_copy_error">Буферге көшірілмеді</string>
     <string name="source_not_installed">Дереккөз орнатылмаған: %1$s</string>
     <string name="snack_add_to_library">Кітапханаға қосайық па?</string>
@@ -640,8 +633,7 @@
     <string name="error_user_agent_string_invalid">User agent жолы жарамсыз</string>
     <string name="information_no_entries_found">Бұл санатта жазба жоқ</string>
     <string name="action_open_random_manga">Кездейсоқ жазбаны ашу</string>
-    <string name="fdroid_warning">F-Droid құрастыруларына ресми түрде қолдау көрсетілмейді.
-\nТолығырақ білу үшін басыңыз.</string>
+    <string name="fdroid_warning">F-Droid құрастыруларына ресми түрде қолдау көрсетілмейді. \nТолығырақ білу үшін басыңыз.</string>
     <string name="download_notifier_cache_renewal">Жүктеулерді тексеру</string>
     <string name="action_display_show_continue_reading_button">«Оқуды жалғастыру» батырмасы</string>
     <string name="track_remove_finish_date_conf_text">Бұл %s ішінен бұрын таңдалған аяқталу күнін жояды</string>

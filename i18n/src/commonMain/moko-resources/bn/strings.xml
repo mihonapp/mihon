@@ -246,8 +246,7 @@
     <string name="double_tap_anim_speed_fast">দ্রুত</string>
     <string name="manga_added_library">সংগ্রহশালায় যোগ করা হয়েছে</string>
     <string name="manga_removed_library">সংগ্রহশালা থেকে অপসারণ করা হয়েছে</string>
-    <string name="copied_to_clipboard">ক্লিপবোর্ডে কপি হয়েছে:
-\n%1$s</string>
+    <string name="copied_to_clipboard">ক্লিপবোর্ডে কপি হয়েছে: \n%1$s</string>
     <string name="migration_dialog_what_to_include">যোগ করার জন্য উপাত্ত নির্বাচন করুন</string>
     <string name="migrate">মাইগ্রেট</string>
     <string name="copy">অনুলিপি</string>

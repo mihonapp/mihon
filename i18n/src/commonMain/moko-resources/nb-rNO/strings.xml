@@ -191,8 +191,7 @@
     <string name="manga_added_library">Lagt til i biblioteket</string>
     <string name="manga_removed_library">Fjernet fra bibliotek</string>
     <string name="delete_downloads_for_manga">Slett nedlastede kapitler?</string>
-    <string name="copied_to_clipboard">Kopiert til utklippstavle:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kopiert til utklippstavle: \n%1$s</string>
     <string name="source_not_installed">Kilde ikke installert: %1$s</string>
     <string name="display_mode_chapter">Kapittel %1$s</string>
     <string name="chapter_downloading_progress">Laster ned (%1$d/%2$d)</string>
@@ -248,9 +247,7 @@
     <string name="label_help">Hjelp</string>
     <string name="action_display_download_badge">Last ned kapitler</string>
     <string name="pref_library_columns">Rutenettstørrelse</string>
-    <string name="untrusted_extension_message">Skadelige utvidelser kan lese alle lagrede innloggingsdetaljer eller kjøre vilkårlig kode.
-\n
-\nVed å godta denne utvidelsen, aksepterer du disse risikoene.</string>
+    <string name="untrusted_extension_message">Skadelige utvidelser kan lese alle lagrede innloggingsdetaljer eller kjøre vilkårlig kode. \n \nVed å godta denne utvidelsen, aksepterer du disse risikoene.</string>
     <string name="pref_double_tap_anim_speed">Animasjonshastighet ved dobbelklikk</string>
     <string name="pager_viewer">Sider</string>
     <string name="confirm_set_image_as_cover">Bruk dette bildet som omslag?</string>
@@ -635,8 +632,7 @@
     <string name="not_installed">Ikke installert</string>
     <string name="updates_last_update_info_just_now">Akkurat nå</string>
     <string name="download_notifier_cache_renewal">Sjekker nedlastinger</string>
-    <string name="fdroid_warning">F-Droid-bygg er ikke offisielt støttet.
-\nTrykk for å finne ut mer.</string>
+    <string name="fdroid_warning">F-Droid-bygg er ikke offisielt støttet. \nTrykk for å finne ut mer.</string>
     <string name="information_no_entries_found">Fant ingen oppføringer i denne kategorien</string>
     <string name="action_open_random_manga">Åpne tilfeldig oppføring</string>
     <string name="action_display_show_continue_reading_button">Fortsett å lese-knapp</string>
@@ -745,11 +741,7 @@
     <string name="onboarding_action_next">Neste</string>
     <string name="onboarding_description">La oss sette opp noen ting først. Du kan alltid endre disse i innstillingene senere også.</string>
     <string name="no_location_set">Ingen lagringsplassering angitt</string>
-    <string name="onboarding_storage_info">Velg en mappe der %1$s vil lagre kapittelnedlastinger, sikkerhetskopier og mer.
-\n
-\nEn dedikert mappe anbefales.
-\n
-\nValgt mappe: %2$s</string>
+    <string name="onboarding_storage_info">Velg en mappe der %1$s vil lagre kapittelnedlastinger, sikkerhetskopier og mer. \n \nEn dedikert mappe anbefales. \n \nValgt mappe: %2$s</string>
     <string name="manga_interval_expected_update">Nye kapitler forventes om omtrent %1$s, sjekker omtrent hver %2$s.</string>
     <string name="onboarding_permission_notifications">Tillat varslinger</string>
     <string name="onboarding_permission_install_apps">Tillat å installere apper</string>

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="obsolete_extension_message">ይህ ቅጥያ ከእንግዲህ አይገኝም።</string>
-    <string name="untrusted_extension_message">ይህ ቅጥያ ባልታመነ የእውቅና ማረጋገጫ ተፈርሟል እና አልነቃም።
-\n
-\nተንኮል አዘል ቅጥያ በታቺሚሚ ውስጥ የተከማቸውን ማንኛውንም የመግቢያ ማስረጃዎችን በማንበብ ወይም የዘፈቀደ ኮድን ሊፈጽም ይችላል ፡፡
-\n
-\nበዚህ የምስክር ወረቀት በመተማመን እነዚህን አደጋዎች ይቀበላሉ ፡፡</string>
+    <string name="untrusted_extension_message">ይህ ቅጥያ ባልታመነ የእውቅና ማረጋገጫ ተፈርሟል እና አልነቃም። \n \nተንኮል አዘል ቅጥያ በታቺሚሚ ውስጥ የተከማቸውን ማንኛውንም የመግቢያ ማስረጃዎችን በማንበብ ወይም የዘፈቀደ ኮድን ሊፈጽም ይችላል ፡፡ \n \nበዚህ የምስክር ወረቀት በመተማመን እነዚህን አደጋዎች ይቀበላሉ ፡፡</string>
     <string name="untrusted_extension">የማይታመን ቅጥያ</string>
     <string name="ext_uninstall">ማራገፍ</string>
     <string name="ext_untrusted">የማይታመን</string>

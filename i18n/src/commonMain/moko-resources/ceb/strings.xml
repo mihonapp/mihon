@@ -246,11 +246,7 @@
     <string name="none">Wala</string>
     <string name="ext_pending">Naghulat</string>
     <string name="ext_app_info">Impormasyon sa app</string>
-    <string name="untrusted_extension_message">Kini nga extension gipirmahan gamit ang dili kasaligan nga sertipiko ug wala gi-aktibo.
-\n
-\nAng usa ka malisyoso nga extension mahimong makabasa sa bisan unsang mga kredensyal sa pag-login nga gitipigan sa Mihon o ipatuman ang arbitraryong code.
-\n
-\nPinaagi sa pagsalig niini nga sertipiko gidawat nimo kini nga mga risgo.</string>
+    <string name="untrusted_extension_message">Kini nga extension gipirmahan gamit ang dili kasaligan nga sertipiko ug wala gi-aktibo. \n \nAng usa ka malisyoso nga extension mahimong makabasa sa bisan unsang mga kredensyal sa pag-login nga gitipigan sa Mihon o ipatuman ang arbitraryong code. \n \nPinaagi sa pagsalig niini nga sertipiko gidawat nimo kini nga mga risgo.</string>
     <string name="pref_cutout_short">Ipakita ang sulod sa ginunting nga lugar</string>
     <string name="pref_page_transitions">I-animate ang mga transisyon sa panid</string>
     <string name="pref_custom_brightness">Custom nga kahayag</string>
@@ -359,9 +355,7 @@
     <string name="backup_in_progress">Ang pag-backup nagpadayon na</string>
     <string name="restore_duration">%1$02d minuto , %2$02d ikaduha</string>
     <string name="backup_choice">Unsa ang gusto nimo i-backup?</string>
-    <string name="backup_restore_content_full">Ang datos gikan sa backup file mapasig-uli.
-\n
-\nKinahanglan nimo nga i-install ang bisan unsang nawala nga mga extension ug mag-log in sa mga serbisyo sa pagsubay pagkahuman aron magamit kini.</string>
+    <string name="backup_restore_content_full">Ang datos gikan sa backup file mapasig-uli. \n \nKinahanglan nimo nga i-install ang bisan unsang nawala nga mga extension ug mag-log in sa mga serbisyo sa pagsubay pagkahuman aron magamit kini.</string>
     <string name="restore_completed">Nakompleto ang pag-uli</string>
     <string name="creating_backup">Paghimo og backup</string>
     <string name="backup_restore_missing_trackers">Ang mga tracker wala naka-log in:</string>
