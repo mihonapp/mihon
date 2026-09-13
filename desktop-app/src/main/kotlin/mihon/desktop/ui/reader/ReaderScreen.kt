@@ -2,9 +2,9 @@ package mihon.desktop.ui.reader
 
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,7 +44,6 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.isCtrlPressed as isPointerCtrlPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
@@ -83,6 +82,7 @@ import mihon.reader.session.ReaderSession
 import mihon.reader.session.ReaderSessionError
 import mihon.reader.session.ReaderState
 import mihon.reader.source.ReaderFailure
+import androidx.compose.ui.input.pointer.isCtrlPressed as isPointerCtrlPressed
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
@@ -587,6 +587,8 @@ fun ReaderScreen(
             CompositionLocalProvider(
                 LocalReaderColorFilter provides settings.colorFilter,
                 LocalReaderCropBorders provides currentCrop,
+                LocalReaderForeground provides state.foreground,
+                LocalReaderSelectedPage provides state.pages.getOrNull(state.selectedIndex)?.id,
                 LocalReaderPageSizeSink provides pageSizeSink,
                 LocalReaderPageImageStore provides imageStore,
             ) {

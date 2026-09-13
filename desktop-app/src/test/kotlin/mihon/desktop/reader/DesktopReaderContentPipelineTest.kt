@@ -3,16 +3,21 @@ package mihon.desktop.reader
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import mihon.desktop.ui.reader.ComposeTileBridge
+import mihon.desktop.ui.reader.IntrinsicPageSizeCache
 import mihon.reader.cache.WeightedTileCache
 import mihon.reader.image.ImageIoPageDecoder
+import mihon.reader.image.ImageMetadata
 import mihon.reader.memory.BoundedReaderMemoryBudget
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import mihon.reader.model.ReadingMode
 import mihon.reader.prefetch.NavigationDirection
 import mihon.reader.session.AdjacentChapterWarmup
+import mihon.reader.session.AnimationCoordinator
 import mihon.reader.session.ReaderContentPosition
 import mihon.reader.source.BoundedPageInput
 import mihon.reader.source.ChapterSource
@@ -28,6 +33,37 @@ import javax.imageio.ImageIO
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DesktopReaderContentPipelineTest {
+    @Test
+    fun `desktop content exposes frames selected by the core animation coordinator`() = runTest {
+        val cache = WeightedTileCache(4L * 1024L * 1024L)
+        val budget = BoundedReaderMemoryBudget(4L * 1024L * 1024L) { cache.relievePressure() }
+        val pipeline = DesktopReaderContentPipeline(
+            decoder = ImageIoPageDecoder(budget),
+            cache = cache,
+            scope = backgroundScope,
+            sourceFactory = ChapterSourceFactory { error("no source expected") },
+        )
+        val animation = AnimationCoordinator(backgroundScope, loadFrame = { null })
+        val bridge = ComposeTileBridge()
+        val content = DesktopReaderContent(pipeline, bridge, IntrinsicPageSizeCache(), animation)
+        val pageId = PageId("7", "animated.gif")
+
+        content.startAnimation(pageId, ImageMetadata(4, 4, 2, listOf(10, 20), supportsRegionDecode = true))
+        runCurrent()
+        content.selectedAnimationFrame.value shouldBe mihon.reader.model.FrameId(pageId, 0)
+        advanceTimeBy(10)
+        runCurrent()
+        content.selectedAnimationFrame.value shouldBe mihon.reader.model.FrameId(pageId, 1)
+        content.setForeground(false)
+        content.selectedAnimationFrame.value shouldBe null
+
+        animation.close()
+        pipeline.close()
+        bridge.close()
+        budget.close()
+        cache.close()
+    }
+
     @Test
     fun `visible load and four ahead one behind prefetch share one coordinator`() = runTest {
         val source = CountingSource(asset(7), pageCount = 8)

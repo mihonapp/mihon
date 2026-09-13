@@ -25,6 +25,7 @@ import mihon.reader.image.TileRequest
 import mihon.reader.memory.BoundedReaderMemoryBudget
 import mihon.reader.model.FrameId
 import mihon.reader.model.PageId
+import mihon.reader.session.AnimationCoordinator
 import mihon.reader.session.AtomicReaderGenerationSource
 import mihon.reader.session.DefaultReaderSession
 import mihon.reader.session.ReaderGenerationSource
@@ -96,6 +97,10 @@ class DesktopReaderFactory(
             sourceFactory = sourceFactory,
             maxFullPagePixels = MAX_DISPLAY_PIXELS,
         )
+        val animationCoordinator = AnimationCoordinator(
+            scope = sessionScope,
+            loadFrame = { frameId -> contentPipeline.loadAnimationLease(frameId) },
+        )
         val session = DefaultReaderSession(
             scope = sessionScope,
             catalog = catalog,
@@ -103,6 +108,7 @@ class DesktopReaderFactory(
             progressSink = effectiveSink,
             generationSource = generationSource,
             settings = settings.load().toCoreSettings(),
+            animationCoordinator = animationCoordinator,
             invalidateContent = { pageId ->
                 cache.invalidatePage(pageId)
                 val asset = requireNotNull(catalog.chapterAsset(pageId.chapterId.toLong()))
@@ -120,7 +126,7 @@ class DesktopReaderFactory(
         }
         return DesktopReaderHandle(
             session = tracked,
-            content = DesktopReaderContent(contentPipeline, bridge, pageSizes),
+            content = DesktopReaderContent(contentPipeline, bridge, pageSizes, animationCoordinator),
         )
     }
 

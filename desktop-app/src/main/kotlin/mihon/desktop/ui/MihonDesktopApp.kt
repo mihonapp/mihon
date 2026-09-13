@@ -929,7 +929,6 @@ private fun ReaderDestination(
                 DecodedReaderPage(
                     content = activeHandle.content,
                     page = page,
-                    foreground = true,
                     modifier = modifier,
                 )
             },

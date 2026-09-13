@@ -442,6 +442,7 @@ class DefaultReaderSession(
     private fun closeContentPipelineLocked() {
         if (contentPipelineClosed) return
         contentPipelineClosed = true
+        animationCoordinator?.close()
         contentPipeline.close()
     }
 

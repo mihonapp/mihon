@@ -94,13 +94,16 @@ class DefaultReaderSessionTest {
 
         coordinator.start(page, AnimationProbe(frameCount = 2, frameDurationsMillis = listOf(10, 20)))
         runCurrent()
+        coordinator.selectedFrame.value shouldBe mihon.reader.model.FrameId(page, 0)
         advanceTimeBy(10)
         runCurrent()
+        coordinator.selectedFrame.value shouldBe mihon.reader.model.FrameId(page, 1)
         coordinator.setContentVisible(false)
         advanceTimeBy(100)
         runCurrent()
 
         frames.shouldBe(listOf(mihon.reader.model.FrameId(page, 0), mihon.reader.model.FrameId(page, 1)))
+        coordinator.selectedFrame.value shouldBe null
     }
 
     @Test

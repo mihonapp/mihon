@@ -4,20 +4,26 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mihon.desktop.ui.reader.AnimationVisibilityReporter
 import mihon.desktop.ui.reader.ComposeTileBridge
 import mihon.desktop.ui.reader.IntrinsicPageSizeCache
+import mihon.desktop.ui.reader.ReaderAnimatedFrame
 import mihon.desktop.ui.reader.SmartBorderCropper
 import mihon.reader.cache.CacheMetrics
 import mihon.reader.cache.WeightedTileCache
 import mihon.reader.image.ImageMetadata
 import mihon.reader.image.IntRect
 import mihon.reader.image.PageDecoder
+import mihon.reader.model.FrameId
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import mihon.reader.prefetch.PageLoadCoordinator
 import mihon.reader.session.AdjacentChapterWarmup
+import mihon.reader.session.AnimationCoordinator
+import mihon.reader.session.AnimationProbe
 import mihon.reader.session.ReaderContentPipeline
 import mihon.reader.session.ReaderContentPosition
 import mihon.reader.source.ChapterSource
@@ -117,6 +123,11 @@ class DesktopReaderContentPipeline(
         return LoadedDesktopTile(loaded, metadata)
     }
 
+    internal suspend fun loadAnimationLease(frameId: FrameId): AutoCloseable? {
+        val loaded = loadTile(frameId.pageId, frameId.frameIndex).tile
+        return if (loaded.resident) null else AutoCloseable { loaded.tile.close() }
+    }
+
     private fun activeCoordinator(): PageLoadCoordinator = synchronized(lock) {
         check(!closed.get()) { "reader content pipeline is closed" }
         checkNotNull(coordinator) { "reader content pipeline has no open chapter" }
@@ -169,9 +180,40 @@ internal data class LoadedDesktopTile(
 /** Compose-facing content handle backed by the same coordinator used by its reader session. */
 class DesktopReaderContent internal constructor(
     private val pipeline: DesktopReaderContentPipeline,
-    private val bridge: ComposeTileBridge,
+    internal val bridge: ComposeTileBridge,
     val pageSizes: IntrinsicPageSizeCache,
-) {
+    private val animationCoordinator: AnimationCoordinator,
+) : AnimationVisibilityReporter {
+    val selectedAnimationFrame: StateFlow<FrameId?> = animationCoordinator.selectedFrame
+
+    fun startAnimation(pageId: PageId, metadata: ImageMetadata) {
+        if (!metadata.isAnimated) return
+        animationCoordinator.start(
+            pageId,
+            AnimationProbe(metadata.frameCount, metadata.frameDurationsMillis),
+        )
+    }
+
+    fun stopAnimation(pageId: PageId) {
+        if (selectedAnimationFrame.value?.pageId == pageId) {
+            animationCoordinator.cancelForPageOrChapterChange()
+        }
+    }
+
+    override fun setContentVisible(visible: Boolean) {
+        animationCoordinator.setContentVisible(visible)
+    }
+
+    override fun setForeground(foreground: Boolean) {
+        animationCoordinator.setForeground(foreground)
+    }
+
+    suspend fun loadAnimatedFrame(frameId: FrameId): ReaderAnimatedFrame {
+        val loaded = pipeline.loadTile(frameId.pageId, frameId.frameIndex)
+        val lease = if (loaded.tile.resident) null else AutoCloseable { loaded.tile.tile.close() }
+        return ReaderAnimatedFrame(loaded.tile.tile.key, loaded.tile.tile.image, lease)
+    }
+
     suspend fun loadFrame(
         pageId: PageId,
         frameIndex: Int,
