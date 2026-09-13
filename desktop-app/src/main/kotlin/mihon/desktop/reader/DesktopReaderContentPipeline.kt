@@ -17,6 +17,8 @@ import mihon.reader.cache.WeightedTileCache
 import mihon.reader.image.ImageMetadata
 import mihon.reader.image.IntRect
 import mihon.reader.image.PageDecoder
+import mihon.reader.image.TileKey
+import mihon.reader.image.TilePlanner
 import mihon.reader.model.FrameId
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
@@ -121,6 +123,42 @@ class DesktopReaderContentPipeline(
         val loaded = active.loadVisible(pageId, frameIndex)
         val metadata = requireNotNull(active.loadedMetadata(pageId)) { "loaded page metadata is missing" }
         return LoadedDesktopTile(loaded, metadata)
+    }
+
+    internal suspend fun loadRegionTiles(
+        pageId: PageId,
+        visibleBounds: IntRect,
+        sampleSize: Int,
+    ): List<LoadedDesktopTile> {
+        val active = activeCoordinator()
+        val metadata = requireNotNull(active.loadedMetadata(pageId)) { "loaded page metadata is missing" }
+        val requests = TilePlanner.plan(
+            pageId = pageId,
+            frameId = null,
+            imageWidth = metadata.width,
+            imageHeight = metadata.height,
+            visible = visibleBounds,
+            sampleSize = sampleSize,
+        )
+        active.retainVisibleRegions(pageId, requests.mapTo(HashSet()) { it.key })
+        val loaded = ArrayList<LoadedDesktopTile>(requests.size)
+        try {
+            requests.forEach { request ->
+                loaded += LoadedDesktopTile(
+                    active.loadRegion(pageId, request.key.bounds, sampleSize = request.key.sampleSize),
+                    metadata,
+                )
+            }
+            return loaded
+        } catch (failure: Throwable) {
+            loaded.filterNot { it.tile.resident }.forEach { it.tile.tile.close() }
+            throw failure
+        }
+    }
+
+    internal fun releaseRegionTiles(pageId: PageId) {
+        val active = synchronized(lock) { coordinator } ?: return
+        runCatching { active.retainVisibleRegions(pageId, emptySet()) }
     }
 
     internal suspend fun loadAnimationLease(frameId: FrameId): AutoCloseable? {
@@ -248,12 +286,52 @@ class DesktopReaderContent internal constructor(
             if (!loaded.tile.resident) loaded.tile.tile.close()
         }
     }
+
+    suspend fun loadRegionTiles(
+        pageId: PageId,
+        visibleBounds: IntRect,
+        sampleSize: Int,
+    ): DesktopReaderTileSet = withContext(Dispatchers.IO) {
+        val loaded = pipeline.loadRegionTiles(pageId, visibleBounds, sampleSize)
+        val bridged = ArrayList<DesktopReaderTile>(loaded.size)
+        try {
+            loaded.forEach { item ->
+                bridged += DesktopReaderTile(
+                    bounds = item.tile.tile.key.bounds,
+                    tile = bridge.acquire(item.tile.tile.key, item.tile.tile.image),
+                )
+            }
+            DesktopReaderTileSet(bridged)
+        } catch (failure: Throwable) {
+            bridged.forEach { it.close() }
+            throw failure
+        } finally {
+            loaded.filterNot { it.tile.resident }.forEach { it.tile.tile.close() }
+        }
+    }
+
+    fun releaseRegionTiles(pageId: PageId) {
+        pipeline.releaseRegionTiles(pageId)
+    }
 }
 
 data class DesktopReaderPageFrame(
     val tile: ComposeTileBridge.BridgeTile,
     val metadata: ImageMetadata,
 )
+
+data class DesktopReaderTile(
+    val bounds: IntRect,
+    val tile: ComposeTileBridge.BridgeTile,
+) : AutoCloseable {
+    override fun close() = tile.close()
+}
+
+class DesktopReaderTileSet(
+    val tiles: List<DesktopReaderTile>,
+) : AutoCloseable {
+    override fun close() = tiles.forEach { it.close() }
+}
 
 data class DesktopReaderHandle(
     val session: mihon.reader.session.ReaderSession,

@@ -11,6 +11,7 @@ import mihon.desktop.ui.reader.IntrinsicPageSizeCache
 import mihon.reader.cache.WeightedTileCache
 import mihon.reader.image.ImageIoPageDecoder
 import mihon.reader.image.ImageMetadata
+import mihon.reader.image.IntRect
 import mihon.reader.memory.BoundedReaderMemoryBudget
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
@@ -33,6 +34,38 @@ import javax.imageio.ImageIO
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DesktopReaderContentPipelineTest {
+    @Test
+    fun `large page keeps a sampled fallback and upgrades the visible viewport with regions`() = runTest {
+        val source = CountingSource(asset(7), pageCount = 1, imageBytes = png(8, 4))
+        val cache = WeightedTileCache(4L * 1024L * 1024L)
+        val budget = BoundedReaderMemoryBudget(4L * 1024L * 1024L) { cache.relievePressure() }
+        val pipeline = DesktopReaderContentPipeline(
+            decoder = ImageIoPageDecoder(budget),
+            cache = cache,
+            scope = backgroundScope,
+            sourceFactory = ChapterSourceFactory { error("no adjacent chapter expected") },
+            maxFullPagePixels = 8,
+        )
+        pipeline.open(source)
+        val bridge = ComposeTileBridge()
+        val animation = AnimationCoordinator(backgroundScope, loadFrame = { null })
+        val content = DesktopReaderContent(pipeline, bridge, IntrinsicPageSizeCache(), animation)
+
+        val fallback = content.loadFrame(source.pages.single().id, frameIndex = 0)
+        fallback.tile.key.sampleSize shouldBe 2
+        val regions = content.loadRegionTiles(source.pages.single().id, IntRect(0, 0, 4, 4), sampleSize = 1)
+        regions.tiles.single().tile.key.sampleSize shouldBe 1
+
+        regions.close()
+        content.releaseRegionTiles(source.pages.single().id)
+        fallback.tile.close()
+        animation.close()
+        pipeline.close()
+        bridge.close()
+        budget.close()
+        cache.close()
+    }
+
     @Test
     fun `desktop content exposes frames selected by the core animation coordinator`() = runTest {
         val cache = WeightedTileCache(4L * 1024L * 1024L)
@@ -137,6 +170,7 @@ class DesktopReaderContentPipelineTest {
     private class CountingSource(
         override val asset: ReaderChapterAsset,
         pageCount: Int,
+        private val imageBytes: ByteArray = PNG,
     ) : ChapterSource {
         val pages = (0 until pageCount).map { index ->
             PageDescriptor(PageId(asset.chapterId.toString(), "page-$index.png"), 4, 4)
@@ -151,15 +185,15 @@ class DesktopReaderContentPipelineTest {
 
         override suspend fun open(pageId: PageId): BoundedPageInput {
             openedIndexes += pages.indexOfFirst { it.id == pageId }
-            return BoundedPageInput(ByteArrayInputStream(PNG), PNG.size.toLong())
+            return BoundedPageInput(ByteArrayInputStream(imageBytes), imageBytes.size.toLong())
         }
 
         override fun close() = Unit
     }
 
     companion object {
-        private val PNG = ByteArrayOutputStream().use { output ->
-            val image = BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB).apply {
+        private fun png(width: Int, height: Int) = ByteArrayOutputStream().use { output ->
+            val image = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB).apply {
                 createGraphics().also { graphics ->
                     graphics.color = Color.RED
                     graphics.fillRect(0, 0, width, height)
@@ -169,6 +203,8 @@ class DesktopReaderContentPipelineTest {
             ImageIO.write(image, "png", output)
             output.toByteArray()
         }
+
+        private val PNG = png(4, 4)
 
         private fun asset(chapterId: Long) = ReaderChapterAsset(
             mangaId = 1,

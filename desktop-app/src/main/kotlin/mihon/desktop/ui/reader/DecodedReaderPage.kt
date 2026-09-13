@@ -42,6 +42,7 @@ fun DecodedReaderPage(
     val imageStore = LocalReaderPageImageStore.current
     val readerForeground = LocalReaderForeground.current
     val selectedPage = LocalReaderSelectedPage.current
+    val renderContext = LocalReaderPageRenderContext.current
     val shouldAnimate = readerForeground && selectedPage == page.id
     val selectedAnimationFrame by content.selectedAnimationFrame.collectAsState()
     var frame by remember(page.id, cropBorders) { mutableStateOf<DesktopReaderPageFrame?>(null) }
@@ -112,6 +113,16 @@ fun DecodedReaderPage(
                 foreground = readerForeground,
                 visibilityReporter = content,
                 modifier = Modifier.matchParentSize(),
+            )
+            current != null && renderContext != null &&
+                current.tile.key.sampleSize > renderContext.sampleSize &&
+                !current.metadata.isAnimated && !cropBorders -> TiledReaderPage(
+                content = content,
+                pageId = page.id,
+                fallback = current,
+                context = renderContext,
+                colorFilter = colorFilter.toComposeColorFilter(),
+                modifier = Modifier.matchParentSize().testTag("reader-decoded-${page.id.entryName}"),
             )
             current != null -> Image(
                 bitmap = current.tile.image,

@@ -613,6 +613,29 @@ class PageLoadCoordinatorTest {
     }
 
     @Test
+    fun `region window releases stale pins while retaining the full page fallback`() = runTest {
+        val harness = Harness(capacity = 4096)
+        harness.decoder.imageWidth = 2048
+        harness.decoder.imageHeight = 1024
+        val coordinator = harness.coordinator(backgroundScope)
+        val source = FakeChapterSource(1, 1)
+        coordinator.openChapter(source)
+
+        val page = source.pageId(0)
+        coordinator.loadVisible(page)
+        val left = coordinator.loadRegion(page, IntRect(0, 0, 1024, 1024)).tile.key
+        val right = coordinator.loadRegion(page, IntRect(1024, 0, 2048, 1024)).tile.key
+        harness.cache.metrics.pinnedBytes shouldBe 768
+
+        coordinator.retainVisibleRegions(page, setOf(right))
+
+        harness.cache.metrics.pinnedBytes shouldBe 512
+        harness.cache.relievePressure()
+        harness.cache.get(left) shouldBe null
+        harness.cache.get(right) shouldBe harness.cache.get(right)
+    }
+
+    @Test
     fun `close cancels in-flight prefetch releases pins and rejects further calls`() = runTest {
         val harness = Harness(capacity = 4096)
         val coordinator = harness.coordinator(backgroundScope)

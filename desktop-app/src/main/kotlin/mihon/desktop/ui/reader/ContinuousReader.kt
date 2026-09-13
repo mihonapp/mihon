@@ -119,6 +119,7 @@ internal fun ContinuousReader(
                         pageContent = pageContent,
                         modifier = Modifier.fillMaxWidth().height(itemHeight),
                         intrinsicSize = intrinsicSize,
+                        viewportTiling = false,
                     )
                 }
                 if (pageIndex < state.pages.lastIndex && gap > 0.dp) {
