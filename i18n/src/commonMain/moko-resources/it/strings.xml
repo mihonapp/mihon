@@ -232,9 +232,7 @@
     <string name="ext_untrusted">Non attendibile</string>
     <string name="ext_uninstall">Disinstalla</string>
     <string name="untrusted_extension">Estensione non attendibile</string>
-    <string name="untrusted_extension_message">Le estensioni dannose possono leggere le credenziali di accesso memorizzate o eseguire codice arbitrario.
-\n
-\nFidandoti di questa estensione, accetti questi rischi.</string>
+    <string name="untrusted_extension_message">Le estensioni dannose possono leggere le credenziali di accesso memorizzate o eseguire codice arbitrario. \n \nFidandoti di questa estensione, accetti questi rischi.</string>
     <string name="pref_double_tap_anim_speed">Velocità animazioni doppio tocco</string>
     <string name="pager_viewer">Per pagina</string>
     <string name="double_tap_anim_speed_0">Senza animazione</string>
@@ -246,8 +244,7 @@
     <string name="browse">Sfoglia</string>
     <string name="manga_added_library">Aggiunto alla libreria</string>
     <string name="manga_removed_library">Rimosso dalla libreria</string>
-    <string name="copied_to_clipboard">Copiato negli appunti:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiato negli appunti: \n%1$s</string>
     <string name="source_not_installed">Fonte non installata: %1$s</string>
     <string name="repeating">Rileggendo</string>
     <string name="track_status">Stato</string>
@@ -637,8 +634,7 @@
     <string name="download_notifier_cache_renewal">Controllando i download</string>
     <string name="action_open_random_manga">Apri una voce casuale</string>
     <string name="information_no_entries_found">Nessuna voce trovata in questa categoria</string>
-    <string name="fdroid_warning">Le versioni F-Droid non sono ufficialmente supportate.
-\nToccare per saperne di più.</string>
+    <string name="fdroid_warning">Le versioni F-Droid non sono ufficialmente supportate. \nToccare per saperne di più.</string>
     <string name="action_display_show_continue_reading_button">Pulsante \"continua a leggere\"</string>
     <string name="track_remove_date_conf_title">Rimuovere la data?</string>
     <string name="track_remove_finish_date_conf_text">Verrà rimossa la data di fine precedentemente selezionata da %s</string>
@@ -655,16 +651,16 @@
     <string name="label_tracked_titles">Voci tracciate</string>
     <string name="label_used">In uso</string>
     <string name="not_applicable">N/D</string>
-    <string name="minute_short">%d min</string>
+    <string name="minute_short">%d min</string>
     <string name="label_downloaded">Scaricati</string>
     <string name="label_titles_in_global_update">Nell\'aggiornamento globale</string>
     <string name="label_read_chapters">Letti</string>
     <string name="label_mean_score">Punteggio medio</string>
-    <string name="hour_short">%d o</string>
+    <string name="hour_short">%d o</string>
     <string name="label_total_chapters">Totale</string>
     <string name="label_tracker_section">Tracciatori</string>
-    <string name="seconds_short">%d s</string>
-    <string name="day_short">%d g</string>
+    <string name="seconds_short">%d s</string>
+    <string name="day_short">%d g</string>
     <string name="action_not_now">Non ora</string>
     <string name="information_no_manga_category">La categoria è vuota</string>
     <string name="pref_library_update_show_tab_badge">Mostra il numero dei capitoli non letti nell\'icona Novità</string>
@@ -736,11 +732,7 @@
     <string name="onboarding_description">Per prima cosa impostiamo alcune cose. Puoi sempre cambiarle successivamente nelle impostazioni.</string>
     <string name="onboarding_permission_notifications_description">Ricevi notifiche per aggiornamenti della libreria e altro.</string>
     <string name="ext_permission_install_apps_warning">È necessaria l\'autorizzazione per installare le estensioni. Tocca qui per concederla.</string>
-    <string name="onboarding_storage_info">Selezione una cartella dove %1$s salverà i capitoli scaricati, i backup e altro.
-\n
-\nÈ raccomandato usare una cartella dedicata.
-\n
-\nCartella selezionata: %2$s</string>
+    <string name="onboarding_storage_info">Selezione una cartella dove %1$s salverà i capitoli scaricati, i backup e altro. \n \nÈ raccomandato usare una cartella dedicata. \n \nCartella selezionata: %2$s</string>
     <string name="pref_storage_location">Posizione di archiviazione</string>
     <string name="action_create">Crea</string>
     <string name="relative_time_span_never">Mai</string>

@@ -245,8 +245,7 @@
     <string name="manga_added_library">Đã thêm vào thư viện</string>
     <string name="manga_removed_library">Đã xóa khỏi thư viện</string>
     <string name="delete_downloads_for_manga">Muốn xóa các chương đã tải?</string>
-    <string name="copied_to_clipboard">Đã sao chép vào bảng tạm:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Đã sao chép vào bảng tạm: \n%1$s</string>
     <string name="source_not_installed">Nguồn truyện chưa được cài đặt: %1$s</string>
     <string name="repeating">Đang đọc lại</string>
     <string name="track_status">Trạng thái</string>
@@ -743,11 +742,7 @@
     <string name="track_delete_text">Điều này sẽ loại bỏ bộ theo dõi cục bộ.</string>
     <string name="track_activity_name">Đăng nhập bộ theo dõi</string>
     <string name="onboarding_permission_action_grant">Cho phép</string>
-    <string name="onboarding_storage_info">Chọn thư mục nơi mà %1$s sẽ chứa chương truyện tải xuống, sao lưu, và những thứ khác.
-\n
-\nKhuyến khích sử dụng một thư mục chuyên dụng.
-\n
-\nThư mục được chọn: %2$s</string>
+    <string name="onboarding_storage_info">Chọn thư mục nơi mà %1$s sẽ chứa chương truyện tải xuống, sao lưu, và những thứ khác. \n \nKhuyến khích sử dụng một thư mục chuyên dụng. \n \nThư mục được chọn: %2$s</string>
     <string name="pref_relative_format">Mốc thời gian liên quan</string>
     <string name="exception_http">HTTP %d, kiểm tra trang web trong WebView</string>
     <string name="pref_relative_format_summary">\"%1$s\" thay vì là \"%2$s\"</string>

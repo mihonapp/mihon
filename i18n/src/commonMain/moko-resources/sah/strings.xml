@@ -197,11 +197,7 @@
     <string name="pref_cutout_short">Быһыллыбыт хонууга баары көрдөр</string>
     <string name="pref_fullscreen">Толору экран</string>
     <string name="obsolete_extension_message">Бу кэҥэтии кыаллыбат буолла.</string>
-    <string name="untrusted_extension_message">Бу кэҥэтии эрэлэ суох туоһу суругунан бэлиэтэммит уонна холбоммотох.
-\n
-\nКуһаҕан кэҥэтии ханнык баҕар, киирэргэ наадалах даннайдары, устуон сөп уонна бэйэтэ киириэн сөп.
-\n
-\nБу туоһу сурукка эрэнэр буоллаххына, бэйэҕин кутталга угаҕын.</string>
+    <string name="untrusted_extension_message">Бу кэҥэтии эрэлэ суох туоһу суругунан бэлиэтэммит уонна холбоммотох. \n \nКуһаҕан кэҥэтии ханнык баҕар, киирэргэ наадалах даннайдары, устуон сөп уонна бэйэтэ киириэн сөп. \n \nБу туоһу сурукка эрэнэр буоллаххына, бэйэҕин кутталга угаҕын.</string>
     <string name="untrusted_extension">Эрэлэ суох кэҥэтии</string>
     <string name="ext_uninstall">Сотон кэбис</string>
     <string name="ext_untrusted">Эрэлэ суох</string>
@@ -328,8 +324,7 @@
     <string name="display_mode_chapter">Түһүмэх %1$s</string>
     <string name="snack_add_to_library">Маанганы Бэбэлэтиэкэҕэ киллэрэбит дуу?</string>
     <string name="source_not_installed">Төрүт туруоруллубатах: %1$s</string>
-    <string name="copied_to_clipboard">Хоспоххо куопуйаланна:
-\n %1$s</string>
+    <string name="copied_to_clipboard">Хоспоххо куопуйаланна: \n %1$s</string>
     <string name="ext_nsfw_warning">18+ контент баар буолуон сөп</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Ити официальнайа суох эбэтэр сыыһа бэлиэтэммит 18+ контенны эбиликкж киирэрин тохтоппот.</string>

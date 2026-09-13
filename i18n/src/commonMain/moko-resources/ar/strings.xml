@@ -246,8 +246,7 @@
     <string name="double_tap_anim_speed_fast">سريع</string>
     <string name="manga_added_library">تم الإضافة إلى المكتبة</string>
     <string name="manga_removed_library">تم الإزالة من المكتبة</string>
-    <string name="copied_to_clipboard">نُسخ إلى الحافظة:
-\n%1$s</string>
+    <string name="copied_to_clipboard">نُسخ إلى الحافظة: \n%1$s</string>
     <string name="source_not_installed">المصدر غير مثبت: %1$s</string>
     <string name="repeating">إعادة القراءة</string>
     <string name="track_status">الحالة</string>
@@ -628,8 +627,7 @@
     <string name="pref_backup_summary">النسخ الاحتياطي اليدوي والآلي وحيِّز التخزين</string>
     <string name="pref_security_summary">قفل التطبيق، شاشة آمنة</string>
     <string name="pref_advanced_summary">تفريغ سجلات الأعطال وتحسينات البطارية</string>
-    <string name="fdroid_warning">لا يتم دعم إصدارات F-Droid رسميا.
-\nانقر لمعرفة المزيد.</string>
+    <string name="fdroid_warning">لا يتم دعم إصدارات F-Droid رسميا. \nانقر لمعرفة المزيد.</string>
     <string name="invalid_location">موقع غير صالح: %s</string>
     <string name="pref_invalidate_download_cache_summary">فرض التطبيق على إعادة التحقق من الفصول التي تم تنزيلها</string>
     <string name="track_remove_date_conf_title">إزالة التاريخ؟</string>

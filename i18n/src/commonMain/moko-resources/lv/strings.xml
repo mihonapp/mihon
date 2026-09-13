@@ -165,9 +165,7 @@
     <string name="pref_category_auto_download">Automātiska lejupielāde</string>
     <string name="pref_restore_backup">Atjaunot dublējumu</string>
     <string name="backup_restore_missing_trackers">Sekotāji, kas nav pieteikušies:</string>
-    <string name="backup_restore_content_full">Dublējuma faila dati tiks atjaunoti.
-\n
-\nJums būs jāinstalē visi trūkstošie paplašinājumi un jāpiesakās izsekošanas pakalpojumos, lai tos izmantotu.</string>
+    <string name="backup_restore_content_full">Dublējuma faila dati tiks atjaunoti. \n \nJums būs jāinstalē visi trūkstošie paplašinājumi un jāpiesakās izsekošanas pakalpojumos, lai tos izmantotu.</string>
     <string name="unread">Neizlasītie</string>
     <string name="all">Visi</string>
     <string name="ext_update">Atjauninājums</string>
@@ -217,11 +215,7 @@
     <string name="ext_pending">Gaida</string>
     <string name="ext_uninstall">Atinstalēt</string>
     <string name="untrusted_extension">Neuzticams paplašinājums</string>
-    <string name="untrusted_extension_message">Šis paplašinājums tika parakstīts ar neuzticamu sertifikātu, un tas netika aktivizēts.
-\n
-\nĻaunprātīgs paplašinājums var nolasīt visus saglabātos pieteikšanās akreditācijas datus vai izpildīt patvaļīgu kodu.
-\n
-\nUzticoties šim sertifikātam, jūs piekrītat šiem riskiem.</string>
+    <string name="untrusted_extension_message">Šis paplašinājums tika parakstīts ar neuzticamu sertifikātu, un tas netika aktivizēts. \n \nĻaunprātīgs paplašinājums var nolasīt visus saglabātos pieteikšanās akreditācijas datus vai izpildīt patvaļīgu kodu. \n \nUzticoties šim sertifikātam, jūs piekrītat šiem riskiem.</string>
     <string name="ext_installer_legacy">Mantots</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Instalējiet un startējiet Shizuku, lai izmantotu Shizuku kā paplašinājuma instalētāju.</string>
     <string name="pref_fullscreen">Pilnekrāns</string>
@@ -542,8 +536,7 @@
     <string name="source_not_installed">Avots nav instalēts: %1$s</string>
     <string name="complete_list">Pabeigto saraksts</string>
     <string name="on_hold_list">Aizturēto saraksts</string>
-    <string name="copied_to_clipboard">Kopēts uz starpliktuvi:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kopēts uz starpliktuvi: \n%1$s</string>
     <string name="error_saving_cover">Kļūda saglabājot vāku</string>
     <string name="reading_list">Lasīšanas saraksts</string>
     <string name="notification_chapters_multiple">Nodaļas %1$s</string>
@@ -668,8 +661,7 @@
     <string name="remove_manga">Jūs gatavojaties noņemt \"%s\" no savas bibliotēkas</string>
     <string name="action_not_now">Ne tagad</string>
     <string name="action_search_hint">Meklē…</string>
-    <string name="fdroid_warning">F-Droid versijas netiek oficiāli atbalstītas.
-\nPieskarieties, lai uzzinātu vairāk.</string>
+    <string name="fdroid_warning">F-Droid versijas netiek oficiāli atbalstītas. \nPieskarieties, lai uzzinātu vairāk.</string>
     <string name="download_notifier_cache_renewal">Pārbauda lejupielādes</string>
     <string name="error_user_agent_string_blank">Lietotāja agent virknes lauks nedrīkst būt tukšs</string>
     <string name="information_no_entries_found">Šajā kategorijā nav atrasts neviens ieraksts</string>

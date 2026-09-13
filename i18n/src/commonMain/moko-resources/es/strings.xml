@@ -252,8 +252,7 @@
     <string name="double_tap_anim_speed_0">Sin animación</string>
     <string name="manga_added_library">Añadido a biblioteca</string>
     <string name="manga_removed_library">Quitado de biblioteca</string>
-    <string name="copied_to_clipboard">Copiado en portapapeles:
-\n«%1$s»</string>
+    <string name="copied_to_clipboard">Copiado en portapapeles: \n«%1$s»</string>
     <string name="source_not_installed">Fuente no instalada: %1$s</string>
     <string name="repeating">Releyendo</string>
     <string name="track_status">Estado</string>
@@ -635,8 +634,7 @@
     <string name="download_notifier_cache_renewal">Reindexando descargas</string>
     <string name="action_open_random_manga">Abrir un elemento al azar</string>
     <string name="information_no_entries_found">Parece que esta categoría está vacía</string>
-    <string name="fdroid_warning">No damos soporte oficial a las versiones de F-Droid.
-\nToca para más información.</string>
+    <string name="fdroid_warning">No damos soporte oficial a las versiones de F-Droid. \nToca para más información.</string>
     <string name="action_display_show_continue_reading_button">Mostrar el botón de seguir leyendo</string>
     <string name="track_remove_start_date_conf_text">Al hacer esto %s ya no aparecerá como empezado ese día</string>
     <string name="track_remove_date_conf_title">¿Quieres quitar esta fecha?</string>
