@@ -69,6 +69,7 @@ import mihon.desktop.reader.input.ReaderInputCommand
 import mihon.desktop.reader.input.ReaderInputContext
 import mihon.desktop.reader.input.ReaderInputKey
 import mihon.desktop.reader.input.ReaderInputMapper
+import mihon.desktop.reader.input.ReaderSideButton
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import mihon.reader.model.ReaderErrorCode
@@ -450,6 +451,19 @@ fun ReaderScreen(
         handleClickAction(clickPolicy.actionAt(normalizedX), pointer = true)
     }
 
+    fun handleSideButton(button: ReaderSideButton) {
+        val current = session.state.value
+        inputMapper.mapSideButton(
+            button,
+            ReaderInputContext(
+                mode = current.mode,
+                wheelBehavior = settings.wheelBehavior,
+                pageCount = current.pages.size.coerceAtLeast(1),
+                anchor = current.viewportAnchor,
+            ),
+        ).action?.let(::handleInput)
+    }
+
     LaunchedEffect(hideGeneration) {
         if (hideGeneration > 0) {
             delay(CHROME_HIDE_DELAY_MILLIS)
@@ -576,6 +590,7 @@ fun ReaderScreen(
             modifier = Modifier.fillMaxSize().testTag("reader-gesture-area"),
             onLongPress = { openPageActions() },
             onSecondaryClick = { openPageActions() },
+            onSideButton = ::handleSideButton,
             onPointerMove = {
                 overlayVisibility = reduceReaderOverlayVisibility(
                     overlayVisibility,
