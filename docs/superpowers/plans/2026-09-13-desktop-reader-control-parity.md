@@ -283,7 +283,7 @@ git commit -m "feat(reader): replicate Mihon reader settings"
 - Consumes: completed Tasks 1-4.
 - Produces: verified current distributable and an evidence report for this slice.
 
-- [ ] **Step 1: Run formatting and focused reader regression**
+- [x] **Step 1: Run formatting and focused reader regression**
 
 ```powershell
 $env:JAVA_HOME='C:\Users\18734\.jdks\corretto-23.0.2'
@@ -292,7 +292,7 @@ $env:JAVA_HOME='C:\Users\18734\.jdks\corretto-23.0.2'
 
 Expected: `BUILD SUCCESSFUL`, zero test failures.
 
-- [ ] **Step 2: Check patch integrity**
+- [x] **Step 2: Check patch integrity**
 
 ```powershell
 git diff --check
@@ -301,7 +301,7 @@ git status --short
 
 Expected: no whitespace errors; only intended evidence/plan changes remain.
 
-- [ ] **Step 3: Build the distributable**
+- [x] **Step 3: Build the distributable**
 
 ```powershell
 ./gradlew.bat :desktop-app:createDistributable --no-daemon --max-workers=1 '-Pkotlin.compiler.execution.strategy=in-process' --console=plain
@@ -309,7 +309,7 @@ Expected: no whitespace errors; only intended evidence/plan changes remain.
 
 Expected: `desktop-app/build/compose/binaries/main/app/MihonW/MihonW.exe` exists and the build exits 0.
 
-- [ ] **Step 4: Launch packaged smoke test**
+- [x] **Step 4: Launch packaged smoke test**
 
 ```powershell
 & 'desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe' --smoke-test
@@ -317,7 +317,7 @@ Expected: `desktop-app/build/compose/binaries/main/app/MihonW/MihonW.exe` exists
 
 Expected: exit code 0 with a successful smoke-test response.
 
-- [ ] **Step 5: Record evidence and commit**
+- [x] **Step 5: Record evidence and commit**
 
 Create `docs/superpowers/evidence/2026-09-13-desktop-reader-control-parity.md` with exact commands, test counts, skipped tests, artifact path, executable hash, and any remaining manual UI limitations.
 
