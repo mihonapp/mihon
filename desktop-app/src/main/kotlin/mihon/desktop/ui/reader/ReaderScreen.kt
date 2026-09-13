@@ -434,6 +434,7 @@ fun ReaderScreen(
         when (val command = result.action) {
             null -> Unit
             is ReaderInputCommand.ZoomBy -> applyZoom(command, viewport)
+            is ReaderInputCommand.Core -> dispatchCore(command.action)
             else -> handleInput(command)
         }
     }
