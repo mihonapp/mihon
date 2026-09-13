@@ -3,7 +3,11 @@ package mihon.reader.source
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
 import mihon.reader.memory.BoundedReaderMemoryBudget
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.junit.jupiter.api.Test
@@ -11,6 +15,7 @@ import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Files
 import java.nio.file.Path
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ChapterSourceContractTest {
     @TempDir
     lateinit var temporaryDirectory: Path
@@ -91,6 +96,31 @@ class ChapterSourceContractTest {
         ).use { source ->
             source.pages().map { it.id.entryName }.shouldContainExactly("2.png", "10.png")
         }
+    }
+
+    @Test
+    fun `concurrent seven zip page opens wait for the exclusive decoder allowance`() = runTest {
+        ArchiveFixtures.writeSevenZ(
+            temporaryDirectory.resolve("chapter.7z"),
+            listOf("1.png" to ArchiveFixtures.pageBytes, "2.png" to ArchiveFixtures.pageBytes),
+        )
+        val budget = BoundedReaderMemoryBudget()
+        val source = SevenZipChapterSource(
+            ArchiveFixtures.asset(temporaryDirectory, "chapter.7z"),
+            budget,
+        )
+        val pages = source.pages()
+        val first = source.open(pages[0].id)
+        val second = async { source.open(pages[1].id) }
+
+        runCurrent()
+        second.isCompleted shouldBe false
+        first.close()
+
+        second.await().use { it.input.readBytes().isNotEmpty() shouldBe true }
+        source.close()
+        budget.metrics.reservedBytes shouldBe 0
+        budget.close()
     }
 }
 

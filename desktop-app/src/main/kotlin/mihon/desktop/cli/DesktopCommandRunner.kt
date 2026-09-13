@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -443,7 +444,8 @@ internal class PackagedReaderVerifier(
         awaitState { it.chapterId == chapterId && it.loadState is ReaderLoadState.Ready }
 
     private suspend fun ReaderSession.awaitState(predicate: (mihon.reader.session.ReaderState) -> Boolean) =
-        withTimeout(10_000) { state.first(predicate) }
+        withTimeoutOrNull(10_000) { state.first(predicate) }
+            ?: error("timed out waiting for reader state; last state=${state.value}")
 
     private suspend fun verifyAsset(
         label: String,
