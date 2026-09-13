@@ -94,7 +94,7 @@ open class WebGpuViewer(
         Color.WHITE,
     ).also { cachedOnBackgroundColor = it }
 
-    private val scope = MainScope()
+    protected val scope = MainScope()
 
     // Dedicated thread for decode worker to avoid blocking Dispatchers.Default pool
     private val decodeExecutor = Executors.newSingleThreadExecutor { r ->
@@ -147,6 +147,10 @@ open class WebGpuViewer(
     }
 
     private fun findInCache(key: PageKey): ViewerPage? = pageCache[key]
+
+    protected fun viewerPageFor(imagePage: ImagePage): ViewerPage? = synchronized(lock) {
+        pageCache.values.firstOrNull { it.imagePage === imagePage }
+    }
 
     /** Check if a page is in the cache by identity. O(1) via key lookup. */
     private fun pageInCache(page: ViewerPage): Boolean = pageCache[pageKey(page)] === page
@@ -1428,13 +1432,17 @@ open class WebGpuViewer(
                 // MainScope, not the state's: that one dispatches inside the frame callback.
                 val settled = page
                 this@WebGpuViewer.scope.launch {
-                    activity.hideMenu()
-                    progressPage(settled)?.let { activity.onPageSelected(it.page) }
+                    if (!isContinuous) {
+                        activity.hideMenu()
+                        progressPage(settled)?.let { activity.onPageSelected(it.page) }
+                    }
                     preloadPages(settled)
 
-                    (settled as? ViewerTransitionPage)?.let { transitionPage ->
-                        if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
-                            activity.showMenu()
+                    if (!isContinuous) {
+                        (settled as? ViewerTransitionPage)?.let { transitionPage ->
+                            if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
+                                activity.showMenu()
+                            }
                         }
                     }
                 }
