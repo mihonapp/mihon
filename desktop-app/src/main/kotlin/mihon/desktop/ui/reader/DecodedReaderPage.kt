@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,28 +18,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.delay
-import mihon.desktop.reader.DesktopReaderFactory
+import mihon.desktop.reader.DesktopReaderContent
+import mihon.desktop.reader.DesktopReaderPageFrame
 import mihon.desktop.reader.ReaderColorFilter
 import mihon.reader.model.PageDescriptor
+import mihon.reader.model.PageId
 
 val LocalReaderColorFilter = staticCompositionLocalOf { ReaderColorFilter.NONE }
 val LocalReaderCropBorders = staticCompositionLocalOf { false }
+val LocalReaderForeground = staticCompositionLocalOf { true }
+val LocalReaderSelectedPage = staticCompositionLocalOf<PageId?> { null }
 
 /** Each composed page owns its display lease; leaving a spread/list releases that lease. */
 @Composable
 fun DecodedReaderPage(
-    factory: DesktopReaderFactory,
+    content: DesktopReaderContent,
     page: PageDescriptor,
-    foreground: Boolean,
     modifier: Modifier,
     colorFilter: ReaderColorFilter = LocalReaderColorFilter.current,
     cropBorders: Boolean = LocalReaderCropBorders.current,
 ) {
     val pageSizeSink = LocalReaderPageSizeSink.current
     val imageStore = LocalReaderPageImageStore.current
-    var frame by remember(page.id, cropBorders) { mutableStateOf<DesktopReaderFactory.PageFrame?>(null) }
+    val readerForeground = LocalReaderForeground.current
+    val selectedPage = LocalReaderSelectedPage.current
+    val renderContext = LocalReaderPageRenderContext.current
+    val shouldAnimate = readerForeground && selectedPage == page.id
+    val selectedAnimationFrame by content.selectedAnimationFrame.collectAsState()
+    var frame by remember(page.id, cropBorders) { mutableStateOf<DesktopReaderPageFrame?>(null) }
     var failure by remember(page.id) { mutableStateOf<String?>(null) }
 
     LaunchedEffect(frame, imageStore) {
@@ -54,43 +61,69 @@ fun DecodedReaderPage(
     }
 
     // Promote probed intrinsic dimensions into reader layout even before the full frame decodes.
-    LaunchedEffect(factory, page.id, pageSizeSink) {
+    LaunchedEffect(content, page.id, pageSizeSink) {
         val sink = pageSizeSink ?: return@LaunchedEffect
-        factory.pageSizes.sizes.collect { sizes ->
+        content.pageSizes.sizes.collect { sizes ->
             sizes[page.id]?.let { size -> sink.onPageSize(page.id, size) }
         }
     }
 
-    LaunchedEffect(factory, page.id, foreground, cropBorders) {
-        var owned: DesktopReaderFactory.PageFrame? = null
+    LaunchedEffect(content, page.id, cropBorders) {
+        var owned: DesktopReaderPageFrame? = null
         try {
-            var index = 0
-            while (true) {
-                val replacement = factory.loadFrame(page.id, index, cropBorders)
-                pageSizeSink?.onPageSize(
-                    page.id,
-                    PageSize(replacement.metadata.width, replacement.metadata.height),
-                )
-                val previous = owned
-                owned = replacement
-                frame = replacement
-                previous?.tile?.close()
-                if (!foreground || replacement.metadata.frameCount == 1) awaitCancellation()
-                delay(replacement.metadata.frameDurationsMillis[index].coerceAtLeast(20L))
-                index = (index + 1) % replacement.metadata.frameCount
-            }
-        } catch (cancelled: CancellationException) {
-            throw cancelled
+            val replacement = content.loadFrame(page.id, frameIndex = 0, cropBorders)
+            pageSizeSink?.onPageSize(
+                page.id,
+                PageSize(replacement.metadata.width, replacement.metadata.height),
+            )
+            owned = replacement
+            frame = replacement
+            kotlinx.coroutines.awaitCancellation()
         } catch (error: Exception) {
+            if (error is CancellationException) throw error
             failure = error.message ?: "Unable to decode page"
         } finally {
             frame = null
             owned?.tile?.close()
         }
     }
+
+    val metadata = frame?.metadata
+    LaunchedEffect(content, page.id, shouldAnimate, metadata) {
+        if (shouldAnimate && metadata?.isAnimated == true) {
+            content.startAnimation(page.id, metadata)
+            try {
+                kotlinx.coroutines.awaitCancellation()
+            } finally {
+                content.stopAnimation(page.id)
+            }
+        } else {
+            content.stopAnimation(page.id)
+        }
+    }
     Box(modifier, contentAlignment = Alignment.Center) {
         val current = frame
+        val animatedFrame = selectedAnimationFrame?.takeIf { it.pageId == page.id && shouldAnimate }
         when {
+            animatedFrame != null -> AnimatedPage(
+                selectedFrame = animatedFrame,
+                loadFrame = content::loadAnimatedFrame,
+                bridge = content.bridge,
+                contentVisible = true,
+                foreground = readerForeground,
+                visibilityReporter = content,
+                modifier = Modifier.matchParentSize(),
+            )
+            current != null && renderContext != null &&
+                current.tile.key.sampleSize > renderContext.sampleSize &&
+                !current.metadata.isAnimated && !cropBorders -> TiledReaderPage(
+                content = content,
+                pageId = page.id,
+                fallback = current,
+                context = renderContext,
+                colorFilter = colorFilter.toComposeColorFilter(),
+                modifier = Modifier.matchParentSize().testTag("reader-decoded-${page.id.entryName}"),
+            )
             current != null -> Image(
                 bitmap = current.tile.image,
                 contentDescription = "Decoded page ${page.id.entryName}",

@@ -1,6 +1,7 @@
 package mihon.reader.source
 
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Mutex
 import mihon.reader.memory.MemoryKind
 import mihon.reader.memory.MemoryLease
 import mihon.reader.memory.ReaderMemoryBudget
@@ -11,6 +12,7 @@ import org.apache.commons.compress.PasswordRequiredException
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod
+import java.util.concurrent.atomic.AtomicBoolean
 
 class SevenZipChapterSource(
     asset: ReaderChapterAsset,
@@ -19,6 +21,7 @@ class SevenZipChapterSource(
     expansionBudget: ChapterExpansionBudget = ChapterExpansionBudget(),
 ) : ManagedChapterSource(asset, expansionBudget) {
     private val decoderAllowance = ReaderLimits.SEVEN_Z_MEMORY_KIB * 1024L
+    private val inputMutex = Mutex()
     private val entries: List<SourceEntry> = enumerate().sortedNaturally()
 
     override suspend fun pages(): List<PageDescriptor> {
@@ -28,15 +31,16 @@ class SevenZipChapterSource(
 
     override suspend fun open(pageId: PageId): BoundedPageInput {
         checkOpenAndCancellation()
-        val wanted = requireEntry(pageId, entries)
-        val lease = reserveDecoderMemory()
-        val archive = try {
-            openArchive()
-        } catch (error: Throwable) {
-            lease.close()
-            throw error
-        }
+        inputMutex.lock()
+        val ownsInputSlot = AtomicBoolean(true)
+        val releaseInputSlot = { if (ownsInputSlot.compareAndSet(true, false)) inputMutex.unlock() }
+        var lease: MemoryLease? = null
+        var archive: SevenZFile? = null
         try {
+            checkOpenAndCancellation()
+            val wanted = requireEntry(pageId, entries)
+            lease = reserveDecoderMemory()
+            archive = openArchive()
             var entry: SevenZArchiveEntry? = null
             for (candidate in archive.entries) {
                 scanCheckpoint()
@@ -53,13 +57,15 @@ class SevenZipChapterSource(
                     archive.close()
                 } finally {
                     lease.close()
+                    releaseInputSlot()
                 }
             }
         } catch (error: Throwable) {
             try {
-                archive.close()
+                archive?.close()
             } finally {
-                lease.close()
+                lease?.close()
+                releaseInputSlot()
             }
             throw classifySevenZFailure(error)
         }

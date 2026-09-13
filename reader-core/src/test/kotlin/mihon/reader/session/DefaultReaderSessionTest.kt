@@ -7,8 +7,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import mihon.reader.cache.CacheMetrics
+import mihon.reader.model.PageId
 import mihon.reader.model.ReaderPan
 import mihon.reader.model.ReaderViewport
+import mihon.reader.model.ReadingMode
+import mihon.reader.prefetch.NavigationDirection
 import mihon.reader.source.BoundedPageInput
 import mihon.reader.source.ChapterSource
 import mihon.reader.source.ChapterSourceFactory
@@ -90,13 +94,16 @@ class DefaultReaderSessionTest {
 
         coordinator.start(page, AnimationProbe(frameCount = 2, frameDurationsMillis = listOf(10, 20)))
         runCurrent()
+        coordinator.selectedFrame.value shouldBe mihon.reader.model.FrameId(page, 0)
         advanceTimeBy(10)
         runCurrent()
+        coordinator.selectedFrame.value shouldBe mihon.reader.model.FrameId(page, 1)
         coordinator.setContentVisible(false)
         advanceTimeBy(100)
         runCurrent()
 
         frames.shouldBe(listOf(mihon.reader.model.FrameId(page, 0), mihon.reader.model.FrameId(page, 1)))
+        coordinator.selectedFrame.value shouldBe null
     }
 
     @Test
@@ -165,6 +172,65 @@ class DefaultReaderSessionTest {
         sourceCreations shouldBe 2
     }
 
+    @Test
+    fun `session routes open visibility direction warmup metrics retry and close through content pipeline`() = runTest {
+        val current = asset(chapterId = 7, lastPageRead = 0)
+        val next = asset(chapterId = 8, lastPageRead = 0)
+        val source = FakeSource(current, pages(7, 8))
+        val pipeline = RecordingContentPipeline()
+        val chapterCatalog = object : ReaderChapterCatalog {
+            override fun chapterAsset(chapterId: Long) = when (chapterId) {
+                7L -> current
+                8L -> next
+                else -> null
+            }
+
+            override fun adjacentReadableChapter(
+                chapterId: Long,
+                direction: mihon.reader.source.ChapterDirection,
+            ) = next.takeIf { chapterId == 7L && direction == mihon.reader.source.ChapterDirection.NEXT }
+        }
+        val session = DefaultReaderSession(
+            scope = backgroundScope,
+            catalog = chapterCatalog,
+            sourceFactory = ChapterSourceFactory { source },
+            progressSink = ReaderProgressSink { ProgressWriteResult.APPLIED },
+            generationSource = AtomicReaderGenerationSource(),
+            contentPipeline = pipeline,
+        )
+
+        session.open(7)
+        runCurrent()
+        session.dispatch(ReaderAction.SelectPage(4))
+        runCurrent()
+        session.dispatch(ReaderAction.SetVisiblePages(listOf(source.descriptors[4].id, source.descriptors[5].id)))
+        runCurrent()
+        session.dispatch(ReaderAction.SelectPage(3))
+        runCurrent()
+        session.retry(source.descriptors[3].id)
+        runCurrent()
+        session.closeAndFlush()
+
+        pipeline.opened shouldBe listOf(7L)
+        pipeline.positions.first() shouldBe ReaderContentPosition(
+            selectedIndex = 0,
+            visiblePages = listOf(source.descriptors[0].id),
+            mode = ReadingMode.SINGLE_LTR,
+            direction = NavigationDirection.FORWARD,
+            foreground = true,
+            contentVisible = true,
+        )
+        pipeline.positions.any {
+            it.selectedIndex == 4 && it.visiblePages == listOf(source.descriptors[4].id, source.descriptors[5].id)
+        } shouldBe true
+        pipeline.positions.last { it.selectedIndex == 3 }.direction shouldBe NavigationDirection.BACKWARD
+        pipeline.warmups.any { it?.asset?.chapterId == 8L } shouldBe true
+        pipeline.retried shouldBe listOf(source.descriptors[3].id)
+        session.state.value.cacheMetrics shouldBe pipeline.cacheMetrics
+        pipeline.chapterCloses shouldBe 1
+        pipeline.closed shouldBe 1
+    }
+
     private fun pages(chapterId: Long, count: Int) =
         (0 until count).map { index ->
             mihon.reader.model.PageDescriptor(
@@ -207,5 +273,45 @@ class DefaultReaderSessionTest {
             BoundedPageInput(ByteArrayInputStream(byteArrayOf()), 0)
 
         override fun close() = Unit
+    }
+
+    private class RecordingContentPipeline : ReaderContentPipeline {
+        val opened = mutableListOf<Long>()
+        val positions = mutableListOf<ReaderContentPosition>()
+        val warmups = mutableListOf<AdjacentChapterWarmup?>()
+        val retried = mutableListOf<PageId>()
+        val cacheMetrics = CacheMetrics(32, 16, 1, 2, 3, 4, 0, 32)
+        var chapterCloses = 0
+        var closed = 0
+
+        override suspend fun open(source: ChapterSource): List<mihon.reader.model.PageDescriptor> {
+            opened += source.asset.chapterId
+            return source.pages()
+        }
+
+        override fun updatePosition(position: ReaderContentPosition) {
+            positions += position
+        }
+
+        override suspend fun loadVisible(pageId: PageId): AutoCloseable? = null
+
+        override suspend fun retry(pageId: PageId): AutoCloseable? {
+            retried += pageId
+            return null
+        }
+
+        override fun metrics() = cacheMetrics
+
+        override fun warmAdjacent(request: AdjacentChapterWarmup?) {
+            warmups += request
+        }
+
+        override fun closeChapter() {
+            chapterCloses++
+        }
+
+        override fun close() {
+            closed++
+        }
     }
 }

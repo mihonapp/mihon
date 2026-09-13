@@ -323,12 +323,20 @@ fun ExtensionDetailsScreen(
                     onExtIncognitoChange = onToggleIncognito,
                     onTrustClick = trustAction,
                     onRevokeClick = revokeAction,
-                    showTrustButton = onTrust != null || onTrustExtension != null || onTrustPackage != null || effectiveTrustStatus != ExtensionTrustStatus.TRUSTED,
-                    showRevokeButton = onRevoke != null || onRevokeExtension != null || onRevokePackage != null || effectiveTrustStatus == ExtensionTrustStatus.TRUSTED,
+                    showTrustButton =
+                    onTrust != null || onTrustExtension != null || onTrustPackage != null ||
+                        effectiveTrustStatus != ExtensionTrustStatus.TRUSTED,
+                    showRevokeButton =
+                    onRevoke != null || onRevokeExtension != null || onRevokePackage != null ||
+                        effectiveTrustStatus == ExtensionTrustStatus.TRUSTED,
                     onCopyDebugInfo = {
                         val extDebugInfo = buildString {
-                            appendLine("Extension name: ${extension.manifest.name} (lang: ${extension.manifest.lang}; package: ${extension.pkg})")
-                            appendLine("Extension version: ${extension.manifest.version} (lib: ${extension.manifest.libVersion}; version code: ${extension.manifest.versionCode})")
+                            appendLine(
+                                "Extension name: ${extension.manifest.name} (lang: ${extension.manifest.lang}; package: ${extension.pkg})",
+                            )
+                            appendLine(
+                                "Extension version: ${extension.manifest.version} (lib: ${extension.manifest.libVersion}; version code: ${extension.manifest.versionCode})",
+                            )
                             appendLine("NSFW: ${extension.manifest.isNsfw}")
                             appendLine("Enabled: ${extension.isEnabled}")
                             appendLine("Trust status: ${effectiveTrustStatus.label}")
@@ -793,7 +801,11 @@ private fun SourceSwitchPreference(
                 Icon(
                     imageVector = Icons.Rounded.VisibilityOff,
                     contentDescription = strings.extensionIncognitoMode,
-                    tint = if (source.isIncognito) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                    tint = if (source.isIncognito) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.outline
+                    },
                 )
             }
         }

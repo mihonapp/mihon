@@ -3,12 +3,12 @@ package mihon.reader.session
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import mihon.reader.model.PageId
@@ -38,6 +38,7 @@ class DefaultReaderSession(
     private val visibleContent: suspend (PageId) -> AutoCloseable? = { null },
     private val animationCoordinator: AnimationCoordinator? = null,
     private val invalidateContent: suspend (PageId) -> Unit = {},
+    private val contentPipeline: ReaderContentPipeline = CallbackReaderContentPipeline(visibleContent),
 ) : ReaderSession {
     private val sessionLock = Mutex()
     private val _state = MutableStateFlow(
@@ -58,6 +59,8 @@ class DefaultReaderSession(
     private var sequence = 0L
     private var pendingDurationMillis = 0L
     private var lastClockMillis: Long? = null
+    private var navigationDirection = NavigationDirection.FORWARD
+    private var contentPipelineClosed = false
     private var closed = false
 
     override suspend fun open(chapterId: Long) {
@@ -77,7 +80,16 @@ class DefaultReaderSession(
                     ReaderAction.Previous -> moveLocked(NavigationDirection.BACKWARD)
                     else -> {
                         accrueDurationLocked()
+                        val previousIndex = _state.value.selectedIndex
                         _state.update { it.reduce(action) }
+                        val updatedIndex = _state.value.selectedIndex
+                        if (updatedIndex != previousIndex) {
+                            navigationDirection = if (updatedIndex > previousIndex) {
+                                NavigationDirection.FORWARD
+                            } else {
+                                NavigationDirection.BACKWARD
+                            }
+                        }
                         when (action) {
                             is ReaderAction.SetForeground -> animationCoordinator?.setForeground(action.foreground)
                             is ReaderAction.SetContentVisible -> animationCoordinator?.setContentVisible(action.visible)
@@ -85,6 +97,16 @@ class DefaultReaderSession(
                             is ReaderAction.SetViewportAnchor,
                             -> animationCoordinator?.cancelForPageOrChapterChange()
                             else -> Unit
+                        }
+                        if (
+                            action is ReaderAction.SelectPage ||
+                            action is ReaderAction.SetViewportAnchor ||
+                            action is ReaderAction.SetVisiblePages ||
+                            action is ReaderAction.ChangeMode ||
+                            action is ReaderAction.SetForeground ||
+                            action is ReaderAction.SetContentVisible
+                        ) {
+                            updateContentPositionLocked()
                         }
                         if (action is ReaderAction.SelectPage || action is ReaderAction.SetViewportAnchor) {
                             requestVisibleLocked()
@@ -118,10 +140,7 @@ class DefaultReaderSession(
                 }
                 return@withLock
             }
-            visibleJob?.cancel()
-            visibleLease?.close()
-            visibleLease = null
-            requestVisibleLocked(pageId)
+            requestPipelineRetryLocked(pageId)
         }
     }
 
@@ -139,6 +158,7 @@ class DefaultReaderSession(
             if (_state.value.loadState is ReaderLoadState.Ready) submitProgressLocked()
             progress.closeAndFlush()
             closeChapterLocked()
+            closeContentPipelineLocked()
             closed = true
             _state.value =
                 _state.value.copy(
@@ -156,6 +176,7 @@ class DefaultReaderSession(
                 visibleJob?.cancel()
                 progress.cancelWithoutFlush()
                 closeChapterLocked()
+                closeContentPipelineLocked()
                 closed = true
                 _state.value =
                     _state.value.copy(
@@ -188,13 +209,15 @@ class DefaultReaderSession(
             return
         }
         val pages = try {
-            opened.pages()
+            contentPipeline.open(opened)
         } catch (failure: Throwable) {
+            contentPipeline.closeChapter()
             opened.close()
             failLocked(ReaderErrorCode.SOURCE_UNAVAILABLE, failure)
             return
         }
         if (pages.isEmpty()) {
+            contentPipeline.closeChapter()
             opened.close()
             failLocked(ReaderErrorCode.EMPTY_CHAPTER, ReaderFailure.EmptyChapter())
             return
@@ -222,6 +245,8 @@ class DefaultReaderSession(
             foreground = _state.value.foreground,
             contentVisible = _state.value.contentVisible,
         )
+        navigationDirection = NavigationDirection.FORWARD
+        updateContentPositionLocked()
         resetClockLocked()
         requestVisibleLocked()
     }
@@ -232,7 +257,9 @@ class DefaultReaderSession(
         accrueDurationLocked()
         val nextIndex = nextLogicalIndex(current, direction)
         if (nextIndex in current.pages.indices) {
+            navigationDirection = direction
             _state.value = current.reduce(ReaderAction.SetViewportAnchor(ReaderPosition(nextIndex)))
+            updateContentPositionLocked()
             requestVisibleLocked()
             submitProgressLocked()
             resetClockLocked()
@@ -254,11 +281,16 @@ class DefaultReaderSession(
         _state.update { it.copy(visibleTileLeases = emptyList()) }
         visibleJob = scope.launch {
             try {
-                val lease = visibleContent(pageId)
+                val lease = contentPipeline.loadVisible(pageId)
                 sessionLock.withLock {
                     if (!closed && _state.value.visiblePages.singleOrNull() == pageId) {
                         visibleLease = lease
-                        _state.update { it.copy(visibleTileLeases = listOfNotNull(lease)) }
+                        _state.update {
+                            it.copy(
+                                visibleTileLeases = listOfNotNull(lease),
+                                cacheMetrics = contentPipeline.metrics(),
+                            )
+                        }
                     } else {
                         lease?.close()
                     }
@@ -340,9 +372,78 @@ class DefaultReaderSession(
         visibleJob = null
         visibleLease?.close()
         visibleLease = null
+        if (source != null) contentPipeline.closeChapter()
         source?.close()
         source = null
+        contentPipeline.warmAdjacent(null)
         lastClockMillis = null
+    }
+
+    private fun updateContentPositionLocked() {
+        val state = _state.value
+        if (state.loadState !is ReaderLoadState.Ready || state.pages.isEmpty()) return
+        contentPipeline.updatePosition(
+            ReaderContentPosition(
+                selectedIndex = state.selectedIndex,
+                visiblePages = state.visiblePages,
+                mode = state.mode,
+                direction = navigationDirection,
+                foreground = state.foreground,
+                contentVisible = state.contentVisible,
+            ),
+        )
+        val chapterId = requireNotNull(state.chapterId)
+        val remainingPages = state.pages.size - state.selectedIndex
+        val warmup = if (navigationDirection == NavigationDirection.FORWARD &&
+            remainingPages <= NEXT_CHAPTER_WARMUP_PAGES
+        ) {
+            catalog.adjacentReadableChapter(chapterId, ChapterDirection.NEXT)?.let { adjacent ->
+                AdjacentChapterWarmup(
+                    asset = adjacent,
+                    preloadFirstUnit = state.selectedIndex == state.pages.lastIndex,
+                )
+            }
+        } else {
+            null
+        }
+        contentPipeline.warmAdjacent(warmup)
+        _state.update { it.copy(cacheMetrics = contentPipeline.metrics()) }
+    }
+
+    private fun requestPipelineRetryLocked(pageId: PageId) {
+        visibleJob?.cancel()
+        visibleLease?.close()
+        visibleLease = null
+        _state.update { it.copy(visibleTileLeases = emptyList()) }
+        visibleJob = scope.launch {
+            try {
+                val lease = contentPipeline.retry(pageId)
+                sessionLock.withLock {
+                    if (!closed && _state.value.visiblePages.singleOrNull() == pageId) {
+                        visibleLease = lease
+                        _state.update {
+                            it.copy(
+                                visibleTileLeases = listOfNotNull(lease),
+                                cacheMetrics = contentPipeline.metrics(),
+                            )
+                        }
+                    } else {
+                        lease?.close()
+                    }
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (failure: Throwable) {
+                sessionLock.withLock { failLocked(ReaderErrorCode.PAGE_DECODE_FAILED, failure) }
+            }
+        }
+    }
+
+    private fun closeContentPipelineLocked() {
+        if (contentPipelineClosed) return
+        contentPipelineClosed = true
+        animationCoordinator?.close()
+        contentPipeline.close()
     }
 
     private object ReaderLayoutPolicy {
@@ -353,5 +454,6 @@ class DefaultReaderSession(
     companion object {
         private const val NANOS_PER_MILLI = 1_000_000L
         private const val MAX_DURATION_DELTA_MILLIS = 60_000L
+        private const val NEXT_CHAPTER_WARMUP_PAGES = 5
     }
 }

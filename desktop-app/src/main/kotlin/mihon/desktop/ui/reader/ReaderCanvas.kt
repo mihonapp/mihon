@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -106,6 +107,7 @@ fun ReaderCanvas(
                 PagedReader(
                     state = state,
                     viewportWidth = maxWidth,
+                    onAction = onAction,
                     pageSizes = pageSizes,
                     pageContent = pageContent,
                     modifier = Modifier.fillMaxSize().testTag("reader-paged"),
@@ -126,6 +128,7 @@ internal fun ReaderPageFrame(
     pageContent: ReaderPageContent,
     modifier: Modifier = Modifier,
     intrinsicSize: PageSize? = null,
+    viewportTiling: Boolean = true,
 ) {
     val effectivePage = page.withIntrinsicSize(intrinsicSize)
     BoxWithConstraints(
@@ -154,16 +157,24 @@ internal fun ReaderPageFrame(
                 },
             contentAlignment = Alignment.Center,
         ) {
-            pageContent(
-                effectivePage,
-                pageIndex,
-                Modifier
-                    .requiredSize(width, height)
-                    .graphicsLayer(
-                        translationX = transform.pan.x,
-                        translationY = transform.pan.y,
-                    ),
-            )
+            CompositionLocalProvider(
+                LocalReaderPageRenderContext provides if (viewportTiling) {
+                    calculatePageRenderContext(effectivePage, viewport, transform)
+                } else {
+                    null
+                },
+            ) {
+                pageContent(
+                    effectivePage,
+                    pageIndex,
+                    Modifier
+                        .requiredSize(width, height)
+                        .graphicsLayer(
+                            translationX = transform.pan.x,
+                            translationY = transform.pan.y,
+                        ),
+                )
+            }
         }
     }
 }

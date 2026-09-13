@@ -750,6 +750,7 @@ internal fun ReaderShortcutsDialog(onDismiss: () -> Unit) {
                 ShortcutItemRow("← / → or A / D", "Previous / Next page")
                 ShortcutItemRow("PageUp / PageDown", "Scroll / Flip page")
                 ShortcutItemRow("Home / End", "First / Last page")
+                ShortcutItemRow("Mouse Back / Forward", "Previous / Next page")
 
                 ShortcutSectionHeader("Zoom & Window")
                 ShortcutItemRow("+ / −", "Zoom in / Zoom out")

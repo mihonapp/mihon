@@ -888,14 +888,16 @@ object EnglishStrings : DesktopStrings {
     override val extensionLanguage = "Language"
     override val extensionAgeRating = "Age rating"
     override val extensionNsfwShort = "18+"
-    override val extensionNsfwWarning = "This extension contains adult (18+) content.\nProceed only if you consent to view sensitive material."
+    override val extensionNsfwWarning =
+        "This extension contains adult (18+) content.\nProceed only if you consent to view sensitive material."
     override val extensionUninstall = "Uninstall"
     override val extensionUpdate = "Update"
     override val extensionTrust = "Trust"
     override val extensionRevoke = "Revoke"
     override val extensionUntrusted = "Untrusted"
     override val extensionObsolete = "Obsolete"
-    override val extensionObsoleteWarning = "This extension was deprecated and will not receive any further updates. Consider uninstalling it."
+    override val extensionObsoleteWarning =
+        "This extension was deprecated and will not receive any further updates. Consider uninstalling it."
     override val extensionIncognitoMode = "Incognito mode"
     override val extensionIncognitoSummary = "Reading history will not be recorded for manga from this extension."
     override val extensionDebugInfoCopied = "Extension debug information copied to clipboard"

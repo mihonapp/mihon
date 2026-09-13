@@ -54,7 +54,12 @@ class PageLoadCoordinator(
     private val decoder: PageDecoder,
     private val cache: WeightedTileCache,
     scope: CoroutineScope,
+    private val maxFullPagePixels: Long = Long.MAX_VALUE,
 ) : Closeable {
+    init {
+        require(maxFullPagePixels > 0L) { "maxFullPagePixels must be positive" }
+    }
+
     private val job = SupervisorJob(scope.coroutineContext[Job])
     private val scope = CoroutineScope(scope.coroutineContext + job)
 
@@ -75,6 +80,9 @@ class PageLoadCoordinator(
 
     val cacheMetrics: CacheMetrics
         get() = cache.metrics
+
+    /** Returns metadata already established by a completed page load. */
+    fun loadedMetadata(pageId: PageId): ImageMetadata? = synchronized(lock) { metadata[pageId] }
 
     /**
      * Switches the coordinator to [source]: cancels every in-flight flight, releases visible
@@ -176,6 +184,28 @@ class PageLoadCoordinator(
         toLaunch.forEach { (frame, flight) -> launchPrefetch(frame, flight) }
     }
 
+    /** Cancels background-only work while leaving visible flights and their pins intact. */
+    fun cancelPrefetch() {
+        val toCancel = mutableListOf<Flight>()
+        synchronized(lock) {
+            checkOpenLocked()
+            prefetchSet = emptySet()
+            val iterator = flights.entries.iterator()
+            while (iterator.hasNext()) {
+                val (_, flight) = iterator.next()
+                if (flight.prefetchWanted) {
+                    flight.prefetchWanted = false
+                    if (flight.visibleWaiters == 0) {
+                        flight.cancelled = true
+                        iterator.remove()
+                        toCancel += flight
+                    }
+                }
+            }
+        }
+        toCancel.forEach { it.cancel("prefetch paused") }
+    }
+
     /** Loads the full [frameIndex] frame of [pageId] with visible priority, pinning the tile. */
     suspend fun loadVisible(pageId: PageId, frameIndex: Int = 0): WeightedTileCache.LoadedTile {
         require(frameIndex >= 0) { "frameIndex must not be negative" }
@@ -195,6 +225,44 @@ class PageLoadCoordinator(
         require(frameIndex >= 0) { "frameIndex must not be negative" }
         require(sampleSize > 0) { "sampleSize must be positive" }
         return runVisibleFlight(FlightKey.Region(pageId, bounds, frameIndex, sampleSize))
+    }
+
+    /**
+     * Keeps only the region tiles required by the latest viewport for [pageId]. The downsampled
+     * full-page tile remains pinned as a seamless fallback while replacement regions decode.
+     */
+    fun retainVisibleRegions(pageId: PageId, keys: Set<TileKey>) {
+        val pinsToClose = mutableListOf<WeightedTileCache.TilePin>()
+        val toCancel = mutableListOf<Flight>()
+        synchronized(lock) {
+            checkOpenLocked()
+            require(pageId in chapterPageIds) { "page is not part of the open chapter" }
+            require(keys.all { it.pageId == pageId }) { "region keys must belong to pageId" }
+            val meta = metadata[pageId] ?: return@synchronized
+            val fullPageKey = fullPageTileKey(pageId, frameIndex = 0, meta)
+
+            val stalePins = visiblePins.keys.filter { key ->
+                key.pageId == pageId && key != fullPageKey && key !in keys
+            }
+            stalePins.forEach { pinsToClose += visiblePins.remove(it)!! }
+
+            val iterator = flights.entries.iterator()
+            while (iterator.hasNext()) {
+                val (flightKey, flight) = iterator.next()
+                if (flightKey is FlightKey.Region && flightKey.pageId == pageId) {
+                    val sampleSize = if (meta.isAnimated) 1 else flightKey.sampleSize
+                    val frameId = if (meta.isAnimated) FrameId(pageId, flightKey.frameIndex) else null
+                    val tileKey = TileKey(pageId, frameId, flightKey.bounds, sampleSize)
+                    if (tileKey !in keys) {
+                        flight.cancelled = true
+                        iterator.remove()
+                        toCancel += flight
+                    }
+                }
+            }
+        }
+        pinsToClose.forEach { it.close() }
+        toCancel.forEach { it.cancel("region left the visible viewport") }
     }
 
     /**
@@ -317,13 +385,24 @@ class PageLoadCoordinator(
     ): WeightedTileCache.LoadedTile {
         val pageId = key.pageId
         require(meta.isAnimated || key.frameIndex == 0) { "static pages expose only frame zero" }
-        val frameId = if (meta.isAnimated) FrameId(pageId, key.frameIndex) else null
-        // Full-page tiles are inherently full resolution, i.e. sampleSize = 1.
-        val tileKey = TileKey(pageId, frameId, IntRect(0, 0, meta.width, meta.height), sampleSize = 1)
+        val tileKey = fullPageTileKey(pageId, key.frameIndex, meta)
+        val sampleSize = tileKey.sampleSize
         synchronized(lock) { if (flight.visible) pinVisibleLocked(tileKey) }
         return cache.getOrLoad(tileKey, insertGuard = { !flight.cancelled }) {
             flight.checkpoint()
-            val tile = decoder.decodeFull(source.open(pageId), meta, FrameId(pageId, key.frameIndex))
+            val tile = if (sampleSize == 1) {
+                decoder.decodeFull(source.open(pageId), meta, FrameId(pageId, key.frameIndex))
+            } else {
+                decoder.decodeRegion(
+                    source.open(pageId),
+                    meta,
+                    TileRequest(
+                        key = tileKey,
+                        targetWidth = (meta.width + sampleSize - 1) / sampleSize,
+                        targetHeight = (meta.height + sampleSize - 1) / sampleSize,
+                    ),
+                )
+            }
             try {
                 flight.checkpoint()
             } catch (cancel: CancellationException) {
@@ -363,6 +442,24 @@ class PageLoadCoordinator(
             }
             tile
         }
+    }
+
+    private fun fullPageTileKey(pageId: PageId, frameIndex: Int, meta: ImageMetadata): TileKey {
+        var sampleSize = 1
+        if (!meta.isAnimated) {
+            while (
+                ((meta.width.toLong() + sampleSize - 1) / sampleSize) *
+                ((meta.height.toLong() + sampleSize - 1) / sampleSize) > maxFullPagePixels
+            ) {
+                sampleSize = Math.multiplyExact(sampleSize, 2)
+            }
+        }
+        return TileKey(
+            pageId = pageId,
+            frameId = if (meta.isAnimated) FrameId(pageId, frameIndex) else null,
+            bounds = IntRect(0, 0, meta.width, meta.height),
+            sampleSize = sampleSize,
+        )
     }
 
     private suspend fun metadataFor(source: ChapterSource, flight: Flight, pageId: PageId): ImageMetadata {

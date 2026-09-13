@@ -3,6 +3,9 @@ package mihon.reader.session
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mihon.reader.model.FrameId
 import mihon.reader.model.PageId
@@ -32,6 +35,9 @@ class AnimationCoordinator(
     private var lease: AutoCloseable? = null
     private var job: Job? = null
     private var closed = false
+    private val _selectedFrame = MutableStateFlow<FrameId?>(null)
+
+    val selectedFrame: StateFlow<FrameId?> = _selectedFrame.asStateFlow()
 
     fun start(pageId: PageId, probe: AnimationProbe) {
         check(!closed) { "animation coordinator is closed" }
@@ -70,8 +76,7 @@ class AnimationCoordinator(
 
     private fun updateActivity() {
         if (!foreground || !visible) {
-            job?.cancel()
-            job = null
+            cancelJobAndLease()
         } else {
             launchIfActive()
         }
@@ -84,11 +89,12 @@ class AnimationCoordinator(
                 val pageId = page ?: return@launch
                 val animation = probe ?: return@launch
                 val frame = FrameId(pageId, index)
+                _selectedFrame.value = frame
                 val replacement = loadFrame(frame)
                 val previous = lease
                 lease = replacement
                 previous?.close()
-                wait(animation.frameDurationsMillis[index])
+                wait(animation.frameDurationsMillis[index].coerceAtLeast(MIN_FRAME_DELAY_MILLIS))
                 index = (index + 1) % animation.frameCount
             }
         }
@@ -99,5 +105,10 @@ class AnimationCoordinator(
         job = null
         lease?.close()
         lease = null
+        _selectedFrame.value = null
+    }
+
+    private companion object {
+        const val MIN_FRAME_DELAY_MILLIS = 1L
     }
 }

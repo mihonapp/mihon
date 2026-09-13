@@ -117,7 +117,13 @@ fun SourcePreferencesScreen(
     val remoteSupported = remoteSnapshot?.supported == true
     val effectiveDefinitions = if (remoteSupported) remoteSnapshot?.definitions.orEmpty() else definitions
     val showUnsupported = remoteSnapshot != null && !remoteSupported && definitions.isEmpty()
-    val globalSetter: (suspend (Long, String, String) -> Unit)? = remember(activeManager, remoteSupported, explicitProvider) {
+    val globalSetter: (
+        suspend (
+            Long,
+            String,
+            String,
+        ) -> Unit
+    )? = remember(activeManager, remoteSupported, explicitProvider) {
         if (explicitProvider == null && remoteSupported) {
             activeManager?.let { manager ->
                 { sourceId: Long, key: String, value: String -> manager.setSourcePreference(sourceId, key, value) }
@@ -194,7 +200,6 @@ fun SourcePreferencesScreen(
                 .padding(horizontal = 16.dp),
             contentPadding = contentPadding,
         ) {
-
             when {
                 isLoading && remoteSnapshot == null -> {
                     item {

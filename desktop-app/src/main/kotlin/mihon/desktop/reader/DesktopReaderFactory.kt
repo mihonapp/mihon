@@ -25,6 +25,7 @@ import mihon.reader.image.TileRequest
 import mihon.reader.memory.BoundedReaderMemoryBudget
 import mihon.reader.model.FrameId
 import mihon.reader.model.PageId
+import mihon.reader.session.AnimationCoordinator
 import mihon.reader.session.AtomicReaderGenerationSource
 import mihon.reader.session.DefaultReaderSession
 import mihon.reader.session.ReaderGenerationSource
@@ -77,7 +78,9 @@ class DesktopReaderFactory(
     private val sessions = linkedSetOf<TrackedReaderSession>()
     private var acceptingSessions = true
 
-    fun createSession(isIncognito: Boolean = false): ReaderSession {
+    fun createSession(isIncognito: Boolean = false): ReaderSession = createHandle(isIncognito).session
+
+    fun createHandle(isIncognito: Boolean = false): DesktopReaderHandle {
         val sessionScope = synchronized(lock) {
             check(acceptingSessions) { "reader runtime is shutting down" }
             CoroutineScope(applicationScope.coroutineContext + SupervisorJob(applicationScope.coroutineContext[Job]))
@@ -87,6 +90,17 @@ class DesktopReaderFactory(
         } else {
             library
         }
+        val contentPipeline = DesktopReaderContentPipeline(
+            decoder = decoder,
+            cache = cache,
+            scope = sessionScope,
+            sourceFactory = sourceFactory,
+            maxFullPagePixels = MAX_DISPLAY_PIXELS,
+        )
+        val animationCoordinator = AnimationCoordinator(
+            scope = sessionScope,
+            loadFrame = { frameId -> contentPipeline.loadAnimationLease(frameId) },
+        )
         val session = DefaultReaderSession(
             scope = sessionScope,
             catalog = catalog,
@@ -94,7 +108,7 @@ class DesktopReaderFactory(
             progressSink = effectiveSink,
             generationSource = generationSource,
             settings = settings.load().toCoreSettings(),
-            visibleContent = { loadFrame(it, 0).tile },
+            animationCoordinator = animationCoordinator,
             invalidateContent = { pageId ->
                 cache.invalidatePage(pageId)
                 val asset = requireNotNull(catalog.chapterAsset(pageId.chapterId.toLong()))
@@ -102,13 +116,18 @@ class DesktopReaderFactory(
                     (source as? mihon.desktop.extension.OnlineChapterSource)?.invalidate(pageId)
                 }
             },
+            contentPipeline = contentPipeline,
         )
-        return TrackedReaderSession(session, sessionScope).also { tracked ->
+        val tracked = TrackedReaderSession(session, sessionScope).also { tracked ->
             synchronized(lock) {
                 check(acceptingSessions) { "reader runtime is shutting down" }
                 sessions += tracked
             }
         }
+        return DesktopReaderHandle(
+            session = tracked,
+            content = DesktopReaderContent(contentPipeline, bridge, pageSizes, animationCoordinator),
+        )
     }
 
     fun nextGeneration(): Long = generationSource.nextGeneration()

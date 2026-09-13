@@ -11,13 +11,14 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
 import mihon.desktop.reader.input.InputPoint
+import mihon.desktop.reader.input.ReaderSideButton
 import mihon.reader.model.ReaderPan
 import mihon.reader.model.ReaderViewport
 
@@ -37,6 +38,7 @@ internal fun ReaderGestureArea(
     modifier: Modifier = Modifier,
     onLongPress: (normalizedX: Float) -> Unit = {},
     onSecondaryClick: () -> Unit = {},
+    onSideButton: (ReaderSideButton) -> Unit = {},
     onPointerMove: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit,
 ) {
@@ -45,15 +47,19 @@ internal fun ReaderGestureArea(
     val currentOnDoubleTap by rememberUpdatedState(onDoubleTap)
     val currentOnLongPress by rememberUpdatedState(onLongPress)
     val currentOnSecondaryClick by rememberUpdatedState(onSecondaryClick)
+    val currentOnSideButton by rememberUpdatedState(onSideButton)
     val currentOnPointerMove by rememberUpdatedState(onPointerMove)
     val currentOnPan by rememberUpdatedState(onPan)
     val currentOnZoomBy by rememberUpdatedState(onZoomBy)
-    val secondaryClickModifier = if (enabled) {
+    val pointerButtonModifier = if (enabled) {
         Modifier.onPointerEvent(PointerEventType.Press, PointerEventPass.Initial) { event ->
-            if (event.button == PointerButton.Secondary) {
-                currentOnSecondaryClick()
-                event.changes.forEach { it.consume() }
+            when (event.button) {
+                PointerButton.Secondary -> currentOnSecondaryClick()
+                PointerButton.Back -> currentOnSideButton(ReaderSideButton.BACK)
+                PointerButton.Forward -> currentOnSideButton(ReaderSideButton.FORWARD)
+                else -> return@onPointerEvent
             }
+            event.changes.forEach { it.consume() }
         }
     } else {
         Modifier
@@ -106,7 +112,7 @@ internal fun ReaderGestureArea(
                     }
                 }
             }
-            .then(secondaryClickModifier)
+            .then(pointerButtonModifier)
             .then(pointerMoveModifier),
         content = content,
     )

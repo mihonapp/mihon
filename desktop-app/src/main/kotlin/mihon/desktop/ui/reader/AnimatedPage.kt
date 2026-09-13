@@ -23,6 +23,7 @@ import java.awt.image.BufferedImage
 data class ReaderAnimatedFrame(
     val key: TileKey,
     val image: BufferedImage,
+    val lease: AutoCloseable? = null,
 ) {
     init {
         require(key.frameId != null) { "animated frames require a frame TileKey" }
@@ -67,7 +68,11 @@ fun AnimatedPage(
             return@LaunchedEffect
         }
         val decoded = loadFrame(selectedFrame)
-        val replacement = bridge.acquire(decoded.key, decoded.image)
+        val replacement = try {
+            bridge.acquire(decoded.key, decoded.image)
+        } finally {
+            decoded.lease?.close()
+        }
         val previous = current
         current = replacement
         renderedFrame = selectedFrame

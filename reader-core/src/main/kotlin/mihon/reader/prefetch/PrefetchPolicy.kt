@@ -11,14 +11,14 @@ enum class NavigationDirection {
 /**
  * Computes which page indexes to prefetch around the selected page.
  *
- * The window is two logical units ahead in the navigation direction and one logical unit behind,
- * where a unit is one page for single/continuous modes and one two-page spread for dual modes.
- * Pages are emitted nearest-first: ahead pages in navigation order, then behind pages in
- * opposite order of distance. The currently visible spread is never part of the plan.
+ * The window matches Mihon's four adjacent images in the navigation direction, then keeps one
+ * image behind for quick desktop direction reversal. Dual-page modes skip the other page in the
+ * currently visible spread before counting the four images ahead. Pages are always emitted
+ * nearest-first and RTL affects placement rather than logical page order.
  */
 object PrefetchPolicy {
-    const val AHEAD_UNITS = 2
-    const val BEHIND_UNITS = 1
+    const val AHEAD_PAGES = 4
+    const val BEHIND_PAGES = 1
 
     fun unitPages(mode: ReadingMode): Int = if (mode.isDualPage) 2 else 1
 
@@ -31,28 +31,15 @@ object PrefetchPolicy {
         require(pageCount > 0) { "pageCount must be positive" }
         require(selectedIndex in 0 until pageCount) { "selectedIndex $selectedIndex out of $pageCount pages" }
 
-        val unit = unitPages(mode)
+        val visibleWidth = unitPages(mode)
         val step = if (direction == NavigationDirection.FORWARD) 1 else -1
-        val result = mutableListOf<Int>()
-
-        // Ahead units start past the current unit, which the caller already displays.
-        for (unitIndex in 1..AHEAD_UNITS) {
-            val base = selectedIndex + step * unitIndex * unit
-            val offsets = if (step > 0) (0 until unit) else (unit - 1 downTo 0)
-            for (offset in offsets) {
-                val index = base + offset
-                if (index in 0 until pageCount) result += index
-            }
-        }
-        // Behind units mirror the ahead ordering on the opposite side, nearest first.
-        for (unitIndex in 1..BEHIND_UNITS) {
-            val base = selectedIndex - step * unitIndex * unit
-            val offsets = if (step > 0) (unit - 1 downTo 0) else (0 until unit)
-            for (offset in offsets) {
-                val index = base + offset
-                if (index in 0 until pageCount) result += index
-            }
-        }
-        return result.distinct()
+        val firstAhead = selectedIndex + step * visibleWidth
+        val ahead = (0 until AHEAD_PAGES)
+            .map { firstAhead + step * it }
+            .filter { it in 0 until pageCount }
+        val behind = (1..BEHIND_PAGES)
+            .map { selectedIndex - step * it }
+            .filter { it in 0 until pageCount }
+        return (ahead + behind).distinct()
     }
 }

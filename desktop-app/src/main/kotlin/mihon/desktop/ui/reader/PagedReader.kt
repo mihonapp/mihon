@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import mihon.reader.layout.PageGrouping
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
+import mihon.reader.session.ReaderAction
 import mihon.reader.session.ReaderState
 
 data class ReaderSpread(val pageIndices: List<Int>)
@@ -29,11 +31,16 @@ fun ReaderState.visibleSpread(): ReaderSpread {
 internal fun PagedReader(
     state: ReaderState,
     viewportWidth: Dp,
+    onAction: (ReaderAction) -> Unit,
     pageContent: ReaderPageContent,
     modifier: Modifier = Modifier,
     pageSizes: Map<PageId, PageSize> = emptyMap(),
 ) {
     val spread = state.visibleSpread()
+    val visiblePageIds = spread.pageIndices.map { index -> state.pages[index].id }
+    LaunchedEffect(state.chapterId, visiblePageIds) {
+        onAction(ReaderAction.SetVisiblePages(visiblePageIds))
+    }
     when {
         spread.pageIndices.size == 2 -> Row(modifier = modifier.fillMaxSize()) {
             spread.pageIndices.forEach { pageIndex ->

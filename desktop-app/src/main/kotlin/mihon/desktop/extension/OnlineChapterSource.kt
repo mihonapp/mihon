@@ -1,9 +1,9 @@
 package mihon.desktop.extension
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import mihon.desktop.extension.DesktopNetworkHelper
 import mihon.desktop.extension.WindowsExtensionProcessManager
 import mihon.extension.ipc.BrokerHttpRequest
@@ -100,7 +100,9 @@ open class OnlineChapterSource(
                     java.nio.file.Files.deleteIfExists(cachedFile.toPath())
                     null
                 }
-            } else null
+            } else {
+                null
+            }
             if (cached != null) return@withLock cached
             val bytes = try {
                 downloadSourcePage(sourceId, page, chapter.url, networkHelper, sourceManager)
@@ -117,7 +119,12 @@ open class OnlineChapterSource(
                 val temporary = java.nio.file.Files.createTempFile(cacheDir.toPath(), "page-", ".tmp")
                 try {
                     java.nio.file.Files.write(temporary, bytes)
-                    java.nio.file.Files.move(temporary, cachedFile.toPath(), java.nio.file.StandardCopyOption.ATOMIC_MOVE, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+                    java.nio.file.Files.move(
+                        temporary,
+                        cachedFile.toPath(),
+                        java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                    )
                 } finally {
                     java.nio.file.Files.deleteIfExists(temporary)
                 }
@@ -140,7 +147,10 @@ open class OnlineChapterSource(
     companion object {
         private const val MAX_IMAGE_BYTES = 64L * 1024 * 1024
         private val cacheLocks = Array(64) { Mutex() }
-        private fun cacheLock(file: File): Mutex = cacheLocks[(file.absolutePath.hashCode() and Int.MAX_VALUE) % cacheLocks.size]
+        private fun cacheLock(file: File): Mutex = cacheLocks[
+            (file.absolutePath.hashCode() and Int.MAX_VALUE) %
+                cacheLocks.size,
+        ]
     }
 
     private fun validateImageResponse(bytes: ByteArray) {

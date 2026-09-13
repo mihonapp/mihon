@@ -2,9 +2,9 @@ package mihon.desktop.ui.reader
 
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,7 +44,6 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.isCtrlPressed as isPointerCtrlPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
@@ -70,6 +69,7 @@ import mihon.desktop.reader.input.ReaderInputCommand
 import mihon.desktop.reader.input.ReaderInputContext
 import mihon.desktop.reader.input.ReaderInputKey
 import mihon.desktop.reader.input.ReaderInputMapper
+import mihon.desktop.reader.input.ReaderSideButton
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
 import mihon.reader.model.ReaderErrorCode
@@ -83,6 +83,7 @@ import mihon.reader.session.ReaderSession
 import mihon.reader.session.ReaderSessionError
 import mihon.reader.session.ReaderState
 import mihon.reader.source.ReaderFailure
+import androidx.compose.ui.input.pointer.isCtrlPressed as isPointerCtrlPressed
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
@@ -450,6 +451,19 @@ fun ReaderScreen(
         handleClickAction(clickPolicy.actionAt(normalizedX), pointer = true)
     }
 
+    fun handleSideButton(button: ReaderSideButton) {
+        val current = session.state.value
+        inputMapper.mapSideButton(
+            button,
+            ReaderInputContext(
+                mode = current.mode,
+                wheelBehavior = settings.wheelBehavior,
+                pageCount = current.pages.size.coerceAtLeast(1),
+                anchor = current.viewportAnchor,
+            ),
+        ).action?.let(::handleInput)
+    }
+
     LaunchedEffect(hideGeneration) {
         if (hideGeneration > 0) {
             delay(CHROME_HIDE_DELAY_MILLIS)
@@ -576,6 +590,7 @@ fun ReaderScreen(
             modifier = Modifier.fillMaxSize().testTag("reader-gesture-area"),
             onLongPress = { openPageActions() },
             onSecondaryClick = { openPageActions() },
+            onSideButton = ::handleSideButton,
             onPointerMove = {
                 overlayVisibility = reduceReaderOverlayVisibility(
                     overlayVisibility,
@@ -587,6 +602,8 @@ fun ReaderScreen(
             CompositionLocalProvider(
                 LocalReaderColorFilter provides settings.colorFilter,
                 LocalReaderCropBorders provides currentCrop,
+                LocalReaderForeground provides state.foreground,
+                LocalReaderSelectedPage provides state.pages.getOrNull(state.selectedIndex)?.id,
                 LocalReaderPageSizeSink provides pageSizeSink,
                 LocalReaderPageImageStore provides imageStore,
             ) {
