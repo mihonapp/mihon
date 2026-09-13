@@ -10,8 +10,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.v2.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import io.kotest.matchers.shouldBe
 import mihon.desktop.library.model.CategoryRecord
 import mihon.desktop.library.model.LibraryChapter
@@ -47,7 +47,13 @@ class MangaDetailScreenActionsTest {
         categories = listOf(CategoryRecord(1L, "Favorites")),
     )
 
-    private fun chapter(id: Long, name: String, read: Boolean = false, bookmark: Boolean = false, number: Double = 1.0) =
+    private fun chapter(
+        id: Long,
+        name: String,
+        read: Boolean = false,
+        bookmark: Boolean = false,
+        number: Double = 1.0,
+    ) =
         LibraryChapter(
             id = id,
             mangaId = 1L,

@@ -170,7 +170,9 @@ fun ReaderChapterDrawer(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 6.dp)
                             .testTag("reader-drawer-search"),
-                        placeholder = { Text(strings.readerChapterDrawerSearch, style = MaterialTheme.typography.bodyMedium) },
+                        placeholder = {
+                            Text(strings.readerChapterDrawerSearch, style = MaterialTheme.typography.bodyMedium)
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Rounded.Search,

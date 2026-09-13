@@ -61,169 +61,169 @@ fun MangaBottomActionMenu(
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 12.dp)
             .testTag("manga-bottom-action-menu"),
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            tonalElevation = 8.dp,
-            shadowElevation = 12.dp,
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        tonalElevation = 8.dp,
+        shadowElevation = 12.dp,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Left side: close button, selection count & selection toggle
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                IconButton(
+                    onClick = onCloseClicked,
+                    modifier = Modifier.testTag("batch-chapter-close"),
+                ) {
+                    Icon(imageVector = Icons.Rounded.Close, contentDescription = "Close selection")
+                }
+                Text(
+                    text = strings.chapterBatchSelected(selectedCount),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.testTag("batch-chapter-selected-count"),
+                )
+                TextButton(
+                    onClick = onSelectAll,
+                    modifier = Modifier.testTag("batch-chapter-select-all"),
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.SelectAll,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(strings.chapterBatchSelectAll)
+                }
+                TextButton(
+                    onClick = onInvertSelection,
+                    modifier = Modifier.testTag("batch-chapter-invert"),
+                ) {
+                    Text(strings.chapterBatchInvert)
+                }
+            }
+
+            // Right side: batch action buttons
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // Left side: close button, selection count & selection toggle
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    IconButton(
-                        onClick = onCloseClicked,
-                        modifier = Modifier.testTag("batch-chapter-close"),
-                    ) {
-                        Icon(imageVector = Icons.Rounded.Close, contentDescription = "Close selection")
-                    }
-                    Text(
-                        text = strings.chapterBatchSelected(selectedCount),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.testTag("batch-chapter-selected-count"),
-                    )
-                    TextButton(
-                        onClick = onSelectAll,
-                        modifier = Modifier.testTag("batch-chapter-select-all"),
+                if (onBookmarkClicked != null) {
+                    FilledTonalButton(
+                        onClick = onBookmarkClicked,
+                        enabled = selectedCount > 0,
+                        modifier = Modifier.testTag("batch-chapter-bookmark"),
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.SelectAll,
+                            imageVector = Icons.Rounded.Bookmark,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
                         )
                         Spacer(Modifier.width(4.dp))
-                        Text(strings.chapterBatchSelectAll)
-                    }
-                    TextButton(
-                        onClick = onInvertSelection,
-                        modifier = Modifier.testTag("batch-chapter-invert"),
-                    ) {
-                        Text(strings.chapterBatchInvert)
+                        Text(strings.chapterBatchBookmark)
                     }
                 }
 
-                // Right side: batch action buttons
-                Row(
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    if (onBookmarkClicked != null) {
-                        FilledTonalButton(
-                            onClick = onBookmarkClicked,
-                            enabled = selectedCount > 0,
-                            modifier = Modifier.testTag("batch-chapter-bookmark"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Bookmark,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(strings.chapterBatchBookmark)
-                        }
+                if (onRemoveBookmarkClicked != null) {
+                    FilledTonalButton(
+                        onClick = onRemoveBookmarkClicked,
+                        enabled = selectedCount > 0,
+                        modifier = Modifier.testTag("batch-chapter-remove-bookmark"),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.BookmarkBorder,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(strings.chapterBatchRemoveBookmark)
                     }
+                }
 
-                    if (onRemoveBookmarkClicked != null) {
-                        FilledTonalButton(
-                            onClick = onRemoveBookmarkClicked,
-                            enabled = selectedCount > 0,
-                            modifier = Modifier.testTag("batch-chapter-remove-bookmark"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.BookmarkBorder,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(strings.chapterBatchRemoveBookmark)
-                        }
+                if (onMarkAsReadClicked != null) {
+                    FilledTonalButton(
+                        onClick = onMarkAsReadClicked,
+                        enabled = selectedCount > 0,
+                        modifier = Modifier.testTag("batch-chapter-mark-read"),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Check,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(strings.chapterBatchMarkAsRead)
                     }
+                }
 
-                    if (onMarkAsReadClicked != null) {
-                        FilledTonalButton(
-                            onClick = onMarkAsReadClicked,
-                            enabled = selectedCount > 0,
-                            modifier = Modifier.testTag("batch-chapter-mark-read"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Check,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(strings.chapterBatchMarkAsRead)
-                        }
+                if (onMarkAsUnreadClicked != null) {
+                    FilledTonalButton(
+                        onClick = onMarkAsUnreadClicked,
+                        enabled = selectedCount > 0,
+                        modifier = Modifier.testTag("batch-chapter-mark-unread"),
+                    ) {
+                        Text(strings.chapterBatchMarkAsUnread)
                     }
+                }
 
-                    if (onMarkAsUnreadClicked != null) {
-                        FilledTonalButton(
-                            onClick = onMarkAsUnreadClicked,
-                            enabled = selectedCount > 0,
-                            modifier = Modifier.testTag("batch-chapter-mark-unread"),
-                        ) {
-                            Text(strings.chapterBatchMarkAsUnread)
-                        }
+                if (onMarkPreviousAsReadClicked != null && selectedCount == 1) {
+                    FilledTonalButton(
+                        onClick = onMarkPreviousAsReadClicked,
+                        modifier = Modifier.testTag("batch-chapter-mark-previous-read"),
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.PlaylistAddCheck,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(strings.markPreviousAsRead)
                     }
+                }
 
-                    if (onMarkPreviousAsReadClicked != null && selectedCount == 1) {
-                        FilledTonalButton(
-                            onClick = onMarkPreviousAsReadClicked,
-                            modifier = Modifier.testTag("batch-chapter-mark-previous-read"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.PlaylistAddCheck,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(strings.markPreviousAsRead)
-                        }
+                if (onDownloadClicked != null) {
+                    FilledTonalButton(
+                        onClick = onDownloadClicked,
+                        enabled = selectedCount > 0,
+                        modifier = Modifier.testTag("batch-chapter-download"),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Download,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(strings.chapterBatchDownload)
                     }
+                }
 
-                    if (onDownloadClicked != null) {
-                        FilledTonalButton(
-                            onClick = onDownloadClicked,
-                            enabled = selectedCount > 0,
-                            modifier = Modifier.testTag("batch-chapter-download"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Download,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(strings.chapterBatchDownload)
-                        }
-                    }
-
-                    if (onDeleteClicked != null) {
-                        OutlinedButton(
-                            onClick = onDeleteClicked,
-                            enabled = selectedCount > 0,
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = MaterialTheme.colorScheme.error,
-                            ),
-                            modifier = Modifier.testTag("batch-chapter-delete-download"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Delete,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(strings.chapterBatchDeleteDownload)
-                        }
+                if (onDeleteClicked != null) {
+                    OutlinedButton(
+                        onClick = onDeleteClicked,
+                        enabled = selectedCount > 0,
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error,
+                        ),
+                        modifier = Modifier.testTag("batch-chapter-delete-download"),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Delete,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(strings.chapterBatchDeleteDownload)
                     }
                 }
             }
         }
+    }
 }

@@ -19,9 +19,27 @@ import org.junit.jupiter.api.Test
 class ReaderChapterDrawerTest {
 
     private val sampleChapters = listOf(
-        ReaderChapterTransitionChapter(id = 101L, title = "Chapter 1 - The Beginning", chapterNumber = 1.0, read = true, downloaded = true),
-        ReaderChapterTransitionChapter(id = 102L, title = "Chapter 2 - Next Step", chapterNumber = 2.0, read = false, downloaded = false),
-        ReaderChapterTransitionChapter(id = 103L, title = "Chapter 3 - Climax", chapterNumber = 3.0, read = false, downloaded = false),
+        ReaderChapterTransitionChapter(
+            id = 101L,
+            title = "Chapter 1 - The Beginning",
+            chapterNumber = 1.0,
+            read = true,
+            downloaded = true,
+        ),
+        ReaderChapterTransitionChapter(
+            id = 102L,
+            title = "Chapter 2 - Next Step",
+            chapterNumber = 2.0,
+            read = false,
+            downloaded = false,
+        ),
+        ReaderChapterTransitionChapter(
+            id = 103L,
+            title = "Chapter 3 - Climax",
+            chapterNumber = 3.0,
+            read = false,
+            downloaded = false,
+        ),
     )
 
     @Test

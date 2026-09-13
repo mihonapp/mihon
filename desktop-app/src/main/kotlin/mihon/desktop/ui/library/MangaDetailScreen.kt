@@ -158,12 +158,24 @@ fun MangaDetailScreen(
                     )
                 }
 
-                var chapterSearchQuery by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-                var isSearchingChapters by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-                var isCoverDialogOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-                var isNotesDialogOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-                var isSelectionMode by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-                var selectedChapterIds by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(emptySet<Long>()) }
+                var chapterSearchQuery by androidx.compose.runtime.remember {
+                    androidx.compose.runtime.mutableStateOf("")
+                }
+                var isSearchingChapters by androidx.compose.runtime.remember {
+                    androidx.compose.runtime.mutableStateOf(false)
+                }
+                var isCoverDialogOpen by androidx.compose.runtime.remember {
+                    androidx.compose.runtime.mutableStateOf(false)
+                }
+                var isNotesDialogOpen by androidx.compose.runtime.remember {
+                    androidx.compose.runtime.mutableStateOf(false)
+                }
+                var isSelectionMode by androidx.compose.runtime.remember {
+                    androidx.compose.runtime.mutableStateOf(false)
+                }
+                var selectedChapterIds by androidx.compose.runtime.remember {
+                    androidx.compose.runtime.mutableStateOf(emptySet<Long>())
+                }
 
                 val displayedChapterItems = androidx.compose.runtime.remember(chapterItems, chapterSearchQuery) {
                     if (chapterSearchQuery.isBlank()) {
@@ -174,7 +186,12 @@ fun MangaDetailScreen(
                                 is ChapterListItem.Chapter -> {
                                     item.label.contains(chapterSearchQuery, ignoreCase = true) ||
                                         item.chapter.name.contains(chapterSearchQuery, ignoreCase = true) ||
-                                        (item.chapter.scanlator?.contains(chapterSearchQuery, ignoreCase = true) == true) ||
+                                        (
+                                            item.chapter.scanlator?.contains(
+                                                chapterSearchQuery,
+                                                ignoreCase = true,
+                                            ) == true
+                                            ) ||
                                         item.chapter.chapterNumber.toString().contains(chapterSearchQuery)
                                 }
                                 is ChapterListItem.MissingCount -> false
@@ -184,10 +201,11 @@ fun MangaDetailScreen(
                 }
 
                 val nextChapterToRead = androidx.compose.runtime.remember(state.chapters) {
-                    if (state.chapters.isEmpty()) null
-                    else {
+                    if (state.chapters.isEmpty()) {
+                        null
+                    } else {
                         val sortedAscending = state.chapters.sortedWith(
-                            compareBy<LibraryChapter> { it.chapterNumber }.thenBy { it.sourceOrder }
+                            compareBy<LibraryChapter> { it.chapterNumber }.thenBy { it.sourceOrder },
                         )
                         sortedAscending.firstOrNull { !it.read } ?: sortedAscending.lastOrNull()
                     }
@@ -830,10 +848,15 @@ fun MangaDetailScreen(
                         selectedCount = selectedChapterIds.size,
                         totalCount = displayedChapterItems.count { it is ChapterListItem.Chapter },
                         onSelectAll = {
-                            selectedChapterIds = displayedChapterItems.mapNotNull { (it as? ChapterListItem.Chapter)?.chapter?.id }.toSet()
+                            selectedChapterIds =
+                                displayedChapterItems.mapNotNull {
+                                    (it as? ChapterListItem.Chapter)?.chapter?.id
+                                }.toSet()
                         },
                         onInvertSelection = {
-                            val allIds = displayedChapterItems.mapNotNull { (it as? ChapterListItem.Chapter)?.chapter?.id }.toSet()
+                            val allIds = displayedChapterItems.mapNotNull {
+                                (it as? ChapterListItem.Chapter)?.chapter?.id
+                            }.toSet()
                             selectedChapterIds = allIds - selectedChapterIds
                         },
                         onBookmarkClicked = {
@@ -850,13 +873,17 @@ fun MangaDetailScreen(
                         },
                         onMarkPreviousAsReadClicked = if (selectedChapterIds.size == 1) {
                             { onMarkPreviousRead(selectedChapterIds.first()) }
-                        } else null,
+                        } else {
+                            null
+                        },
                         onDownloadClicked = {
                             onBatchDownloadChapters(selectedChapterIds)
                         },
                         onDeleteClicked = if (selectedChapterIds.any { state.downloadedChapterIds.contains(it) }) {
                             { onBatchDeleteDownloads(selectedChapterIds) }
-                        } else null,
+                        } else {
+                            null
+                        },
                         onCloseClicked = {
                             isSelectionMode = false
                             selectedChapterIds = emptySet()
