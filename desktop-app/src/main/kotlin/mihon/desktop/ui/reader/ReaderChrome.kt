@@ -1,5 +1,11 @@
 package mihon.desktop.ui.reader
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +29,6 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
@@ -38,17 +41,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import mihon.desktop.i18n.LocalStrings
 import mihon.desktop.reader.DesktopReaderSettings
@@ -99,231 +104,234 @@ internal fun ReaderChrome(
 ) {
     val strings = LocalStrings.current
     var isChapterDrawerOpen by remember { mutableStateOf(false) }
+    var overflowExpanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .graphicsLayer(alpha = if (visible) 1f else 0f)
             .testTag("reader-chrome")
             .semantics {
                 readerChromeVisible = visible
                 readerBookmarked = bookmarked
             },
     ) {
-        Surface(
+        AnimatedVisibility(
+            visible = visible,
             modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
-            tonalElevation = 3.dp,
+            enter = slideInVertically(tween(READER_BARS_SLIDE_MILLIS)) { -it } +
+                fadeIn(tween(READER_BARS_FADE_MILLIS)),
+            exit = slideOutVertically(tween(READER_BARS_SLIDE_MILLIS)) { -it } +
+                fadeOut(tween(READER_BARS_FADE_MILLIS)),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            Surface(
+                modifier = Modifier.fillMaxWidth().testTag("reader-top-bar"),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
+                tonalElevation = 3.dp,
             ) {
-                IconButton(onClick = onBack, modifier = Modifier.testTag("reader-back")) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = strings.mangaDetailBack,
-                    )
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        title,
-                        modifier = Modifier.testTag("reader-title"),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Text(
-                        chapterTitle,
-                        modifier = Modifier.testTag("reader-chapter"),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                Text(
-                    "${(state.selectedIndex + 1).coerceAtMost(state.pages.size)} / ${state.pages.size}",
-                    modifier = Modifier.testTag("reader-page-counter"),
-                    style = MaterialTheme.typography.labelLarge,
-                )
-                IconButton(
-                    onClick = onToggleBookmark,
-                    modifier = Modifier.testTag("reader-bookmark-toggle"),
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(
-                        imageVector = if (bookmarked) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
-                        contentDescription = if (bookmarked) strings.removeBookmark else strings.bookmarkChapter,
-                    )
-                }
-                IconButton(
-                    onClick = onOpenPageActions,
-                    modifier = Modifier.testTag("reader-page-actions"),
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.MoreVert,
-                        contentDescription = "Page actions",
-                    )
-                }
-                IconButton(onClick = onOpenShortcuts, modifier = Modifier.testTag("reader-shortcuts-btn")) {
-                    Icon(
-                        imageVector = Icons.Rounded.Keyboard,
-                        contentDescription = strings.readerShortcutsHelp,
-                    )
-                }
-                IconButton(onClick = onFullscreen, modifier = Modifier.testTag("reader-fullscreen")) {
-                    Icon(
-                        imageVector = Icons.Rounded.Fullscreen,
-                        contentDescription = strings.readerFullscreen,
-                    )
-                }
-                TextButton(onClick = onBorderless, modifier = Modifier.testTag("reader-borderless")) {
-                    Text(strings.readerBorderless)
-                }
-                IconButton(onClick = onOpenSettings, modifier = Modifier.testTag("reader-settings")) {
-                    Icon(
-                        imageVector = Icons.Rounded.Settings,
-                        contentDescription = strings.settingsTitle,
-                    )
-                }
-            }
-        }
-        Surface(
-            modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
-            tonalElevation = 3.dp,
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                if (state.pages.size > 1) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp, vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    IconButton(onClick = onBack, modifier = Modifier.testTag("reader-back")) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = strings.mangaDetailBack,
+                        )
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            title,
+                            modifier = Modifier.testTag("reader-title"),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        Text(
+                            chapterTitle,
+                            modifier = Modifier.testTag("reader-chapter"),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    IconButton(
+                        onClick = onToggleBookmark,
+                        modifier = Modifier.testTag("reader-bookmark-toggle"),
                     ) {
-                        if (chapterCatalog.isNotEmpty()) {
-                            IconButton(
-                                onClick = { isChapterDrawerOpen = true },
-                                modifier = Modifier.testTag("reader-chapter-list-button"),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Rounded.FormatListBulleted,
-                                    contentDescription = strings.readerChapterList,
-                                    tint = MaterialTheme.colorScheme.primary,
+                        Icon(
+                            imageVector = if (bookmarked) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                            contentDescription = if (bookmarked) strings.removeBookmark else strings.bookmarkChapter,
+                        )
+                    }
+                    Box {
+                        IconButton(
+                            onClick = { overflowExpanded = true },
+                            modifier = Modifier.testTag("reader-overflow"),
+                        ) {
+                            Icon(Icons.Rounded.MoreVert, contentDescription = "More reader actions")
+                        }
+                        DropdownMenu(
+                            expanded = overflowExpanded,
+                            onDismissRequest = { overflowExpanded = false },
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Page actions") },
+                                onClick = {
+                                    overflowExpanded = false
+                                    onOpenPageActions()
+                                },
+                                modifier = Modifier.testTag("reader-page-actions"),
+                            )
+                            if (chapterCatalog.isNotEmpty()) {
+                                DropdownMenuItem(
+                                    text = { Text(strings.readerChapterList) },
+                                    onClick = {
+                                        overflowExpanded = false
+                                        isChapterDrawerOpen = true
+                                    },
+                                    modifier = Modifier.testTag("reader-chapter-list-button"),
+                                )
+                            }
+                            DropdownMenuItem(
+                                text = { Text(strings.readerShortcutsHelp) },
+                                onClick = {
+                                    overflowExpanded = false
+                                    onOpenShortcuts()
+                                },
+                                leadingIcon = { Icon(Icons.Rounded.Keyboard, contentDescription = null) },
+                                modifier = Modifier.testTag("reader-shortcuts-btn"),
+                            )
+                            DropdownMenuItem(
+                                text = { Text(strings.readerFullscreen) },
+                                onClick = {
+                                    overflowExpanded = false
+                                    onFullscreen()
+                                },
+                                leadingIcon = { Icon(Icons.Rounded.Fullscreen, contentDescription = null) },
+                                modifier = Modifier.testTag("reader-fullscreen"),
+                            )
+                            DropdownMenuItem(
+                                text = { Text(strings.readerBorderless) },
+                                onClick = {
+                                    overflowExpanded = false
+                                    onBorderless()
+                                },
+                                modifier = Modifier.testTag("reader-borderless"),
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Zoom out") },
+                                onClick = {
+                                    overflowExpanded = false
+                                    onZoom(state.zoom - 0.25f)
+                                },
+                                modifier = Modifier.testTag("reader-zoom-out"),
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Reset zoom (${(state.zoom * 100).toInt()}%)") },
+                                onClick = {
+                                    overflowExpanded = false
+                                    onZoom(1f)
+                                },
+                                modifier = Modifier.testTag("reader-zoom-reset"),
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Zoom in") },
+                                onClick = {
+                                    overflowExpanded = false
+                                    onZoom(state.zoom + 0.25f)
+                                },
+                                modifier = Modifier.testTag("reader-zoom-in"),
+                            )
+                            if (state.mode.isDualPage) {
+                                DropdownMenuItem(
+                                    text = { Text(strings.readerCoverOffsetToggle(state.coverOffset)) },
+                                    onClick = {
+                                        overflowExpanded = false
+                                        onCoverOffset(!state.coverOffset)
+                                    },
+                                    modifier = Modifier.testTag("reader-cover-toggle"),
+                                )
+                            }
+                            if (canRetry) {
+                                DropdownMenuItem(
+                                    text = { Text(strings.downloadsRetry) },
+                                    onClick = {
+                                        overflowExpanded = false
+                                        onRetry()
+                                    },
+                                    modifier = Modifier.testTag("reader-retry"),
+                                )
+                            }
+                            if (debugEnabled) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            "Core ${state.cacheMetrics.residentBytes / MIB} MiB · " +
+                                                "pinned ${state.cacheMetrics.pinnedBytes / MIB} MiB",
+                                        )
+                                    },
+                                    onClick = { overflowExpanded = false },
+                                    modifier = Modifier.testTag("reader-cache-diagnostic"),
                                 )
                             }
                         }
-                        IconButton(
-                            onClick = onPreviousChapter,
-                            enabled = hasPreviousChapter,
-                            modifier = Modifier.testTag("reader-scrubber-prev-chapter"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.SkipPrevious,
-                                contentDescription = strings.readerPreviousChapter,
-                            )
-                        }
-                        IconButton(
-                            onClick = onPreviousPage,
-                            enabled = state.selectedIndex > 0,
-                            modifier = Modifier.testTag("reader-scrubber-prev"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                                contentDescription = "Previous Page",
-                            )
-                        }
-                        val isRtl = state.mode.isRightToLeft
-                        val sliderDirection = if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
-                        CompositionLocalProvider(LocalLayoutDirection provides sliderDirection) {
-                            Slider(
-                                value = (state.selectedIndex + 1).toFloat(),
-                                onValueChange = { onPageSelected((it.toInt() - 1).coerceIn(0, state.pages.size - 1)) },
-                                valueRange = 1f..state.pages.size.toFloat(),
-                                steps = (state.pages.size - 2).coerceAtLeast(0),
-                                modifier = Modifier.weight(1f).testTag("reader-scrubber-slider"),
-                            )
-                        }
-                        IconButton(
-                            onClick = onNextPage,
-                            enabled = state.selectedIndex < state.pages.size - 1,
-                            modifier = Modifier.testTag("reader-scrubber-next"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                contentDescription = "Next Page",
-                            )
-                        }
-                        IconButton(
-                            onClick = onNextChapter,
-                            enabled = hasNextChapter,
-                            modifier = Modifier.testTag("reader-scrubber-next-chapter"),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.SkipNext,
-                                contentDescription = strings.readerNextChapter,
-                            )
-                        }
                     }
                 }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
+            }
+        }
+        AnimatedVisibility(
+            visible = visible,
+            modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
+            enter = slideInVertically(tween(READER_BARS_SLIDE_MILLIS)) { it } +
+                fadeIn(tween(READER_BARS_FADE_MILLIS)),
+            exit = slideOutVertically(tween(READER_BARS_SLIDE_MILLIS)) { it } +
+                fadeOut(tween(READER_BARS_FADE_MILLIS)),
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth().testTag("reader-bottom-bar"),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
+                tonalElevation = 3.dp,
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    ReadingModeMenu(state.mode, onMode)
-                    ScaleModeMenu(state.scaleMode, onScale)
-                    ColorFilterMenu(settings.colorFilter, onColorFilter)
-                    val isWebtoon = state.mode == ReadingMode.WEBTOON
-                    val cropActive = if (isWebtoon) settings.cropBordersWebtoon else settings.cropBorders
-                    TextButton(
-                        onClick = {
-                            if (isWebtoon) {
-                                onCropBordersWebtoon(!settings.cropBordersWebtoon)
-                            } else {
-                                onCropBorders(!settings.cropBorders)
-                            }
-                        },
-                        modifier = Modifier.testTag("reader-crop-toggle"),
+                    ReaderChapterNavigator(
+                        currentPage = if (state.pages.isEmpty()) 0 else state.selectedIndex + 1,
+                        totalPages = state.pages.size,
+                        isRtl = state.mode.isRightToLeft,
+                        onPageSelected = onPageSelected,
+                        onPreviousChapter = onPreviousChapter,
+                        onNextChapter = onNextChapter,
+                        hasPreviousChapter = hasPreviousChapter,
+                        hasNextChapter = hasNextChapter,
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(strings.readerCropToggle(cropActive))
-                    }
-                    if (state.mode.isDualPage) {
+                        ReadingModeMenu(state.mode, onMode)
+                        ScaleModeMenu(state.scaleMode, onScale)
+                        val isWebtoon = state.mode == ReadingMode.WEBTOON
+                        val cropActive = if (isWebtoon) settings.cropBordersWebtoon else settings.cropBorders
                         TextButton(
-                            onClick = { onCoverOffset(!state.coverOffset) },
-                            modifier = Modifier.testTag("reader-cover-toggle"),
+                            onClick = {
+                                if (isWebtoon) {
+                                    onCropBordersWebtoon(!settings.cropBordersWebtoon)
+                                } else {
+                                    onCropBorders(!settings.cropBorders)
+                                }
+                            },
+                            modifier = Modifier.testTag("reader-crop-toggle"),
                         ) {
-                            Text(strings.readerCoverOffsetToggle(state.coverOffset))
+                            Text(strings.readerCropToggle(cropActive))
                         }
-                    }
-                    TextButton(
-                        onClick = { onZoom(state.zoom - 0.25f) },
-                        modifier = Modifier.testTag("reader-zoom-out"),
-                    ) { Text("−") }
-                    TextButton(onClick = { onZoom(1f) }, modifier = Modifier.testTag("reader-zoom-reset")) {
-                        Text("${(state.zoom * 100).toInt()}%")
-                    }
-                    TextButton(
-                        onClick = { onZoom(state.zoom + 0.25f) },
-                        modifier = Modifier.testTag("reader-zoom-in"),
-                    ) { Text("+") }
-                    if (canRetry) {
-                        TextButton(onClick = onRetry, modifier = Modifier.testTag("reader-retry")) {
-                            Text(strings.downloadsRetry)
+                        IconButton(onClick = onOpenSettings, modifier = Modifier.testTag("reader-settings")) {
+                            Icon(Icons.Rounded.Settings, contentDescription = strings.settingsTitle)
                         }
-                    }
-                    if (debugEnabled) {
-                        Text(
-                            "Core ${state.cacheMetrics.residentBytes / MIB} MiB · " +
-                                "pinned ${state.cacheMetrics.pinnedBytes / MIB} MiB",
-                            modifier = Modifier.testTag("reader-cache-diagnostic"),
-                            style = MaterialTheme.typography.labelSmall,
-                        )
                     }
                 }
             }
@@ -341,6 +349,9 @@ internal fun ReaderChrome(
         )
     }
 }
+
+private const val READER_BARS_SLIDE_MILLIS = 200
+private const val READER_BARS_FADE_MILLIS = 150
 
 @Composable
 private fun ReadingModeMenu(current: ReadingMode, onSelected: (ReadingMode) -> Unit) {
@@ -389,7 +400,7 @@ private fun ScaleModeMenu(current: ScaleMode, onSelected: (ScaleMode) -> Unit) {
 }
 
 @Composable
-internal fun ReaderSettingsDialog(
+private fun LegacyReaderSettingsDialog(
     settings: DesktopReaderSettings,
     onDismiss: () -> Unit,
     onSave: (DesktopReaderSettings) -> Unit,

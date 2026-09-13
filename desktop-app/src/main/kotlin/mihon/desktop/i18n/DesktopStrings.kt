@@ -543,6 +543,14 @@ interface DesktopStrings {
     fun readerFilterLabel(filter: ReaderColorFilter): String
     fun readerBackgroundLabel(bg: ReaderBackgroundColor): String
     val readerSettingsDialogTitle: String
+    val readerSettingsTabReading: String
+    val readerSettingsTabGeneral: String
+    val readerSettingsTabFilter: String
+    val readerChapterTransitions: String
+    val readerAlwaysShowChapterTransition: String
+    val readerSkipReadChapters: String
+    val readerSkipFilteredChapters: String
+    val readerSkipDuplicateChapters: String
     val readerClickRegions: String
     val readerRegionLeft: String
     val readerRegionCenter: String
@@ -1223,6 +1231,14 @@ object EnglishStrings : DesktopStrings {
         ReaderBackgroundColor.WARM_CREAM -> "Warm cream"
     }
     override val readerSettingsDialogTitle = "Reader settings"
+    override val readerSettingsTabReading = "Reading mode"
+    override val readerSettingsTabGeneral = "General"
+    override val readerSettingsTabFilter = "Color filter"
+    override val readerChapterTransitions = "Chapter transitions"
+    override val readerAlwaysShowChapterTransition = "Always show chapter transition"
+    override val readerSkipReadChapters = "Skip read chapters"
+    override val readerSkipFilteredChapters = "Skip filtered chapters"
+    override val readerSkipDuplicateChapters = "Skip duplicate chapters"
     override val readerClickRegions = "Click regions"
     override val readerRegionLeft = "Left"
     override val readerRegionCenter = "Center"
@@ -1936,6 +1952,14 @@ object SimplifiedChineseStrings : DesktopStrings {
         ReaderBackgroundColor.WARM_CREAM -> readerBgWarmCream
     }
     override val readerSettingsDialogTitle = "阅读器设置"
+    override val readerSettingsTabReading = "阅读模式"
+    override val readerSettingsTabGeneral = "常规"
+    override val readerSettingsTabFilter = "色彩滤镜"
+    override val readerChapterTransitions = "章节切换"
+    override val readerAlwaysShowChapterTransition = "始终显示章节切换页"
+    override val readerSkipReadChapters = "跳过已读章节"
+    override val readerSkipFilteredChapters = "跳过被筛选章节"
+    override val readerSkipDuplicateChapters = "跳过重复章节"
     override val readerClickRegions = "点击翻页区域"
     override val readerRegionLeft = "左侧"
     override val readerRegionCenter = "中间"
@@ -2648,6 +2672,14 @@ object TraditionalChineseStrings : DesktopStrings {
         ReaderBackgroundColor.WARM_CREAM -> readerBgWarmCream
     }
     override val readerSettingsDialogTitle = "閱讀器設定"
+    override val readerSettingsTabReading = "閱讀模式"
+    override val readerSettingsTabGeneral = "一般"
+    override val readerSettingsTabFilter = "色彩濾鏡"
+    override val readerChapterTransitions = "章節切換"
+    override val readerAlwaysShowChapterTransition = "一律顯示章節切換頁"
+    override val readerSkipReadChapters = "跳過已讀章節"
+    override val readerSkipFilteredChapters = "跳過已篩選章節"
+    override val readerSkipDuplicateChapters = "跳過重複章節"
     override val readerClickRegions = "點擊翻頁區域"
     override val readerRegionLeft = "左側"
     override val readerRegionCenter = "中間"

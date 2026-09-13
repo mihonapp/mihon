@@ -171,7 +171,7 @@ git commit -m "feat(reader): add desktop pointer visibility behavior"
 - Consumes: existing `ReaderChrome` callback contract and `ReaderState`.
 - Produces: `ReaderChapterNavigator` plus top/bottom/overflow chrome semantics tags.
 
-- [ ] **Step 1: Write failing Compose structure tests**
+- [x] **Step 1: Write failing Compose structure tests**
 
 Add `ReaderChromeParityTest` assertions for:
 
@@ -187,7 +187,7 @@ onNodeWithTag("reader-shortcuts-btn").assertIsDisplayed()
 
 Assert that fullscreen, borderless, shortcuts, zoom, and page actions are absent from the persistent top/bottom rows. Assert stable current/total page labels and RTL slider semantics.
 
-- [ ] **Step 2: Run the chrome test and observe RED**
+- [x] **Step 2: Run the chrome test and observe RED**
 
 Run:
 
@@ -197,15 +197,15 @@ Run:
 
 Expected: failures because the current chrome has no Mihon component tags and exposes desktop actions persistently.
 
-- [ ] **Step 3: Extract and implement the navigator**
+- [x] **Step 3: Extract and implement the navigator**
 
 Create `ReaderChapterNavigator.kt` with a rounded 24 dp slider capsule, filled chapter buttons, stable page-label width, and explicit layout direction derived from `state.mode.isRightToLeft`.
 
-- [ ] **Step 4: Rebuild chrome around Mihon's hierarchy**
+- [x] **Step 4: Rebuild chrome around Mihon's hierarchy**
 
 Use `AnimatedVisibility` with `slideInVertically/slideOutVertically(tween(200))` and `fadeIn/fadeOut(tween(150))`. Keep only back/title/bookmark/overflow in the top bar and reading mode/layout/crop/settings in the bottom bar.
 
-- [ ] **Step 5: Run chrome and existing reader UI tests**
+- [x] **Step 5: Run chrome and existing reader UI tests**
 
 Run:
 
@@ -215,7 +215,7 @@ Run:
 
 Expected: all selected tests pass.
 
-- [ ] **Step 6: Commit Task 3**
+- [x] **Step 6: Commit Task 3**
 
 ```powershell
 git add -- desktop-app/src/main/kotlin/mihon/desktop/ui/reader/ReaderChrome.kt desktop-app/src/main/kotlin/mihon/desktop/ui/reader/ReaderChapterNavigator.kt desktop-app/src/test/kotlin/mihon/desktop/ui/reader/ReaderChromeParityTest.kt desktop-app/src/test/kotlin/mihon/desktop/ui/reader/ReaderScreenTest.kt desktop-app/src/test/kotlin/mihon/desktop/ui/reader/ReaderScreenActionsTest.kt
@@ -229,7 +229,7 @@ git commit -m "feat(reader): replicate Mihon reader chrome"
 - Consumes: `DesktopReaderSettings`, `DesktopReaderSettingsStore`, existing setting callbacks.
 - Produces: `ReaderSettingsPanel(settings, onSave, onDismiss)` with Reading mode, General, and Color filter pages.
 
-- [ ] **Step 1: Write failing settings UI tests**
+- [x] **Step 1: Write failing settings UI tests**
 
 Add tests that open settings and assert tags for three tabs, switch pages, edit a draft, cancel without persistence, then save all changes atomically.
 
@@ -241,7 +241,7 @@ onNodeWithTag("reader-settings-tab-filter").performClick()
 onNodeWithTag("reader-setting-filter").assertIsDisplayed()
 ```
 
-- [ ] **Step 2: Run the settings test and observe RED**
+- [x] **Step 2: Run the settings test and observe RED**
 
 Run:
 
@@ -251,15 +251,15 @@ Run:
 
 Expected: failures because the current dialog is a single scrolling page.
 
-- [ ] **Step 3: Implement the tabbed settings panel**
+- [x] **Step 3: Implement the tabbed settings panel**
 
 Move the existing draft controls into the three sections without changing persisted keys. Use a bounded desktop dialog width, vertical scrolling per page, and explicit Save/Reset/Cancel actions.
 
-- [ ] **Step 4: Add localized labels**
+- [x] **Step 4: Add localized labels**
 
 Add English, Simplified Chinese, and Traditional Chinese strings for the three tab titles, overflow actions, layout selector, and pointer shortcuts.
 
-- [ ] **Step 5: Run settings and i18n tests**
+- [x] **Step 5: Run settings and i18n tests**
 
 Run:
 
@@ -269,7 +269,7 @@ Run:
 
 Expected: zero failures.
 
-- [ ] **Step 6: Commit Task 4**
+- [x] **Step 6: Commit Task 4**
 
 ```powershell
 git add -- desktop-app/src/main/kotlin/mihon/desktop/ui/reader/ReaderSettingsPanel.kt desktop-app/src/main/kotlin/mihon/desktop/ui/reader/ReaderChrome.kt desktop-app/src/main/kotlin/mihon/desktop/i18n/DesktopStrings.kt desktop-app/src/test/kotlin/mihon/desktop/ui/reader/DesktopReaderSettingsTransitionTest.kt desktop-app/src/test/kotlin/mihon/desktop/ui/reader/ReaderScreenTest.kt desktop-app/src/test/kotlin/mihon/desktop/i18n/DesktopStringsTest.kt

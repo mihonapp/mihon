@@ -71,24 +71,24 @@ class ReaderScreenTest {
         onNodeWithTag("reader-back").assertIsDisplayed()
         onNodeWithTag("reader-title").assertTextContains("Manga title")
         onNodeWithTag("reader-chapter").assertTextContains("Chapter 7")
-        onNodeWithTag("reader-page-counter").assertTextContains("1 / 4")
+        onNodeWithTag("reader-current-page").assertTextContains("1")
+        onNodeWithTag("reader-total-pages").assertTextContains("4")
         onNodeWithTag("reader-mode-menu").performClick()
         onNodeWithTag("reader-mode-DUAL_RTL").performClick()
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-cover-toggle").performClick()
         onNodeWithTag("reader-scale-menu").performClick()
         onNodeWithTag("reader-scale-FIT_HEIGHT").performClick()
-        onNodeWithTag("reader-filter-menu").performClick()
-        onNodeWithTag("reader-filter-INVERT").performClick()
         onNodeWithTag("reader-crop-toggle").performClick()
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-zoom-in").performClick()
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-fullscreen").performClick()
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-borderless").performClick()
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-shortcuts-btn").assertIsDisplayed()
         onNodeWithTag("reader-scrubber-slider").assertIsDisplayed()
-        onNodeWithTag("reader-scrubber-next").assertIsDisplayed()
-        onNodeWithTag("reader-scrubber-next").performClick()
-
-        session.actions shouldContain ReaderAction.Next
         session.actions shouldContain ReaderAction.ChangeMode(ReadingMode.DUAL_RTL)
         session.actions shouldContain ReaderAction.SetCoverOffset(true)
         session.actions shouldContain ReaderAction.SetScaleMode(ScaleMode.FIT_HEIGHT)
@@ -96,7 +96,6 @@ class ReaderScreenTest {
         store.load().mode shouldBe ReadingMode.DUAL_RTL
         store.load().coverOffset shouldBe true
         store.load().scaleMode shouldBe ScaleMode.FIT_HEIGHT
-        store.load().colorFilter shouldBe ReaderColorFilter.INVERT
         store.load().cropBorders shouldBe true
         fullscreen shouldBe 1
         borderless shouldBe 1
@@ -111,23 +110,26 @@ class ReaderScreenTest {
         setReaderScreen(session, store, width = 800, height = 700)
 
         onNodeWithTag("reader-settings").performClick()
-        onNodeWithTag("reader-setting-left-action").assertExists()
-        onNodeWithTag("reader-setting-center-action").assertExists()
-        onNodeWithTag("reader-setting-right-action").assertExists()
-        onNodeWithTag("reader-setting-wheel").assertExists()
+        onNodeWithTag("reader-settings-tab-reading").assertIsDisplayed()
         onNodeWithTag("reader-setting-mode").assertExists()
         onNodeWithTag("reader-setting-scale").assertExists()
         onNodeWithTag("reader-setting-cover").assertExists()
-        onNodeWithTag("reader-setting-filter").assertExists()
-        onNodeWithTag("reader-setting-bg").assertExists()
         onNodeWithTag("reader-setting-crop-paged").assertExists()
         onNodeWithTag("reader-setting-crop-webtoon").assertExists()
         onNodeWithTag("reader-setting-webtoon-max-width").assertExists()
         onNodeWithTag("reader-setting-webtoon-side-padding").assertExists()
+        onNodeWithTag("reader-settings-tab-general").performClick()
+        onNodeWithTag("reader-setting-left-action").assertExists()
+        onNodeWithTag("reader-setting-center-action").assertExists()
+        onNodeWithTag("reader-setting-right-action").assertExists()
+        onNodeWithTag("reader-setting-wheel").assertIsDisplayed()
         onNodeWithTag("reader-setting-left-boundary")
             .performSemanticsAction(SemanticsActions.SetProgress) { it(40f) }
         onNodeWithTag("reader-setting-center-boundary")
             .performSemanticsAction(SemanticsActions.SetProgress) { it(70f) }
+        onNodeWithTag("reader-settings-tab-filter").performClick()
+        onNodeWithTag("reader-setting-filter").assertIsDisplayed()
+        onNodeWithTag("reader-setting-bg").assertExists()
         onNodeWithTag("reader-settings-reset").performClick()
         onNodeWithTag("reader-settings-save").performClick()
 
@@ -135,6 +137,23 @@ class ReaderScreenTest {
         session.actions shouldContain ReaderAction.ChangeMode(ReadingMode.SINGLE_LTR)
         session.actions shouldContain ReaderAction.SetCoverOffset(false)
         session.actions shouldContain ReaderAction.SetScaleMode(ScaleMode.FIT_WIDTH)
+    }
+
+    @Test
+    fun `settings cancel discards the draft without changing session or persistence`() = runComposeUiTest {
+        val session = FakeReaderSession(ready())
+        val store = settingsStore()
+        val before = store.load()
+        setReaderScreen(session, store)
+
+        onNodeWithTag("reader-settings").performClick()
+        onNodeWithTag("reader-setting-mode").performClick()
+        onNodeWithTag("reader-setting-mode-DUAL_RTL").performClick()
+        onNodeWithTag("reader-settings-cancel").performClick()
+
+        store.load() shouldBe before
+        session.actions.filterIsInstance<ReaderAction.ChangeMode>().none { it.mode == ReadingMode.DUAL_RTL } shouldBe
+            true
     }
 
     @Test
@@ -183,6 +202,7 @@ class ReaderScreenTest {
         waitForIdle()
         onNodeWithTag("reader-error").assertTextContains("not supported", substring = true)
         onNodeWithText("C:\\secret\\chapter.exe", substring = true).assertDoesNotExist()
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-retry").performClick()
         waitForIdle()
         session.retryRequests shouldBe 1
@@ -222,6 +242,7 @@ class ReaderScreenTest {
         onNodeWithTag("reader-cache-diagnostic").assertDoesNotExist()
 
         setReaderScreen(FakeReaderSession(ready()), settingsStore(), debugEnabled = true)
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-cache-diagnostic").assertExists()
     }
 

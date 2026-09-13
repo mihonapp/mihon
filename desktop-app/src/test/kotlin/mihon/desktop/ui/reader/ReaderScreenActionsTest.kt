@@ -48,6 +48,7 @@ class ReaderScreenActionsTest {
             pageActionHandler = handler,
         )
 
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-page-actions").performClick()
         onNodeWithTag("reader-page-actions-dialog").assertIsDisplayed()
         onNodeWithTag("reader-page-action-save").assertIsDisplayed()
@@ -108,15 +109,19 @@ class ReaderScreenActionsTest {
             pageUrlResolver = { page -> "https://example.com/${page.id.entryName}" },
         )
 
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-page-actions").performClick()
         onNodeWithTag("reader-page-action-copy").performClick()
         waitUntil { handler.copied == 1 }
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-page-actions").performClick()
         onNodeWithTag("reader-page-action-share").performClick()
         waitUntil { handler.shared == 1 }
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-page-actions").performClick()
         onNodeWithTag("reader-page-action-cover").performClick()
         waitUntil { handler.coverTargets.size == 1 }
+        onNodeWithTag("reader-overflow").performClick()
         onNodeWithTag("reader-page-actions").performClick()
         onNodeWithTag("reader-page-action-browser").performClick()
         waitUntil { handler.openedUrls.size == 1 }
