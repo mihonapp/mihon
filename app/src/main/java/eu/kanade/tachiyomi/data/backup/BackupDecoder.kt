@@ -12,18 +12,24 @@ import okio.source
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.io.IOException
+import java.io.InputStream
 
 @Inject
 class BackupDecoder(
     private val context: Context,
     private val parser: ProtoBuf,
+    private val backupFileOpener: BackupFileOpener,
 ) {
     /**
      * Decode a potentially-gzipped backup.
      */
     fun decode(uri: Uri): Backup {
-        return context.contentResolver.openInputStream(uri)!!.use { inputStream ->
-            val source = inputStream.source().buffer()
+        return decode(backupFileOpener.open(uri))
+    }
+
+    internal fun decode(inputStream: InputStream): Backup {
+        return inputStream.use {
+            val source = it.source().buffer()
 
             val peeked = source.peek().apply {
                 require(2)
@@ -35,7 +41,7 @@ class BackupDecoder(
                     throw IOException(context.stringResource(MR.strings.invalid_backup_file_json))
                 }
                 else -> source
-            }.use { it.readByteArray() }
+            }.use { decoded -> decoded.readByteArray() }
 
             try {
                 parser.decodeFromByteArray(Backup.serializer(), backupString)
