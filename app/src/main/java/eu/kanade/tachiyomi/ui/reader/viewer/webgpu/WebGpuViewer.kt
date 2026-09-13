@@ -6,6 +6,9 @@ import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.spring
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastCoerceIn
@@ -47,6 +50,7 @@ import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.cancel
@@ -510,11 +514,46 @@ open class WebGpuViewer(
             homeScale = 1f
         }
 
-        var progress: Float = 0f
+        @Volatile
+        private var progressValue: Float = 0f
+        private var progressJob: Job? = null
+        var progress: Float
+            get() = progressValue
             set(value) {
-                field = value
-                invalidate()
+                val target = value.fastCoerceIn(0f, 1f)
+                synchronized(this) {
+                    progressJob?.cancel()
+                    progressJob = null
+
+                    if (destroyed || progressValue == target) return
+
+                    val scope = scope ?: run {
+                        progressValue = target
+                        invalidate()
+                        return
+                    }
+
+                    val start = progressValue
+                    progressJob = scope.launch {
+                        animate(
+                            start,
+                            target,
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                        ) { current, _ ->
+                            progressValue = current
+                            invalidate()
+                        }
+                    }
+                }
             }
+
+        override fun cleanup() {
+            super.cleanup()
+            synchronized(this) {
+                progressJob?.cancel()
+                progressJob = null
+            }
+        }
 
         var foregroundColor: Int = foregroundColor
             set(value) {
@@ -531,9 +570,7 @@ open class WebGpuViewer(
             val cx = dst.width * (0.5f + scale * x)
             val cy = dst.height * (0.5f + scale * y)
 
-            // Off this page's own width, not dst's: a spread half would otherwise draw a ring
-            // sized for the whole screen, straight over its partner.
-            val full = width * 0.5f * scale
+            val full = min(width, height) * 0.25f * scale
 
             circle(cx, cy, full / 2f, 0xAAAAAAAA.toInt())
 
