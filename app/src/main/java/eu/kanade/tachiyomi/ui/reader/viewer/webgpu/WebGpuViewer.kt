@@ -6,6 +6,9 @@ import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.spring
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastCoerceIn
@@ -33,9 +36,6 @@ import ca.mpreg.webgpuviewer.transition.TransitionStackUp
 import ca.mpreg.webgpuviewer.viewer.ImagePage
 import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuousState
 import com.google.android.material.color.MaterialColors
-import de.stefan_oltmann.kim.Kim
-import de.stefan_oltmann.kim.android.readMetadata
-import de.stefan_oltmann.kim.format.tiff.constant.TiffTag
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -50,6 +50,7 @@ import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.cancel
@@ -83,7 +84,7 @@ open class WebGpuViewer(
     @Volatile
     private var cachedOnBackgroundColor: Int? = null
 
-    private fun readerBackgroundColor(): Int =
+    protected fun readerBackgroundColor(): Int =
         cachedBackgroundColor ?: activity.baseContext.readerBackgroundColor(config.theme)
             .also { cachedBackgroundColor = it }
 
@@ -93,7 +94,7 @@ open class WebGpuViewer(
         Color.WHITE,
     ).also { cachedOnBackgroundColor = it }
 
-    private val scope = MainScope()
+    protected val scope = MainScope()
 
     // Dedicated thread for decode worker to avoid blocking Dispatchers.Default pool
     private val decodeExecutor = Executors.newSingleThreadExecutor { r ->
@@ -146,6 +147,10 @@ open class WebGpuViewer(
     }
 
     private fun findInCache(key: PageKey): ViewerPage? = pageCache[key]
+
+    protected fun viewerPageFor(imagePage: ImagePage): ViewerPage? = synchronized(lock) {
+        pageCache.values.firstOrNull { it.imagePage === imagePage }
+    }
 
     /** Check if a page is in the cache by identity. O(1) via key lookup. */
     private fun pageInCache(page: ViewerPage): Boolean = pageCache[pageKey(page)] === page
@@ -513,11 +518,46 @@ open class WebGpuViewer(
             homeScale = 1f
         }
 
-        var progress: Float = 0f
+        @Volatile
+        private var progressValue: Float = 0f
+        private var progressJob: Job? = null
+        var progress: Float
+            get() = progressValue
             set(value) {
-                field = value
-                invalidate()
+                val target = value.fastCoerceIn(0f, 1f)
+                synchronized(this) {
+                    progressJob?.cancel()
+                    progressJob = null
+
+                    if (destroyed || progressValue == target) return
+
+                    val scope = scope ?: run {
+                        progressValue = target
+                        invalidate()
+                        return
+                    }
+
+                    val start = progressValue
+                    progressJob = scope.launch {
+                        animate(
+                            start,
+                            target,
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                        ) { current, _ ->
+                            progressValue = current
+                            invalidate()
+                        }
+                    }
+                }
             }
+
+        override fun cleanup() {
+            super.cleanup()
+            synchronized(this) {
+                progressJob?.cancel()
+                progressJob = null
+            }
+        }
 
         var foregroundColor: Int = foregroundColor
             set(value) {
@@ -534,9 +574,7 @@ open class WebGpuViewer(
             val cx = dst.width * (0.5f + scale * x)
             val cy = dst.height * (0.5f + scale * y)
 
-            // Off this page's own width, not dst's: a spread half would otherwise draw a ring
-            // sized for the whole screen, straight over its partner.
-            val full = width * 0.5f * scale
+            val full = min(width, height) * 0.25f * scale
 
             circle(cx, cy, full / 2f, 0xAAAAAAAA.toInt())
 
@@ -925,6 +963,7 @@ open class WebGpuViewer(
                 }
 
                 (this as? ImageViewerContinuousState)?.let {
+                    backgroundColor = readerBackgroundColor()
                     homeScale = config.continuousMinWidth / 100f
                     scale = homeScale
                     minScale = if (config.zoomOutDisabled) 0f else 0.1f
@@ -1089,27 +1128,6 @@ open class WebGpuViewer(
                 }
             }
 
-            // Buffered to read the spread tag, then decoded from the buffer. On the preference,
-            // not isDualPageMode(): WIDE is portrait-off, and a rotate never re-decodes. Never in
-            // continuous, where nothing pairs - that mode reads the stream instead of holding it.
-            val bytes = if (!isContinuous && config.dualPageView != ReaderPreferences.DualPageView.NEVER) {
-                input.readBytes()
-            } else {
-                null
-            }
-
-            // Left untouched for a file that names no side - [spreadPosition] then derives one.
-            if (bytes != null) {
-                val tag = Kim.readMetadata(bytes.inputStream(), bytes.size.toLong())
-                    ?.findStringValue(TiffTag.TIFF_TAG_PAGE_NAME)
-                page.taggedSpreadPosition = when (tag) {
-                    "Left" -> SpreadPosition.LEFT
-                    "Right" -> SpreadPosition.RIGHT
-                    null -> null
-                    else -> SpreadPosition.SINGLE
-                }
-            }
-
             // The decoder hands the map over unapplied - see ImageDecoder.Gainmap - because how
             // much of it to use depends on the display, so the viewer applies it.
             fun ImageDecoder.DecodeResult.gainmapInput(): GainmapInput? = gainmap?.let {
@@ -1126,121 +1144,130 @@ open class WebGpuViewer(
                 )
             }
 
-            val dec = ImageDecoder.new(bytes?.inputStream() ?: input)
+            ImageDecoder.new(input).use { dec ->
+                if (isDualPageMode()) {
+                    page.taggedSpreadPosition = when (dec.getTag("PageName")) {
+                        "Left" -> SpreadPosition.LEFT
+                        "Right" -> SpreadPosition.RIGHT
+                        null -> null
+                        else -> SpreadPosition.SINGLE
+                    }
+                }
 
-            val pageCount = dec.pages
+                val pageCount = dec.pages
 
-            if (pageCount == 0) throw Exception("No frames decoded")
+                if (pageCount == 0) throw Exception("No frames decoded")
 
-            val backgroundColor = if (config.automaticBackground) null else readerBackgroundColor()
+                val backgroundColor = if (config.automaticBackground) null else readerBackgroundColor()
 
-            val firstFrame = dec.decodeNext()
+                val firstFrame = dec.decodeNext()
 
-            val imagePage = if (pageCount == 1) {
-                // Only trim when not animated and not in dual page mode
-                val trimColors = if (config.imageCropBorders && !isDualPageMode()) {
-                    listOf(
-                        floatArrayOf(1f, 1f, 1f),
-                        floatArrayOf(0f, 0f, 0f),
+                val imagePage = if (pageCount == 1) {
+                    // Only trim when not animated and not in dual page mode
+                    val trimColors = if (config.imageCropBorders && !isDualPageMode()) {
+                        listOf(
+                            floatArrayOf(1f, 1f, 1f),
+                            floatArrayOf(0f, 0f, 0f),
+                        )
+                    } else {
+                        null
+                    }
+
+                    val firstImage = Image(
+                        firstFrame.image,
+                        firstFrame.width,
+                        firstFrame.height,
+                        createMipMaps = true,
+                        trimColors = trimColors,
+                        trimThreshold = 0.15f,
+                        backgroundColor = backgroundColor,
+                        hdr = firstFrame.isHdr,
+                        hdrHeadroom = firstFrame.hdrHeadroom,
+                        gainmap = firstFrame.gainmapInput(),
                     )
+
+                    ImagePage.ImageSingle(firstImage)
                 } else {
-                    null
+                    val frames = ArrayList<Pair<Image, Int>>(pageCount)
+
+                    // Built frames hold uploaded textures, and ImageSingle owns the only teardown.
+                    fun discardFrames() {
+                        if (frames.isNotEmpty()) ImagePage.ImageSingle(frames).cleanup()
+                    }
+
+                    val firstImage = Image(
+                        firstFrame.image,
+                        firstFrame.width,
+                        firstFrame.height,
+                        createMipMaps = false,
+                        backgroundColor = backgroundColor,
+                        hdr = firstFrame.isHdr,
+                        hdrHeadroom = firstFrame.hdrHeadroom,
+                        gainmap = firstFrame.gainmapInput(),
+                    )
+
+                    frames.add(Pair(firstImage, firstFrame.duration))
+
+                    try {
+                        for (i in 1 until pageCount) {
+                            // Under lock: a decode this long gives an eviction's cleanup() time to land.
+                            val stillWanted = synchronized(lock) {
+                                pageInCache(page).also { inCache ->
+                                    if (inCache) {
+                                        (page.imagePage as? ProgressPage)?.progress = i.toFloat() / pageCount
+                                    }
+                                }
+                            }
+
+                            // Scrolled past: the frames left are work nothing will draw.
+                            if (!stillWanted) {
+                                discardFrames()
+                                return
+                            }
+
+                            val frame = dec.decodeNext()
+                            val image = Image(
+                                frame.image,
+                                frame.width,
+                                frame.height,
+                                createMipMaps = false,
+                                backgroundColor = firstImage.backgroundColor,
+                                hdr = frame.isHdr,
+                                hdrHeadroom = frame.hdrHeadroom,
+                                gainmap = frame.gainmapInput(),
+                            )
+                            frames.add(Pair(image, frame.duration))
+                        }
+                    } catch (e: Throwable) {
+                        discardFrames()
+                        throw e
+                    }
+
+                    ImagePage.ImageSingle(frames)
                 }
 
-                val firstImage = Image(
-                    firstFrame.image,
-                    firstFrame.width,
-                    firstFrame.height,
-                    createMipMaps = true,
-                    trimColors = trimColors,
-                    trimThreshold = 0.15f,
-                    backgroundColor = backgroundColor,
-                    hdr = firstFrame.isHdr,
-                    hdrHeadroom = firstFrame.hdrHeadroom,
-                    gainmap = firstFrame.gainmapInput(),
-                )
-
-                ImagePage.ImageSingle(firstImage)
-            } else {
-                val frames = ArrayList<Pair<Image, Int>>(pageCount)
-
-                // Built frames hold uploaded textures, and ImageSingle owns the only teardown.
-                fun discardFrames() {
-                    if (frames.isNotEmpty()) ImagePage.ImageSingle(frames).cleanup()
-                }
-
-                val firstImage = Image(
-                    firstFrame.image,
-                    firstFrame.width,
-                    firstFrame.height,
-                    createMipMaps = false,
-                    backgroundColor = backgroundColor,
-                    hdr = firstFrame.isHdr,
-                    hdrHeadroom = firstFrame.hdrHeadroom,
-                    gainmap = firstFrame.gainmapInput(),
-                )
-
-                frames.add(Pair(firstImage, firstFrame.duration))
-
-                try {
-                    for (i in 1 until pageCount) {
-                        // Under lock: a decode this long gives an eviction's cleanup() time to land.
-                        val stillWanted = synchronized(lock) {
-                            pageInCache(page).also { inCache ->
-                                if (inCache) {
-                                    (page.imagePage as? ProgressPage)?.progress = i.toFloat() / pageCount
+                synchronized(lock) {
+                    if (pageInCache(page) && !page.isDecoded && !page.imagePage.destroyed) {
+                        val oldImagePage = page.imagePage
+                        page.imagePage = imagePage
+                        noteIfLone(page)
+                        page.state = PageState.IDLE
+                        cleanupImage(oldImagePage)
+                        // Fade up from the placeholder's colour, if that placeholder was on screen -
+                        // one that decoded out of view has nothing left to fade from.
+                        if (oldImagePage.isOnScreen) imagePage.fadeIn()
+                        if (!isDualPageMode()) {
+                            (page.imagePage as? ImagePage.ImageSingle)?.let {
+                                if (!applyWideZoomIfNeeded(it)) {
+                                    applyFitModeAnchor(it)
                                 }
                             }
                         }
-
-                        // Scrolled past: the frames left are work nothing will draw.
-                        if (!stillWanted) {
-                            discardFrames()
-                            return
-                        }
-
-                        val frame = dec.decodeNext()
-                        val image = Image(
-                            frame.image,
-                            frame.width,
-                            frame.height,
-                            createMipMaps = false,
-                            backgroundColor = firstImage.backgroundColor,
-                            hdr = frame.isHdr,
-                            hdrHeadroom = frame.hdrHeadroom,
-                            gainmap = frame.gainmapInput(),
-                        )
-                        frames.add(Pair(image, frame.duration))
+                        pager.state.invalidate()
+                    } else {
+                        if (pageInCache(page)) page.state = PageState.IDLE
+                        imagePage.cleanup()
                     }
-                } catch (e: Throwable) {
-                    discardFrames()
-                    throw e
-                }
-
-                ImagePage.ImageSingle(frames)
-            }
-
-            synchronized(lock) {
-                if (pageInCache(page) && !page.isDecoded && !page.imagePage.destroyed) {
-                    val oldImagePage = page.imagePage
-                    page.imagePage = imagePage
-                    noteIfLone(page)
-                    page.state = PageState.IDLE
-                    cleanupImage(oldImagePage)
-                    // Fade up from the placeholder's colour, if that placeholder was on screen -
-                    // one that decoded out of view has nothing left to fade from.
-                    if (oldImagePage.isOnScreen) imagePage.fadeIn()
-                    if (!isDualPageMode()) {
-                        (page.imagePage as? ImagePage.ImageSingle)?.let {
-                            if (!applyWideZoomIfNeeded(it)) {
-                                applyFitModeAnchor(it)
-                            }
-                        }
-                    }
-                    pager.state.invalidate()
-                } else {
-                    if (pageInCache(page)) page.state = PageState.IDLE
-                    imagePage.cleanup()
                 }
             }
         }
@@ -1405,13 +1432,17 @@ open class WebGpuViewer(
                 // MainScope, not the state's: that one dispatches inside the frame callback.
                 val settled = page
                 this@WebGpuViewer.scope.launch {
-                    activity.hideMenu()
-                    progressPage(settled)?.let { activity.onPageSelected(it.page) }
+                    if (!isContinuous) {
+                        activity.hideMenu()
+                        progressPage(settled)?.let { activity.onPageSelected(it.page) }
+                    }
                     preloadPages(settled)
 
-                    (settled as? ViewerTransitionPage)?.let { transitionPage ->
-                        if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
-                            activity.showMenu()
+                    if (!isContinuous) {
+                        (settled as? ViewerTransitionPage)?.let { transitionPage ->
+                            if (transitionPage.prevChapter == null || transitionPage.nextChapter == null) {
+                                activity.showMenu()
+                            }
                         }
                     }
                 }

@@ -298,7 +298,6 @@ dependencies {
     implementation(libs.image.decoder)
 
     implementation(libs.webgpuviewer)
-    implementation(libs.kim)
 
     // UI libraries
     implementation(libs.material)
