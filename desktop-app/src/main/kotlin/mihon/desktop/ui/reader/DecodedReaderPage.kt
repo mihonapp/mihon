@@ -19,7 +19,8 @@ import androidx.compose.ui.platform.testTag
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
-import mihon.desktop.reader.DesktopReaderFactory
+import mihon.desktop.reader.DesktopReaderContent
+import mihon.desktop.reader.DesktopReaderPageFrame
 import mihon.desktop.reader.ReaderColorFilter
 import mihon.reader.model.PageDescriptor
 
@@ -29,7 +30,7 @@ val LocalReaderCropBorders = staticCompositionLocalOf { false }
 /** Each composed page owns its display lease; leaving a spread/list releases that lease. */
 @Composable
 fun DecodedReaderPage(
-    factory: DesktopReaderFactory,
+    content: DesktopReaderContent,
     page: PageDescriptor,
     foreground: Boolean,
     modifier: Modifier,
@@ -38,7 +39,7 @@ fun DecodedReaderPage(
 ) {
     val pageSizeSink = LocalReaderPageSizeSink.current
     val imageStore = LocalReaderPageImageStore.current
-    var frame by remember(page.id, cropBorders) { mutableStateOf<DesktopReaderFactory.PageFrame?>(null) }
+    var frame by remember(page.id, cropBorders) { mutableStateOf<DesktopReaderPageFrame?>(null) }
     var failure by remember(page.id) { mutableStateOf<String?>(null) }
 
     LaunchedEffect(frame, imageStore) {
@@ -54,19 +55,19 @@ fun DecodedReaderPage(
     }
 
     // Promote probed intrinsic dimensions into reader layout even before the full frame decodes.
-    LaunchedEffect(factory, page.id, pageSizeSink) {
+    LaunchedEffect(content, page.id, pageSizeSink) {
         val sink = pageSizeSink ?: return@LaunchedEffect
-        factory.pageSizes.sizes.collect { sizes ->
+        content.pageSizes.sizes.collect { sizes ->
             sizes[page.id]?.let { size -> sink.onPageSize(page.id, size) }
         }
     }
 
-    LaunchedEffect(factory, page.id, foreground, cropBorders) {
-        var owned: DesktopReaderFactory.PageFrame? = null
+    LaunchedEffect(content, page.id, foreground, cropBorders) {
+        var owned: DesktopReaderPageFrame? = null
         try {
             var index = 0
             while (true) {
-                val replacement = factory.loadFrame(page.id, index, cropBorders)
+                val replacement = content.loadFrame(page.id, index, cropBorders)
                 pageSizeSink?.onPageSize(
                     page.id,
                     PageSize(replacement.metadata.width, replacement.metadata.height),

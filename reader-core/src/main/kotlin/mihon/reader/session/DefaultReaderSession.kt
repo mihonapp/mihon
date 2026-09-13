@@ -217,6 +217,7 @@ class DefaultReaderSession(
             return
         }
         if (pages.isEmpty()) {
+            contentPipeline.closeChapter()
             opened.close()
             failLocked(ReaderErrorCode.EMPTY_CHAPTER, ReaderFailure.EmptyChapter())
             return

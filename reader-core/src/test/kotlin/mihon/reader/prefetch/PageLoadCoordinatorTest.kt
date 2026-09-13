@@ -105,6 +105,8 @@ class PageLoadCoordinatorTest {
     ) : PageDecoder {
         private val lock = Any()
         var frameCount = 1
+        var imageWidth = 4
+        var imageHeight = 4
         var probeGate: CompletableDeferred<Unit>? = null
         var decodeGate: CompletableDeferred<Unit>? = null
         var postDecodeGate: CompletableDeferred<Unit>? = null
@@ -133,7 +135,7 @@ class PageLoadCoordinatorTest {
                 probeCount++
                 frameCount
             }
-            return ImageMetadata(4, 4, frames, List(frames) { 0L }, supportsRegionDecode = true)
+            return ImageMetadata(imageWidth, imageHeight, frames, List(frames) { 0L }, supportsRegionDecode = true)
         }
 
         override suspend fun decodeFull(
@@ -222,6 +224,29 @@ class PageLoadCoordinatorTest {
         coordinator.close()
         harness.cache.metrics.pinnedBytes shouldBe 0
         harness.budget.metrics shouldBe ReaderMemoryMetrics(4096, 0, 256)
+    }
+
+    @Test
+    fun `full page loading downsamples static images to the configured pixel ceiling`() = runTest {
+        val harness = Harness(capacity = 4096)
+        harness.decoder.imageWidth = 8
+        harness.decoder.imageHeight = 8
+        harness.cache = WeightedTileCache(capacityBytes = 4096)
+        val coordinator = PageLoadCoordinator(
+            harness.decoder,
+            harness.cache,
+            backgroundScope,
+            maxFullPagePixels = 16,
+        )
+        val source = FakeChapterSource(1, 1)
+        coordinator.openChapter(source)
+
+        val loaded = coordinator.loadVisible(source.pageId(0))
+
+        loaded.tile.key.sampleSize shouldBe 2
+        harness.decoder.regionRequests().single().targetWidth shouldBe 4
+        harness.decoder.regionRequests().single().targetHeight shouldBe 4
+        coordinator.close()
     }
 
     @Test

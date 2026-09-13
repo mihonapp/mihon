@@ -879,7 +879,7 @@ private fun ReaderDestination(
     bookmarkStore: ReaderChapterBookmarkStore? = null,
 ) {
     val strings = mihon.desktop.i18n.LocalStrings.current
-    var session by remember(destination) { mutableStateOf<mihon.reader.session.ReaderSession?>(null) }
+    var readerHandle by remember(destination) { mutableStateOf<mihon.desktop.reader.DesktopReaderHandle?>(null) }
     val factory = runtime.readerFactory
     if (factory == null) {
         Text(strings.readerUnavailable)
@@ -887,12 +887,12 @@ private fun ReaderDestination(
     }
     LaunchedEffect(destination) {
         val isIncognito = runtime.preferences.load().incognitoMode
-        session = withContext(Dispatchers.Default) {
-            factory.createSession(isIncognito = isIncognito).also { it.open(destination.chapterId) }
+        readerHandle = withContext(Dispatchers.Default) {
+            factory.createHandle(isIncognito = isIncognito).also { it.session.open(destination.chapterId) }
         }
     }
-    val activeSession = session
-    if (activeSession == null) {
+    val activeHandle = readerHandle
+    if (activeHandle == null) {
         Column(
             modifier = androidx.compose.ui.Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -902,6 +902,7 @@ private fun ReaderDestination(
             Text(strings.readerOpeningChapter)
         }
     } else {
+        val activeSession = activeHandle.session
         ReaderScreen(
             session = activeSession,
             title = mangaTitle,
@@ -926,7 +927,7 @@ private fun ReaderDestination(
             bookmarkStore = bookmarkStore,
             pageContent = { page, _, modifier ->
                 DecodedReaderPage(
-                    factory = factory,
+                    content = activeHandle.content,
                     page = page,
                     foreground = true,
                     modifier = modifier,

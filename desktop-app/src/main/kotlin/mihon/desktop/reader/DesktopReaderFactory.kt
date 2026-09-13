@@ -77,7 +77,9 @@ class DesktopReaderFactory(
     private val sessions = linkedSetOf<TrackedReaderSession>()
     private var acceptingSessions = true
 
-    fun createSession(isIncognito: Boolean = false): ReaderSession {
+    fun createSession(isIncognito: Boolean = false): ReaderSession = createHandle(isIncognito).session
+
+    fun createHandle(isIncognito: Boolean = false): DesktopReaderHandle {
         val sessionScope = synchronized(lock) {
             check(acceptingSessions) { "reader runtime is shutting down" }
             CoroutineScope(applicationScope.coroutineContext + SupervisorJob(applicationScope.coroutineContext[Job]))
@@ -87,6 +89,13 @@ class DesktopReaderFactory(
         } else {
             library
         }
+        val contentPipeline = DesktopReaderContentPipeline(
+            decoder = decoder,
+            cache = cache,
+            scope = sessionScope,
+            sourceFactory = sourceFactory,
+            maxFullPagePixels = MAX_DISPLAY_PIXELS,
+        )
         val session = DefaultReaderSession(
             scope = sessionScope,
             catalog = catalog,
@@ -94,7 +103,6 @@ class DesktopReaderFactory(
             progressSink = effectiveSink,
             generationSource = generationSource,
             settings = settings.load().toCoreSettings(),
-            visibleContent = { loadFrame(it, 0).tile },
             invalidateContent = { pageId ->
                 cache.invalidatePage(pageId)
                 val asset = requireNotNull(catalog.chapterAsset(pageId.chapterId.toLong()))
@@ -102,13 +110,18 @@ class DesktopReaderFactory(
                     (source as? mihon.desktop.extension.OnlineChapterSource)?.invalidate(pageId)
                 }
             },
+            contentPipeline = contentPipeline,
         )
-        return TrackedReaderSession(session, sessionScope).also { tracked ->
+        val tracked = TrackedReaderSession(session, sessionScope).also { tracked ->
             synchronized(lock) {
                 check(acceptingSessions) { "reader runtime is shutting down" }
                 sessions += tracked
             }
         }
+        return DesktopReaderHandle(
+            session = tracked,
+            content = DesktopReaderContent(contentPipeline, bridge, pageSizes),
+        )
     }
 
     fun nextGeneration(): Long = generationSource.nextGeneration()
