@@ -14,7 +14,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerButton
-import androidx.compose.ui.input.pointer.isCtrlPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
@@ -35,7 +34,6 @@ internal fun ReaderGestureArea(
     onDoubleTap: (viewport: ReaderViewport) -> Unit,
     onPan: (delta: ReaderPan, viewport: ReaderViewport) -> Unit,
     onZoomBy: (factor: Float, centroid: InputPoint, viewport: ReaderViewport) -> Unit,
-    onWheel: (deltaPixels: Float, ctrl: Boolean, centroid: InputPoint, viewport: ReaderViewport) -> Unit,
     modifier: Modifier = Modifier,
     onLongPress: (normalizedX: Float) -> Unit = {},
     onSecondaryClick: () -> Unit = {},
@@ -50,27 +48,6 @@ internal fun ReaderGestureArea(
     val currentOnPointerMove by rememberUpdatedState(onPointerMove)
     val currentOnPan by rememberUpdatedState(onPan)
     val currentOnZoomBy by rememberUpdatedState(onZoomBy)
-    val currentOnWheel by rememberUpdatedState(onWheel)
-
-    val wheelModifier = if (enabled) {
-        Modifier.onPointerEvent(PointerEventType.Scroll, PointerEventPass.Initial) { event ->
-            val change = event.changes.firstOrNull() ?: return@onPointerEvent
-            val deltaPixels = change.scrollDelta.y
-            if (deltaPixels == 0f) return@onPointerEvent
-            val viewport = size.toReaderViewport()
-            val centroid = InputPoint(
-                x = (change.position.x / viewport.width).coerceIn(0f, 1f),
-                y = (change.position.y / viewport.height).coerceIn(0f, 1f),
-            )
-            val ctrl = event.keyboardModifiers.isCtrlPressed
-            currentOnWheel(deltaPixels, ctrl, centroid, viewport)
-            if (ctrl) {
-                event.changes.forEach { it.consume() }
-            }
-        }
-    } else {
-        Modifier
-    }
     val secondaryClickModifier = if (enabled) {
         Modifier.onPointerEvent(PointerEventType.Press, PointerEventPass.Initial) { event ->
             if (event.button == PointerButton.Secondary) {
@@ -130,8 +107,7 @@ internal fun ReaderGestureArea(
                 }
             }
             .then(secondaryClickModifier)
-            .then(pointerMoveModifier)
-            .then(wheelModifier),
+            .then(pointerMoveModifier),
         content = content,
     )
 }

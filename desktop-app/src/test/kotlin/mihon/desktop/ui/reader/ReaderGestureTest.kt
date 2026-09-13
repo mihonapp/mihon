@@ -131,7 +131,6 @@ class ReaderGestureTest {
                     onDoubleTap = { doubleTaps += it },
                     onPan = { delta, _ -> pans += delta },
                     onZoomBy = { factor, _, _ -> zoomFactors += factor },
-                    onWheel = { _, _, _, _ -> },
                     modifier = Modifier.testTag("gesture-area"),
                     content = {},
                 )
@@ -178,7 +177,6 @@ class ReaderGestureTest {
                     onDoubleTap = {},
                     onPan = { _, _ -> },
                     onZoomBy = { _, _, _ -> },
-                    onWheel = { _, _, _, _ -> },
                     onSecondaryClick = { secondaryClicks++ },
                     modifier = Modifier.testTag("gesture-area"),
                     content = {},
@@ -191,6 +189,33 @@ class ReaderGestureTest {
 
         secondaryClicks shouldBe 1
         primaryTaps shouldBe 0
+    }
+
+    @Test
+    fun `one mouse wheel notch advances one paged image`() = runComposeUiTest {
+        val session = FakeReaderSession(readyState())
+        setContent {
+            MaterialTheme {
+                Box(Modifier.requiredSize(800.dp, 600.dp)) {
+                    ReaderScreen(
+                        session = session,
+                        title = "Manga title",
+                        chapterTitle = "Chapter 7",
+                        settingsStore = null,
+                        onBack = {},
+                    )
+                }
+            }
+        }
+        waitForIdle()
+
+        onNodeWithTag("reader-gesture-area").performMouseInput {
+            moveTo(center)
+            scroll(1f)
+        }
+        waitForIdle()
+
+        session.actions shouldContain ReaderAction.Next
     }
 
     @Test

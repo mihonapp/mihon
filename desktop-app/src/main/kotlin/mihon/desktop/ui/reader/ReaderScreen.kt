@@ -42,7 +42,9 @@ import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.isCtrlPressed as isPointerCtrlPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
@@ -83,6 +85,7 @@ import mihon.reader.session.ReaderState
 import mihon.reader.source.ReaderFailure
 
 @Composable
+@OptIn(ExperimentalComposeUiApi::class)
 fun ReaderScreen(
     session: ReaderSession,
     title: String,
@@ -504,9 +507,27 @@ fun ReaderScreen(
         onDispose { session.dispatch(ReaderAction.SetContentVisible(false)) }
     }
 
+    val ready = state.loadState is ReaderLoadState.Ready
     Box(
         modifier = modifier
             .fillMaxSize()
+            .onPointerEvent(PointerEventType.Scroll, PointerEventPass.Initial) { event ->
+                if (!ready) return@onPointerEvent
+                val change = event.changes.firstOrNull() ?: return@onPointerEvent
+                val deltaPixels = change.scrollDelta.y
+                if (deltaPixels == 0f) return@onPointerEvent
+                val viewport = state.viewport ?: return@onPointerEvent
+                val centroid = InputPoint(
+                    x = (change.position.x / viewport.width.coerceAtLeast(1)).coerceIn(0f, 1f),
+                    y = (change.position.y / viewport.height.coerceAtLeast(1)).coerceIn(0f, 1f),
+                )
+                val ctrl = event.keyboardModifiers.isPointerCtrlPressed
+                handleWheel(deltaPixels, ctrl, centroid, viewport)
+                val continuous = state.mode == ReadingMode.VERTICAL || state.mode == ReadingMode.WEBTOON
+                if (ctrl || !continuous) {
+                    event.changes.forEach { it.consume() }
+                }
+            }
             .pointerHoverIcon(rememberReaderPointerIcon(overlayVisibility.cursorVisible))
             .testTag("reader-screen")
             .focusRequester(focusRequester)
@@ -545,7 +566,6 @@ fun ReaderScreen(
     ) {
         val isWebtoon = state.mode == ReadingMode.WEBTOON
         val currentCrop = if (isWebtoon) settings.cropBordersWebtoon else settings.cropBorders
-        val ready = state.loadState is ReaderLoadState.Ready
         ReaderGestureArea(
             enabled = ready,
             onPress = { handlePress(it) },
@@ -553,7 +573,6 @@ fun ReaderScreen(
             onDoubleTap = { handleDoubleTap(it) },
             onPan = { delta, viewport -> handlePan(delta, viewport) },
             onZoomBy = { factor, centroid, viewport -> handleZoomBy(factor, centroid, viewport) },
-            onWheel = { delta, ctrl, centroid, viewport -> handleWheel(delta, ctrl, centroid, viewport) },
             modifier = Modifier.fillMaxSize().testTag("reader-gesture-area"),
             onLongPress = { openPageActions() },
             onSecondaryClick = { openPageActions() },

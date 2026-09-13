@@ -149,7 +149,7 @@ class ReaderInputMapper(private val nowMillis: () -> Long = System::currentTimeM
 
     private companion object {
         val CENTER = InputPoint(.5f, .5f)
-        const val PAGE_WHEEL_THRESHOLD = 120f
+        const val PAGE_WHEEL_THRESHOLD = 1f
         const val PAGE_WHEEL_RATE_LIMIT_MILLIS = 150L
     }
 }

@@ -67,16 +67,25 @@ class ReaderInputMapperTest {
             ReaderInputCommand.Core(ReaderAction.Next)
     }
 
-    @Test fun `wheel uses zoom before scroll and pages only after threshold and rate limit`() {
+    @Test fun `wheel uses zoom then accumulates touchpad units and rate limits page changes`() {
         val mapper = ReaderInputMapper(nowMillis = { now })
         val paged = ReaderInputContext(ReadingMode.SINGLE_LTR, wheelBehavior = ReaderWheelBehavior.PAGE_NAVIGATION)
         mapper.mapWheel(40f, paged, ctrl = true, centroid = InputPoint(.4f, .6f)).action shouldBe
             ReaderInputCommand.ZoomBy(1.1f, InputPoint(.4f, .6f))
-        mapper.mapWheel(50f, paged).consumed shouldBe false
-        mapper.mapWheel(70f, paged).action shouldBe ReaderInputCommand.Core(ReaderAction.Next)
-        mapper.mapWheel(120f, paged).consumed shouldBe false
+        mapper.mapWheel(.4f, paged).consumed shouldBe false
+        mapper.mapWheel(.6f, paged).action shouldBe ReaderInputCommand.Core(ReaderAction.Next)
+        mapper.mapWheel(1f, paged).consumed shouldBe false
         now += 200
-        mapper.mapWheel(120f, paged).action shouldBe ReaderInputCommand.Core(ReaderAction.Next)
+        mapper.mapWheel(1f, paged).action shouldBe ReaderInputCommand.Core(ReaderAction.Next)
+    }
+
+    @Test fun `one desktop wheel notch flips exactly one paged image`() {
+        val mapper = ReaderInputMapper(nowMillis = { now })
+        val paged = ReaderInputContext(ReadingMode.SINGLE_LTR, wheelBehavior = ReaderWheelBehavior.PAGE_NAVIGATION)
+
+        mapper.mapWheel(1f, paged).action shouldBe ReaderInputCommand.Core(ReaderAction.Next)
+        now += 200
+        mapper.mapWheel(-1f, paged).action shouldBe ReaderInputCommand.Core(ReaderAction.Previous)
     }
 
     @Test fun `continuous wheel moves the anchor and touchpad pinch preserves centroid`() {
