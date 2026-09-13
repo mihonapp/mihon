@@ -108,6 +108,9 @@ abstract class BaseTracker(
             track.status != getRereadingStatus()
         ) {
             track.status = getReadingStatus()
+            if (track.started_reading_date <= 0L) {
+                track.started_reading_date = System.currentTimeMillis()
+            }
         }
         track.last_chapter_read = chapterNumber.toDouble()
         if (track.total_chapters != 0L && track.last_chapter_read.toLong() == track.total_chapters) {
