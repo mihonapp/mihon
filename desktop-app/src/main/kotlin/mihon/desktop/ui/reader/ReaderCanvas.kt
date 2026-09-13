@@ -106,6 +106,7 @@ fun ReaderCanvas(
                 PagedReader(
                     state = state,
                     viewportWidth = maxWidth,
+                    onAction = onAction,
                     pageSizes = pageSizes,
                     pageContent = pageContent,
                     modifier = Modifier.fillMaxSize().testTag("reader-paged"),

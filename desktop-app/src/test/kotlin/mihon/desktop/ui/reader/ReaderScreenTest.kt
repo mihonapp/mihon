@@ -140,6 +140,35 @@ class ReaderScreenTest {
     }
 
     @Test
+    fun `paged reader reports every page in the visible dual spread`() = runComposeUiTest {
+        val initial = ready().copy(mode = ReadingMode.DUAL_LTR)
+        val session = FakeReaderSession(initial)
+        setReaderScreen(session, settingsStore(), width = 1000, height = 700)
+
+        waitUntil(timeoutMillis = 5_000) {
+            session.actions.filterIsInstance<ReaderAction.SetVisiblePages>().any { action ->
+                action.pageIds == listOf(initial.pages[0].id, initial.pages[1].id)
+            }
+        }
+    }
+
+    @Test
+    fun `continuous reader reports all items intersecting the viewport`() = runComposeUiTest {
+        val pages = List(6) { index ->
+            PageDescriptor(PageId("chapter", "short-$index.png"), 600, 200)
+        }
+        val initial = ReaderState.ready(7, pages, selectedIndex = 0).copy(mode = ReadingMode.VERTICAL)
+        val session = FakeReaderSession(initial)
+        setReaderScreen(session, settingsStore(), width = 800, height = 800)
+
+        waitUntil(timeoutMillis = 5_000) {
+            session.actions.filterIsInstance<ReaderAction.SetVisiblePages>().any { action ->
+                action.pageIds.size >= 2 && action.pageIds.all { id -> id in pages.map { it.id } }
+            }
+        }
+    }
+
+    @Test
     fun `settings cancel discards the draft without changing session or persistence`() = runComposeUiTest {
         val session = FakeReaderSession(ready())
         val store = settingsStore()

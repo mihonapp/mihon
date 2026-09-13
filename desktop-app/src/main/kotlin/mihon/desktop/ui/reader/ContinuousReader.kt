@@ -76,6 +76,14 @@ internal fun ContinuousReader(
         }
     }
 
+    LaunchedEffect(listState, state.chapterId, state.pages) {
+        snapshotFlow {
+            listState.layoutInfo.visibleItemsInfo.mapNotNull { item -> state.pages.getOrNull(item.index)?.id }
+        }.distinctUntilChanged().collect { visiblePages ->
+            onAction(ReaderAction.SetVisiblePages(visiblePages))
+        }
+    }
+
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
