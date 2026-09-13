@@ -7,8 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.doubleClick
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performMouseInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.pinch
@@ -216,6 +219,44 @@ class ReaderGestureTest {
         waitForIdle()
 
         session.actions shouldContain ReaderAction.Next
+    }
+
+    @Test
+    fun `mouse wheel page navigation does not reveal hidden reader chrome`() = runComposeUiTest {
+        mainClock.autoAdvance = false
+        val session = FakeReaderSession(readyState())
+        setContent {
+            MaterialTheme {
+                Box(Modifier.requiredSize(800.dp, 600.dp)) {
+                    ReaderScreen(
+                        session = session,
+                        title = "Manga title",
+                        chapterTitle = "Chapter 7",
+                        settingsStore = null,
+                        onBack = {},
+                    )
+                }
+            }
+        }
+        waitForIdle()
+
+        onNodeWithTag("reader-next-region").performClick()
+        mainClock.advanceTimeBy(2_600)
+        waitForIdle()
+        onNodeWithTag("reader-chrome")
+            .assert(SemanticsMatcher.expectValue(ReaderChromeVisibleKey, false))
+        val previousNextCount = session.actions.count { it == ReaderAction.Next }
+
+        onNodeWithTag("reader-gesture-area").performMouseInput {
+            moveTo(center)
+            scroll(1f)
+        }
+        mainClock.advanceTimeByFrame()
+        waitForIdle()
+
+        session.actions.count { it == ReaderAction.Next } shouldBe previousNextCount + 1
+        onNodeWithTag("reader-chrome")
+            .assert(SemanticsMatcher.expectValue(ReaderChromeVisibleKey, false))
     }
 
     @Test
