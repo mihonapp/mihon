@@ -56,7 +56,7 @@ class ExtensionDetailsViewModel(
         fun create(pkgName: String): ExtensionDetailsViewModel
     }
 
-    val state: StateFlow<State> = extensionManager.installedExtensionsFlow
+    val state: StateFlow<State> = extensionManager.loadedExtensionsFlow
         .map { it.firstOrNull { extension -> extension.pkgName == pkgName } }
         .distinctUntilChanged()
         .flatMapLatest { extension ->
@@ -73,7 +73,7 @@ class ExtensionDetailsViewModel(
     private val successState: State.Success?
         get() = state.value as? State.Success
 
-    private fun subscribeToSources(extension: Extension.Installed): Flow<List<ExtensionSourceItem>> {
+    private fun subscribeToSources(extension: Extension.Loaded): Flow<List<ExtensionSourceItem>> {
         return getExtensionSources.subscribe(extension)
             .map {
                 it.sortedWith(
@@ -142,7 +142,7 @@ class ExtensionDetailsViewModel(
 
         @Immutable
         data class Success(
-            val extension: Extension.Installed,
+            val extension: Extension.Loaded,
             val isIncognito: Boolean,
             val sources: List<ExtensionSourceItem>,
         ) : State
