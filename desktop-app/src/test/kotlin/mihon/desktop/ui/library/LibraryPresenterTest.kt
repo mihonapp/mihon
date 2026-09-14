@@ -173,6 +173,29 @@ class LibraryPresenterTest {
     }
 
     @Test
+    fun `online backing record opens in detail without selecting a library row`() = runBlocking {
+        val rows = MutableStateFlow<List<LibraryManga>>(emptyList())
+        val onlineDetails = details(9, "Online only").copy(favorite = false)
+        val presenter = LibraryPresenter(
+            FakeLibraryRepository(
+                details = mapOf(9L to MutableStateFlow(onlineDetails)),
+                chapters = mapOf(9L to MutableStateFlow(listOf(chapter(91, 9)))),
+                libraryFlow = { rows },
+            ),
+            scope,
+        )
+        presenter.awaitState { !it.loading }
+
+        presenter.openMangaDetail(9)
+
+        val detail = presenter.awaitDetail { it.manga?.id == 9L && it.chapters.size == 1 }
+        detail.manga?.favorite shouldBe false
+        detail.chapters.single().id shouldBe 91L
+        presenter.state.value.selectedMangaId shouldBe null
+        presenter.close()
+    }
+
+    @Test
     fun `switching selection detaches old detail flow and missing selected manga clears selection`() = runBlocking {
         val rows = MutableStateFlow(listOf(manga(1, "One"), manga(2, "Two")))
         val first = MutableStateFlow<MangaDetails?>(details(1, "One"))

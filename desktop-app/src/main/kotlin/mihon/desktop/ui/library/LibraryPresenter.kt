@@ -99,6 +99,7 @@ class LibraryPresenter(
     private val presenterScope = CoroutineScope(scope.coroutineContext + presenterJob)
     private val query = MutableStateFlow("")
     private val selectedMangaId = MutableStateFlow<Long?>(null)
+    private val detailMangaId = MutableStateFlow<Long?>(null)
     private val selectedCategoryId = MutableStateFlow(SYSTEM_ALL_CATEGORY.id)
     private val retryRequest = MutableStateFlow(0L)
     private val detailRetryRequest = MutableStateFlow(0L)
@@ -187,7 +188,11 @@ class LibraryPresenter(
         .onEach { result ->
             if (result is RepositoryState.Loaded) {
                 selectedMangaId.update { selected ->
-                    selected?.takeIf { id -> result.items.any { it.id == id } }
+                    val retained = selected?.takeIf { id -> result.items.any { it.id == id } }
+                    if (selected != null && retained == null) {
+                        detailMangaId.compareAndSet(selected, null)
+                    }
+                    retained
                 }
                 if (selectedCategoryId.value == SYSTEM_ALL_CATEGORY.id) {
                     detectDuplicates(result.items)
@@ -285,7 +290,7 @@ class LibraryPresenter(
     )
 
     private val selectedRepositoryState: Flow<SelectedRepositoryState> = combine(
-        selectedMangaId,
+        detailMangaId,
         detailRetryRequest,
     ) { selected, _ -> selected }
         .flatMapLatest { selectedId ->
@@ -319,6 +324,7 @@ class LibraryPresenter(
         .flowOn(Dispatchers.IO)
         .onEach { result ->
             if (result is SelectedRepositoryState.Loaded && result.selectedId != null && result.manga == null) {
+                detailMangaId.compareAndSet(result.selectedId, null)
                 selectedMangaId.compareAndSet(result.selectedId, null)
             }
         }
@@ -403,7 +409,7 @@ class LibraryPresenter(
         )
 
     fun setChapterFilter(filter: ChapterFilterState) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         updateChapterSettings(mangaId) { current ->
             current.copy(
                 unreadFilter = filter.unread,
@@ -414,24 +420,24 @@ class LibraryPresenter(
     }
 
     fun setChapterSort(sort: ChapterSortState) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         updateChapterSettings(mangaId) { current ->
             current.copy(sortMode = sort.mode, sortAscending = sort.ascending)
         }
     }
 
     fun setChapterDisplayMode(mode: ChapterDisplayMode) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         updateChapterSettings(mangaId) { it.copy(displayMode = mode) }
     }
 
     fun setExcludedScanlators(excludedScanlators: Set<String>) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         updateChapterSettings(mangaId) { it.copy(excludedScanlators = excludedScanlators) }
     }
 
     fun setShowMissingChapters(show: Boolean) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         updateChapterSettings(mangaId) { it.copy(showMissingChapters = show) }
     }
 
@@ -440,7 +446,7 @@ class LibraryPresenter(
     }
 
     fun setChapterSettingsAsDefault(applyToExisting: Boolean) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         val settings = currentChapterSettings(mangaId)
         preferences?.update {
             setProperty(CHAPTER_DEFAULT_FLAGS_KEY, encodeChapterFlags(0L, settings).toString())
@@ -464,7 +470,7 @@ class LibraryPresenter(
     }
 
     fun resetChapterSettingsToDefault() {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         val defaults = defaultChapterSettings().copy(excludedScanlators = emptySet())
         chapterSettingsOverrides.update { it.copy(mangaId = mangaId, settings = defaults) }
         persistChapterSettings(mangaId, defaults)
@@ -484,6 +490,7 @@ class LibraryPresenter(
         // cannot immediately clear the requested selection.
         selectedCategoryId.value = SYSTEM_ALL_CATEGORY.id
         selectedMangaId.value = mangaId
+        detailMangaId.value = mangaId
     }
 
     fun migrateDuplicateTo(existingMangaId: Long) {
@@ -627,7 +634,7 @@ class LibraryPresenter(
     }
 
     fun toggleChapterBookmark(chapterId: Long) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         val currentChapters = repository.chapterSnapshot(mangaId)
         val chapter = currentChapters.find { it.id == chapterId } ?: return
         val updated = chapter.copy(bookmark = !chapter.bookmark)
@@ -636,7 +643,7 @@ class LibraryPresenter(
     }
 
     fun toggleChapterRead(chapterId: Long) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         val currentChapters = repository.chapterSnapshot(mangaId)
         val chapter = currentChapters.find { it.id == chapterId } ?: return
         val newRead = !chapter.read
@@ -650,7 +657,7 @@ class LibraryPresenter(
     }
 
     fun batchBookmarkChapters(chapterIds: Set<Long>, bookmark: Boolean) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         val currentChapters = repository.chapterSnapshot(mangaId)
         val toUpdate = currentChapters.filter { it.id in chapterIds && it.bookmark != bookmark }
         if (toUpdate.isEmpty()) return
@@ -663,7 +670,7 @@ class LibraryPresenter(
     }
 
     fun batchMarkChaptersRead(chapterIds: Set<Long>, read: Boolean) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         val currentChapters = repository.chapterSnapshot(mangaId)
         val toUpdate = currentChapters.filter { it.id in chapterIds && it.read != read }
         if (toUpdate.isEmpty()) return
@@ -700,7 +707,7 @@ class LibraryPresenter(
     }
 
     fun markPreviousChaptersRead(chapterId: Long) {
-        val mangaId = selectedMangaId.value ?: return
+        val mangaId = detailMangaId.value ?: return
         val currentChapters = repository.chapterSnapshot(mangaId)
         val target = currentChapters.find { it.id == chapterId } ?: return
         val now = System.currentTimeMillis()
@@ -799,12 +806,12 @@ class LibraryPresenter(
         status: Long,
         notes: String,
     ) {
-        val id = selectedMangaId.value ?: return
+        val id = detailMangaId.value ?: return
         updateMangaInfo(id, title, author, artist, description, genres, status, notes)
     }
 
     fun resetSelectedMangaInfo() {
-        val id = selectedMangaId.value ?: return
+        val id = detailMangaId.value ?: return
         resetMangaInfo(id)
     }
 
@@ -813,7 +820,13 @@ class LibraryPresenter(
     }
 
     fun selectManga(id: Long?) {
-        selectedMangaId.value = id?.takeIf { selected -> state.value.items.any { it.id == selected } }
+        val selected = id?.takeIf { candidate -> state.value.items.any { it.id == candidate } }
+        selectedMangaId.value = selected
+        detailMangaId.value = selected
+    }
+
+    fun openMangaDetail(id: Long) {
+        detailMangaId.value = id
     }
 
     fun selectCategory(categoryId: Long) {
