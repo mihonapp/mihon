@@ -1,7 +1,7 @@
 # Mihon W Desktop Library Adaptive Layout Design
 
-**Date:** 2026-09-14  
-**Status:** Approved for planning  
+**Date:** 2026-09-14
+**Status:** Approved for planning
 **Scope:** Repair the library's broken comfortable-grid proportions and make all library display modes respond predictably to desktop window width.
 
 ## Objective
