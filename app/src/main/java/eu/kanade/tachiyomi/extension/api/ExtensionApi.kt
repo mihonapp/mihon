@@ -5,7 +5,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.extension.model.Extension
-import eu.kanade.tachiyomi.extension.model.LoadResult
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.repository.ExtensionStoreRepository
@@ -28,12 +27,11 @@ class ExtensionApi(
 
         val extensions = findExtensions()
 
-        val installedExtensions = ExtensionLoader.loadExtensions(context)
-            .filterIsInstance<LoadResult.Success>()
-            .map { it.extension }
+        val loadedExtensions = ExtensionLoader.loadExtensions(context)
+            .filterIsInstance<Extension.Loaded>()
 
-        val extensionsWithUpdate = mutableListOf<Extension.Installed>()
-        for (installedExt in installedExtensions) {
+        val extensionsWithUpdate = mutableListOf<Extension.Loaded>()
+        for (installedExt in loadedExtensions) {
             val pkgName = installedExt.pkgName
             val availableExt = extensions.find { it.pkgName == pkgName } ?: continue
             val hasUpdatedVer = availableExt.versionCode > installedExt.versionCode

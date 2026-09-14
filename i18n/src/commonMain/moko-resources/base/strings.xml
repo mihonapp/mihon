@@ -270,7 +270,7 @@
     <string name="pref_allowed_content_warnings">Allowed content warnings</string>
     <string name="pref_apply_content_warnings_to_installed">Also apply to installed extensions</string>
     <string name="pref_apply_content_warnings_to_installed_summary">When off, extensions you already installed keep loading and updating regardless of their warning</string>
-    <string name="content_warnings_info">Requires app restart to take effect. Extensions that aren\'t loaded won\'t provide their sources anywhere in the app. This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing 18+ content within the app.</string>
+    <string name="content_warnings_info">Requires app restart to take effect. Installed extensions that aren\'t loaded stay listed without their sources; ones you haven\'t installed are hidden. This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing 18+ content within the app.</string>
 
     <string name="relative_time_today">Today</string>
 
@@ -340,6 +340,15 @@
     <string name="ext_installed">Installed</string>
     <string name="ext_trust">Trust</string>
     <string name="ext_untrusted">Untrusted</string>
+    <string name="ext_filtered">Filtered</string>
+    <string name="ext_not_loaded">Not loaded</string>
+    <string name="ext_not_loaded_dialog">Couldn\'t load</string>
+    <string name="ext_copy_stacktrace">Copy stack trace</string>
+    <string name="ext_filtered_message">This extension\'s content warning isn\'t one you chose to load, so its sources aren\'t available.</string>
+    <string name="ext_unsigned_message">This extension isn\'t signed, so there\'s no signature to check it against.</string>
+    <string name="ext_unsupported_message">This extension was built for a version of the extension library this app version can\'t load. Updating the app or the extension may help.</string>
+    <string name="ext_malformed_message">This extension is missing information the app needs to load it.</string>
+    <string name="ext_load_failed_message">This extension threw an error while loading, so none of its sources are available.</string>
     <string name="ext_uninstall">Uninstall</string>
     <string name="ext_remove">Remove</string>
     <string name="ext_confirm_remove">Remove Extension?</string>
