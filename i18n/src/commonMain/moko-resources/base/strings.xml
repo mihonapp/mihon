@@ -379,7 +379,6 @@
     <string name="downloading_with_progress">Downloading… (%d%%)</string>
 
     <!-- Extension repos -->
-    <string name="action_open_repo">Open source repo</string>
 
     <!-- Extension store -->
     <string name="extensionStores">Extension stores</string>

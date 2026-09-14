@@ -21,6 +21,9 @@ sealed interface Extension {
      */
     sealed interface Installed : Extension {
         val isShared: Boolean
+
+        /** The store whose signing key signed this apk, or null when no added store did. */
+        val store: ExtensionStore?
     }
 
     /**
@@ -73,7 +76,7 @@ sealed interface Extension {
         val icon: Drawable?,
         val hasUpdate: Boolean = false,
         val isObsolete: Boolean = false,
-        val store: ExtensionStore? = null,
+        override val store: ExtensionStore? = null,
     ) : Installed
 
     /**
@@ -89,6 +92,7 @@ sealed interface Extension {
         override val contentWarning: ContentWarning,
         override val libVersion: Double? = null,
         override val lang: String? = null,
+        override val store: ExtensionStore? = null,
         val reason: Reason,
     ) : Installed {
 
@@ -112,4 +116,14 @@ sealed interface Extension {
             data class Failed(val message: String, val stackTrace: String) : Reason
         }
     }
+}
+
+/**
+ * The listing that could actually update [extension]. Only the store that signed it can, and with
+ * several stores added the same package name can appear in more than one of them. An extension no
+ * added store signed has nowhere to update from, whatever else happens to share its name.
+ */
+fun Iterable<Extension.Available>.findFor(extension: Extension.Installed): Extension.Available? {
+    val signingKey = extension.store?.signingKey ?: return null
+    return firstOrNull { it.pkgName == extension.pkgName && it.store.signingKey == signingKey }
 }

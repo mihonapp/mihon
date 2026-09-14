@@ -18,6 +18,7 @@ import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.data.dalvik.DelegateLastClassLoaderCompat
 import mihon.domain.extension.model.ContentWarning
+import mihon.domain.extension.model.ExtensionStore
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import java.io.File
@@ -118,6 +119,7 @@ internal object ExtensionLoader {
         alreadyLoaded: Map<String, Extension.Loaded> = emptyMap(),
     ): List<Extension.Installed> {
         val trustExtension = context.appGraph.trustExtension
+        val stores = context.appGraph.extensionStoreRepository.getAll()
         val sourcePreferences = context.appGraph.sourcePreferences
         val enabledContentWarnings = sourcePreferences.enabledContentWarnings.get()
         val applyContentWarningsToInstalled = sourcePreferences.applyContentWarningsToInstalled.get()
@@ -175,6 +177,7 @@ internal object ExtensionLoader {
                             context = context,
                             extensionInfo = it,
                             trustExtension = trustExtension,
+                            stores = stores,
                             enabledContentWarnings = enabledContentWarnings,
                             applyContentWarningsToInstalled = applyContentWarningsToInstalled,
                             alreadyLoaded = alreadyLoaded[it.packageInfo.packageName],
@@ -201,6 +204,7 @@ internal object ExtensionLoader {
             context = context,
             extensionInfo = extensionPackage,
             trustExtension = context.appGraph.trustExtension,
+            stores = context.appGraph.extensionStoreRepository.getAll(),
             enabledContentWarnings = sourcePreferences.enabledContentWarnings.get(),
             applyContentWarningsToInstalled = sourcePreferences.applyContentWarningsToInstalled.get(),
         )
@@ -251,6 +255,7 @@ internal object ExtensionLoader {
         context: Context,
         extensionInfo: ExtensionInfo,
         trustExtension: TrustExtension,
+        stores: List<ExtensionStore>,
         enabledContentWarnings: Set<ContentWarning>,
         applyContentWarningsToInstalled: Boolean,
         alreadyLoaded: Extension.Loaded? = null,
@@ -260,6 +265,7 @@ internal object ExtensionLoader {
                 context = context,
                 extensionInfo = extensionInfo,
                 trustExtension = trustExtension,
+                stores = stores,
                 enabledContentWarnings = enabledContentWarnings,
                 applyContentWarningsToInstalled = applyContentWarningsToInstalled,
                 alreadyLoaded = alreadyLoaded,
@@ -289,6 +295,7 @@ internal object ExtensionLoader {
         context: Context,
         extensionInfo: ExtensionInfo,
         trustExtension: TrustExtension,
+        stores: List<ExtensionStore>,
         enabledContentWarnings: Set<ContentWarning>,
         applyContentWarningsToInstalled: Boolean,
         alreadyLoaded: Extension.Loaded? = null,
@@ -435,6 +442,7 @@ internal object ExtensionLoader {
             pkgFactory = metaData.getString(METADATA_SOURCE_FACTORY),
             icon = runCatching { appInfo.loadIcon(pkgManager) }.getOrNull(),
             isShared = extensionInfo.isShared,
+            store = stores.firstOrNull { it.signingKey in signatures },
         )
     }
 
