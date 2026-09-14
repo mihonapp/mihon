@@ -7,6 +7,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.tachiyomi.ui.reader.cast.CastBackground
+import eu.kanade.tachiyomi.ui.reader.cast.CastImageQuality
+import eu.kanade.tachiyomi.ui.reader.cast.CastOrientation
+import eu.kanade.tachiyomi.ui.reader.cast.CastPreferences
+import eu.kanade.tachiyomi.ui.reader.cast.CastScaleMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
@@ -28,6 +33,7 @@ object SettingsReaderScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val context = LocalContext.current
         val readerPref = remember { context.appGraph.readerPreferences }
+        val castPref = remember { context.appGraph.castPreferences }
 
         return listOf(
             Preference.PreferenceItem.ListPreference(
@@ -66,6 +72,7 @@ object SettingsReaderScreen : SearchableSettings {
             getWebtoonGroup(readerPreferences = readerPref),
             getNavigationGroup(readerPreferences = readerPref),
             getActionsGroup(readerPreferences = readerPref),
+            getCastGroup(castPreferences = castPref),
         )
     }
 
@@ -436,6 +443,94 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.folderPerManga,
                     title = stringResource(MR.strings.pref_create_folder_per_manga),
                     subtitle = stringResource(MR.strings.pref_create_folder_per_manga_summary),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getCastGroup(castPreferences: CastPreferences): Preference.PreferenceGroup {
+        val zoomPref = castPreferences.zoomPercent
+        val zoom by zoomPref.collectAsState()
+        val stripWidthPref = castPreferences.stripWidthPercent
+        val stripWidth by stripWidthPref.collectAsState()
+        val autoScrollSpeedPref = castPreferences.autoScrollSpeed
+        val autoScrollSpeed by autoScrollSpeedPref.collectAsState()
+        val pageIntervalPref = castPreferences.autoScrollPageIntervalSec
+        val pageInterval by pageIntervalPref.collectAsState()
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.cast_pref_category),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.ListPreference(
+                    preference = castPreferences.orientation,
+                    entries = CastOrientation.entries.associateWith { stringResource(it.titleRes) },
+                    title = stringResource(MR.strings.cast_orientation),
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = castPreferences.scaleMode,
+                    entries = CastScaleMode.entries.associateWith { stringResource(it.titleRes) },
+                    title = stringResource(MR.strings.cast_scale_mode),
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = castPreferences.background,
+                    entries = CastBackground.entries.associateWith { stringResource(it.titleRes) },
+                    title = stringResource(MR.strings.cast_background),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = zoom,
+                    valueRange = CastPreferences.ZOOM_MIN..CastPreferences.ZOOM_MAX step 5,
+                    steps = 74,
+                    title = stringResource(MR.strings.cast_zoom),
+                    valueString = "$zoom%",
+                    onValueChanged = { zoomPref.set(it) },
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = stripWidth,
+                    valueRange = CastPreferences.STRIP_WIDTH_MIN..CastPreferences.STRIP_WIDTH_MAX step 5,
+                    steps = 16,
+                    title = stringResource(MR.strings.cast_strip_width),
+                    valueString = "$stripWidth%",
+                    onValueChanged = { stripWidthPref.set(it) },
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = autoScrollSpeed,
+                    valueRange = CastPreferences.AUTO_SCROLL_SPEED_MIN..CastPreferences.AUTO_SCROLL_SPEED_MAX step 5,
+                    steps = 98,
+                    title = stringResource(MR.strings.cast_auto_scroll_speed),
+                    valueString = stringResource(MR.strings.cast_auto_scroll_speed_value, autoScrollSpeed),
+                    onValueChanged = { autoScrollSpeedPref.set(it) },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = castPreferences.autoScrollStepMs,
+                    entries = CastPreferences.AutoScrollSteps.associateWith { ms ->
+                        if (ms == CastPreferences.AutoScrollSteps.first()) {
+                            stringResource(MR.strings.cast_auto_scroll_step_smooth)
+                        } else {
+                            stringResource(MR.strings.cast_auto_scroll_step_value, ms)
+                        }
+                    },
+                    title = stringResource(MR.strings.cast_auto_scroll_step),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = pageInterval,
+                    valueRange = CastPreferences.let {
+                        it.AUTO_SCROLL_PAGE_INTERVAL_MIN..it.AUTO_SCROLL_PAGE_INTERVAL_MAX
+                    },
+                    steps = 118,
+                    title = stringResource(MR.strings.cast_auto_scroll_page_interval),
+                    valueString = stringResource(MR.strings.cast_auto_scroll_page_interval_value, pageInterval),
+                    onValueChanged = { pageIntervalPref.set(it) },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = castPreferences.webImageQuality,
+                    entries = CastImageQuality.entries.associateWith { stringResource(it.titleRes) },
+                    title = stringResource(MR.strings.cast_pref_web_quality),
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = castPreferences.webPort,
+                    entries = listOf(8765, 8080, 8888, 9000, 9090, 3000).associateWith { it.toString() },
+                    title = stringResource(MR.strings.cast_pref_web_port),
                 ),
             ),
         )

@@ -65,6 +65,12 @@ object Notifications {
     const val ID_INCOGNITO_MODE = -701
 
     /**
+     * Notification channel and id used while casting the reader.
+     */
+    const val CHANNEL_CAST = "cast_channel"
+    const val ID_CAST = -801
+
+    /**
      * Notification channel and ids used for extension updates.
      */
     private const val GROUP_APK_UPDATES = "group_apk_updates"
@@ -155,6 +161,9 @@ object Notifications {
                 },
                 buildNotificationChannel(CHANNEL_INCOGNITO_MODE, IMPORTANCE_LOW) {
                     setName(context.stringResource(MR.strings.pref_incognito_mode))
+                },
+                buildNotificationChannel(CHANNEL_CAST, IMPORTANCE_LOW) {
+                    setName(context.stringResource(MR.strings.cast_notification_channel))
                 },
                 buildNotificationChannel(CHANNEL_EXTENSIONS_UPDATE, IMPORTANCE_DEFAULT) {
                     setGroup(GROUP_APK_UPDATES)

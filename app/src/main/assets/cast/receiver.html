@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Mihon Cast</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #eee;
+    font-family: Roboto, "Segoe UI", Helvetica, Arial, sans-serif; cursor: none; }
+  #stage { position: absolute; left: 50%; top: 50%; overflow: hidden; transform-origin: center center; }
+  #paged { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; }
+  #paged img { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; image-rendering: auto; }
+  #strip { position: absolute; top: 0; left: 50%; will-change: transform; }
+  .page { position: relative; width: 100%; background: rgba(255,255,255,0.04); }
+  .page img { display: block; width: 100%; height: 100%; }
+  .page .num { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); opacity: .35; font-size: 4vh; }
+  #card { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; padding: 6vh; box-sizing: border-box; }
+  #card .big { font-size: 5vh; font-weight: 600; margin-bottom: 2vh; }
+  #card .small { font-size: 2.6vh; opacity: .7; }
+  #hud { position: absolute; right: 2vh; bottom: 2vh; padding: .8vh 1.6vh; border-radius: 1.2vh; background: rgba(0,0,0,.6);
+    color: #fff; font-size: 2.4vh; opacity: 0; transition: opacity .4s; pointer-events: none; z-index: 10; }
+  #hud.show { opacity: 1; }
+  #idle { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; background: #000; z-index: 20; }
+  #idle .logo { width: 12vh; height: 12vh; border-radius: 3vh; background: linear-gradient(135deg, #7b61ff, #4a90e2); margin-bottom: 3vh; }
+  #idle .t { font-size: 4vh; font-weight: 600; }
+  #idle .s { font-size: 2.4vh; opacity: .6; margin-top: 1vh; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="paged"><img id="pageImg" alt=""></div>
+  <div id="strip"></div>
+  <div id="card"><div class="big"></div><div class="small"></div></div>
+</div>
+<div id="hud"></div>
+<div id="idle"><div class="logo"></div><div class="t">Mihon Cast</div><div class="s">Waiting for the reader…</div></div>
+<script>
+(function () {
+  'use strict';
+  var stage = document.getElementById('stage');
+  var paged = document.getElementById('paged');
+  var pageImg = document.getElementById('pageImg');
+  var strip = document.getElementById('strip');
+  var card = document.getElementById('card');
+  var hud = document.getElementById('hud');
+  var idle = document.getElementById('idle');
+
+  var state = null;          // last state from the phone
+  var version = 0;
+  var stageW = 0, stageH = 0; // logical (rotated) stage size
+  var pageEls = [];           // continuous mode page elements
+  var dims = {};              // "chapterId/index" -> {w,h}
+  var preloaded = {};         // url -> Image
+  var hudTimer = null;
+  var anim = null;            // continuous scroll animation
+
+  function px(n) { return Math.round(n) + 'px'; }
+
+  // Reload an image that failed (page still downloading on the phone) a few times, with backoff.
+  function retryOnError(img, url) {
+    var attempts = 0;
+    img.onerror = function () {
+      attempts++;
+      if (attempts > 6) return;
+      setTimeout(function () {
+        if (img.getAttribute('data-url') === url || !img.getAttribute('data-url')) {
+          img.src = url + (url.indexOf('?') < 0 ? '?' : '&') + 'r=' + attempts;
+        }
+      }, Math.min(8000, 1500 * attempts));
+    };
+  }
+  function imgUrl(chapterId, i) { return '/img/' + chapterId + '/' + i; }
+  function key(chapterId, i) { return chapterId + '/' + i; }
+
+  function layoutStage() {
+    var W = window.innerWidth, H = window.innerHeight;
+    var rot = state ? (state.orientation || 0) : 0;
+    var swap = rot === 90 || rot === 270;
+    stageW = swap ? H : W;
+    stageH = swap ? W : H;
+    stage.style.width = px(stageW);
+    stage.style.height = px(stageH);
+    stage.style.transform = 'translate(-50%, -50%) rotate(' + rot + 'deg)';
+    document.body.style.background = state && state.background ? state.background : '#000';
+    stage.style.background = document.body.style.background;
+  }
+
+  function showHud(text) {
+    hud.textContent = text;
+    hud.classList.add('show');
+    if (hudTimer) clearTimeout(hudTimer);
+    hudTimer = setTimeout(function () { hud.classList.remove('show'); }, 2500);
+  }
+
+  function preload(chapterId, i) {
+    if (!state || i < 0 || i >= state.pages.length) return;
+    var url = imgUrl(chapterId, i);
+    if (preloaded[url]) return;
+    var im = new Image();
+    im.onload = function () {
+      dims[key(chapterId, i)] = { w: im.naturalWidth, h: im.naturalHeight };
+      if (state && state.mode === 'continuous') { relayoutStrip(); positionStrip(false); }
+    };
+    retryOnError(im, url);
+    im.src = url;
+    preloaded[url] = im;
+    var keys = Object.keys(preloaded);
+    if (keys.length > 12) { delete preloaded[keys[0]]; }
+  }
+
+  function pageDims(chapterId, i) {
+    var d = dims[key(chapterId, i)];
+    if (d && d.w > 0 && d.h > 0) return d;
+    if (state) {
+      var p = state.pages[i];
+      if (p && p.w > 0 && p.h > 0) return { w: p.w, h: p.h };
+    }
+    return { w: 1000, h: 1400 };
+  }
+
+  // ---------- paged mode ----------
+  function renderPaged() {
+    paged.classList.remove('hidden');
+    strip.classList.add('hidden');
+    var i = state.page;
+    var url = imgUrl(state.chapterId, i);
+    if (pageImg.getAttribute('data-url') !== url) {
+      pageImg.setAttribute('data-url', url);
+      pageImg.style.visibility = 'hidden';
+      retryOnError(pageImg, url);
+      pageImg.src = url;
+    }
+    fitPaged();
+    preload(state.chapterId, i + 1);
+    preload(state.chapterId, i + 2);
+    preload(state.chapterId, i - 1);
+  }
+
+  function fitPaged() {
+    if (!state || state.mode !== 'paged') return;
+    var nw = pageImg.naturalWidth, nh = pageImg.naturalHeight;
+    if (!nw || !nh) return;
+    var scale;
+    switch (state.scale) {
+      case 'fit_width': scale = stageW / nw; break;
+      case 'fit_height': scale = stageH / nh; break;
+      case 'original': scale = 1; break;
+      default: scale = Math.min(stageW / nw, stageH / nh);
+    }
+    scale *= (state.zoom || 100) / 100;
+    var w = nw * scale, h = nh * scale;
+    var x = (stageW - w) / 2, y = (stageH - h) / 2;
+    var pan = state.pan || { x: 0, y: 0 };
+    // pan is a fraction of the overflow (-1..1); only meaningful when content overflows the stage
+    if (w > stageW) x = (stageW - w) / 2 - pan.x * (w - stageW) / 2;
+    if (h > stageH) y = (stageH - h) / 2 - pan.y * (h - stageH) / 2;
+    if (w <= stageW) x = (stageW - w) / 2;
+    if (h <= stageH) y = (stageH - h) / 2;
+    pageImg.style.width = px(w);
+    pageImg.style.height = px(h);
+    pageImg.style.transform = 'translate(' + px(x) + ',' + px(y) + ')';
+    pageImg.style.visibility = 'visible';
+  }
+  pageImg.onload = function () {
+    dims[key(state ? state.chapterId : 0, state ? state.page : 0)] = { w: pageImg.naturalWidth, h: pageImg.naturalHeight };
+    fitPaged();
+  };
+
+  // ---------- continuous mode ----------
+  function stripWidth() {
+    var pct = state.stripWidth || 50;
+    return Math.max(50, Math.round(stageW * pct / 100));
+  }
+
+  function buildStrip() {
+    strip.innerHTML = '';
+    pageEls = [];
+    for (var i = 0; i < state.pages.length; i++) {
+      var el = document.createElement('div');
+      el.className = 'page';
+      var num = document.createElement('div');
+      num.className = 'num';
+      num.textContent = String(i + 1);
+      el.appendChild(num);
+      strip.appendChild(el);
+      pageEls.push(el);
+    }
+    relayoutStrip();
+  }
+
+  function relayoutStrip() {
+    if (!state || state.mode !== 'continuous') return;
+    var W = stripWidth();
+    strip.style.width = px(W);
+    strip.style.marginLeft = px(-W / 2);
+    for (var i = 0; i < pageEls.length; i++) {
+      var d = pageDims(state.chapterId, i);
+      pageEls[i].style.height = px(W * d.h / d.w);
+    }
+  }
+
+  function ensureImages(center) {
+    var lo = Math.max(0, center - 1), hi = Math.min(state.pages.length - 1, center + 3);
+    for (var i = 0; i < pageEls.length; i++) {
+      var el = pageEls[i];
+      var img = el.querySelector('img');
+      if (i >= lo && i <= hi) {
+        if (!img) {
+          img = document.createElement('img');
+          img.alt = '';
+          (function (idx, image) {
+            image.onload = function () {
+              dims[key(state.chapterId, idx)] = { w: image.naturalWidth, h: image.naturalHeight };
+              relayoutStrip();
+              positionStrip(false);
+            };
+          })(i, img);
+          var url = imgUrl(state.chapterId, i);
+          img.setAttribute('data-url', url);
+          retryOnError(img, url);
+          img.src = url;
+          el.appendChild(img);
+        }
+      } else if (img) {
+        el.removeChild(img);
+      }
+    }
+  }
+
+  function targetStripY() {
+    var y = 0;
+    for (var i = 0; i < state.page && i < pageEls.length; i++) y += pageEls[i].offsetHeight;
+    if (state.page < pageEls.length) y += pageEls[state.page].offsetHeight * (state.offset || 0);
+    return -y;
+  }
+
+  var currentY = 0;
+  function positionStrip(smooth) {
+    if (!state || state.mode !== 'continuous') return;
+    var target = targetStripY();
+    if (anim) { cancelAnimationFrame(anim); anim = null; }
+    if (!smooth) {
+      currentY = target;
+      strip.style.transform = 'translateY(' + px(currentY) + ')';
+      return;
+    }
+    var from = currentY, start = performance.now(), dur = Math.min(120, Math.max(40, sinceLast));
+    function step(now) {
+      var t = Math.min(1, (now - start) / dur);
+      currentY = from + (target - from) * t;
+      strip.style.transform = 'translateY(' + px(currentY) + ')';
+      if (t < 1) anim = requestAnimationFrame(step); else anim = null;
+    }
+    anim = requestAnimationFrame(step);
+  }
+
+  function renderContinuous(structural) {
+    strip.classList.remove('hidden');
+    paged.classList.add('hidden');
+    if (structural || pageEls.length !== state.pages.length) buildStrip();
+    ensureImages(state.page);
+    positionStrip(!structural);
+  }
+
+  // ---------- transitions / cards ----------
+  function renderCard() {
+    if (state.transition) {
+      card.style.display = 'flex';
+      card.querySelector('.big').textContent = state.transition.title || '';
+      card.querySelector('.small').textContent = state.transition.subtitle || '';
+    } else {
+      card.style.display = 'none';
+    }
+  }
+
+  var lastUpdate = 0, sinceLast = 80;
+  function apply(next) {
+    var prev = state;
+    var now = performance.now();
+    sinceLast = lastUpdate ? (now - lastUpdate) : 80;
+    lastUpdate = now;
+    state = next;
+    if (!state.active) {
+      idle.classList.remove('hidden');
+      return;
+    }
+    idle.classList.add('hidden');
+    var structural = !prev || prev.chapterId !== state.chapterId || prev.mode !== state.mode ||
+      prev.orientation !== state.orientation || prev.stripWidth !== state.stripWidth ||
+      prev.pages.length !== state.pages.length || prev.background !== state.background;
+    if (structural) { layoutStage(); }
+    // Fill in dims sent by the phone
+    for (var i = 0; i < state.pages.length; i++) {
+      var p = state.pages[i];
+      if (p.w > 0 && p.h > 0 && !dims[key(state.chapterId, i)]) dims[key(state.chapterId, i)] = { w: p.w, h: p.h };
+    }
+    if (state.mode === 'continuous') renderContinuous(structural); else renderPaged();
+    renderCard();
+    if (!prev || prev.page !== state.page || prev.chapter !== state.chapter) {
+      showHud((state.page + 1) + ' / ' + state.pages.length + (state.chapter ? '  ·  ' + state.chapter : ''));
+    }
+  }
+
+  // ---------- long polling ----------
+  var failures = 0;
+  function poll() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/state?v=' + version + '&t=' + Date.now(), true);
+    xhr.timeout = 40000;
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) return;
+      if (xhr.status === 200) {
+        failures = 0;
+        try {
+          var s = JSON.parse(xhr.responseText);
+          if (s && typeof s.v === 'number') {
+            if (s.v !== version) { version = s.v; apply(s); }
+          }
+        } catch (e) { /* ignore malformed */ }
+        poll();
+      } else {
+        failures++;
+        if (failures > 3) { idle.classList.remove('hidden'); }
+        setTimeout(poll, Math.min(5000, 500 * failures));
+      }
+    };
+    xhr.send();
+  }
+
+  function cmd(name) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/cmd?do=' + name, true);
+    xhr.send();
+  }
+
+  document.addEventListener('keydown', function (e) {
+    switch (e.key) {
+      case 'ArrowRight': case 'PageDown': case ' ': cmd('next'); e.preventDefault(); break;
+      case 'ArrowLeft': case 'PageUp': cmd('prev'); e.preventDefault(); break;
+      case 'ArrowDown': cmd('down'); e.preventDefault(); break;
+      case 'ArrowUp': cmd('up'); e.preventDefault(); break;
+      case 'Enter': cmd('toggle'); e.preventDefault(); break;
+    }
+  });
+  document.addEventListener('click', function (e) {
+    var x = e.clientX / window.innerWidth;
+    if (x < 0.33) cmd('prev'); else if (x > 0.66) cmd('next'); else cmd('toggle');
+  });
+
+  window.addEventListener('resize', function () {
+    layoutStage();
+    if (state && state.active) {
+      if (state.mode === 'continuous') { relayoutStrip(); positionStrip(false); } else { fitPaged(); }
+    }
+  });
+
+  layoutStage();
+  poll();
+})();
+</script>
+</body>
+</html>

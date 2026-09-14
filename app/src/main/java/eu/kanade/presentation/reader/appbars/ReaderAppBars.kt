@@ -55,6 +55,8 @@ fun ReaderAppBars(
     onOpenInWebView: (() -> Unit)?,
     onOpenInBrowser: (() -> Unit)?,
     onShare: (() -> Unit)?,
+    castActive: Boolean,
+    onClickCast: () -> Unit,
 
     chapterNavigatorType: ChapterNavigatorType,
     verticalNavigatorHeight: Float,
@@ -74,6 +76,8 @@ fun ReaderAppBars(
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
+    autoScrollRunning: Boolean,
+    onClickCastRemote: () -> Unit,
 ) {
     val backgroundColor = MaterialTheme.colorScheme
         .surfaceColorAtElevation(3.dp)
@@ -97,6 +101,8 @@ fun ReaderAppBars(
                 onOpenInWebView = onOpenInWebView,
                 onOpenInBrowser = onOpenInBrowser,
                 onShare = onShare,
+                castActive = castActive,
+                onClickCast = onClickCast,
             )
         }
 
@@ -173,6 +179,8 @@ fun ReaderAppBars(
                     cropEnabled = cropEnabled,
                     onClickCropBorder = onClickCropBorder,
                     onClickSettings = onClickSettings,
+                    autoScrollRunning = autoScrollRunning,
+                    onClickCastRemote = onClickCastRemote,
                 )
             }
         }

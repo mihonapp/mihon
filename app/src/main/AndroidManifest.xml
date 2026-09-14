@@ -32,6 +32,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
         android:name=".App"
@@ -208,6 +209,11 @@
             android:name=".extension.util.ExtensionInstallService"
             android:exported="false"
             android:foregroundServiceType="shortService" />
+
+        <service
+            android:name=".ui.reader.cast.CastService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

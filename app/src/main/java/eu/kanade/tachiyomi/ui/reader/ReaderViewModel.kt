@@ -818,6 +818,14 @@ class ReaderViewModel(
         mutableState.update { it.copy(dialog = Dialog.Settings) }
     }
 
+    fun openCastDialog() {
+        mutableState.update { it.copy(dialog = Dialog.Cast) }
+    }
+
+    fun openCastRemoteDialog() {
+        mutableState.update { it.copy(dialog = Dialog.CastRemote) }
+    }
+
     fun closeDialog() {
         mutableState.update { it.copy(dialog = null) }
     }
@@ -1007,6 +1015,8 @@ class ReaderViewModel(
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
+        data object Cast : Dialog
+        data object CastRemote : Dialog
     }
 
     sealed interface Event {

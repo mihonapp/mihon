@@ -53,6 +53,8 @@ import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
+import eu.kanade.presentation.reader.cast.CastDialog
+import eu.kanade.presentation.reader.cast.CastRemoteSheet
 import eu.kanade.presentation.reader.components.ChapterNavigatorType
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
 import eu.kanade.tachiyomi.R
@@ -65,6 +67,11 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.AddToLibraryFirst
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Error
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Success
+import eu.kanade.tachiyomi.ui.reader.cast.CastController
+import eu.kanade.tachiyomi.ui.reader.cast.CastEvent
+import eu.kanade.tachiyomi.ui.reader.cast.CastLayoutMode
+import eu.kanade.tachiyomi.ui.reader.cast.CastViewerBridge
+import eu.kanade.tachiyomi.ui.reader.cast.ReaderAutoScroller
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
@@ -120,6 +127,8 @@ class ReaderActivity : BaseActivity() {
 
     @Inject private lateinit var preferences: BasePreferences
 
+    @Inject lateinit var castController: CastController
+
     lateinit var binding: ReaderActivityBinding
 
     val viewModel by viewModels<ReaderViewModel> { graph.viewModelFactory }
@@ -137,6 +146,9 @@ class ReaderActivity : BaseActivity() {
     private val windowInsetsController by lazy { WindowInsetsControllerCompat(window, window.decorView) }
 
     private var loadingIndicator: ReaderProgressIndicator? = null
+
+    private var castBridge: CastViewerBridge? = null
+    private val autoScroller by lazy { ReaderAutoScroller(this, castController) { castBridge } }
 
     var isScrollingThroughPages = false
         private set
@@ -244,6 +256,20 @@ class ReaderActivity : BaseActivity() {
                 }
             }
             .launchIn(lifecycleScope)
+
+        castController.events
+            .onEach { event ->
+                when (event) {
+                    CastEvent.NextPage -> castBridge?.next()
+                    CastEvent.PreviousPage -> castBridge?.previous()
+                    is CastEvent.ScrollBy -> castBridge?.scrollBy(event.deltaPx)
+                    CastEvent.NextChapter -> loadNextChapter()
+                    CastEvent.PreviousChapter -> loadPreviousChapter()
+                    CastEvent.ToggleAutoScroll -> autoScroller.toggle()
+                    is CastEvent.Stopped -> toast(event.messageRes ?: MR.strings.cast_stopped)
+                }
+            }
+            .launchIn(lifecycleScope)
     }
 
     private fun ReaderActivityBinding.setComposeOverlay(): Unit = composeOverlay.setComposeContent {
@@ -329,6 +355,19 @@ class ReaderActivity : BaseActivity() {
                     onSave = viewModel::saveImage,
                 )
             }
+            is ReaderViewModel.Dialog.Cast -> {
+                CastDialog(
+                    onDismissRequest = onDismissRequest,
+                    castController = castController,
+                    onOpenRemote = { viewModel.openCastRemoteDialog() },
+                )
+            }
+            is ReaderViewModel.Dialog.CastRemote -> {
+                CastRemoteSheet(
+                    onDismissRequest = onDismissRequest,
+                    castController = castController,
+                )
+            }
             null -> {}
         }
     }
@@ -337,6 +376,12 @@ class ReaderActivity : BaseActivity() {
      * Called when the activity is destroyed. Cleans up the viewer, configuration and any view.
      */
     override fun onDestroy() {
+        if (isFinishing) autoScroller.stop(silent = true) else autoScroller.pause()
+        castBridge?.detach()
+        castBridge = null
+        // Casting outlives configuration changes but ends with the reader. Done before the
+        // ViewModel is cleared, which recycles the chapters' page loaders.
+        if (isFinishing) castController.detachReader()
         super.onDestroy()
         viewModel.state.value.viewer?.destroy()
         config = null
@@ -461,6 +506,7 @@ class ReaderActivity : BaseActivity() {
         )
         val verticalNavigatorOnLeft by readerPreferences.verticalNavigatorOnLeft.collectAsState()
         val verticalNavigatorHeight by readerPreferences.verticalNavigatorHeight.collectAsState()
+        val castState by castController.state.collectAsState()
 
         ReaderAppBars(
             visible = state.menuVisible,
@@ -518,6 +564,10 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
+            castActive = castState.active,
+            onClickCast = viewModel::openCastDialog,
+            autoScrollRunning = castState.autoScrollRunning,
+            onClickCastRemote = viewModel::openCastRemoteDialog,
         )
     }
 
@@ -538,7 +588,8 @@ class ReaderActivity : BaseActivity() {
      */
     private fun updateViewer() {
         val prevViewer = viewModel.state.value.viewer
-        val newViewer = ReadingMode.toViewer(viewModel.getMangaReadingMode(), this)
+        val readingMode = viewModel.getMangaReadingMode()
+        val newViewer = ReadingMode.toViewer(readingMode, this)
 
         if (window.sharedElementEnterTransition is MaterialContainerTransform) {
             // Wait until transition is complete to avoid crash on API 26
@@ -555,6 +606,14 @@ class ReaderActivity : BaseActivity() {
             binding.viewerContainer.removeAllViews()
         }
         viewModel.onViewerLoaded(newViewer)
+        castBridge?.detach()
+        castBridge = CastViewerBridge(this, castController).also { it.attach(newViewer) }
+        castController.attachReader(
+            mangaId = viewModel.mangaId,
+            mangaTitle = viewModel.manga?.title.orEmpty(),
+            layoutMode = if (ReadingMode.isPagerType(readingMode)) CastLayoutMode.PAGED else CastLayoutMode.CONTINUOUS,
+            rtl = ReadingMode.fromPreference(readingMode) == ReadingMode.RIGHT_TO_LEFT,
+        )
         updateViewerInset(readerPreferences.fullscreen.get(), readerPreferences.drawUnderCutout.get())
         binding.viewerContainer.addView(newViewer.getView())
 
@@ -620,6 +679,11 @@ class ReaderActivity : BaseActivity() {
     private fun setChapters(viewerChapters: ViewerChapters) {
         binding.readerContainer.removeView(loadingIndicator)
         viewModel.state.value.viewer?.setChapters(viewerChapters)
+        castController.setChapters(viewerChapters)
+        if (castController.state.value.autoScrollRunning && !autoScroller.isRunning) {
+            // Resume auto-scroll after a configuration change.
+            autoScroller.start(silent = true)
+        }
 
         lifecycleScope.launchIO {
             viewModel.getChapterUrl()?.let { url ->
@@ -667,7 +731,7 @@ class ReaderActivity : BaseActivity() {
      * Tells the presenter to load the next chapter and mark it as active. The progress dialog
      * should be automatically shown.
      */
-    private fun loadNextChapter() {
+    fun loadNextChapter() {
         lifecycleScope.launch {
             viewModel.loadNextChapter()
             moveToPageIndex(0)
@@ -678,7 +742,7 @@ class ReaderActivity : BaseActivity() {
      * Tells the presenter to load the previous chapter and mark it as active. The progress dialog
      * should be automatically shown.
      */
-    private fun loadPreviousChapter() {
+    fun loadPreviousChapter() {
         lifecycleScope.launch {
             viewModel.loadPreviousChapter()
             moveToPageIndex(0)
@@ -691,6 +755,7 @@ class ReaderActivity : BaseActivity() {
      */
     fun onPageSelected(page: ReaderPage) {
         viewModel.onPageSelected(page)
+        castController.onReaderPageSelected(page)
     }
 
     /**
