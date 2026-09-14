@@ -271,7 +271,11 @@ fun MangaDetailScreen(
                                             modifier = Modifier.testTag("manga-detail-library-button"),
                                         ) {
                                             Icon(
-                                                if (manga.favorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                                                if (manga.favorite) {
+                                                    Icons.Rounded.Favorite
+                                                } else {
+                                                    Icons.Rounded.FavoriteBorder
+                                                },
                                                 contentDescription = null,
                                                 modifier = Modifier.size(16.dp),
                                             )
@@ -300,58 +304,58 @@ fun MangaDetailScreen(
                                             Text(strings.browseRefresh)
                                         }
                                     }
+                                    androidx.compose.material3.OutlinedButton(
+                                        onClick = onEditInfo,
+                                        modifier = Modifier.testTag("manga-detail-edit-info-button"),
+                                    ) {
+                                        Icon(
+                                            Icons.Rounded.Edit,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp),
+                                        )
+                                        Spacer(Modifier.width(6.dp))
+                                        Text(strings.mangaDetailEditInfo)
+                                    }
+                                    androidx.compose.material3.OutlinedButton(
+                                        onClick = onEditCategories,
+                                        modifier = Modifier.testTag("manga-detail-edit-categories-button"),
+                                    ) {
+                                        Icon(
+                                            Icons.AutoMirrored.Rounded.Label,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp),
+                                        )
+                                        Spacer(Modifier.width(6.dp))
+                                        Text(strings.mangaDetailCategories)
+                                    }
+                                    androidx.compose.material3.OutlinedButton(
+                                        onClick = onOpenTracking,
+                                        modifier = Modifier.testTag("manga-detail-open-tracking-button"),
+                                    ) {
+                                        Icon(
+                                            Icons.Rounded.Sync,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp),
+                                        )
+                                        Spacer(Modifier.width(6.dp))
+                                        Text(strings.mangaDetailTracking)
+                                    }
+                                    if (manga.url.startsWith("http")) {
                                         androidx.compose.material3.OutlinedButton(
-                                            onClick = onEditInfo,
-                                            modifier = Modifier.testTag("manga-detail-edit-info-button"),
+                                            onClick = {
+                                                mihon.desktop.platform.DesktopBrowserHelper.openInBrowser(manga.url)
+                                            },
+                                            modifier = Modifier.testTag("manga-detail-open-browser-button"),
                                         ) {
                                             Icon(
-                                                Icons.Rounded.Edit,
+                                                Icons.AutoMirrored.Rounded.OpenInNew,
                                                 contentDescription = null,
                                                 modifier = Modifier.size(16.dp),
                                             )
                                             Spacer(Modifier.width(6.dp))
-                                            Text(strings.mangaDetailEditInfo)
+                                            Text(strings.openInBrowser)
                                         }
-                                        androidx.compose.material3.OutlinedButton(
-                                            onClick = onEditCategories,
-                                            modifier = Modifier.testTag("manga-detail-edit-categories-button"),
-                                        ) {
-                                            Icon(
-                                                Icons.AutoMirrored.Rounded.Label,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(16.dp),
-                                            )
-                                            Spacer(Modifier.width(6.dp))
-                                            Text(strings.mangaDetailCategories)
-                                        }
-                                        androidx.compose.material3.OutlinedButton(
-                                            onClick = onOpenTracking,
-                                            modifier = Modifier.testTag("manga-detail-open-tracking-button"),
-                                        ) {
-                                            Icon(
-                                                Icons.Rounded.Sync,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(16.dp),
-                                            )
-                                            Spacer(Modifier.width(6.dp))
-                                            Text(strings.mangaDetailTracking)
-                                        }
-                                        if (manga.url.startsWith("http")) {
-                                            androidx.compose.material3.OutlinedButton(
-                                                onClick = {
-                                                    mihon.desktop.platform.DesktopBrowserHelper.openInBrowser(manga.url)
-                                                },
-                                                modifier = Modifier.testTag("manga-detail-open-browser-button"),
-                                            ) {
-                                                Icon(
-                                                    Icons.AutoMirrored.Rounded.OpenInNew,
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(16.dp),
-                                                )
-                                                Spacer(Modifier.width(6.dp))
-                                                Text(strings.openInBrowser)
-                                            }
-                                        }
+                                    }
                                 }
 
                                 Row(

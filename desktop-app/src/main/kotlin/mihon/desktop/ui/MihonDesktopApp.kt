@@ -644,7 +644,9 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                                 presenterScope.launch {
                                                     isMangaSourceRefreshing = true
                                                     try {
-                                                        val source = runtime.sourceManager.findSourceDescriptor(manga.sourceId)
+                                                        val source = runtime.sourceManager.findSourceDescriptor(
+                                                            manga.sourceId,
+                                                        )
                                                         if (source == null || source.isLocalSource()) {
                                                             libraryPresenter.retryDetail()
                                                         } else {
@@ -964,7 +966,9 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                                         when (pendingAction) {
                                                             MangaOrganizationAction.Categories ->
                                                                 isEditMangaCategoriesDialogOpen = true
-                                                            MangaOrganizationAction.Tracking -> isTrackingDialogOpen = true
+                                                            MangaOrganizationAction.Tracking ->
+                                                                isTrackingDialogOpen =
+                                                                    true
                                                         }
                                                     } else {
                                                         mangaDetailActionError =
