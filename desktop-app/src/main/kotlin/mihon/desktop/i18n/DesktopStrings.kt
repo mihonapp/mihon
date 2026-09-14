@@ -102,6 +102,7 @@ interface DesktopStrings {
     val mangaDetailStatusUnknown: String
     val mangaDetailInLibrary: String
     val mangaDetailAddToLibrary: String
+    val mangaDetailOrganizationRequiresLibrary: String
     val mangaDetailCategories: String
     val mangaDetailTracking: String
     fun mangaDetailResume(chapter: String): String
@@ -747,6 +748,8 @@ object EnglishStrings : DesktopStrings {
     override val mangaDetailStatusUnknown = "Unknown"
     override val mangaDetailInLibrary = "Remove from Library"
     override val mangaDetailAddToLibrary = "Add to Library"
+    override val mangaDetailOrganizationRequiresLibrary =
+        "Categories and tracking require this manga to be in your library."
     override val mangaDetailCategories = "Categories"
     override val mangaDetailTracking = "Tracking"
     override fun mangaDetailResume(chapter: String) = "Resume $chapter"
@@ -1469,6 +1472,7 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val mangaDetailStatusUnknown = "未知"
     override val mangaDetailInLibrary = "移出书架"
     override val mangaDetailAddToLibrary = "添加到书架"
+    override val mangaDetailOrganizationRequiresLibrary = "使用分类和进度记录前，需要先将这部漫画添加到书架。"
     override val mangaDetailCategories = "分类"
     override val mangaDetailTracking = "进度记录"
     override fun mangaDetailResume(chapter: String) = "继续阅读 $chapter"
@@ -2189,6 +2193,7 @@ object TraditionalChineseStrings : DesktopStrings {
     override val mangaDetailStatusUnknown = "未知"
     override val mangaDetailInLibrary = "移出書架"
     override val mangaDetailAddToLibrary = "加入書架"
+    override val mangaDetailOrganizationRequiresLibrary = "使用分類和進度記錄前，需要先將這部漫畫加入書架。"
     override val mangaDetailCategories = "分類"
     override val mangaDetailTracking = "進度記錄"
     override fun mangaDetailResume(chapter: String) = "繼續閱讀 $chapter"

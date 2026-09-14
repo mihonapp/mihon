@@ -32,6 +32,7 @@ import mihon.desktop.security.DesktopAppLockController
 import mihon.desktop.ui.library.LibraryScreen
 import mihon.desktop.ui.library.LibraryUiState
 import mihon.desktop.ui.library.MangaDetailUiState
+import mihon.desktop.ui.library.MangaDetailActions
 
 internal const val DESKTOP_MAIN_HEADLINE_TEST_TAG = "desktop-main-headline"
 internal const val DESKTOP_NAVIGATION_RAIL_TEST_TAG = "desktop-navigation-rail"
@@ -43,6 +44,11 @@ fun DesktopShell(
     onDestinationSelected: (DesktopDestination) -> Unit,
     libraryState: LibraryUiState = LibraryUiState(),
     mangaDetailState: MangaDetailUiState = MangaDetailUiState(),
+    mangaDetailActions: MangaDetailActions? = null,
+    onToggleMangaLibrary: (() -> Unit)? = null,
+    onRefreshMangaSource: (() -> Unit)? = null,
+    isMangaLibraryActionRunning: Boolean = false,
+    isMangaSourceRefreshing: Boolean = false,
     onLibraryQueryChange: (String) -> Unit = {},
     onMangaSelected: (Long) -> Unit = {},
     onBackFromMangaDetail: () -> Unit = {},
@@ -289,6 +295,11 @@ fun DesktopShell(
                                 onShowMissingChaptersChange = onShowMissingChaptersChange,
                                 onSetChapterSettingsAsDefault = onSetChapterSettingsAsDefault,
                                 onResetChapterSettingsToDefault = onResetChapterSettingsToDefault,
+                                mangaDetailActions = mangaDetailActions,
+                                onToggleMangaLibrary = onToggleMangaLibrary,
+                                onRefreshMangaSource = onRefreshMangaSource,
+                                isMangaLibraryActionRunning = isMangaLibraryActionRunning,
+                                isMangaSourceRefreshing = isMangaSourceRefreshing,
                                 onDuplicateOpenManga = onDuplicateOpenManga,
                                 onDuplicateMigrate = onDuplicateMigrate,
                                 onDuplicateAddAnyway = onDuplicateAddAnyway,

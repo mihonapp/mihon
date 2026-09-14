@@ -29,6 +29,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
@@ -42,6 +43,7 @@ import kotlinx.coroutines.withContext
 import mihon.desktop.DesktopRuntime
 import mihon.desktop.category.DesktopCategory
 import mihon.desktop.category.SYSTEM_ALL_CATEGORY
+import mihon.desktop.extension.builtin.isLocalSource
 import mihon.desktop.navigation.DesktopDestination
 import mihon.desktop.navigation.DesktopNavigator
 import mihon.desktop.reader.DesktopReaderSettingsStore
@@ -61,6 +63,7 @@ import mihon.desktop.ui.library.ImportActionState
 import mihon.desktop.ui.library.LibraryImportActions
 import mihon.desktop.ui.library.LibraryImportController
 import mihon.desktop.ui.library.LibraryPresenter
+import mihon.desktop.ui.library.MangaDetailActions
 import mihon.desktop.ui.library.chapterDisplayLabel
 import mihon.desktop.ui.reader.DecodedReaderPage
 import mihon.desktop.ui.reader.LibraryChapterBookmarkStore
@@ -71,6 +74,7 @@ import mihon.desktop.ui.upcoming.UpcomingPresenter
 import mihon.desktop.ui.upcoming.UpcomingScreen
 import mihon.desktop.window.ScreenBounds
 import mihon.desktop.window.WindowPlacement
+import mihon.extension.source.model.SManga
 import java.awt.Frame
 import java.awt.Toolkit
 import androidx.compose.ui.window.WindowPlacement as ComposeWindowPlacement
@@ -206,6 +210,10 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
     var isTrackingDialogOpen by remember { mutableStateOf(false) }
     var isManageCategoriesDialogOpen by remember { mutableStateOf(false) }
     var isEditMangaCategoriesDialogOpen by remember { mutableStateOf(false) }
+    var isMangaLibraryActionRunning by remember { mutableStateOf(false) }
+    var isMangaSourceRefreshing by remember { mutableStateOf(false) }
+    var mangaDetailActionError by remember { mutableStateOf<String?>(null) }
+    var pendingMangaOrganizationAction by remember { mutableStateOf<MangaOrganizationAction?>(null) }
     DisposableEffect(libraryPresenter) {
         onDispose(libraryPresenter::close)
     }
@@ -558,6 +566,59 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                     } else {
                                         null
                                     }
+                                    val sharedMangaDetailActions = MangaDetailActions(
+                                        onReadChapter = { chapterId ->
+                                            navigator.navigate(DesktopDestination.Reader(chapterId))
+                                        },
+                                        onEditCategories = {
+                                            if (mangaDetailState.manga?.favorite == true) {
+                                                isEditMangaCategoriesDialogOpen = true
+                                            } else {
+                                                pendingMangaOrganizationAction = MangaOrganizationAction.Categories
+                                            }
+                                        },
+                                        onOpenTracking = {
+                                            if (mangaDetailState.manga?.favorite == true) {
+                                                isTrackingDialogOpen = true
+                                            } else {
+                                                pendingMangaOrganizationAction = MangaOrganizationAction.Tracking
+                                            }
+                                        },
+                                        onEditInfo = { libraryPresenter.setEditInfoDialogOpen(true) },
+                                        onDismissEditInfo = { libraryPresenter.setEditInfoDialogOpen(false) },
+                                        onSaveMangaInfo = libraryPresenter::updateSelectedMangaInfo,
+                                        onResetMangaInfo = libraryPresenter::resetSelectedMangaInfo,
+                                        onChapterFilterChange = libraryPresenter::setChapterFilter,
+                                        onChapterSortChange = libraryPresenter::setChapterSort,
+                                        onToggleBookmark = libraryPresenter::toggleChapterBookmark,
+                                        onToggleRead = libraryPresenter::toggleChapterRead,
+                                        onMarkPreviousRead = libraryPresenter::markPreviousChaptersRead,
+                                        onDownloadChapter = libraryPresenter::downloadChapter,
+                                        onDeleteDownload = libraryPresenter::deleteChapterDownload,
+                                        onDownloadBatch = { amount ->
+                                            if (amount == -1) {
+                                                libraryPresenter.downloadNextChapters(null, unreadOnly = false)
+                                            } else {
+                                                libraryPresenter.downloadNextChapters(amount, unreadOnly = true)
+                                            }
+                                        },
+                                        onBatchBookmarkChapters = libraryPresenter::batchBookmarkChapters,
+                                        onBatchMarkChaptersRead = libraryPresenter::batchMarkChaptersRead,
+                                        onBatchDownloadChapters = libraryPresenter::batchDownloadChapters,
+                                        onBatchDeleteDownloads = libraryPresenter::batchDeleteChapterDownloads,
+                                        onOpenChapterSettings = {
+                                            libraryPresenter.setChapterSettingsDialogOpen(true)
+                                        },
+                                        onDismissChapterSettings = {
+                                            libraryPresenter.setChapterSettingsDialogOpen(false)
+                                        },
+                                        onChapterDisplayModeChange = libraryPresenter::setChapterDisplayMode,
+                                        onExcludedScanlatorsChange = libraryPresenter::setExcludedScanlators,
+                                        onShowMissingChaptersChange = libraryPresenter::setShowMissingChapters,
+                                        onSetChapterSettingsAsDefault = libraryPresenter::setChapterSettingsAsDefault,
+                                        onResetChapterSettingsToDefault =
+                                        libraryPresenter::resetChapterSettingsToDefault,
+                                    )
                                     DesktopShell(
                                         selected = destination as DesktopDestination,
                                         onDestinationSelected = { selectedDestination ->
@@ -566,6 +627,50 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         },
                                         libraryState = libraryState,
                                         mangaDetailState = mangaDetailState,
+                                        mangaDetailActions = sharedMangaDetailActions,
+                                        onToggleMangaLibrary = {
+                                            val manga = mangaDetailState.manga
+                                            if (manga != null) {
+                                                isMangaLibraryActionRunning = true
+                                                if (!libraryPresenter.setDetailFavorite(!manga.favorite)) {
+                                                    mangaDetailActionError = "Unable to update library membership"
+                                                }
+                                                isMangaLibraryActionRunning = false
+                                            }
+                                        },
+                                        onRefreshMangaSource = {
+                                            val manga = mangaDetailState.manga
+                                            if (manga != null && !isMangaSourceRefreshing) {
+                                                presenterScope.launch {
+                                                    isMangaSourceRefreshing = true
+                                                    try {
+                                                        val source = runtime.sourceManager.findSourceDescriptor(manga.sourceId)
+                                                        if (source == null || source.isLocalSource()) {
+                                                            libraryPresenter.retryDetail()
+                                                        } else {
+                                                            runtime.onlineMangaSyncService.prepareOnlineMangaForReading(
+                                                                sourceId = manga.sourceId,
+                                                                manga = SManga(
+                                                                    url = manga.url,
+                                                                    title = manga.title,
+                                                                    thumbnailUrl = manga.thumbnailUrl,
+                                                                    initialized = false,
+                                                                ),
+                                                                forceRefresh = true,
+                                                            )
+                                                            libraryPresenter.retryDetail()
+                                                        }
+                                                    } catch (error: Exception) {
+                                                        mangaDetailActionError =
+                                                            error.message ?: "Unable to refresh manga"
+                                                    } finally {
+                                                        isMangaSourceRefreshing = false
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        isMangaLibraryActionRunning = isMangaLibraryActionRunning,
+                                        isMangaSourceRefreshing = isMangaSourceRefreshing,
                                         onLibraryQueryChange = libraryPresenter::setQuery,
                                         onMangaSelected = libraryPresenter::selectManga,
                                         onBackFromMangaDetail = { libraryPresenter.selectManga(null) },
@@ -625,9 +730,11 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         browseContent = {
                                             mihon.desktop.ui.browse.BrowseContentView(
                                                 runtime = runtime,
-                                                onReadChapter = { chapterId ->
-                                                    navigator.navigate(DesktopDestination.Reader(chapterId))
-                                                },
+                                                detailState = mangaDetailState,
+                                                detailActions = sharedMangaDetailActions,
+                                                onOpenMangaDetail = libraryPresenter::openMangaDetail,
+                                                onCloseMangaDetail = { libraryPresenter.selectManga(null) },
+                                                onRetryMangaDetail = libraryPresenter::retryDetail,
                                             )
                                         },
                                         // History
@@ -833,6 +940,57 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         },
                                     )
                                 }
+                                mangaDetailActionError?.let { message ->
+                                    AlertDialog(
+                                        onDismissRequest = { mangaDetailActionError = null },
+                                        confirmButton = {
+                                            TextButton(onClick = { mangaDetailActionError = null }) {
+                                                Text(strings.dialogOk)
+                                            }
+                                        },
+                                        title = { Text(strings.downloadsStatusError) },
+                                        text = { Text(message) },
+                                    )
+                                }
+                                pendingMangaOrganizationAction?.let { pendingAction ->
+                                    AlertDialog(
+                                        onDismissRequest = { pendingMangaOrganizationAction = null },
+                                        confirmButton = {
+                                            TextButton(
+                                                onClick = {
+                                                    val added = libraryPresenter.setDetailFavorite(true)
+                                                    pendingMangaOrganizationAction = null
+                                                    if (added) {
+                                                        when (pendingAction) {
+                                                            MangaOrganizationAction.Categories ->
+                                                                isEditMangaCategoriesDialogOpen = true
+                                                            MangaOrganizationAction.Tracking -> isTrackingDialogOpen = true
+                                                        }
+                                                    } else {
+                                                        mangaDetailActionError =
+                                                            "Unable to add this manga to the library"
+                                                    }
+                                                },
+                                                modifier = Modifier.testTag("manga-organization-confirm"),
+                                            ) {
+                                                Text(strings.mangaDetailAddToLibrary)
+                                            }
+                                        },
+                                        dismissButton = {
+                                            TextButton(
+                                                onClick = { pendingMangaOrganizationAction = null },
+                                                modifier = Modifier.testTag("manga-organization-cancel"),
+                                            ) {
+                                                Text(strings.dialogCancel)
+                                            }
+                                        },
+                                        title = { Text(strings.mangaDetailAddToLibrary) },
+                                        text = {
+                                            Text(strings.mangaDetailOrganizationRequiresLibrary)
+                                        },
+                                        modifier = Modifier.testTag("manga-organization-confirmation"),
+                                    )
+                                }
                                 ImportStateDialog(importState) { importState = ImportActionState.Idle }
                                 exportNotification?.let { msg ->
                                     AlertDialog(
@@ -853,6 +1011,11 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
             }
         }
     }
+}
+
+private enum class MangaOrganizationAction {
+    Categories,
+    Tracking,
 }
 
 @Composable

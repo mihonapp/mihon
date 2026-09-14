@@ -17,6 +17,7 @@ import mihon.desktop.library.model.ImportReport
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.library.model.MangaDetails
+import mihon.desktop.library.model.MangaRecord
 import mihon.desktop.library.reader.ReaderLibraryPort
 import mihon.desktop.library.reader.ReaderOnlineChapter
 import mihon.desktop.library.repository.LibraryRepository
@@ -192,6 +193,29 @@ class LibraryPresenterTest {
         detail.manga?.favorite shouldBe false
         detail.chapters.single().id shouldBe 91L
         presenter.state.value.selectedMangaId shouldBe null
+        presenter.close()
+    }
+
+    @Test
+    fun `explicit favorite toggle promotes an online backing record into the library`() = runBlocking {
+        val repository = TestLibraryRepository()
+        val mangaId = repository.addManga(
+            MangaRecord(
+                sourceId = 901L,
+                url = "/online",
+                title = "Online",
+                favorite = false,
+                initialized = true,
+            ),
+        )
+        val presenter = LibraryPresenter(repository, scope)
+        presenter.openMangaDetail(mangaId)
+        presenter.awaitDetail { it.manga?.id == mangaId }
+
+        presenter.setDetailFavorite(true) shouldBe true
+
+        presenter.awaitDetail { it.manga?.favorite == true }
+        repository.librarySnapshot(null).single().id shouldBe mangaId
         presenter.close()
     }
 

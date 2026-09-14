@@ -24,11 +24,11 @@ import mihon.desktop.ui.library.ChapterSortState
 import mihon.desktop.ui.library.ImportActionState
 import mihon.desktop.ui.library.LibraryImportActions
 import mihon.desktop.ui.library.LibraryImportController
+import mihon.desktop.ui.library.MangaDetailActions
 import mihon.desktop.ui.library.MangaDetailScreen
 import mihon.desktop.ui.library.MangaDetailUiState
 import mihon.desktop.ui.library.TriStateFilter
 import mihon.extension.model.SourceDescriptor
-import mihon.extension.source.model.SChapter
 import mihon.extension.source.model.SManga
 import java.nio.file.Files
 
@@ -54,7 +54,12 @@ sealed interface BrowseNavigationState {
 @Composable
 fun BrowseContentView(
     runtime: DesktopRuntime,
-    onReadChapter: (Long) -> Unit,
+    detailState: MangaDetailUiState = MangaDetailUiState(),
+    detailActions: MangaDetailActions = MangaDetailActions(),
+    onReadChapter: (Long) -> Unit = detailActions.onReadChapter,
+    onOpenMangaDetail: (Long) -> Unit = {},
+    onCloseMangaDetail: () -> Unit = {},
+    onRetryMangaDetail: () -> Unit = {},
     onImportLocal: (() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
@@ -298,33 +303,25 @@ fun BrowseContentView(
                     onReadChapter = onReadChapter,
                 )
             } else {
-                var detailUiState by remember(nav.source.id, nav.manga.url) {
-                    mutableStateOf(
-                        OnlineMangaDetailUiState(
-                            source = nav.source,
-                            manga = nav.manga,
-                            isLoading = true,
-                            inLibrary = runtime.onlineMangaSyncService.isMangaInLibrary(nav.source.id, nav.manga.url),
-                        ),
-                    )
+                var loadState by remember(nav.source.id, nav.manga.url) {
+                    mutableStateOf(OnlineDetailLoadState(loading = true))
                 }
 
-                fun loadMangaDetails() {
-                    detailUiState = detailUiState.copy(isLoading = true, errorMessage = null)
+                fun loadMangaDetails(forceRefresh: Boolean = false) {
+                    loadState = loadState.copy(loading = true, errorMessage = null)
                     scope.launch {
                         try {
-                            val detailed = runtime.sourceManager.getMangaDetails(nav.source.id, nav.manga)
-                            val chapters = runtime.sourceManager.getChapterList(nav.source.id, detailed)
-                            val inLib = runtime.onlineMangaSyncService.isMangaInLibrary(nav.source.id, nav.manga.url)
-                            detailUiState = detailUiState.copy(
-                                isLoading = false,
-                                manga = detailed,
-                                chapters = chapters,
-                                inLibrary = inLib,
+                            val mangaId = runtime.onlineMangaSyncService.prepareOnlineMangaForReading(
+                                sourceId = nav.source.id,
+                                manga = nav.manga,
+                                forceRefresh = forceRefresh,
                             )
+                            onOpenMangaDetail(mangaId)
+                            onRetryMangaDetail()
+                            loadState = loadState.copy(loading = false, mangaId = mangaId)
                         } catch (e: Exception) {
-                            detailUiState = detailUiState.copy(
-                                isLoading = false,
+                            loadState = loadState.copy(
+                                loading = false,
                                 errorMessage = e.message ?: "Failed to fetch manga details",
                             )
                         }
@@ -335,91 +332,51 @@ fun BrowseContentView(
                     loadMangaDetails()
                 }
 
-                OnlineMangaDetailScreen(
-                    state = detailUiState,
-                    onBack = { navState = BrowseNavigationState.SourceView(nav.source) },
-                    onAddToLibrary = {
+                val displayedState = when {
+                    loadState.loading -> MangaDetailUiState(loading = true)
+                    loadState.errorMessage != null -> MangaDetailUiState(
+                        loading = false,
+                        errorMessage = loadState.errorMessage,
+                    )
+                    else -> detailState
+                }
+                MangaDetailScreen(
+                    state = displayedState,
+                    actions = detailActions.copy(onReadChapter = onReadChapter),
+                    onBack = {
+                        onCloseMangaDetail()
+                        navState = BrowseNavigationState.SourceView(nav.source)
+                    },
+                    onRetry = { loadMangaDetails(forceRefresh = true) },
+                    onToggleLibrary = {
                         scope.launch {
-                            detailUiState = detailUiState.copy(isSyncingLibrary = true)
+                            loadState = loadState.copy(syncingLibrary = true, errorMessage = null)
                             try {
-                                val adding = !detailUiState.inLibrary
+                                val adding = detailState.manga?.favorite != true
                                 if (adding) {
                                     runtime.onlineMangaSyncService.addOrUpdateOnlineManga(
                                         nav.source.id,
-                                        detailUiState.manga,
+                                        nav.manga,
                                     )
                                 } else {
                                     runtime.onlineMangaSyncService.removeFromLibrary(
                                         nav.source.id,
-                                        detailUiState.manga.url,
+                                        nav.manga.url,
                                     )
                                 }
-                                detailUiState = detailUiState.copy(
-                                    isSyncingLibrary = false,
-                                    inLibrary = adding,
-                                )
+                                onRetryMangaDetail()
+                                loadState = loadState.copy(syncingLibrary = false)
                             } catch (e: Exception) {
-                                detailUiState = detailUiState.copy(
-                                    isSyncingLibrary = false,
+                                loadState = loadState.copy(
+                                    syncingLibrary = false,
                                     errorMessage = "Failed to update library: ${e.message}",
                                 )
                             }
                         }
                     },
-                    onReadChapter = { chapter: SChapter ->
-                        scope.launch {
-                            detailUiState = detailUiState.copy(isSyncingLibrary = true)
-                            try {
-                                val mangaId = runtime.onlineMangaSyncService.prepareOnlineMangaForReading(
-                                    nav.source.id,
-                                    detailUiState.manga,
-                                )
-                                val chapters = withContext(Dispatchers.IO) {
-                                    runtime.library.chapterSnapshot(mangaId)
-                                }
-                                val targetChapter = chapters.find { it.url == chapter.url }
-                                    ?: chapters.firstOrNull()
-                                if (targetChapter != null) {
-                                    detailUiState = detailUiState.copy(isSyncingLibrary = false)
-                                    onReadChapter(targetChapter.id)
-                                }
-                            } catch (e: Exception) {
-                                detailUiState = detailUiState.copy(
-                                    isSyncingLibrary = false,
-                                    errorMessage = "Failed to start reader: ${e.message}",
-                                )
-                            }
-                        }
-                    },
-                    onDownloadChapter = { chapter: SChapter ->
-                        scope.launch {
-                            detailUiState = detailUiState.copy(isSyncingLibrary = true, errorMessage = null)
-                            try {
-                                val mangaId = runtime.onlineMangaSyncService.prepareOnlineMangaForReading(
-                                    nav.source.id,
-                                    detailUiState.manga,
-                                )
-                                val targetChapter = withContext(Dispatchers.IO) {
-                                    runtime.library.chapterSnapshot(mangaId).find { it.url == chapter.url }
-                                } ?: throw IllegalStateException("Chapter is unavailable for download")
-                                val downloader = runtime.downloader
-                                    ?: throw IllegalStateException("Downloader is unavailable")
-                                downloader.enqueue(
-                                    sourceId = nav.source.id,
-                                    mangaId = mangaId,
-                                    mangaTitle = detailUiState.manga.title,
-                                    chapters = listOf(targetChapter),
-                                )
-                                detailUiState = detailUiState.copy(isSyncingLibrary = false)
-                            } catch (e: Exception) {
-                                detailUiState = detailUiState.copy(
-                                    isSyncingLibrary = false,
-                                    errorMessage = "Failed to download chapter: ${e.message}",
-                                )
-                            }
-                        }
-                    },
-                    onRefresh = ::loadMangaDetails,
+                    onRefreshSource = { loadMangaDetails(forceRefresh = true) },
+                    isLibraryActionRunning = loadState.syncingLibrary,
+                    isRefreshingSource = loadState.loading,
                 )
             }
         }
@@ -494,6 +451,13 @@ fun BrowseContentView(
         }
     }
 }
+
+private data class OnlineDetailLoadState(
+    val mangaId: Long? = null,
+    val loading: Boolean = false,
+    val syncingLibrary: Boolean = false,
+    val errorMessage: String? = null,
+)
 
 private suspend fun loadLocalChapterCounts(
     runtime: DesktopRuntime,

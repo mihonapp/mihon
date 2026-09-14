@@ -829,6 +829,24 @@ class LibraryPresenter(
         detailMangaId.value = id
     }
 
+    fun setDetailFavorite(favorite: Boolean): Boolean {
+        val mangaId = detailMangaId.value ?: return false
+        val record = repository.allMangaSnapshot().firstOrNull { it.id == mangaId } ?: return false
+        if (record.favorite == favorite) return true
+        val now = System.currentTimeMillis()
+        mutationPort?.updateManga(
+            record.copy(
+                favorite = favorite,
+                dateAdded = if (favorite) record.dateAdded.takeIf { it > 0L } ?: now else 0L,
+                lastModifiedAt = now,
+                favoriteModifiedAt = now,
+            ),
+        ) ?: return false
+        detailRetryRequest.value = now
+        retry()
+        return true
+    }
+
     fun selectCategory(categoryId: Long) {
         selectedCategoryId.value = categoryId
     }

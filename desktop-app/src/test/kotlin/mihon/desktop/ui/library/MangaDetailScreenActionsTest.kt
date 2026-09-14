@@ -47,6 +47,35 @@ class MangaDetailScreenActionsTest {
         refreshes shouldBe 1
     }
 
+    @Test
+    fun `shared action bundle drives edit categories and tracking from either host`() = runComposeUiTest {
+        var edited = 0
+        var categorized = 0
+        var tracked = 0
+
+        setContent {
+            MaterialTheme {
+                MangaDetailScreen(
+                    state = MangaDetailUiState(loading = false, manga = sampleManga()),
+                    onBack = {},
+                    actions = MangaDetailActions(
+                        onEditInfo = { edited++ },
+                        onEditCategories = { categorized++ },
+                        onOpenTracking = { tracked++ },
+                    ),
+                )
+            }
+        }
+
+        onNodeWithTag("manga-detail-edit-info-button").performClick()
+        onNodeWithTag("manga-detail-edit-categories-button").performClick()
+        onNodeWithTag("manga-detail-open-tracking-button").performClick()
+
+        edited shouldBe 1
+        categorized shouldBe 1
+        tracked shouldBe 1
+    }
+
     private fun sampleManga() = MangaDetails(
         id = 1L,
         sourceId = 100L,
