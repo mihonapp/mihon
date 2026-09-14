@@ -1,7 +1,7 @@
 package mihon.desktop.ui.library
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -10,8 +10,11 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import io.kotest.matchers.shouldBe
 import mihon.desktop.library.model.LibraryManga
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -44,6 +47,47 @@ class LibraryScreenTest {
         onNodeWithTag("library-item-73").performClick()
 
         selected shouldBe 73L
+    }
+
+    @Test
+    fun `comfortable card uses readable cover led desktop geometry`() = runComposeUiTest {
+        val title = "A deliberately long desktop manga title"
+        setLibraryContent(
+            state = LibraryUiState(loading = false, items = listOf(manga(42, title, chapters = 18, unread = 4))),
+            rootWidth = 520.dp,
+        )
+
+        val cardBounds = onNodeWithTag("library-item-42").fetchSemanticsNode().boundsInRoot
+        val titleBounds = onNodeWithText(title).fetchSemanticsNode().boundsInRoot
+        check(cardBounds.height > cardBounds.width) { "Expected portrait card, got $cardBounds" }
+        check(titleBounds.width > 120f) { "Expected readable title width, got $titleBounds" }
+    }
+
+    @Test
+    fun `library controls stay inside a narrow desktop window`() = runComposeUiTest {
+        setLibraryContent(
+            state = LibraryUiState(loading = false, items = listOf(manga(42, "Narrow window"))),
+            rootWidth = 480.dp,
+        )
+
+        val rootBounds = onNodeWithTag("library-screen").fetchSemanticsNode().boundsInRoot
+        listOf(
+            "library-import-backup",
+            "library-import-local",
+            "display-mode-ComfortableGrid",
+            "display-mode-CompactGrid",
+            "display-mode-CoverOnly",
+            "display-mode-List",
+            "library-grid-slider",
+            "library-filter-sort-button",
+            "library-toggle-selection",
+            "library-manage-categories-button",
+            "library-search",
+        ).forEach { tag ->
+            val bounds = onNodeWithTag(tag).fetchSemanticsNode().boundsInRoot
+            assertTrue(bounds.left >= rootBounds.left, "$tag starts outside $rootBounds: $bounds")
+            assertTrue(bounds.right <= rootBounds.right, "$tag ends outside $rootBounds: $bounds")
+        }
     }
 
     @Test
@@ -89,10 +133,11 @@ class LibraryScreenTest {
         onImportBackup: () -> Unit = {},
         onImportLocal: () -> Unit = {},
         onRetry: () -> Unit = {},
+        rootWidth: Dp = 1000.dp,
     ) {
         setContent {
             MaterialTheme {
-                Box(modifier = Modifier.fillMaxSize()) {
+                Box(modifier = Modifier.requiredSize(rootWidth, 800.dp)) {
                     LibraryScreen(
                         state = state,
                         onQueryChange = {},
