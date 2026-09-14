@@ -1,0 +1,67 @@
+name: Build casting APK
+on:
+  push:
+    branches:
+      - 'claude/**'
+    paths-ignore:
+      - '**.md'
+      - 'fastlane/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build release APK
+    runs-on: 'ubuntu-24.04'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up JDK
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          java-version-file: .github/.java-version
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+
+      - name: Build app
+        run: ./gradlew assembleRelease
+
+      - name: Rename APKs
+        run: |
+          set -eu
+          short_sha="${GITHUB_SHA::7}"
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-arm64-v8a-release.apk "dist/mihon-casting-${short_sha}-arm64-v8a.apk"
+          cp app/build/outputs/apk/release/app-armeabi-v7a-release.apk "dist/mihon-casting-${short_sha}-armeabi-v7a.apk"
+          cp app/build/outputs/apk/release/app-universal-release.apk "dist/mihon-casting-${short_sha}-universal.apk"
+          echo "short_sha=${short_sha}" >> "$GITHUB_ENV"
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mihon-casting-${{ env.short_sha }}
+          path: dist/*.apk
+
+      - name: Publish pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: cast-latest
+          name: Mihon Casting (latest build)
+          prerelease: true
+          body: |
+            Automated build of the `${{ github.ref_name }}` branch at ${{ github.sha }}.
+
+            Pick the APK matching your device (arm64-v8a for practically every recent phone).
+            The build is signed with the Android debug key and uses the `app.mihon` package id,
+            so an official Mihon install must be removed first.
+          files: dist/*.apk
