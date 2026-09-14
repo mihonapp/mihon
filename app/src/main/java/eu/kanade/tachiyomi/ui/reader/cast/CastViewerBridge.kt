@@ -70,6 +70,13 @@ class CastViewerBridge(
         lastScrollFraction = -1f
     }
 
+    /** Re-reports the current position even if it did not change (a target just connected). */
+    fun reportNow() {
+        lastScrollPage = null
+        lastScrollFraction = -1f
+        hook?.reportNow()
+    }
+
     /** Moves forward in reading order: a page for paged viewers, most of a screen for continuous ones. */
     fun next() {
         when (val viewer = viewer) {
@@ -140,9 +147,10 @@ class CastViewerBridge(
         controller.onReaderTransition(from, to, forward)
     }
 
+    /** True on a transition the viewer can't move past: no next chapter, or one not loaded yet. */
     private fun WebGpuViewer.isAtEnd(): Boolean {
         val page = currentPage as? WebGpuViewer.ViewerTransitionPage ?: return false
-        return page.nextChapter == null
+        return page.nextChapter?.state !is ReaderChapter.State.Loaded
     }
 
     private val WebGpuViewer.continuousState: ImageViewerContinuousState?
@@ -151,6 +159,7 @@ class CastViewerBridge(
     private interface Hook {
         fun install()
         fun uninstall()
+        fun reportNow() {}
     }
 
     private inner class WebtoonHook(viewer: WebtoonViewer) : Hook {
@@ -182,10 +191,16 @@ class CastViewerBridge(
             recycler.removeOnScrollListener(scrollListener)
         }
 
+        override fun reportNow() = report()
+
+        /** [dy] is in screen pixels; the recycler is scaled when the user zoomed out. */
         fun scrollBy(dy: Int): Boolean {
             if (dy == 0) return true
+            val scale = recycler.scaleY.takeIf { it > 0f } ?: 1f
+            val recyclerDy = (dy / scale).roundToInt()
+            if (recyclerDy == 0) return true
             consumedDy = 0
-            recycler.scrollBy(0, dy)
+            recycler.scrollBy(0, recyclerDy)
             return consumedDy != 0
         }
 
@@ -251,6 +266,11 @@ class CastViewerBridge(
             if (!attached) return
             poll()
             choreographer.postFrameCallback(this)
+        }
+
+        override fun reportNow() {
+            lastTransition = null
+            poll()
         }
 
         private fun poll() {

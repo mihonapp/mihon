@@ -79,11 +79,7 @@ fun CastRemoteSheet(
 ) {
     val state by castController.state.collectAsState()
 
-    // Touchpad drags must not be mistaken for a swipe-to-dismiss.
-    AdaptiveSheet(
-        onDismissRequest = onDismissRequest,
-        enableImplicitDismiss = false,
-    ) {
+    AdaptiveSheet(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,6 +95,7 @@ fun CastRemoteSheet(
             Touchpad(
                 layoutMode = state.layoutMode,
                 rtl = state.rtl,
+                verticalPaging = state.verticalPaging,
                 castController = castController,
                 modifier = Modifier.padding(
                     horizontal = MaterialTheme.padding.medium,
@@ -203,6 +200,7 @@ private fun RemoteHeader(
 private fun Touchpad(
     layoutMode: CastLayoutMode,
     rtl: Boolean,
+    verticalPaging: Boolean,
     castController: CastController,
     modifier: Modifier = Modifier,
 ) {
@@ -228,7 +226,7 @@ private fun Touchpad(
                     }
                 }
             }
-            .pointerInput(layoutMode, rtl) {
+            .pointerInput(layoutMode, rtl, verticalPaging) {
                 var totalX = 0f
                 var totalY = 0f
                 detectDragGestures(
@@ -238,7 +236,18 @@ private fun Touchpad(
                     },
                     onDragEnd = {
                         if (layoutMode == CastLayoutMode.PAGED) {
-                            if (abs(totalX) > swipeThresholdPx && abs(totalX) > abs(totalY)) {
+                            val horizontal = abs(totalX) > swipeThresholdPx && abs(totalX) > abs(totalY)
+                            val vertical = abs(totalY) > swipeThresholdPx && abs(totalY) > abs(totalX)
+                            if (verticalPaging && vertical) {
+                                // Vertical pager: swiping up goes forward.
+                                if (totalY <
+                                    0f
+                                ) {
+                                    castController.remoteNextPage()
+                                } else {
+                                    castController.remotePreviousPage()
+                                }
+                            } else if (horizontal) {
                                 // Swiping left goes forward, unless the reader is right-to-left.
                                 val forward = (totalX < 0f) != rtl
                                 if (forward) castController.remoteNextPage() else castController.remotePreviousPage()

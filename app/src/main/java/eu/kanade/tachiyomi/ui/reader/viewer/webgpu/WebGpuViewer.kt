@@ -1433,7 +1433,7 @@ open class WebGpuViewer(
                 val settled = page
                 this@WebGpuViewer.scope.launch {
                     if (!isContinuous) {
-                        if (!activity.isScrollingThroughPages) {
+                        if (!activity.isScrollingThroughPages && !activity.isAutoScrolling) {
                             activity.hideMenu()
                         }
                         progressPage(settled)?.let { activity.onPageSelected(it.page) }

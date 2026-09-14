@@ -799,8 +799,21 @@ class ReaderViewModel(
     }
 
     fun showLoadingDialog() {
-        mutableState.update { it.copy(dialog = Dialog.Loading) }
+        mutableState.update {
+            // The cast remote drives chapter changes; bring it back once the chapter is loaded.
+            dialogToRestore = it.dialog as? Dialog.CastRemote
+            it.copy(dialog = Dialog.Loading)
+        }
     }
+
+    fun hideLoadingDialog() {
+        mutableState.update {
+            if (it.dialog !is Dialog.Loading) return@update it
+            it.copy(dialog = dialogToRestore.also { dialogToRestore = null })
+        }
+    }
+
+    private var dialogToRestore: Dialog? = null
 
     fun openReadingModeSelectDialog() {
         mutableState.update { it.copy(dialog = Dialog.ReadingModeSelect) }

@@ -98,6 +98,8 @@ data class CastState(
     val chapterId: Long = -1L,
     val layoutMode: CastLayoutMode = CastLayoutMode.PAGED,
     val rtl: Boolean = false,
+    /** Paged layouts only: pages are turned by vertical swipes (vertical pager). */
+    val verticalPaging: Boolean = false,
     val pages: List<CastPageInfo> = emptyList(),
     val position: CastPosition = CastPosition.Page(0),
     val orientation: CastOrientation = CastOrientation.LANDSCAPE,
@@ -118,6 +120,8 @@ data class CastState(
 
 /** Commands from a cast target / remote / notification that the reader must execute. */
 sealed interface CastEvent {
+    /** A target was just connected; the reader should re-report its exact position. */
+    data object Started : CastEvent
     data object NextPage : CastEvent
     data object PreviousPage : CastEvent
 

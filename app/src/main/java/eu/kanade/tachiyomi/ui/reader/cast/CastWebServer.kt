@@ -36,8 +36,9 @@ import java.net.SocketTimeoutException
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.SynchronousQueue
+import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
@@ -97,10 +98,19 @@ class CastWebServer(
         check(!running) { "CastWebServer is already running" }
         val address = findLanAddress()
             ?: throw IOException(context.stringResource(MR.strings.cast_web_no_network))
-        val socket = bind()
+        // Only listen on the advertised LAN address, never on cellular / VPN interfaces.
+        val socket = bind(address)
         serverSocket = socket
         running = true
-        executor = Executors.newFixedThreadPool(MAX_CONNECTIONS) { runnable ->
+        // One thread per open connection: browsers keep several connections per receiver, and a
+        // long-poll holds its thread, so the pool grows on demand instead of queueing clients.
+        executor = ThreadPoolExecutor(
+            0,
+            MAX_CONNECTIONS,
+            IDLE_THREAD_SECONDS,
+            TimeUnit.SECONDS,
+            SynchronousQueue(),
+        ) { runnable ->
             Thread(runnable, "CastWebServer-${threadCounter.incrementAndGet()}").apply { isDaemon = true }
         }
 
@@ -155,7 +165,7 @@ class CastWebServer(
             logcat(LogPriority.ERROR, e) { "Unable to list network interfaces" }
             return null
         }
-        return interfaces
+        val candidates = interfaces
             .filter { iface ->
                 try {
                     !iface.isLoopback && iface.isUp
@@ -164,11 +174,13 @@ class CastWebServer(
                 }
             }
             .sortedBy { iface -> interfacePriority(iface.name.orEmpty()) }
-            .firstNotNullOfOrNull { iface ->
+            .flatMap { iface ->
                 iface.inetAddresses.toList()
                     .filterIsInstance<Inet4Address>()
-                    .firstOrNull { it.isSiteLocalAddress && !it.isLoopbackAddress }
+                    .filter { !it.isLoopbackAddress && !it.isLinkLocalAddress && !it.isAnyLocalAddress }
             }
+        // Private LAN ranges first; otherwise any routable IPv4 (CGNAT 100.64/10, public ranges).
+        return candidates.firstOrNull { it.isSiteLocalAddress } ?: candidates.firstOrNull()
     }
 
     private fun interfacePriority(name: String): Int = when {
@@ -179,14 +191,14 @@ class CastWebServer(
     }
 
     @Throws(IOException::class)
-    private fun bind(): ServerSocket {
+    private fun bind(address: Inet4Address): ServerSocket {
         var lastError: IOException? = null
         for (candidate in port..(port + PORT_ATTEMPTS)) {
             if (candidate !in 1..MAX_PORT) break
             val socket = ServerSocket()
             try {
                 socket.reuseAddress = true
-                socket.bind(InetSocketAddress(candidate), ACCEPT_BACKLOG)
+                socket.bind(InetSocketAddress(address, candidate), ACCEPT_BACKLOG)
                 return socket
             } catch (e: IOException) {
                 runCatching { socket.close() }
@@ -564,8 +576,9 @@ class CastWebServer(
         private const val MAX_PORT = 65535
         private const val PORT_ATTEMPTS = 20
         private const val ACCEPT_BACKLOG = 50
-        private const val MAX_CONNECTIONS = 8
+        private const val MAX_CONNECTIONS = 64
         private const val SOCKET_TIMEOUT_MS = 30_000
+        private const val IDLE_THREAD_SECONDS = 60L
         private const val INPUT_BUFFER_SIZE = 8 * 1024
         private const val OUTPUT_BUFFER_SIZE = 16 * 1024
         private const val MAX_LINE_LENGTH = 8 * 1024

@@ -87,7 +87,7 @@ fun CastDialog(
                         context.toast(MR.strings.cast_started)
                         onOpenRemote()
                     } else {
-                        context.toast(MR.strings.cast_display_none)
+                        context.toast(MR.strings.cast_display_error)
                     }
                 },
                 onOpenSettings = { context.openCastSettings() },

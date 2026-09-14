@@ -554,6 +554,7 @@
     <string name="cast_display_help">Start screen casting from Quick Settings (Cast, Smart View or Screen mirroring) or connect an HDMI adapter. Mihon takes over the TV and turns this device into a remote.</string>
     <string name="cast_display_open_settings">Open cast settings</string>
     <string name="cast_display_unnamed">External display</string>
+    <string name="cast_display_error">Could not show the reader on this display.</string>
     <string name="cast_display_size">%1$d × %2$d</string>
     <string name="cast_section_web">Web receiver</string>
     <string name="cast_web_description">Works with any TV, console or computer that has a web browser on the same Wi-Fi network.</string>
@@ -583,7 +584,7 @@
     <string name="cast_background">Cast background</string>
     <string name="cast_auto_scroll">Auto-scroll</string>
     <string name="cast_auto_scroll_speed">Auto-scroll speed</string>
-    <string name="cast_auto_scroll_speed_value">%d px/s</string>
+    <string name="cast_auto_scroll_speed_value">%d dp/s</string>
     <string name="cast_auto_scroll_step">Scroll rate</string>
     <string name="cast_auto_scroll_step_smooth">Smooth</string>
     <string name="cast_auto_scroll_step_value">Every %d ms</string>

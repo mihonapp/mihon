@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.util.system.toast
 import tachiyomi.i18n.MR
 import kotlin.math.roundToInt
@@ -55,6 +56,7 @@ class ReaderAutoScroller(
     fun start(silent: Boolean = false) {
         if (isRunning) return
         isRunning = true
+        activity.isAutoScrolling = true
         resetBlock()
         pendingPx = 0f
         controller.setAutoScrollRunning(true)
@@ -68,6 +70,7 @@ class ReaderAutoScroller(
     fun stop(silent: Boolean = false) {
         if (!isRunning) return
         isRunning = false
+        activity.isAutoScrolling = false
         handler.removeCallbacks(tick)
         controller.setAutoScrollRunning(false)
         if (!silent) activity.toast(MR.strings.cast_auto_scroll_stopped)
@@ -80,6 +83,7 @@ class ReaderAutoScroller(
     fun pause() {
         if (!isRunning) return
         isRunning = false
+        activity.isAutoScrolling = false
         handler.removeCallbacks(tick)
     }
 
@@ -138,9 +142,12 @@ class ReaderAutoScroller(
         if (blockedSince == 0L) blockedSince = now
         if (now - blockedSince < graceMs) return
         val state = activity.viewModel.state.value
+        val nextChapter = state.viewerChapters?.nextChapter
         when {
+            // The viewer is already preloading it; loading it again would orphan that loader.
+            nextChapter?.state is ReaderChapter.State.Loading -> blockedSince = now
             !chapterRequested -> {
-                if (state.viewerChapters?.nextChapter == null) {
+                if (nextChapter == null) {
                     stop()
                 } else {
                     chapterRequested = true

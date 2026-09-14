@@ -314,6 +314,7 @@
       if (xhr.readyState !== 4) return;
       if (xhr.status === 200) {
         failures = 0;
+        if (state && state.active) idle.classList.add('hidden');
         try {
           var s = JSON.parse(xhr.responseText);
           if (s && typeof s.v === 'number') {

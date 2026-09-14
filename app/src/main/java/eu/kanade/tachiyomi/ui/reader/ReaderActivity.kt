@@ -153,6 +153,9 @@ class ReaderActivity : BaseActivity() {
     var isScrollingThroughPages = false
         private set
 
+    /** True while [ReaderAutoScroller] drives the viewer; viewers then keep the menu open. */
+    var isAutoScrolling = false
+
     /**
      * Called when the activity is created. Initializes the presenter and configuration.
      */
@@ -260,6 +263,7 @@ class ReaderActivity : BaseActivity() {
         castController.events
             .onEach { event ->
                 when (event) {
+                    CastEvent.Started -> castBridge?.reportNow()
                     CastEvent.NextPage -> castBridge?.next()
                     CastEvent.PreviousPage -> castBridge?.previous()
                     is CastEvent.ScrollBy -> castBridge?.scrollBy(event.deltaPx)
@@ -406,6 +410,19 @@ class ReaderActivity : BaseActivity() {
         setMenuVisibility(viewModel.state.value.menuVisible)
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (castController.state.value.autoScrollRunning && !autoScroller.isRunning) {
+            autoScroller.start(silent = true)
+        }
+    }
+
+    override fun onStop() {
+        // Without a cast target nobody is watching: don't advance the reading progress unseen.
+        if (!castController.isActive) autoScroller.pause()
+        super.onStop()
+    }
+
     /**
      * Called when the window focus changes. It sets the menu visibility to the last known state
      * to apply immersive mode again if needed.
@@ -506,7 +523,10 @@ class ReaderActivity : BaseActivity() {
         )
         val verticalNavigatorOnLeft by readerPreferences.verticalNavigatorOnLeft.collectAsState()
         val verticalNavigatorHeight by readerPreferences.verticalNavigatorHeight.collectAsState()
-        val castState by castController.state.collectAsState()
+        val castFlags by remember {
+            castController.state.map { it.active to it.autoScrollRunning }.distinctUntilChanged()
+        }.collectAsState(initial = castController.state.value.let { it.active to it.autoScrollRunning })
+        val (castActive, autoScrollRunning) = castFlags
 
         ReaderAppBars(
             visible = state.menuVisible,
@@ -564,9 +584,9 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
-            castActive = castState.active,
+            castActive = castActive,
             onClickCast = viewModel::openCastDialog,
-            autoScrollRunning = castState.autoScrollRunning,
+            autoScrollRunning = autoScrollRunning,
             onClickCastRemote = viewModel::openCastRemoteDialog,
         )
     }
@@ -608,11 +628,13 @@ class ReaderActivity : BaseActivity() {
         viewModel.onViewerLoaded(newViewer)
         castBridge?.detach()
         castBridge = CastViewerBridge(this, castController).also { it.attach(newViewer) }
+        val resolvedMode = ReadingMode.fromPreference(readingMode)
         castController.attachReader(
             mangaId = viewModel.mangaId,
             mangaTitle = viewModel.manga?.title.orEmpty(),
             layoutMode = if (ReadingMode.isPagerType(readingMode)) CastLayoutMode.PAGED else CastLayoutMode.CONTINUOUS,
-            rtl = ReadingMode.fromPreference(readingMode) == ReadingMode.RIGHT_TO_LEFT,
+            rtl = resolvedMode == ReadingMode.RIGHT_TO_LEFT,
+            verticalPaging = resolvedMode == ReadingMode.VERTICAL,
         )
         updateViewerInset(readerPreferences.fullscreen.get(), readerPreferences.drawUnderCutout.get())
         binding.viewerContainer.addView(newViewer.getView())
@@ -712,7 +734,7 @@ class ReaderActivity : BaseActivity() {
         if (show) {
             viewModel.showLoadingDialog()
         } else {
-            viewModel.closeDialog()
+            viewModel.hideLoadingDialog()
         }
     }
 

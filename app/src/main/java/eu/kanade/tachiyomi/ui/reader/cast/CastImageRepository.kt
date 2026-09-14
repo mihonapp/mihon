@@ -84,7 +84,8 @@ class CastImageRepository(
 ) {
 
     private val sessionJob = SupervisorJob()
-    private val scope = CoroutineScope(sessionJob + Dispatchers.IO.limitedParallelism(DECODE_PARALLELISM))
+    private val decodeDispatcher = Dispatchers.IO.limitedParallelism(DECODE_PARALLELISM)
+    private val scope = CoroutineScope(sessionJob + decodeDispatcher)
 
     private val lock = Any()
 
@@ -98,6 +99,9 @@ class CastImageRepository(
     /** Decode keys that failed recently, with the uptime until which they should not be retried. */
     private val failedUntil = HashMap<String, Long>()
 
+    /** Pages whose download/read failed recently; their loader is not retried until the deadline. */
+    private val readFailedUntil = HashMap<String, Long>()
+
     /** Page keys the renderer is about to draw; eviction skips them. */
     private var pinnedPages: Set<String> = emptySet()
 
@@ -105,6 +109,7 @@ class CastImageRepository(
     private var generation = 0
 
     private val encodedCache = LinkedHashMap<String, CastEncodedImage>(8, 0.75f, true)
+    private val encodedInFlight = HashMap<String, Deferred<CastEncodedImage?>>()
     private val rawCache = LinkedHashMap<String, ByteArray>(4, 0.75f, true)
 
     private val maxDecodedBytes: Long = min(Runtime.getRuntime().maxMemory() / 4, MAX_DECODED_BYTES)
@@ -216,9 +221,31 @@ class CastImageRepository(
         maxWidth: Int = WEB_MAX_WIDTH,
     ): CastEncodedImage? {
         val key = "${page.key}@${quality.name}@$maxWidth"
-        synchronized(lock) { encodedCache[key]?.let { return it } }
+        // Concurrent requests for the same page (several receivers, retries) share one transcode,
+        // and transcodes run on the bounded decode pool so a burst can't exhaust the heap.
+        val deferred = synchronized(lock) {
+            encodedCache[key]?.let { return it }
+            encodedInFlight.getOrPut(key) {
+                scope.async {
+                    try {
+                        encodeAndCache(page, key, quality, maxWidth)
+                    } finally {
+                        synchronized(lock) { encodedInFlight.remove(key) }
+                    }
+                }
+            }
+        }
+        return deferred.await()
+    }
+
+    private suspend fun encodeAndCache(
+        page: CastPageInfo,
+        key: String,
+        quality: CastImageQuality,
+        maxWidth: Int,
+    ): CastEncodedImage? {
         val bytes = readBytes(page) ?: return null
-        val (result, sourceDimensions) = withContext(Dispatchers.IO) {
+        val (result, sourceDimensions) = withContext(decodeDispatcher) {
             encodeInternal(bytes, quality, maxWidth) to probe(bytes)
         }
         if (result == null) return null
@@ -244,8 +271,10 @@ class CastImageRepository(
             decodedBytes = 0
             decodedInFlight.clear()
             failedUntil.clear()
+            readFailedUntil.clear()
             pinnedPages = emptySet()
             encodedCache.clear()
+            encodedInFlight.clear()
             rawCache.clear()
             if (dimensionCache.size > MAX_DIMENSION_ENTRIES) dimensionCache.clear()
         }
@@ -306,19 +335,30 @@ class CastImageRepository(
     }
 
     private suspend fun readBytes(page: CastPageInfo): ByteArray? {
-        synchronized(lock) { rawCache[page.key]?.let { return it } }
+        synchronized(lock) {
+            rawCache[page.key]?.let { return it }
+            if ((readFailedUntil[page.key] ?: 0L) > SystemClock.uptimeMillis()) return null
+        }
         val readerPage = pageSource.findPage(page.chapterId, page.index) ?: return null
-        if (!pageSource.awaitReady(readerPage)) return null
-        val streamFn = readerPage.stream ?: return null
-        val bytes = withContext(Dispatchers.IO) {
-            try {
-                streamFn().use { it.readBytes() }
-            } catch (e: Throwable) {
-                if (e is CancellationException) throw e
-                logcat(LogPriority.ERROR, e) { "Failed to read cast page ${page.key}" }
-                null
+        val bytes = if (pageSource.awaitReady(readerPage)) {
+            val streamFn = readerPage.stream
+            withContext(Dispatchers.IO) {
+                try {
+                    streamFn?.invoke()?.use { it.readBytes() }
+                } catch (e: Throwable) {
+                    if (e is CancellationException) throw e
+                    logcat(LogPriority.ERROR, e) { "Failed to read cast page ${page.key}" }
+                    null
+                }
             }
-        } ?: return null
+        } else {
+            null
+        }
+        if (bytes == null) {
+            // Don't hammer the source: the reader's own retry button still works immediately.
+            synchronized(lock) { readFailedUntil[page.key] = SystemClock.uptimeMillis() + FAILURE_COOLDOWN_MS }
+            return null
+        }
         synchronized(lock) {
             rawCache[page.key] = bytes
             while (rawCache.size > MAX_RAW_ENTRIES) {
@@ -503,11 +543,11 @@ class CastImageRepository(
         val probed = probe(bytes)
         val mime = probeMimeType(bytes)
         val browserFriendly = mime != null && mime in BROWSER_MIME_TYPES
-        if (quality == CastImageQuality.ORIGINAL) {
-            return CastEncodedImage(bytes, mime ?: "application/octet-stream", probed?.width ?: 0, probed?.height ?: 0)
-        }
-        if (browserFriendly && probed != null && probed.width <= maxWidth && bytes.size <= WEB_MAX_RAW_BYTES) {
-            return CastEncodedImage(bytes, mime, probed.width, probed.height)
+        // Formats a TV browser can't show (JXL, AVIF, JP2...) are always transcoded.
+        if (browserFriendly && probed != null) {
+            val keepOriginal = quality == CastImageQuality.ORIGINAL ||
+                (probed.width <= maxWidth && bytes.size <= WEB_MAX_RAW_BYTES)
+            if (keepOriginal) return CastEncodedImage(bytes, mime, probed.width, probed.height)
         }
 
         val bitmap: Bitmap = if (probed != null) {
@@ -568,7 +608,7 @@ class CastImageRepository(
         private const val MAX_RAW_ENTRIES = 4
         private const val MAX_DIMENSION_ENTRIES = 2000
         private const val FAILURE_COOLDOWN_MS = 20_000L
-        private const val CLEAR_JOIN_TIMEOUT_MS = 400L
+        private const val CLEAR_JOIN_TIMEOUT_MS = 250L
         private val BROWSER_MIME_TYPES = setOf("image/jpeg", "image/png", "image/webp", "image/gif")
     }
 }

@@ -160,7 +160,13 @@ class CastController(
     // region Reader bridge (main thread)
 
     /** Called by the reader once its viewer is created (and again after it is recreated). */
-    fun attachReader(mangaId: Long, mangaTitle: String, layoutMode: CastLayoutMode, rtl: Boolean) {
+    fun attachReader(
+        mangaId: Long,
+        mangaTitle: String,
+        layoutMode: CastLayoutMode,
+        rtl: Boolean,
+        verticalPaging: Boolean = false,
+    ) {
         scrollReportsSeen = false
         update {
             it.copy(
@@ -168,6 +174,7 @@ class CastController(
                 mangaTitle = mangaTitle,
                 layoutMode = layoutMode,
                 rtl = rtl,
+                verticalPaging = verticalPaging,
                 panX = 0f,
                 panY = 0f,
             )
@@ -263,7 +270,12 @@ class CastController(
             forward -> context.stringResource(MR.strings.cast_transition_next, to.chapter.name)
             else -> context.stringResource(MR.strings.cast_transition_prev, to.chapter.name)
         }
-        update { it.copy(position = CastPosition.Transition(title, from.chapter.name, forward)) }
+        val fromId = from.chapter.id
+        update { current ->
+            // The card sits at the edge of [from]; anchor there even when arriving from [to].
+            val base = if (fromId != null && current.chapterId != fromId) current.withChapter(from) else current
+            base.copy(position = CastPosition.Transition(title, from.chapter.name, forward))
+        }
     }
 
     fun setAutoScrollRunning(running: Boolean) {
@@ -294,12 +306,14 @@ class CastController(
     /** Starts showing the reader on the external display with the given id. */
     fun startDisplayCast(displayId: Int): Boolean {
         val display = displayManager?.getDisplay(displayId) ?: return false
-        stopTargets()
+        // Start the new target before tearing the current one down so a failure leaves the
+        // session untouched.
         val target = CastDisplayTarget(context.applicationContext, this)
         if (!target.start(display)) {
             logcat(LogPriority.ERROR) { "Unable to show cast presentation on display $displayId" }
             return false
         }
+        stopTargets()
         displayTarget = target
         update {
             it.copy(
@@ -308,14 +322,12 @@ class CastController(
                 targetName = display.name.ifBlank { context.stringResource(MR.strings.cast_display_unnamed) },
             )
         }
-        scheduleDimensionProbe()
-        CastService.start(context)
+        onTargetStarted()
         return true
     }
 
     /** Starts the embedded web receiver; returns its URL on success. */
     fun startWebCast(): Result<CastWebInfo> {
-        stopTargets()
         val server = CastWebServer(
             context = context.applicationContext,
             controller = this,
@@ -324,6 +336,7 @@ class CastController(
         )
         return runCatching { server.start() }
             .onSuccess { info ->
+                stopTargets()
                 webServer = server
                 mutableWebInfo.value = info
                 update {
@@ -333,8 +346,7 @@ class CastController(
                         targetName = info.url,
                     )
                 }
-                scheduleDimensionProbe()
-                CastService.start(context)
+                onTargetStarted()
             }
             .onFailure { e ->
                 logcat(LogPriority.ERROR, e) { "Unable to start cast web server" }
@@ -359,6 +371,13 @@ class CastController(
         images.clear()
         CastService.stop(context)
         emit(CastEvent.Stopped(messageRes))
+    }
+
+    private fun onTargetStarted() {
+        scheduleDimensionProbe()
+        CastService.start(context)
+        // The reader only reports page-level changes while nothing is cast; ask for the exact spot.
+        emit(CastEvent.Started)
     }
 
     private fun stopTargets() {

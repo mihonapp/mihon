@@ -40,7 +40,9 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
             wasAtEdge = edge
             if (edge) {
                 if (edgeChanged) scope.launch { activity.showMenu() }
-            } else if (!first && (edgeChanged || pageChanged) && !activity.isScrollingThroughPages) {
+            } else if (!first && (edgeChanged || pageChanged) && !activity.isScrollingThroughPages &&
+                !activity.isAutoScrolling
+            ) {
                 scope.launch { activity.hideMenu() }
             }
         }
