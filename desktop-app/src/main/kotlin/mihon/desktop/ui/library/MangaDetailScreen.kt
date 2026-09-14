@@ -31,8 +31,11 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.EditNote
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Sync
@@ -78,14 +81,19 @@ import mihon.desktop.ui.common.MangaBackdropBanner
 fun MangaDetailScreen(
     state: MangaDetailUiState,
     onBack: () -> Unit,
-    onReadChapter: (Long) -> Unit = {},
+    actions: MangaDetailActions = MangaDetailActions(),
+    onReadChapter: (Long) -> Unit = actions.onReadChapter,
     onRetry: () -> Unit = {},
+    onToggleLibrary: (() -> Unit)? = null,
+    onRefreshSource: (() -> Unit)? = null,
+    isLibraryActionRunning: Boolean = false,
+    isRefreshingSource: Boolean = false,
     modifier: Modifier = Modifier,
     showBack: Boolean = true,
-    onEditCategories: () -> Unit = {},
-    onOpenTracking: () -> Unit = {},
-    onEditInfo: () -> Unit = {},
-    onDismissEditInfo: () -> Unit = {},
+    onEditCategories: () -> Unit = actions.onEditCategories,
+    onOpenTracking: () -> Unit = actions.onOpenTracking,
+    onEditInfo: () -> Unit = actions.onEditInfo,
+    onDismissEditInfo: () -> Unit = actions.onDismissEditInfo,
     onSaveMangaInfo: (
         title: String,
         author: String?,
@@ -94,27 +102,27 @@ fun MangaDetailScreen(
         genres: List<String>,
         status: Long,
         notes: String,
-    ) -> Unit = { _, _, _, _, _, _, _ -> },
-    onResetMangaInfo: () -> Unit = {},
-    onChapterFilterChange: (ChapterFilterState) -> Unit = {},
-    onChapterSortChange: (ChapterSortState) -> Unit = {},
-    onToggleBookmark: (Long) -> Unit = {},
-    onToggleRead: (Long) -> Unit = {},
-    onMarkPreviousRead: (Long) -> Unit = {},
-    onDownloadChapter: (Long) -> Unit = {},
-    onDeleteDownload: (Long) -> Unit = {},
-    onDownloadBatch: (Int?) -> Unit = {},
-    onBatchBookmarkChapters: (Set<Long>, Boolean) -> Unit = { ids, _ -> ids.forEach(onToggleBookmark) },
-    onBatchMarkChaptersRead: (Set<Long>, Boolean) -> Unit = { ids, _ -> ids.forEach(onToggleRead) },
-    onBatchDownloadChapters: (Set<Long>) -> Unit = { ids -> ids.forEach(onDownloadChapter) },
-    onBatchDeleteDownloads: (Set<Long>) -> Unit = { ids -> ids.forEach(onDeleteDownload) },
-    onOpenChapterSettings: () -> Unit = {},
-    onDismissChapterSettings: () -> Unit = {},
-    onChapterDisplayModeChange: (ChapterDisplayMode) -> Unit = {},
-    onExcludedScanlatorsChange: (Set<String>) -> Unit = {},
-    onShowMissingChaptersChange: (Boolean) -> Unit = {},
-    onSetChapterSettingsAsDefault: (Boolean) -> Unit = {},
-    onResetChapterSettingsToDefault: () -> Unit = {},
+    ) -> Unit = actions.onSaveMangaInfo,
+    onResetMangaInfo: () -> Unit = actions.onResetMangaInfo,
+    onChapterFilterChange: (ChapterFilterState) -> Unit = actions.onChapterFilterChange,
+    onChapterSortChange: (ChapterSortState) -> Unit = actions.onChapterSortChange,
+    onToggleBookmark: (Long) -> Unit = actions.onToggleBookmark,
+    onToggleRead: (Long) -> Unit = actions.onToggleRead,
+    onMarkPreviousRead: (Long) -> Unit = actions.onMarkPreviousRead,
+    onDownloadChapter: (Long) -> Unit = actions.onDownloadChapter,
+    onDeleteDownload: (Long) -> Unit = actions.onDeleteDownload,
+    onDownloadBatch: (Int?) -> Unit = actions.onDownloadBatch,
+    onBatchBookmarkChapters: (Set<Long>, Boolean) -> Unit = actions.onBatchBookmarkChapters,
+    onBatchMarkChaptersRead: (Set<Long>, Boolean) -> Unit = actions.onBatchMarkChaptersRead,
+    onBatchDownloadChapters: (Set<Long>) -> Unit = actions.onBatchDownloadChapters,
+    onBatchDeleteDownloads: (Set<Long>) -> Unit = actions.onBatchDeleteDownloads,
+    onOpenChapterSettings: () -> Unit = actions.onOpenChapterSettings,
+    onDismissChapterSettings: () -> Unit = actions.onDismissChapterSettings,
+    onChapterDisplayModeChange: (ChapterDisplayMode) -> Unit = actions.onChapterDisplayModeChange,
+    onExcludedScanlatorsChange: (Set<String>) -> Unit = actions.onExcludedScanlatorsChange,
+    onShowMissingChaptersChange: (Boolean) -> Unit = actions.onShowMissingChaptersChange,
+    onSetChapterSettingsAsDefault: (Boolean) -> Unit = actions.onSetChapterSettingsAsDefault,
+    onResetChapterSettingsToDefault: () -> Unit = actions.onResetChapterSettingsToDefault,
 ) {
     Surface(
         modifier = modifier.testTag("manga-detail-pane"),
@@ -237,10 +245,10 @@ fun MangaDetailScreen(
                                 modifier = Modifier.fillMaxWidth().padding(24.dp),
                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                             ) {
-                                Row(
+                                FlowRow(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     if (showBack) {
                                         TextButton(
@@ -256,7 +264,42 @@ fun MangaDetailScreen(
                                             Text(strings.mangaDetailBack)
                                         }
                                     }
-                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    onToggleLibrary?.let { toggleLibrary ->
+                                        FilledTonalButton(
+                                            onClick = toggleLibrary,
+                                            enabled = !isLibraryActionRunning,
+                                            modifier = Modifier.testTag("manga-detail-library-button"),
+                                        ) {
+                                            Icon(
+                                                if (manga.favorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp),
+                                            )
+                                            Spacer(Modifier.width(6.dp))
+                                            Text(
+                                                if (manga.favorite) {
+                                                    strings.mangaDetailInLibrary
+                                                } else {
+                                                    strings.mangaDetailAddToLibrary
+                                                },
+                                            )
+                                        }
+                                    }
+                                    onRefreshSource?.let { refreshSource ->
+                                        androidx.compose.material3.OutlinedButton(
+                                            onClick = refreshSource,
+                                            enabled = !isRefreshingSource,
+                                            modifier = Modifier.testTag("manga-detail-refresh-button"),
+                                        ) {
+                                            Icon(
+                                                Icons.Rounded.Refresh,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp),
+                                            )
+                                            Spacer(Modifier.width(6.dp))
+                                            Text(strings.browseRefresh)
+                                        }
+                                    }
                                         androidx.compose.material3.OutlinedButton(
                                             onClick = onEditInfo,
                                             modifier = Modifier.testTag("manga-detail-edit-info-button"),
@@ -309,7 +352,6 @@ fun MangaDetailScreen(
                                                 Text(strings.openInBrowser)
                                             }
                                         }
-                                    }
                                 }
 
                                 Row(

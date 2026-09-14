@@ -21,6 +21,32 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalTestApi::class)
 class MangaDetailScreenActionsTest {
 
+    @Test
+    fun `shared detail exposes source refresh and explicit library membership actions`() = runComposeUiTest {
+        var refreshes = 0
+        var membershipToggles = 0
+
+        setContent {
+            MaterialTheme {
+                MangaDetailScreen(
+                    state = MangaDetailUiState(
+                        loading = false,
+                        manga = sampleManga().copy(favorite = false),
+                    ),
+                    onBack = {},
+                    onToggleLibrary = { membershipToggles++ },
+                    onRefreshSource = { refreshes++ },
+                )
+            }
+        }
+
+        onNodeWithTag("manga-detail-library-button").assertIsDisplayed().performClick()
+        onNodeWithTag("manga-detail-refresh-button").assertIsDisplayed().performClick()
+
+        membershipToggles shouldBe 1
+        refreshes shouldBe 1
+    }
+
     private fun sampleManga() = MangaDetails(
         id = 1L,
         sourceId = 100L,
