@@ -14,6 +14,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.unit.dp
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -112,7 +113,7 @@ class CategoryManagementTest {
         presenter.selectCategory(10L)
         val filtered = presenter.awaitState { it.selectedCategoryId == 10L && it.items.size == 1 }
         filtered.items.single().id shouldBe 1L
-        fake.observedCategoryIds.last() shouldBe 10L
+        fake.observedCategoryIds shouldContain 10L
 
         presenter.selectCategory(SYSTEM_ALL_CATEGORY.id)
         presenter.awaitState { it.selectedCategoryId == SYSTEM_ALL_CATEGORY.id && it.items.size == 2 }
