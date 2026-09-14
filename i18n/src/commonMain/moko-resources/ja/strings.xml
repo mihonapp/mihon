@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">ログインしていないトラッカー:</string>
     <string name="pref_remove_bookmarked_chapters">ブックマークした章の削除を許可</string>
     <string name="pref_category_delete_chapters">章を削除</string>
-    <string name="ext_nsfw_warning">この拡張機能のソースには成人向けのコンテンツが含まれる可能性があります</string>
-    <string name="ext_nsfw_short">成人向け</string>
-    <string name="parental_controls_info">これは、非公式の拡張機能や誤ってフラグ付けされた可能性のある拡張機能が、アプリ内で NSFW（18 歳以上向け）コンテンツを表示することを防ぐものではありません。</string>
     <string name="no_chapters_error">章が見つかりません</string>
     <string name="chapter_settings_updated">デフォルトの章設定を更新しました</string>
     <string name="share_page_info">%1$s: %2$s、第 %3$d ページ</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">次のページ</string>
     <string name="spen_previous_page">前のページ</string>
     <string name="migration_help_guide">ソース移行ガイド</string>
-    <string name="pref_category_nsfw_content">成人向けのソース</string>
-    <string name="pref_show_nsfw_source">ソース・拡張機能リストに表示</string>
     <string name="file_picker_error">ファイルを選択できるアプリが見つかりません</string>
     <string name="myanimelist_relogin">MAL に再度ログインしてください</string>
     <string name="action_display_show_number_of_items">アイテム数を表示する</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">えっと、こりゃまずいですね</string>
     <string name="ext_info_version">バージョン</string>
     <string name="ext_info_language">言語</string>
-    <string name="ext_info_age_rating">年齢制限</string>
     <string name="network_not_metered">非従量制課金接続でのみ</string>
     <string name="reading_list">読書中リスト</string>
     <string name="wish_list">読みたいリスト</string>

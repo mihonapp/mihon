@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Monitoradores sem login realizado:</string>
     <string name="pref_remove_bookmarked_chapters">Permitir a exclusão de capítulos favoritos</string>
     <string name="pref_category_delete_chapters">Excluir capítulos</string>
-    <string name="ext_nsfw_warning">As fontes desta extensão podem ter conteúdo NSFW (+18)</string>
-    <string name="ext_nsfw_short">+18</string>
-    <string name="parental_controls_info">Isso não impede que extensões não oficiais ou potencialmente sinalizadas de maneira incorreta apresentem conteúdo NSFW (+18) no aplicativo.</string>
     <string name="no_chapters_error">Nenhum capítulo encontrado</string>
     <string name="chapter_settings_updated">Configurações padrões de capítulo atualizadas</string>
     <string name="set_chapter_settings_as_default">Definir como padrão</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Próxima página</string>
     <string name="spen_previous_page">Página anterior</string>
     <string name="migration_help_guide">Guia sobre a migração de fonte</string>
-    <string name="pref_category_nsfw_content">Fontes NSFW (+18)</string>
-    <string name="pref_show_nsfw_source">Mostrar na lista de fontes e extensões</string>
     <string name="file_picker_error">Nenhum aplicativo de seleção de arquivos encontrado</string>
     <string name="myanimelist_relogin">Por favor, faça login no MAL novamente</string>
     <string name="edge_nav">Borda</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">Bem, isso é esquisito</string>
     <string name="ext_info_version">Versão</string>
     <string name="ext_info_language">Idioma</string>
-    <string name="ext_info_age_rating">Classificação</string>
     <string name="reading_list">Lista de Leitura</string>
     <string name="wish_list">Lista de Desejos</string>
     <string name="complete_list">Lista de Completos</string>

@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Сервисы отслеживания, в которые не выполнен вход:</string>
     <string name="pref_remove_bookmarked_chapters">Удалять главы с закладками</string>
     <string name="pref_category_delete_chapters">Удаление глав</string>
-    <string name="ext_nsfw_warning">Источики из этого расширения могут содержать контент NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Это не предотвращает появление внутри приложения контента NSFW (18+) из неофициальных или потенциально неправильно помеченных расширений.</string>
     <string name="no_chapters_error">Нет глав</string>
     <string name="chapter_settings_updated">Настройки главы по умолчанию были обновлены</string>
     <string name="set_chapter_settings_as_default">Установить по умолчанию</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Следующая страница</string>
     <string name="spen_previous_page">Предыдущая страница</string>
     <string name="migration_help_guide">Руководство по переносу источников</string>
-    <string name="pref_category_nsfw_content">Источники NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Показывать в списке источников и расширений</string>
     <string name="file_picker_error">Приложение для выбора файлов не найдено</string>
     <string name="myanimelist_relogin">Пожалуйста, авторизуйтесь в MyAnimeList снова</string>
     <string name="pref_viewer_nav">Зоны касания</string>
@@ -578,7 +573,6 @@
     <string name="pref_reset_viewer_flags_success">Все настройки читалки сброшены</string>
     <string name="pref_reset_viewer_flags_error">Не удалось сбросить настройки читалки</string>
     <string name="empty_screen">Упс, ошибочка вышла</string>
-    <string name="ext_info_age_rating">Возрастное ограничение</string>
     <string name="ext_info_version">Версия</string>
     <string name="ext_info_language">Язык</string>
     <string name="complete_list">Прочитано</string>

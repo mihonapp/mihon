@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Serveis de seguiment sense sessió iniciada:</string>
     <string name="pref_remove_bookmarked_chapters">Permet la supressió dels capítols marcats</string>
     <string name="pref_category_delete_chapters">Suprimeix capítols</string>
-    <string name="ext_nsfw_warning">Les fonts d’aquesta extensió poden contenir contingut NSFW (+18)</string>
-    <string name="ext_nsfw_short">+18</string>
-    <string name="parental_controls_info">Això no evita que les extensions no oficials o possiblement mal etiquetades puguin mostrar contingut NSFW (+18) a l’aplicació.</string>
     <string name="no_chapters_error">No s’ha trobat cap capítol</string>
     <string name="chapter_settings_updated">S’ha actualitzat la configuració per defecte dels capítols</string>
     <string name="set_chapter_settings_as_default">Estableix com a per defecte</string>
@@ -421,9 +418,7 @@
     <string name="spen_next_page">Pàgina següent</string>
     <string name="spen_previous_page">Pàgina anterior</string>
     <string name="migration_help_guide">Guia de migració de fonts</string>
-    <string name="pref_category_nsfw_content">Fonts NSFW (+18)</string>
     <string name="file_picker_error">No s’ha trobat cap aplicació de selecció de fitxers</string>
-    <string name="pref_show_nsfw_source">Mostra a la llista de fonts i extensions</string>
     <string name="myanimelist_relogin">Torneu a iniciar la sessió a MAL</string>
     <string name="track_finished_reading_date">Data de finalització</string>
     <string name="track_started_reading_date">Data d’inici</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">Ostres, que estrany</string>
     <string name="ext_info_language">Llengua</string>
     <string name="ext_info_version">Versió</string>
-    <string name="ext_info_age_rating">Valoració d’edat</string>
     <string name="reading_list">Llista de lectura</string>
     <string name="wish_list">Llista de desitjos</string>
     <string name="complete_list">Llista de completats</string>

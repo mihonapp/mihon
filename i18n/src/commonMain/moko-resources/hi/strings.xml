@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">ट्रैकर्स में लॉग इन नहीं किया गया:</string>
     <string name="pref_remove_bookmarked_chapters">बुकमार्क किए गए अध्यायों को हटाने की अनुमति दें</string>
     <string name="pref_category_delete_chapters">अध्यायों को हटाएं</string>
-    <string name="ext_nsfw_warning">इसमें NSFW (18+) सामग्री हो सकती है</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">यह अनौपचारिक या संभावित रूप से फ़्लैग किए गए एक्सटेंशन को ऐप के भीतर NSFW (18+) सामग्री के सामने आने से नहीं रोकता है।</string>
     <string name="chapter_settings_updated">अपडेट किए गए डिफ़ॉल्ट अध्याय सेटिंग्स</string>
     <string name="no_chapters_error">कोई अध्याय नहीं मिला</string>
     <string name="set_chapter_settings_as_default">डिफ़ॉल्ट के रूप में सेट करें</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">अगला पृष्ठ</string>
     <string name="spen_previous_page">पिछला पृष्ठ</string>
     <string name="migration_help_guide">स्रोत माइग्रेशन गाइड</string>
-    <string name="pref_show_nsfw_source">स्रोतों और एक्सटेंशन सूचियों में दिखाएं</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) स्रोत</string>
     <string name="file_picker_error">कोई फ़ाइल पिकर ऐप नहीं मिला</string>
     <string name="myanimelist_relogin">कृपया फिर से MAL पर लॉगिन करें</string>
     <string name="track_finished_reading_date">समाप्ति की तिथि</string>
@@ -575,7 +570,6 @@
     <string name="empty_backup_error">बैकअप करने के लिए कोई पुस्तकालय प्रविष्टि नहीं</string>
     <string name="ext_info_version">संस्करण</string>
     <string name="ext_info_language">भाषा</string>
-    <string name="ext_info_age_rating">आयु रेटिंग</string>
     <string name="reading_list">पठन सूची</string>
     <string name="wish_list">विश-लिस्ट</string>
     <string name="theme_lavender">लैवेंडर</string>

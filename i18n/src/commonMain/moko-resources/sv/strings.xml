@@ -398,10 +398,7 @@
     <string name="no_pinned_sources">Du har inga fästa källor</string>
     <string name="pref_remove_bookmarked_chapters">Tillåt att radera bokmärkta kapitel</string>
     <string name="pref_category_delete_chapters">Ta bort kapitel</string>
-    <string name="ext_nsfw_warning">Källor från detta tillägg kan innehålla NSFW(18+) innehåll</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="backup_restore_missing_trackers">Spårare som inte har loggats in:</string>
-    <string name="parental_controls_info">Detta förhindrar inte inofficiella eller potentiellt felaktigt flaggade tillägg från att visa NSFW(18+) innehåll i appen.</string>
     <string name="channel_errors">Fel</string>
     <string name="chapter_settings_updated">Uppdaterade standardinställningar för kapitel</string>
     <string name="confirm_set_chapter_settings">Vill du spara de här inställningarna som standard?</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Nästa sida</string>
     <string name="spen_previous_page">Föregående sida</string>
     <string name="migration_help_guide">Migreringsguide för källor</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) källor</string>
-    <string name="pref_show_nsfw_source">Visa i källor och tilläggslistor</string>
     <string name="file_picker_error">Ingen filväljare-app hittades</string>
     <string name="myanimelist_relogin">Vänligen logga in på MAL igen</string>
     <string name="pref_dump_crash_logs_summary">Sparar felloggar till en fil för delning med utvecklarna</string>
@@ -584,7 +579,6 @@
     <string name="empty_screen">Det här är pinsamt</string>
     <string name="wish_list">Önskelista</string>
     <string name="complete_list">Klart lista</string>
-    <string name="ext_info_age_rating">Åldersklassificering</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Språk</string>
     <string name="cant_open_last_read_chapter">Det går inte att öppna det senast lästa kapitlet</string>

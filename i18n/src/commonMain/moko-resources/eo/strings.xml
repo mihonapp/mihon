@@ -120,7 +120,6 @@
     <string name="white_background">Blanka</string>
     <string name="pref_reader_theme">Fona koloro</string>
     <string name="pref_read_with_volume_keys">Laŭtecaj klavoj</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="nav_zone_next">Sekva</string>
     <string name="nav_zone_prev">Antaŭa</string>
     <string name="browse">Foliumi</string>
@@ -175,8 +174,6 @@
     <string name="landscape">Horizontale</string>
     <string name="portrait">Vertikale</string>
     <string name="pref_category_display">Montrado</string>
-    <string name="pref_show_nsfw_source">Montri en fontaj kaj etendaĵaj listoj</string>
-    <string name="pref_category_nsfw_content">NSFW-fontoj (18+)</string>
     <string name="pref_category_general">Ĝeneralaj</string>
     <string name="app_not_available">Apo maldisponebla</string>
     <string name="action_restore">Restaŭri</string>
@@ -379,7 +376,6 @@
     <string name="rotation_portrait">Vertikala</string>
     <string name="rotation_landscape">Horizontala</string>
     <string name="pref_grayscale">Grizoskalo</string>
-    <string name="ext_nsfw_warning">Fontoj de ĉi tiu etendaĵo eble enhavas NSFW-enhavon (18+)</string>
     <string name="untrusted_extension">Malfidinda etendaĵo</string>
     <string name="charging">Dum ŝargado</string>
     <string name="lock_when_idle">Ŝlosi kiam senokupa</string>
@@ -553,7 +549,6 @@
     <string name="pref_reader_summary">Legada reĝimo, montrado, navigado</string>
     <string name="pref_firebase">Analitikoj kaj protokoloj</string>
     <string name="firebase_summary">Sendado de prikolapsaj protokoloj kaj analitikoj eblos al ni identigi kaj ripari problemojn, plibonigi rendimenton kaj igi estontajn ĝisdatigojn pli rilataj al viaj bezonoj</string>
-    <string name="parental_controls_info">Tio ne preventas neoficialajn aŭ eventuale malĝuste markitajn etendaĵojn montri NSFW-enhavon (18+) ene de la apo.</string>
     <string name="update_72hour">Ĉiun 3-an tagon</string>
     <string name="pref_update_only_started">Preterpasi nekomencitajn elementojn</string>
     <string name="pref_chapter_swipe_end">Ĉapitro je ŝovumo dekstren</string>
@@ -574,7 +569,6 @@
     <string name="multi_lang">Plur</string>
     <string name="ext_app_info">Pri apo</string>
     <string name="extension_api_error">Malsukcesis akiri etendaĵan liston</string>
-    <string name="ext_info_age_rating">Aĝa takso</string>
     <string name="ext_permission_install_apps_warning">Permesoj bezonatas por instali etendaĵojn. Tuŝetu ĉi tie por permesi.</string>
     <string name="ext_install_service_notif">Instalado de etendaĵo…</string>
     <string name="network_not_metered">Nur per nemezurata reto</string>

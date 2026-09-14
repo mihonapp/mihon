@@ -397,9 +397,6 @@
     <string name="channel_progress">進度</string>
     <string name="channel_errors">錯誤</string>
     <string name="channel_complete">作業完成</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">即使啟用監護限制，還是可能有漏網之魚，使用者仍可藉由第三方或未正確標幟的擴充套件在本應用程式中瀏覽 NSFW(18+) 內容</string>
-    <string name="ext_nsfw_warning">來自此擴充套件的來源可能包含未滿十八歲之人不宜觀賞的內容</string>
     <string name="invalid_backup_file_missing_manga">備份檔並未包含任何書櫃中的作品</string>
     <string name="pref_remove_bookmarked_chapters">允許刪除有書籤的章節</string>
     <string name="pref_category_delete_chapters">刪除章節</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">下一頁</string>
     <string name="spen_previous_page">上一頁</string>
     <string name="myanimelist_relogin">請重新登入 MAL</string>
-    <string name="pref_category_nsfw_content">未滿十八歲之人不宜瀏覽的來源</string>
-    <string name="pref_show_nsfw_source">在來源和擴充套件清單中顯示</string>
     <string name="track_finished_reading_date">閱讀完畢日期</string>
     <string name="track_started_reading_date">開始閱讀日期</string>
     <string name="edge_nav">邊緣式</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">呃…尷尬了</string>
     <string name="ext_info_version">版本</string>
     <string name="ext_info_language">語言</string>
-    <string name="ext_info_age_rating">分級</string>
     <string name="unfinished_list">已拋棄</string>
     <string name="on_hold_list">擱置中</string>
     <string name="complete_list">已完結</string>
