@@ -81,6 +81,22 @@ object SettingsBrowseScreen : SearchableSettings {
                             }
                         },
                     ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = sourcePreferences.applyContentWarningsToInstalled,
+                        title = stringResource(MR.strings.pref_apply_content_warnings_to_installed),
+                        subtitle = stringResource(MR.strings.pref_apply_content_warnings_to_installed_summary),
+                        onValueChanged = { newValue ->
+                            if (newValue) {
+                                true
+                            } else {
+                                (context as FragmentActivity).authenticate(
+                                    title = context.stringResource(
+                                        MR.strings.pref_apply_content_warnings_to_installed,
+                                    ),
+                                )
+                            }
+                        },
+                    ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.content_warnings_info)),
                 ),
             ),
