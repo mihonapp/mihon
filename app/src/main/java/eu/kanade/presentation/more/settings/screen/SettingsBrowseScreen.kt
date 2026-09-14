@@ -63,7 +63,6 @@ object SettingsBrowseScreen : SearchableSettings {
                             ContentWarning.NSFW to stringResource(MR.strings.ext_content_warning_nsfw),
                         ),
                         title = stringResource(MR.strings.pref_allowed_content_warnings),
-                        // The stored set iterates in hash order, so list the entries instead
                         subtitleProvider = { value, entries ->
                             remember(value, entries) {
                                 entries.filterKeys { it in value }.values.joinToString()
