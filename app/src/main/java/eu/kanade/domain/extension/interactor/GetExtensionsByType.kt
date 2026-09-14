@@ -19,24 +19,24 @@ class GetExtensionsByType(
 
         return combine(
             preferences.enabledLanguages.changes(),
-            extensionManager.installedExtensionsFlow,
-            extensionManager.untrustedExtensionsFlow,
+            extensionManager.loadedExtensionsFlow,
+            extensionManager.notLoadedExtensionsFlow,
             extensionManager.availableExtensionsFlow,
-        ) { enabledLanguages, _installed, _untrusted, _available ->
-            val (updates, installed) = _installed
+        ) { enabledLanguages, _loaded, _notLoaded, _available ->
+            val (updates, loaded) = _loaded
                 .sortedWith(
-                    compareBy<Extension.Installed> { !it.isObsolete }
+                    compareBy<Extension.Loaded> { !it.isObsolete }
                         .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name },
                 )
                 .partition { it.hasUpdate }
 
-            val untrusted = _untrusted
+            val notLoaded = _notLoaded
                 .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
 
             val available = _available
                 .filter { extension ->
-                    _installed.none { it.pkgName == extension.pkgName } &&
-                        _untrusted.none { it.pkgName == extension.pkgName } &&
+                    _loaded.none { it.pkgName == extension.pkgName } &&
+                        _notLoaded.none { it.pkgName == extension.pkgName } &&
                         extension.contentWarning in enabledContentWarnings
                 }
                 .flatMap { ext ->
@@ -52,7 +52,7 @@ class GetExtensionsByType(
                 }
                 .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
 
-            Extensions(updates, installed, available, untrusted)
+            Extensions(updates, loaded, available, notLoaded)
         }
     }
 }

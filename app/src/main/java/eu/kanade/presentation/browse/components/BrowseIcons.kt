@@ -96,7 +96,7 @@ fun ExtensionIcon(
                     .clip(MaterialTheme.shapes.extraSmall),
             )
         }
-        is Extension.Installed -> {
+        is Extension.Loaded -> {
             val icon by extension.getIcon(density)
             when (icon) {
                 Result.Loading -> Box(modifier = modifier)
@@ -112,7 +112,7 @@ fun ExtensionIcon(
                 )
             }
         }
-        is Extension.Untrusted -> Image(
+        is Extension.NotLoaded -> Image(
             imageVector = MaterialSymbols.Rounded.Dangerous,
             contentDescription = null,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
