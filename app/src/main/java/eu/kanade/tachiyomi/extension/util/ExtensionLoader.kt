@@ -20,6 +20,7 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.data.dalvik.DelegateLastClassLoaderCompat
+import mihon.domain.extension.model.ContentWarning
 import tachiyomi.core.common.util.system.logcat
 import java.io.File
 
@@ -222,7 +223,7 @@ internal object ExtensionLoader {
      */
     private suspend fun loadExtension(context: Context, extensionInfo: ExtensionInfo): LoadResult {
         val trustExtension: TrustExtension = context.appGraph.trustExtension
-        val loadNsfwSource: Boolean = context.appGraph.sourcePreferences.showNsfwSource.get()
+        val enabledContentWarnings = context.appGraph.sourcePreferences.enabledContentWarnings.get()
 
         val pkgManager = context.packageManager
         val pkgInfo = extensionInfo.packageInfo
@@ -269,10 +270,19 @@ internal object ExtensionLoader {
             return LoadResult.Untrusted(extension)
         }
 
-        val isNsfw = appInfo.metaData.getInt(METADATA_CONTENT_WARNING) > 0 ||
-            appInfo.metaData.getInt(METADATA_NSFW) == 1
-        if (!loadNsfwSource && isNsfw) {
-            logcat(LogPriority.WARN) { "NSFW extension $pkgName not allowed" }
+        val contentWarning = when {
+            appInfo.metaData.containsKey(METADATA_CONTENT_WARNING) -> {
+                when (appInfo.metaData.getInt(METADATA_CONTENT_WARNING)) {
+                    1 -> ContentWarning.MIXED
+                    2 -> ContentWarning.NSFW
+                    else -> ContentWarning.SAFE
+                }
+            }
+            appInfo.metaData.getInt(METADATA_NSFW) == 1 -> ContentWarning.NSFW
+            else -> ContentWarning.SAFE
+        }
+        if (contentWarning !in enabledContentWarnings) {
+            logcat(LogPriority.WARN) { "Extension $pkgName with $contentWarning not allowed" }
             return LoadResult.Error
         }
 
@@ -320,7 +330,7 @@ internal object ExtensionLoader {
             versionCode = versionCode,
             libVersion = libVersion,
             lang = lang,
-            isNsfw = isNsfw,
+            contentWarning = contentWarning,
             sources = sources,
             pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
             icon = appInfo.loadIcon(pkgManager),
