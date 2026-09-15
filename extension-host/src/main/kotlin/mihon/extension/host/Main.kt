@@ -12,6 +12,12 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     System.setProperty("mihon.extension.host", "true")
+    // Windows redirects GetTempPath into this AppContainer's private profile. With a
+    // relocated LOCALAPPDATA that directory is not provisioned by the OS.
+    val temporaryDirectory = File(System.getProperty("java.io.tmpdir"))
+    check(temporaryDirectory.isDirectory || temporaryDirectory.mkdirs()) {
+        "Cannot create extension temporary directory: $temporaryDirectory"
+    }
     var pipeName: String? = null
     var useStdio = false
 

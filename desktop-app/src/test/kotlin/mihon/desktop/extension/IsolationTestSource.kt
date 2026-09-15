@@ -30,6 +30,8 @@ class IsolationSourceTwo : IsolationTestSource(902)
 class DetachedNetworkSource : IsolationTestSource(903), mihon.extension.source.WindowsHttpSource {
     override val baseUrl = "https://detached.example"
     override suspend fun getPopularManga(page: Int): MangasPage {
+        // Zstd's JNI loader creates NIO temporary files before loading its native library.
+        java.nio.file.Files.delete(java.nio.file.Files.createTempFile("extension-", ".tmp"))
         val result = java.util.concurrent.CompletableFuture.supplyAsync {
             eu.kanade.tachiyomi.network.NetworkHelper().client.newCall(
                 okhttp3.Request.Builder().url(baseUrl).build(),

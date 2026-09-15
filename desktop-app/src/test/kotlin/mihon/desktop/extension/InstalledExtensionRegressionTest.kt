@@ -74,6 +74,11 @@ class InstalledExtensionRegressionTest {
         } finally {
             manager.close()
             network.close()
+            if (live && failures.isNotEmpty()) {
+                manager.workingDirectory.walkTopDown().filter { it.name == "extension-host-stderr.log" }.forEach {
+                    println("HOST_STDERR ${it.relativeTo(manager.workingDirectory)}\n${it.readText()}")
+                }
+            }
         }
     }
 }
