@@ -97,9 +97,7 @@
     <string name="ext_untrusted">Μη αξιόπιστο</string>
     <string name="ext_uninstall">Απεγκατάσταση</string>
     <string name="untrusted_extension">Μη αξιόπιστη επέκταση</string>
-    <string name="untrusted_extension_message">Οι κακόβουλες επεκτάσεις μπορούν να διαβάσουν τυχόν αποθηκευμένα διαπιστευτήρια σύνδεσης ή να εκτελέσουν αυθαίρετο κώδικα.
-\n
-\nΜε την εμπιστοσύνη αυτής της επέκτασης, αποδέχεστε αυτούς τους κινδύνους.</string>
+    <string name="untrusted_extension_message">Οι κακόβουλες επεκτάσεις μπορούν να διαβάσουν τυχόν αποθηκευμένα διαπιστευτήρια σύνδεσης ή να εκτελέσουν αυθαίρετο κώδικα. \n \nΜε την εμπιστοσύνη αυτής της επέκτασης, αποδέχεστε αυτούς τους κινδύνους.</string>
     <string name="pref_fullscreen">Πλήρης οθόνη</string>
     <string name="pref_page_transitions">Ζωντανή μετάβαση σελίδας</string>
     <string name="pref_double_tap_anim_speed">Ταχύτητα κίνησης διπλού αγγίγματος</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">Προστέθηκε στη βιβλιοθήκη</string>
     <string name="manga_removed_library">Αφαιρέθηκε από τη βιβλιοθήκη</string>
     <string name="delete_downloads_for_manga">Να διαγραφούν τα κεφάλαια που έχουν ληφθεί;</string>
-    <string name="copied_to_clipboard">Αντιγράφηκε στο πρόχειρο:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Αντιγράφηκε στο πρόχειρο: \n%1$s</string>
     <string name="source_not_installed">Η πηγή δεν είναι εγκατεστημένη: %1$s</string>
     <string name="display_mode_chapter">Κεφάλαιο %1$s</string>
     <string name="chapter_downloading_progress">Λήψη (%1$d/%2$d)</string>
@@ -635,8 +632,7 @@
     <string name="error_user_agent_string_invalid">Μη έγκυρη συμβολοσειρά πράκτορα χρήστη</string>
     <string name="updates_last_update_info_just_now">Μόλις τώρα</string>
     <string name="download_notifier_cache_renewal">Έλεγχος λήψεων</string>
-    <string name="fdroid_warning">Οι εκδόσεις F-Droid δεν υποστηρίζονται επίσημα.
-\nΠατήστε για να μάθετε περισσότερα.</string>
+    <string name="fdroid_warning">Οι εκδόσεις F-Droid δεν υποστηρίζονται επίσημα. \nΠατήστε για να μάθετε περισσότερα.</string>
     <string name="action_open_random_manga">Άνοιγμα τυχαίας καταχώρησης</string>
     <string name="information_no_entries_found">Δε βρέθηκαν καταχωρήσεις σε αυτή την κατηγορία</string>
     <string name="action_display_show_continue_reading_button">Κουμπί συνέχειας ανάγνωσης</string>
@@ -745,11 +741,7 @@
     <string name="onboarding_guides_returning_user">Επανεγκατάσταση %s;</string>
     <string name="onboarding_description">Ας ρυθμίσουμε πρώτα κάποια πράγματα. Μπορείτε πάντα να τα αλλάξετε στις ρυθμίσεις αργότερα.</string>
     <string name="no_location_set">Δεν έχει οριστεί τοποθεσία αποθήκευσης</string>
-    <string name="onboarding_storage_info">Επιλέξτε ένα φάκελο όπου το %1$s θα αποθηκεύει λήψεις κεφαλαίων, αντίγραφα ασφαλείας και άλλα.
-\n
-\nΣυνιστάται ένας αποκλειστικός φάκελος.
-\n
-\nΕπιλεγμένος φάκελος: %2$s</string>
+    <string name="onboarding_storage_info">Επιλέξτε ένα φάκελο όπου το %1$s θα αποθηκεύει λήψεις κεφαλαίων, αντίγραφα ασφαλείας και άλλα. \n \nΣυνιστάται ένας αποκλειστικός φάκελος. \n \nΕπιλεγμένος φάκελος: %2$s</string>
     <string name="onboarding_permission_notifications">Άδεια ειδοποιήσεων</string>
     <string name="onboarding_permission_install_apps">Άδεια εγκατάστασης εφαρμογών</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Αποφύγετε διακοπές σε μακροχρόνιες ενημερώσεις της βιβλιοθήκης, λήψεις και επαναφορές αντιγράφων ασφαλείας.</string>

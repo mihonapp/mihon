@@ -248,8 +248,7 @@
     <string name="double_tap_anim_speed_fast">Snel</string>
     <string name="manga_added_library">Toegevoegd aan bibliotheek</string>
     <string name="manga_removed_library">Verwijderd uit bibliotheek</string>
-    <string name="copied_to_clipboard">Gekopieerd naar het klembord:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Gekopieerd naar het klembord: \n%1$s</string>
     <string name="source_not_installed">Bron niet geïnstalleerd: %1$s</string>
     <string name="repeating">Opnieuw aan het lezen</string>
     <string name="track_status">Status</string>

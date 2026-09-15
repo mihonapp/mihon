@@ -97,9 +97,7 @@
     <string name="ext_untrusted">Güvenilmeyen</string>
     <string name="ext_uninstall">Kaldır</string>
     <string name="untrusted_extension">Güvenilmeyen uzantı</string>
-    <string name="untrusted_extension_message">Kötü niyetli uzantılar, oturum açma bilgilerini okuyabilir veya güvenilmeyen kodlar çalıştırabilir.
-\n
-\nBu uzantıya güvenerek bu riskleri kabul etmiş olursunuz.</string>
+    <string name="untrusted_extension_message">Kötü niyetli uzantılar, oturum açma bilgilerini okuyabilir veya güvenilmeyen kodlar çalıştırabilir. \n \nBu uzantıya güvenerek bu riskleri kabul etmiş olursunuz.</string>
     <string name="pref_fullscreen">Tam ekran</string>
     <string name="pref_page_transitions">Sayfa geçişlerini animasyonla yap</string>
     <string name="pref_double_tap_anim_speed">Çift dokunma animasyon hızı</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">Kitaplığa eklendi</string>
     <string name="manga_removed_library">Kitaplıktan kaldırıldı</string>
     <string name="delete_downloads_for_manga">İndirilen bölümler silinsin mi?</string>
-    <string name="copied_to_clipboard">Panoya kopyalandı:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Panoya kopyalandı: \n%1$s</string>
     <string name="source_not_installed">Kaynak yüklenmedi: %1$s</string>
     <string name="display_mode_chapter">Bölüm %1$s</string>
     <string name="chapter_downloading_progress">İndiriliyor (%1$d/%2$d)</string>
@@ -637,8 +634,7 @@
     <string name="download_notifier_cache_renewal">İndirilenler kontrol ediliyor</string>
     <string name="action_open_random_manga">Rastgele girdi aç</string>
     <string name="information_no_entries_found">Bu kategoride girdi bulunamadı</string>
-    <string name="fdroid_warning">F-Droid derlemeleri desteklenmemektedir.
-\nDaha fazla bilgi için dokunun.</string>
+    <string name="fdroid_warning">F-Droid derlemeleri desteklenmemektedir. \nDaha fazla bilgi için dokunun.</string>
     <string name="action_display_show_continue_reading_button">Okumaya devam et butonu</string>
     <string name="track_remove_date_conf_title">Tarih kaldırılsın mı?</string>
     <string name="track_remove_start_date_conf_text">Bu, daha önce seçtiğiniz başlangıç tarihini şuradan kaldıracak: %s</string>
@@ -745,11 +741,7 @@
     <string name="onboarding_action_next">Sonraki</string>
     <string name="onboarding_description">Hadi bazı şeyleri ayarlayalım. Bunları daha sonra ayarlardan da değiştirebilirsiniz.</string>
     <string name="no_location_set">Depolama konumu ayarlanmadı</string>
-    <string name="onboarding_storage_info">%1$s\'un bölüm indirmelerini, yedeklemeleri ve daha fazlasını kaydedeceği bir klasör seçin.
-\n
-\nYalnızca buna ait bir klasör tavsiye edilir.
-\n
-\nSeçilen klasör: %2$s</string>
+    <string name="onboarding_storage_info">%1$s\'un bölüm indirmelerini, yedeklemeleri ve daha fazlasını kaydedeceği bir klasör seçin. \n \nYalnızca buna ait bir klasör tavsiye edilir. \n \nSeçilen klasör: %2$s</string>
     <string name="onboarding_permission_notifications">Bildirim izni</string>
     <string name="onboarding_permission_install_apps">Uygulama yükleme izni</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Uzun süren kitaplık güncellemelerinin, indirmelerin, yedeklemelerin ve geri yüklemelerinin kesintiye uğramasını önleyin.</string>

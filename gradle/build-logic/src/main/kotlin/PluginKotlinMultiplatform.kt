@@ -6,6 +6,7 @@ import mihon.gradle.extensions.coreLibraryDesugaring
 import mihon.gradle.extensions.libs
 import mihon.gradle.extensions.mihonx
 import mihon.gradle.extensions.plugins
+import mihon.gradle.extensions.release
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -31,7 +32,9 @@ class PluginKotlinMultiplatform : Plugin<Project> {
 
             android {
                 minSdk = mihonx.versions.android.sdk.min.get().toInt()
-                compileSdk = mihonx.versions.android.sdk.compile.get().toInt()
+                compileSdk {
+                    version = release(mihonx.versions.android.sdk.compile)
+                }
                 enableCoreLibraryDesugaring = true
             }
         }

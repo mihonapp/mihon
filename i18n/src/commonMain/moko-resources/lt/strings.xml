@@ -184,11 +184,7 @@
     <string name="ext_nsfw_warning">Šaltiniuose gali būti N18 turinio</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="obsolete_extension_message">Šis plėtinys nebėra prieinamas. Plėtinys gali veikti netinkamai arba sukelti problemas programėlėje. Rekomenduojama išdiegti plėtinį.</string>
-    <string name="untrusted_extension_message">Šis plėtinys buvo pasirašytas nepatikimu sertifikatu ir nebuvo aktyvuotas.
-\n
-\nPlėtinys, su negeranoriškais ketinimais, gali perskaityti prisijungimo duomenys patalpintus Mihon arba gali paleisti kenkėjišką kodą.
-\n
-\nJūs priimate šias rizikas pasitikėdami sertifikatu.</string>
+    <string name="untrusted_extension_message">Šis plėtinys buvo pasirašytas nepatikimu sertifikatu ir nebuvo aktyvuotas. \n \nPlėtinys, su negeranoriškais ketinimais, gali perskaityti prisijungimo duomenys patalpintus Mihon arba gali paleisti kenkėjišką kodą. \n \nJūs priimate šias rizikas pasitikėdami sertifikatu.</string>
     <string name="untrusted_extension">Nepatikimas plėtinys</string>
     <string name="ext_app_info">Aplikacijos informacija</string>
     <string name="ext_uninstall">Šalinti</string>
@@ -387,8 +383,7 @@
     <string name="login_success">Prisijungęs</string>
     <string name="unknown_error">Nežinoma klaida</string>
     <string name="downloaded_chapters">Atsisiųsti skyriai</string>
-    <string name="copied_to_clipboard">Nukopijuota į iškarpinę:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Nukopijuota į iškarpinę: \n%1$s</string>
     <string name="clipboard_copy_error">Nepavyko nukopijuoti į iškarpinę</string>
     <string name="chapter_downloading_progress">Atsisiunčiama (%1$d / %2$d)</string>
     <string name="show_chapter_number">Skyriaus numeris</string>
@@ -489,9 +484,7 @@
     <string name="pref_clear_cookies">Išvalyti slapukus</string>
     <string name="pref_auto_clear_chapter_cache">Išvalyti skyriaus talpyklą uždarius programą</string>
     <string name="pref_clear_database_summary">Ištrinkite įrašų istoriją, kurie nėra išsaugoti jūsų bibliotekoje</string>
-    <string name="backup_restore_content_full">Atsarginės failo kopijos duomenys bus atkurti.
-\n
-\nNorėdami jais naudotis, turėsite įdiegti trūkstamus plėtinius ir po to prisijungti prie stebėjimo paslaugų.</string>
+    <string name="backup_restore_content_full">Atsarginės failo kopijos duomenys bus atkurti. \n \nNorėdami jais naudotis, turėsite įdiegti trūkstamus plėtinius ir po to prisijungti prie stebėjimo paslaugų.</string>
     <string name="pref_reset_user_agent_string">Iš naujo nustatyti numatytąją vartotojo agento eilutę</string>
     <string name="pref_clear_webview_data">Išvalyti \"WebView\" duomenis</string>
     <string name="pref_refresh_library_covers">Atnaujinti bibliotekos viršelius</string>
@@ -639,8 +632,7 @@
     <string name="crash_screen_title">Ups!</string>
     <string name="crash_screen_restart_application">Iš naujo paleiskite programą</string>
     <string name="download_notifier_cache_renewal">Indeksuojami atsisiuntimai</string>
-    <string name="fdroid_warning">F-Droid versijos oficialiai nepalaikomos.
-\nBakstelėkite, kad sužinotumėte daugiau.</string>
+    <string name="fdroid_warning">F-Droid versijos oficialiai nepalaikomos. \nBakstelėkite, kad sužinotumėte daugiau.</string>
     <string name="information_no_entries_found">Šioje kategorijoje įrašų nerasta</string>
     <string name="action_open_random_manga">Atverti atsitiktinį įrašą</string>
     <string name="action_display_show_continue_reading_button">Rodyti mygtuką „Tęsti” skaitymą</string>

@@ -239,17 +239,14 @@
     <string name="ext_untrusted">Não confiável</string>
     <string name="ext_uninstall">Desinstalar</string>
     <string name="untrusted_extension">Extensão não confiável</string>
-    <string name="untrusted_extension_message">Extensões maliciosas podem ler quaisquer credenciais de login armazenadas ou executar códigos arbitrários.
-\n
-\nAo confiar nessa extensão, você estará aceitando estes riscos.</string>
+    <string name="untrusted_extension_message">Extensões maliciosas podem ler quaisquer credenciais de login armazenadas ou executar códigos arbitrários. \n \nAo confiar nessa extensão, você estará aceitando estes riscos.</string>
     <string name="pref_double_tap_anim_speed">Velocidade da animação do toque duplo</string>
     <string name="double_tap_anim_speed_0">Sem animação</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Rápida</string>
     <string name="manga_added_library">Adicionado à biblioteca</string>
     <string name="manga_removed_library">Removido da biblioteca</string>
-    <string name="copied_to_clipboard">Copiado para a área de transferência:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiado para a área de transferência: \n%1$s</string>
     <string name="migration_dialog_what_to_include">Selecione os dados para incluir</string>
     <string name="migrate">Migrar</string>
     <string name="copy">Copiar</string>
@@ -637,8 +634,7 @@
     <string name="download_notifier_cache_renewal">Verificando os downloads</string>
     <string name="action_open_random_manga">Abrir um item aleatório</string>
     <string name="information_no_entries_found">Nenhum item encontrado nesta categoria</string>
-    <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente.
-\nToque para saber mais.</string>
+    <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente. \nToque para saber mais.</string>
     <string name="action_display_show_continue_reading_button">Botão de continuar a leitura</string>
     <string name="track_remove_date_conf_title">Remover data?</string>
     <string name="track_remove_start_date_conf_text">Isto irá remover sua data de início selecionada anteriormente no %s</string>
@@ -744,11 +740,7 @@
     <string name="onboarding_action_next">Próximo</string>
     <string name="onboarding_description">Vamos definir algumas coisas primeiro. Você sempre pode fazer alterações nas configurações depois também.</string>
     <string name="no_location_set">Local de armazenamento não definido</string>
-    <string name="onboarding_storage_info">Escolha uma pasta onde o %1$s irá armazenar os downloads de capítulos, backups e mais.
-\n
-\nUma pasta dedicada é recomendada.
-\n
-\nPasta selecionada: %2$s</string>
+    <string name="onboarding_storage_info">Escolha uma pasta onde o %1$s irá armazenar os downloads de capítulos, backups e mais. \n \nUma pasta dedicada é recomendada. \n \nPasta selecionada: %2$s</string>
     <string name="onboarding_storage_selection_required">Uma pasta deve ser selecionada</string>
     <string name="onboarding_permission_notifications">Permissão de notificação</string>
     <string name="onboarding_permission_install_apps">Permissão de instalação de aplicativos</string>

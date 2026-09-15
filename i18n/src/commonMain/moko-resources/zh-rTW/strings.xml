@@ -908,7 +908,6 @@
     <string name="pref_high_quality_renderer">使用高品質彩現器</string>
     <string name="webgpu_viewer">WebGPU</string>
     <string name="pref_transition_animation">轉場動畫</string>
-    <string name="transition_animation_default">預設</string>
     <string name="transition_animation_flip_left">翻頁（向左）</string>
     <string name="transition_animation_flip_right">翻頁（向右）</string>
     <string name="transition_animation_stack_left">層疊（向左）</string>

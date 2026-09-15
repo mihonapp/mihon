@@ -512,8 +512,7 @@
     <string name="transition_pages_error">पुटानाम् आरोहणम् अनुत्तीर्णम् - %1$s</string>
     <string name="download_notifier_text_only_wifi">वै-फ़ै सम्पर्कः न उपलभ्यः</string>
     <string name="download_notifier_no_network">जालसम्पर्कः न उपलभ्यः</string>
-    <string name="copied_to_clipboard">प्रतिलेखः अंशफलकान्ते कृतः -
-\n%1$s</string>
+    <string name="copied_to_clipboard">प्रतिलेखः अंशफलकान्ते कृतः - \n%1$s</string>
     <string name="notification_chapters_single_and_more">अध्यायः %1$s च इतोऽपि %2$d च</string>
     <string name="file_picker_error">सञ्चिकाग्राही अनुप्रयोगः न लभ्यः</string>
     <string name="skipped_reason_completed">धारावाहिकः पूर्णः अतः लङ्घितः</string>

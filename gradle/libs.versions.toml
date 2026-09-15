@@ -5,10 +5,10 @@ android-gradle = "9.4.0"
 androidx-activity-compose = "1.13.0"
 androidx-annotation = "1.10.0"
 androidx-appCompat = "1.8.0"
-androidx-baselineProfile = "1.5.0-rc02"
-androidx-benchmark = "1.4.1"
+androidx-baselineProfile = "1.5.0"
+androidx-benchmark = "1.5.0"
 androidx-biometric = "1.2.0-alpha05"
-androidx-compose-bom = "2026.07.01"
+androidx-compose-bom = "2026.09.00"
 androidx-constraintLayout = "2.2.2"
 androidx-core = "1.19.0"
 androidx-coreSplashScreen = "1.2.0"
@@ -39,14 +39,13 @@ directionalViewPager = "1.0.0"
 diskLruCache = "2.0.2"
 firebase-bom = "34.19.0"
 firebase-crashlytics = "3.0.8"
-flexibleAdapter = "c8013533"
+flexibleAdapter = "5.1.0"
 google-services = "4.5.0"
-image-decoder = "10"
-injekt = "91edab2317"
+image-decoder = "14"
+injekt = "1.16.1"
 jsoup = "1.23.2"
 junit = "6.1.3"
-kim = "0.39.1"
-kotest-assertions = "6.2.4"
+kotest-assertions = "6.2.5"
 kotlin-gradle = "2.4.20"
 kotlinx-coroutines = "1.11.0"
 kotlinx-datetime = "0.8.0"
@@ -54,8 +53,8 @@ kotlinx-serialization = "1.11.0"
 ktlint = "1.8.0"
 leakCanary = "2.14"
 logcat = "0.4"
-markdown = "0.43.0"
-material = "1.12.0"
+markdown = "0.45.0"
+material = "1.14.0"
 materialKolor = "5.0.1"
 metro = "1.4.3"
 mockk = "1.14.11"
@@ -69,7 +68,7 @@ rxJava = "1.3.8"
 shizuku = "13.1.5"
 spotless = "8.10.2"
 sqldelight = "2.3.2"
-sqldelight-androidx-driver = "0637a964a1"
+sqldelight-androidx-driver = "0.2.2"
 stringSimilarity = "0.1.0"
 subsamplingScaleImageView = "94915e6f73"
 swipe = "1.3.0"
@@ -77,7 +76,7 @@ tapmoc = "0.4.2"
 unifile = "08f224c8f9"
 valkyrie = "0.5.2"
 voyager = "2.2.21-1.10.3"
-webgpuviewer = "40"
+webgpuviewer = "47"
 xmlutil = "1.0.2"
 
 [libraries]
@@ -140,13 +139,12 @@ diskLruCache = { module = "com.jakewharton:disklrucache", version.ref = "diskLru
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-flexibleAdapter = { module = "com.github.arkon.FlexibleAdapter:flexible-adapter", version.ref = "flexibleAdapter" }
+flexibleAdapter = { module = "eu.davidea:flexible-adapter", version.ref = "flexibleAdapter" }
 image-decoder = { module = "ca.mpreg:imagedecoder", version.ref = "image-decoder" }
-injekt = { module = "com.github.mihonapp:injekt", version.ref = "injekt" }
+injekt = { module = "uy.kohesive.injekt:injekt-core", version.ref = "injekt" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-kim = { module = "de.stefan-oltmann:kim", version.ref = "kim" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest-assertions" }
 kotlin-compose-compiler-gradle = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin-gradle" }
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle" }
@@ -186,7 +184,7 @@ rxJava = { module = "io.reactivex:rxjava", version.ref = "rxJava" }
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
 shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
 spotless-gradle = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
-sqldelight-androidxDriver = { module = "com.github.mihon.sqldelight-androidx-driver:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
+sqldelight-androidxDriver = { module = "com.eygraber:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
 sqldelight-androidxPaging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-async = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }

@@ -236,16 +236,13 @@
     <string name="ext_installing">Wird installiert</string>
     <string name="ext_installed">Installiert</string>
     <string name="ext_uninstall">Deinstallieren</string>
-    <string name="untrusted_extension_message">Bösartige Erweiterungen können gespeicherte Anmeldedaten auslesen oder beliebigen Code ausführen.
-\n
-\nDurch das Vertrauen in die Erweiterung akzeptierst du diese Risiken.</string>
+    <string name="untrusted_extension_message">Bösartige Erweiterungen können gespeicherte Anmeldedaten auslesen oder beliebigen Code ausführen. \n \nDurch das Vertrauen in die Erweiterung akzeptierst du diese Risiken.</string>
     <string name="double_tap_anim_speed_0">Keine Animation</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Schnell</string>
     <string name="manga_added_library">Zur Bibliothek hinzugefügt</string>
     <string name="manga_removed_library">Aus der Bibliothek entfernt</string>
-    <string name="copied_to_clipboard">In die Zwischenablage kopiert:
-\n%1$s</string>
+    <string name="copied_to_clipboard">In die Zwischenablage kopiert: \n%1$s</string>
     <string name="migrate">Migrieren</string>
     <string name="copy">Kopieren</string>
     <string name="ext_trust">Vertrauen</string>
@@ -637,8 +634,7 @@
     <string name="download_notifier_cache_renewal">Downloads werden überprüft</string>
     <string name="action_open_random_manga">Zufälligen Eintrag öffnen</string>
     <string name="information_no_entries_found">Keine Einträge in dieser Kategorie gefunden</string>
-    <string name="fdroid_warning">F-Droid-Builds werden nicht offiziell unterstützt.
-\nTippe, um mehr zu erfahren.</string>
+    <string name="fdroid_warning">F-Droid-Builds werden nicht offiziell unterstützt. \nTippe, um mehr zu erfahren.</string>
     <string name="action_display_show_continue_reading_button">Weiterlesen-Button</string>
     <string name="pref_invalidate_download_cache">Downloads neu indizieren</string>
     <string name="track_remove_date_conf_title">Datum entfernen?</string>
@@ -745,11 +741,7 @@
     <string name="onboarding_action_next">Weiter</string>
     <string name="onboarding_description">Lass uns zuerst ein paar Dinge einrichten. Du kannst diese später in den Einstellungen jederzeit ändern.</string>
     <string name="no_location_set">Kein Speicherort festgelegt</string>
-    <string name="onboarding_storage_info">Wähle einen Ordner aus, in welchem %1$s Kapitel-Downloads, Datensicherungen und mehr speichern wird.
-\n
-\nEin dedizierter Ordner wird empfohlen.
-\n
-\nAusgewählter Ordner: %2$s</string>
+    <string name="onboarding_storage_info">Wähle einen Ordner aus, in welchem %1$s Kapitel-Downloads, Datensicherungen und mehr speichern wird. \n \nEin dedizierter Ordner wird empfohlen. \n \nAusgewählter Ordner: %2$s</string>
     <string name="onboarding_permission_notifications">Berechtigung für Benachrichtigungen</string>
     <string name="onboarding_permission_install_apps">Berechtigung zum Installieren von Apps</string>
     <string name="available_disk_space_info">Verfügbar: %1$s / Insgesamt: %2$s</string>
