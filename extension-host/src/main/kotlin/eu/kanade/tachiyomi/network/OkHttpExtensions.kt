@@ -62,7 +62,7 @@ fun Call.asObservableSuccess(): Observable<Response> {
     return asObservable().doOnNext { response ->
         if (!response.isSuccessful) {
             response.close()
-            throw HttpException(response.code)
+            throw HttpException(response.code, response.request.tag(mihon.extension.ipc.NetworkFailure::class.java))
         }
     }
 }
@@ -101,7 +101,8 @@ suspend fun Call.awaitSuccess(): Response {
     val response = await(callStack)
     if (!response.isSuccessful) {
         response.close()
-        throw HttpException(response.code).apply { stackTrace = callStack }
+        throw HttpException(response.code, response.request.tag(mihon.extension.ipc.NetworkFailure::class.java))
+            .apply { stackTrace = callStack }
     }
     return response
 }

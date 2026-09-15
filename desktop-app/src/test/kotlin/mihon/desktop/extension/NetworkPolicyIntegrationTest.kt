@@ -49,11 +49,31 @@ class NetworkPolicyIntegrationTest {
             exchange.sendResponseHeaders(429, -1)
             exchange.close()
         }
+        server.createContext("/blocked") { exchange ->
+            val bytes = (
+                "<title>Attention Required! | Cloudflare</title>" +
+                    "<h1>Sorry, you have been blocked</h1>"
+                ).toByteArray()
+            exchange.responseHeaders.add("Server", "cloudflare")
+            exchange.sendResponseHeaders(403, bytes.size.toLong())
+            exchange.responseBody.use { it.write(bytes) }
+        }
+        server.createContext("/header-challenge") { exchange ->
+            exchange.responseHeaders.add("cf-mitigated", "challenge")
+            exchange.sendResponseHeaders(403, -1)
+            exchange.close()
+        }
         server.start()
         try {
             DesktopNetworkHelper().use { helper ->
                 helper.registerExtensionDomains("test", listOf("127.0.0.1"))
                 val origin = "http://127.0.0.1:${server.address.port}"
+                helper.executeBrokeredRequest(BrokerHttpRequest("GET", "$origin/blocked", extensionId = "test"))
+                    .failureKind?.name shouldBe "SITE_BLOCKED"
+                helper.executeBrokeredRequest(
+                    BrokerHttpRequest("GET", "$origin/header-challenge", extensionId = "test"),
+                )
+                    .failureKind shouldBe NetworkFailureKind.WEB_VERIFICATION
                 helper.executeBrokeredRequest(BrokerHttpRequest("GET", "$origin/challenge", extensionId = "test"))
                     .failureKind shouldBe NetworkFailureKind.WEB_VERIFICATION
                 val response = helper.executeBrokeredRequest(

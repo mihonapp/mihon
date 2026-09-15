@@ -68,6 +68,7 @@ dependencies {
     implementation("com.github.ThexXTURBOXx.dex2jar:dex-translator:v64")
     implementation("com.github.ThexXTURBOXx.dex2jar:dex-tools:v64")
     testImplementation("com.github.ThexXTURBOXx.dex2jar:dex-writer:v64")
+    testImplementation(libs.rxJava)
     implementation("org.slf4j:slf4j-nop:2.0.17")
 
     testImplementation(libs.bundles.test)

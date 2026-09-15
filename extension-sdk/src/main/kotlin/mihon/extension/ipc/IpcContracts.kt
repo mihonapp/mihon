@@ -21,6 +21,7 @@ data class IpcResponse(
     val success: Boolean,
     val payloadJson: String = "",
     val error: String? = null,
+    val networkFailure: NetworkFailure? = null,
 ) : IpcMessage
 
 @Serializable
@@ -140,9 +141,21 @@ enum class NetworkFailureKind {
     RATE_LIMITED,
     AUTHENTICATION_REQUIRED,
     WEB_VERIFICATION,
+    SITE_BLOCKED,
     HTTP_ERROR,
     CONNECTION,
 }
+
+@Serializable
+data class NetworkFailure(val kind: NetworkFailureKind, val statusCode: Int, val host: String)
+
+interface NetworkFailureProvider {
+    val networkFailure: NetworkFailure?
+}
+
+fun Throwable.findNetworkFailure(): NetworkFailure? =
+    generateSequence(this) { it.cause }.take(16).filterIsInstance<NetworkFailureProvider>()
+        .firstNotNullOfOrNull { it.networkFailure }
 
 @Serializable
 data class BrokerHttpResponse(

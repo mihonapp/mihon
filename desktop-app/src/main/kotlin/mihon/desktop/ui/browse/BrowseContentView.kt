@@ -28,6 +28,7 @@ import mihon.desktop.ui.library.MangaDetailActions
 import mihon.desktop.ui.library.MangaDetailScreen
 import mihon.desktop.ui.library.MangaDetailUiState
 import mihon.desktop.ui.library.TriStateFilter
+import mihon.extension.ipc.findNetworkFailure
 import mihon.extension.model.SourceDescriptor
 import mihon.extension.source.model.SManga
 import java.nio.file.Files
@@ -155,6 +156,7 @@ fun BrowseContentView(
                         isLoading = true,
                         isLoadingMore = false,
                         errorMessage = null,
+                        networkFailure = null,
                         mode = mode,
                         page = page,
                     )
@@ -188,6 +190,7 @@ fun BrowseContentView(
                         sourceUiState = sourceUiState.copy(
                             isLoading = false,
                             errorMessage = e.message ?: "Failed to load source page",
+                            networkFailure = e.findNetworkFailure(),
                         )
                     }
                 }
@@ -196,7 +199,7 @@ fun BrowseContentView(
             fun loadMore() {
                 if (sourceUiState.isLoading || sourceUiState.isLoadingMore || !sourceUiState.hasNextPage) return
                 val nextPage = sourceUiState.page + 1
-                sourceUiState = sourceUiState.copy(isLoadingMore = true, errorMessage = null)
+                sourceUiState = sourceUiState.copy(isLoadingMore = true, errorMessage = null, networkFailure = null)
                 pageJob = scope.launch {
                     try {
                         val mangasPage = when (sourceUiState.mode) {
@@ -228,6 +231,7 @@ fun BrowseContentView(
                         sourceUiState = sourceUiState.copy(
                             isLoadingMore = false,
                             errorMessage = e.message ?: "Failed to load more manga",
+                            networkFailure = e.findNetworkFailure(),
                         )
                     }
                 }

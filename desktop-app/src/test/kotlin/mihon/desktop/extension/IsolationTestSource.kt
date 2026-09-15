@@ -1,5 +1,6 @@
 package mihon.desktop.extension
 
+import eu.kanade.tachiyomi.network.asObservableSuccess
 import mihon.extension.source.WindowsCatalogueSource
 import mihon.extension.source.model.FilterList
 import mihon.extension.source.model.MangasPage
@@ -27,11 +28,25 @@ open class IsolationTestSource(override val id: Long) : WindowsCatalogueSource {
 class IsolationSourceOne : IsolationTestSource(901)
 class IsolationSourceTwo : IsolationTestSource(902)
 
+class RejectedNetworkSource : IsolationTestSource(904), mihon.extension.source.WindowsHttpSource {
+    override val baseUrl = "https://blocked.example"
+
+    @Suppress("DEPRECATION")
+    override suspend fun getPopularManga(page: Int): MangasPage {
+        eu.kanade.tachiyomi.network.NetworkHelper().client.newCall(
+            okhttp3.Request.Builder().url(baseUrl).build(),
+        ).asObservableSuccess().toBlocking().first().close()
+        return MangasPage(emptyList(), false)
+    }
+}
+
 class DetachedNetworkSource : IsolationTestSource(903), mihon.extension.source.WindowsHttpSource {
     override val baseUrl = "https://detached.example"
     override suspend fun getPopularManga(page: Int): MangasPage {
         // Zstd's JNI loader creates NIO temporary files before loading its native library.
         java.nio.file.Files.delete(java.nio.file.Files.createTempFile("extension-", ".tmp"))
+        check(File.createTempFile("extension-", ".tmp").delete())
+        check(File.createTempFile("extension-", null, File(".")).delete())
         val result = java.util.concurrent.CompletableFuture.supplyAsync {
             eu.kanade.tachiyomi.network.NetworkHelper().client.newCall(
                 okhttp3.Request.Builder().url(baseUrl).build(),

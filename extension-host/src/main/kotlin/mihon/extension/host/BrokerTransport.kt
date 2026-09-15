@@ -189,7 +189,16 @@ class BrokerTransport(
                 }
             }.build()
             val bytes = result.bodyBase64?.let { Base64.getDecoder().decode(it) } ?: result.body.orEmpty().toByteArray()
-            return Response.Builder().request(result.finalUrl?.let { request.newBuilder().url(it).build() } ?: request)
+            val responseRequest = request.newBuilder().apply {
+                result.finalUrl?.let(::url)
+                tag(
+                    mihon.extension.ipc.NetworkFailure::class.java,
+                    result.failureKind?.let {
+                        mihon.extension.ipc.NetworkFailure(it, result.statusCode, build().url.host)
+                    },
+                )
+            }.build()
+            return Response.Builder().request(responseRequest)
                 .protocol(Protocol.HTTP_1_1).code(result.statusCode).message("").headers(headers)
                 .body(bytes.toResponseBody(headers["Content-Type"]?.toMediaTypeOrNull())).build()
         }

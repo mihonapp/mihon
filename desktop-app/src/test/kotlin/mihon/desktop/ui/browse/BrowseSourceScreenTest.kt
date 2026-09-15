@@ -17,6 +17,38 @@ import org.junit.jupiter.api.Test
 
 class BrowseSourceScreenTest {
 
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `site block is explained without promising a verification retry`() = runComposeUiTest {
+        setContent {
+            androidx.compose.runtime.CompositionLocalProvider(
+                mihon.desktop.i18n.LocalStrings provides mihon.desktop.i18n.SimplifiedChineseStrings,
+            ) {
+                BrowseSourceScreen(
+                    state = BrowseSourceUiState(
+                        source = testSource,
+                        errorMessage = "HTTP error 403",
+                        networkFailure = mihon.extension.ipc.NetworkFailure(
+                            mihon.extension.ipc.NetworkFailureKind.SITE_BLOCKED,
+                            403,
+                            "vapi.ezmanga.org",
+                        ),
+                    ),
+                    onBack = {},
+                    onModeChange = {},
+                    onQueryChange = {},
+                    onSearch = {},
+                    onPageChange = {},
+                    onMangaSelected = {},
+                    onOpenWebPage = {},
+                )
+            }
+        }
+        onNodeWithText("网站已封锁访问。", substring = true).assertIsDisplayed()
+        onNodeWithText("vapi.ezmanga.org · HTTP 403", substring = true).assertIsDisplayed()
+        onNodeWithTag("source-open-webpage").assertIsDisplayed()
+    }
+
     private val testSource = SourceDescriptor(
         id = 123L,
         name = "Test Manga Source",

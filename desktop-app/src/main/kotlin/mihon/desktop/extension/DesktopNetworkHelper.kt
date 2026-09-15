@@ -299,8 +299,14 @@ class DesktopNetworkHelper(
             val preview = bytes.take(8_192).toByteArray().toString(Charsets.UTF_8).lowercase()
             return when {
                 code == 429 -> NetworkFailureKind.RATE_LIMITED
+                code == 403 && "cloudflare" in preview &&
+                    ("sorry, you have been blocked" in preview || "error code: 1020" in preview) ->
+                    NetworkFailureKind.SITE_BLOCKED
                 code in setOf(403, 503) &&
-                    ("cf-chl-" in preview || "challenge-platform" in preview || "captcha" in preview) ->
+                    (
+                        headers.any { (key, values) -> key.equals("cf-mitigated", true) && "challenge" in values } ||
+                            "cf-chl-" in preview || "challenge-platform" in preview || "captcha" in preview
+                        ) ->
                     NetworkFailureKind.WEB_VERIFICATION
                 code == 401 || code == 403 -> NetworkFailureKind.AUTHENTICATION_REQUIRED
                 code !in 200..399 -> NetworkFailureKind.HTTP_ERROR

@@ -12,6 +12,38 @@ class ExtensionClassLoader(
     parent: ClassLoader = ExtensionClassLoader::class.java.classLoader,
 ) : URLClassLoader(urls, parent) {
 
+    override fun findClass(name: String): Class<*> {
+        if (!System.getProperty("os.name").startsWith("Windows")) return super.findClass(name)
+        val resource = findResource(name.replace('.', '/') + ".class") ?: throw ClassNotFoundException(name)
+        // Do not leave a second cached JarFile handle behind when an extension is reloaded on Windows.
+        val connection = resource.openConnection().apply { useCaches = false }
+        val jar = connection as? java.net.JarURLConnection
+        val (original, manifest, certificates) = connection.getInputStream().use {
+            Triple(it.readBytes(), jar?.manifest, jar?.certificates)
+        }
+        val adapted = ExtensionBytecodeCompatibility.adapt(original) ?: return super.findClass(name)
+        val source = jar?.jarFileURL ?: getURLs().first { resource.toString().startsWith(it.toString()) }
+        check(certificates.isNullOrEmpty()) { "Cannot adapt a signed extension class: $name" }
+        val packageName = name.substringBeforeLast('.', "")
+        if (packageName.isNotEmpty()) {
+            val sealed = manifest?.getAttributes(packageName.replace('.', '/') + "/")?.getValue("Sealed")
+                ?: manifest?.mainAttributes?.getValue("Sealed")
+            val existing = getDefinedPackage(packageName)
+            if (existing == null) {
+                if (manifest == null) {
+                    definePackage(packageName, null, null, null, null, null, null, null)
+                } else {
+                    definePackage(packageName, manifest, source)
+                }
+            } else {
+                check(if (existing.isSealed) existing.isSealed(source) else !sealed.equals("true", true)) {
+                    "Sealing violation: $packageName"
+                }
+            }
+        }
+        return defineClass(name, adapted, 0, adapted.size, java.security.CodeSource(source, certificates))
+    }
+
     fun instantiateSources(className: String, httpClient: BrokeredHttpClient? = null): List<WindowsSource> {
         val clazz = loadClass(className)
 

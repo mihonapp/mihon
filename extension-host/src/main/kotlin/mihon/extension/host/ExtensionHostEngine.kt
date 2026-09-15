@@ -26,6 +26,7 @@ import mihon.extension.ipc.decodeFilterList
 import mihon.extension.ipc.encodeFilterList
 import mihon.extension.ipc.encodeSourcePreferenceValue
 import mihon.extension.ipc.encodeSourcePreferences
+import mihon.extension.ipc.findNetworkFailure
 import mihon.extension.model.ExtensionManifest
 import mihon.extension.model.SourceDescriptor
 import mihon.extension.source.WindowsCatalogueSource
@@ -417,7 +418,12 @@ class ExtensionHostEngine(
             if (e is VirtualMachineError || e is ThreadDeath) throw e
             System.err.println("Extension request failed: ${request.command}")
             e.printStackTrace(System.err)
-            IpcResponse(request.requestId, success = false, error = e.message ?: e::class.java.simpleName)
+            IpcResponse(
+                request.requestId,
+                success = false,
+                error = e.message ?: e::class.java.simpleName,
+                networkFailure = e.findNetworkFailure(),
+            )
         }
     }
 }

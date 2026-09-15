@@ -62,6 +62,13 @@ class IpcSessionTest {
             output = hostOut,
             onRequest = { req ->
                 when (req.command) {
+                    "blocked" -> throw IllegalStateException(
+                        "wrapped",
+                        IpcException(
+                            "HTTP error 403",
+                            networkFailure = NetworkFailure(NetworkFailureKind.SITE_BLOCKED, 403, "test.invalid"),
+                        ),
+                    )
                     "echo" -> IpcResponse(req.requestId, success = true, payloadJson = "echoed:${req.payloadJson}")
                     "slow" -> {
                         delay(20)
@@ -99,6 +106,8 @@ class IpcSessionTest {
                 mainSession.sendRequest("unknown_cmd")
             }
             errorEx.message shouldContain "Unknown command"
+            assertThrows<IpcException> { mainSession.sendRequest("blocked") }.networkFailure shouldBe
+                NetworkFailure(NetworkFailureKind.SITE_BLOCKED, 403, "test.invalid")
         } finally {
             mainSession.close()
             hostSession.close()

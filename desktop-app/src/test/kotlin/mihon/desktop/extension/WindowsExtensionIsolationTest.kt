@@ -19,6 +19,38 @@ class WindowsExtensionIsolationTest {
     @TempDir lateinit var tempDir: Path
 
     @Test
+    fun `site block metadata survives extension HTTP and process IPC`(): Unit = runBlocking {
+        assumeTrue(Platform.isWindows())
+        val manager = WindowsExtensionProcessManager(
+            tempDir.resolve("blocked-network").toFile(),
+            onBrokerHttp = {
+                mihon.extension.ipc.BrokerHttpResponse(
+                    403,
+                    body = "blocked",
+                    finalUrl = "https://blocked.example/",
+                    failureKind = mihon.extension.ipc.NetworkFailureKind.SITE_BLOCKED,
+                )
+            },
+        )
+        try {
+            manager.loadExtension(packageFile("blocked", RejectedNetworkSource::class.java, 904))
+            val error = runCatching { manager.getPopular(904, 1) }.exceptionOrNull()
+            assertTrue(error is mihon.extension.ipc.IpcException)
+            assertEquals(
+                mihon.extension.ipc.NetworkFailure(
+                    mihon.extension.ipc.NetworkFailureKind.SITE_BLOCKED,
+                    403,
+                    "blocked.example",
+                ),
+                (error as mihon.extension.ipc.IpcException).networkFailure,
+                "Unexpected source failure: $error",
+            )
+        } finally {
+            manager.close()
+        }
+    }
+
+    @Test
     fun `named pipe rejects mismatched peer PID and nonce`() {
         assumeTrue(Platform.isWindows())
         for (wrongPid in listOf(true, false)) {
@@ -125,6 +157,10 @@ class WindowsExtensionIsolationTest {
     }
 
     private fun packageFile(name: String, type: Class<*>, id: Long): java.io.File {
+        // Keep fixture classes out of the parent's test classpath so the real extension loader runs.
+        val classes = listOf(type, IsolationTestSource::class.java)
+        val names = classes.associate { it.name.replace('.', '/') to "fixture/$name/${it.simpleName}" }
+        val remapper = org.objectweb.asm.commons.SimpleRemapper(names)
         val manifest = ExtensionManifest(
             "test.$name",
             name,
@@ -132,14 +168,22 @@ class WindowsExtensionIsolationTest {
             1,
             1.0,
             "en",
-            sources = listOf(mihon.extension.model.SourceDescriptor(id, name, "en", type.name)),
+            sources = listOf(
+                mihon.extension.model.SourceDescriptor(id, name, "en", "fixture.$name.${type.simpleName}"),
+            ),
         )
         val jar = java.io.ByteArrayOutputStream()
         java.util.jar.JarOutputStream(jar).use { output ->
-            listOf(type, IsolationTestSource::class.java).forEach { clazz ->
+            classes.forEach { clazz ->
                 val path = clazz.name.replace('.', '/') + ".class"
-                output.putNextEntry(java.util.jar.JarEntry(path))
-                clazz.classLoader.getResourceAsStream(path)!!.use { it.copyTo(output) }
+                val writer = org.objectweb.asm.ClassWriter(0)
+                clazz.classLoader.getResourceAsStream(path)!!.use {
+                    org.objectweb.asm.ClassReader(
+                        it,
+                    ).accept(org.objectweb.asm.commons.ClassRemapper(writer, remapper), 0)
+                }
+                output.putNextEntry(java.util.jar.JarEntry("fixture/$name/${clazz.simpleName}.class"))
+                output.write(writer.toByteArray())
                 output.closeEntry()
             }
         }

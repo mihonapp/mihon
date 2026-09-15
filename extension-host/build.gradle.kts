@@ -26,6 +26,7 @@ dependencies {
     implementation(libs.injekt)
     implementation(libs.rxJava)
     implementation("org.mozilla:rhino:1.8.1")
+    implementation("org.ow2.asm:asm:9.9.1")
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.bundles.test)

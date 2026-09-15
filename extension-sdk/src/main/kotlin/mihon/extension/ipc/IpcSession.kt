@@ -21,7 +21,11 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-class IpcException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+class IpcException @JvmOverloads constructor(
+    message: String,
+    cause: Throwable? = null,
+    override val networkFailure: NetworkFailure? = null,
+) : RuntimeException(message, cause), NetworkFailureProvider
 
 class IpcSession(
     private val input: InputStream,
@@ -55,7 +59,12 @@ class IpcSession(
                         } catch (cancelled: CancellationException) {
                             throw cancelled
                         } catch (error: Exception) {
-                            IpcResponse(message.requestId, false, error = error.message ?: error::class.java.simpleName)
+                            IpcResponse(
+                                message.requestId,
+                                false,
+                                error = error.message ?: error::class.java.simpleName,
+                                networkFailure = error.findNetworkFailure(),
+                            )
                         }
                         writeMessage(response)
                     }
@@ -123,7 +132,12 @@ class IpcSession(
                 ),
             )
             val response = withTimeout(timeoutMillis) { deferred.await() }
-            if (!response.success) throw IpcException(response.error ?: "IPC request failed without error description")
+            if (!response.success) {
+                throw IpcException(
+                    response.error ?: "IPC request failed without error description",
+                    networkFailure = response.networkFailure,
+                )
+            }
             return response.payloadJson
         } catch (cancelled: CancellationException) {
             cancelRemote(id, callback = false)

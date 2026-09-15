@@ -65,6 +65,7 @@ data class BrowseSourceUiState(
     val isLoading: Boolean = false,
     val isLoadingMore: Boolean = false,
     val errorMessage: String? = null,
+    val networkFailure: mihon.extension.ipc.NetworkFailure? = null,
     val filterList: FilterList = FilterList(),
     val isFilterDialogOpen: Boolean = false,
 ) {
@@ -204,7 +205,7 @@ fun BrowseSourceScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = error,
+                    text = state.networkFailure?.let { sourceNetworkFailureText(it) } ?: error,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.weight(1f).padding(end = 12.dp),
                 )

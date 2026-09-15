@@ -605,6 +605,7 @@ open class WindowsExtensionProcessManager(
         addLocation("okio.ByteString")
         addLocation("uy.kohesive.injekt.Injekt")
         addLocation("rx.Observable")
+        addLocation("org.objectweb.asm.ClassReader")
 
         val sysCp = System.getProperty("java.class.path") ?: ""
         if (sysCp.isNotBlank()) {

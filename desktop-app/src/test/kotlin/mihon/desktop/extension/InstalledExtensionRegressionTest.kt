@@ -18,6 +18,7 @@ class InstalledExtensionRegressionTest {
         assumeTrue(packages?.isDirectory == true)
         val executable = System.getenv("MIHON_PACKAGED_EXE")?.let(::File)
         val live = System.getenv("MIHON_EXTENSION_LIVE_SMOKE") == "1"
+        val expectedBlock = System.getenv("MIHON_EXTENSION_EXPECT_SITE_BLOCK")
         val failures = java.util.concurrent.CopyOnWriteArrayList<String>()
         val network = DesktopNetworkHelper()
         val requests = java.util.concurrent.CopyOnWriteArrayList<String>()
@@ -63,7 +64,28 @@ class InstalledExtensionRegressionTest {
                         it.baseUrl
                     }} count=${result.getOrNull()?.mangas?.size} error=${error?.message}",
                 )
-                if (live && error != null) failures.add("Live request failed: ${manifest.id}: ${error.message}")
+                if (live && manifest.id == expectedBlock) {
+                    val failure = (error as? mihon.extension.ipc.IpcException)?.networkFailure
+                    assertEquals(mihon.extension.ipc.NetworkFailureKind.SITE_BLOCKED, failure?.kind)
+                    assertEquals(403, failure?.statusCode)
+                    println("SITE_BLOCKED ${manifest.id}: ${failure?.host}")
+                } else if (live && error != null) {
+                    failures.add("Live request failed: ${manifest.id}: ${error.message}")
+                }
+                if (live && manifest.id.endsWith(".nhentaixxx")) {
+                    manager.getFilterList(sources.first().id)
+                    val cached = kotlinx.coroutines.withTimeout(30_000) {
+                        var file: File? = null
+                        while (file == null) {
+                            file = manager.workingDirectory.walkTopDown().firstOrNull {
+                                it.name == "filters.json.zst" && it.length() > 0
+                            }
+                            if (file == null) kotlinx.coroutines.delay(250)
+                        }
+                        file
+                    }
+                    println("FILTER_CACHE ${cached.name}: ${cached.length()} bytes")
+                }
                 if (requests.size == before) failures.add("No broker request: ${manifest.id}: ${error?.message}")
                 assertFalse(
                     network.isDomainAllowed("unrelated.invalid", manifest.id) && manifest.declaredDomains.isEmpty(),
