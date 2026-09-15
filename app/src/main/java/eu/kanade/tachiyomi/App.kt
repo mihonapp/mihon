@@ -52,7 +52,7 @@ import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import logcat.LogcatLogger
 import mihon.app.di.AppGraph
-import mihon.app.di.injekt.MetroInteropModule
+import mihon.app.di.injekt.MetroInjektRegistrar
 import mihon.core.metro.GraphProvider
 import mihon.core.migration.Migration
 import mihon.core.migration.Migrator
@@ -66,7 +66,7 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.addSingleton
+import uy.kohesive.injekt.api.InjektScope
 import java.security.Security
 
 class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
@@ -93,8 +93,6 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     @Inject private lateinit var widgetManager: WidgetManager
 
-    @Inject private lateinit var injektMetroInteropModule: MetroInteropModule
-
     @Inject private lateinit var migrations: Set<Migration>
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
@@ -110,8 +108,8 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
             if (packageName != process) WebView.setDataDirectorySuffix(process)
         }
 
+        Injekt = InjektScope(MetroInjektRegistrar(application = this, graphProvider = this))
         graph.inject(this)
-        setupInjekt()
 
         TelemetryConfig.init(applicationContext)
 
@@ -183,12 +181,6 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         }
 
         initializeMigrator()
-    }
-
-    private fun setupInjekt() {
-        Injekt.addSingleton<Application>(this)
-        Injekt.addSingleton<Context>(this)
-        Injekt.importModule(injektMetroInteropModule)
     }
 
     private fun initializeMigrator() {
