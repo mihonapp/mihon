@@ -1,5 +1,5 @@
 name: 功能建议
-description: 为 MihonW 的 Windows 使用体验提出改进建议
+description: 为 mihondesk 的 Windows 使用体验提出改进建议
 labels: [feature request]
 body:
   - type: textarea

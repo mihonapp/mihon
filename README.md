@@ -1,32 +1,38 @@
 <div align="center">
 
-<img src=".github/assets/logo.png" alt="MihonW" width="88" />
+<img src=".github/assets/logo.png" alt="mihondesk" width="88" />
 
-# MihonW
+# mihondesk
 
 **在 Windows 上管理书架，阅读漫画。**
 
-基于 Mihon 的开源 Windows 漫画阅读器 · Kotlin / Compose Desktop
+AI 辅助开发的开源 Windows 漫画阅读器 · 基于 Mihon · Kotlin / Compose Desktop
 
-[![最新版本](https://img.shields.io/github/v/release/1873412297-art/mihon-w?label=Release&color=0057d9)](https://github.com/1873412297-art/mihon-w/releases/latest)
-[![下载量](https://img.shields.io/github/downloads/1873412297-art/mihon-w/total?label=Downloads&color=0057d9)](https://github.com/1873412297-art/mihon-w/releases)
+![AI 辅助开发项目](https://img.shields.io/badge/AI-assisted%20development-7c3aed)
+
+[![最新版本](https://img.shields.io/github/v/release/1873412297-art/mihondesk?label=Release&color=0057d9)](https://github.com/1873412297-art/mihondesk/releases/latest)
+[![下载量](https://img.shields.io/github/downloads/1873412297-art/mihondesk/total?label=Downloads&color=0057d9)](https://github.com/1873412297-art/mihondesk/releases)
 ![Windows x64](https://img.shields.io/badge/Windows-x64-0078d4)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-64748b)](LICENSE)
 
-**[下载 Windows 版](https://github.com/1873412297-art/mihon-w/releases/latest)** · [版本说明](https://github.com/1873412297-art/mihon-w/releases/tag/v0.2.4) · [反馈问题](https://github.com/1873412297-art/mihon-w/issues)
+**[下载 Windows 版](https://github.com/1873412297-art/mihondesk/releases/latest)** · [版本说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.4) · [反馈问题](https://github.com/1873412297-art/mihondesk/issues)
 
 </div>
+
+**AI 项目说明**：本仓库的 Windows 移植、功能迭代、问题修复和文档维护使用 AI 编程助手协助完成。上游 Mihon、Suwayomi 及其他第三方项目的贡献与许可归属见文末。
 
 ## 下载与安装
 
 当前版本：**0.2.4**。面向 **Windows 10 22H2 / Windows 11，x64**，发行包已内置运行环境，无需另装 Java。
 
+GitHub 项目现名为 **mihondesk**；已发布的 0.2.4 安装包、程序显示名和数据目录仍使用 **MihonW**。
+
 | 下载 | 适用方式 |
 | --- | --- |
-| **[EXE 安装包](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.4/MihonW-0.2.4.exe)** | 推荐使用，下载后按向导安装 |
-| [MSI 安装包](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.4/MihonW-0.2.4.msi) | 需要 MSI 安装方式时使用 |
-| [便携 ZIP](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.4/MihonW-0.2.4-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `MihonW.exe` |
-| [SHA-256 校验文件](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.4/SHA256SUMS.txt) | 校验下载文件的完整性 |
+| **[EXE 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.4/MihonW-0.2.4.exe)** | 推荐使用，下载后按向导安装 |
+| [MSI 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.4/MihonW-0.2.4.msi) | 需要 MSI 安装方式时使用 |
+| [便携 ZIP](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.4/MihonW-0.2.4-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `MihonW.exe` |
+| [SHA-256 校验文件](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.4/SHA256SUMS.txt) | 校验下载文件的完整性 |
 
 **干净发行包**：不预装图源或扩展仓库，不包含开发者的书架、账号、Cookie、阅读记录或个人设置。首次使用请自行添加仓库或安装扩展；升级会继续使用你本机已有的数据。
 
@@ -57,20 +63,20 @@
 - 保留用户已保存的仓库配置。
 - EXE、MSI 和便携 ZIP 打包前统一检查，发现个人数据目录、已安装扩展或偏好文件时终止打包。
 
-详见[本版发布说明](https://github.com/1873412297-art/mihon-w/releases/tag/v0.2.4)。此前的图源兼容修复见 [0.2.3 发布说明](https://github.com/1873412297-art/mihon-w/releases/tag/v0.2.3)。
+详见[本版发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.4)。此前的图源兼容修复见 [0.2.3 发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.3)。
 
 ## 当前限制
 
-MihonW 仍在持续开发，桌面端尚未覆盖 Mihon 的全部功能。
+mihondesk 仍在持续开发，桌面端尚未覆盖 Mihon 的全部功能。
 
 - **扩展兼容性因图源而异**：扩展通过桌面兼容层运行；能够安装或加载，并不代表该图源的所有功能都可用。
 - **网站验证与封锁**：登录或验证可以使用程序提供的网页入口；能否通过取决于网站。0.2.3 测试时，EZmanga 的网页和 API 均返回 403 封锁，本版本能识别并说明该情况，无法解除网站封锁。
-- **手动更新**：0.2.4 内置更新检查仍指向旧的默认仓库，请从[本仓库 Releases](https://github.com/1873412297-art/mihon-w/releases/latest)下载后续版本。
+- **手动更新**：0.2.4 内置更新检查仍指向旧的默认仓库，请从[本仓库 Releases](https://github.com/1873412297-art/mihondesk/releases/latest)下载后续版本。
 - **备份与跟踪服务**：部分设置不会迁移，生产账户的完整登录与同步流程仍需继续验证。请查看[备份兼容范围](docs/superpowers/evidence/suwayomi-backup-compatibility.md)和[功能覆盖说明](docs/superpowers/evidence/suwayomi-feature-coverage.md)。
 
 ## 反馈与开发
 
-遇到问题请在[本仓库 Issues](https://github.com/1873412297-art/mihon-w/issues)反馈，附上 MihonW 版本、Windows 版本、复现步骤和错误信息。图源问题请同时提供扩展名称及版本。
+遇到问题请在[本仓库 Issues](https://github.com/1873412297-art/mihondesk/issues)反馈，附上 MihonW 版本、Windows 版本、复现步骤和错误信息。图源问题请同时提供扩展名称及版本。
 
 欢迎提交改进，参见[贡献指南](CONTRIBUTING.md)。开发资料：
 

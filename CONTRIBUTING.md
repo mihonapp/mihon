@@ -1,12 +1,12 @@
-# 为 MihonW 做贡献
+# 为 mihondesk 做贡献
 
-欢迎改进 MihonW 的 Windows 阅读体验、扩展兼容、文档和测试。
+欢迎改进 mihondesk 的 Windows 阅读体验、扩展兼容、文档和测试。
 
 ## 反馈问题或建议
 
-请使用[本仓库 Issues](https://github.com/1873412297-art/mihon-w/issues)，选择对应表单。问题报告请提供程序版本、Windows 版本、安装方式、复现步骤和错误信息；扩展问题请附扩展名称与版本。
+请使用[本仓库 Issues](https://github.com/1873412297-art/mihondesk/issues)，选择对应表单。问题报告请提供程序版本、Windows 版本、安装方式、复现步骤和错误信息；扩展问题请附扩展名称与版本。
 
-提交前可查看[最新发布说明](https://github.com/1873412297-art/mihon-w/releases/latest)和[功能覆盖说明](docs/superpowers/evidence/suwayomi-feature-coverage.md)。
+提交前可查看[最新发布说明](https://github.com/1873412297-art/mihondesk/releases/latest)和[功能覆盖说明](docs/superpowers/evidence/suwayomi-feature-coverage.md)。
 
 ## 代码贡献
 
