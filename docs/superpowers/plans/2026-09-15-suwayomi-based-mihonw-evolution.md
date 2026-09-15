@@ -8,7 +8,7 @@
 
 **Tech Stack:** Kotlin、Compose Desktop Material 3、coroutines/StateFlow、SQLDelight/SQLite、OkHttp、JVM extension-host、Windows Job Object、Gradle/jpackage；浏览器兼容采用 Suwayomi 的 JCEF/KCEF 方向，单独处理原生组件和运行时。
 
-**状态：** 2026-09-15 调查完成，执行计划已编写。下文未勾选事项尚未执行；本轮仅新增本文档，未修改应用代码、安装程序或用户数据。
+**状态：** 2026-09-15 已进入实施和发行验收。主要兼容、网络、恢复、Windows 隔离与打包改动已集成；当前结果见[执行记录](../evidence/suwayomi-execution-progress.md)。未勾选项包括尚未完成或证据不足的完整场景，不能据此将部分验证计为正式发行完成。
 
 ## 全局约束
 

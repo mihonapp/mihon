@@ -1,0 +1,11 @@
+# 阅读内容重新获得键盘焦点
+
+在680a062真实Windows EXE中，鼠标选择阅读模式、点击正文隐藏工具栏后，Esc没有退出。再次按Tab取得焦点，Esc立即返回详情。这将问题定位到消失的工具栏控件持有焦点，而非章节关闭或进度写入阻塞。
+
+新增Compose实鼠标输入场景：打开模式菜单、选择WEBTOON、点击正文隐藏栏、发送Esc。修复前在等待返回回调时超时（run6182，1失败），与实际窗口一致。
+
+ReaderScreen现在在正文点击或非零滚轮输入时请求阅读根节点焦点。它不会改变控件显隐策略，不修改reader-core动作队列、解码、缓存或CLI压力测试逻辑。现有设置、章节抽屉和页面菜单仍按原有路径处理。
+
+补充滚轮从模式工具栏接回键盘的测试。run53949的ReaderScreenActions、ReaderGesture、ReaderScreen、ReaderChromeParity、ReaderOverlayVisibility、ReaderChapterDrawer、ReaderPageActionsDialog共52项全部通过，0跳过，spotlessCheck通过，40s。首次失败与通过XML保留在`desktop-app/build/verification/reader-focus-fix`。
+
+最终包必须重建后复现同一鼠标与Esc操作。此前680a062长测的输入是无界面CLI阅读压力场景，与本次UI焦点修正分开记录；它不是修正后EXE的鼠标验收证据。

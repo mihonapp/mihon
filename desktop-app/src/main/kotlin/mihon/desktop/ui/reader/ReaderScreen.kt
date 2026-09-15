@@ -456,6 +456,7 @@ fun ReaderScreen(
     }
 
     fun handleTap(normalizedX: Float) {
+        focusRequester.requestFocus()
         handleClickAction(clickPolicy.actionAt(normalizedX), pointer = true)
     }
 
@@ -538,6 +539,7 @@ fun ReaderScreen(
                 val change = event.changes.firstOrNull() ?: return@onPointerEvent
                 val deltaPixels = change.scrollDelta.y
                 if (deltaPixels == 0f) return@onPointerEvent
+                focusRequester.requestFocus()
                 val viewport = state.viewport ?: return@onPointerEvent
                 val centroid = InputPoint(
                     x = (change.position.x / viewport.width.coerceAtLeast(1)).coerceIn(0f, 1f),

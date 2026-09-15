@@ -49,3 +49,10 @@
 - 30分钟压力验证在22分钟时因ReaderSession异步选页/跨章乱序而作废。新增`ReaderActionOrderingTest`以反序dispatcher和直接切换章节两个确定性场景复现，root6821为2/2失败；改为session action queue及旧章节操作过滤后，root72832新回归和DefaultReaderSessionTest通过。reader全回归与桌面阅读集成正在执行，不能让此前598项覆盖这一后续reader修改。
 
 - root81430：BUILD SUCCESSFUL，1m37s。新reader-core全量180项/0失败/1专用极大图片跳过；桌面在线阅读、PackagedReaderScenario、ReaderScreenActions、ChromeParity、OverlayVisibility选择测试全部通过。旧的30分钟run01明确作废，后续最终发行目录的长测和三进程验收原始结果保留在`desktop-app/build/verification`；以带哈希的JSON为准。
+
+## 680a062 集成包及界面焦点修正
+
+- `680a062a02e379ceaab7527008495d186b46eaab` 已 fast-forward 合入原工作目录 `main`，原12文件和计划与起始快照逐字一致后另存具名stash，未丢弃或重新覆盖原修改。
+- 同提交 `assembleWindowsRelease` 6m9s 成功；app-image/EXE/MSI/ZIP 版本均为0.2.0，revision准确、dirty=false，919个发行文件摘要通过。真实EXE三进程阅读和七格式/六模式验证通过；MSI仅做只读表检查，没有安装。
+- 桌面全量 run45255：598项、0失败、7环境跳过，6m32s成功，存档于`integration-680a062-final`。便携版在中文空格目录、无JAVA_HOME且PATH仅含系统目录时，八个CLI进程全部成功，非空Android编码器样本导入/导出/重复导入稳定，914个载荷文件与app-image一致。ZIP中浏览器运行时的原生网络/JS/Cookie/退出验证2项通过，1m36s。
+- 最终窗口检查额外发现工具栏选择模式后隐藏会丢失键盘焦点，Esc需先Tab才能生效。已通过真实鼠标输入测试复现，再让阅读内容点击和滚轮恢复阅读器焦点。首个回归先失败，修复后52项相关阅读UI测试与格式检查通过（run53949，40s），详见[焦点修正](suwayomi-reader-keyboard-focus.md)。这一后续变更需生成新的同提交包，不能把680a062旧包当作已包含焦点修正。

@@ -12,6 +12,7 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -320,6 +321,56 @@ class ReaderScreenActionsTest {
             onBack = { backRequests++ },
             onEscape = { true },
         )
+
+        onNodeWithTag("reader-screen").performKeyInput {
+            keyDown(Key.Escape)
+            keyUp(Key.Escape)
+        }
+        waitUntil { session.closeRequests == 1 && backRequests == 1 }
+    }
+
+    @Test
+    fun `escape exits after a mode menu selection and hiding the focused toolbar`() = runComposeUiTest {
+        val session = TestReaderSession(testReaderState())
+        var backRequests = 0
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            onBack = { backRequests++ },
+        )
+
+        onNodeWithTag("reader-mode-menu").performMouseInput { click(center) }
+        onNodeWithTag("reader-mode-WEBTOON").performMouseInput { click(center) }
+        waitForIdle()
+        onNodeWithTag("reader-gesture-area").performMouseInput { click(center) }
+        mainClock.advanceTimeBy(1_000)
+        waitForIdle()
+
+        onNodeWithTag("reader-screen").performKeyInput {
+            keyDown(Key.Escape)
+            keyUp(Key.Escape)
+        }
+        waitUntil { session.closeRequests == 1 && backRequests == 1 }
+    }
+
+    @Test
+    fun `wheel scrolling returns keyboard focus from the mode toolbar to the reader`() = runComposeUiTest {
+        val session = TestReaderSession(testReaderState())
+        var backRequests = 0
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            onBack = { backRequests++ },
+        )
+
+        onNodeWithTag("reader-mode-menu").performMouseInput { click(center) }
+        onNodeWithTag("reader-mode-WEBTOON").performMouseInput { click(center) }
+        waitForIdle()
+        onNodeWithTag("reader-gesture-area").performMouseInput {
+            moveTo(center)
+            scroll(1f)
+        }
+        waitForIdle()
 
         onNodeWithTag("reader-screen").performKeyInput {
             keyDown(Key.Escape)
