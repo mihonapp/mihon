@@ -26,3 +26,28 @@ open class IsolationTestSource(override val id: Long) : WindowsCatalogueSource {
 }
 class IsolationSourceOne : IsolationTestSource(901)
 class IsolationSourceTwo : IsolationTestSource(902)
+
+class DetachedNetworkSource : IsolationTestSource(903), mihon.extension.source.WindowsHttpSource {
+    override val baseUrl = "https://detached.example"
+    override suspend fun getPopularManga(page: Int): MangasPage {
+        val result = java.util.concurrent.CompletableFuture.supplyAsync {
+            eu.kanade.tachiyomi.network.NetworkHelper().client.newCall(
+                okhttp3.Request.Builder().url(baseUrl).build(),
+            ).execute().use { it.body.string() }
+        }.get()
+        return MangasPage(listOf(SManga(url = "/result", title = result)), false)
+    }
+    override suspend fun searchManga(page: Int, query: String, filters: FilterList): MangasPage {
+        val identity = mihon.extension.host.ExtensionExecutionContext.Identity(
+            "test.other",
+            902,
+            android.app.Application(),
+        )
+        val result = mihon.extension.host.ExtensionExecutionContext.duringConstruction(identity) {
+            eu.kanade.tachiyomi.network.NetworkHelper().client.newCall(
+                okhttp3.Request.Builder().url(baseUrl).build(),
+            ).execute().use { it.body.string() }
+        }
+        return MangasPage(listOf(SManga(url = "/result", title = result)), false)
+    }
+}

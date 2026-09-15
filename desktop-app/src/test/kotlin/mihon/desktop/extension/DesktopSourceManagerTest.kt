@@ -32,6 +32,47 @@ import java.util.zip.ZipOutputStream
 class DesktopSourceManagerTest {
 
     @Test
+    fun `source web page recovers when its registry disappears during lookup`(@TempDir tempDir: Path) =
+        verifyLostRegistry(tempDir, webPage = true)
+
+    @Test
+    fun `source request recovers when its isolated route disappears`(@TempDir tempDir: Path) =
+        verifyLostRegistry(tempDir, webPage = false)
+
+    private fun verifyLostRegistry(tempDir: Path, webPage: Boolean): Unit = runBlocking {
+        val source = SourceDescriptor(8123L, "Recovery", "en", "fixture.Source", baseUrl = "https://example.org")
+        val manifest = ExtensionManifest("ext.recovery", "Recovery", "1.0", 1, 1.4, "en", sources = listOf(source))
+        val preferences = DesktopPreferenceStore(tempDir.resolve("preferences.properties"))
+        val installer = DesktopExtensionInstaller(tempDir.resolve("extensions").toFile(), preferences)
+        val file = tempDir.resolve("recovery.mext").toFile()
+        writeMext(file, manifest)
+        installer.installFromLocalFile(file, trustOnInstall = true)
+        var loads = 0
+        var lookups = 0
+        var requests = 0
+        val process = object : WindowsExtensionProcessManager(tempDir.resolve("host").toFile()) {
+            override suspend fun loadExtension(packageFile: File): List<SourceDescriptor> {
+                loads++
+                return listOf(source)
+            }
+            override suspend fun getSources(): List<SourceDescriptor> =
+                if (++lookups == 1) emptyList() else listOf(source)
+            override suspend fun getPopular(sourceId: Long, page: Int): MangasPage {
+                if (++requests == 1) throw IpcException("No isolated host registered for source $sourceId")
+                return MangasPage(listOf(SManga(url = "/manga", title = "Recovered")), false)
+            }
+        }
+        DesktopSourceManager(installer, process, preferences).use { manager ->
+            if (webPage) {
+                manager.sourceWebPage(source.id) shouldBe source.baseUrl
+            } else {
+                manager.getPopular(source.id, 1).mangas.single().title shouldBe "Recovered"
+            }
+            loads shouldBe 2
+        }
+    }
+
+    @Test
     fun `registers bundled MangaDex source and retrieves it by id`(@TempDir tempDir: Path) {
         val dummyProcessManager = WindowsExtensionProcessManager(tempDir.toFile())
         val manager = DesktopSourceManager(installer = null, processManager = dummyProcessManager)

@@ -519,8 +519,11 @@ class DesktopSourceManager(
 
     suspend fun sourceWebPage(sourceId: Long): String? {
         (builtinSources[sourceId] as? WindowsHttpSource)?.let { return it.baseUrl }
-        ensureSourceLoaded(sourceId)
-        return processManager?.getSources()?.firstOrNull { it.id == sourceId }?.baseUrl
+        return withLoadedExtensionSource(sourceId) { proc ->
+            val source = proc.getSources().firstOrNull { it.id == sourceId }
+                ?: throw IpcException("Source with ID $sourceId not found")
+            source.baseUrl?.takeIf { it.isNotBlank() }
+        }
     }
 
     private suspend fun loadSource(sourceId: Long) {
@@ -773,7 +776,8 @@ class DesktopSourceManager(
     }
 
     private fun IpcException.isMissingSource(sourceId: Long): Boolean =
-        message?.contains("Source with ID $sourceId not found", ignoreCase = true) == true
+        message?.contains("Source with ID $sourceId not found", ignoreCase = true) == true ||
+            message == "No isolated host registered for source $sourceId"
 
     private fun fallbackSourcePreferenceDefinitions(sourceId: Long): List<SourcePreferenceDefinition> {
         registeredSourcePreferences[sourceId]?.takeIf { it.isNotEmpty() }?.let { return it }

@@ -160,6 +160,46 @@ class WindowsExtensionIsolationTest {
     }
 
     @Test
+    fun `detached network callbacks use authenticated package identity`() = runBlocking {
+        assumeTrue(Platform.isWindows())
+        val network = DesktopNetworkHelper()
+        val manager = WindowsExtensionProcessManager(
+            tempDir.resolve("detached-network").toFile(),
+            networkHelper = network,
+            onBrokerHttp = { request ->
+                assertEquals("test.detached", request.extensionId)
+                mihon.extension.ipc.BrokerHttpResponse(200, body = "bound")
+            },
+        )
+        try {
+            manager.loadExtension(packageFile("detached", DetachedNetworkSource::class.java, 903))
+            assertEquals("bound", manager.getPopular(903, 1).mangas.single().title)
+            val forged = runCatching { manager.searchManga(903, 1, "forge") }.exceptionOrNull()
+            assertTrue(forged?.message.orEmpty().contains("Unregistered extension network identity"))
+        } finally {
+            manager.close()
+            network.close()
+        }
+    }
+
+    @Test
+    fun `reloading an existing host repairs missing source routes`() = runBlocking {
+        assumeTrue(Platform.isWindows())
+        val manager = WindowsExtensionProcessManager(tempDir.resolve("repair-routes").toFile())
+        try {
+            val file = packageFile("one", IsolationSourceOne::class.java, 901)
+            manager.loadExtension(file)
+            val routes = WindowsExtensionProcessManager::class.java.getDeclaredField("sourceHosts")
+                .apply { isAccessible = true }.get(manager) as MutableMap<*, *>
+            routes.clear()
+            manager.loadExtension(file)
+            assertEquals("901", manager.getPopular(901, 1).mangas.single().title)
+        } finally {
+            manager.close()
+        }
+    }
+
+    @Test
     fun `sandbox blocks sibling files and direct network and job close kills child`() {
         assumeTrue(Platform.isWindows())
         val secret = tempDir.resolve("private.txt").toFile().apply { writeText("secret") }

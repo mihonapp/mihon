@@ -155,9 +155,14 @@ open class WindowsExtensionProcessManager(
             output = proc.outputStream,
             onCallback = { callback ->
                 if (callback.callbackType == IpcCallbacks.BROKER_HTTP) {
-                    val request = json.decodeFromString<BrokerHttpRequest>(callback.payloadJson)
+                    val received = json.decodeFromString<BrokerHttpRequest>(callback.payloadJson)
+                    // Detached extension coroutines/OkHttp dispatchers can lose thread-local identity.
+                    // Only a dedicated, authenticated package process may supply the missing owner.
+                    val request = received.copy(
+                        extensionId = received.extensionId ?: if (isolatedLeaf) brokerPackages.singleOrNull() else null,
+                    )
                     val permitted = networkHelper == null || (
-                        request.extensionId in brokerPackages &&
+                        request.extensionId != null && request.extensionId in brokerPackages &&
                             (request.sourceId == null || brokerSources[request.sourceId] == request.extensionId)
                         )
                     val response = if (!permitted) {
@@ -270,7 +275,9 @@ open class WindowsExtensionProcessManager(
                 val manifest = mihon.extension.validator.ExtensionPackageValidator.validatePackage(packageFile)
                 packageHosts[manifest.id]?.let { existing ->
                     val current = existing.getSources()
-                    return@withLock if (current.isNotEmpty()) current else existing.loadExtension(packageFile)
+                    val sources = if (current.isNotEmpty()) current else existing.loadExtension(packageFile)
+                    registerRoutes(existing, sources)
+                    return@withLock sources
                 }
                 val key = java.security.MessageDigest.getInstance("SHA-256").digest(manifest.id.toByteArray())
                     .joinToString("") { "%02x".format(it) }
@@ -286,14 +293,9 @@ open class WindowsExtensionProcessManager(
                 )
                 try {
                     val sources = child.loadExtension(packageFile)
-                    check(
-                        sources.none {
-                            sourceHosts.containsKey(it.id)
-                        },
-                    ) { "Source identity is already owned by another extension host" }
+                    registerRoutes(child, sources)
                     packageHosts[manifest.id] = child
                     packageFiles[manifest.id] = packageFile
-                    sources.forEach { sourceHosts[it.id] = child }
                     sources
                 } catch (failure: Throwable) {
                     child.close()
@@ -304,7 +306,7 @@ open class WindowsExtensionProcessManager(
         val session = ensureRunningSession()
         val manifest = mihon.extension.validator.ExtensionPackageValidator.validatePackage(packageFile)
         brokerPackages.add(manifest.id)
-        networkHelper?.registerExtensionDomains(manifest.id, manifest.declaredDomains)
+        networkHelper?.registerExtensionDomains(manifest.id, ExtensionPackageDomains.resolve(packageFile, manifest))
         manifest.sources.forEach { source ->
             brokerSources[source.id] = manifest.id
             networkHelper?.registerSourceOwner(source.id, manifest.id)
@@ -325,6 +327,15 @@ open class WindowsExtensionProcessManager(
                 networkHelper?.registerSourceOwner(source.id, manifest.id)
             }
         }
+    }
+
+    private fun registerRoutes(host: WindowsExtensionProcessManager, sources: List<SourceDescriptor>) {
+        check(sources.none { sourceHosts[it.id]?.let { owner -> owner !== host } == true }) {
+            "Source identity is already owned by another extension host"
+        }
+        val ids = sources.mapTo(hashSetOf()) { it.id }
+        sourceHosts.entries.removeIf { it.value === host && it.key !in ids }
+        sources.forEach { sourceHosts[it.id] = host }
     }
 
     open suspend fun unloadExtension(pkg: String) {
@@ -369,8 +380,11 @@ open class WindowsExtensionProcessManager(
     open suspend fun getSources(): List<SourceDescriptor> {
         if (routesPackages) {
             ensureRunningSession()
-            return packageHosts.entries.flatMap { (pkg, child) ->
-                child.getSources().ifEmpty { child.loadExtension(packageFiles.getValue(pkg)) }
+            return routingMutex.withLock {
+                packageHosts.entries.flatMap { (pkg, child) ->
+                    child.getSources().ifEmpty { child.loadExtension(packageFiles.getValue(pkg)) }
+                        .also { registerRoutes(child, it) }
+                }
             }
         }
         val session = ensureRunningSession()
