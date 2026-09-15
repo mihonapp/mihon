@@ -482,8 +482,7 @@
     <string name="migration_dialog_what_to_include">समावेश गर्न डेटा चयन गर्नुहोस्</string>
     <string name="recent_manga_time">अध्याय. %1$s - %2$s</string>
     <string name="copy">प्रतिलिपि</string>
-    <string name="copied_to_clipboard">क्लिपबोर्डमा प्रतिलिपि गर्नुहोस्:
-\n%1$s</string>
+    <string name="copied_to_clipboard">क्लिपबोर्डमा प्रतिलिपि गर्नुहोस्: \n%1$s</string>
     <string name="clipboard_copy_error">क्लिपबोर्डमा प्रतिलिपि गर्न असफल</string>
     <string name="delete_downloads_for_manga">डाउनलोड गरिएका अध्यायहरू हटाउने हो?</string>
     <string name="pref_update_only_started">जो सुरु भएको छैन</string>
@@ -620,8 +619,7 @@
     <string name="invalid_location">अवैध स्थान: %s</string>
     <string name="missing_storage_permission">भण्डारण अनुमतिहरू प्रदान गरिएको छैन</string>
     <string name="pref_clear_webview_data">WebView डेटा खाली गर्नुहोस्</string>
-    <string name="fdroid_warning">F-Droid निर्माणहरू आधिकारिक रूपमा समर्थित छैनन्।
-\nथप जान्न ट्याप गर्नुहोस्।</string>
+    <string name="fdroid_warning">F-Droid निर्माणहरू आधिकारिक रूपमा समर्थित छैनन्। \nथप जान्न ट्याप गर्नुहोस्।</string>
     <string name="crash_screen_title">उफ्!</string>
     <string name="label_read_duration">पढेको अवधि</string>
     <string name="pref_reset_viewer_flags_error">रिडर सेटिंग्स रिसेट गर्न सकिएन</string>
@@ -738,11 +736,7 @@
     <string name="action_revert_to_default">पूर्वनिर्धारितमा फर्कनुहोस्</string>
     <string name="pref_onboarding_guide">अनबोर्डिङ गाइड</string>
     <string name="onboarding_description">पहिले केहि चीजहरू सेट गरौं। तपाईं पछि पनि सेटिंग्समा गएर यसलाई परिवर्तन गर्न सक्नुहुन्छ।</string>
-    <string name="onboarding_storage_info">एउटा फोल्डर चयन गर्नुहोस् जहाँ %1$s ले अध्याय डाउनलोड, ब्याकअप, र थप भण्डारण गर्नेछ।
-\n
-\nएक समर्पित फोल्डर सिफारिस गरिएको छ।
-\n
-\nचयन गरिएको फोल्डर: %2$s</string>
+    <string name="onboarding_storage_info">एउटा फोल्डर चयन गर्नुहोस् जहाँ %1$s ले अध्याय डाउनलोड, ब्याकअप, र थप भण्डारण गर्नेछ। \n \nएक समर्पित फोल्डर सिफारिस गरिएको छ। \n \nचयन गरिएको फोल्डर: %2$s</string>
     <string name="onboarding_storage_action_select">फोल्डर चयन गर्नुहोस्</string>
     <string name="onboarding_permission_install_apps">एप स्थापना गर्ने अनुमति</string>
     <string name="onboarding_permission_install_apps_description">स्रोत एक्सटेन्शन स्थापना गर्न को लागि।</string>

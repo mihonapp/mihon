@@ -74,17 +74,21 @@ class ExtensionsViewModel(
             .map { searchQueryPredicate(it ?: "") },
         currentDownloads,
         getExtensions.subscribe(),
-    ) { predicate, downloads, (_updates, _installed, _available, _untrusted) ->
+    ) { predicate, downloads, (_updates, _loaded, _available, _notLoaded) ->
         buildMap {
             val updates = _updates.filter(predicate).map(extensionMapper(downloads))
             if (updates.isNotEmpty()) {
                 put(ExtensionUiModel.Header.Resource(MR.strings.ext_updates_pending), updates)
             }
 
-            val installed = _installed.filter(predicate).map(extensionMapper(downloads))
-            val untrusted = _untrusted.filter(predicate).map(extensionMapper(downloads))
-            if (installed.isNotEmpty() || untrusted.isNotEmpty()) {
-                put(ExtensionUiModel.Header.Resource(MR.strings.ext_installed), installed + untrusted)
+            val notLoaded = _notLoaded.filter(predicate).map(extensionMapper(downloads))
+            if (notLoaded.isNotEmpty()) {
+                put(ExtensionUiModel.Header.Resource(MR.strings.ext_not_loaded), notLoaded)
+            }
+
+            val loaded = _loaded.filter(predicate).map(extensionMapper(downloads))
+            if (loaded.isNotEmpty()) {
+                put(ExtensionUiModel.Header.Resource(MR.strings.ext_installed), loaded)
             }
 
             val languagesWithExtensions = _available
@@ -138,7 +142,7 @@ class ExtensionsViewModel(
                 if (extension.name.contains(subquery, ignoreCase = true)) return@any true
 
                 when (extension) {
-                    is Extension.Installed -> extension.sources.any { source ->
+                    is Extension.Loaded -> extension.sources.any { source ->
                         source.name.contains(subquery, ignoreCase = true) ||
                             (source as? HttpSource)?.getHomeUrl()?.contains(subquery, ignoreCase = true) == true ||
                             source.id == subquery.toLongOrNull()
@@ -164,7 +168,7 @@ class ExtensionsViewModel(
         viewModelScope.launchIO {
             state.value.items.values.flatten()
                 .map { it.extension }
-                .filterIsInstance<Extension.Installed>()
+                .filterIsInstance<Extension.Loaded>()
                 .filter { it.hasUpdate }
                 .forEach(::updateExtension)
         }
@@ -176,7 +180,7 @@ class ExtensionsViewModel(
         }
     }
 
-    fun updateExtension(extension: Extension.Installed) {
+    fun updateExtension(extension: Extension.Loaded) {
         viewModelScope.launchIO {
             extensionManager.updateExtension(extension).collectToInstallUpdate(extension)
         }
@@ -202,7 +206,7 @@ class ExtensionsViewModel(
             .onCompletion { removeDownloadState(extension) }
             .collect()
 
-    fun uninstallExtension(extension: Extension) {
+    fun uninstallExtension(extension: Extension.Installed) {
         extensionManager.uninstallExtension(extension)
     }
 
@@ -219,10 +223,8 @@ class ExtensionsViewModel(
         }
     }
 
-    fun trustExtension(extension: Extension.Untrusted) {
-        viewModelScope.launch {
-            extensionManager.trust(extension)
-        }
+    fun trustExtension(extension: Extension.NotLoaded) {
+        extensionManager.trust(extension)
     }
 
     @Immutable

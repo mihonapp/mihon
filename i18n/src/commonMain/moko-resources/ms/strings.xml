@@ -249,8 +249,7 @@
     <string name="double_tap_anim_speed_fast">Laju</string>
     <string name="manga_added_library">Ditambah ke pustaka</string>
     <string name="manga_removed_library">Dibuang dari pustaka</string>
-    <string name="copied_to_clipboard">Disalin ke papan keratan:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Disalin ke papan keratan: \n%1$s</string>
     <string name="source_not_installed">Sumber tidak dipasang: %1$s</string>
     <string name="repeating">Membaca semula</string>
     <string name="track_status">Status</string>
@@ -635,8 +634,7 @@
     <string name="action_open_random_manga">Buka entri rawak</string>
     <string name="information_no_entries_found">Tiada entri dijumpai di kategori ini</string>
     <string name="download_notifier_cache_renewal">Menyemak muat turun</string>
-    <string name="fdroid_warning">Binaan F-Droid tidak disokong secara rasmi.
-\nKetik untuk mengetahui lebih lanjut.</string>
+    <string name="fdroid_warning">Binaan F-Droid tidak disokong secara rasmi. \nKetik untuk mengetahui lebih lanjut.</string>
     <string name="action_display_show_continue_reading_button">Butang sambung membaca</string>
     <string name="pref_invalidate_download_cache">Indeks semula muat turun</string>
     <string name="track_remove_date_conf_title">Buang tarikh?</string>

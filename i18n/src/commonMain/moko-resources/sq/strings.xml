@@ -286,11 +286,7 @@
     <string name="ext_downloading">Po shkarkohet</string>
     <string name="ext_uninstall">Çinstaloni</string>
     <string name="ext_installer_legacy">Trashëgimia</string>
-    <string name="untrusted_extension_message">Kjo shtesë u nënshkrua me një certifikatë të pabesueshme dhe nuk u aktivizua.
-\n
-\n Një shtesë me qëllim të keq mund të lexojë çdo kredencial identifikimi të ruajtur në Mihon ose të ekzekutojë kod arbitrar.
-\n
-\n Duke i besuar kësaj certifikate ju i pranoni këto rreziqe.</string>
+    <string name="untrusted_extension_message">Kjo shtesë u nënshkrua me një certifikatë të pabesueshme dhe nuk u aktivizua. \n \n Një shtesë me qëllim të keq mund të lexojë çdo kredencial identifikimi të ruajtur në Mihon ose të ekzekutojë kod arbitrar. \n \n Duke i besuar kësaj certifikate ju i pranoni këto rreziqe.</string>
     <string name="obsolete_extension_message">Kjo shtesë nuk është më e disponueshme. Mund të mos funksionojë siç duhet dhe mund të shkaktojë probleme me aplikacionin. Rekomandohet ta çinstaloni.</string>
     <string name="ext_info_language">Gjuha</string>
     <string name="pref_read_with_volume_keys">Çelsat e volumit</string>
@@ -522,8 +518,7 @@
     <string name="check_for_updates">Kontrolloni për përditësime</string>
     <string name="pref_enable_acra">Dërgoni raporte përplasjesh</string>
     <string name="pref_acra_summary">Ndihmon në rregullimin e çdo defekti. Nuk do të dërgohen të dhëna sensitive</string>
-    <string name="fdroid_warning">Ndërtimet e F-Droid nuk mbështeten zyrtarisht.
-\nTrokit për të mësuar më shumë.</string>
+    <string name="fdroid_warning">Ndërtimet e F-Droid nuk mbështeten zyrtarisht. \nTrokit për të mësuar më shumë.</string>
     <string name="label_downloaded_only">Vetëm të shkarkuarat</string>
     <string name="pref_incognito_mode">Modaliteti i fshehtë</string>
     <string name="pref_incognito_mode_summary">Ndalon leximin e historisë</string>
@@ -546,8 +541,7 @@
     <string name="local_source_help_guide">Udhëzues burimi lokal</string>
     <string name="add_to_library">Shto në bibliotekë</string>
     <string name="in_library">Në bibliotekë</string>
-    <string name="copied_to_clipboard">Kopjuar në kujtesën e fragmenteve:
-\n %1$s</string>
+    <string name="copied_to_clipboard">Kopjuar në kujtesën e fragmenteve: \n %1$s</string>
     <string name="snack_add_to_library">Të shtohet në bibliotekë?</string>
     <string name="display_mode_chapter">Kapitulli %1$s</string>
     <string name="chapter_downloading_progress">Po shkarkohet (%1$d/%2$d)</string>
@@ -620,9 +614,7 @@
     <string name="chapter_settings_updated">Cilësimet e kapitullit të parazgjedhur të përditësuara</string>
     <string name="theme_midnightdusk">Perëndim Mesnate</string>
     <string name="pref_restore_backup_summ">Rivendosni bibliotekën nga skedari rezervë</string>
-    <string name="backup_restore_content_full">Të dhënat nga skedari rezervë do të rikthehen.
-\n
-\n Do t\'ju duhet të instaloni çdo shtesë që mungon dhe më pas të identifikoheni në shërbimet e gjurmimit për t\'i përdorur ato.</string>
+    <string name="backup_restore_content_full">Të dhënat nga skedari rezervë do të rikthehen. \n \n Do t\'ju duhet të instaloni çdo shtesë që mungon dhe më pas të identifikoheni në shërbimet e gjurmimit për t\'i përdorur ato.</string>
     <string name="invalid_backup_file">Skedar rezervë i pavlefshëm</string>
     <string name="invalid_backup_file_missing_manga">Rezervimi nuk përmban asnjë element në bibliotekë.</string>
     <string name="pref_user_agent_string">Varg i parazgjedhur i agjentit të përdoruesit</string>

@@ -207,8 +207,7 @@
     <string name="pinned_sources">Kitűzött</string>
     <string name="other_source">Egyéb</string>
     <string name="manga_tracking_tab">Nyilvántartás</string>
-    <string name="copied_to_clipboard">Vágólapra másolva:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Vágólapra másolva: \n%1$s</string>
     <string name="delete_downloads_for_manga">Törli a kijelölt fejezeteket?</string>
     <string name="spen_previous_page">Előző oldal</string>
     <string name="chapter_error">Hiba</string>
@@ -268,9 +267,7 @@
     <string name="updating_library">Könyvtár frissítése</string>
     <string name="no_chapters_error">Nem található fejezet</string>
     <string name="licensed">Licenszelt</string>
-    <string name="untrusted_extension_message">Egy rosszindulatú bővítmény hozzáférhet a tárolt bejelentkezési adatokhoz, vagy tetszőleges kódot futtathat.
-\n
-\nHa megbízik ebben a bővítményben, elfogadja ezeket a kockázatokat.</string>
+    <string name="untrusted_extension_message">Egy rosszindulatú bővítmény hozzáférhet a tárolt bejelentkezési adatokhoz, vagy tetszőleges kódot futtathat. \n \nHa megbízik ebben a bővítményben, elfogadja ezeket a kockázatokat.</string>
     <string name="ext_trust">Bizalom</string>
     <string name="exclude">Tiltott: %s</string>
     <string name="include">Kedvelt: %s</string>
@@ -640,8 +637,7 @@
     <string name="action_update_category">Kategória frissítése</string>
     <string name="copied_to_clipboard_plain">Vágólapra másolva</string>
     <string name="track_remove_start_date_conf_text">Ez eltávolítja az eddig kiválasztott kezdeti dátumot a(z) %s szolgáltatásból</string>
-    <string name="fdroid_warning">F-Droid csomagok nem hivatalosan támogatottak.
-\nKattincs további információért.</string>
+    <string name="fdroid_warning">F-Droid csomagok nem hivatalosan támogatottak. \nKattincs további információért.</string>
     <string name="label_completed_titles">Befejezett olvasmányok</string>
     <string name="crash_screen_title">Hoppá!</string>
     <string name="enhanced_services_not_installed">Elérhető de a forrás nincs telepítve: %s</string>
@@ -724,11 +720,7 @@
     <string name="onboarding_action_next">Következő</string>
     <string name="onboarding_action_finish">Kezdjünk hozzá</string>
     <string name="onboarding_action_skip">Kihagyás</string>
-    <string name="onboarding_storage_info">Válasszon ki egy mappát, ahol a(z) %1$s a fejezetek letöltéseit, biztonsági mentéseket és egyebeket tárolja.
-\n
-\nAjánlott egy külön mappa használata.
-\n
-\nKiválasztott mappa: %2$s</string>
+    <string name="onboarding_storage_info">Válasszon ki egy mappát, ahol a(z) %1$s a fejezetek letöltéseit, biztonsági mentéseket és egyebeket tárolja. \n \nAjánlott egy külön mappa használata. \n \nKiválasztott mappa: %2$s</string>
     <string name="onboarding_storage_action_select">Válasszon ki egy mappát</string>
     <string name="onboarding_storage_selection_required">Ki kell választani egy mappát</string>
     <string name="onboarding_storage_help_info">Régebbi verzióról frissít, és nem tudja, mit válasszon? További információkért olvassa el a tárolási útmutatót.</string>

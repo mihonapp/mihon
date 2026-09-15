@@ -190,11 +190,7 @@
     <string name="pref_cutout_short">ಕಟೌಟ್ ಆದಂತಹ ಪ್ರದೇಶದಲ್ಲಿ ವಿಷಯವನ್ನು ತೋರಿಸಿ</string>
     <string name="pref_fullscreen">ಪೂರ್ಣ ಪರದೆ</string>
     <string name="obsolete_extension_message">ಈ ವಿಸ್ತರಣೆ ಇನ್ನು ಮುಂದೆ ಲಭ್ಯವಿಲ್ಲ.</string>
-    <string name="untrusted_extension_message">ಈ ವಿಸ್ತರಣೆಯನ್ನು ವಿಶ್ವಾಸಾರ್ಹವಲ್ಲದ ಪ್ರಮಾಣಪತ್ರದೊಂದಿಗೆ ಸಹಿ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಅದನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿಲ್ಲ.
-\n
-\nದುರುದ್ದೇಶಪೂರಿತ ವಿಸ್ತರಣೆಯು ತಚಿಯೋಮಿಯಲ್ಲಿ ಸಂಗ್ರಹವಾಗಿರುವ ಯಾವುದೇ ಲಾಗಿನ್ ರುಜುವಾತುಗಳನ್ನು ಓದಬಹುದು ಅಥವಾ ಅನಿಯಂತ್ರಿತ ಕೋಡ್ ಅನ್ನು ಕಾರ್ಯಗತಗೊಳಿಸಬಹುದು.
-\n
-\nಈ ಪ್ರಮಾಣಪತ್ರವನ್ನು ನಂಬುವ ಮೂಲಕ ನೀವು ಈ ಅಪಾಯಗಳನ್ನು ಸ್ವೀಕರಿಸುತ್ತೀರಿ.</string>
+    <string name="untrusted_extension_message">ಈ ವಿಸ್ತರಣೆಯನ್ನು ವಿಶ್ವಾಸಾರ್ಹವಲ್ಲದ ಪ್ರಮಾಣಪತ್ರದೊಂದಿಗೆ ಸಹಿ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಅದನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿಲ್ಲ. \n \nದುರುದ್ದೇಶಪೂರಿತ ವಿಸ್ತರಣೆಯು ತಚಿಯೋಮಿಯಲ್ಲಿ ಸಂಗ್ರಹವಾಗಿರುವ ಯಾವುದೇ ಲಾಗಿನ್ ರುಜುವಾತುಗಳನ್ನು ಓದಬಹುದು ಅಥವಾ ಅನಿಯಂತ್ರಿತ ಕೋಡ್ ಅನ್ನು ಕಾರ್ಯಗತಗೊಳಿಸಬಹುದು. \n \nಈ ಪ್ರಮಾಣಪತ್ರವನ್ನು ನಂಬುವ ಮೂಲಕ ನೀವು ಈ ಅಪಾಯಗಳನ್ನು ಸ್ವೀಕರಿಸುತ್ತೀರಿ.</string>
     <string name="untrusted_extension">ವಿಶ್ವಾಸಾರ್ಹವಲ್ಲದ ವಿಸ್ತರಣೆ</string>
     <string name="ext_uninstall">ಅನ್ಇನ್ಸ್ಟಾಲ್</string>
     <string name="ext_untrusted">ವಿಶ್ವಾಸಾರ್ಹವಲ್ಲ</string>
@@ -300,8 +296,7 @@
     <string name="display_mode_chapter">ಅಧ್ಯಾಯ %1$s</string>
     <string name="snack_add_to_library">ಮಾಂಗಾವನ್ನು ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸೇರಿಸುವುದೇ?</string>
     <string name="source_not_installed">ಮೂಲವನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿಲ್ಲ: %1$s</string>
-    <string name="copied_to_clipboard">ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ:
-\n%1$s</string>
+    <string name="copied_to_clipboard">ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ: \n%1$s</string>
     <string name="delete_downloads_for_manga">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿದ ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸುವುದೇ?</string>
     <string name="manga_info_collapse">ಕಡಿಮೆ</string>
     <string name="manga_info_expand">ಹೆಚ್ಚು</string>
@@ -442,9 +437,7 @@
     <string name="pref_dump_crash_logs_summary">ಡೆವಲಪರ್‌ಗಳೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಲು ದೋಷದೆ ಲಾಗ್‌ಗಳನ್ನು ಫೈಲ್‌ಗೆ ಸೇರಿಸಿ</string>
     <string name="pref_dump_crash_logs">ಕ್ರ್ಯಾಶ್ ಲಾಗ್‌ಗಳನ್ನು ಡಂಪ್ ಮಾಡಿ</string>
     <string name="pref_dns_over_https">HTTPS ಮೇಲೆ DNS ಬಳಸಿ</string>
-    <string name="backup_restore_content_full">ಬ್ಯಾಕಪ್ ಫೈಲ್‌ನಿಂದ ಡೇಟಾವನ್ನು ಮರುಸ್ಥಾಪಿಸಲಾಗುತ್ತದೆ.
-\n
-\nಕಾಣೆಯಾದ ಯಾವುದೇ ವಿಸ್ತರಣೆಗಳನ್ನು ನೀವು ಪುನಃ ಸ್ಥಾಪಿಸಬೇಕಾಗುತ್ತದೆ ಮತ್ತು ಅವುಗಳನ್ನು ಬಳಸಲು ಟ್ರ್ಯಾಕಿಂಗ್ ಸೇವೆಗಳಿಗೆ ಲಾಗ್ ಇನ್ ಮಾಡಬೇಕಾಗುತ್ತದೆ.</string>
+    <string name="backup_restore_content_full">ಬ್ಯಾಕಪ್ ಫೈಲ್‌ನಿಂದ ಡೇಟಾವನ್ನು ಮರುಸ್ಥಾಪಿಸಲಾಗುತ್ತದೆ. \n \nಕಾಣೆಯಾದ ಯಾವುದೇ ವಿಸ್ತರಣೆಗಳನ್ನು ನೀವು ಪುನಃ ಸ್ಥಾಪಿಸಬೇಕಾಗುತ್ತದೆ ಮತ್ತು ಅವುಗಳನ್ನು ಬಳಸಲು ಟ್ರ್ಯಾಕಿಂಗ್ ಸೇವೆಗಳಿಗೆ ಲಾಗ್ ಇನ್ ಮಾಡಬೇಕಾಗುತ್ತದೆ.</string>
     <string name="pref_download_new_categories_details">ಹೊರಗಿಡಲಾದ ವಿಭಾಗಗಳಲ್ಲಿ ಮಾಂಗಾವನ್ನು ಸೇರಿಸಿದ ವಿಭಾಗಗಳಲ್ಲಿದ್ದರೂ ಅವುಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುವುದಿಲ್ಲ.</string>
     <string name="pref_category_auto_download">ಸ್ವಯಂ ಡೌನ್‌ಲೋಡ್</string>
     <string name="pref_viewer_nav">ನ್ಯಾವಿಗೇಶನ್ ಲೇಔಟ್</string>

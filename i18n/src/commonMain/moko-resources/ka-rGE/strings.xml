@@ -251,8 +251,7 @@
     <string name="manga_info_expand">მეტი ინფორმაციის ჩვენება</string>
     <string name="manga_info_collapse">ნაკლები ინფორმაციის ჩვენება</string>
     <string name="delete_downloads_for_manga">წაიშალოს გადმოწერილი თავები?</string>
-    <string name="copied_to_clipboard">დაკოპირებულია ბუფერში:
-\n%1$s</string>
+    <string name="copied_to_clipboard">დაკოპირებულია ბუფერში: \n%1$s</string>
     <string name="source_not_installed">წყარო არ არის დაინსტალირებული: %1$s</string>
     <string name="snack_add_to_library">დავამატო ბიბლიოთეკაში?</string>
     <string name="display_mode_chapter">თავი %1$s</string>
@@ -372,11 +371,7 @@
     <string name="action_enable_all">ჩართე ყველა</string>
     <string name="action_disable_all">გამორთე ყველა</string>
     <string name="secure_screen_summary">აპლიკაციებს შორის გადართვისას შემადგენლობის დამალვა და სკრინშოტების დაბლოკვა</string>
-    <string name="untrusted_extension_message">ეს დამატება ხელმოწერილია უცნობი სერთიფიკატის მიერ და არ არის აქტივირებული.
-\n
-\nმავნე დამატებას შეუძლია წაიკითხოს შესვლის მონაცემები შენახული ამ აპლიკაციაში ან გაუშვას თავისი კოდი.
-\n
-\nამ სერტიფიკატის ნდობით თქვენ თქვენს თავზე იღებთ რისკებს და პასუხისმგებლობას.</string>
+    <string name="untrusted_extension_message">ეს დამატება ხელმოწერილია უცნობი სერთიფიკატის მიერ და არ არის აქტივირებული. \n \nმავნე დამატებას შეუძლია წაიკითხოს შესვლის მონაცემები შენახული ამ აპლიკაციაში ან გაუშვას თავისი კოდი. \n \nამ სერტიფიკატის ნდობით თქვენ თქვენს თავზე იღებთ რისკებს და პასუხისმგებლობას.</string>
     <string name="tracking_info">ცალმხრივი სინქრონიზაცია თვალყურის სადევნებელ სერვისებში თავების პროგრესის განსაახლებლად. მიადევნე თვალყური ინდივიდუალურ ჩანაწერებს მათი ჩანართებიდან.</string>
     <string name="filter_mode_overlay">გადაფარება</string>
     <string name="information_cloudflare_bypass_failure">ვერ მოხერხდა CloudFlare-ს შემოვლა</string>
