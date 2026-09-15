@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: ❌ Help with Extensions
-    url: https://mihon.app/docs/faq/browse/extensions
-    about: For extension-related questions/issues
-  - name: 🖥️ Mihon website
-    url: https://mihon.app/
-    about: Guides, troubleshooting, and answers to common questions
+  - name: 下载 MihonW / 查看版本说明
+    url: https://github.com/1873412297-art/mihon-w/releases/latest
+    about: Windows 安装包、便携版和当前版本的已知限制
+  - name: 查看扩展兼容范围
+    url: https://github.com/1873412297-art/mihon-w/blob/main/docs/suwayomi-extension-compatibility.md
+    about: 桌面扩展兼容情况及验证范围；兼容层问题可使用问题反馈表单提交

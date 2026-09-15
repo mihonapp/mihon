@@ -1,36 +1,25 @@
-name: ⭐ Feature request
-description: Suggest a feature to improve Mihon
+name: 功能建议
+description: 为 MihonW 的 Windows 使用体验提出改进建议
 labels: [feature request]
 body:
   - type: textarea
-    id: feature-description
+    id: problem
     attributes:
-      label: Describe your suggested feature
-      description: How can Mihon be improved?
-      placeholder: |
-        Example:
-          "It should work like this..."
+      label: 使用场景与遇到的问题
+      description: 描述希望完成的操作，以及当前不方便的地方。
     validations:
       required: true
-
   - type: textarea
-    id: other-details
+    id: suggestion
     attributes:
-      label: Other details
-      placeholder: |
-        Additional details and attachments.
-
+      label: 期望的改进
+      description: 可以附示例、截图，或 Mihon / Suwayomi 对应功能的说明。
+    validations:
+      required: true
   - type: checkboxes
-    id: acknowledgements
+    id: searched
     attributes:
-      label: Acknowledgements
-      description: Read this carefully, we will close and ignore your issue if you skimmed through this.
+      label: 提交前确认
       options:
-        - label: I have searched the existing issues and this is a new ticket, **NOT** a duplicate or related to another open or closed issue.
-          required: true
-        - label: I have written a short but informative title.
-          required: true
-        - label: I have updated the app to version **[0.20.4](https://github.com/mihonapp/mihon/releases/latest)**.
-          required: true
-        - label: I will fill out all of the requested information in this form.
+        - label: 我已搜索本仓库已有建议，未找到相同请求。
           required: true
