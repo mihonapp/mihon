@@ -387,7 +387,7 @@ object DesktopRuntimeFactory {
                 trackSyncService.start(appScope)
             }
             val packagedExecutable = ProcessHandle.current().info().command().orElse(null)?.let(Path::of)
-                ?.takeIf { it.fileName.toString().equals("MihonW.exe", ignoreCase = true) }
+                ?.takeIf { it.fileName.toString().lowercase() in setOf("mihondesk.exe", "mihonw.exe") }
             val backgroundScheduler = packagedExecutable?.let {
                 mihon.desktop.platform.WindowsBackgroundScheduler(it, directories.root)
             }

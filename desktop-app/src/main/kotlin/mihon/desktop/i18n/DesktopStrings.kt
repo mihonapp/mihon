@@ -681,7 +681,7 @@ interface DesktopStrings {
 }
 
 object EnglishStrings : DesktopStrings {
-    override val appName = "Mihon W"
+    override val appName = "mihondesk"
 
     override fun destinationLabel(destination: DesktopDestination): String = destination.label
     override fun destinationShortLabel(destination: DesktopDestination): String = destination.shortLabel
@@ -1003,7 +1003,7 @@ object EnglishStrings : DesktopStrings {
 
     override val settingsBackupTitle = "Cross-Platform Backup Exchange"
     override val settingsBackupDescription =
-        "Mihon W produces full Android-compatible ProtoBuf .tachibk backups (gzipped) containing your library, categories, reading history, tracking records, and preferences."
+        "mihondesk produces full Android-compatible ProtoBuf .tachibk backups (gzipped) containing your library, categories, reading history, tracking records, and preferences."
     override val settingsExportBackupButton = "Export Backup (.tachibk)"
     override val settingsImportBackupButton = "Import Backup (.tachibk)"
 
@@ -1016,7 +1016,7 @@ object EnglishStrings : DesktopStrings {
     override fun settingsLogFilesCount(count: Int) = "Log Files Count: $count"
     override fun settingsBundleExportedTo(path: String) = "Diagnostic bundle exported to: $path"
 
-    override val aboutTitle = "About Mihon W"
+    override val aboutTitle = "About mihondesk"
     override val aboutSubtitle = "Mihon Desktop Port for Windows"
     override fun aboutVersion(version: String) = "Version: $version"
     override val aboutArchitecture = "Target Architecture: Windows 10/11 x64"
@@ -1387,7 +1387,7 @@ object EnglishStrings : DesktopStrings {
 }
 
 object SimplifiedChineseStrings : DesktopStrings {
-    override val appName = "Mihon W"
+    override val appName = "mihondesk"
 
     override fun destinationLabel(destination: DesktopDestination): String = when (destination) {
         DesktopDestination.Library -> "书架"
@@ -1727,7 +1727,7 @@ object SimplifiedChineseStrings : DesktopStrings {
 
     override val settingsBackupTitle = "跨平台备份交换"
     override val settingsBackupDescription =
-        "Mihon W 可生成与 Android 端完全兼容的 ProtoBuf .tachibk 备份 (gzip压缩)，包含书架、分类、阅读历史、追踪记录及设置。"
+        "mihondesk 可生成与 Android 端完全兼容的 ProtoBuf .tachibk 备份 (gzip压缩)，包含书架、分类、阅读历史、追踪记录及设置。"
     override val settingsExportBackupButton = "导出备份 (.tachibk)"
     override val settingsImportBackupButton = "导入备份 (.tachibk)"
 
@@ -1740,8 +1740,8 @@ object SimplifiedChineseStrings : DesktopStrings {
     override fun settingsLogFilesCount(count: Int) = "日志文件数: $count"
     override fun settingsBundleExportedTo(path: String) = "诊断包已导出至: $path"
 
-    override val aboutTitle = "关于 Mihon W"
-    override val aboutSubtitle = "Mihon Windows 桌面移植版"
+    override val aboutTitle = "关于 mihondesk"
+    override val aboutSubtitle = "mihondeskindows 桌面移植版"
     override fun aboutVersion(version: String) = "版本: $version"
     override val aboutArchitecture = "目标架构: Windows 10/11 x64"
     override val aboutRuntime = "运行时: Java ${System.getProperty("java.version")} / Compose Desktop"
@@ -2109,7 +2109,7 @@ object SimplifiedChineseStrings : DesktopStrings {
 }
 
 object TraditionalChineseStrings : DesktopStrings {
-    override val appName = "Mihon W"
+    override val appName = "mihondesk"
 
     override fun destinationLabel(destination: DesktopDestination): String = when (destination) {
         DesktopDestination.Library -> "書架"
@@ -2449,7 +2449,7 @@ object TraditionalChineseStrings : DesktopStrings {
 
     override val settingsBackupTitle = "跨平臺備份交換"
     override val settingsBackupDescription =
-        "Mihon W 可生成與 Android 端完全相容的 ProtoBuf .tachibk 備份 (gzip壓縮)，包含書架、分類、閱讀歷史、追蹤記錄及設定。"
+        "mihondesk 可生成與 Android 端完全相容的 ProtoBuf .tachibk 備份 (gzip壓縮)，包含書架、分類、閱讀歷史、追蹤記錄及設定。"
     override val settingsExportBackupButton = "匯出備份 (.tachibk)"
     override val settingsImportBackupButton = "匯入備份 (.tachibk)"
 
@@ -2462,8 +2462,8 @@ object TraditionalChineseStrings : DesktopStrings {
     override fun settingsLogFilesCount(count: Int) = "記錄檔數量: $count"
     override fun settingsBundleExportedTo(path: String) = "診斷包已匯出至: $path"
 
-    override val aboutTitle = "關於 Mihon W"
-    override val aboutSubtitle = "Mihon Windows 桌面移植版"
+    override val aboutTitle = "關於 mihondesk"
+    override val aboutSubtitle = "mihondeskindows 桌面移植版"
     override fun aboutVersion(version: String) = "版本: $version"
     override val aboutArchitecture = "目標架構: Windows 10/11 x64"
     override val aboutRuntime = "執行環境: Java ${System.getProperty("java.version")} / Compose Desktop"

@@ -61,7 +61,7 @@ internal class WebViewSession(
     private val client: org.cef.CefClient
     private val browser: CefBrowser
     private val closed = java.util.concurrent.atomic.AtomicBoolean(false)
-    private val window = JFrame("MihonW - Web verification")
+    private val window = JFrame("mihondesk - Web verification")
     init {
         require(broker.host == "127.0.0.1" && broker.scheme == "http")
         val cef = JCefAppConfig.getInstance()

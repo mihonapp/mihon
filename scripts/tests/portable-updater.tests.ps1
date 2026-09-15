@@ -1,15 +1,15 @@
 $ErrorActionPreference = 'Stop'
 $root = Join-Path $PSScriptRoot ('updater-test-' + [Guid]::NewGuid().ToString('N'))
 $target = Join-Path $root 'installed'
-$payload = Join-Path $root 'payload/MihonW'
+$payload = Join-Path $root 'payload/mihondesk'
 New-Item -ItemType Directory -Path $target,$payload,(Join-Path $target 'data') -Force | Out-Null
 Set-Content -LiteralPath (Join-Path $target '.portable') -Value ''
 Set-Content -LiteralPath (Join-Path $target 'MihonW.exe') -Value 'old version'
 Set-Content -LiteralPath (Join-Path $target 'data/keep.txt') -Value 'user data'
-Set-Content -LiteralPath (Join-Path $payload 'MihonW.exe') -Value 'invalid executable triggers rollback'
+Set-Content -LiteralPath (Join-Path $payload 'mihondesk.exe') -Value 'invalid executable triggers rollback'
 $zip = Join-Path $root 'update.zip'
 Compress-Archive -LiteralPath $payload -DestinationPath $zip
-$updater = Join-Path $PSScriptRoot '../MihonUpdater.ps1'
+$updater = Join-Path $PSScriptRoot '../mihondesk-updater.ps1'
 try {
     $rejected = $false
     try { & $updater -ZipPath $zip -TargetDir $target -ExpectedSha256 ('0' * 64) -NoRestart } catch { $rejected = $_.Exception.Message -match 'SHA-256' }

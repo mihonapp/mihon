@@ -79,6 +79,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    systemProperty("mihon.desktop.expectedVersion", desktopVersion)
 }
 
 val readerCodecVersion = "7.1.2-31"
@@ -202,10 +203,10 @@ compose.desktop {
         nativeDistributions {
             appResourcesRootDir.set(distributionResourcesRoot)
             targetFormats(TargetFormat.Exe, TargetFormat.Msi)
-            packageName = "MihonW"
+            packageName = "mihondesk"
             packageVersion = desktopVersion
-            description = "Mihon manga reader for Windows"
-            vendor = "Mihon W"
+            description = "mihondesk manga reader for Windows"
+            vendor = "mihondesk"
             licenseFile.set(rootProject.file("LICENSE"))
             modules("java.desktop", "java.logging", "java.prefs", "java.sql", "java.instrument", "jdk.unsupported")
 
@@ -216,7 +217,7 @@ compose.desktop {
                 perUserInstall = true
                 menu = true
                 shortcut = true
-                menuGroup = "Mihon W"
+                menuGroup = "mihondesk"
                 upgradeUuid = "07E02BEA-9179-4E54-A1AF-CFC185C91398"
             }
         }
@@ -235,7 +236,7 @@ val verifyCleanDistribution by tasks.registering(Exec::class) {
         "-File",
         rootProject.file("scripts/verify-release-clean.ps1").absolutePath,
         "-ImagePath",
-        layout.buildDirectory.dir("compose/binaries/main/app/MihonW").get().asFile.absolutePath,
+        layout.buildDirectory.dir("compose/binaries/main/app/mihondesk").get().asFile.absolutePath,
     )
 }
 
@@ -258,13 +259,13 @@ val packagePortableZip by tasks.registering(Zip::class) {
     group = "compose desktop"
     description = "Packages the portable distribution as a standalone ZIP archive"
 
-    archiveBaseName.set("MihonW")
+    archiveBaseName.set("mihondesk")
     archiveClassifier.set("windows-x64-portable")
     archiveVersion.set(desktopVersion)
     destinationDirectory.set(layout.buildDirectory.dir("compose/binaries/main/portable"))
 
-    from(layout.buildDirectory.dir("compose/binaries/main/app/MihonW")) {
-        into("MihonW")
+    from(layout.buildDirectory.dir("compose/binaries/main/app/mihondesk")) {
+        into("mihondesk")
     }
 
     val markerFile = layout.buildDirectory.file("compose/tmp/portable/.portable")
@@ -274,11 +275,11 @@ val packagePortableZip by tasks.registering(Zip::class) {
         file.writeText("")
     }
     from(markerFile) {
-        into("MihonW")
+        into("mihondesk")
     }
 
-    from(rootProject.file("scripts/MihonUpdater.ps1")) {
-        into("MihonW")
+    from(rootProject.file("scripts/mihondesk-updater.ps1")) {
+        into("mihondesk")
     }
 }
 
@@ -293,19 +294,22 @@ tasks.withType<org.jetbrains.compose.desktop.application.tasks.AbstractJPackageT
             val format = if (name == "packageMsi") "msi" else "exe"
             val output = layout.buildDirectory.dir("compose/binaries/main/$format").get().asFile
             output.mkdirs()
-            val artifact = File(output, "MihonW-$desktopVersion.$format")
+            val artifact = File(output, "mihondesk-$desktopVersion.$format")
             if (artifact.exists()) check(artifact.delete()) { "Cannot replace previous $artifact" }
             val arguments = listOf(
                 File(desktopJavaHome, "bin/jpackage.exe").absolutePath,
                 "--type", format,
-                "--app-image", layout.buildDirectory.dir("compose/binaries/main/app/MihonW").get().asFile.absolutePath,
+                "--app-image",
+                layout.buildDirectory.dir(
+                    "compose/binaries/main/app/mihondesk",
+                ).get().asFile.absolutePath,
                 "--dest", output.absolutePath,
-                "--name", "MihonW", "--app-version", desktopVersion,
-                "--vendor", "Mihon W", "--description", "Mihon manga reader for Windows",
+                "--name", "mihondesk", "--app-version", desktopVersion,
+                "--vendor", "mihondesk", "--description", "mihondesk manga reader for Windows",
                 "--resource-dir", project.file("packaging/windows").absolutePath,
                 "--license-file", rootProject.file("LICENSE").absolutePath,
                 "--win-per-user-install", "--win-dir-chooser", "--win-menu", "--win-shortcut",
-                "--win-menu-group", "Mihon W", "--win-upgrade-uuid", "07E02BEA-9179-4E54-A1AF-CFC185C91398",
+                "--win-menu-group", "mihondesk", "--win-upgrade-uuid", "07E02BEA-9179-4E54-A1AF-CFC185C91398",
             )
             val process = ProcessBuilder(arguments).inheritIO()
             val environment = process.environment()
@@ -323,9 +327,9 @@ val assembleWindowsRelease by tasks.registering(Sync::class) {
     description = "Collects version-matched Windows artifacts and a complete SHA-256 manifest"
     dependsOn("packageMsi", "packageExe", packagePortableZip)
     into(layout.buildDirectory.dir("releases/$desktopVersion"))
-    from(layout.buildDirectory.dir("compose/binaries/main/app/MihonW")) { into("app-image/MihonW") }
-    from(layout.buildDirectory.dir("compose/binaries/main/msi")) { include("MihonW-$desktopVersion.msi") }
-    from(layout.buildDirectory.dir("compose/binaries/main/exe")) { include("MihonW-$desktopVersion.exe") }
+    from(layout.buildDirectory.dir("compose/binaries/main/app/mihondesk")) { into("app-image/mihondesk") }
+    from(layout.buildDirectory.dir("compose/binaries/main/msi")) { include("mihondesk-$desktopVersion.msi") }
+    from(layout.buildDirectory.dir("compose/binaries/main/exe")) { include("mihondesk-$desktopVersion.exe") }
     from(packagePortableZip.flatMap { it.archiveFile })
     from(rootProject.file("desktop-version.txt"))
     from(generatedVersionResources) { include("mihon-build-info.properties") }
@@ -347,8 +351,8 @@ val assembleWindowsRelease by tasks.registering(Sync::class) {
             digest.digest().joinToString("") { "%02x".format(it) } + "  " +
                 root.relativize(file.toPath()).toString().replace('\\', '/')
         }.toList()
-        check(lines.any { it.endsWith("MihonW-$desktopVersion.msi") }) { "MSI missing" }
-        check(lines.any { it.endsWith("MihonW-$desktopVersion.exe") }) { "Installer EXE missing" }
+        check(lines.any { it.endsWith("mihondesk-$desktopVersion.msi") }) { "MSI missing" }
+        check(lines.any { it.endsWith("mihondesk-$desktopVersion.exe") }) { "Installer EXE missing" }
         manifest.writeText(lines.joinToString("\n", postfix = "\n"))
     }
 }

@@ -93,7 +93,7 @@ class WindowsBackgroundScheduler(
         return """
             <?xml version="1.0" encoding="UTF-16"?>
             <Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
-              <RegistrationInfo><Description>MihonW ${kind.name} for ${xml(
+              <RegistrationInfo><Description>mihondesk ${kind.name} for ${xml(
             profileDirectory.toString(),
         )}</Description></RegistrationInfo>
               <Triggers><TimeTrigger><Repetition><Interval>PT${intervalHours}H</Interval><StopAtDurationEnd>false</StopAtDurationEnd></Repetition>

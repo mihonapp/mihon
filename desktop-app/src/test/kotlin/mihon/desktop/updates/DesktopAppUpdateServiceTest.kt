@@ -14,8 +14,29 @@ import java.security.MessageDigest
 class DesktopAppUpdateServiceTest {
 
     @Test
+    fun `updates resolve renamed repository and distribution assets`(): Unit = runBlocking {
+        var requestedUrl = ""
+        val service = DesktopAppUpdateService(
+            currentVersion = "0.2.4",
+            fetchText = {
+                requestedUrl = it
+                """{"tag_name":"v0.2.5","assets":[
+                    {"name":"mihondesk-0.2.5.exe","browser_download_url":"https://example.com/app.exe"},
+                    {"name":"mihondesk-0.2.5-windows-x64-portable.zip","browser_download_url":"https://example.com/app.zip"}
+                ]}"""
+            },
+        )
+
+        val result = service.checkForUpdates().shouldBeInstanceOf<UpdateCheckResult.UpdateAvailable>()
+        requestedUrl shouldBe "https://api.github.com/repos/1873412297-art/mihondesk/releases/latest"
+        result.matchedAsset?.name shouldBe "mihondesk-0.2.5.exe"
+        DesktopAppUpdateService.findBestAsset(result.release.assets, DistributionMode.Portable)?.name shouldBe
+            "mihondesk-0.2.5-windows-x64-portable.zip"
+    }
+
+    @Test
     fun `current version matches the Windows distribution version`() {
-        DesktopAppUpdateService.CURRENT_VERSION shouldBe "0.2.0"
+        DesktopAppUpdateService.CURRENT_VERSION shouldBe System.getProperty("mihon.desktop.expectedVersion")
     }
 
     @TempDir

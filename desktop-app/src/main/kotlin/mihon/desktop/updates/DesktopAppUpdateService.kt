@@ -92,7 +92,7 @@ class DesktopAppUpdateService(
         val CURRENT_VERSION: String = requireNotNull(
             DesktopAppUpdateService::class.java.getResourceAsStream("/mihon-desktop-version.txt"),
         ) { "Desktop version resource is missing" }.bufferedReader().use { it.readText().trim() }
-        const val DEFAULT_REPO = "mihonapp/mihon-w"
+        const val DEFAULT_REPO = "1873412297-art/mihondesk"
 
         private val json = Json { ignoreUnknownKeys = true }
 
@@ -168,7 +168,7 @@ class DesktopAppUpdateService(
 
         private fun defaultFetchText(url: String): String {
             val connection = java.net.URI(url).toURL().openConnection() as java.net.HttpURLConnection
-            connection.setRequestProperty("User-Agent", "MihonW-Desktop/$CURRENT_VERSION")
+            connection.setRequestProperty("User-Agent", "mihondesk/$CURRENT_VERSION")
             connection.connectTimeout = 10000
             connection.readTimeout = 10000
             return connection.inputStream.bufferedReader().use { it.readText() }
@@ -176,7 +176,7 @@ class DesktopAppUpdateService(
 
         private fun defaultDownloadStream(url: String): InputStream {
             val connection = java.net.URI(url).toURL().openConnection() as java.net.HttpURLConnection
-            connection.setRequestProperty("User-Agent", "MihonW-Desktop/$CURRENT_VERSION")
+            connection.setRequestProperty("User-Agent", "mihondesk/$CURRENT_VERSION")
             connection.connectTimeout = 15000
             connection.readTimeout = 30000
             return connection.inputStream

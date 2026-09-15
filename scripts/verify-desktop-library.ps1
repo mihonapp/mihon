@@ -162,11 +162,11 @@ exit $process.ExitCode
     }
     Write-Host "Android fixture SHA-256=$actualChecksum"
 
-    $launcher = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe'
+    $launcher = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\mihondesk\mihondesk.exe'
     if (-not (Test-Path -LiteralPath $launcher)) {
         throw "Packaged launcher was not created at $launcher"
     }
-    $runtimeRelease = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\MihonW\runtime\release'
+    $runtimeRelease = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\mihondesk\runtime\release'
     $runtimeReleaseContents = Get-Content -Raw -LiteralPath $runtimeRelease
     $javaVersionMatch = [regex]::Match($runtimeReleaseContents, '(?m)^JAVA_VERSION="(?<version>[^"]+)"\r?$')
     if (-not $javaVersionMatch.Success) {
@@ -218,7 +218,7 @@ exit $process.ExitCode
         throw "Reopened packaged process did not persist $localTitle with chapters."
     }
     Write-Host "Packaged processes persisted titles and chapters under $temporaryRoot"
-    Write-Host 'Mihon W desktop library verification passed.'
+    Write-Host 'mihondesk desktop library verification passed.'
 } finally {
     Pop-Location
     if ($null -eq $originalJavaHome) {

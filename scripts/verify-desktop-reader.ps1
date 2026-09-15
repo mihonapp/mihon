@@ -268,11 +268,11 @@ exit $process.ExitCode
     }
     Copy-Item -LiteralPath $manifestPath -Destination (Join-Path $verificationLogRoot 'reader-fixture-manifest.json')
 
-    $launcher = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe'
+    $launcher = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\mihondesk\mihondesk.exe'
     if (-not (Test-Path -LiteralPath $launcher)) {
         throw "Packaged launcher was not created at $launcher"
     }
-    $runtimeRelease = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\MihonW\runtime\release'
+    $runtimeRelease = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\mihondesk\runtime\release'
     $runtimeReleaseContents = Get-Content -Raw -LiteralPath $runtimeRelease
     $javaVersionMatch = [regex]::Match($runtimeReleaseContents, '(?m)^JAVA_VERSION="(?<version>[^"]+)"\r?$')
     if (-not $javaVersionMatch.Success -or -not [regex]::IsMatch($javaVersionMatch.Groups['version'].Value, '^17(?:\.|$)')) {
@@ -345,9 +345,9 @@ exit $process.ExitCode
 }
 
 if (-not $verificationPassed) {
-    throw 'Mihon W desktop reader verification did not reach its completion gate.'
+    throw 'mihondesk desktop reader verification did not reach its completion gate.'
 }
 if (Test-Path -LiteralPath $temporaryRoot) {
     throw "Reader verifier root still exists after cleanup: $temporaryRoot"
 }
-Write-Host 'Mihon W desktop reader verification passed.'
+Write-Host 'mihondesk desktop reader verification passed.'

@@ -8,8 +8,9 @@ $ErrorActionPreference = 'Stop'
 if (-not $ExecutablePath) {
     # Check default release locations
     $candidates = @(
-        "$PSScriptRoot\..\desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe",
-        "$env:LOCALAPPDATA\Programs\MihonW\MihonW.exe"
+        "$PSScriptRoot\..\desktop-app\build\compose\binaries\main\app\mihondesk\mihondesk.exe",
+        "$env:LOCALAPPDATA\mihondesk\mihondesk.exe",
+        "$env:LOCALAPPDATA\MihonW\MihonW.exe"
     )
     foreach ($candidate in $candidates) {
         if (Test-Path $candidate) {
@@ -20,7 +21,7 @@ if (-not $ExecutablePath) {
 }
 
 if (-not $ExecutablePath -or -not (Test-Path $ExecutablePath)) {
-    Write-Error "MihonW.exe not found. Please provide -ExecutablePath explicitly."
+    Write-Error "mihondesk.exe not found. Please provide -ExecutablePath explicitly."
     exit 1
 }
 

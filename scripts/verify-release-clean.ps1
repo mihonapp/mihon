@@ -1,13 +1,13 @@
 param([Parameter(Mandatory)][string]$ImagePath)
 $ErrorActionPreference = 'Stop'
 $imageRoot = (Resolve-Path -LiteralPath $ImagePath).Path
-foreach ($required in @('MihonW.exe', 'app', 'runtime')) {
+foreach ($required in @('mihondesk.exe', 'app', 'runtime')) {
     if (-not (Test-Path -LiteralPath (Join-Path $imageRoot $required))) {
         throw "Incomplete application image: missing $required"
     }
 }
 $unexpected = @(Get-ChildItem -LiteralPath $imageRoot -Force | Where-Object {
-    $_.Name -notin @('MihonW.exe', 'app', 'runtime')
+    $_.Name -notin @('mihondesk.exe', 'app', 'runtime')
 })
 if ($unexpected.Count -gt 0) {
     throw "Release image contains unexpected root entries: $($unexpected.Name -join ', ')"

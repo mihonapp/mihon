@@ -98,7 +98,7 @@ class DesktopCommandRunner(
                 0
             }
             DesktopCommand.Version -> {
-                writeUtf8Line(output, "Mihon W ${DesktopAppUpdateService.CURRENT_VERSION} (Windows x64)")
+                writeUtf8Line(output, "mihondesk ${DesktopAppUpdateService.CURRENT_VERSION} (Windows x64)")
                 0
             }
             DesktopCommand.FoundationSmoke -> {
@@ -753,8 +753,8 @@ private fun DesktopCommand.sourcePath(): String? = when (this) {
 }
 
 private val HELP_TEXT = """
-Mihon W - Manga Reader for Windows
-Usage: MihonW.exe [options] [file]
+mihondesk - Manga Reader for Windows
+Usage: mihondesk.exe [options] [file]
 
 Options:
   --help, -h                  Show this help message and exit

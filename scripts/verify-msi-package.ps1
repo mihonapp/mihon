@@ -25,9 +25,10 @@ if ([int]$cleanup[2] -ge [int]$remove[2] -or $cleanup[1] -notmatch 'REMOVE="ALL"
 $properties = @(Read-MsiTable 'Property')
 $version = $properties | Where-Object { $_[0] -eq 'ProductVersion' }
 if ($version[1] -ne $expectedVersion) { throw 'MSI version mismatch' }
+$productName = $properties | Where-Object { $_[0] -eq 'ProductName' }
+if ($productName[1] -ne 'mihondesk') { throw 'MSI product name mismatch' }
 $files = @(Read-MsiTable 'File')
-foreach ($required in @('libcef.dll','CHROMIUM-CREDITS.html','remove-background-tasks.ps1')) {
+foreach ($required in @('mihondesk.exe','libcef.dll','CHROMIUM-CREDITS.html','remove-background-tasks.ps1')) {
     if (-not ($files | Where-Object { $_[2].EndsWith($required) })) { throw "MSI required resource missing: $required" }
 }
 Write-Output "PASS: MSI $expectedVersion contains browser, licenses and deferred uninstall hook before RemoveFiles; execution not tested"
-

@@ -134,9 +134,9 @@ internal fun BackgroundSettingsCard(
             if (scheduler == null) {
                 Text(
                     label(
-                        "Available in the packaged MihonW application.",
-                        "请在已打包的 MihonW 应用中设置。",
-                        "請在已封裝的 MihonW 應用程式中設定。",
+                        "Available in the packaged mihondesk application.",
+                        "请在已打包的 mihondesk 应用中设置。",
+                        "請在已封裝的 mihondesk 應用程式中設定。",
                     ),
                 )
             }

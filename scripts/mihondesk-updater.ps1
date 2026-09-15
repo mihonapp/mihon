@@ -4,7 +4,7 @@ param(
     [Parameter(Mandatory)][string]$ZipPath,
     [Parameter(Mandatory)][string]$TargetDir,
     [Parameter(Mandatory)][ValidatePattern('^[a-fA-F0-9]{64}$')][string]$ExpectedSha256,
-    [string]$ExecutableName = 'MihonW.exe',
+    [string]$ExecutableName = 'mihondesk.exe',
     [switch]$NoRestart
 )
 $ErrorActionPreference = 'Stop'
@@ -27,7 +27,7 @@ $swapped = $false
 try {
     New-Item -ItemType Directory -Path $stage | Out-Null
     Expand-Archive -LiteralPath $archive -DestinationPath $stage
-    $candidate = Join-Path $stage 'MihonW'
+    $candidate = Join-Path $stage ([IO.Path]::GetFileNameWithoutExtension($ExecutableName))
     if (-not (Test-Path -LiteralPath (Join-Path $candidate $ExecutableName))) { throw 'Update executable missing' }
     if (Test-Path -LiteralPath (Join-Path $candidate 'data')) { throw 'Update archive must not supply user data' }
     $existingData = Join-Path $targetResolved 'data'

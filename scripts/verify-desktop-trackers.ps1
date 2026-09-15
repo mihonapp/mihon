@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "  Mihon Windows Port - Phase 6 Trackers & History Verify  " -ForegroundColor Cyan
+Write-Host "  mihondesk Windows - Phase 6 Trackers & History Verify  " -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 $env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'

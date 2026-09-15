@@ -49,7 +49,7 @@ fun DesktopLockScreen(
     onUnlock: (String) -> Boolean,
     onForgotPinConfirmed: () -> Unit,
     modifier: Modifier = Modifier,
-    appName: String = "Mihon W",
+    appName: String = "mihondesk",
 ) {
     var pin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }

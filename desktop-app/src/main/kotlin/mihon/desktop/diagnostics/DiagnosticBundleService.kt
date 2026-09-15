@@ -67,7 +67,7 @@ class DiagnosticBundleService(
                 // 1. summary.txt
                 zip.putNextEntry(ZipEntry("diagnostics/summary.txt"))
                 val summaryText = buildString {
-                    appendLine("Mihon W Diagnostic Summary")
+                    appendLine("mihondesk Diagnostic Summary")
                     appendLine("==========================")
                     appendLine("Timestamp: ${summary.timestamp}")
                     appendLine("OS: ${summary.osName} ${summary.osVersion} (${summary.osArch})")

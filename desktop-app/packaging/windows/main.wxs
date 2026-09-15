@@ -100,7 +100,7 @@
 
     <!-- Remove only tasks owned by this installation, before its script is removed. -->
     <CustomAction Id="MihonRemoveBackgroundTasks" Directory="INSTALLDIR"
-      ExeCommand="&quot;[SystemFolder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;[INSTALLDIR]app\resources\maintenance\remove-background-tasks.ps1&quot; -ExecutablePath &quot;[INSTALLDIR]MihonW.exe&quot;"
+      ExeCommand="&quot;[SystemFolder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;[INSTALLDIR]app\resources\maintenance\remove-background-tasks.ps1&quot; -ExecutablePath &quot;[INSTALLDIR]$(var.JpAppName).exe&quot;"
       Execute="deferred" Impersonate="yes" Return="check" />
     <InstallExecuteSequence>
       <Custom Action="MihonRemoveBackgroundTasks" Before="RemoveFiles">Installed AND REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE</Custom>

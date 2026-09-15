@@ -347,7 +347,7 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                 exitApplication()
             },
             state = windowState,
-            title = "Mihon W",
+            title = "mihondesk",
             icon = appIcon,
             undecorated = readerWindowMode == ReaderWindowMode.BORDERLESS,
             onPreviewKeyEvent = { event ->

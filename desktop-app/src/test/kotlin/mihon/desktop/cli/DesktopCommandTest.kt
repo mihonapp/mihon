@@ -320,13 +320,13 @@ class DesktopCommandTest {
         newRuntime(DesktopCommand.Help).use { fixture ->
             DesktopCommandRunner(fixture.runtime, helpOutput).run(DesktopCommand.Help) shouldBe 0
         }
-        helpOutput.toString(UTF_8) shouldContain "Mihon W - Manga Reader for Windows"
+        helpOutput.toString(UTF_8) shouldContain "mihondesk - Manga Reader for Windows"
         helpOutput.toString(UTF_8) shouldContain "--help"
 
         newRuntime(DesktopCommand.Version).use { fixture ->
             DesktopCommandRunner(fixture.runtime, versionOutput).run(DesktopCommand.Version) shouldBe 0
         }
-        versionOutput.toString(UTF_8) shouldContain "Mihon W 0.2.0"
+        versionOutput.toString(UTF_8) shouldContain "mihondesk ${System.getProperty("mihon.desktop.expectedVersion")}"
     }
 
     private fun newRuntime(command: DesktopCommand): RuntimeFixture {

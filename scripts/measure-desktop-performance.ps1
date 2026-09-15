@@ -9,7 +9,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $rootProcess = Get-Process -Id $ProcessId -ErrorAction Stop
 $expectedPath = $rootProcess.Path
-if ([IO.Path]::GetFileName($expectedPath) -ne 'MihonW.exe') { throw 'Target must be a running MihonW executable' }
+if ([IO.Path]::GetFileName($expectedPath) -ne 'mihondesk.exe') { throw 'Target must be a running mihondesk executable' }
 $outputRoot = [IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Path $outputRoot -Force | Out-Null
 $runName = 'process-memory-' + [DateTime]::UtcNow.ToString('yyyyMMdd-HHmmss')

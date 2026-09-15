@@ -44,7 +44,7 @@ class DesktopNotificationService(
                         javax.imageio.ImageIO.read(it)
                     }
                 }.getOrNull() ?: BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
-                val icon = TrayIcon(image, "Mihon")
+                val icon = TrayIcon(image, "mihondesk")
                 icon.isImageAutoSize = true
                 tray.add(icon)
                 trayIcon = icon
@@ -61,7 +61,7 @@ class DesktopNotificationService(
     ) {
         if (!enabledProvider()) return
 
-        val visibleMessage = if (hideContentProvider()) "Open Mihon W to view details" else message
+        val visibleMessage = if (hideContentProvider()) "Open mihondesk to view details" else message
         val event = DesktopNotificationEvent(title = title, message = visibleMessage, type = type)
         _notifications.value = event
 

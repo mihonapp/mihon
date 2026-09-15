@@ -9,12 +9,12 @@ try {
         throw "Gradle desktop foundation verification failed with exit code $LASTEXITCODE"
     }
 
-    $launcher = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe'
+    $launcher = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\mihondesk\mihondesk.exe'
     if (-not (Test-Path -LiteralPath $launcher)) {
         throw "Packaged launcher was not created at $launcher"
     }
 
-    $runtimeRelease = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\MihonW\runtime\release'
+    $runtimeRelease = Join-Path $repoRoot 'desktop-app\build\compose\binaries\main\app\mihondesk\runtime\release'
     if (-not (Test-Path -LiteralPath $runtimeRelease)) {
         throw "Packaged Java runtime metadata was not created at $runtimeRelease"
     }
@@ -50,7 +50,7 @@ try {
         throw "Packaged launcher did not initialize the explicit smoke-test data root"
     }
 
-    Write-Host 'Mihon W desktop foundation verification passed.'
+    Write-Host 'mihondesk desktop foundation verification passed.'
 } finally {
     Pop-Location
 }

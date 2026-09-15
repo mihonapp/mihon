@@ -53,7 +53,7 @@ class WindowsDesktopNotificationService(
                         javax.imageio.ImageIO.read(it)
                     }
                 }.getOrNull() ?: BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
-                val icon = TrayIcon(image, "Mihon")
+                val icon = TrayIcon(image, "mihondesk")
                 icon.isImageAutoSize = true
                 tray.add(icon)
                 trayIcon = icon

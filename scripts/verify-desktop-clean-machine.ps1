@@ -12,7 +12,7 @@ if (-not $SkipBuild) {
     if ($LASTEXITCODE -ne 0) { throw 'packagePortableZip failed' }
 }
 if (-not $PortableZip) {
-    $PortableZip = Join-Path $PSScriptRoot "../desktop-app/build/compose/binaries/main/portable/MihonW-$expectedVersion-windows-x64-portable.zip"
+    $PortableZip = Join-Path $PSScriptRoot "../desktop-app/build/compose/binaries/main/portable/mihondesk-$expectedVersion-windows-x64-portable.zip"
 }
 $portableZip = (Resolve-Path -LiteralPath $PortableZip).Path
 Write-Host "Found portable zip: $portableZip ($((Get-Item $portableZip).Length / 1MB) MB)" -ForegroundColor Green
@@ -26,8 +26,8 @@ Write-Host "`n2. Extracting to clean-machine sandbox: $sandboxDir" -ForegroundCo
 try {
     Expand-Archive -Path $portableZip -DestinationPath $sandboxDir -Force
 
-$appDir = Join-Path $sandboxDir "MihonW"
-$exePath = Join-Path $appDir "MihonW.exe"
+$appDir = Join-Path $sandboxDir "mihondesk"
+$exePath = Join-Path $appDir "mihondesk.exe"
 $portableMarker = Join-Path $appDir ".portable"
 
 if (-not (Test-Path $exePath)) {
@@ -44,11 +44,11 @@ $versionOutput = Join-Path $sandboxDir "version.stdout"
 $versionError = Join-Path $sandboxDir "version.stderr"
 $versionProcess = Start-Process -FilePath $exePath -ArgumentList "--version" -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput $versionOutput -RedirectStandardError $versionError
 if ($versionProcess.ExitCode -ne 0) {
-    throw "MihonW --version exited with non-zero code: $($versionProcess.ExitCode)"
+    throw "mihondesk --version exited with non-zero code: $($versionProcess.ExitCode)"
 }
 $versionStr = Get-Content -LiteralPath $versionOutput -Raw
 Write-Host "Output: $versionStr" -ForegroundColor DarkGray
-if ($versionStr -notmatch [regex]::Escape("Mihon W $expectedVersion")) {
+if ($versionStr -notmatch [regex]::Escape("mihondesk $expectedVersion")) {
     throw "Output did not match expected version string!"
 }
 Write-Host "--version verified successfully." -ForegroundColor Green
@@ -59,10 +59,10 @@ $helpOutput = Join-Path $sandboxDir "help.stdout"
 $helpError = Join-Path $sandboxDir "help.stderr"
 $helpProcess = Start-Process -FilePath $exePath -ArgumentList "--help" -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput $helpOutput -RedirectStandardError $helpError
 if ($helpProcess.ExitCode -ne 0) {
-    throw "MihonW --help exited with non-zero code: $($helpProcess.ExitCode)"
+    throw "mihondesk --help exited with non-zero code: $($helpProcess.ExitCode)"
 }
 $helpStr = Get-Content -LiteralPath $helpOutput -Raw
-if ($helpStr -notmatch "Mihon W - Manga Reader for Windows") {
+if ($helpStr -notmatch "mihondesk - Manga Reader for Windows") {
     throw "Output did not match expected help text!"
 }
 Write-Host "--help verified successfully." -ForegroundColor Green
@@ -74,10 +74,10 @@ $exportOutput = Join-Path $sandboxDir "export.stdout"
 $exportError = Join-Path $sandboxDir "export.stderr"
 $exportProcess = Start-Process -FilePath $exePath -ArgumentList ('"--export-backup={0}"' -f $targetBackup) -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput $exportOutput -RedirectStandardError $exportError
 if ($exportProcess.ExitCode -ne 0) {
-    throw "MihonW --export-backup exited with non-zero code: $($exportProcess.ExitCode)"
+    throw "mihondesk --export-backup exited with non-zero code: $($exportProcess.ExitCode)"
 }
 
-# Verify data was placed inside sandbox\MihonW\data and NOT polluting APPDATA
+# Verify data was placed inside sandbox\mihondesk\data and NOT polluting APPDATA
 $localDataDir = Join-Path $appDir "data"
 if (-not (Test-Path $localDataDir)) {
     throw "Portable isolation failed: Local data directory was not created in $appDir"
