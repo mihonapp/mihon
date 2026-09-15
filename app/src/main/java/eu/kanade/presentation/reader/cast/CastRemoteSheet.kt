@@ -17,17 +17,22 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,6 +45,7 @@ import eu.kanade.tachiyomi.ui.reader.cast.CastPreferences
 import eu.kanade.tachiyomi.ui.reader.cast.CastScaleMode
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
+import mihon.icons.materialsymbols.rounded.FitScreen
 import mihon.icons.materialsymbols.rounded.KeyboardArrowLeft
 import mihon.icons.materialsymbols.rounded.KeyboardArrowRight
 import mihon.icons.materialsymbols.rounded.SkipNext
@@ -57,6 +63,9 @@ import tachiyomi.presentation.core.util.secondaryItemAlpha
 import kotlin.math.abs
 
 private val TouchpadHeight = 200.dp
+
+/** Share of the screen height the touchpad takes when expanded. */
+private const val EXPANDED_TOUCHPAD_FRACTION = 0.72f
 private val SwipeThreshold = 96.dp
 private val PlayButtonSize = 56.dp
 
@@ -78,6 +87,7 @@ fun CastRemoteSheet(
     castController: CastController,
 ) {
     val state by castController.state.collectAsState()
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     AdaptiveSheet(onDismissRequest = onDismissRequest) {
         Column(
@@ -96,6 +106,8 @@ fun CastRemoteSheet(
                 layoutMode = state.layoutMode,
                 rtl = state.rtl,
                 verticalPaging = state.verticalPaging,
+                expanded = expanded,
+                onToggleExpanded = { expanded = !expanded },
                 castController = castController,
                 modifier = Modifier.padding(
                     horizontal = MaterialTheme.padding.medium,
@@ -107,6 +119,12 @@ fun CastRemoteSheet(
                 autoScrollRunning = state.autoScrollRunning,
                 castController = castController,
             )
+
+            if (expanded) {
+                // Full-size touchpad: only navigation and the stop button stay on screen.
+                if (state.active) StopButton(castController)
+                return@Column
+            }
 
             SettingsChipRow(MR.strings.cast_orientation) {
                 CastOrientation.entries.forEach { orientation ->
@@ -141,17 +159,20 @@ fun CastRemoteSheet(
                 preferences = castController.preferences,
             )
 
-            if (state.active) {
-                OutlinedButton(
-                    onClick = { castController.stopCasting() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.padding.large, vertical = MaterialTheme.padding.small),
-                ) {
-                    Text(text = stringResource(MR.strings.cast_action_stop))
-                }
-            }
+            if (state.active) StopButton(castController)
         }
+    }
+}
+
+@Composable
+private fun StopButton(castController: CastController) {
+    OutlinedButton(
+        onClick = { castController.stopCasting() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = MaterialTheme.padding.large, vertical = MaterialTheme.padding.small),
+    ) {
+        Text(text = stringResource(MR.strings.cast_action_stop))
     }
 }
 
@@ -201,15 +222,22 @@ private fun Touchpad(
     layoutMode: CastLayoutMode,
     rtl: Boolean,
     verticalPaging: Boolean,
+    expanded: Boolean,
+    onToggleExpanded: () -> Unit,
     castController: CastController,
     modifier: Modifier = Modifier,
 ) {
     val swipeThresholdPx = with(LocalDensity.current) { SwipeThreshold.toPx() }
+    val height = if (expanded) {
+        (LocalConfiguration.current.screenHeightDp * EXPANDED_TOUCHPAD_FRACTION).dp
+    } else {
+        TouchpadHeight
+    }
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(TouchpadHeight)
+            .height(height)
             .clip(MaterialTheme.shapes.large)
             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             .pointerInput(rtl) {
@@ -281,6 +309,19 @@ private fun Touchpad(
                 .padding(MaterialTheme.padding.large)
                 .alpha(TOUCHPAD_HINT_ALPHA),
         )
+        // A child consumes its own taps, so the touchpad never sees them.
+        IconButton(
+            onClick = onToggleExpanded,
+            modifier = Modifier.align(Alignment.TopEnd),
+        ) {
+            Icon(
+                imageVector = MaterialSymbols.Rounded.FitScreen,
+                contentDescription = stringResource(
+                    if (expanded) MR.strings.cast_touchpad_collapse else MR.strings.cast_touchpad_expand,
+                ),
+                tint = if (expanded) MaterialTheme.colorScheme.primary else LocalContentColor.current,
+            )
+        }
     }
 }
 

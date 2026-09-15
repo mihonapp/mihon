@@ -114,13 +114,17 @@ class ReaderActivity : BaseActivity() {
     private val graph: AppGraph by lazy { metroGraph() }
 
     companion object {
-        fun newIntent(context: Context, mangaId: Long?, chapterId: Long?): Intent {
+        fun newIntent(context: Context, mangaId: Long?, chapterId: Long?, cast: Boolean = false): Intent {
             return Intent(context, ReaderActivity::class.java).apply {
                 putExtra("manga", mangaId)
                 putExtra("chapter", chapterId)
+                if (cast) putExtra(EXTRA_OPEN_CAST, true)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
         }
+
+        /** Boolean extra: open the cast target picker as soon as the chapter is shown. */
+        private const val EXTRA_OPEN_CAST = "open_cast"
     }
 
     @Inject private lateinit var readerPreferences: ReaderPreferences
@@ -702,6 +706,11 @@ class ReaderActivity : BaseActivity() {
         binding.readerContainer.removeView(loadingIndicator)
         viewModel.state.value.viewer?.setChapters(viewerChapters)
         castController.setChapters(viewerChapters)
+        if (intent.getBooleanExtra(EXTRA_OPEN_CAST, false)) {
+            // Launched from the manga page's "Cast to TV": show the target picker once.
+            intent.removeExtra(EXTRA_OPEN_CAST)
+            if (!castController.isActive) viewModel.openCastDialog() else viewModel.openCastRemoteDialog()
+        }
         if (castController.state.value.autoScrollRunning && !autoScroller.isRunning) {
             // Resume auto-scroll after a configuration change.
             autoScroller.start(silent = true)

@@ -569,6 +569,8 @@
     <string name="cast_target_web">Web receiver</string>
     <string name="cast_remote_title">Remote</string>
     <string name="cast_remote_touchpad_hint">Swipe to scroll · Tap sides to turn pages · Tap center to play or pause</string>
+    <string name="cast_touchpad_expand">Expand touchpad</string>
+    <string name="cast_touchpad_collapse">Collapse touchpad</string>
     <string name="cast_remote_prev_page">Previous page</string>
     <string name="cast_remote_next_page">Next page</string>
     <string name="cast_remote_prev_chapter">Previous chapter</string>

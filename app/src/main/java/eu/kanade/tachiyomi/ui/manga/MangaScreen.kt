@@ -154,6 +154,13 @@ class MangaScreen(
                 navigator.push(MigrationConfigScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
+            onCastClicked = {
+                val chapter = viewModel.getNextUnreadChapter()
+                    ?: successState.chapters.lastOrNull()?.chapter
+                if (chapter != null) {
+                    context.startActivity(ReaderActivity.newIntent(context, chapter.mangaId, chapter.id, cast = true))
+                }
+            }.takeIf { successState.chapters.isNotEmpty() },
             onMultiBookmarkClicked = viewModel::bookmarkChapters,
             onMultiMarkAsReadClicked = viewModel::markChaptersRead,
             onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,
