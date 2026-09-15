@@ -167,15 +167,19 @@ class DownloadProvider(
         chapterScanlator: String?,
         chapterUrl: String,
         disallowNonAsciiFilenames: Boolean = libraryPreferences.disallowNonAsciiFilenames.get(),
+        disableChapterNameHash: Boolean = libraryPreferences.disableChapterNameHash.get(),
     ): String {
-        var dirName = sanitizeChapterName(chapterName)
-        if (!chapterScanlator.isNullOrBlank()) {
-            dirName = chapterScanlator + "_" + dirName
+        return buildString {
+            if (!chapterScanlator.isNullOrBlank()) {
+                append(chapterScanlator + "_")
+            }
+
+            // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
+            append(DiskUtil.buildValidFilename(sanitizeChapterName(chapterName), DiskUtil.MAX_FILE_NAME_BYTES - 11, disallowNonAsciiFilenames))
+            if(!disableChapterNameHash) {
+                append("_${md5(chapterUrl).take(6)}")
+            }
         }
-        // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
-        dirName = DiskUtil.buildValidFilename(dirName, DiskUtil.MAX_FILE_NAME_BYTES - 11, disallowNonAsciiFilenames)
-        dirName += "_" + md5(chapterUrl).take(6)
-        return dirName
     }
 
     /**
