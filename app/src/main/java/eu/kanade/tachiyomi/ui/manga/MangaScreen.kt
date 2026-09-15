@@ -340,10 +340,11 @@ class MangaScreen(
         }
 
         when (val previousController = navigator.items[navigator.size - 2]) {
-            is HomeScreen -> {
-                navigator.pop()
-                previousController.search(query)
-            }
+            // TODO(homescreen): search
+            // is HomeScreen -> {
+            //     navigator.pop()
+            //     previousController.search(query)
+            // }
             is BrowseSourceScreen -> {
                 navigator.pop()
                 previousController.search(query)
