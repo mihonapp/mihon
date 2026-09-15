@@ -16,6 +16,7 @@ fun ReaderTopBar(
     mangaTitle: String?,
     chapterTitle: String?,
     navigateUp: () -> Unit,
+    bookmarkOnTopBar: Boolean,
     bookmarked: Boolean,
     onToggleBookmarked: () -> Unit,
     onOpenInWebView: (() -> Unit)?,
@@ -32,23 +33,25 @@ fun ReaderTopBar(
         actions = {
             AppBarActions(
                 actions = buildList {
-                    add(
-                        AppBar.Action(
-                            title = stringResource(
-                                if (bookmarked) {
-                                    MR.strings.action_remove_bookmark
+                    if (bookmarkOnTopBar) {
+                        add(
+                            AppBar.Action(
+                                title = stringResource(
+                                    if (bookmarked) {
+                                        MR.strings.action_remove_bookmark
+                                    } else {
+                                        MR.strings.action_bookmark
+                                    },
+                                ),
+                                icon = if (bookmarked) {
+                                    MaterialSymbols.RoundedFilled.Bookmark
                                 } else {
-                                    MR.strings.action_bookmark
+                                    MaterialSymbols.Rounded.Bookmark
                                 },
+                                onClick = onToggleBookmarked,
                             ),
-                            icon = if (bookmarked) {
-                                MaterialSymbols.RoundedFilled.Bookmark
-                            } else {
-                                MaterialSymbols.Rounded.Bookmark
-                            },
-                            onClick = onToggleBookmarked,
-                        ),
-                    )
+                        )
+                    }
                     onOpenInWebView?.let {
                         add(
                             AppBar.OverflowAction(
