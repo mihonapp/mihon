@@ -2,7 +2,10 @@ name: Build casting APK
 on:
   push:
     branches:
+      - main
       - 'claude/**'
+    tags:
+      - 'cast-v*'
     paths-ignore:
       - '**.md'
       - 'fastlane/**'
@@ -53,6 +56,7 @@ jobs:
           path: dist/*.apk
 
       - name: Publish pre-release
+        if: github.ref_type == 'branch'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: cast-latest
@@ -60,6 +64,24 @@ jobs:
           prerelease: true
           body: |
             Automated build of the `${{ github.ref_name }}` branch at ${{ github.sha }}.
+
+            Pick the APK matching your device (arm64-v8a for practically every recent phone).
+            The build is signed with the Android debug key and uses the `app.mihon` package id,
+            so an official Mihon install must be removed first.
+          files: dist/*.apk
+
+      - name: Publish release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Mihon Casting ${{ github.ref_name }}
+          prerelease: false
+          body: |
+            Mihon with **Cast to TV**: show the reader on an external display (Cast screen,
+            Miracast / Smart View, HDMI) or in any TV / console / computer browser through the
+            built-in web receiver, with the phone as a smart remote, independent orientation and
+            size on the TV, and auto-scroll. See `CASTING.md` for details.
 
             Pick the APK matching your device (arm64-v8a for practically every recent phone).
             The build is signed with the Android debug key and uses the `app.mihon` package id,
