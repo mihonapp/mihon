@@ -70,12 +70,26 @@ jobs:
             so an official Mihon install must be removed first.
           files: dist/*.apk
 
+      - name: Resolve release version
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -eu
+          version="$(tr -d '[:space:]' < CAST_VERSION)"
+          echo "cast_version=${version}" >> "$GITHUB_ENV"
+          if git ls-remote --exit-code --tags origin "refs/tags/cast-v${version}" > /dev/null; then
+            echo "cast_release_exists=true" >> "$GITHUB_ENV"
+          else
+            echo "cast_release_exists=false" >> "$GITHUB_ENV"
+          fi
+
+      # A new CAST_VERSION on main publishes (and tags) a versioned release; pushed cast-v* tags do too.
       - name: Publish release
-        if: github.ref_type == 'tag'
+        if: github.ref_type == 'tag' || (github.ref == 'refs/heads/main' && env.cast_release_exists == 'false')
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Mihon Casting ${{ github.ref_name }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('cast-v{0}', env.cast_version) }}
+          target_commitish: ${{ github.sha }}
+          name: Mihon Casting ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', env.cast_version) }}
           prerelease: false
           body: |
             Mihon with **Cast to TV**: show the reader on an external display (Cast screen,
