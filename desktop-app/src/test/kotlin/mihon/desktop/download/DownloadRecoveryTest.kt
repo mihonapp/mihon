@@ -12,6 +12,66 @@ import java.nio.file.Path
 import java.util.Collections
 
 class DownloadRecoveryTest {
+    @Test
+    fun `database failure keeps new pages retryable and previous chapter intact`(@TempDir dir: Path) {
+        mihon.desktop.library.db.DesktopLibraryDatabaseFactory.open(dir.resolve("library.db")).use { repository ->
+            val mangaId = repository.insertManga(
+                mihon.desktop.library.model.MangaRecord(
+                    sourceId = 1,
+                    url = "/manga",
+                    title = "Manga",
+                    favorite = false,
+                ),
+            )
+            val disk = DownloadDiskProvider(dir.resolve("pages"))
+            val previous = disk.getChapterDir(1, "Manga", "Chapter")
+            val temp = disk.getTempChapterDir(1, "Manga", "Chapter")
+            disk.savePage(previous, 0, validDownloadImage())
+            Files.writeString(previous.resolve("previous-marker"), "keep")
+            val newPage = disk.savePage(temp, 0, validDownloadImage())
+            val bytes = Files.readAllBytes(newPage).toList()
+            io.kotest.assertions.throwables.shouldThrow<Exception> {
+                // The parent manga exists, but the queued chapter was removed from the database.
+                disk.finalizeChapter(1, mangaId, 999, "Manga", "Chapter", 1, repository)
+            }
+            repository.localMangaStoragePaths() shouldBe emptySet()
+            Files.exists(previous.resolve("previous-marker")) shouldBe true
+            Files.readAllBytes(newPage).toList() shouldBe bytes
+        }
+    }
+
+    @Test
+    fun `retry reuses published ready pages after interrupted database registration`(
+        @TempDir dir: Path,
+    ): Unit = runBlocking {
+        val disk = DownloadDiskProvider(dir.resolve("pages"))
+        val bytes = validDownloadImage()
+        val published = disk.getChapterDir(1, "Manga", "Chapter 1")
+        disk.savePage(published, 0, bytes)
+        val store = DownloadStore(dir.resolve("queue.json"))
+        store.save(
+            listOf(
+                item(1).copy(
+                    status = DownloadStatus.ERROR,
+                    pages = listOf(DownloadPage(0, "http://127.0.0.1:1/unavailable", status = PageStatus.READY)),
+                    error = "Database registration interrupted",
+                ),
+            ),
+        )
+        val network = DesktopNetworkHelper()
+        val downloader = DesktopDownloader(store, disk, network)
+        try {
+            downloader.retry(1)
+            withTimeout(5_000) { while (downloader.isRunning.value) delay(10) }
+            downloader.queueState.value.single().status shouldBe DownloadStatus.COMPLETED
+            downloader.queueState.value.single().bytesDownloaded shouldBe bytes.size.toLong()
+            Files.readAllBytes(disk.getPageFile(published, 0)).toList() shouldBe bytes.toList()
+        } finally {
+            downloader.close()
+            network.close()
+        }
+    }
+
     private fun item(id: Long, source: Long = 1) = DesktopDownload(
         chapterId = id,
         mangaId = 1,

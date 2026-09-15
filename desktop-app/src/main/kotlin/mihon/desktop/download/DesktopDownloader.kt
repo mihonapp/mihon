@@ -395,6 +395,16 @@ class DesktopDownloader(
         }
 
         diskProvider.cleanPartialPages(tempDir)
+        // A previous run may have published the images before database registration failed.
+        // Only reuse pages the saved queue marked ready, and validate their bytes again.
+        val publishedDir = diskProvider.getChapterDir(download.sourceId, download.mangaTitle, download.chapterName)
+        pages.filter { it.status == PageStatus.READY }.forEach { page ->
+            val temporaryPage = diskProvider.getPageFile(tempDir, page.index)
+            val publishedPage = diskProvider.getPageFile(publishedDir, page.index)
+            if (!diskProvider.isValidPage(temporaryPage) && diskProvider.isValidPage(publishedPage)) {
+                Files.copy(publishedPage, temporaryPage, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            }
+        }
         val validPages = pages.filter { diskProvider.isValidPage(diskProvider.getPageFile(tempDir, it.index)) }
         val totalBytes = AtomicLong(validPages.sumOf { Files.size(diskProvider.getPageFile(tempDir, it.index)) })
         updateDownload(download.chapterId) { item ->

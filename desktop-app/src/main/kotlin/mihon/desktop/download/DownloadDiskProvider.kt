@@ -193,40 +193,46 @@ class DownloadDiskProvider(
             deleteDirectory(previousDir)
             Files.move(targetDir, previousDir)
         }
+        var published = false
         try {
             try {
                 Files.move(tempDir, targetDir, StandardCopyOption.ATOMIC_MOVE)
             } catch (_: AtomicMoveNotSupportedException) {
                 Files.move(tempDir, targetDir)
             }
-        } catch (error: Exception) {
-            if (!Files.exists(targetDir) && Files.exists(previousDir)) {
-                Files.move(previousDir, targetDir)
+            published = true
+            // Commit both records together. A registration failure must leave the downloaded
+            // pages retryable and retain any previously registered offline chapter.
+            mutationPort?.transaction {
+                val mangaDir = getMangaDir(sourceId, mangaTitle)
+                insertLocalManga(
+                    LocalMangaRecord(
+                        mangaId = mangaId,
+                        storagePath = mangaDir.toAbsolutePath().toString(),
+                        manifestSha256 = "",
+                        importedAt = System.currentTimeMillis(),
+                    ),
+                )
+                insertLocalChapter(
+                    LocalChapterRecord(
+                        chapterId = chapterId,
+                        relativePath = sanitizeFileName(chapterName),
+                        assetKind = "DIRECTORY",
+                        sizeBytes = totalBytes,
+                        modifiedAt = System.currentTimeMillis(),
+                    ),
+                )
             }
+        } catch (error: Exception) {
+            runCatching {
+                if (published) Files.move(targetDir, tempDir)
+                if (!Files.exists(targetDir) && Files.exists(previousDir)) {
+                    Files.move(previousDir, targetDir)
+                }
+            }.onFailure(error::addSuppressed)
             throw error
         }
         deleteDirectory(previousDir)
-        // Register as local chapter asset in database so reader-core can open it immediately offline
-        mutationPort?.let { port ->
-            val mangaDir = getMangaDir(sourceId, mangaTitle)
-            port.insertLocalManga(
-                LocalMangaRecord(
-                    mangaId = mangaId,
-                    storagePath = mangaDir.toAbsolutePath().toString(),
-                    manifestSha256 = "",
-                    importedAt = System.currentTimeMillis(),
-                ),
-            )
-            port.insertLocalChapter(
-                LocalChapterRecord(
-                    chapterId = chapterId,
-                    relativePath = sanitizeFileName(chapterName),
-                    assetKind = "DIRECTORY",
-                    sizeBytes = totalBytes,
-                    modifiedAt = System.currentTimeMillis(),
-                ),
-            )
-        }
 
         return targetDir
     }
