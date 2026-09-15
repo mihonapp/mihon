@@ -12,6 +12,7 @@ import mihon.desktop.library.db.DesktopLibraryDatabaseFactory
 import mihon.desktop.library.model.ChapterRecord
 import mihon.desktop.library.model.MangaRecord
 import mihon.desktop.preferences.DesktopPreferenceStore
+import mihon.extension.ipc.IpcException
 import mihon.extension.model.ExtensionManifest
 import mihon.extension.model.SourceDescriptor
 import mihon.extension.source.model.FilterList
@@ -157,6 +158,7 @@ class DesktopSourceManagerTest {
             installer.installFromLocalFile(mextFile, trustOnInstall = true)
 
             var loadedCount = 0
+            var hostSources = emptyList<mihon.extension.model.SourceDescriptor>()
             val processWorkDir = tempDir.resolve("work").toFile()
             val customProcManager = object : WindowsExtensionProcessManager(processWorkDir) {
                 override suspend fun loadExtension(
@@ -164,8 +166,11 @@ class DesktopSourceManagerTest {
                 ): List<mihon.extension.model.SourceDescriptor> {
                     loadedCount++
                     kotlinx.coroutines.delay(50)
-                    return manifest.sources
+                    hostSources = manifest.sources
+                    return hostSources
                 }
+
+                override suspend fun getSources(): List<mihon.extension.model.SourceDescriptor> = hostSources
             }
 
             val manager = DesktopSourceManager(installer = installer, processManager = customProcManager)
@@ -189,6 +194,123 @@ class DesktopSourceManagerTest {
             manager.ensureSourceLoaded(7777L)
             loadedCount shouldBe 2
             manager.close()
+        }
+    }
+
+    @Test
+    fun `ensureSourceLoaded repairs a cached package when the host no longer has the source`(@TempDir tempDir: Path) {
+        runBlocking {
+            val prefStore = mihon.desktop.preferences.DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
+            val installer = DesktopExtensionInstaller(tempDir.resolve("extensions").toFile(), prefStore)
+            val descriptor = mihon.extension.model.SourceDescriptor(
+                id = 1759845183972082995L,
+                name = "NHentai.xxx",
+                lang = "en",
+                className = "keiyoushi.source.Generated",
+            )
+            val manifest = mihon.extension.model.ExtensionManifest(
+                id = "eu.kanade.tachiyomi.extension.all.nhentaixxx",
+                name = "NHentai.xxx",
+                version = "1.6.11",
+                versionCode = 106011,
+                libVersion = 1.6,
+                lang = "all",
+                sources = listOf(descriptor),
+            )
+            val mextFile = tempDir.resolve("nhentaixxx.mext").toFile()
+            java.util.zip.ZipOutputStream(java.io.FileOutputStream(mextFile)).use { zos ->
+                zos.putNextEntry(java.util.zip.ZipEntry("manifest.json"))
+                zos.write(kotlinx.serialization.json.Json.encodeToString(manifest).toByteArray())
+                zos.closeEntry()
+            }
+            installer.installFromLocalFile(mextFile, trustOnInstall = true)
+
+            var loadedCount = 0
+            var hostSources = emptyList<mihon.extension.model.SourceDescriptor>()
+            val process = object : WindowsExtensionProcessManager(tempDir.resolve("host").toFile()) {
+                override suspend fun loadExtension(
+                    packageFile: java.io.File,
+                ): List<mihon.extension.model.SourceDescriptor> {
+                    loadedCount++
+                    hostSources = manifest.sources
+                    return hostSources
+                }
+
+                override suspend fun getSources(): List<mihon.extension.model.SourceDescriptor> = hostSources
+            }
+            val manager = DesktopSourceManager(installer, process, prefStore)
+
+            manager.ensureSourceLoaded(descriptor.id)
+            loadedCount shouldBe 1
+
+            // Reproduce a live host whose package cache survived but whose source registry did not.
+            hostSources = emptyList()
+            manager.ensureSourceLoaded(descriptor.id)
+
+            loadedCount shouldBe 2
+            manager.close()
+        }
+    }
+
+    @Test
+    fun `source operation reloads when the host restarts after source validation`(@TempDir tempDir: Path) {
+        runBlocking {
+            val preferences = DesktopPreferenceStore(tempDir.resolve("preferences.properties"))
+            val installer = DesktopExtensionInstaller(tempDir.resolve("extensions").toFile(), preferences)
+            val source = SourceDescriptor(
+                id = 560822675588930101L,
+                name = "NHentai.xxx",
+                lang = "zh",
+                className = "keiyoushi.source.Generated",
+            )
+            val manifest = ExtensionManifest(
+                id = "eu.kanade.tachiyomi.extension.all.nhentaixxx",
+                name = "NHentai.xxx",
+                version = "1.6.11",
+                versionCode = 106011,
+                libVersion = 1.6,
+                lang = "all",
+                sources = listOf(source),
+            )
+            val packageFile = tempDir.resolve("nhentaixxx.mext").toFile()
+            ZipOutputStream(FileOutputStream(packageFile)).use { zip ->
+                zip.putNextEntry(ZipEntry("manifest.json"))
+                zip.write(Json.encodeToString(manifest).toByteArray())
+                zip.closeEntry()
+            }
+            installer.installFromLocalFile(packageFile, trustOnInstall = true)
+
+            var hostSources = emptyList<SourceDescriptor>()
+            var loadCount = 0
+            var popularAttempts = 0
+            val processManager = object : WindowsExtensionProcessManager(tempDir.resolve("host").toFile()) {
+                override suspend fun loadExtension(packageFile: File): List<SourceDescriptor> {
+                    loadCount++
+                    hostSources = manifest.sources
+                    return hostSources
+                }
+
+                override suspend fun getSources(): List<SourceDescriptor> = hostSources
+
+                override suspend fun getPopular(sourceId: Long, page: Int): MangasPage {
+                    popularAttempts++
+                    if (popularAttempts == 1) {
+                        // The process manager restarted an empty host after validation but before
+                        // sending the source operation.
+                        hostSources = emptyList()
+                        throw IpcException("Source with ID $sourceId not found")
+                    }
+                    return MangasPage(listOf(SManga(url = "/manga", title = "Recovered")), false)
+                }
+            }
+            val manager = DesktopSourceManager(installer, processManager, preferences)
+            try {
+                manager.getPopular(source.id, 1).mangas.single().title shouldBe "Recovered"
+                popularAttempts shouldBe 2
+                loadCount shouldBe 2
+            } finally {
+                manager.close()
+            }
         }
     }
 

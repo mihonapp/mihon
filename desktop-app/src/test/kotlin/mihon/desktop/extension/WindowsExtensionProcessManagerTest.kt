@@ -3,6 +3,8 @@ package mihon.desktop.extension
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.yield
@@ -156,6 +158,45 @@ class WindowsExtensionProcessManagerTest {
             }
         } finally {
             manager.close()
+        }
+    }
+
+    @Test
+    fun `source manager concurrently invokes every language from a real source factory`(
+        @TempDir tempDir: Path,
+    ): Unit = runBlocking {
+        val executable = System.getenv("MIHON_PACKAGED_EXE")?.let(::File)
+        val extension = System.getenv("MIHON_EXTENSION_SMOKE_PACKAGE")?.let(::File)
+        assumeTrue(executable?.isFile == true, "No packaged Mihon executable was supplied")
+        assumeTrue(extension?.isFile == true, "No external extension package was supplied")
+
+        val preferences = DesktopPreferenceStore(tempDir.resolve("preferences.properties"))
+        val installer = DesktopExtensionInstaller(tempDir.resolve("extensions").toFile(), preferences)
+        val installed = installer.installFromLocalFile(requireNotNull(extension), trustOnInstall = true)
+        installed.manifest.sources.map { it.id }.toSet() shouldBe setOf(
+            1759845183972082995L,
+            5939253174175011564L,
+            560822675588930101L,
+            2384499981488817067L,
+        )
+        val processManager = WindowsExtensionProcessManager(
+            workingDirectory = tempDir.resolve("concurrent-language-host").toFile(),
+            customCommand = listOf(requireNotNull(executable).absolutePath, "--extension-host", "--stdio"),
+        )
+        val sourceManager = DesktopSourceManager(installer, processManager, preferences)
+        try {
+            repeat(5) {
+                coroutineScope {
+                    installed.manifest.sources.flatMap { source ->
+                        listOf(
+                            async { sourceManager.getPopular(source.id, 1) },
+                            async { sourceManager.loadFilterList(source.id) },
+                        )
+                    }.awaitAll()
+                }
+            }
+        } finally {
+            sourceManager.close()
         }
     }
 

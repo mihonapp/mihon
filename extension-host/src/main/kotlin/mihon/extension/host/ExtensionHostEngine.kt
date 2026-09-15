@@ -41,6 +41,7 @@ import java.util.zip.ZipFile
 class ExtensionHostEngine(
     val httpClient: BrokeredHttpClient,
 ) {
+    private val sourceRegistryLock = Any()
     private val json = Json {
         ignoreUnknownKeys = true
         isLenient = true
@@ -101,8 +102,10 @@ class ExtensionHostEngine(
     }
 
     fun registerSource(source: WindowsSource) {
-        loadedSources[source.id] = source
-        sourcePreferenceModels.remove(source.id)
+        synchronized(sourceRegistryLock) {
+            loadedSources[source.id] = source
+            sourcePreferenceModels.remove(source.id)
+        }
     }
 
     fun loadExtension(packageFile: File, workingDir: File): List<SourceDescriptor> {
@@ -132,38 +135,39 @@ class ExtensionHostEngine(
 
         val urls = (extractedJars.map { it.toURI().toURL() } + listOf(workingDir.toURI().toURL())).toTypedArray()
         val loader = ExtensionClassLoader(urls)
-        extensionLoaders[manifest.id] = loader
 
-        // Clean up old sources from this extension if it was reloaded
-        val previousSourceIds = extensionSources.remove(manifest.id) ?: emptySet()
-        previousSourceIds.forEach {
-            loadedSources.remove(it)
-            sourcePreferenceModels.remove(it)
+        // Suwayomi loads an extension's main class once and lets SourceFactory provide the
+        // authoritative source instances. A repository manifest can contain one descriptor per
+        // language even though every descriptor points to that same factory class.
+        val instantiatedSources = manifest.sources
+            .distinctBy { it.className }
+            .flatMap { descriptor -> loader.instantiateSources(descriptor.className, httpClient) }
+            .distinctBy { it.id }
+
+        val newSources = linkedMapOf<Long, WindowsSource>()
+        instantiatedSources.forEach { source -> newSources[source.id] = source }
+
+        synchronized(sourceRegistryLock) {
+            val previousSourceIds = extensionSources.remove(manifest.id).orEmpty()
+            previousSourceIds.forEach {
+                loadedSources.remove(it)
+                sourcePreferenceModels.remove(it)
+            }
+            loadedSources.putAll(newSources)
+            extensionSources[manifest.id] = newSources.keys
+            extensionLoaders.put(manifest.id, loader)?.close()
         }
 
-        val newSourceIds = mutableSetOf<Long>()
-        manifest.sources.forEach { descriptor ->
-            val sources = loader.instantiateSources(descriptor.className, httpClient)
-            sources.forEach { sourceInstance ->
-                loadedSources[sourceInstance.id] = sourceInstance
-                newSourceIds.add(sourceInstance.id)
-            }
-            if (sources.size == 1 && !loadedSources.containsKey(descriptor.id)) {
-                loadedSources[descriptor.id] = sources.first()
-                newSourceIds.add(descriptor.id)
-            }
-        }
-        extensionSources[manifest.id] = newSourceIds
-
-        val loadedDescriptors = newSourceIds.mapNotNull { loadedSources[it] }.distinctBy { it.id }.map {
-            SourceDescriptor(it.id, it.name, it.lang, it::class.java.name, it.supportsLatest)
+        val loadedDescriptors = newSources.map { (registeredId, source) ->
+            SourceDescriptor(registeredId, source.name, source.lang, source::class.java.name, source.supportsLatest)
         }
 
         return if (loadedDescriptors.isNotEmpty()) loadedDescriptors else manifest.sources
     }
 
     private fun getCatalogueSource(sourceId: Long): WindowsCatalogueSource {
-        val source = loadedSources[sourceId] ?: throw IllegalArgumentException("Source with ID $sourceId not found")
+        val source = synchronized(sourceRegistryLock) { loadedSources[sourceId] }
+            ?: throw IllegalArgumentException("Source with ID $sourceId not found")
         return source as? WindowsCatalogueSource
             ?: throw IllegalArgumentException("Source $sourceId does not implement WindowsCatalogueSource")
     }
@@ -180,8 +184,16 @@ class ExtensionHostEngine(
                 }
 
                 IpcCommands.GET_SOURCES -> {
-                    val descriptors = loadedSources.values.distinctBy { it.id }.map {
-                        SourceDescriptor(it.id, it.name, it.lang, it::class.java.name, it.supportsLatest)
+                    val descriptors = synchronized(sourceRegistryLock) {
+                        loadedSources.map { (registeredId, source) ->
+                            SourceDescriptor(
+                                registeredId,
+                                source.name,
+                                source.lang,
+                                source::class.java.name,
+                                source.supportsLatest,
+                            )
+                        }
                     }
                     IpcResponse(request.requestId, success = true, payloadJson = json.encodeToString(descriptors))
                 }

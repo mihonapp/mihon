@@ -235,6 +235,13 @@ fun ReaderScreen(
     fun closeAndThen(afterClose: () -> Unit) {
         if (closing) return
         closing = true
+        if (session.state.value.loadState is ReaderLoadState.Loading ||
+            session.state.value.loadState is ReaderLoadState.Idle
+        ) {
+            session.cancelWithoutFlush()
+            afterClose()
+            return
+        }
         scope.launch {
             runCatching { withContext(Dispatchers.Default) { session.closeAndFlush() } }
             afterClose()
@@ -618,6 +625,7 @@ fun ReaderScreen(
                     webtoonSidePadding = settings.webtoonSidePadding,
                     pageSizes = effectivePageSizes,
                     pageContent = pageContent,
+                    onCancelLoading = { closeAndThen(onBack) },
                 )
             }
             if (ready) {
@@ -829,6 +837,7 @@ private fun ReaderBody(
     webtoonSidePadding: Int,
     pageSizes: Map<PageId, PageSize>,
     pageContent: ReaderPageContent,
+    onCancelLoading: () -> Unit,
 ) {
     val strings = LocalStrings.current
     val scope = rememberCoroutineScope()
@@ -839,6 +848,12 @@ private fun ReaderBody(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 CircularProgressIndicator()
                 Text(strings.readerLoadingChapter, modifier = Modifier.padding(top = 12.dp).testTag("reader-loading"))
+                FilledTonalButton(
+                    onClick = onCancelLoading,
+                    modifier = Modifier.padding(top = 16.dp).testTag("reader-loading-cancel"),
+                ) {
+                    Text(strings.dialogCancel)
+                }
             }
         }
         ReaderLoadState.Ready -> ReaderCanvas(

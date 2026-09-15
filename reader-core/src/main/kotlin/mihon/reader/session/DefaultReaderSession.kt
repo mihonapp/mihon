@@ -210,6 +210,10 @@ class DefaultReaderSession(
         }
         val pages = try {
             contentPipeline.open(opened)
+        } catch (cancelled: CancellationException) {
+            contentPipeline.closeChapter()
+            opened.close()
+            throw cancelled
         } catch (failure: Throwable) {
             contentPipeline.closeChapter()
             opened.close()

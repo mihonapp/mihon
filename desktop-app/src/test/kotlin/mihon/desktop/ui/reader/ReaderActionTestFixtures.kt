@@ -16,6 +16,7 @@ internal class TestReaderSession(initial: ReaderState) : ReaderSession {
     val actions = mutableListOf<ReaderAction>()
     var retryRequests = 0
     var closeRequests = 0
+    var cancelRequests = 0
     var closeFailure: Throwable? = null
 
     override suspend fun open(chapterId: Long) = Unit
@@ -36,7 +37,9 @@ internal class TestReaderSession(initial: ReaderState) : ReaderSession {
         closeFailure?.let { throw it }
     }
 
-    override fun cancelWithoutFlush() = Unit
+    override fun cancelWithoutFlush() {
+        cancelRequests++
+    }
 }
 
 internal fun testPage(index: Int): PageDescriptor = PageDescriptor(

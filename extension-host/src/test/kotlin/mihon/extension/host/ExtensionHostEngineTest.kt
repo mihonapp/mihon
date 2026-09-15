@@ -1,5 +1,8 @@
 ﻿package mihon.extension.host
 
+import eu.kanade.tachiyomi.source.CatalogueSource
+import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.SourceFactory
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -38,6 +41,51 @@ import java.nio.file.Path
 class ExtensionHostEngineTest {
 
     private val json = Json { ignoreUnknownKeys = true }
+
+    class CountingSourceFactory : SourceFactory {
+        override fun createSources(): List<Source> {
+            invocations++
+            return listOf(
+                CountingCatalogueSource(1001L, "Test Source"),
+                CountingCatalogueSource(2002L, "Test Source 2"),
+            )
+        }
+
+        companion object {
+            var invocations: Int = 0
+        }
+    }
+
+    class CountingCatalogueSource(
+        override val id: Long,
+        override val name: String,
+    ) : CatalogueSource {
+        override val lang: String = "en"
+        override val supportsLatest: Boolean = true
+
+        override suspend fun getPopularManga(page: Int) =
+            eu.kanade.tachiyomi.source.model.MangasPage(emptyList(), false)
+
+        override suspend fun getLatestUpdates(page: Int) =
+            eu.kanade.tachiyomi.source.model.MangasPage(emptyList(), false)
+
+        override suspend fun getSearchManga(
+            page: Int,
+            query: String,
+            filters: eu.kanade.tachiyomi.source.model.FilterList,
+        ) = eu.kanade.tachiyomi.source.model.MangasPage(emptyList(), false)
+
+        override suspend fun getMangaUpdate(
+            manga: eu.kanade.tachiyomi.source.model.SManga,
+            chapters: List<eu.kanade.tachiyomi.source.model.SChapter>,
+            fetchDetails: Boolean,
+            fetchChapters: Boolean,
+        ) = eu.kanade.tachiyomi.source.model.SMangaUpdate(manga, chapters)
+
+        override suspend fun getPageList(
+            chapter: eu.kanade.tachiyomi.source.model.SChapter,
+        ): List<eu.kanade.tachiyomi.source.model.Page> = emptyList()
+    }
 
     class TestCatalogueSource : WindowsCatalogueSource {
         override val id: Long = 1001L
@@ -350,5 +398,34 @@ class ExtensionHostEngineTest {
             )
             pop2.success shouldBe true
         }
+    }
+
+    @Test
+    fun `engine instantiates a multi source factory once per extension load`(@TempDir tempDir: Path) {
+        CountingSourceFactory.invocations = 0
+        val manifest = mihon.extension.model.ExtensionManifest(
+            id = "ext.factory",
+            name = "Factory",
+            version = "1.0.0",
+            versionCode = 1,
+            libVersion = 1.4,
+            lang = "all",
+            sources = listOf(
+                SourceDescriptor(1001L, "Test Source", "en", CountingSourceFactory::class.java.name),
+                SourceDescriptor(2002L, "Test Source 2", "en", CountingSourceFactory::class.java.name),
+            ),
+        )
+        val mext = tempDir.resolve("factory.mext").toFile()
+        java.util.zip.ZipOutputStream(java.io.FileOutputStream(mext)).use { zos ->
+            zos.putNextEntry(java.util.zip.ZipEntry("manifest.json"))
+            zos.write(json.encodeToString(manifest).toByteArray())
+            zos.closeEntry()
+        }
+
+        val engine = ExtensionHostEngine(BrokeredHttpClient { null })
+        val sources = engine.loadExtension(mext, tempDir.resolve("work").toFile())
+
+        CountingSourceFactory.invocations shouldBe 1
+        sources.map { it.id }.toSet() shouldBe setOf(1001L, 2002L)
     }
 }

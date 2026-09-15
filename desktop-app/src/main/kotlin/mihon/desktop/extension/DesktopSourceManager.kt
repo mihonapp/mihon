@@ -12,6 +12,7 @@ import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.extension.ipc.BooleanPreferenceValueDto
 import mihon.extension.ipc.FloatPreferenceValueDto
 import mihon.extension.ipc.IntPreferenceValueDto
+import mihon.extension.ipc.IpcException
 import mihon.extension.ipc.ListPreferenceValueDto
 import mihon.extension.ipc.LongPreferenceValueDto
 import mihon.extension.ipc.SelectPreferenceValueDto
@@ -500,10 +501,23 @@ class DesktopSourceManager(
                 ext.manifest.sources.any { s -> s.id == sourceId }
         } ?: return
 
-        if (!loadedPackages.contains(targetExt.pkg)) {
+        // Suwayomi resolves its source cache first and reloads the owning extension on a miss.
+        // Validate the host registry as well as this process-local package hint so a live host with
+        // a cleared/partially replaced registry can repair itself without an application restart.
+        val hostHasSource = if (loadedPackages.contains(targetExt.pkg)) {
+            runCatching { proc.getSources().any { it.id == sourceId } }.getOrDefault(false)
+        } else {
+            false
+        }
+        if (!hostHasSource) {
+            loadedPackages.remove(targetExt.pkg)
             val packageFile = java.io.File(targetExt.packageFile)
             if (packageFile.exists()) {
-                proc.loadExtension(packageFile)
+                val loadedSources = proc.loadExtension(packageFile)
+                check(loadedSources.any { it.id == sourceId }) {
+                    "Extension ${targetExt.pkg} loaded without requested source $sourceId " +
+                        "(registered=${loadedSources.map { it.id }})"
+                }
                 loadedPackages.add(targetExt.pkg)
             }
         }
@@ -526,9 +540,7 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext builtin.getPopularManga(page)
         }
-        ensureSourceLoaded(sourceId)
-        val proc = processManager ?: throw IllegalStateException("Extension host process manager is unavailable")
-        proc.getPopular(sourceId, page)
+        withLoadedExtensionSource(sourceId) { proc -> proc.getPopular(sourceId, page) }
     }
 
     suspend fun getLatest(sourceId: Long, page: Int): MangasPage = withContext(Dispatchers.IO) {
@@ -536,9 +548,7 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext builtin.getLatestUpdates(page)
         }
-        ensureSourceLoaded(sourceId)
-        val proc = processManager ?: throw IllegalStateException("Extension host process manager is unavailable")
-        proc.getLatest(sourceId, page)
+        withLoadedExtensionSource(sourceId) { proc -> proc.getLatest(sourceId, page) }
     }
 
     fun getFilterList(sourceId: Long): FilterList {
@@ -564,10 +574,9 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext builtin.getFilterList()
         }
-        val proc = processManager ?: return@withContext FilterList()
+        if (processManager == null) return@withContext FilterList()
         try {
-            ensureSourceLoaded(sourceId)
-            proc.getFilterList(sourceId)
+            withLoadedExtensionSource(sourceId) { proc -> proc.getFilterList(sourceId) }
         } catch (_: Exception) {
             FilterList()
         }
@@ -583,9 +592,7 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext builtin.searchManga(page, query, filters)
         }
-        ensureSourceLoaded(sourceId)
-        val proc = processManager ?: throw IllegalStateException("Extension host process manager is unavailable")
-        proc.searchManga(sourceId, page, query, filters)
+        withLoadedExtensionSource(sourceId) { proc -> proc.searchManga(sourceId, page, query, filters) }
     }
 
     suspend fun getMangaDetails(sourceId: Long, manga: SManga): SManga = withContext(Dispatchers.IO) {
@@ -593,9 +600,7 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext builtin.getMangaDetails(manga)
         }
-        ensureSourceLoaded(sourceId)
-        val proc = processManager ?: error("Extension host process manager is unavailable")
-        proc.getMangaDetails(sourceId, manga)
+        withLoadedExtensionSource(sourceId) { proc -> proc.getMangaDetails(sourceId, manga) }
     }
 
     suspend fun getChapterList(sourceId: Long, manga: SManga): List<SChapter> = withContext(Dispatchers.IO) {
@@ -603,9 +608,7 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext builtin.getChapterList(manga)
         }
-        ensureSourceLoaded(sourceId)
-        val proc = processManager ?: throw IllegalStateException("Extension host process manager is unavailable")
-        proc.getChapterList(sourceId, manga)
+        withLoadedExtensionSource(sourceId) { proc -> proc.getChapterList(sourceId, manga) }
     }
 
     suspend fun getPageList(sourceId: Long, chapter: SChapter): List<Page> = withContext(Dispatchers.IO) {
@@ -613,9 +616,8 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext builtin.getPageList(chapter)
         }
-        ensureSourceLoaded(sourceId)
-        val proc = processManager ?: return@withContext emptyList()
-        proc.getPageList(sourceId, chapter)
+        if (processManager == null) return@withContext emptyList()
+        withLoadedExtensionSource(sourceId) { proc -> proc.getPageList(sourceId, chapter) }
     }
 
     suspend fun getImage(sourceId: Long, page: Page): ByteArray? = withContext(Dispatchers.IO) {
@@ -623,9 +625,7 @@ class DesktopSourceManager(
         if (builtin != null) {
             return@withContext (builtin as? mihon.extension.source.WindowsImageSource)?.getImage(page)
         }
-        ensureSourceLoaded(sourceId)
-        val proc = processManager ?: error("Extension host process manager is unavailable")
-        proc.getImage(sourceId, page)
+        withLoadedExtensionSource(sourceId) { proc -> proc.getImage(sourceId, page) }
     }
 
     override fun close() {
@@ -648,9 +648,10 @@ class DesktopSourceManager(
         }
 
         if (sourceId in remotePreferenceSupport && processManager != null) {
-            ensureSourceLoaded(sourceId)
             val remoteValue = definition.type.toSourcePreferenceValueDto(value)
-            processManager.setSourcePreference(sourceId, key, remoteValue)
+            withLoadedExtensionSource(sourceId) { proc ->
+                proc.setSourcePreference(sourceId, key, remoteValue)
+            }
                 ?: throw IllegalStateException("Extension host did not return the updated source preference")
             remoteSourcePreferences[sourceId] = definitions.map { current ->
                 if (current.key == key) current.copy(currentValue = value) else current
@@ -671,10 +672,11 @@ class DesktopSourceManager(
         return try {
             val alreadyLoaded = loadedPackages.contains(extension.pkg)
             val epochBeforeLoad = proc.epoch
-            ensureSourceLoaded(sourceId)
+            val response = withLoadedExtensionSource(sourceId) { manager ->
+                manager.getSourcePreferencesResult(sourceId)
+            }
             val hostRestarted = proc.epoch != epochBeforeLoad
             val newlyLoaded = !alreadyLoaded && loadedPackages.contains(extension.pkg)
-            val response = proc.getSourcePreferencesResult(sourceId)
             var definitions = response.definitions.map { it.toDesktopDefinition() }
             if (response.supported && (hostRestarted || newlyLoaded)) {
                 // The extension host keeps source preferences in memory. Re-apply values
@@ -683,11 +685,13 @@ class DesktopSourceManager(
                     val stored = getLocalSourcePreferenceValue(sourceId, definition.key)
                         ?: return@map definition
                     val applied = runCatching {
-                        proc.setSourcePreference(
-                            sourceId,
-                            definition.key,
-                            definition.type.toSourcePreferenceValueDto(stored),
-                        )
+                        withLoadedExtensionSource(sourceId) { manager ->
+                            manager.setSourcePreference(
+                                sourceId,
+                                definition.key,
+                                definition.type.toSourcePreferenceValueDto(stored),
+                            )
+                        }
                     }.isSuccess
                     if (applied) definition.copy(currentValue = stored) else definition
                 }
@@ -700,6 +704,33 @@ class DesktopSourceManager(
             null
         }
     }
+
+    /**
+     * Runs one extension-source operation against a registry that contains [sourceId]. The process
+     * manager can transparently start a fresh host between validation and the request itself; that
+     * new host has an empty source registry. Repair that narrow race by reloading the owner and
+     * retrying only the host's explicit missing-source response, at most once.
+     */
+    private suspend fun <T> withLoadedExtensionSource(
+        sourceId: Long,
+        operation: suspend (WindowsExtensionProcessManager) -> T,
+    ): T {
+        val proc = processManager ?: throw IllegalStateException("Extension host process manager is unavailable")
+        ensureSourceLoaded(sourceId)
+        return try {
+            operation(proc)
+        } catch (error: IpcException) {
+            if (!error.isMissingSource(sourceId)) throw error
+            installer?.getInstalledExtensions()
+                ?.firstOrNull { extension -> extension.manifest.sources.any { it.id == sourceId } }
+                ?.let { extension -> loadedPackages.remove(extension.pkg) }
+            ensureSourceLoaded(sourceId)
+            operation(proc)
+        }
+    }
+
+    private fun IpcException.isMissingSource(sourceId: Long): Boolean =
+        message?.contains("Source with ID $sourceId not found", ignoreCase = true) == true
 
     private fun fallbackSourcePreferenceDefinitions(sourceId: Long): List<SourcePreferenceDefinition> {
         registeredSourcePreferences[sourceId]?.takeIf { it.isNotEmpty() }?.let { return it }

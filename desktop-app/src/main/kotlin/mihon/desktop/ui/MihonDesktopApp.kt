@@ -1054,8 +1054,12 @@ private fun ReaderDestination(
     }
     LaunchedEffect(destination) {
         val isIncognito = runtime.preferences.load().incognitoMode
-        readerHandle = withContext(Dispatchers.Default) {
-            factory.createHandle(isIncognito = isIncognito).also { it.session.open(destination.chapterId) }
+        val handle = withContext(Dispatchers.Default) {
+            factory.createHandle(isIncognito = isIncognito)
+        }
+        readerHandle = handle
+        withContext(Dispatchers.Default) {
+            handle.session.open(destination.chapterId)
         }
     }
     val activeHandle = readerHandle

@@ -27,6 +27,7 @@ import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.DesktopReaderSettingsStore
 import mihon.reader.model.PageDescriptor
+import mihon.reader.session.ReaderLoadState
 import mihon.reader.session.ReaderSession
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -325,6 +326,48 @@ class ReaderScreenActionsTest {
             keyUp(Key.Escape)
         }
         waitUntil { session.closeRequests == 1 && backRequests == 1 }
+    }
+
+    @Test
+    fun `escape cancels chapter loading and leaves without waiting for a progress flush`() = runComposeUiTest {
+        val session = TestReaderSession(
+            testReaderState().copy(loadState = ReaderLoadState.Loading(generation = 1L)),
+        )
+        var backRequests = 0
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            onBack = { backRequests++ },
+            onEscape = { true },
+        )
+
+        onNodeWithTag("reader-screen").performKeyInput {
+            keyDown(Key.Escape)
+            keyUp(Key.Escape)
+        }
+        waitUntil { backRequests == 1 }
+
+        session.cancelRequests shouldBe 1
+        session.closeRequests shouldBe 0
+    }
+
+    @Test
+    fun `loading chapter offers an immediate cancel action`() = runComposeUiTest {
+        val session = TestReaderSession(
+            testReaderState().copy(loadState = ReaderLoadState.Loading(generation = 1L)),
+        )
+        var backRequests = 0
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            onBack = { backRequests++ },
+        )
+
+        onNodeWithTag("reader-loading-cancel").performClick()
+        waitUntil { backRequests == 1 }
+
+        session.cancelRequests shouldBe 1
+        session.closeRequests shouldBe 0
     }
 
     @Test

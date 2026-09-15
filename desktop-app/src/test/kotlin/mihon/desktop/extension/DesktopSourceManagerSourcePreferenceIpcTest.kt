@@ -34,7 +34,16 @@ class DesktopSourceManagerSourcePreferenceIpcTest {
 
         val setCalls = mutableListOf<Triple<Long, String, SourcePreferenceValueDto>>()
 
-        override suspend fun loadExtension(packageFile: File): List<SourceDescriptor> = emptyList()
+        private fun loadedSource() = SourceDescriptor(
+            id = response.sourceId,
+            name = "Preference Source ${response.sourceId}",
+            lang = "en",
+            className = "ext.PreferenceSource${response.sourceId}",
+        )
+
+        override suspend fun loadExtension(packageFile: File): List<SourceDescriptor> = listOf(loadedSource())
+
+        override suspend fun getSources(): List<SourceDescriptor> = listOf(loadedSource())
 
         override suspend fun getSourcePreferencesResult(sourceId: Long): SourcePreferencesDto = response
 

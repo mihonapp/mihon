@@ -4,6 +4,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -81,6 +84,29 @@ class DefaultReaderSessionTest {
         session.state.value.selectedIndex shouldBe 2
         session.state.value.visiblePages.shouldBe(listOf(source.descriptors[2].id))
         requested.shouldBe(listOf(source.descriptors[2].id))
+    }
+
+    @Test
+    fun `cancelling chapter image discovery closes partial resources without reporting a failure`() = runTest {
+        val asset = asset(chapterId = 7, lastPageRead = 0)
+        val source = FakeSource(asset, pages(7, 3))
+        val pipeline = SuspendingOpeningPipeline()
+        val session = DefaultReaderSession(
+            scope = backgroundScope,
+            catalog = catalog(asset),
+            sourceFactory = ChapterSourceFactory { source },
+            progressSink = ReaderProgressSink { ProgressWriteResult.APPLIED },
+            generationSource = AtomicReaderGenerationSource(),
+            contentPipeline = pipeline,
+        )
+
+        val opening = launch { session.open(7) }
+        runCurrent()
+        opening.cancelAndJoin()
+
+        session.state.value.loadState.shouldBeInstanceOf<ReaderLoadState.Loading>()
+        pipeline.chapterCloses shouldBe 1
+        source.closeRequests shouldBe 1
     }
 
     @Test
@@ -267,10 +293,36 @@ class DefaultReaderSessionTest {
         override val asset: ReaderChapterAsset,
         val descriptors: List<mihon.reader.model.PageDescriptor>,
     ) : ChapterSource {
+        var closeRequests = 0
+
         override suspend fun pages() = descriptors
 
         override suspend fun open(pageId: mihon.reader.model.PageId) =
             BoundedPageInput(ByteArrayInputStream(byteArrayOf()), 0)
+
+        override fun close() {
+            closeRequests++
+        }
+    }
+
+    private class SuspendingOpeningPipeline : ReaderContentPipeline {
+        var chapterCloses = 0
+
+        override suspend fun open(source: ChapterSource): List<mihon.reader.model.PageDescriptor> = awaitCancellation()
+
+        override fun updatePosition(position: ReaderContentPosition) = Unit
+
+        override suspend fun loadVisible(pageId: PageId): AutoCloseable? = null
+
+        override suspend fun retry(pageId: PageId): AutoCloseable? = null
+
+        override fun metrics() = CacheMetrics(0, 0, 0, 0, 0, 0, 0, 0)
+
+        override fun warmAdjacent(request: AdjacentChapterWarmup?) = Unit
+
+        override fun closeChapter() {
+            chapterCloses++
+        }
 
         override fun close() = Unit
     }
