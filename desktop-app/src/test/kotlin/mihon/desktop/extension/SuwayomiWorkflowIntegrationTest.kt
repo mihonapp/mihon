@@ -60,6 +60,7 @@ class SuwayomiWorkflowIntegrationTest {
         }.toByteArray()
         val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
         val base = "http://127.0.0.1:${server.address.port}"
+        val imageBase = "http://localhost:${server.address.port}"
         server.createContext("/") { exchange ->
             val path = exchange.requestURI.path
             requests += path
@@ -67,7 +68,7 @@ class SuwayomiWorkflowIntegrationTest {
                 path == "/search" -> "Fixture Manga".toByteArray()
                 path == "/manga" -> "Fixture Author".toByteArray()
                 path == "/manga/chapters" -> count.get().toString().toByteArray()
-                path.endsWith("/pages") -> "$base/one.png\n$base/two.png".toByteArray()
+                path.endsWith("/pages") -> "$imageBase/one.png\n$imageBase/two.png".toByteArray()
                 path.endsWith(".png") -> image
                 else -> error("Unexpected fixture request: $path")
             }
@@ -110,7 +111,11 @@ class SuwayomiWorkflowIntegrationTest {
                 99001L,
                 mihon.extension.source.model.SChapter(url = chapter.url, name = chapter.name),
             ).first()
+            assertFalse(network.isDomainAllowed("localhost", installed.pkg))
             assertArrayEquals(image, sources.getImage(99001L, sourcePage))
+            assertTrue(network.isDomainAllowed("localhost", installed.pkg))
+            assertFalse(network.isDomainAllowed("localhost", "unrelated.extension"))
+            assertFalse(network.isDomainAllowed("unrelated.invalid", installed.pkg))
             downloader.enqueue(repository.librarySnapshot().single(), listOf(chapter))
             withTimeout(30_000) {
                 while (downloader.queueState.value.single().status !in
@@ -189,6 +194,90 @@ class SuwayomiWorkflowIntegrationTest {
             manager.close()
             scope.cancel()
             repository.close()
+            network.close()
+            server.stop(0)
+        }
+    }
+
+    @Test
+    fun `restored failed downloads grant their image host before the first extension request`() = runBlocking {
+        assumeTrue(Platform.isWindows())
+        val image = ByteArrayOutputStream().also {
+            javax.imageio.ImageIO.write(
+                java.awt.image.BufferedImage(12, 16, java.awt.image.BufferedImage.TYPE_INT_RGB),
+                "png",
+                it,
+            )
+        }.toByteArray()
+        val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
+        val requests = CopyOnWriteArrayList<String>()
+        server.createContext("/") { exchange ->
+            requests += exchange.requestURI.path
+            exchange.sendResponseHeaders(200, image.size.toLong())
+            exchange.responseBody.use { it.write(image) }
+        }
+        server.start()
+        val prefs = DesktopPreferenceStore(temp.resolve("preferences.properties"))
+        val installer = DesktopExtensionInstaller(temp.resolve("extensions").toFile(), prefs)
+        val installed = installer.installFromLocalFile(createPackage(), trustOnInstall = true)
+        val network = DesktopNetworkHelper()
+        val manager = WindowsExtensionProcessManager(
+            temp.resolve("hosts").toFile(),
+            onBrokerHttp = network::executeBrokeredRequest,
+            networkHelper = network,
+        )
+        val sources = DesktopSourceManager(installer = installer, processManager = manager)
+        val store = DownloadStore(temp.resolve("queue.json"))
+        val imageUrl = "http://localhost:${server.address.port}/restored.png"
+        store.save(
+            listOf(
+                mihon.desktop.download.DesktopDownload(
+                    chapterId = 9L,
+                    mangaId = 8L,
+                    sourceId = 99001L,
+                    mangaTitle = "Fixture",
+                    chapterName = "Saved chapter",
+                    chapterUrl = "http://127.0.0.1:${server.address.port}/chapter",
+                    status = DownloadStatus.ERROR,
+                    pages = listOf(
+                        mihon.desktop.download.DownloadPage(
+                            index = 0,
+                            url = imageUrl,
+                            imageUrl = imageUrl,
+                            status = mihon.desktop.download.PageStatus.ERROR,
+                            error = "Domain denied",
+                        ),
+                    ),
+                    error = "Domain denied",
+                ),
+            ),
+        )
+        val downloader = DesktopDownloader(
+            store,
+            DownloadDiskProvider(temp.resolve("downloads")),
+            network,
+            sourceManager = sources,
+        )
+        try {
+            assertFalse(network.isDomainAllowed("localhost", installed.pkg))
+            downloader.retry(9L)
+            withTimeout(30_000) {
+                while (downloader.queueState.value.single().status !in
+                    setOf(DownloadStatus.COMPLETED, DownloadStatus.ERROR)
+                ) {
+                    delay(50)
+                }
+            }
+            val result = downloader.queueState.value.single()
+            assertEquals(DownloadStatus.COMPLETED, result.status, result.error)
+            assertEquals(1, result.downloadedImages)
+            assertEquals(image.size.toLong(), result.bytesDownloaded)
+            assertEquals(listOf("/restored.png"), requests)
+            assertFalse(network.isDomainAllowed("localhost", "unrelated.extension"))
+            assertFalse(network.isDomainAllowed("unrelated.invalid", installed.pkg))
+        } finally {
+            downloader.close()
+            sources.close()
             network.close()
             server.stop(0)
         }

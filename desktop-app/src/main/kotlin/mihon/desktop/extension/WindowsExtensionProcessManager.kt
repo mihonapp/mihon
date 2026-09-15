@@ -458,6 +458,12 @@ open class WindowsExtensionProcessManager(
     open suspend fun getImage(sourceId: Long, page: Page): ByteArray? {
         routedHost(sourceId)?.let { return it.getImage(sourceId, page) }
         val ipc = ensureRunningSession()
+        // Page URLs can use a CDN discovered at runtime, including pages restored from a saved queue.
+        // Register it for this loaded extension before its image pipeline calls the HTTP broker.
+        brokerSources[sourceId]?.let { owner ->
+            val imageUrl = page.imageUrl?.takeIf { it.isNotBlank() } ?: page.url
+            networkHelper?.registerRuntimePageUrl(imageUrl, extensionId = owner)
+        }
         val response = ipc.sendRequest(
             IpcCommands.GET_IMAGE,
             json.encodeToString(ImagePayload(sourceId, page)),
