@@ -1,6 +1,6 @@
 # T1 source / installer lifecycle evidence
 
-Working tree: `D:\my project\mihon-w\.worktrees\suwayomi`, branch `codex/suwayomi-evolution`, baseline `a75a1d76f`.
+Working tree: `<repository>\.worktrees\suwayomi`, branch `codex/suwayomi-evolution`, baseline `a75a1d76f`.
 
 ## Implemented
 

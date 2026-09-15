@@ -13,7 +13,7 @@
 - Preserve `LibraryUiState`, presenter callbacks, stored display-mode names, and the persisted `gridSize` preference range of 120–280 dp.
 - Opening online content must not add it to the library or a category; this layout slice changes no membership behavior.
 - Support Windows 10 22H2 and Windows 11 x64 desktop resizing.
-- Serialize Gradle with `--max-workers=1` and compile with `C:\Users\18734\.jdks\corretto-23.0.2`.
+- Serialize Gradle with `--max-workers=1` and compile with `<JDK 23 path>`.
 - Do not claim packaging or runtime completion without a built artifact and launch evidence.
 
 ---
@@ -74,7 +74,7 @@ class LibraryGridLayoutTest {
 Run:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\18734\.jdks\corretto-23.0.2'
+$env:JAVA_HOME='<JDK 23 path>'
 .\gradlew.bat :desktop-app:test --tests '*LibraryGridLayoutTest' --no-daemon --max-workers=1 '-Pkotlin.compiler.execution.strategy=in-process' --console=plain
 ```
 

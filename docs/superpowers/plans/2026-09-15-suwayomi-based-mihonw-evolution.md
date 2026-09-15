@@ -28,12 +28,12 @@
 
 ### MihonW
 
-- 工作目录：`D:\my project\mihon-w`。
+- 工作目录：`<repository>`。
 - 当前分支：`main`；HEAD：`d88913d13078262ac051d9745111880362e2ff9a`。
 - 当前仅一个 Git worktree；已有 12 个未提交修改文件，478 行新增、65 行删除。
 - 未提交修改已包含 source 缓存失效后的单次重载、SourceFactory 去重/原子替换、加载中取消和资源释放。下一步应收口这些修改，不重复实现。
 - 桌面主模块当前是 Kotlin/JVM，复用 Compose Multiplatform；不要把所有模块已完成 KMP 拆分当作现状。
-- 打包配置版本为 `0.1.3`，桌面运行时设置 Java 17。构建沿用本机 Corretto 23。
+- 打包配置版本为 `0.1.3`，桌面运行时设置 Java 17。构建沿用Corretto 23。
 - 现有 app-image 时间为 2026-09-15 09:57:25、MSI 为 09:57:49；installer EXE 为 2026-09-11，portable ZIP 为 2026-09-12。各包并非同批产物，时间戳也不能证明对应当前全部改动。
 - 本次未重新运行构建、测试或安装，因此不把已有报告当作当前整个工作区的通过证明。
 
@@ -273,7 +273,7 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 - [ ] 从已集成的同一提交生成 app-image、installer EXE、MSI、portable ZIP；统一版本来源，输出整个发行目录的文件摘要清单。
 - [ ] 包含 codec、扩展 host、浏览器辅助组件及其所需运行时，不依赖开发机 PATH/JDK/全局缓存。
-- [ ] 修正现有 clean-machine 脚本硬编码 JDK/版本，并准确称其为本机隔离目录检查；真正干净环境验收在 Win10/Win11 虚拟机或实体机执行。
+- [ ] 修正现有 clean-machine 脚本硬编码 JDK/版本，并准确称其为独立目录检查；全新系统验收在 Win10/Win11 虚拟机或实体机执行。
 - [ ] 验证旧版升级、数据迁移失败回滚、更新包摘要失败、portable 原子替换、文件关联、卸载保留数据；升级下载成功不等于安装成功。
 - [ ] 安装/更新后启动真实 EXE，执行 T9 主流程；记录安装版本、构建提交、完整 app 内容摘要、截图和退出码。
 - [ ] 检查 0.1.3 的三个旧格式升级到同一新版本，portable 用户数据仅写自己的 data 目录；新机器无浏览器缓存也能初始化。
@@ -298,7 +298,7 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 在已确定的工作分支执行，不在计划编写阶段运行。统一 PowerShell 构建环境：
 
 ```powershell
-$env:JAVA_HOME = 'C:\Users\18734\.jdks\corretto-23.0.2'
+$env:JAVA_HOME = '<JDK 23 path>'
 $gradleArgs = @('--no-daemon', '--max-workers=1', '-Pkotlin.compiler.execution.strategy=in-process', '--console=plain')
 ```
 
@@ -325,7 +325,7 @@ git diff --check
 
 ```powershell
 .\gradlew.bat :desktop-app:createDistributable :desktop-app:packageExe :desktop-app:packageMsi :desktop-app:packagePortableZip @gradleArgs
-$releaseExe = 'D:\my project\mihon-w\desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe'
+$releaseExe = '<repository>\desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe'
 $smokeProcess = Start-Process -FilePath $releaseExe -ArgumentList '--smoke-test' -WindowStyle Hidden -Wait -PassThru
 if ($smokeProcess.ExitCode -ne 0) { throw 'Packaged smoke failed' }
 ```

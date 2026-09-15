@@ -1,6 +1,6 @@
 # T6 书库更新归一与恢复
 
-日期：2026-09-15。工作区：`D:\my project\mihon-w\.worktrees\suwayomi`，分支 `codex/suwayomi-evolution`。本任务未提交。
+日期：2026-09-15。工作区：`<repository>\.worktrees\suwayomi`，分支 `codex/suwayomi-evolution`。本任务未提交。
 
 ## 已实现
 

@@ -7,7 +7,7 @@ Date: 2026-09-14 (Asia/Shanghai)
 - Branch: `codex/reader-runtime-wiring`
 - Verified HEAD: `dfebd909481e4f44a8da1d477fe27f182ad2ef05`
 - Merge base: `main@8e19e5b48875752850ba45072d215f1828fce364`
-- Isolated worktree: `D:\my project\mihon-w\.worktrees\reader-runtime-wiring`
+- Isolated worktree: `<repository>\.worktrees\reader-runtime-wiring`
 
 ## Runtime coverage
 

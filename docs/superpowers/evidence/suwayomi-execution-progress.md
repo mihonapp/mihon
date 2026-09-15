@@ -1,6 +1,6 @@
 # Suwayomi 计划执行记录
 
-- 工作区：`D:\my project\mihon-w\.worktrees\suwayomi`
+- 工作区：`<repository>\.worktrees\suwayomi`
 - 分支：`codex/suwayomi-evolution`
 - 原始 HEAD：`d88913d13078262ac051d9745111880362e2ff9a`
 - 起始修改快照提交：`a75a1d76f`（原12文件修改及执行计划），原checkout保留。

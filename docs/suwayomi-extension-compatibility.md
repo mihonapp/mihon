@@ -2,7 +2,7 @@
 
 **Current result:** all 7 real APKs convert and load, exposing 84 runtime sources. The final combined run (`73059`) passed 18 tests, 0 failures, 0 skips, in 32 seconds through the shared Gradle mutex wrapper. This proves conversion/loading and the specified offline contracts; it is not full live-site or image-reading verification. Later sections retain the actual red-to-green failure history.
 
-Worktree: `D:\my project\mihon-w\.worktrees\suwayomi`, branch `codex/suwayomi-evolution`. No user extension installation or data was modified. APK downloads and converted artifacts remain in ignored `.superpowers/sdd/t3-samples`.
+Worktree: `<repository>\.worktrees\suwayomi`, branch `codex/suwayomi-evolution`. No user extension installation or data was modified. APK downloads and converted artifacts remain in ignored `.superpowers/sdd/t3-samples`.
 
 ## Provenance
 

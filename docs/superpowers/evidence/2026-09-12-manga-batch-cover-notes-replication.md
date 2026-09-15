@@ -55,5 +55,5 @@
   - `.\gradlew test` executed across all modules (313 tasks): **100% SUCCESS**
 - **Packaging & Deployment**:
   - `.\gradlew :desktop-app:createDistributable` -> Successful build.
-  - Synchronized binaries to `C:\Users\18734\AppData\Local\MihonW`.
+  - Synchronized binaries to `%LOCALAPPDATA%\MihonW`.
   - Binary verified: `Mihon W 0.1.3 (Windows x64)`.

@@ -4,7 +4,7 @@
 
 - Branch: `codex/desktop-reader-control-parity`
 - Implementation commit: `b04cbe839`
-- Isolated worktree: `D:\my project\mihon-w\.worktrees\desktop-reader-control-parity`
+- Isolated worktree: `<repository>\.worktrees\desktop-reader-control-parity`
 - Build JDK: Amazon Corretto 23.0.2
 
 ## Automated verification

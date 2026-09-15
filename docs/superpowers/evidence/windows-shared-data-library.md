@@ -206,10 +206,10 @@ Observed result: exit code 0. The output contained both required success lines:
 
 It also printed `Packaged runtime JAVA_VERSION=17.0.18`, regenerated and verified the Android fixture, ran the Android-to-desktop contract, ran data/UI tests and migration verification, invoked packaged backup/local imports in separate processes, and used a third packaged process to prove both titles and nonempty chapter lists persisted after reopen.
 
-The verifier's observed packaged-process root was `C:\Users\18734\AppData\Local\Temp\mihon-w-library-a36abc23a8cf45c5a2148079c0732795`; its containment check passed and the script removed it. The generated local source path was 288 characters:
+The verifier's observed packaged-process root was `%TEMP%\mihon-w-library-a36abc23a8cf45c5a2148079c0732795`; its containment check passed and the script removed it. The generated local source path was 288 characters:
 
 ```text
-C:\Users\18734\AppData\Local\Temp\mihon-w-library-a36abc23a8cf45c5a2148079c0732795\路径段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长1\路径段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长2\路径段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长3\跨平台本地漫画_验证
+%TEMP%\mihon-w-library-a36abc23a8cf45c5a2148079c0732795\路径段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长1\路径段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长2\路径段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长3\跨平台本地漫画_验证
 ```
 
 It contained a directory chapter plus `.cbz`, `.rar`, `.7z`, and `.epub` files. The verifier asserted exit 0 and exact `SUCCEEDED` JSON for both imports, then found `跨平台备份` and `跨平台本地漫画_验证` with chapters in a new process.
@@ -233,9 +233,9 @@ It contained a directory chapter plus `.cbz`, `.rar`, `.7z`, and `.epub` files. 
 
 Computer Use controlled the already-built packaged executable; no terminal application was automated. Shell use was limited to fixture preparation and launching the visible app with an explicit argument.
 
-- Clean explicit data root: `C:\Users\18734\AppData\Local\Temp\mihon-w-manual-plan2-834c8731027047d0bf91951ecc3955de`.
-- Database actually created and reopened: `C:\Users\18734\AppData\Local\Temp\mihon-w-manual-plan2-834c8731027047d0bf91951ecc3955de\database\library.db`, 114,688 bytes; final observed SHA-256 `2b3725ab5d26995777cd702c29b53acdf31d34024d3b09d6094a1d1bda94f086`.
-- Unicode source selected through the application's native directory chooser: `C:\Users\18734\AppData\Local\Temp\mihon-w-manual-plan2-834c8731027047d0bf91951ecc3955de\源漫画\作者名_日本語\跨平台本地漫画_手动验收`.
+- Clean explicit data root: `%TEMP%\mihon-w-manual-plan2-834c8731027047d0bf91951ecc3955de`.
+- Database actually created and reopened: `%TEMP%\mihon-w-manual-plan2-834c8731027047d0bf91951ecc3955de\database\library.db`, 114,688 bytes; final observed SHA-256 `2b3725ab5d26995777cd702c29b53acdf31d34024d3b09d6094a1d1bda94f086`.
+- Unicode source selected through the application's native directory chooser: `%TEMP%\mihon-w-manual-plan2-834c8731027047d0bf91951ecc3955de\源漫画\作者名_日本語\跨平台本地漫画_手动验收`.
 - Source contents: directory chapter `第 02 话_目录章节/001.jpg` and archive chapter `第 01 话.cbz`.
 
 Observed UI sequence and facts:

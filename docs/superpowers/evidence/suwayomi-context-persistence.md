@@ -1,6 +1,6 @@
 # Suwayomi T1 host Context persistence
 
-Scope: `D:\my project\mihon-w\.worktrees\suwayomi`, `codex/suwayomi-evolution`.
+Scope: `<repository>\.worktrees\suwayomi`, `codex/suwayomi-evolution`.
 
 ## Behavior
 

@@ -1,6 +1,6 @@
 # T10 Windows 后台更新、备份与单实例数据目录
 
-日期：2026-09-15。工作区：`D:\my project\mihon-w\.worktrees\suwayomi`，分支 `codex/suwayomi-evolution`。未提交，未修改用户真实计划任务或安装。
+日期：2026-09-15。工作区：`<repository>\.worktrees\suwayomi`，分支 `codex/suwayomi-evolution`。未提交，未修改用户真实计划任务或安装。
 
 ## 已实现行为
 
@@ -43,4 +43,4 @@ Task Scheduler XML 依据 Microsoft 的[每日触发器 XML 示例](https://lear
 - `DesktopProfileLock.acquire(profileRoot).use { ... }` 已由 Main 在运行时创建前持有；内部测试直接构造 Runtime 不额外持锁。
 - `SettingsScreen(..., backgroundScheduler = runtime.backgroundScheduler)` 参数由主代理接入。
 
-**边界：** 当前 Windows 用户需要保持登录，支持关闭 MihonW 后执行；不承诺注销后运行。不启动本机真实用户的后台计划。卸载安装器调用 removeAll 的最终发行接线、实际打包 EXE 的定时启动验收仍由 T11 完成；本轮真机验证计划任务的注册/查询/移除，没有让隔离 cmd.exe 临时任务执行业务。后台更新产生的自动下载进入现有持久队列，不宣称本轮已验收退出前所有下载都完成。AppContainer、Named Pipe 沙箱由另一任务负责。
+**边界：** 当前 Windows 用户需要保持登录，支持关闭 MihonW 后执行；不承诺注销后运行。不启动已有用户的后台计划。卸载安装器调用 removeAll 的最终发行接线、实际打包 EXE 的定时启动验收仍由 T11 完成；本轮真机验证计划任务的注册/查询/移除，没有让隔离 cmd.exe 临时任务执行业务。后台更新产生的自动下载进入现有持久队列，不宣称本轮已验收退出前所有下载都完成。AppContainer、Named Pipe 沙箱由另一任务负责。

@@ -1,6 +1,6 @@
 # 网络与桌面集成证据
 
-工作区：`D:\my project\mihon-w\.worktrees\suwayomi`，分支 `codex/suwayomi-evolution`。
+工作区：`<repository>\.worktrees\suwayomi`，分支 `codex/suwayomi-evolution`。
 
 ## 网络行为
 

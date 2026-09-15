@@ -1,6 +1,6 @@
 # T8 备份兼容与恢复验证
 
-工作目录：`D:\my project\mihon-w\.worktrees\suwayomi`。2026-09-15。
+工作目录：`<repository>\.worktrees\suwayomi`。2026-09-15。
 
 ## 来源与测试边界
 

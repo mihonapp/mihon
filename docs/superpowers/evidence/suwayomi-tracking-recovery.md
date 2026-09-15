@@ -1,6 +1,6 @@
 # T7 跟踪恢复、凭据迁移与新增跟踪器
 
-工作树：`D:\my project\mihon-w\.worktrees\suwayomi`。未提交，Runtime/UI 由主代理接线。
+工作树：`<repository>\.worktrees\suwayomi`。未提交，Runtime/UI 由主代理接线。
 
 ## 实现
 
@@ -35,8 +35,8 @@ UI 收集 `authenticationRequired: StateFlow<Set<Long>>` 显示重新登录；�
 - 绿：TrackingRecoveryTest、TrackOnReadSyncServiceTest、DesktopTrackerStoreTest、OfflineTrackingQueueTest 首批通过。
 - 新增服务阶段发现 JSON helper 与 Shikimori 私有扩展同名，已统一 token 前缀消除冲突。
 - 第二轮绿：DesktopAdditionalTrackerApiTest 2、TrackerAndQueueTest 3、TrackingQueueRecoveryTest 2、TrackingRecoveryTest 3，共 10 个，0 failed/0 skipped。
-- Windows 原生凭据写入→回读（含中文）→删除→确认不存在：本机实际执行通过；使用一次性随机 test target 并 finally 清理。
-- HTTP 契约为本机 HttpServer 实际 HTTP 请求，覆盖真实路径/方法/header/body 字段；不等同线上账户联调。
+- Windows 原生凭据写入→回读（含中文）→删除→确认不存在：Windows 集成测试通过；使用一次性随机 test target 并 finally 清理。
+- HTTP 契约为测试用 HttpServer 实际 HTTP 请求，覆盖真实路径/方法/header/body 字段；不等同线上账户联调。
 - 最终全 `mihon.desktop.track.*`：15 类、44 个测试，0 failures / 0 errors / 0 skipped；BUILD SUCCESSFUL in 27s。包含新增远端更高进度冲突采用远端测试。
 
 ## 外部门槛和实测范围

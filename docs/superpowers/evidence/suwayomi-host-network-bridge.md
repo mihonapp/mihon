@@ -1,6 +1,6 @@
 # Suwayomi host network bridge evidence
 
-Worktree: `D:\my project\mihon-w\.worktrees\suwayomi`
+Worktree: `<repository>\.worktrees\suwayomi`
 Date: 2026-09-15
 
 ## Delivered

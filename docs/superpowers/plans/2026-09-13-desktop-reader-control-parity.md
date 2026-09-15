@@ -286,7 +286,7 @@ git commit -m "feat(reader): replicate Mihon reader settings"
 - [x] **Step 1: Run formatting and focused reader regression**
 
 ```powershell
-$env:JAVA_HOME='C:\Users\18734\.jdks\corretto-23.0.2'
+$env:JAVA_HOME='<JDK 23 path>'
 ./gradlew.bat :reader-core:spotlessCheck :reader-core:test :desktop-app:spotlessCheck :desktop-app:test --no-daemon --max-workers=1 '-Pkotlin.compiler.execution.strategy=in-process' --console=plain
 ```
 

@@ -21,4 +21,5 @@ The release keeps the empty source/repository defaults and clean-distribution ch
 - Six focused test classes reported 54 tests, zero failures/errors, and two environment-dependent skips: 52 executed tests passed.
 - Portable updater checks passed for checksum rejection, invalid-executable rollback from a renamed archive to a legacy installation, and user data preservation.
 - Background uninstall checks passed for exact executable ownership.
-- Installation, shortcut, executable metadata, portable startup, profile preservation, and GitHub asset checks are recorded in ignored `desktop-app/build/deliveries/0.2.5/` after packaging.
+- Upgrade validation from 0.2.4 passed: the legacy installation was replaced, application files matched the release, shortcuts used the new name, and profile contents were preserved.
+- Installed window-title and executable-metadata checks passed. Portable version, help, data isolation, and backup export checks passed in an isolated test directory; clean Windows 10 / 11 system acceptance remains separate.

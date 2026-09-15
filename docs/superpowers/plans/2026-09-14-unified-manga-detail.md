@@ -76,7 +76,7 @@
 - Modify if required by findings: files touched above only
 - Evidence: `desktop-app/build/compose/binaries/main/app/`
 
-1. Run the full suite: `./gradlew.bat :desktop-app:test --max-workers=1 -Pkotlin.compiler.execution.strategy=in-process` with `JAVA_HOME=C:\Users\18734\.jdks\corretto-23.0.2`.
+1. Run the full suite: `./gradlew.bat :desktop-app:test --max-workers=1 -Pkotlin.compiler.execution.strategy=in-process` with `JAVA_HOME=<JDK 23 path>`.
 2. Build the distributable: `./gradlew.bat :desktop-app:createDistributable --max-workers=1 -Pkotlin.compiler.execution.strategy=in-process`.
 3. Launch the packaged application with an isolated no-space data root. Verify source browse → online detail → refresh → explicit add/remove → category/tracking confirmation → chapter search/filter/sort → bookmark/read/download/delete/batch actions → reader, then verify the same controls from the library detail entry.
 4. Capture desktop-width and split-pane screenshots. Check that actions wrap without clipping, the header uses the available width, and both entry paths show the same feature set.

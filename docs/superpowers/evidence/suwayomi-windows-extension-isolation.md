@@ -37,8 +37,8 @@ Normal close terminates the job, closes process/pipe/log handles, removes only t
 
 Two early prototype runtime caches remain:
 
-- `C:\Users\18734\AppData\Local\Temp\mihonw-sandbox-runtime-18305044064793164876`
-- `C:\Users\18734\AppData\Local\Temp\mihonw-sandbox-runtime-4972787963644455935`
+- `%TEMP%\mihonw-sandbox-runtime-18305044064793164876`
+- `%TEMP%\mihonw-sandbox-runtime-4972787963644455935`
 
 A PowerShell cleanup resolving and checking these exact own TEMP paths before `Remove-Item -LiteralPath ... -Recurse -Force` was rejected by automatic approval with `blocked by policy` and no further reason. It was not retried through another tool or alternate deletion mechanism. Read-only checks found no running Java executable from these caches and no remaining MihonW.Extension profile directories at that point. Subsequent normal launch/close cleanup concerns only resources created by those subsequent launches.
 

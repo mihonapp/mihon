@@ -16,7 +16,7 @@
 - Visible work always has priority; background failures never fail the current page.
 - Keep decoded memory inside the existing 256 MiB core budget and Compose copies inside the existing 96 MiB bridge budget.
 - Preserve page-image ownership, retry invalidation, progress flush, and chapter-boundary callback contracts.
-- Use `C:\Users\18734\.jdks\corretto-23.0.2` for Gradle and always pass `--max-workers=1 -Pkotlin.compiler.execution.strategy=in-process`.
+- Use `<JDK 23 path>` for Gradle and always pass `--max-workers=1 -Pkotlin.compiler.execution.strategy=in-process`.
 - Do not declare completion until the packaged EXE passes its smoke test and the branch is merged to `main`.
 
 ---
@@ -47,7 +47,7 @@ PrefetchPolicy.plan(10, 2, ReadingMode.DUAL_LTR, NavigationDirection.FORWARD) sh
 Run:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\18734\.jdks\corretto-23.0.2'
+$env:JAVA_HOME='<JDK 23 path>'
 .\gradlew.bat :reader-core:test --tests '*PrefetchPolicyTest' --no-daemon --max-workers=1 '-Pkotlin.compiler.execution.strategy=in-process' --console=plain
 ```
 
@@ -361,7 +361,7 @@ git commit -m "feat(reader): render zoomed large images with viewport tiles"
 - [ ] **Step 1: Run formatting and focused suites**
 
 ```powershell
-$env:JAVA_HOME='C:\Users\18734\.jdks\corretto-23.0.2'
+$env:JAVA_HOME='<JDK 23 path>'
 .\gradlew.bat :reader-core:spotlessCheck :reader-core:test :desktop-app:spotlessCheck :desktop-app:test --no-daemon --max-workers=1 '-Pkotlin.compiler.execution.strategy=in-process' --console=plain
 ```
 
@@ -397,7 +397,7 @@ git commit -m "docs(reader): record runtime wiring verification"
 
 - [ ] **Step 5: Merge only after clean verification**
 
-From `D:\my project\mihon-w`:
+From `<repository>`:
 
 ```powershell
 git status --short

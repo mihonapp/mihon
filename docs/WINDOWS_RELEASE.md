@@ -24,7 +24,7 @@ mihondesk 是 AI 辅助开发的 Windows 漫画阅读器，基于 Mihon。当前
 
 ## 干净发行规则
 
-发行包不包含预装图源、扩展仓库、开发者账号或个人数据。首次使用请自行添加仓库或安装扩展。
+发行包不预装图源或扩展仓库，也不包含账号或阅读数据。首次使用请自行添加仓库或安装扩展。
 
 EXE、MSI 和便携 ZIP 都依赖 `verifyCleanDistribution`，打包前执行 `scripts/verify-release-clean.ps1`。检查会拒绝个人数据目录、已安装扩展包、偏好文件、Cookie 和数据库。用于验证的独立数据目录、日志与升级备份放在发行目录以外。
 
@@ -44,7 +44,7 @@ EXE、MSI 和便携 ZIP 都依赖 `verifyCleanDistribution`，打包前执行 `s
 .\scripts\verify-desktop-clean-machine.ps1 -PortableZip '<便携 ZIP 路径>' -SkipBuild
 ```
 
-最后一个脚本验证本机独立目录中的便携运行、版本、帮助和备份导出，不代表已完成所有 Windows 版本的干净系统验收。
+最后一个脚本验证独立目录中的便携运行、版本、帮助和备份导出。Windows 10 / 11 的全新系统验收需另外执行。
 
 ## 更新
 

@@ -25,12 +25,12 @@ Following user feedback on page download failures and unrecoverable reader error
    - Full test suite passed across all modules (313 tasks, zero failures).
 
 2. **Live Installed Source Probing**:
-   - Probed installed extensions with `scripts/probe-installed-sources.py` using the updated executable `C:\Users\18734\AppData\Local\MihonW\MihonW.exe`:
+   - Probed installed extensions with `scripts/probe-installed-sources.py` using the updated executable `%LOCALAPPDATA%\MihonW\MihonW.exe`:
      - **Everia.club** (Source `7698513740234984368`): Chapter `2026/09/09/niko-kawago-...` (Chapter 567) returned 87 pages. Page 0 fetched as real 168,062-byte WebP image.
      - **J-Novel** (Source `2482510125735992610`): Chapter 1 returned 33 pages. Page 0 fetched as real 588,130-byte WebP image.
      - **BiliManga (嗶哩漫畫)** (Source `7289707411592168382`): Chapter 111 returned 44 pages. Page 0 fetched as real 215,413-byte AVIF image.
 
 3. **Packaging & Delivery**:
    - Generated `MihonW-0.1.3.msi` and `MihonW-0.1.3-windows-x64-portable.zip`.
-   - Backed up installed application to `C:\Users\18734\AppData\Local\MihonW-repair-backup-20260912-012734`.
-   - Deployed updated application files to `C:\Users\18734\AppData\Local\MihonW`, verified 292 files with 0 SHA-256 hash mismatches.
+   - Backed up installed application to `%LOCALAPPDATA%\MihonW-repair-backup-20260912-012734`.
+   - Deployed updated application files to `%LOCALAPPDATA%\MihonW`, verified 292 files with 0 SHA-256 hash mismatches.

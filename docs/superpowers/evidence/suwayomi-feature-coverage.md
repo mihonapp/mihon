@@ -1,13 +1,13 @@
 # Suwayomi 演进功能覆盖与验收证据映射
 
-本表是 **2026-09-15 当前工作树的功能与证据快照，不是完整 Windows 端或正式发行已完成的声明**。基准为[原批准设计](../specs/2026-08-31-windows-port-design.md)及[本次 T0–T11 计划](../plans/2026-09-15-suwayomi-based-mihonw-evolution.md)。工作树为 `D:\my project\mihon-w\.worktrees\suwayomi`，`codex/suwayomi-evolution`；起始快照 `a75a1d76f` 不代表后续所有工作已提交或已进入发行包。
+本表是 **2026-09-15 当前工作树的功能与证据快照，不是完整 Windows 端或正式发行已完成的声明**。基准为[原批准设计](../specs/2026-08-31-windows-port-design.md)及[本次 T0–T11 计划](../plans/2026-09-15-suwayomi-based-mihonw-evolution.md)。工作树为 `<repository>\.worktrees\suwayomi`，`codex/suwayomi-evolution`；起始快照 `a75a1d76f` 不代表后续所有工作已提交或已进入发行包。
 
 本文直接采用各负责代理和根代理已有报告，不重新执行测试或复核其实现。不同时间、过滤条件和构建版本的测试数量不相加；后续 Gradle 会覆盖 XML，因此不从当前 XML 倒推旧运行。报告中较早的“复跑中”状态，由较新的具体通过结果补充；涉及最终包、GUI、安装和外部账户的门槛仍保留。
 
 ## 证据等级与来源
 
 - **代码/契约**：实现入口与确定性测试存在且负责报告给出通过结果，不代表外站或安装环境通过。
-- **本机真实链路**：实际 Windows API、进程、SQLite、HTTP、下载文件、JCEF 或 EXE 被执行；测试内容仍可能是合成数据。
+- **Windows 集成测试**：实际 Windows API、进程、SQLite、HTTP、下载文件、JCEF 或 EXE 被执行；测试内容仍可能是合成数据。
 - **外部样本部分验证**：真实 APK 或当前 Android 编码器被使用，只覆盖报告明确执行的行为。
 - **外部未验证**：缺真实账户、目标应用、站点流程或干净系统，没有结果可计入完成。
 - **已知限制/缺口**：报告明确指出的能力限制或尚缺实现，不以“待验证”掩盖。
@@ -92,7 +92,7 @@
 | 外部生产环境 | 代表性普通 HTTP / SourceFactory / 会话型 / WebView 源从安装到图片阅读；真实 tracker 登录、绑定、读写、刷新与退出 | 不宣布生产图源/账户矩阵全面完成；不将 intentional fixture parse error 归因为站点故障 |
 | 真实数据交换 | 脱敏用户备份；当前Android/Suwayomi应用实际导入本次导出；关键字段对照 | 不满足原设计真实备份双向迁移完成门槛 |
 | 新能力缺口 | 新tracker自动OAuth；WebView高级API/WebSocket等；受限环境第三方旧temp API；安装发布强杀窗口 | 分别是明确实现/兼容限制，不能仅改成“未提供账号”或“网站没测” |
-| Windows发行 | 同一最终提交、同版本所有产物、完整SHA、真实安装升级卸载/回滚、关联、portable数据边界；干净Win10 22H2与Win11 x64 | 不满足正式发行完成定义。`verify-desktop-clean-machine`类本机隔离检查也不是干净VM |
+| Windows发行 | 同一最终提交、同版本所有产物、完整SHA、真实安装升级卸载/回滚、关联、portable数据边界；干净Win10 22H2与Win11 x64 | 不满足正式发行完成定义。`verify-desktop-clean-machine`类独立目录检查也不是干净VM |
 | UI/性能 | 新GUI包截图/输入/焦点/DPI/宽窄矩阵；启动/空闲/P95/帧时间/30分钟曲线及硬件方法 | 单元/UI测试和reader预算仅为部分证据；根代理后续GUI结果应单独链接 |
 | 故障恢复 | 真实满盘/拔盘/断电、升级迁移失败只读恢复、实际旧版安装失败回退、长备份恢复取消 | 不能把确定性异常测试替代全部系统故障注入 |
 | Android与许可 | 最终共享改动后的Android测试/APK构建；最终发行包第三方清单与实际原生文件匹配 | 目前编码器合同及许可工程不足以宣布全部最终门槛通过 |

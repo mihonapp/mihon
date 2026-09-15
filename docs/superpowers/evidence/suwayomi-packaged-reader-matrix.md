@@ -4,7 +4,7 @@ PASS: three independent real `MihonW.exe` processes completed initial-open, reop
 
 ## Exact artifact
 
-- EXE: `D:\my project\mihon-w\.worktrees\suwayomi\desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe`
+- EXE: `<repository>\.worktrees\suwayomi\desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe`
 - EXE SHA-256: `88C84A9F42411DECCBECA230AFF1CD055CA76E565C6745D116324397FE43F961`
 - Application JAR: `app\desktop-app-71a0e82b6a4da447c2479ea2671441.jar`
 - Application JAR SHA-256: `349F37A58677A1D8F616684464E9B5EC43B1AD36D91EF75AC0AAC1BE6664B655`

@@ -62,7 +62,7 @@ Fixture construction uses the repository's test dependencies. Packaged verificat
 Tests were added before the implementation and first run with:
 
 ```powershell
-$env:JAVA_HOME='C:\Users\18734\.jdks\corretto-23.0.2'
+$env:JAVA_HOME='<JDK 23 path>'
 .\gradlew.bat :desktop-app:test `
   --tests 'mihon.desktop.cli.DesktopCommandTest' `
   --tests 'mihon.desktop.reader.PackagedReaderScenarioTest' `
@@ -145,7 +145,7 @@ Directory, CBZ, and EPUB each contain the streamed 20,000×20,000 PNG. The archi
 
 ## Packaged process evidence
 
-Executable: `D:\my project\mihon-w\.worktrees\windows-reader-core\desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe` (532,480 bytes), SHA-256 `ad4c8b925492c83c098ec68c3ebc13e6e5b9020859c51415aa70b8aa94720658`.
+Executable: `<repository>\.worktrees\windows-reader-core\desktop-app\build\compose\binaries\main\app\MihonW\MihonW.exe` (532,480 bytes), SHA-256 `ad4c8b925492c83c098ec68c3ebc13e6e5b9020859c51415aa70b8aa94720658`.
 
 All processes reported assets `standalone,directory,cbz,cbt,cb7,cbr,epub`, modes `SINGLE_LTR,SINGLE_RTL,DUAL_LTR,DUAL_RTL,VERTICAL,WEBTOON`, 38 decoded tiles, and distinct GIF frame hashes:
 

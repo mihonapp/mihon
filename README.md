@@ -34,7 +34,7 @@ AI 辅助开发的开源 Windows 漫画阅读器 · 基于 Mihon · Kotlin / Com
 | [便携 ZIP](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.5/mihondesk-0.2.5-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `mihondesk.exe` |
 | [SHA-256 校验文件](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.5/SHA256SUMS.txt) | 校验下载文件的完整性 |
 
-**干净发行包**：不预装图源或扩展仓库，不包含开发者的书架、账号、Cookie、阅读记录或个人设置。首次使用请自行添加仓库或安装扩展；升级会继续使用你本机已有的数据。
+**首次使用**：发行包不预装图源或扩展仓库，请自行添加仓库或安装扩展。升级会保留已有书架、设置和阅读数据。
 
 安装版默认将数据保存在 `%APPDATA%\MihonW`；便携版保存在 `mihondesk.exe` 同目录下的 `data` 文件夹。迁移便携版时请一并保留该文件夹。
 
@@ -61,7 +61,7 @@ AI 辅助开发的开源 Windows 漫画阅读器 · 基于 Mihon · Kotlin / Com
 - 程序显示名、窗口标题、通知、安装包、快捷方式与启动文件统一改为 mihondesk。
 - 更新检查改为访问本仓库，并识别新名称的安装包与便携 ZIP。
 - 保留原有升级识别码、数据目录与账号存储，已有书架和配置继续使用。
-- 延续 0.2.4 的干净发行规则：无预装图源或仓库，打包前拦截误混入的个人数据。
+- 延续 0.2.4 的发行规则：首次启动不预设图源或仓库，发布前校验发行包内容。
 
 详见[本版发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.5)。此前的图源兼容修复见 [0.2.3 发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.3)。
 
@@ -82,7 +82,7 @@ mihondesk 仍在持续开发，桌面端尚未覆盖 Mihon 的全部功能。
 
 - [扩展兼容矩阵](docs/suwayomi-extension-compatibility.md)
 - [功能覆盖与验证范围](docs/superpowers/evidence/suwayomi-feature-coverage.md)
-- [Windows 打包与验收说明](docs/superpowers/evidence/suwayomi-windows-release-acceptance.md)
+- [Windows 发行与升级说明](docs/WINDOWS_RELEASE.md)
 
 ## 上游与许可
 

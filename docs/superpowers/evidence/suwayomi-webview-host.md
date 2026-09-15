@@ -67,7 +67,7 @@ runtime stage 保留原有 legal/conf/native，排除 jmods/include/src.zip。�
 
 - [Suwayomi CEFManager](https://github.com/Suwayomi/Suwayomi-Server/blob/d10e000e1fdcac6f3c84d002f0b459c90c1b00f3/server/src/main/kotlin/suwayomi/tachidesk/server/util/CEFManager.kt)：JBR/JCEF runtime、JCefAppConfig 与原生初始化。
 - [Suwayomi KcefWebViewProvider](https://github.com/Suwayomi/Suwayomi-Server/blob/d10e000e1fdcac6f3c84d002f0b459c90c1b00f3/AndroidCompat/src/main/java/xyz/nulldev/androidcompat/webkit/KcefWebViewProvider.kt)：CEF resource handler、额外 headers 与 JS message router。
-- [JCEF Maven 文档](https://github.com/jcefmaven/jcefmaven)：Windows JCEF 独立组件的可用性参考；最终实现使用本机固定 JBR 内置 JCEF，不引入 jcefmaven 下载器。
+- [JCEF Maven 文档](https://github.com/jcefmaven/jcefmaven)：Windows JCEF 独立组件的可用性参考；最终实现使用指定版本的 JBR 内置 JCEF，不引入 jcefmaven 下载器。
 
 ## 真实 APK 范围
 

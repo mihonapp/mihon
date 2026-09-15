@@ -1,6 +1,6 @@
 # T5 下载恢复与来源公平调度
 
-工作树：`D:\my project\mihon-w\.worktrees\suwayomi`，分支 `codex/suwayomi-evolution`。仅修改下载模块及其测试；没有复制上游源码。行为依据为本地计划 T5，延续现有 JSON 队列、共同 getImage 下载链和离线目录。
+工作树：`<repository>\.worktrees\suwayomi`，分支 `codex/suwayomi-evolution`。仅修改下载模块及其测试；没有复制上游源码。行为依据为本地计划 T5，延续现有 JSON 队列、共同 getImage 下载链和离线目录。
 
 ## 行为
 

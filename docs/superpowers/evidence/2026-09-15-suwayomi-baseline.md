@@ -1,6 +1,6 @@
 # Suwayomi 演进基线
 
-2026-09-15，在原checkout `D:\my project\mihon-w` 测试起始12文件修改；期间原checkout源码未修改。
+2026-09-15，在原checkout `<repository>` 测试起始12文件修改；期间原checkout源码未修改。
 
 - HEAD：`d88913d13078262ac051d9745111880362e2ff9a`。
 - 隔离工作区完整保存为提交 `a75a1d76f`。
