@@ -465,6 +465,10 @@ class SqlDelightLibraryRepository(
     override fun localMangaStoragePaths(): Set<String> =
         queries.selectLocalMangaStoragePaths().executeAsList().toSet()
 
+    override fun importedMangaStoragePaths(): Set<String> =
+        queries.selectLocalMangaStoragePathsBySource(mihon.desktop.library.local.LOCAL_SOURCE_ID)
+            .executeAsList().toSet()
+
     override fun insertLocalManga(value: LocalMangaRecord) {
         queries.insertLocalMangaEntry(value.mangaId, value.storagePath, value.manifestSha256, value.importedAt)
     }

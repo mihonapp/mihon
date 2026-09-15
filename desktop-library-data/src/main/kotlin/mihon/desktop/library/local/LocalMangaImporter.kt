@@ -104,7 +104,7 @@ class LocalMangaImporter private constructor(
     }
 
     fun cleanupOrphans(localLibraryRoot: Path) {
-        val retained = mutations.localMangaStoragePaths().mapTo(mutableSetOf()) { storagePath ->
+        val retained = mutations.importedMangaStoragePaths().mapTo(mutableSetOf()) { storagePath ->
             try {
                 Path.of(storagePath)
             } catch (error: RuntimeException) {

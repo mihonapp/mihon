@@ -22,6 +22,38 @@ class DesktopRuntimeFactoryTest {
     lateinit var tempDir: Path
 
     @Test
+    fun `downloaded online manga does not prevent the next startup or enter import cleanup`() {
+        val chosen = tempDir.resolve("download-profile")
+        val downloaded = chosen.resolve("media/downloads/42/Manga")
+        Files.createDirectories(downloaded)
+        val image = Files.writeString(downloaded.resolve("keep.jpg"), "downloaded image")
+        mihon.desktop.library.db.DesktopLibraryDatabaseFactory.open(
+            chosen.resolve("database/library.db"),
+        ).use { library ->
+            val mangaId = library.insertManga(
+                mihon.desktop.library.model.MangaRecord(
+                    sourceId = 42,
+                    url = "/manga",
+                    title = "Manga",
+                    favorite = false,
+                ),
+            )
+            library.insertLocalManga(
+                mihon.desktop.library.model.LocalMangaRecord(mangaId, downloaded.toString(), "", 1),
+            )
+        }
+        DesktopRuntimeFactory.create(
+            args = arrayOf("--data-dir=$chosen"),
+            environment = emptyMap(),
+            executableDirectory = tempDir.resolve("bin"),
+        ).use { runtime ->
+            runtime.library.librarySnapshot() shouldBe emptyList()
+            runtime.library.localMangaStoragePaths() shouldBe setOf(downloaded.toString())
+            Files.readString(image) shouldBe "downloaded image"
+        }
+    }
+
+    @Test
     fun `portable runtime never uses APPDATA`() {
         val executableDir = tempDir.resolve("portable")
 

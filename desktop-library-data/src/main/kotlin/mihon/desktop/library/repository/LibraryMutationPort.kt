@@ -40,6 +40,9 @@ interface LibraryMutationPort {
     fun upsertSourcePreference(value: SourcePreferenceSnapshotRecord)
     fun findLocalMangaByManifest(manifestSha256: String): LocalMangaRecord?
     fun localMangaStoragePaths(): Set<String>
+
+    /** Paths retained by local-import cleanup; online downloads have separate ownership. */
+    fun importedMangaStoragePaths(): Set<String> = localMangaStoragePaths()
     fun insertLocalManga(value: LocalMangaRecord)
     fun insertLocalChapter(value: LocalChapterRecord)
     fun insertReport(value: ImportReportRecord): Long

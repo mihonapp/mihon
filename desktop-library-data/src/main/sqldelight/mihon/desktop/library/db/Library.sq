@@ -505,6 +505,11 @@ SELECT * FROM local_manga_entry WHERE manifest_sha256 = ?;
 selectLocalMangaStoragePaths:
 SELECT storage_path FROM local_manga_entry ORDER BY storage_path;
 
+selectLocalMangaStoragePathsBySource:
+SELECT local_manga_entry.storage_path FROM local_manga_entry
+JOIN manga ON manga.id = local_manga_entry.manga_id
+WHERE manga.source_id = ? ORDER BY local_manga_entry.storage_path;
+
 insertLocalChapterAsset:
 INSERT INTO local_chapter_asset(chapter_id, relative_path, asset_kind, size_bytes, modified_at)
 VALUES (?, ?, ?, ?, ?)
