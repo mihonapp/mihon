@@ -3,7 +3,11 @@ package mihon.desktop
 import androidx.compose.ui.window.application
 import mihon.desktop.cli.CommandLineException
 import mihon.desktop.cli.DesktopCommand
+import mihon.desktop.cli.DesktopCommandParser
 import mihon.desktop.cli.DesktopCommandRunner
+import mihon.desktop.platform.DesktopProfileDirectories
+import mihon.desktop.platform.DesktopProfileLock
+import mihon.desktop.platform.ProfileInUseException
 import mihon.desktop.ui.MihonDesktopApp
 import java.nio.file.Path
 import kotlin.system.exitProcess
@@ -18,18 +22,25 @@ fun main(args: Array<String>) {
     val executableDirectory = command?.let(Path::of)?.parent
         ?: Path.of(System.getProperty("user.dir"))
     val exitCode = try {
-        val runtime = DesktopRuntimeFactory.create(args, System.getenv(), executableDirectory)
-        executeDesktopRuntime(
-            runtime = runtime,
-            runCommand = { activeRuntime, desktopCommand ->
-                DesktopCommandRunner(activeRuntime, System.out).run(desktopCommand)
-            },
-            launchUi = { activeRuntime ->
-                application(exitProcessOnExit = false) {
-                    MihonDesktopApp(activeRuntime)
-                }
-            },
-        )
+        DesktopCommandParser.parse(args)
+        val profile = DesktopProfileDirectories.resolve(args, System.getenv(), executableDirectory)
+        DesktopProfileLock.acquire(profile.root).use {
+            val runtime = DesktopRuntimeFactory.create(args, System.getenv(), executableDirectory)
+            executeDesktopRuntime(
+                runtime = runtime,
+                runCommand = { activeRuntime, desktopCommand ->
+                    DesktopCommandRunner(activeRuntime, System.out).run(desktopCommand)
+                },
+                launchUi = { activeRuntime ->
+                    application(exitProcessOnExit = false) {
+                        MihonDesktopApp(activeRuntime)
+                    }
+                },
+            )
+        }
+    } catch (_: ProfileInUseException) {
+        System.out.println("""{"command":"startup","status":"SKIPPED","category":"PROFILE_IN_USE"}""")
+        if ("--background-update" in args || "--background-backup" in args) 0 else 75
     } catch (error: CommandLineException) {
         DesktopCommandRunner.writeCommandLineError(System.out, error)
         error.exitCode

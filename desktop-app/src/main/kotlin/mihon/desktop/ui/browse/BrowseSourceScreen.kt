@@ -109,6 +109,7 @@ fun BrowseSourceScreen(
     onResetFilters: () -> Unit = {},
     onApplyFilters: (FilterList) -> Unit = {},
     onImportLocal: () -> Unit = {},
+    onOpenWebPage: (() -> Unit)? = null,
 ) {
     val strings = LocalStrings.current
 
@@ -187,6 +188,12 @@ fun BrowseSourceScreen(
                     Text(strings.browseFiltersButton(count))
                 }
             }
+            if (onOpenWebPage != null) {
+                Spacer(modifier = Modifier.width(8.dp))
+                OutlinedButton(onClick = onOpenWebPage, modifier = Modifier.testTag("source-open-webpage")) {
+                    Text(mihon.desktop.i18n.recoveryText("Open website", "打开网页", "開啟網頁"))
+                }
+            }
         }
 
         // Error message
@@ -196,7 +203,11 @@ fun BrowseSourceScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = error, color = MaterialTheme.colorScheme.error)
+                Text(
+                    text = error,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.weight(1f).padding(end = 12.dp),
+                )
                 Button(onClick = onRetry) { Text(strings.libraryRetry) }
             }
         }

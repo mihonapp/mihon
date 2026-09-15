@@ -56,7 +56,7 @@ class AndroidBackupImporter(
                 upsertCategory(CategoryRecord(name = category.name, sortOrder = category.order, flags = category.flags))
             databaseCategoryIdByOrder[category.order] = databaseId
             databaseCategoryIdByName[category.name.lowercase(Locale.ROOT)] = databaseId
-            backupCategoryNameById[category.id] = category.name
+            if (category.id != 0L) backupCategoryNameById[category.id] = category.name
         }
 
         backup.backupSources.forEach { source ->

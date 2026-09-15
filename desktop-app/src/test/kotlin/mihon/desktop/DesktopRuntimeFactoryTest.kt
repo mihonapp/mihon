@@ -136,6 +136,7 @@ class DesktopRuntimeFactoryTest {
                 },
                 closeLibrary = { events += "library" },
             )
+            runtime.onShutdown { events += "ui-workers" }
 
             val thrown = try {
                 runtime.shutdown()
@@ -146,7 +147,7 @@ class DesktopRuntimeFactoryTest {
 
             thrown shouldBe firstFailure
             thrown.suppressed.toList() shouldBe listOf(secondFailure)
-            events shouldBe listOf("sessions", "services", "library")
+            events shouldBe listOf("ui-workers", "sessions", "services", "library")
             val repeated = try {
                 runtime.shutdown()
                 error("repeated shutdown must preserve the first failure")
@@ -154,7 +155,7 @@ class DesktopRuntimeFactoryTest {
                 error
             }
             repeated shouldBe firstFailure
-            events shouldBe listOf("sessions", "services", "library")
+            events shouldBe listOf("ui-workers", "sessions", "services", "library")
         }
     }
 

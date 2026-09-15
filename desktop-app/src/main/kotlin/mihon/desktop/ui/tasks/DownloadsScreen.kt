@@ -58,6 +58,8 @@ fun DownloadsScreen(
     onCancel: (chapterId: Long) -> Unit,
     onRetry: (chapterId: Long) -> Unit,
     modifier: Modifier = Modifier,
+    recoveryMessage: String? = null,
+    storageError: String? = null,
 ) {
     val strings = mihon.desktop.i18n.LocalStrings.current
     Column(
@@ -87,7 +89,11 @@ fun DownloadsScreen(
                     text = if (isRunning && speedBytesPerSec > 0) {
                         strings.downloadsActiveSpeed(activeCount, speedText)
                     } else {
-                        "$activeCount active items"
+                        mihon.desktop.i18n.recoveryText(
+                            "$activeCount active items",
+                            "$activeCount 个下载任务",
+                            "$activeCount 個下載工作",
+                        )
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -143,6 +149,20 @@ fun DownloadsScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        listOfNotNull(storageError, recoveryMessage).distinct().forEach { message ->
+            Surface(
+                color = if (message == storageError) {
+                    MaterialTheme.colorScheme.errorContainer
+                } else {
+                    MaterialTheme.colorScheme.secondaryContainer
+                },
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp).testTag("download-recovery-notice"),
+            ) {
+                Text(message, modifier = Modifier.padding(12.dp), style = MaterialTheme.typography.bodyMedium)
+            }
+        }
 
         if (queue.isEmpty()) {
             Box(

@@ -158,8 +158,14 @@ CREATE INDEX manga_title ON manga(title COLLATE NOCASE);
 
 selectLibrary:
 SELECT manga.*, COUNT(chapter.id) AS chapter_count,
-       COALESCE(SUM(CASE WHEN chapter.read = 0 THEN 1 ELSE 0 END), 0) AS unread_count
+       COALESCE(SUM(CASE WHEN chapter.read = 0 THEN 1 ELSE 0 END), 0) AS unread_count,
+       COALESCE(SUM(CASE WHEN chapter.bookmark = 1 THEN 1 ELSE 0 END), 0) AS bookmark_count,
+       COUNT(local_chapter_asset.chapter_id) AS downloaded_count,
+       COALESCE(MAX(history.last_read), 0) AS last_read,
+       COALESCE(MAX(chapter.date_fetch), 0) AS last_update
 FROM manga LEFT JOIN chapter ON chapter.manga_id = manga.id
+LEFT JOIN local_chapter_asset ON local_chapter_asset.chapter_id = chapter.id
+LEFT JOIN history ON history.chapter_id = chapter.id
 WHERE manga.favorite = 1
 GROUP BY manga.id
 ORDER BY manga.title COLLATE NOCASE, manga.id;
@@ -569,10 +575,16 @@ DELETE FROM tracking WHERE manga_id = ? AND tracker_id = ?;
 
 selectLibraryByCategory:
 SELECT manga.*, COUNT(chapter.id) AS chapter_count,
-       COALESCE(SUM(CASE WHEN chapter.read = 0 THEN 1 ELSE 0 END), 0) AS unread_count
+       COALESCE(SUM(CASE WHEN chapter.read = 0 THEN 1 ELSE 0 END), 0) AS unread_count,
+       COALESCE(SUM(CASE WHEN chapter.bookmark = 1 THEN 1 ELSE 0 END), 0) AS bookmark_count,
+       COUNT(local_chapter_asset.chapter_id) AS downloaded_count,
+       COALESCE(MAX(history.last_read), 0) AS last_read,
+       COALESCE(MAX(chapter.date_fetch), 0) AS last_update
 FROM manga
 JOIN manga_category ON manga_category.manga_id = manga.id
 LEFT JOIN chapter ON chapter.manga_id = manga.id
+LEFT JOIN local_chapter_asset ON local_chapter_asset.chapter_id = chapter.id
+LEFT JOIN history ON history.chapter_id = chapter.id
 WHERE manga.favorite = 1 AND manga_category.category_id = ?
 GROUP BY manga.id
 ORDER BY manga.title COLLATE NOCASE, manga.id;
@@ -603,4 +615,3 @@ SELECT * FROM preference_snapshot ORDER BY key ASC;
 
 selectAllSourcePreferenceSnapshotsForExport:
 SELECT * FROM source_preference_snapshot ORDER BY source_key ASC, key ASC;
-

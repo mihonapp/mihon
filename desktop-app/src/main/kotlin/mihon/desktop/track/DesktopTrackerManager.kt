@@ -13,6 +13,12 @@ class DesktopTrackerManager(
     @Volatile
     private var pendingSyncHandler: (suspend () -> Int)? = null
 
+    private var loginRecoveryHandler: (suspend (Long) -> Unit)? = null
+
+    fun setLoginRecoveryHandler(handler: suspend (Long) -> Unit) {
+        loginRecoveryHandler = handler
+    }
+
     init {
         store?.let { s ->
             trackersList.forEach { tracker ->
@@ -72,6 +78,11 @@ class DesktopTrackerManager(
                     serverUrl = serverUrl,
                 )
             }
+            try {
+                loginRecoveryHandler?.invoke(trackerId)
+            } catch (error: CancellationException) {
+                throw error
+            } catch (_: Exception) { }
             drainPendingSafely()
         }
         return success
@@ -106,6 +117,8 @@ class DesktopTrackerManager(
             MangaUpdatesTracker(),
             KavitaTracker(),
             SuwayomiTracker(),
+            HikkaTracker(),
+            MangaBakaTracker(),
         )
     }
 }

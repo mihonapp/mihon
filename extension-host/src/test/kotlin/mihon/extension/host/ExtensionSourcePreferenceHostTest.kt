@@ -53,6 +53,7 @@ class ExtensionSourcePreferenceHostTest {
 
     private class FakeConfigurableSource(
         private val preferences: SharedPreferences,
+        private val enabledByDefault: Boolean = false,
     ) : CatalogueSource, ConfigurableSource {
 
         override val id: Long = 8801L
@@ -73,7 +74,7 @@ class ExtensionSourcePreferenceHostTest {
                 key = "dataSaver"
                 title = "Data Saver"
                 summary = "Reduce data usage"
-                defaultValue = false
+                defaultValue = enabledByDefault
                 onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                     listenerValues += newValue
                     true
@@ -126,6 +127,7 @@ class ExtensionSourcePreferenceHostTest {
                     title = "Genres"
                     entries = arrayOf("Action", "Comedy")
                     entryValues = arrayOf("action", "comedy")
+                    if (enabledByDefault) defaultValue = setOf("action", "comedy")
                     values = setOf("action")
                 },
             )
@@ -169,6 +171,24 @@ class ExtensionSourcePreferenceHostTest {
     private fun decodePreferences(payloadJson: String): SourcePreferencesDto {
         return decodeSourcePreferences(payloadJson)
             ?: error("Could not decode source preferences payload: $payloadJson")
+    }
+
+    @Test
+    fun `unset checkbox and multi select expose declared defaults while stored empty values win`(
+        @org.junit.jupiter.api.io.TempDir directory: java.nio.file.Path,
+    ) {
+        val context = Application(directory.toFile(), "default.preference.test")
+        val preferences = context.getSharedPreferences("source_defaults", Context.MODE_PRIVATE)
+        val source = FakeConfigurableSource(preferences, enabledByDefault = true)
+        val model = SourcePreferenceModel(source, context)
+        val defaults = model.definitions().associateBy { it.key }
+        defaults.getValue("dataSaver").currentValue shouldBe BooleanPreferenceValueDto(true)
+        defaults.getValue("genres").currentValue shouldBe ListPreferenceValueDto(listOf("action", "comedy"))
+
+        preferences.edit().putBoolean("dataSaver", false).putStringSet("genres", emptySet()).commit() shouldBe true
+        val stored = model.definitions().associateBy { it.key }
+        stored.getValue("dataSaver").currentValue shouldBe BooleanPreferenceValueDto(false)
+        stored.getValue("genres").currentValue shouldBe ListPreferenceValueDto(emptyList())
     }
 
     @Test

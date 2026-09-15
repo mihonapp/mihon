@@ -1,6 +1,8 @@
 package mihon.desktop.extension
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -62,11 +64,16 @@ class DesktopExtensionInstaller(
     /** Alias constructor parameter for callers/tests that name the fake verifier `verifier`. */
     verifier: ExtensionVerifier? = null,
 ) {
+    private val lifecycleMutex = Mutex()
+
+    internal suspend fun <T> withLifecycleLock(block: suspend () -> T): T = lifecycleMutex.withLock { block() }
+
     val signatureVerifier: ExtensionVerifier = verifier ?: signatureVerifier
     val verifier: ExtensionVerifier get() = signatureVerifier
     val trustStore: ExtensionTrustStore = trustStore
     val extensionTrustStore: ExtensionTrustStore get() = trustStore
     companion object {
+        const val PREF_KEY_PENDING_CLEANUP = "extension.pending_cleanup"
         const val PREF_KEY_INSTALLED_EXTENSIONS = "extension.installed_list"
         const val PREF_KEY_TRUSTED_EXTENSIONS = ExtensionTrustStore.PREF_KEY_TRUSTED_EXTENSIONS
         const val PREF_KEY_REVOKED_EXTENSIONS = ExtensionTrustStore.PREF_KEY_REVOKED_EXTENSIONS
@@ -82,6 +89,7 @@ class DesktopExtensionInstaller(
         if (!installRoot.exists()) {
             installRoot.mkdirs()
         }
+        retryPendingCleanup()
     }
 
     @Synchronized
@@ -154,6 +162,28 @@ class DesktopExtensionInstaller(
         allowUntrusted: Boolean = false,
         explicitTrust: Boolean = false,
         trustUnknown: Boolean = false,
+    ): InstalledExtension = withLifecycleLock {
+        installFromLocalFileUnlocked(
+            file,
+            expectedSha256,
+            repoUrl,
+            storeItem,
+            trustOnInstall,
+            allowUntrusted,
+            explicitTrust,
+            trustUnknown,
+        )
+    }
+
+    private suspend fun installFromLocalFileUnlocked(
+        file: File,
+        expectedSha256: String? = null,
+        repoUrl: String = "",
+        storeItem: ExtensionStoreItem? = null,
+        trustOnInstall: Boolean = false,
+        allowUntrusted: Boolean = false,
+        explicitTrust: Boolean = false,
+        trustUnknown: Boolean = false,
     ): InstalledExtension = withContext(Dispatchers.IO) {
         if (!file.exists() || !file.isFile) {
             throw ExtensionValidationException("Extension package file does not exist: ${file.absolutePath}")
@@ -198,13 +228,22 @@ class DesktopExtensionInstaller(
 
         // 3. Validate package and parse manifest (converting Tachiyomi APK/JAR to .mext if needed)
         val effectivePackageFile: File
-        val manifest: ExtensionManifest
+        var manifest: ExtensionManifest
         var tempConvertedMext: File? = null
         if (mihon.desktop.extension.compat.TachiyomiExtensionConverter.isTachiyomiPackage(file)) {
             val convertedFile = File.createTempFile("mext_conv_", ".mext")
             tempConvertedMext = convertedFile
-            manifest =
-                mihon.desktop.extension.compat.TachiyomiExtensionConverter.convertToMext(file, convertedFile, storeItem)
+            try {
+                manifest =
+                    mihon.desktop.extension.compat.TachiyomiExtensionConverter.convertToMext(
+                        file,
+                        convertedFile,
+                        storeItem,
+                    )
+            } catch (error: Throwable) {
+                convertedFile.delete()
+                throw error
+            }
             effectivePackageFile = convertedFile
         } else {
             manifest = ExtensionPackageValidator.validatePackage(file)
@@ -238,50 +277,94 @@ class DesktopExtensionInstaller(
                 trustStore.trust(manifest.id, storeSigningKey)
             }
 
-            // 5. Destination folder: <installRoot>/<pkg>
+            if (tempConvertedMext != null && storeItem?.sources.isNullOrEmpty()) {
+                val runtimeSources = DesktopSourceManager.probeInstalledPackage(
+                    this@DesktopExtensionInstaller,
+                    effectivePackageFile,
+                    manifest.id,
+                )
+                manifest =
+                    mihon.desktop.extension.compat.TachiyomiExtensionConverter.replaceSourceIdentities(
+                        effectivePackageFile,
+                        manifest,
+                        runtimeSources,
+                    )
+            }
+
+            // Stage every byte before touching a usable installation (the input may itself be installed).
             val targetDir = File(installRoot, manifest.id)
-            if (targetDir.exists()) {
-                targetDir.deleteRecursively()
-            }
-            targetDir.mkdirs()
-
-            val targetPackageFile = File(targetDir, "${manifest.id}.mext")
-            effectivePackageFile.copyTo(targetPackageFile, overwrite = true)
-
-            // Extract icon if present in package
-            var iconPath: String? = null
-            java.util.zip.ZipFile(targetPackageFile).use { zip ->
-                val iconEntry = zip.getEntry("icon.png") ?: zip.getEntry("icon.jpg") ?: zip.getEntry("assets/icon.png")
-                if (iconEntry != null) {
-                    val iconFile = File(targetDir, "icon.png")
-                    zip.getInputStream(iconEntry).use { input ->
-                        FileOutputStream(iconFile).use { output ->
-                            input.copyTo(output)
+            val stagedDir = java.nio.file.Files.createTempDirectory(
+                installRoot.toPath(),
+                ".stage-${manifest.id}-",
+            ).toFile()
+            val backupDir = File(installRoot, ".backup-${manifest.id}-${java.util.UUID.randomUUID()}")
+            var oldMoved = false
+            var published = false
+            var committed = false
+            try {
+                val stagedPackage = File(stagedDir, "${manifest.id}.mext")
+                effectivePackageFile.copyTo(stagedPackage)
+                ExtensionPackageValidator.validatePackage(stagedPackage)
+                var hasIcon = false
+                java.util.zip.ZipFile(stagedPackage).use { zip ->
+                    val entry = zip.getEntry("icon.png") ?: zip.getEntry("icon.jpg") ?: zip.getEntry("assets/icon.png")
+                    if (entry != null) {
+                        zip.getInputStream(entry).use { input ->
+                            File(stagedDir, "icon.png").outputStream().use { input.copyTo(it) }
                         }
+                        hasIcon = true
                     }
-                    iconPath = iconFile.absolutePath
                 }
+                DesktopSourceManager.releaseInstalledPackage(this@DesktopExtensionInstaller, manifest.id)
+                if (targetDir.exists()) {
+                    java.nio.file.Files.move(targetDir.toPath(), backupDir.toPath())
+                    oldMoved = true
+                }
+                java.nio.file.Files.move(stagedDir.toPath(), targetDir.toPath())
+                published = true
+                val targetPackageFile = File(targetDir, "${manifest.id}.mext")
+                val iconPath = if (hasIcon) File(targetDir, "icon.png").absolutePath else null
+
+                val installed = InstalledExtension(
+                    pkg = manifest.id,
+                    manifest = manifest,
+                    installDir = targetDir.absolutePath,
+                    packageFile = targetPackageFile.absolutePath,
+                    installedAt = System.currentTimeMillis(),
+                    repoUrl = repoUrl,
+                    iconPath = iconPath,
+                    isEnabled = installedExtension?.isEnabled ?: true,
+                    signatureFingerprint = signerFingerprints.lastOrNull().orEmpty(),
+                    signatureFingerprints = signerFingerprints,
+                    signingKey = ExtensionTrustStore.normalizeFingerprint(storeItem?.signingKey),
+                    trustStatus = ExtensionTrustStatus.TRUSTED,
+                )
+
+                val current = getInstalledExtensions().filter { it.pkg != manifest.id }
+                saveInstalledExtensions(current + installed)
+
+                committed = true
+                installed
+            } catch (error: Throwable) {
+                if (published && targetDir.exists() && !targetDir.deleteRecursively()) {
+                    error.addSuppressed(
+                        java.io.IOException(
+                            "Cannot remove failed replacement ${targetDir.absolutePath}; old package preserved at ${backupDir.absolutePath}",
+                        ),
+                    )
+                }
+                if (oldMoved && !targetDir.exists()) {
+                    try {
+                        java.nio.file.Files.move(backupDir.toPath(), targetDir.toPath())
+                    } catch (restoreError: Throwable) {
+                        error.addSuppressed(restoreError)
+                    }
+                }
+                throw error
+            } finally {
+                cleanupOrRemember(stagedDir)
+                if (committed) cleanupOrRemember(backupDir)
             }
-
-            val installed = InstalledExtension(
-                pkg = manifest.id,
-                manifest = manifest,
-                installDir = targetDir.absolutePath,
-                packageFile = targetPackageFile.absolutePath,
-                installedAt = System.currentTimeMillis(),
-                repoUrl = repoUrl,
-                iconPath = iconPath,
-                isEnabled = true,
-                signatureFingerprint = signerFingerprints.lastOrNull().orEmpty(),
-                signatureFingerprints = signerFingerprints,
-                signingKey = ExtensionTrustStore.normalizeFingerprint(storeItem?.signingKey),
-                trustStatus = ExtensionTrustStatus.TRUSTED,
-            )
-
-            val current = getInstalledExtensions().filter { it.pkg != manifest.id }
-            saveInstalledExtensions(current + installed)
-
-            installed
         } finally {
             tempConvertedMext?.delete()
         }
@@ -308,20 +391,66 @@ class DesktopExtensionInstaller(
         trustUnknown,
     )
 
-    suspend fun uninstall(pkg: String): Boolean = withContext(Dispatchers.IO) {
+    suspend fun uninstall(pkg: String): Boolean = withLifecycleLock { uninstallUnlocked(pkg) }
+
+    private suspend fun uninstallUnlocked(pkg: String): Boolean = withContext(Dispatchers.IO) {
         val current = getInstalledExtensions()
         val target = current.find { it.pkg == pkg } ?: return@withContext false
 
+        DesktopSourceManager.releaseInstalledPackage(this@DesktopExtensionInstaller, pkg)
         val targetDir = File(target.installDir)
-        if (targetDir.exists()) {
-            targetDir.deleteRecursively()
+        val removedDir = File(installRoot, ".removed-$pkg-${java.util.UUID.randomUUID()}")
+        if (targetDir.exists()) java.nio.file.Files.move(targetDir.toPath(), removedDir.toPath())
+        try {
+            saveInstalledExtensions(current.filter { it.pkg != pkg })
+        } catch (error: Throwable) {
+            if (removedDir.exists()) java.nio.file.Files.move(removedDir.toPath(), targetDir.toPath())
+            throw error
         }
-
-        saveInstalledExtensions(current.filter { it.pkg != pkg })
+        cleanupOrRemember(removedDir)
         true
     }
 
-    suspend fun setExtensionEnabled(pkg: String, enabled: Boolean): Boolean = withContext(Dispatchers.IO) {
+    private fun cleanupOrRemember(directory: File) {
+        if (!directory.exists() || directory.deleteRecursively()) return
+        val pending = runCatching {
+            json.decodeFromString<List<String>>(preferenceStore.property(PREF_KEY_PENDING_CLEANUP) ?: "[]")
+        }.getOrDefault(emptyList())
+        preferenceStore.update {
+            setProperty(
+                PREF_KEY_PENDING_CLEANUP,
+                json.encodeToString(
+                    (
+                        pending +
+                            directory.absolutePath
+                        ).distinct(),
+                ),
+            )
+        }
+    }
+
+    private fun retryPendingCleanup() {
+        val pending = runCatching {
+            json.decodeFromString<List<String>>(preferenceStore.property(PREF_KEY_PENDING_CLEANUP) ?: "[]")
+        }.getOrDefault(emptyList())
+        if (pending.isEmpty()) return
+        val root = installRoot.canonicalFile
+        val remaining = pending.filter { path ->
+            val directory = File(path)
+            val safe = directory.canonicalFile.parentFile == root &&
+                listOf(".stage-", ".backup-", ".removed-").any { directory.name.startsWith(it) }
+            safe && directory.exists() && !directory.deleteRecursively()
+        }
+        preferenceStore.update { setProperty(PREF_KEY_PENDING_CLEANUP, json.encodeToString(remaining)) }
+    }
+
+    suspend fun setExtensionEnabled(pkg: String, enabled: Boolean): Boolean = withLifecycleLock {
+        setExtensionEnabledUnlocked(pkg, enabled)
+    }
+
+    private suspend fun setExtensionEnabledUnlocked(pkg: String, enabled: Boolean): Boolean = withContext(
+        Dispatchers.IO,
+    ) {
         val current = getInstalledExtensions()
         val index = current.indexOfFirst { it.pkg == pkg }
         if (index == -1) return@withContext false

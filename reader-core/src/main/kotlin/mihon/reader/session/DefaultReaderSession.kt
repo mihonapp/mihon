@@ -4,6 +4,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,6 +63,15 @@ class DefaultReaderSession(
     private var navigationDirection = NavigationDirection.FORWARD
     private var contentPipelineClosed = false
     private var closed = false
+    private val actionQueue = Channel<Pair<ReaderAction, Long?>>(Channel.UNLIMITED)
+
+    init {
+        scope.launch {
+            for ((action, chapterId) in actionQueue) {
+                applyAction(action, chapterId)
+            }
+        }
+    }
 
     override suspend fun open(chapterId: Long) {
         require(chapterId >= 0L) { "chapterId must not be negative" }
@@ -72,48 +82,55 @@ class DefaultReaderSession(
     }
 
     override fun dispatch(action: ReaderAction) {
-        scope.launch {
-            sessionLock.withLock {
-                if (closed) return@withLock
-                when (action) {
-                    ReaderAction.Next -> moveLocked(NavigationDirection.FORWARD)
-                    ReaderAction.Previous -> moveLocked(NavigationDirection.BACKWARD)
-                    else -> {
-                        accrueDurationLocked()
-                        val previousIndex = _state.value.selectedIndex
-                        _state.update { it.reduce(action) }
-                        val updatedIndex = _state.value.selectedIndex
-                        if (updatedIndex != previousIndex) {
-                            navigationDirection = if (updatedIndex > previousIndex) {
-                                NavigationDirection.FORWARD
-                            } else {
-                                NavigationDirection.BACKWARD
-                            }
+        // A mutex inside separately launched jobs serializes execution but cannot preserve input order.
+        actionQueue.trySend(action to _state.value.chapterId)
+    }
+
+    private suspend fun applyAction(action: ReaderAction, requestedChapterId: Long?) {
+        sessionLock.withLock {
+            if (closed) return@withLock
+            val chapterAction = action is ReaderAction.SelectPage ||
+                action is ReaderAction.SetViewportAnchor || action is ReaderAction.SetVisiblePages ||
+                action is ReaderAction.Next || action is ReaderAction.Previous
+            if (chapterAction && requestedChapterId != _state.value.chapterId) return@withLock
+            when (action) {
+                ReaderAction.Next -> moveLocked(NavigationDirection.FORWARD)
+                ReaderAction.Previous -> moveLocked(NavigationDirection.BACKWARD)
+                else -> {
+                    accrueDurationLocked()
+                    val previousIndex = _state.value.selectedIndex
+                    _state.update { it.reduce(action) }
+                    val updatedIndex = _state.value.selectedIndex
+                    if (updatedIndex != previousIndex) {
+                        navigationDirection = if (updatedIndex > previousIndex) {
+                            NavigationDirection.FORWARD
+                        } else {
+                            NavigationDirection.BACKWARD
                         }
-                        when (action) {
-                            is ReaderAction.SetForeground -> animationCoordinator?.setForeground(action.foreground)
-                            is ReaderAction.SetContentVisible -> animationCoordinator?.setContentVisible(action.visible)
-                            is ReaderAction.SelectPage,
-                            is ReaderAction.SetViewportAnchor,
-                            -> animationCoordinator?.cancelForPageOrChapterChange()
-                            else -> Unit
-                        }
-                        if (
-                            action is ReaderAction.SelectPage ||
-                            action is ReaderAction.SetViewportAnchor ||
-                            action is ReaderAction.SetVisiblePages ||
-                            action is ReaderAction.ChangeMode ||
-                            action is ReaderAction.SetForeground ||
-                            action is ReaderAction.SetContentVisible
-                        ) {
-                            updateContentPositionLocked()
-                        }
-                        if (action is ReaderAction.SelectPage || action is ReaderAction.SetViewportAnchor) {
-                            requestVisibleLocked()
-                            submitProgressLocked()
-                        }
-                        resetClockLocked()
                     }
+                    when (action) {
+                        is ReaderAction.SetForeground -> animationCoordinator?.setForeground(action.foreground)
+                        is ReaderAction.SetContentVisible -> animationCoordinator?.setContentVisible(action.visible)
+                        is ReaderAction.SelectPage,
+                        is ReaderAction.SetViewportAnchor,
+                        -> animationCoordinator?.cancelForPageOrChapterChange()
+                        else -> Unit
+                    }
+                    if (
+                        action is ReaderAction.SelectPage ||
+                        action is ReaderAction.SetViewportAnchor ||
+                        action is ReaderAction.SetVisiblePages ||
+                        action is ReaderAction.ChangeMode ||
+                        action is ReaderAction.SetForeground ||
+                        action is ReaderAction.SetContentVisible
+                    ) {
+                        updateContentPositionLocked()
+                    }
+                    if (action is ReaderAction.SelectPage || action is ReaderAction.SetViewportAnchor) {
+                        requestVisibleLocked()
+                        submitProgressLocked()
+                    }
+                    resetClockLocked()
                 }
             }
         }
@@ -160,6 +177,7 @@ class DefaultReaderSession(
             closeChapterLocked()
             closeContentPipelineLocked()
             closed = true
+            actionQueue.cancel()
             _state.value =
                 _state.value.copy(
                     loadState = ReaderLoadState.Closed,
@@ -170,6 +188,7 @@ class DefaultReaderSession(
     }
 
     override fun cancelWithoutFlush() {
+        actionQueue.cancel()
         scope.launch {
             sessionLock.withLock {
                 if (closed) return@withLock

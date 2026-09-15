@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -112,7 +113,10 @@ enum class SettingsSection(val label: String) {
 
     fun localized(strings: DesktopStrings): String = when (this) {
         General -> strings.settingsSectionGeneral
-        Security -> "Security"
+        Security -> when (strings) {
+            mihon.desktop.i18n.SimplifiedChineseStrings, mihon.desktop.i18n.TraditionalChineseStrings -> "安全"
+            else -> "Security"
+        }
         Appearance -> strings.settingsSectionAppearance
         Library -> strings.libraryTitle
         Reader -> strings.settingsSectionReader
@@ -139,8 +143,24 @@ fun SettingsScreen(
     downloadsDir: Path? = null,
     diskCacheDir: Path? = null,
     appLockController: DesktopAppLockController? = null,
+    backgroundScheduler: mihon.desktop.platform.WindowsBackgroundScheduler? = null,
     modifier: Modifier = Modifier,
 ) {
+    val backgroundScope = rememberCoroutineScope()
+    var previousSchedule by remember {
+        val saved = preferenceStore.load()
+        mutableStateOf(saved.libraryUpdateIntervalHours to saved.backupIntervalHours)
+    }
+    val notifyPreferencesChanged: (DesktopPreferences) -> Unit = { updated ->
+        onPreferencesChanged?.invoke(updated)
+        val schedule = updated.libraryUpdateIntervalHours to updated.backupIntervalHours
+        if (updated.backgroundTasksEnabled && schedule != previousSchedule) {
+            backgroundScope.launch(Dispatchers.IO) {
+                runCatching { backgroundScheduler?.reconcile(true, schedule.first, schedule.second) }
+            }
+        }
+        previousSchedule = schedule
+    }
     val strings = LocalStrings.current
     val securityController = remember(preferenceStore, appLockController) {
         appLockController ?: DesktopAppLockController(preferenceStore)
@@ -153,7 +173,7 @@ fun SettingsScreen(
             modifier = Modifier.width(240.dp).fillMaxHeight(),
             color = MaterialTheme.colorScheme.surfaceContainerLow,
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
                 Text(
                     text = strings.settingsTitle,
                     style = MaterialTheme.typography.titleLarge,
@@ -210,25 +230,32 @@ fun SettingsScreen(
             modifier = Modifier.weight(1f).fillMaxHeight().padding(24.dp),
         ) {
             when (selectedSection) {
-                SettingsSection.General -> GeneralSettingsPane(preferenceStore, onPreferencesChanged)
+                SettingsSection.General -> GeneralSettingsPane(preferenceStore, notifyPreferencesChanged)
                 SettingsSection.Security -> SecuritySettingsPane(
                     preferenceStore = preferenceStore,
                     appLockController = securityController,
-                    onPreferencesChanged = onPreferencesChanged,
+                    onPreferencesChanged = notifyPreferencesChanged,
                 )
-                SettingsSection.Appearance -> AppearanceSettingsPane(preferenceStore, onPreferencesChanged)
-                SettingsSection.Library -> LibrarySettingsPane(preferenceStore, updateScheduler, onPreferencesChanged)
+                SettingsSection.Appearance -> AppearanceSettingsPane(preferenceStore, notifyPreferencesChanged)
+                SettingsSection.Library -> LibrarySettingsPane(
+                    preferenceStore,
+                    updateScheduler,
+                    notifyPreferencesChanged,
+                )
                 SettingsSection.Reader -> ReaderSettingsPane(readerSettingsStore)
-                SettingsSection.Downloads -> DownloadsSettingsPane(preferenceStore, onPreferencesChanged)
+                SettingsSection.Downloads -> DownloadsSettingsPane(preferenceStore, notifyPreferencesChanged)
                 SettingsSection.Tracking -> TrackingSettingsPane(trackerManager)
                 SettingsSection.Backup -> BackupSettingsPane(
                     preferenceStore = preferenceStore,
                     backupScheduler = backupScheduler,
                     onImportBackup = onImportBackup,
                     onExportBackup = onExportBackup,
-                    onPreferencesChanged = onPreferencesChanged,
+                    onPreferencesChanged = notifyPreferencesChanged,
                 )
                 SettingsSection.Advanced -> AdvancedSettingsPane(
+                    preferenceStore = preferenceStore,
+                    backgroundScheduler = backgroundScheduler,
+                    onPreferencesChanged = notifyPreferencesChanged,
                     diagnosticService = diagnosticService,
                     onOpenCookieManager = onOpenCookieManager,
                     downloadCacheCleaner = downloadCacheCleaner,
@@ -261,7 +288,10 @@ private fun GeneralSettingsPane(
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(strings.settingsLanguageTitle, fontWeight = FontWeight.Bold)
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
                     listOf(
                         AppLanguage.System to strings.settingsLanguageSystem,
                         AppLanguage.SimplifiedChinese to strings.settingsLanguageSimplifiedChinese,
@@ -328,7 +358,7 @@ private fun GeneralSettingsPane(
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(strings.settingsAppInfoTitle, fontWeight = FontWeight.Bold)
-                Text(strings.settingsVersionLabel("1.0.0-desktop (Phase 8)"))
+                Text(strings.settingsVersionLabel(mihon.desktop.updates.DesktopAppUpdateService.CURRENT_VERSION))
                 Text(strings.settingsPlatformLabel("Windows x64"))
             }
         }
@@ -1941,6 +1971,9 @@ private fun LibrarySettingsPane(
 
 @Composable
 private fun AdvancedSettingsPane(
+    preferenceStore: DesktopPreferenceStore,
+    backgroundScheduler: mihon.desktop.platform.WindowsBackgroundScheduler?,
+    onPreferencesChanged: ((DesktopPreferences) -> Unit)?,
     diagnosticService: DiagnosticBundleService?,
     onOpenCookieManager: () -> Unit = {},
     downloadCacheCleaner: mihon.desktop.download.DownloadCacheCleaner? = null,
@@ -1962,6 +1995,9 @@ private fun AdvancedSettingsPane(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
         )
+
+        BackgroundSettingsCard(preferenceStore, backgroundScheduler, onPreferencesChanged)
+        NetworkSettingsCard(preferenceStore)
 
         // Storage & Cache Cleaner Card
         Card(modifier = Modifier.fillMaxWidth().testTag("storage-cleaner-card")) {

@@ -81,7 +81,7 @@ class DesktopNetworkHelperTest {
     }
 
     @Test
-    fun `injects cookies and custom user agent from cookie store`() {
+    fun `keeps manual session cookies off HTTP while applying custom user agent`() {
         var receivedCookie: String? = null
         var receivedUa: String? = null
 
@@ -113,7 +113,7 @@ class DesktopNetworkHelperTest {
                     ),
                 )
                 res.statusCode shouldBe 200
-                receivedCookie shouldBe "cf_clearance=cf123; token=tok456"
+                receivedCookie shouldBe null
                 receivedUa shouldBe "MihonBypassUA/2.0"
             }
         } finally {

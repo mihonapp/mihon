@@ -9,6 +9,7 @@ data class LibraryUpdateOptions(
     val includedCategoryIds: Set<Long>? = null,
     val excludedCategoryIds: Set<Long>? = null,
     val autoDownloadNewChapters: Boolean = false,
+    val mangaIds: Set<Long>? = null,
 )
 
 data class MangaUpdateItemResult(
@@ -30,4 +31,5 @@ data class LibraryUpdateProgress(
     val currentMangaTitle: String,
     val currentIndex: Int,
     val totalManga: Int,
+    val currentSourceId: Long? = null,
 )

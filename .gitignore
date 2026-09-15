@@ -9,6 +9,8 @@ build
 !.idea/icon.svg
 /captures
 .worktrees/
+extension-host/host-data/
+.soak-*/
 
 # Configuration files
 keystore.properties

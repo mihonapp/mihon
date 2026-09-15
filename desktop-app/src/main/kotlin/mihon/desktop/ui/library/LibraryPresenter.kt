@@ -6,6 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -62,6 +63,13 @@ data class LibraryUiState(
     val duplicateCandidates: List<DuplicateMangaCandidate> get() = duplicateDialog?.candidates.orEmpty()
 }
 
+data class LibraryBatchState(
+    val running: Boolean = false,
+    val processed: Int = 0,
+    val total: Int = 0,
+    val error: String? = null,
+)
+
 data class MangaDetailUiState(
     val manga: MangaDetails? = null,
     val chapters: List<LibraryChapter> = emptyList(),
@@ -98,6 +106,9 @@ class LibraryPresenter(
     private val presenterJob = SupervisorJob(scope.coroutineContext[Job])
     private val presenterScope = CoroutineScope(scope.coroutineContext + presenterJob)
     private val query = MutableStateFlow("")
+    private val batchLock = java.util.concurrent.atomic.AtomicBoolean(false)
+    private val _batchState = MutableStateFlow(LibraryBatchState())
+    val batchState: StateFlow<LibraryBatchState> = _batchState
     private val selectedMangaId = MutableStateFlow<Long?>(null)
     private val detailMangaId = MutableStateFlow<Long?>(null)
     private val selectedCategoryId = MutableStateFlow(SYSTEM_ALL_CATEGORY.id)
@@ -932,20 +943,19 @@ class LibraryPresenter(
 
     fun batchSetCategories(categoryIds: List<Long>) {
         val selected = selectionStateFlow.value.selectedMangaIds
-        mutationPort?.transaction {
-            for (id in selected) {
+        runLibraryBatch(selected) { ids, progress ->
+            ids.forEachIndexed { index, id ->
                 setMangaCategories(id, categoryIds)
+                progress(index + 1)
             }
         }
-        clearSelection()
         isBatchCategoryDialogOpenState.value = false
-        retry()
     }
 
     fun batchMarkRead(read: Boolean) {
         val selected = selectionStateFlow.value.selectedMangaIds
-        mutationPort?.transaction {
-            for (mangaId in selected) {
+        runLibraryBatch(selected) { ids, progress ->
+            ids.forEachIndexed { index, mangaId ->
                 val chapters = repository.chapterSnapshot(mangaId)
                 for (ch in chapters) {
                     val record = findChapter(mangaId, ch.url)
@@ -953,10 +963,9 @@ class LibraryPresenter(
                         updateChapter(record.copy(read = read))
                     }
                 }
+                progress(index + 1)
             }
         }
-        clearSelection()
-        retry()
     }
 
     fun batchDownload(chaptersCount: Int) {
@@ -983,19 +992,53 @@ class LibraryPresenter(
 
     fun batchRemoveFromLibrary() {
         val selected = selectionStateFlow.value.selectedMangaIds
-        mutationPort?.transaction {
-            for (mangaId in selected) {
-                val manga = repository.librarySnapshot(null).find { it.id == mangaId }
-                if (manga != null) {
-                    val record = findManga(manga.sourceId, manga.url)
-                    if (record != null) {
-                        updateManga(record.copy(favorite = false))
-                    }
+        runLibraryBatch(selected) { ids, progress ->
+            val selectedManga = repository.librarySnapshot(null).filter { it.id in ids }
+            selectedManga.forEachIndexed { index, manga ->
+                val record = findManga(manga.sourceId, manga.url)
+                if (record != null) {
+                    updateManga(record.copy(favorite = false))
                 }
+                progress(index + 1)
             }
         }
-        clearSelection()
-        retry()
+    }
+
+    private fun runLibraryBatch(selected: Set<Long>, block: LibraryMutationPort.(Set<Long>, (Int) -> Unit) -> Unit) {
+        val mutations = mutationPort ?: return
+        if (selected.isEmpty() || !batchLock.compareAndSet(false, true)) return
+        _batchState.value = LibraryBatchState(running = true, total = selected.size)
+        presenterScope.launch(Dispatchers.IO) {
+            try {
+                val context = kotlinx.coroutines.currentCoroutineContext()
+                mutations.transaction {
+                    block(selected) { count ->
+                        context.ensureActive()
+                        if (count % 25 == 0 || count == selected.size) {
+                            _batchState.value = _batchState.value.copy(processed = count)
+                        }
+                    }
+                }
+                clearSelection()
+                _batchState.value = _batchState.value.copy(running = false)
+                retry()
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                _batchState.value = _batchState.value.copy(running = false)
+                throw cancelled
+            } catch (error: Exception) {
+                _batchState.value = _batchState.value.copy(
+                    running = false,
+                    error = error.message ?: "Library operation failed",
+                )
+            } finally {
+                batchLock.set(false)
+            }
+        }
+    }
+
+    suspend fun shutdown() {
+        close()
+        presenterJob.join()
     }
 
     override fun close() {
@@ -1029,14 +1072,14 @@ private fun matchesFilters(manga: LibraryManga, filters: LibraryFilterState): Bo
     }
     // 4. Downloaded
     when (filters.downloaded) {
-        TriStateFilter.Include -> Unit // Default pass
-        TriStateFilter.Exclude -> Unit
+        TriStateFilter.Include -> if (manga.downloadedCount == 0L) return false
+        TriStateFilter.Exclude -> if (manga.downloadedCount > 0L) return false
         TriStateFilter.Disabled -> Unit
     }
     // 5. Bookmarked
     when (filters.bookmarked) {
-        TriStateFilter.Include -> Unit
-        TriStateFilter.Exclude -> Unit
+        TriStateFilter.Include -> if (manga.bookmarkCount == 0L) return false
+        TriStateFilter.Exclude -> if (manga.bookmarkCount > 0L) return false
         TriStateFilter.Disabled -> Unit
     }
     return true
@@ -1049,9 +1092,9 @@ private fun sortManga(items: List<LibraryManga>, sort: LibrarySortState): List<L
         LibrarySortMode.Alphabetical -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.title }
         LibrarySortMode.UnreadCount -> compareBy { it.unreadCount }
         LibrarySortMode.TotalChapters -> compareBy { it.chapterCount }
-        LibrarySortMode.DateAdded -> compareBy { it.id }
-        LibrarySortMode.LastRead -> compareBy { it.id }
-        LibrarySortMode.LastUpdate -> compareBy { it.id }
+        LibrarySortMode.DateAdded -> compareBy<LibraryManga> { it.dateAdded }.thenBy { it.id }
+        LibrarySortMode.LastRead -> compareBy<LibraryManga> { it.lastRead }.thenBy { it.id }
+        LibrarySortMode.LastUpdate -> compareBy<LibraryManga> { it.lastUpdate }.thenBy { it.id }
     }
 
     return if (sort.ascending) {

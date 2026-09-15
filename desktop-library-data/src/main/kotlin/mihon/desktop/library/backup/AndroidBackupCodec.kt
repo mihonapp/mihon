@@ -74,16 +74,21 @@ class AndroidBackupCodec private constructor(
     fun encode(backup: AndroidBackup, path: Path) {
         val bytes = protoBuf.encodeToByteArray(AndroidBackup.serializer(), backup)
         Files.createDirectories(path.parent ?: Path.of("."))
-        val temp = path.resolveSibling("${path.fileName}.tmp")
-        Files.newOutputStream(temp).sink().gzip().buffer().use { sink ->
-            sink.write(bytes)
+        // Every export owns its temporary file, including concurrent exports to the same target.
+        val temp = Files.createTempFile(path.toAbsolutePath().parent, ".${path.fileName}-", ".tmp")
+        try {
+            Files.newOutputStream(temp).sink().gzip().buffer().use { sink ->
+                sink.write(bytes)
+            }
+            Files.move(
+                temp,
+                path,
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+            )
+        } finally {
+            Files.deleteIfExists(temp)
         }
-        Files.move(
-            temp,
-            path,
-            java.nio.file.StandardCopyOption.REPLACE_EXISTING,
-            java.nio.file.StandardCopyOption.ATOMIC_MOVE,
-        )
     }
 
     private fun rejectLegacyJson(bytes: ByteArray) {

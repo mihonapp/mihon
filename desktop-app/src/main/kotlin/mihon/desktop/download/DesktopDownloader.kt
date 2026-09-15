@@ -2,13 +2,15 @@ package mihon.desktop.download
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +27,6 @@ import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.library.model.MangaDetails
 import mihon.desktop.library.repository.LibraryMutationPort
-import mihon.extension.ipc.BrokerHttpRequest
 import mihon.extension.source.model.Page
 import mihon.extension.source.model.SChapter
 import java.io.IOException
@@ -47,6 +48,7 @@ class DesktopDownloader(
     val onDownloadCompleted: ((DesktopDownload) -> Unit)? = null,
     val onDownloadFailed: ((DesktopDownload, String) -> Unit)? = null,
     val onDownloadProgress: ((DesktopDownload) -> Unit)? = null,
+    val sourceParallelism: () -> Int = { 1 },
 ) : AutoCloseable {
     private val _queueState = MutableStateFlow<List<DesktopDownload>>(emptyList())
     val queueState: StateFlow<List<DesktopDownload>> = _queueState.asStateFlow()
@@ -58,8 +60,25 @@ class DesktopDownloader(
     val speedBytesPerSec: StateFlow<Double> = _speedBytesPerSec.asStateFlow()
 
     private val queueMutex = Mutex()
+    private val persistenceLock = Any()
+    private val _storageError = MutableStateFlow<String?>(null)
+    val storageError: StateFlow<String?> = _storageError.asStateFlow()
+    private var lastClaimedSource: Long? = null
+
+    private fun persistQueue() = synchronized(persistenceLock) {
+        try {
+            store.save(_queueState.value)
+            _storageError.value = null
+        } catch (error: Exception) {
+            _storageError.value = "下载队列无法保存，已停止调度：${error.message}"
+            _isRunning.value = false
+            downloadJob?.cancel()
+            throw error
+        }
+    }
     private val activeDownloadJobs = ConcurrentHashMap<Long, Job>()
     private val sessionBytes = AtomicLong(0L)
+    private val sessionGeneration = AtomicLong(0L)
     private var downloadJob: Job? = null
     private var sessionStartedAt = 0L
 
@@ -100,7 +119,7 @@ class DesktopDownloader(
             if (newItems.isNotEmpty()) {
                 val updated = current + newItems
                 _queueState.value = updated
-                store.save(updated)
+                persistQueue()
             }
         }
 
@@ -166,6 +185,7 @@ class DesktopDownloader(
     fun deleteDownloadedChapter(manga: MangaDetails, chapter: LibraryChapter): Boolean =
         deleteDownloadedChapter(manga.sourceId, manga.title, chapter.name)
 
+    @Synchronized
     fun start(): Boolean {
         if (_isRunning.value) return false
         val hasPending = _queueState.value.any {
@@ -176,20 +196,29 @@ class DesktopDownloader(
         _isRunning.value = true
         sessionBytes.set(0L)
         sessionStartedAt = System.currentTimeMillis()
+        val generation = sessionGeneration.incrementAndGet()
+        val previousJob = downloadJob
         downloadJob = scope.launch {
             try {
+                previousJob?.join()
                 runDownloadLoop()
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                _storageError.value = "下载调度已停止：${error.message}"
             } finally {
-                _isRunning.value = false
-                _speedBytesPerSec.value = 0.0
+                if (sessionGeneration.get() == generation) {
+                    _isRunning.value = false
+                    _speedBytesPerSec.value = 0.0
+                }
             }
         }
         return true
     }
 
     fun pause() {
+        sessionGeneration.incrementAndGet()
         downloadJob?.cancel()
-        downloadJob = null
         _isRunning.value = false
         _speedBytesPerSec.value = 0.0
 
@@ -202,7 +231,7 @@ class DesktopDownloader(
                 }
             }
         }
-        store.save(_queueState.value)
+        persistQueue()
     }
 
     fun resume() {
@@ -215,28 +244,26 @@ class DesktopDownloader(
                 }
             }
         }
-        store.save(_queueState.value)
+        persistQueue()
         start()
     }
 
     fun cancel(chapterId: Long) {
-        activeDownloadJobs.remove(chapterId)?.cancel()
+        val job = activeDownloadJobs.remove(chapterId)
+        job?.cancel()
         val cancelled = _queueState.value.find { it.chapterId == chapterId }
         _queueState.update { list -> list.filterNot { it.chapterId == chapterId } }
-        store.save(_queueState.value)
-
+        persistQueue()
         cancelled?.let { download ->
-            val tempDir = diskProvider.getTempChapterDir(download.sourceId, download.mangaTitle, download.chapterName)
-            if (Files.exists(tempDir)) {
-                try {
-                    Files.walk(tempDir)
-                        .sorted(Comparator.reverseOrder())
-                        .forEach { Files.deleteIfExists(it) }
-                } catch (_: Exception) {}
+            scope.launch {
+                job?.join()
+                runCatching {
+                    diskProvider.deleteTempChapter(download.sourceId, download.mangaTitle, download.chapterName)
+                }
+                    .onFailure { _storageError.value = "下载临时文件无法清理：${it.message}" }
             }
         }
     }
-
     fun retry(chapterId: Long) {
         _queueState.update { list ->
             list.map { item ->
@@ -259,13 +286,13 @@ class DesktopDownloader(
                 }
             }
         }
-        store.save(_queueState.value)
+        persistQueue()
         start()
     }
 
     fun clearCompleted() {
         _queueState.update { list -> list.filterNot { it.status == DownloadStatus.COMPLETED } }
-        store.save(_queueState.value)
+        persistQueue()
     }
 
     private suspend fun runDownloadLoop() = supervisorScope {
@@ -273,7 +300,7 @@ class DesktopDownloader(
             launch {
                 while (_isRunning.value) {
                     val next = claimNextDownload() ?: break
-                    val chapterJob = launch {
+                    val chapterJob = launch(start = CoroutineStart.LAZY) {
                         if (!diskProvider.checkDiskSpace()) {
                             val errorMessage = "Insufficient disk space"
                             updateDownload(next.chapterId) {
@@ -296,6 +323,7 @@ class DesktopDownloader(
                         }
                     }
                     activeDownloadJobs[next.chapterId] = chapterJob
+                    chapterJob.start()
                     try {
                         chapterJob.join()
                     } finally {
@@ -307,14 +335,27 @@ class DesktopDownloader(
         workers.forEach { it.join() }
     }
 
+    @Synchronized
     private fun claimNextDownload(): DesktopDownload? {
         while (true) {
             val current = _queueState.value
-            val next = current.firstOrNull { it.status == DownloadStatus.QUEUED } ?: return null
+            val activeBySource = current.filter {
+                it.status == DownloadStatus.DOWNLOADING
+            }.groupingBy { it.sourceId }.eachCount()
+            val eligible = current.filter {
+                it.status == DownloadStatus.QUEUED &&
+                    (activeBySource[it.sourceId] ?: 0) < sourceParallelism().coerceIn(1, 16)
+            }
+            val sources = current.map { it.sourceId }.distinct()
+            val after = sources.indexOfFirst { it == lastClaimedSource } + 1
+            val rotation = sources.drop(after) + sources.take(after)
+            val source = rotation.firstOrNull { id -> eligible.any { it.sourceId == id } } ?: return null
+            val next = eligible.first { it.sourceId == source }
             val claimed = next.copy(status = DownloadStatus.DOWNLOADING, error = null)
             val updated = current.map { item -> if (item.chapterId == next.chapterId) claimed else item }
             if (_queueState.compareAndSet(current, updated)) {
-                store.save(updated)
+                lastClaimedSource = next.sourceId
+                persistQueue()
                 return claimed
             }
         }
@@ -322,7 +363,7 @@ class DesktopDownloader(
 
     private suspend fun processDownload(download: DesktopDownload) {
         // Fetch page list if not already populated
-        var currentDownload = _queueState.value.first { it.chapterId == download.chapterId }
+        val currentDownload = _queueState.value.first { it.chapterId == download.chapterId }
         val pages = if (currentDownload.pages.isEmpty()) {
             val fetchedPages = fetchPages(currentDownload.sourceId, currentDownload.chapterUrl)
             val downloadPages = fetchedPages.distinctBy { it.index }.mapIndexed { index, page ->
@@ -353,15 +394,28 @@ class DesktopDownloader(
             Files.createDirectories(tempDir)
         }
 
-        val totalBytes = AtomicLong(currentDownload.bytesDownloaded)
+        diskProvider.cleanPartialPages(tempDir)
+        val validPages = pages.filter { diskProvider.isValidPage(diskProvider.getPageFile(tempDir, it.index)) }
+        val totalBytes = AtomicLong(validPages.sumOf { Files.size(diskProvider.getPageFile(tempDir, it.index)) })
+        updateDownload(download.chapterId) { item ->
+            item.copy(
+                bytesDownloaded = totalBytes.get(),
+                pages = item.pages.map { page ->
+                    if (validPages.any { it.index == page.index }) {
+                        page.copy(status = PageStatus.READY, progress = 1f, error = null)
+                    } else {
+                        page.copy(status = PageStatus.QUEUE, progress = 0f, error = null)
+                    }
+                },
+            )
+        }
         val pageFailures = ConcurrentHashMap<Int, Exception>()
         val pageSemaphore = Semaphore(pageParallelism().coerceIn(1, 32))
         coroutineScope {
             pages.map { page ->
                 async {
                     pageSemaphore.withPermit {
-                        val existingPageFile = diskProvider.getPageFile(tempDir, page.index)
-                        if (Files.exists(existingPageFile) && Files.size(existingPageFile) > 0L) {
+                        if (validPages.any { it.index == page.index }) {
                             updatePageStatus(download.chapterId, page.index, PageStatus.READY, 1.0f)
                             return@withPermit
                         }
@@ -375,7 +429,9 @@ class DesktopDownloader(
                                 networkHelper,
                                 sourceManager,
                                 processManager,
+                                priority = mihon.extension.ipc.RequestPriority.BACKGROUND,
                             )
+                            currentCoroutineContext().ensureActive()
                             diskProvider.savePage(tempDir, page.index, bytes)
 
                             val downloadedBytes = totalBytes.addAndGet(bytes.size.toLong())
@@ -415,6 +471,7 @@ class DesktopDownloader(
             )
         }
 
+        currentCoroutineContext().ensureActive()
         // Finalize chapter atomically and register in database
         diskProvider.finalizeChapter(
             sourceId = download.sourceId,
@@ -462,7 +519,7 @@ class DesktopDownloader(
                 }
             }
         }
-        store.save(_queueState.value)
+        persistQueue()
         return updatedItem
     }
 
@@ -479,6 +536,11 @@ class DesktopDownloader(
             }
             download.copy(pages = updatedPages)
         }
+    }
+
+    suspend fun shutdown() {
+        close()
+        scope.coroutineContext[Job]?.join()
     }
 
     override fun close() {

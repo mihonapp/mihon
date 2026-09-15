@@ -127,6 +127,11 @@ fun BrowseContentView(
             )
         }
         is BrowseNavigationState.SourceView -> {
+            var webPageOpen by remember(nav.source.id) { mutableStateOf(false) }
+            var pageJob by remember(nav.source.id) { mutableStateOf<kotlinx.coroutines.Job?>(null) }
+            androidx.compose.runtime.DisposableEffect(nav.source.id) {
+                onDispose { pageJob?.cancel() }
+            }
             var sourceUiState by remember(nav.source.id, nav.mode) {
                 mutableStateOf(
                     BrowseSourceUiState(
@@ -144,8 +149,16 @@ fun BrowseContentView(
                 query: String,
                 filters: mihon.extension.source.model.FilterList = sourceUiState.filterList,
             ) {
-                sourceUiState = sourceUiState.copy(isLoading = true, errorMessage = null, mode = mode, page = page)
-                scope.launch {
+                pageJob?.cancel()
+                sourceUiState =
+                    sourceUiState.copy(
+                        isLoading = true,
+                        isLoadingMore = false,
+                        errorMessage = null,
+                        mode = mode,
+                        page = page,
+                    )
+                pageJob = scope.launch {
                     try {
                         val mangasPage = when (mode) {
                             SourceListingMode.Popular -> runtime.sourceManager.getPopular(nav.source.id, page)
@@ -169,6 +182,8 @@ fun BrowseContentView(
                             inLibraryUrls = inLibrary,
                             chapterCounts = chapterCounts,
                         )
+                    } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                        throw cancelled
                     } catch (e: Exception) {
                         sourceUiState = sourceUiState.copy(
                             isLoading = false,
@@ -182,7 +197,7 @@ fun BrowseContentView(
                 if (sourceUiState.isLoading || sourceUiState.isLoadingMore || !sourceUiState.hasNextPage) return
                 val nextPage = sourceUiState.page + 1
                 sourceUiState = sourceUiState.copy(isLoadingMore = true, errorMessage = null)
-                scope.launch {
+                pageJob = scope.launch {
                     try {
                         val mangasPage = when (sourceUiState.mode) {
                             SourceListingMode.Popular -> runtime.sourceManager.getPopular(nav.source.id, nextPage)
@@ -207,6 +222,8 @@ fun BrowseContentView(
                             inLibraryUrls = sourceUiState.inLibraryUrls + inLibrary,
                             chapterCounts = chapterCounts,
                         )
+                    } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                        throw cancelled
                     } catch (e: Exception) {
                         sourceUiState = sourceUiState.copy(
                             isLoadingMore = false,
@@ -229,6 +246,7 @@ fun BrowseContentView(
 
             BrowseSourceScreen(
                 state = sourceUiState,
+                onOpenWebPage = if (nav.source.isLocalSource()) null else ({ webPageOpen = true }),
                 onBack = { navState = BrowseNavigationState.Home },
                 onModeChange = { newMode ->
                     loadSourcePage(newMode, 1, sourceUiState.query)
@@ -292,6 +310,14 @@ fun BrowseContentView(
                     Unit
                 },
             )
+            if (webPageOpen) {
+                SourceWebPageDialog(
+                    runtime,
+                    nav.source,
+                    onDismiss = { webPageOpen = false },
+                    onRetry = { loadSourcePage(sourceUiState.mode, sourceUiState.page, sourceUiState.query) },
+                )
+            }
         }
         is BrowseNavigationState.MangaDetail -> {
             if (nav.source.isLocalSource()) {

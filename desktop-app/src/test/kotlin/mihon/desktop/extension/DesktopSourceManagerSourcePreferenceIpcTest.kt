@@ -2,6 +2,8 @@ package mihon.desktop.extension
 
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -26,6 +28,31 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 class DesktopSourceManagerSourcePreferenceIpcTest {
+
+    @Test
+    fun `loading for business restores stored preferences before settings are opened`(
+        @TempDir tempDir: Path,
+    ): Unit = runBlocking {
+        val sourceId = 7299L
+        val store = DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
+        val installer = DesktopExtensionInstaller(tempDir.resolve("extensions").toFile(), store)
+        installExtension(installer, tempDir, sourceId, emptyList())
+        val proc = FakePreferenceProcessManager(tempDir.resolve("work").toFile(), remotePreferences(sourceId))
+        val manager = DesktopSourceManager(installer, proc, store)
+        try {
+            manager.setSourcePreferenceValue(sourceId, "apiKey", "persisted-key")
+            coroutineScope { List(8) { async { manager.ensureSourceLoaded(sourceId) } }.forEach { it.await() } }
+            proc.setCalls shouldContainExactly
+                listOf(Triple(sourceId, "apiKey", StringPreferenceValueDto("persisted-key")))
+            manager.ensureSourceLoaded(sourceId)
+            proc.setCalls.size shouldBe 1
+            manager.unloadExtension("ext.preferences.$sourceId")
+            manager.ensureSourceLoaded(sourceId)
+            proc.setCalls.size shouldBe 2
+        } finally {
+            manager.close()
+        }
+    }
 
     private class FakePreferenceProcessManager(
         workingDirectory: File,

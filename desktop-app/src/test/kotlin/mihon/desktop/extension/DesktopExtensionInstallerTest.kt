@@ -23,6 +23,33 @@ import java.util.zip.ZipOutputStream
 
 class DesktopExtensionInstallerTest {
 
+    @Test
+    fun `reinstalling installed package stages bytes before replacing directory`(
+        @TempDir tempDir: Path,
+    ): Unit = runBlocking {
+        val installer =
+            DesktopExtensionInstaller(
+                tempDir.resolve("installed").toFile(),
+                DesktopPreferenceStore(tempDir.resolve("prefs")),
+            )
+        val manifest = ExtensionManifest(
+            id = "ext.reinstall",
+            name = "Reinstall",
+            version = "1.0",
+            versionCode = 1,
+            libVersion = 1.4,
+            lang = "en",
+            sources = listOf(SourceDescriptor(99L, "Source", "en", "ext.Source")),
+        )
+        val source = tempDir.resolve("source.mext").toFile()
+        createDummyMext(source, manifest)
+        val installed = installer.installFromLocalFile(source, trustOnInstall = true)
+        val bytes = File(installed.packageFile).readBytes().toList()
+        val replacement = installer.installFromLocalFile(File(installed.packageFile), trustOnInstall = true)
+        File(replacement.packageFile).readBytes().toList() shouldBe bytes
+        replacement.manifest.sources.single().id shouldBe 99L
+    }
+
     private val json = Json { prettyPrint = true }
 
     private fun createDummyMext(

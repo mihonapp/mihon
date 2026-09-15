@@ -89,7 +89,9 @@ class DesktopAppUpdateService(
     }
 
     companion object {
-        const val CURRENT_VERSION = "0.1.3"
+        val CURRENT_VERSION: String = requireNotNull(
+            DesktopAppUpdateService::class.java.getResourceAsStream("/mihon-desktop-version.txt"),
+        ) { "Desktop version resource is missing" }.bufferedReader().use { it.readText().trim() }
         const val DEFAULT_REPO = "mihonapp/mihon-w"
 
         private val json = Json { ignoreUnknownKeys = true }

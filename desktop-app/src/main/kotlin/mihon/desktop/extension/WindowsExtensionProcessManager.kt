@@ -1,6 +1,7 @@
 package mihon.desktop.extension
 
 import com.sun.jna.Platform
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -31,6 +32,7 @@ import mihon.extension.ipc.SourcePreferenceDefinitionDto
 import mihon.extension.ipc.SourcePreferenceValueDto
 import mihon.extension.ipc.SourcePreferencesDto
 import mihon.extension.ipc.StringPreferenceValueDto
+import mihon.extension.ipc.UnloadExtensionPayload
 import mihon.extension.ipc.decodeFilterList
 import mihon.extension.ipc.decodeSourcePreferenceValue
 import mihon.extension.ipc.decodeSourcePreferences
@@ -58,6 +60,13 @@ open class WindowsExtensionProcessManager(
     private val onBrokerHttp: (suspend (BrokerHttpRequest) -> BrokerHttpResponse)? = null,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + Job()),
     private val sourceSessionFile: File? = null,
+    private val networkHelper: DesktopNetworkHelper? = null,
+    private val onWebView: (
+        suspend (
+            mihon.extension.ipc.WebViewRequest,
+        ) -> mihon.extension.ipc.WebViewResponse
+    )? = null,
+    private val isolatedLeaf: Boolean = false,
 ) : Closeable {
 
     private val json = Json {
@@ -66,6 +75,17 @@ open class WindowsExtensionProcessManager(
     }
 
     private val mutex = Mutex()
+    private val routingMutex = Mutex()
+    private val packageHosts = java.util.concurrent.ConcurrentHashMap<String, WindowsExtensionProcessManager>()
+    private val packageFiles = java.util.concurrent.ConcurrentHashMap<String, File>()
+    private val sourceHosts = java.util.concurrent.ConcurrentHashMap<Long, WindowsExtensionProcessManager>()
+    private val routesPackages: Boolean get() = Platform.isWindows() && !isolatedLeaf
+
+    private fun routedHost(sourceId: Long): WindowsExtensionProcessManager? = if (routesPackages) {
+        sourceHosts[sourceId] ?: throw IpcException("No isolated host registered for source $sourceId")
+    } else {
+        null
+    }
     var state: HostProcessState = HostProcessState.STOPPED
         private set
 
@@ -76,8 +96,13 @@ open class WindowsExtensionProcessManager(
         private set
 
     private var process: Process? = null
+    private var sandboxLauncher: WindowsAppContainerLauncher? = null
+    private val hostWorkingDirectory: File
+        get() = if (Platform.isWindows()) File(workingDirectory, "sandbox-data") else workingDirectory
     private var jobObject: WindowsJobObject? = null
     private var session: IpcSession? = null
+    private val brokerPackages = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
+    private val brokerSources = java.util.concurrent.ConcurrentHashMap<Long, String>()
 
     private var lastStderr: String = ""
         private set
@@ -95,44 +120,70 @@ open class WindowsExtensionProcessManager(
         lastExitCode = null
         lastStderr = ""
 
-        workingDirectory.mkdirs()
+        hostWorkingDirectory.mkdirs()
 
         val command = customCommand ?: buildDefaultCommand()
-        val stderrLog = File(workingDirectory, "extension-host-stderr.log")
-        val pb = ProcessBuilder(command)
-        pb.environment().remove("MIHON_SOURCE_SESSION_FILE")
-        sourceSessionFile?.let { pb.environment()["MIHON_SOURCE_SESSION_FILE"] = it.absolutePath }
-        pb.directory(workingDirectory)
-        pb.redirectError(stderrLog)
-
-        // Log launch command for debugging
-        val cmdLog = File(workingDirectory, "extension-host-launch.log")
-        cmdLog.writeText("Launch time: ${java.time.Instant.now()}\nCommand: ${command.joinToString(" ")}\n")
-
-        val proc = pb.start()
-        this.process = proc
-
-        if (Platform.isWindows()) {
-            val job = WindowsJobObject(memoryLimitBytes)
-            job.assignProcess(proc)
-            this.jobObject = job
+        val stderrLog = File(hostWorkingDirectory, "extension-host-stderr.log")
+        val proc = if (Platform.isWindows()) {
+            // Session cookies and headers remain exclusively in the parent HTTP broker.
+            val environment = emptyMap<String, String>()
+            val launcher = WindowsAppContainerLauncher(hostWorkingDirectory, memoryLimitBytes)
+            sandboxLauncher = launcher
+            try {
+                kotlinx.coroutines.withContext(Dispatchers.IO) { launcher.launch(command, environment) }
+            } catch (
+                cancelled: CancellationException,
+            ) {
+                launcher.close()
+                sandboxLauncher = null
+                state = HostProcessState.STOPPED
+                throw cancelled
+            } catch (error: Throwable) {
+                sandboxLauncher = null
+                state = HostProcessState.CRASHED
+                throw IpcException("Isolated extension host launch failed: ${error.message}", error)
+            }
+        } else {
+            ProcessBuilder(command).directory(hostWorkingDirectory).redirectError(stderrLog).apply {
+                environment().remove("MIHON_SOURCE_SESSION_FILE")
+                sourceSessionFile?.let { environment()["MIHON_SOURCE_SESSION_FILE"] = it.absolutePath }
+            }.start()
         }
-
+        this.process = proc
         val ipc = IpcSession(
             input = proc.inputStream,
             output = proc.outputStream,
             onCallback = { callback ->
                 if (callback.callbackType == IpcCallbacks.BROKER_HTTP) {
                     val request = json.decodeFromString<BrokerHttpRequest>(callback.payloadJson)
-                    val response = onBrokerHttp?.invoke(request) ?: BrokerHttpResponse(
-                        statusCode = 503,
-                        error = "Brokered HTTP handler not configured in process manager",
-                    )
+                    val permitted = networkHelper == null || (
+                        request.extensionId in brokerPackages &&
+                            (request.sourceId == null || brokerSources[request.sourceId] == request.extensionId)
+                        )
+                    val response = if (!permitted) {
+                        BrokerHttpResponse(403, error = "Unregistered extension network identity")
+                    } else {
+                        onBrokerHttp?.invoke(request) ?: BrokerHttpResponse(
+                            statusCode = 503,
+                            error = "Brokered HTTP handler not configured in process manager",
+                        )
+                    }
                     IpcCallbackResponse(
                         requestId = callback.requestId,
                         success = true,
-                        payloadJson = json.encodeToString(response),
+                        payloadJson = json.encodeToString(prepareBrokerResponse(response)),
                     )
+                } else if (callback.callbackType == "webview") {
+                    val request = json.decodeFromString<mihon.extension.ipc.WebViewRequest>(callback.payloadJson)
+                    val permitted =
+                        request.extensionId in brokerPackages && brokerSources[request.sourceId] == request.extensionId
+                    val response = if (!permitted) {
+                        mihon.extension.ipc.WebViewResponse(false, error = "Unregistered extension WebView identity")
+                    } else {
+                        onWebView?.invoke(request)
+                            ?: mihon.extension.ipc.WebViewResponse(false, error = "WebView handler is not configured")
+                    }
+                    IpcCallbackResponse(callback.requestId, success = true, payloadJson = json.encodeToString(response))
                 } else {
                     IpcCallbackResponse(
                         requestId = callback.requestId,
@@ -152,7 +203,7 @@ open class WindowsExtensionProcessManager(
             } catch (_: Exception) {
                 ""
             }
-            if (state == HostProcessState.RUNNING || state == HostProcessState.STARTING) {
+            if (process === proc && (state == HostProcessState.RUNNING || state == HostProcessState.STARTING)) {
                 state = HostProcessState.CRASHED
                 try {
                     ipc.close()
@@ -167,6 +218,10 @@ open class WindowsExtensionProcessManager(
             }
             state = HostProcessState.RUNNING
             epoch++
+        } catch (cancelled: CancellationException) {
+            closeInternal()
+            state = HostProcessState.STOPPED
+            throw cancelled
         } catch (e: Exception) {
             closeInternal()
             // Give a moment for stderr to flush to file
@@ -202,28 +257,129 @@ open class WindowsExtensionProcessManager(
         return try {
             val session = ensureRunningSession()
             session.sendRequest(IpcCommands.PING, timeoutMillis = 5_000L) == "pong"
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (_: Exception) {
             false
         }
     }
 
     open suspend fun loadExtension(packageFile: File): List<SourceDescriptor> {
+        if (routesPackages) {
+            return routingMutex.withLock {
+                val manifest = mihon.extension.validator.ExtensionPackageValidator.validatePackage(packageFile)
+                packageHosts[manifest.id]?.let { existing ->
+                    val current = existing.getSources()
+                    return@withLock if (current.isNotEmpty()) current else existing.loadExtension(packageFile)
+                }
+                val key = java.security.MessageDigest.getInstance("SHA-256").digest(manifest.id.toByteArray())
+                    .joinToString("") { "%02x".format(it) }
+                val child = WindowsExtensionProcessManager(
+                    workingDirectory = File(workingDirectory, "isolated-extensions/$key"),
+                    customCommand = customCommand,
+                    memoryLimitBytes = memoryLimitBytes,
+                    onBrokerHttp = onBrokerHttp,
+                    sourceSessionFile = sourceSessionFile,
+                    networkHelper = networkHelper,
+                    onWebView = onWebView,
+                    isolatedLeaf = true,
+                )
+                try {
+                    val sources = child.loadExtension(packageFile)
+                    check(
+                        sources.none {
+                            sourceHosts.containsKey(it.id)
+                        },
+                    ) { "Source identity is already owned by another extension host" }
+                    packageHosts[manifest.id] = child
+                    packageFiles[manifest.id] = packageFile
+                    sources.forEach { sourceHosts[it.id] = child }
+                    sources
+                } catch (failure: Throwable) {
+                    child.close()
+                    throw failure
+                }
+            }
+        }
         val session = ensureRunningSession()
+        val manifest = mihon.extension.validator.ExtensionPackageValidator.validatePackage(packageFile)
+        brokerPackages.add(manifest.id)
+        networkHelper?.registerExtensionDomains(manifest.id, manifest.declaredDomains)
+        manifest.sources.forEach { source ->
+            brokerSources[source.id] = manifest.id
+            networkHelper?.registerSourceOwner(source.id, manifest.id)
+        }
         val payload = LoadExtensionPayload(
-            packagePath = packageFile.absolutePath,
-            workingDir = File(workingDirectory, packageFile.nameWithoutExtension).absolutePath,
+            packagePath = if (Platform.isWindows()) {
+                val packages = File(hostWorkingDirectory, "packages").apply { mkdirs() }
+                packageFile.copyTo(File(packages, "${manifest.id}.wext"), overwrite = true).absolutePath
+            } else {
+                packageFile.absolutePath
+            },
+            workingDir = File(hostWorkingDirectory, manifest.id).absolutePath,
         )
         val res = session.sendRequest(IpcCommands.LOAD_EXTENSION, json.encodeToString(payload))
-        return json.decodeFromString(res)
+        return json.decodeFromString<List<SourceDescriptor>>(res).also { sources ->
+            sources.forEach { source ->
+                brokerSources[source.id] = manifest.id
+                networkHelper?.registerSourceOwner(source.id, manifest.id)
+            }
+        }
+    }
+
+    open suspend fun unloadExtension(pkg: String) {
+        if (routesPackages) {
+            routingMutex.withLock {
+                packageFiles.remove(pkg)
+                packageHosts.remove(pkg)?.let { child ->
+                    sourceHosts.entries.removeIf { it.value === child }
+                    try {
+                        child.unloadExtension(pkg)
+                    } finally {
+                        child.close()
+                    }
+                }
+            }
+            return
+        }
+        if (state == HostProcessState.RUNNING) {
+            ensureRunning().sendRequest(IpcCommands.UNLOAD_EXTENSION, json.encodeToString(UnloadExtensionPayload(pkg)))
+        }
+        brokerPackages.remove(pkg)
+        brokerSources.entries.removeIf { it.value == pkg }
+        networkHelper?.unregisterExtensionDomains(pkg)
+    }
+
+    private fun prepareBrokerResponse(response: BrokerHttpResponse): BrokerHttpResponse {
+        val encoded = response.bodyBase64 ?: return response
+        if (encoded.length <= 4 * 1024 * 1024) return response
+        val bytes = java.util.Base64.getDecoder().decode(encoded)
+        require(bytes.size <= 64 * 1024 * 1024) { "Broker response exceeds 64 MiB" }
+        val directory = File(hostWorkingDirectory, "broker-responses").apply { mkdirs() }
+        val file = File(directory, "broker-${java.util.UUID.randomUUID()}.bin")
+        try {
+            file.writeBytes(bytes)
+        } catch (error: Exception) {
+            file.delete()
+            throw error
+        }
+        return response.copy(body = null, bodyBase64 = null, bodyFileName = file.name)
     }
 
     open suspend fun getSources(): List<SourceDescriptor> {
+        if (routesPackages) {
+            ensureRunningSession()
+            return packageHosts.entries.flatMap { (pkg, child) ->
+                child.getSources().ifEmpty { child.loadExtension(packageFiles.getValue(pkg)) }
+            }
+        }
         val session = ensureRunningSession()
         val res = session.sendRequest(IpcCommands.GET_SOURCES)
         return json.decodeFromString(res)
     }
 
     open suspend fun getPopular(sourceId: Long, page: Int): MangasPage {
+        routedHost(sourceId)?.let { return it.getPopular(sourceId, page) }
         val session = ensureRunningSession()
         val payload = GetPagePayload(sourceId, page)
         val res = session.sendRequest(IpcCommands.GET_POPULAR, json.encodeToString(payload))
@@ -231,6 +387,7 @@ open class WindowsExtensionProcessManager(
     }
 
     open suspend fun getLatest(sourceId: Long, page: Int): MangasPage {
+        routedHost(sourceId)?.let { return it.getLatest(sourceId, page) }
         val session = ensureRunningSession()
         val payload = GetPagePayload(sourceId, page)
         val res = session.sendRequest(IpcCommands.GET_LATEST, json.encodeToString(payload))
@@ -247,6 +404,7 @@ open class WindowsExtensionProcessManager(
         query: String,
         filters: FilterList,
     ): MangasPage {
+        routedHost(sourceId)?.let { return it.searchManga(sourceId, page, query, filters) }
         val session = ensureRunningSession()
         val payload = SearchPayload(
             sourceId = sourceId,
@@ -260,6 +418,7 @@ open class WindowsExtensionProcessManager(
     }
 
     open suspend fun getMangaDetails(sourceId: Long, manga: SManga): SManga {
+        routedHost(sourceId)?.let { return it.getMangaDetails(sourceId, manga) }
         val session = ensureRunningSession()
         val payload = MangaPayload(sourceId, json.encodeToString(manga))
         val res = session.sendRequest(IpcCommands.GET_MANGA_DETAILS, json.encodeToString(payload))
@@ -267,6 +426,7 @@ open class WindowsExtensionProcessManager(
     }
 
     open suspend fun getChapterList(sourceId: Long, manga: SManga): List<SChapter> {
+        routedHost(sourceId)?.let { return it.getChapterList(sourceId, manga) }
         val session = ensureRunningSession()
         val payload = MangaPayload(sourceId, json.encodeToString(manga))
         val res = session.sendRequest(IpcCommands.GET_CHAPTER_LIST, json.encodeToString(payload))
@@ -274,6 +434,7 @@ open class WindowsExtensionProcessManager(
     }
 
     open suspend fun getPageList(sourceId: Long, chapter: SChapter): List<Page> {
+        routedHost(sourceId)?.let { return it.getPageList(sourceId, chapter) }
         val session = ensureRunningSession()
         val payload = ChapterPayload(sourceId, json.encodeToString(chapter))
         val res = session.sendRequest(IpcCommands.GET_PAGE_LIST, json.encodeToString(payload))
@@ -281,6 +442,7 @@ open class WindowsExtensionProcessManager(
     }
 
     open suspend fun getImage(sourceId: Long, page: Page): ByteArray? {
+        routedHost(sourceId)?.let { return it.getImage(sourceId, page) }
         val ipc = ensureRunningSession()
         val response = ipc.sendRequest(
             IpcCommands.GET_IMAGE,
@@ -289,7 +451,7 @@ open class WindowsExtensionProcessManager(
         )
         val name = json.decodeFromString<ImageFilePayload>(response).fileName ?: return null
         require(name.matches(Regex("page-[a-zA-Z0-9-]+\\.img"))) { "Invalid image transfer filename" }
-        val file = File(workingDirectory, "page-images/$name")
+        val file = File(hostWorkingDirectory, "page-images/$name")
         try {
             require(file.length() <= 64L * 1024 * 1024) { "Source image exceeds 64 MiB" }
             return file.readBytes()
@@ -299,6 +461,7 @@ open class WindowsExtensionProcessManager(
     }
 
     open suspend fun getFilterList(sourceId: Long): FilterList {
+        routedHost(sourceId)?.let { return it.getFilterList(sourceId) }
         val session = ensureRunningSession()
         val payload = SourcePayload(sourceId)
         val res = session.sendRequest(IpcCommands.GET_FILTER_LIST, json.encodeToString(payload))
@@ -310,6 +473,7 @@ open class WindowsExtensionProcessManager(
      * distinguish "source has no settings" from "source does not implement ConfigurableSource".
      */
     open suspend fun getSourcePreferencesResult(sourceId: Long): SourcePreferencesDto {
+        routedHost(sourceId)?.let { return it.getSourcePreferencesResult(sourceId) }
         val session = ensureRunningSession()
         val payload = SourcePayload(sourceId)
         val res = session.sendRequest(IpcCommands.GET_SOURCE_PREFERENCES, json.encodeToString(payload))
@@ -326,6 +490,7 @@ open class WindowsExtensionProcessManager(
         key: String,
         value: SourcePreferenceValueDto,
     ): SourcePreferenceValueDto? {
+        routedHost(sourceId)?.let { return it.setSourcePreference(sourceId, key, value) }
         val session = ensureRunningSession()
         val payload = SetSourcePreferencePayload(sourceId = sourceId, key = key, value = value)
         val res = session.sendRequest(IpcCommands.SET_SOURCE_PREFERENCE, json.encodeToString(payload))
@@ -344,6 +509,10 @@ open class WindowsExtensionProcessManager(
     }
 
     private fun closeInternal() {
+        packageHosts.values.forEach { it.close() }
+        packageHosts.clear()
+        packageFiles.clear()
+        sourceHosts.clear()
         val proc = process
         process = null
 
@@ -365,6 +534,13 @@ open class WindowsExtensionProcessManager(
             session?.close()
         } catch (_: Exception) {}
         session = null
+        sandboxLauncher?.close()
+        sandboxLauncher = null
+        brokerPackages.clear()
+        brokerSources.clear()
+        File(hostWorkingDirectory, "broker-responses").listFiles()?.filter {
+            it.isFile && it.name.matches(Regex("broker-[a-zA-Z0-9-]+\\.bin"))
+        }?.forEach { it.delete() }
     }
 
     override fun close() {

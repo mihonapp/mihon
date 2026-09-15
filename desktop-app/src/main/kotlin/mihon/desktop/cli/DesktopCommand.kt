@@ -3,6 +3,9 @@ package mihon.desktop.cli
 import java.nio.file.Path
 
 sealed interface DesktopCommand {
+    data object RemoveBackgroundTasks : DesktopCommand
+    data object BackgroundUpdate : DesktopCommand
+    data object BackgroundBackup : DesktopCommand
     data object LaunchUi : DesktopCommand
     data object FoundationSmoke : DesktopCommand
     data object Help : DesktopCommand
@@ -29,6 +32,9 @@ object DesktopCommandParser {
         val commands = buildList {
             args.forEach { argument ->
                 when {
+                    argument == "--remove-background-tasks" -> add(DesktopCommand.RemoveBackgroundTasks)
+                    argument == "--background-update" -> add(DesktopCommand.BackgroundUpdate)
+                    argument == "--background-backup" -> add(DesktopCommand.BackgroundBackup)
                     argument == "--portable" -> Unit
                     argument.startsWith("--data-dir=") -> Unit
                     argument == "--help" || argument == "-h" || argument == "/?" -> add(DesktopCommand.Help)

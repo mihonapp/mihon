@@ -132,7 +132,7 @@ internal class SourcePreferenceModel(
         val currentValue = if (preferences.contains(key)) {
             preferences.getBoolean(key, defaultValue)
         } else {
-            checked
+            defaultValue
         }
         return SourcePreferenceDefinitionDto(
             key = key,
@@ -179,14 +179,16 @@ internal class SourcePreferenceModel(
         summary: String,
     ): SourcePreferenceDefinitionDto {
         val options = optionsOf(preference.entries, preference.entryValues)
-        val rawDefaultValues = (preference.defaultValue as? Collection<*>)
-            ?.mapNotNull { it?.toString() }
-            ?: preference.values.toList()
+        val rawDefaultValues = when (val raw = preference.defaultValue) {
+            is Collection<*> -> raw.mapNotNull { it?.toString() }
+            is Array<*> -> raw.mapNotNull { it?.toString() }
+            else -> preference.values.toList()
+        }
         val defaultValues = orderValues(rawDefaultValues, options)
         val rawCurrentValues = if (preferences.contains(key)) {
             preferences.getStringSet(key, defaultValues.toSet())?.toList() ?: defaultValues
         } else {
-            preference.values.toList()
+            defaultValues
         }
         val currentValues = orderValues(rawCurrentValues, options)
         return SourcePreferenceDefinitionDto(

@@ -15,7 +15,7 @@ class DesktopAppUpdateServiceTest {
 
     @Test
     fun `current version matches the Windows distribution version`() {
-        DesktopAppUpdateService.CURRENT_VERSION shouldBe "0.1.3"
+        DesktopAppUpdateService.CURRENT_VERSION shouldBe "0.2.0"
     }
 
     @TempDir

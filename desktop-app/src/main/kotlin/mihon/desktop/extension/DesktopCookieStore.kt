@@ -3,6 +3,9 @@ package mihon.desktop.extension
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import okhttp3.Cookie
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -23,9 +26,70 @@ class DesktopCookieStore(
     },
 ) {
     private val memoryMap = ConcurrentHashMap<String, DomainCookieConfig>()
+    private val sessionCookies = mutableListOf<StoredSessionCookie>()
+    private val sessionPath = storagePath.resolveSibling("${storagePath.fileName}.sessions.json")
+
+    @Serializable
+    private data class StoredSessionCookie(val extensionId: String, val origin: String, val header: String)
 
     init {
         loadFromDisk()
+        if (Files.isRegularFile(sessionPath)) {
+            runCatching { json.decodeFromString<List<StoredSessionCookie>>(Files.readString(sessionPath)) }
+                .getOrNull()?.let(sessionCookies::addAll)
+        }
+    }
+
+    @Synchronized
+    fun saveFromResponse(extensionId: String, url: HttpUrl, cookies: List<Cookie>) {
+        if (cookies.isEmpty()) return
+        val now = System.currentTimeMillis()
+        for (cookie in cookies) {
+            sessionCookies.removeAll { stored ->
+                val old = decodeCookie(stored)
+                old == null || old.expiresAt <= now || (
+                    stored.extensionId == extensionId &&
+                        old.name == cookie.name && old.domain == cookie.domain && old.path == cookie.path
+                    )
+            }
+            if (cookie.expiresAt >
+                now
+            ) {
+                sessionCookies.add(StoredSessionCookie(extensionId, url.toString(), cookie.toString()))
+            }
+        }
+        persistSessions()
+    }
+
+    @Synchronized
+    fun loadForRequest(extensionId: String, url: HttpUrl): List<Cookie> = sessionCookies
+        .filter { it.extensionId == extensionId }
+        .mapNotNull(::decodeCookie)
+        .filter { it.expiresAt > System.currentTimeMillis() && it.matches(url) }
+        .sortedByDescending { it.path.length }
+
+    @Synchronized
+    fun clearSession(extensionId: String) {
+        if (sessionCookies.removeAll { it.extensionId == extensionId }) persistSessions()
+    }
+
+    private fun decodeCookie(stored: StoredSessionCookie): Cookie? = runCatching {
+        Cookie.parse(stored.origin.toHttpUrl(), stored.header)
+    }.getOrNull()
+
+    private fun persistSessions() {
+        Files.createDirectories(sessionPath.toAbsolutePath().parent)
+        val temp = Files.createTempFile(sessionPath.toAbsolutePath().parent, "cookies-", ".tmp")
+        try {
+            Files.writeString(temp, json.encodeToString(sessionCookies))
+            try {
+                Files.move(temp, sessionPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+            } catch (_: java.nio.file.AtomicMoveNotSupportedException) {
+                Files.move(temp, sessionPath, StandardCopyOption.REPLACE_EXISTING)
+            }
+        } finally {
+            Files.deleteIfExists(temp)
+        }
     }
 
     @Synchronized

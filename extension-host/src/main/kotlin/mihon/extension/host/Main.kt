@@ -1,4 +1,4 @@
-﻿package mihon.extension.host
+package mihon.extension.host
 
 import kotlinx.coroutines.runBlocking
 import mihon.extension.ipc.IpcSession
@@ -11,6 +11,7 @@ import java.io.RandomAccessFile
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
+    System.setProperty("mihon.extension.host", "true")
     var pipeName: String? = null
     var useStdio = false
 
@@ -21,8 +22,24 @@ fun main(args: Array<String>) {
         }
     }
 
+    args.firstOrNull { it.startsWith("--stderr=") }?.substringAfter("=")?.let {
+        System.setErr(java.io.PrintStream(FileOutputStream(it, true), true, "UTF-8"))
+    }
+    val isolatedRead = args.firstOrNull { it.startsWith("--pipe-read=") }?.substringAfter("=")
+    val isolatedWrite = args.firstOrNull { it.startsWith("--pipe-write=") }?.substringAfter("=")
     val (input, output) = try {
         when {
+            isolatedRead != null && isolatedWrite != null -> {
+                val token = requireNotNull(System.getenv("MIHON_IPC_NONCE")) { "Missing IPC authentication token" }
+                val read = FileInputStream(isolatedRead)
+                val write = FileOutputStream(isolatedWrite)
+                java.io.DataOutputStream(write).apply {
+                    writeUTF(token)
+                    flush()
+                }
+                check(java.io.DataInputStream(read).readUTF() == token) { "IPC server authentication failed" }
+                read to write
+            }
             pipeName != null -> openPipe(pipeName)
             useStdio -> System.`in` to System.out
             else -> {

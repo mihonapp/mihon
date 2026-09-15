@@ -61,6 +61,7 @@ interface DesktopStrings {
     val libraryGridSize: String
     val libraryFilterAndSort: String
     val libraryFilterTab: String
+    val libraryFilterCycleHint: String
     val librarySortTab: String
     val libraryFilterReset: String
     val libraryFilterUnread: String
@@ -707,6 +708,7 @@ object EnglishStrings : DesktopStrings {
     override val libraryGridSize = "Card Size"
     override val libraryFilterAndSort = "Filter & Sort"
     override val libraryFilterTab = "Filter"
+    override val libraryFilterCycleHint = "Click to cycle: Off → Include (√) → Exclude (✕)"
     override val librarySortTab = "Sort"
     override val libraryFilterReset = "Reset Filters"
     override val libraryFilterUnread = "Unread"
@@ -1018,7 +1020,7 @@ object EnglishStrings : DesktopStrings {
     override val aboutSubtitle = "Mihon Desktop Port for Windows"
     override fun aboutVersion(version: String) = "Version: $version"
     override val aboutArchitecture = "Target Architecture: Windows 10/11 x64"
-    override val aboutRuntime = "Runtime: OpenJDK 21 / Compose Multiplatform Desktop"
+    override val aboutRuntime = "Runtime: Java ${System.getProperty("java.version")} / Compose Desktop"
     override val aboutDatabase = "Database: SQLite with SQLDelight (Driver: SingleConnectionSqliteDriver)"
     override val aboutProtocol = "Protocol: Android-compatible Protocol Buffers (.tachibk)"
     override val aboutLicensesTitle = "Open Source Licenses"
@@ -1431,6 +1433,7 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val libraryGridSize = "封面大小"
     override val libraryFilterAndSort = "筛选与排序"
     override val libraryFilterTab = "筛选"
+    override val libraryFilterCycleHint = "点击切换：不限 → 包含（√）→ 排除（✕）"
     override val librarySortTab = "排序"
     override val libraryFilterReset = "重置筛选"
     override val libraryFilterUnread = "未读"
@@ -1741,7 +1744,7 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val aboutSubtitle = "Mihon Windows 桌面移植版"
     override fun aboutVersion(version: String) = "版本: $version"
     override val aboutArchitecture = "目标架构: Windows 10/11 x64"
-    override val aboutRuntime = "运行时: OpenJDK 21 / Compose Multiplatform Desktop"
+    override val aboutRuntime = "运行时: Java ${System.getProperty("java.version")} / Compose Desktop"
     override val aboutDatabase = "数据库: SQLite + SQLDelight (驱动: SingleConnectionSqliteDriver)"
     override val aboutProtocol = "协议: Android 兼容 Protocol Buffers (.tachibk)"
     override val aboutLicensesTitle = "开源许可证"
@@ -2152,6 +2155,7 @@ object TraditionalChineseStrings : DesktopStrings {
     override val libraryGridSize = "封面大小"
     override val libraryFilterAndSort = "篩選與排序"
     override val libraryFilterTab = "篩選"
+    override val libraryFilterCycleHint = "點擊切換：不限 → 包含（√）→ 排除（✕）"
     override val librarySortTab = "排序"
     override val libraryFilterReset = "重設篩選"
     override val libraryFilterUnread = "未讀"
@@ -2462,7 +2466,7 @@ object TraditionalChineseStrings : DesktopStrings {
     override val aboutSubtitle = "Mihon Windows 桌面移植版"
     override fun aboutVersion(version: String) = "版本: $version"
     override val aboutArchitecture = "目標架構: Windows 10/11 x64"
-    override val aboutRuntime = "執行環境: OpenJDK 21 / Compose Multiplatform Desktop"
+    override val aboutRuntime = "執行環境: Java ${System.getProperty("java.version")} / Compose Desktop"
     override val aboutDatabase = "資料庫: SQLite + SQLDelight (驅動: SingleConnectionSqliteDriver)"
     override val aboutProtocol = "協定: Android 相容 Protocol Buffers (.tachibk)"
     override val aboutLicensesTitle = "開源許可證"

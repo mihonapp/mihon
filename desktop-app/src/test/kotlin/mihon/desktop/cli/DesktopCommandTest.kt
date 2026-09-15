@@ -37,6 +37,7 @@ class DesktopCommandTest {
     fun `parses the exact desktop command forms while ignoring runtime options`() {
         val cases = listOf(
             emptyArray<String>() to DesktopCommand.LaunchUi,
+            arrayOf("--remove-background-tasks") to DesktopCommand.RemoveBackgroundTasks,
             arrayOf("--smoke-test") to DesktopCommand.FoundationSmoke,
             arrayOf("--help") to DesktopCommand.Help,
             arrayOf("-h") to DesktopCommand.Help,
@@ -325,7 +326,7 @@ class DesktopCommandTest {
         newRuntime(DesktopCommand.Version).use { fixture ->
             DesktopCommandRunner(fixture.runtime, versionOutput).run(DesktopCommand.Version) shouldBe 0
         }
-        versionOutput.toString(UTF_8) shouldContain "Mihon W 0.1.3"
+        versionOutput.toString(UTF_8) shouldContain "Mihon W 0.2.0"
     }
 
     private fun newRuntime(command: DesktopCommand): RuntimeFixture {

@@ -149,6 +149,35 @@ class DesktopSourceManager(
          * `SourcePreferencesScreen`; this registry lets the screen lazily fetch the authoritative
          * extension-host model without changing every navigation call site.
          */
+        internal suspend fun releaseInstalledPackage(installer: DesktopExtensionInstaller, pkg: String) {
+            activeManagers.mapNotNull { it.get() }.filter { it.installer === installer }.forEach { manager ->
+                manager.sourceLoadMutex.withLock {
+                    manager.processManager?.unloadExtension(pkg)
+                    manager.unloadExtension(pkg)
+                }
+            }
+        }
+
+        internal suspend fun probeInstalledPackage(
+            installer: DesktopExtensionInstaller,
+            packageFile: java.io.File,
+            pkg: String,
+        ): List<SourceDescriptor> {
+            val manager = activeManagers.mapNotNull { it.get() }
+                .lastOrNull { it.installer === installer && it.processManager != null }
+                ?: throw IllegalStateException(
+                    "An extension host is required to discover original APK source identities",
+                )
+            return manager.sourceLoadMutex.withLock {
+                try {
+                    manager.processManager!!.loadExtension(packageFile)
+                } finally {
+                    manager.processManager!!.unloadExtension(pkg)
+                    manager.unloadExtension(pkg)
+                }
+            }
+        }
+
         fun findActiveManagerForSource(sourceId: Long): DesktopSourceManager? {
             val candidates = activeManagers
                 .mapNotNull { it.get() }
@@ -425,6 +454,9 @@ class DesktopSourceManager(
     /** Removes stored cookies for every domain declared by the extension containing [sourceId]. */
     fun clearSourceCookies(sourceId: Long): Int {
         val store = activeCookieStore ?: return 0
+        val owner = installer?.getInstalledExtensions()
+            ?.firstOrNull { extension -> extension.manifest.sources.any { it.id == sourceId } }?.pkg ?: "builtin"
+        store.clearSession(owner)
         var cleared = 0
         cookieDomainsForSource(sourceId).forEach { domain ->
             if (store.getDomainConfig(domain) != null) {
@@ -478,7 +510,17 @@ class DesktopSourceManager(
 
     suspend fun ensureSourceLoaded(sourceId: Long) {
         if (builtinSources.containsKey(sourceId)) return
-        sourceLoadMutex.withLock { loadSource(sourceId) }
+        if (installer != null) {
+            installer.withLifecycleLock { sourceLoadMutex.withLock { loadSource(sourceId) } }
+        } else {
+            sourceLoadMutex.withLock { loadSource(sourceId) }
+        }
+    }
+
+    suspend fun sourceWebPage(sourceId: Long): String? {
+        (builtinSources[sourceId] as? WindowsHttpSource)?.let { return it.baseUrl }
+        ensureSourceLoaded(sourceId)
+        return processManager?.getSources()?.firstOrNull { it.id == sourceId }?.baseUrl
     }
 
     private suspend fun loadSource(sourceId: Long) {
@@ -491,6 +533,8 @@ class DesktopSourceManager(
         // Reset loaded packages if extension host process was restarted
         if (proc.epoch != lastKnownEpoch) {
             loadedPackages.clear()
+            remoteSourcePreferences.clear()
+            remotePreferenceSupport.clear()
             lastKnownEpoch = proc.epoch
         }
 
@@ -518,6 +562,9 @@ class DesktopSourceManager(
                     "Extension ${targetExt.pkg} loaded without requested source $sourceId " +
                         "(registered=${loadedSources.map { it.id }})"
                 }
+                // Publish the package hint only after every saved source setting has been restored.
+                // Call IPC directly while holding the load mutex; recursively ensuring here deadlocks.
+                loadedSources.forEach { source -> restoreSourcePreferences(proc, source.id) }
                 loadedPackages.add(targetExt.pkg)
             }
         }
@@ -670,32 +717,10 @@ class DesktopSourceManager(
         } ?: return null
 
         return try {
-            val alreadyLoaded = loadedPackages.contains(extension.pkg)
-            val epochBeforeLoad = proc.epoch
             val response = withLoadedExtensionSource(sourceId) { manager ->
                 manager.getSourcePreferencesResult(sourceId)
             }
-            val hostRestarted = proc.epoch != epochBeforeLoad
-            val newlyLoaded = !alreadyLoaded && loadedPackages.contains(extension.pkg)
-            var definitions = response.definitions.map { it.toDesktopDefinition() }
-            if (response.supported && (hostRestarted || newlyLoaded)) {
-                // The extension host keeps source preferences in memory. Re-apply values
-                // persisted by the desktop app so settings survive host/app restarts.
-                definitions = definitions.map { definition ->
-                    val stored = getLocalSourcePreferenceValue(sourceId, definition.key)
-                        ?: return@map definition
-                    val applied = runCatching {
-                        withLoadedExtensionSource(sourceId) { manager ->
-                            manager.setSourcePreference(
-                                sourceId,
-                                definition.key,
-                                definition.type.toSourcePreferenceValueDto(stored),
-                            )
-                        }
-                    }.isSuccess
-                    if (applied) definition.copy(currentValue = stored) else definition
-                }
-            }
+            val definitions = response.definitions.map { it.toDesktopDefinition() }
             SourcePreferencesSnapshot(
                 definitions = definitions,
                 supported = response.supported,
@@ -703,6 +728,24 @@ class DesktopSourceManager(
         } catch (_: Exception) {
             null
         }
+    }
+
+    private suspend fun restoreSourcePreferences(proc: WindowsExtensionProcessManager, sourceId: Long) {
+        val saved = preferenceStore?.propertiesWithPrefix("$PREF_PREFIX_SOURCE_PREFERENCE$sourceId.").orEmpty()
+        if (saved.isEmpty()) return
+        val response = proc.getSourcePreferencesResult(sourceId)
+        if (!response.supported) return
+        val definitions = response.definitions.map { it.toDesktopDefinition() }.map { definition ->
+            val stored = saved[sourcePreferenceKey(sourceId, definition.key)]
+            if (stored == null || definition.isReadOnly || definition.type == SourcePreferenceType.Unsupported) {
+                definition
+            } else {
+                proc.setSourcePreference(sourceId, definition.key, definition.type.toSourcePreferenceValueDto(stored))
+                definition.copy(currentValue = stored)
+            }
+        }
+        remotePreferenceSupport.add(sourceId)
+        remoteSourcePreferences[sourceId] = definitions
     }
 
     /**

@@ -1,30 +1,51 @@
 package mihon.desktop.library.update
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import mihon.desktop.download.DesktopDownloader
 import mihon.desktop.extension.OnlineMangaSyncService
-import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.MangaRecord
 import mihon.desktop.library.repository.LibraryRepository
 import mihon.desktop.platform.DesktopNotificationService
 import mihon.desktop.platform.NotificationType
 import mihon.extension.source.model.SManga
+import kotlin.coroutines.coroutineContext
 
 class LibraryUpdateService(
     private val repository: LibraryRepository,
-    private val syncService: OnlineMangaSyncService,
+    private val syncService: OnlineMangaSyncService? = null,
     private val downloader: DesktopDownloader? = null,
     private val notificationService: DesktopNotificationService? = null,
+    private val refreshManga: (suspend (MangaRecord) -> Unit)? = null,
+    private val maxConcurrentSources: Int = 3,
+    private val requestTimeoutMs: Long = 60_000L,
 ) {
+
+    init {
+        require(maxConcurrentSources > 0)
+        require(requestTimeoutMs > 0)
+        require(syncService != null || refreshManga != null)
+    }
 
     suspend fun updateLibrary(
         options: LibraryUpdateOptions = LibraryUpdateOptions(),
         onProgress: ((LibraryUpdateProgress) -> Unit)? = null,
         throttleDelayMs: Long = 200L,
     ): LibraryUpdateReport = withContext(Dispatchers.IO) {
-        val allFavorites = repository.allMangaSnapshot().filter { it.favorite }
+        val allFavorites = repository.allMangaSnapshot().filter {
+            it.favorite && it.sourceId != 0L && (options.mangaIds == null || it.id in options.mangaIds)
+        }
         val categoryLinks = repository.mangaCategoryLinksSnapshot()
         val importedPreferences = repository.allPreferenceSnapshots().associateBy { it.key }
         val includedCategoryIds = options.includedCategoryIds
@@ -64,90 +85,43 @@ class LibraryUpdateService(
             true
         }
 
-        val results = mutableListOf<MangaUpdateItemResult>()
-        val errors = mutableListOf<String>()
-        var newChaptersTotal = 0
-        var updatedMangaCount = 0
-
-        candidates.forEachIndexed { index, manga ->
-            onProgress?.invoke(
-                LibraryUpdateProgress(
-                    currentMangaTitle = manga.title,
-                    currentIndex = index + 1,
-                    totalManga = candidates.size,
-                ),
-            )
-
-            val existingChapterUrls = repository.chapterSnapshot(manga.id).map { it.url }.toSet()
-
-            try {
-                val sManga = SManga(
-                    url = manga.url,
-                    title = manga.title,
-                    artist = manga.artist,
-                    author = manga.author,
-                    description = manga.description,
-                    genre = emptyList(),
-                    status = manga.status.toInt(),
-                    thumbnailUrl = manga.thumbnailUrl,
-                    initialized = manga.initialized,
-                )
-
-                syncService.addOrUpdateOnlineManga(
-                    sourceId = manga.sourceId,
-                    manga = sManga,
-                    forceRefresh = true,
-                )
-
-                val latestChapters = repository.chapterSnapshot(manga.id)
-                val newlyAdded = latestChapters.filter { it.url !in existingChapterUrls }
-
-                if (newlyAdded.isNotEmpty()) {
-                    newChaptersTotal += newlyAdded.size
-                    updatedMangaCount++
-
-                    if (options.autoDownloadNewChapters && downloader != null) {
-                        downloader.enqueue(
-                            sourceId = manga.sourceId,
-                            mangaId = manga.id,
-                            mangaTitle = manga.title,
-                            chapters = newlyAdded,
-                            autoStart = true,
-                        )
+        val progressMutex = Mutex()
+        val sourceSlots = Semaphore(maxConcurrentSources)
+        var started = 0
+        val resultsBySource = coroutineScope {
+            candidates.groupBy { it.sourceId }.values.map { sourceManga ->
+                async {
+                    sourceSlots.withPermit {
+                        sourceManga.mapIndexed { index, manga ->
+                            coroutineContext.ensureActive()
+                            progressMutex.withLock {
+                                started++
+                                onProgress?.invoke(
+                                    LibraryUpdateProgress(
+                                        currentMangaTitle = manga.title,
+                                        currentIndex = started,
+                                        totalManga = candidates.size,
+                                        currentSourceId = manga.sourceId,
+                                    ),
+                                )
+                            }
+                            val result = updateManga(manga, options)
+                            if (throttleDelayMs > 0 && index < sourceManga.size - 1) delay(throttleDelayMs)
+                            result
+                        }
                     }
                 }
-
-                results.add(
-                    MangaUpdateItemResult(
-                        mangaId = manga.id,
-                        title = manga.title,
-                        newChapters = newlyAdded,
-                    ),
-                )
-            } catch (e: Exception) {
-                val err = "Failed to update '${manga.title}': ${e.message ?: "Unknown error"}"
-                errors.add(err)
-                results.add(
-                    MangaUpdateItemResult(
-                        mangaId = manga.id,
-                        title = manga.title,
-                        newChapters = emptyList(),
-                        error = err,
-                    ),
-                )
-            }
-
-            if (throttleDelayMs > 0 && index < candidates.size - 1) {
-                delay(throttleDelayMs)
-            }
+            }.awaitAll()
         }
-
+        val candidateOrder = candidates.mapIndexed { index, manga -> manga.id to index }.toMap()
+        val results = resultsBySource.flatten().sortedBy { candidateOrder[it.mangaId] }
+        val newChaptersTotal = results.sumOf { it.newChapters.size }
         val report = LibraryUpdateReport(
             totalMangaChecked = candidates.size,
-            updatedMangaCount = updatedMangaCount,
+            updatedMangaCount = results.count { it.newChapters.isNotEmpty() },
             newChaptersTotal = newChaptersTotal,
             results = results,
-            errors = errors,
+            errors = results.mapNotNull { it.error },
         )
 
         // Notify user via Desktop Notification Service
@@ -167,6 +141,55 @@ class LibraryUpdateService(
         }
 
         report
+    }
+
+    private suspend fun updateManga(manga: MangaRecord, options: LibraryUpdateOptions): MangaUpdateItemResult {
+        try {
+            val existingChapterUrls = repository.chapterSnapshot(manga.id).map { it.url }.toSet()
+            val refreshed = withTimeoutOrNull(requestTimeoutMs) {
+                if (refreshManga != null) {
+                    refreshManga.invoke(manga)
+                } else {
+                    syncService!!.prepareOnlineMangaForReading(
+                        sourceId = manga.sourceId,
+                        manga = SManga(
+                            url = manga.url,
+                            title = manga.title,
+                            artist = manga.artist,
+                            author = manga.author,
+                            description = manga.description,
+                            genre = emptyList(),
+                            status = manga.status.toInt(),
+                            thumbnailUrl = manga.thumbnailUrl,
+                            initialized = manga.initialized,
+                        ),
+                        forceRefresh = true,
+                    )
+                }
+                true
+            } ?: false
+            check(refreshed) { "Source ${manga.sourceId} timed out after $requestTimeoutMs ms" }
+            val newlyAdded = repository.chapterSnapshot(manga.id).filter { it.url !in existingChapterUrls }
+            if (newlyAdded.isNotEmpty() && options.autoDownloadNewChapters && downloader != null) {
+                downloader.enqueue(
+                    sourceId = manga.sourceId,
+                    mangaId = manga.id,
+                    mangaTitle = manga.title,
+                    chapters = newlyAdded,
+                    autoStart = true,
+                )
+            }
+            return MangaUpdateItemResult(manga.id, manga.title, newlyAdded)
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Exception) {
+            return MangaUpdateItemResult(
+                manga.id,
+                manga.title,
+                emptyList(),
+                "Failed to update '${manga.title}': ${error.message ?: "Unknown error"}",
+            )
+        }
     }
 
     private fun isMangaCompleted(manga: MangaRecord): Boolean {

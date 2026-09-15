@@ -1,0 +1,13 @@
+MihonW desktop third-party components
+
+MihonW: repository LICENSE.
+Main Java 17 runtime: runtime/legal contains upstream notices.
+Browser: JetBrains Runtime JBRSDK-21.0.10+1-1163.110-jcef (Java 21.0.10).
+Source: https://github.com/JetBrains/JetBrainsRuntime
+Browser runtime legal/ and LICENSE files ship unchanged in browser/runtime.
+JCEF/CEF licenses and Chromium credits are in resources/licenses.
+Chromium credits are exported from the exact packaged native browser chrome://credits page.
+Reader codec: ImageMagick 7.1.2-31; see codec/LICENSE.txt and NOTICE.txt.
+JVM dependencies retain their upstream license resources in the distributed JARs.
+This index supplements those license texts.
+Rhino 1.8.1 (unmodified): Mozilla Public License 2.0, resources/licenses/RHINO-MPL-2.0.txt. Source: https://github.com/mozilla/rhino/tree/Rhino1_8_1_Release

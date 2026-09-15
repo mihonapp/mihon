@@ -23,4 +23,5 @@ data class SourceDescriptor(
     val lang: String,
     val className: String,
     val supportsLatest: Boolean = true,
+    val baseUrl: String? = null,
 )

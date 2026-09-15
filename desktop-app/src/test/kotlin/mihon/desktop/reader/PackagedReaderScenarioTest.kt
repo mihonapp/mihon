@@ -19,6 +19,35 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class PackagedReaderScenarioTest {
+    @Test
+    fun `explicit soak repeatedly decodes real fixtures in one runtime`() {
+        val fixture = ReaderFixtureBuilder.build(tempDir.resolve("soak-fixture"), committedRar())
+        val samples = tempDir.resolve("soak.jsonl")
+        val environment = mapOf(
+            "MIHON_W_READER_VERIFY" to "1",
+            "MIHON_W_READER_SOAK_SECONDS" to "2",
+            "MIHON_W_READER_SOAK_OUTPUT" to samples.toString(),
+        )
+        DesktopRuntimeFactory.create(
+            arrayOf("--verify-reader=${fixture.root}", "--data-dir=${tempDir.resolve("soak-data")}"),
+            environment,
+            tempDir.resolve("bin"),
+        ).use { runtime ->
+            val result = kotlinx.coroutines.runBlocking {
+                PackagedReaderVerifier(runtime, System::currentTimeMillis, environment).verify(fixture.root)
+            }
+            val soak = requireNotNull(result.soak)
+            (soak.elapsedSeconds >= 2.0) shouldBe true
+            (soak.cycles >= 1) shouldBe true
+            (soak.decodedTiles >= result.decodedTileCount) shouldBe true
+            val rows = Files.readAllLines(samples)
+            (rows.size >= 2) shouldBe true
+            rows.map {
+                Json.parseToJsonElement(it).jsonObject.getValue("processId").jsonPrimitive.content
+            }.distinct().size shouldBe
+                1
+        }
+    }
 
     @TempDir
     lateinit var tempDir: Path

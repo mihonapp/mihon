@@ -72,6 +72,7 @@ class PageLoadCoordinatorTest {
         private val lock = Any()
         private val failures = HashMap<String, Throwable>()
         private val openCounts = HashMap<String, Int>()
+        private val visibleLoads = HashMap<String, MutableList<Boolean>>()
         var closed = false
             private set
 
@@ -82,11 +83,14 @@ class PageLoadCoordinatorTest {
         }
 
         fun openCount(entry: String) = synchronized(lock) { openCounts[entry] ?: 0 }
+        fun visibilityFor(entry: String) = synchronized(lock) { visibleLoads[entry].orEmpty().toList() }
 
         override suspend fun pages(): List<PageDescriptor> = descriptors
 
         override suspend fun open(pageId: PageId): BoundedPageInput {
+            val visible = kotlinx.coroutines.currentCoroutineContext()[PageLoadPriority]?.isVisible?.invoke() ?: true
             synchronized(lock) {
+                visibleLoads.getOrPut(pageId.entryName) { mutableListOf() }.add(visible)
                 openCounts.merge(pageId.entryName, 1, Int::plus)
                 failures[pageId.entryName]?.let { throw it }
             }
@@ -262,6 +266,7 @@ class PageLoadCoordinatorTest {
         runCurrent()
 
         harness.decoder.producedNames() shouldBe listOf("p5.png", "p6.png", "p7.png", "p8.png", "p3.png")
+        source.visibilityFor("p5.png").all { !it } shouldBe true
         harness.cache.metrics.entryCount shouldBe 5
         harness.budget.metrics shouldBe ReaderMemoryMetrics(4096, 0, 1280)
     }
@@ -286,6 +291,8 @@ class PageLoadCoordinatorTest {
 
         harness.decoder.producedNames() shouldBe
             listOf("p4.png", "p5.png", "p6.png", "p7.png", "p8.png", "p3.png")
+        source.visibilityFor("p4.png").all { it } shouldBe true
+        source.visibilityFor("p5.png").all { !it } shouldBe true
     }
 
     @Test

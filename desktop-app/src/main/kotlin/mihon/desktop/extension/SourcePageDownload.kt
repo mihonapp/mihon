@@ -2,7 +2,9 @@ package mihon.desktop.extension
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import mihon.extension.ipc.BrokerHttpRequest
+import mihon.extension.ipc.RequestPriority
 import mihon.extension.source.model.Page
 import mihon.reader.image.ImageFormatDetector
 import mihon.reader.image.ReaderImageFormat
@@ -16,7 +18,8 @@ suspend fun downloadSourcePage(
     network: DesktopNetworkHelper,
     sourceManager: DesktopSourceManager? = null,
     processManager: WindowsExtensionProcessManager? = null,
-): ByteArray {
+    priority: Int = RequestPriority.READER,
+): ByteArray = withContext(RequestPriority(priority)) {
     var failure: Exception? = null
     repeat(4) { attempt ->
         try {
@@ -30,29 +33,35 @@ suspend fun downloadSourcePage(
                 require(imageUrl.startsWith("https://") || imageUrl.startsWith("http://")) {
                     "Source returned no absolute image URL"
                 }
-                network.registerRuntimePageUrl(imageUrl)
+                network.registerRuntimePageUrl(imageUrl, sourceId = sourceId)
                 val headers = page.headers.toMutableMap()
                 if (headers.keys.none { it.equals("Referer", ignoreCase = true) } &&
                     (chapterUrl.startsWith("https://") || chapterUrl.startsWith("http://"))
                 ) {
                     headers["Referer"] = chapterUrl
                 }
-                network.downloadRawBytes(BrokerHttpRequest("GET", imageUrl, headers))
+                network.downloadRawBytes(
+                    BrokerHttpRequest("GET", imageUrl, headers, sourceId = sourceId, priority = priority),
+                )
             }
             if (ImageFormatDetector.detect(bytes) == ReaderImageFormat.UNKNOWN) {
                 throw mihon.reader.source.ReaderFailure.UnsupportedImage("server returned non-image data")
             }
-            return bytes
+            return@withContext bytes
         } catch (error: CancellationException) {
             throw error
         } catch (error: Exception) {
             failure = error
             // Parsing and compatibility errors are deterministic; only retry network failures.
             val message = error.message.orEmpty()
-            val retryable = (error is IOException && error !is mihon.reader.source.ReaderFailure) ||
-                Regex("HTTP(?: error)? (408|429|5[0-9]{2})").containsMatchIn(message)
+            val retryable = if (error is SourceHttpException) {
+                error.code == 408 || error.code == 429 || error.code in 500..599
+            } else {
+                (error is IOException && error !is mihon.reader.source.ReaderFailure) ||
+                    Regex("HTTP(?: error)? (408|429|5[0-9]{2})").containsMatchIn(message)
+            }
             if (!retryable || attempt == 3) throw error
-            delay(2_000L shl attempt)
+            delay((error as? SourceHttpException)?.retryAfterMillis ?: (2_000L shl attempt))
         }
     }
     throw requireNotNull(failure)

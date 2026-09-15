@@ -17,7 +17,7 @@ class TrackerAndQueueTest {
     @Test
     fun `tracker manager contains all default trackers and handles login state`() = runBlocking {
         val manager = DesktopTrackerManager()
-        assertEquals(9, manager.trackers.size)
+        assertEquals(11, manager.trackers.size)
 
         val mal = manager.get(1L)
         assertNotNull(mal)

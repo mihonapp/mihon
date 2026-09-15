@@ -84,7 +84,7 @@ fun LibraryFilterDialog(
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         Text(
-                            text = "Click to cycle: Off -> Include (√) -> Exclude (✕)",
+                            text = strings.libraryFilterCycleHint,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.outline,
                         )

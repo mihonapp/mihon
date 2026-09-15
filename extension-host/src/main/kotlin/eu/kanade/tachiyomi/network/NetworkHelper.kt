@@ -10,13 +10,42 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
 open class NetworkHelper(
-    open val client: OkHttpClient = createDefaultClient(),
+    client: OkHttpClient? = null,
 ) {
+    private val suppliedClient = client
+    private val clients = java.util.concurrent.ConcurrentHashMap<Pair<String?, Long?>, OkHttpClient>()
+    open val client: OkHttpClient
+        get() {
+            suppliedClient?.let { return it }
+            val identity =
+                mihon.extension.host.ExtensionExecutionContext.currentPackageId() to
+                    mihon.extension.host.ExtensionExecutionContext.currentSourceId()
+            return clients.computeIfAbsent(identity) {
+                val broker = brokerClient
+                if (broker == null) {
+                    createDefaultClient()
+                } else {
+                    createDefaultClient().newBuilder().apply {
+                        // Parent owns cookies/session headers. Keep extension-added interceptors intact.
+                        networkInterceptors().clear()
+                        cookieJar(CookieJar.NO_COOKIES)
+                        interceptors().add(
+                            0,
+                            mihon.extension.host.BrokerTransport(identity.first, identity.second, broker::execute),
+                        )
+                    }.build()
+                }
+            }
+        }
     open val cloudflareClient: OkHttpClient get() = client
 
     open fun defaultUserAgentProvider(): String = DEFAULT_USER_AGENT
 
     companion object {
+        @Volatile private var brokerClient: mihon.extension.host.BrokeredHttpClient? = null
+        fun installBroker(client: mihon.extension.host.BrokeredHttpClient) {
+            brokerClient = client
+        }
         const val DEFAULT_USER_AGENT =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 MihonW/1.0"
 

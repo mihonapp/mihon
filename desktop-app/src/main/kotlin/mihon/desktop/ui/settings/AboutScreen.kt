@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -26,7 +28,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
         color = MaterialTheme.colorScheme.background,
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(32.dp),
+            modifier = Modifier.fillMaxSize().padding(32.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
@@ -42,7 +44,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                     )
-                    Text(strings.aboutVersion("1.0.0-desktop (Phase 8)"))
+                    Text(strings.aboutVersion(mihon.desktop.updates.DesktopAppUpdateService.CURRENT_VERSION))
                     Text(strings.aboutArchitecture)
                     Text(strings.aboutRuntime)
                     Text(strings.aboutDatabase)

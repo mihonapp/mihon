@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.jsoup)
     implementation(libs.injekt)
     implementation(libs.rxJava)
+    implementation("org.mozilla:rhino:1.8.1")
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.bundles.test)
@@ -33,4 +34,6 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    // Exercise the same main-loop mode selected by the extension-host entry point.
+    systemProperty("mihon.extension.host", "true")
 }

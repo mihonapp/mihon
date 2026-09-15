@@ -12,6 +12,7 @@ data class IpcRequest(
     override val requestId: Long,
     val command: String,
     val payloadJson: String = "",
+    val priority: Int = RequestPriority.NORMAL,
 ) : IpcMessage
 
 @Serializable
@@ -37,9 +38,16 @@ data class IpcCallbackResponse(
     val error: String? = null,
 ) : IpcMessage
 
+@Serializable
+data class IpcCancel(
+    override val requestId: Long,
+    val callback: Boolean = false,
+) : IpcMessage
+
 object IpcCommands {
     const val PING = "ping"
     const val LOAD_EXTENSION = "load_extension"
+    const val UNLOAD_EXTENSION = "unload_extension"
     const val GET_SOURCES = "get_sources"
     const val GET_POPULAR = "get_popular"
     const val GET_LATEST = "get_latest"
@@ -66,6 +74,9 @@ data class LoadExtensionPayload(
     val workingDir: String,
     val grantedCapabilities: List<String> = emptyList(),
 )
+
+@Serializable
+data class UnloadExtensionPayload(val pkg: String)
 
 @Serializable
 data class SourcePayload(
@@ -111,7 +122,27 @@ data class BrokerHttpRequest(
     val url: String,
     val headers: Map<String, String> = emptyMap(),
     val body: String? = null,
+    val extensionId: String? = null,
+    val sourceId: Long? = null,
+    val bodyBase64: String? = null,
+    val headerValues: Map<String, List<String>> = emptyMap(),
+    val priority: Int = RequestPriority.NORMAL,
 )
+
+@Serializable
+enum class NetworkFailureKind {
+    DOMAIN_DENIED,
+    INVALID_REQUEST,
+    OFFLINE,
+    TIMEOUT,
+    PROXY,
+    TLS,
+    RATE_LIMITED,
+    AUTHENTICATION_REQUIRED,
+    WEB_VERIFICATION,
+    HTTP_ERROR,
+    CONNECTION,
+}
 
 @Serializable
 data class BrokerHttpResponse(
@@ -119,4 +150,9 @@ data class BrokerHttpResponse(
     val headers: Map<String, String> = emptyMap(),
     val body: String? = null,
     val error: String? = null,
+    val bodyBase64: String? = null,
+    val headerValues: Map<String, List<String>> = emptyMap(),
+    val finalUrl: String? = null,
+    val bodyFileName: String? = null,
+    val failureKind: NetworkFailureKind? = null,
 )

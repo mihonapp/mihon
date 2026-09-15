@@ -23,6 +23,16 @@ Discover and read manga, webtoons, comics, and more – easier than ever on your
 
 *Requires Android 8.0 or higher.*
 
+### MihonW for Windows
+
+This checkout also develops MihonW, a Compose Desktop application for Windows x64. The Windows work builds on Mihon's reader and backup formats and uses [Suwayomi-Server](https://github.com/Suwayomi/Suwayomi-Server) as a reference for extension compatibility and background services.
+
+The current Windows version is **0.2.0**. Run `:desktop-app:assembleWindowsRelease` to produce an app image, EXE installer, MSI installer, portable ZIP, build identity, and SHA-256 manifest in `desktop-app/build/releases/0.2.0`. The main application bundles Java 17; the optional browser helper bundles its separate Java 21/JCEF runtime. Portable distributions keep application data in their own `data` directory.
+
+See the [execution plan](docs/superpowers/plans/2026-09-15-suwayomi-based-mihonw-evolution.md), [feature coverage and remaining limits](docs/superpowers/evidence/suwayomi-feature-coverage.md), [extension compatibility matrix](docs/suwayomi-extension-compatibility.md), and [Windows release evidence](docs/superpowers/evidence/suwayomi-windows-release-acceptance.md). The Windows port remains under development; artifact generation is separate from clean-system installation, upgrade, and production-site acceptance.
+
+Third-party desktop components and their bundled license locations are listed in [THIRD-PARTY-DESKTOP.txt](THIRD-PARTY-DESKTOP.txt).
+
 ## Features
 
 <div align="left">

@@ -353,7 +353,9 @@ class PageLoadCoordinator(
         }
     }
 
-    private suspend fun runFlight(key: FlightKey, flight: Flight) {
+    private suspend fun runFlight(key: FlightKey, flight: Flight) = kotlinx.coroutines.withContext(
+        PageLoadPriority { synchronized(lock) { flight.visible } },
+    ) {
         val pageId = key.pageId
         try {
             val source = synchronized(lock) { chapterSource } ?: throw ReaderFailure.SourceClosed()

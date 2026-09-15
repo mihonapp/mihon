@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpServer
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
@@ -46,7 +47,7 @@ class DesktopDownloaderTest {
         }
         server.createContext("/good") { exchange ->
             goodRequests.incrementAndGet()
-            val bytes = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xe0.toByte())
+            val bytes = validDownloadImage()
             exchange.sendResponseHeaders(200, bytes.size.toLong())
             exchange.responseBody.use { it.write(bytes) }
         }
@@ -137,12 +138,12 @@ class DesktopDownloaderTest {
         val page2Url = "http://127.0.0.1:$serverPort/page2.jpg"
 
         server.createContext("/page1.jpg") { exchange ->
-            val bytes = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xe0.toByte())
+            val bytes = validDownloadImage()
             exchange.sendResponseHeaders(200, bytes.size.toLong())
             exchange.responseBody.use { it.write(bytes) }
         }
         server.createContext("/page2.jpg") { exchange ->
-            val bytes = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xe0.toByte())
+            val bytes = validDownloadImage()
             exchange.sendResponseHeaders(200, bytes.size.toLong())
             exchange.responseBody.use { it.write(bytes) }
         }
@@ -187,7 +188,7 @@ class DesktopDownloaderTest {
             override fun insertReportItem(reportId: Long, value: ImportReportItemRecord) = Unit
         }
 
-        var completedDownload: DesktopDownload? = null
+        val completion = CompletableDeferred<DesktopDownload>()
 
         val downloader = DesktopDownloader(
             store = store,
@@ -200,33 +201,38 @@ class DesktopDownloaderTest {
                     Page(1, page2Url, page2Url),
                 )
             },
-            onDownloadCompleted = { completedDownload = it },
+            onDownloadCompleted = { completion.complete(it) },
         )
 
         val manga = createManga()
         val chapter = createChapter()
 
-        downloader.enqueue(manga, listOf(chapter), autoStart = true)
+        try {
+            downloader.enqueue(manga, listOf(chapter), autoStart = true)
 
-        withTimeout(5000) {
-            while (downloader.queueState.value.firstOrNull()?.status != DownloadStatus.COMPLETED) {
-                delay(50)
+            val completedDownload = withTimeout(5000) {
+                while (downloader.queueState.value.firstOrNull()?.status != DownloadStatus.COMPLETED) {
+                    delay(50)
+                }
+                completion.await()
             }
+
+            val item = downloader.queueState.value.first()
+            item.status shouldBe DownloadStatus.COMPLETED
+            item.progress shouldBe 1.0f
+            item.downloadedImages shouldBe 2
+            completedDownload.status shouldBe DownloadStatus.COMPLETED
+
+            diskProvider.isChapterDownloaded(manga.sourceId, manga.title, chapter.name) shouldBe true
+            val chapterDir = diskProvider.getChapterDir(manga.sourceId, manga.title, chapter.name)
+            Files.exists(chapterDir.resolve("001.jpg")) shouldBe true
+            Files.exists(chapterDir.resolve("002.jpg")) shouldBe true
+
+            insertedChapters shouldHaveSize 1
+            insertedChapters[0].chapterId shouldBe chapter.id
+        } finally {
+            downloader.close()
         }
-
-        val item = downloader.queueState.value.first()
-        item.status shouldBe DownloadStatus.COMPLETED
-        item.progress shouldBe 1.0f
-        item.downloadedImages shouldBe 2
-        completedDownload shouldNotBe null
-
-        diskProvider.isChapterDownloaded(manga.sourceId, manga.title, chapter.name) shouldBe true
-        val chapterDir = diskProvider.getChapterDir(manga.sourceId, manga.title, chapter.name)
-        Files.exists(chapterDir.resolve("001.jpg")) shouldBe true
-        Files.exists(chapterDir.resolve("002.jpg")) shouldBe true
-
-        insertedChapters shouldHaveSize 1
-        insertedChapters[0].chapterId shouldBe chapter.id
     }
 
     @Test
@@ -237,12 +243,7 @@ class DesktopDownloaderTest {
             val authorized = exchange.requestHeaders.getFirst("X-Image-Token") == "page-token" &&
                 exchange.requestHeaders.getFirst("Referer") == "https://source.example/gallery/1"
             val bytes = if (authorized) {
-                byteArrayOf(
-                    0xff.toByte(),
-                    0xd8.toByte(),
-                    0xff.toByte(),
-                    0xe0.toByte(),
-                )
+                validDownloadImage()
             } else {
                 "forbidden".toByteArray()
             }
@@ -290,13 +291,13 @@ class DesktopDownloaderTest {
 
         // Simulate page 0 already existing in temp dir
         val tempDirChapter = diskProvider.getTempChapterDir(manga.sourceId, manga.title, chapter.name)
-        diskProvider.savePage(tempDirChapter, 0, byteArrayOf(99, 98, 97))
+        diskProvider.savePage(tempDirChapter, 0, validDownloadImage())
 
         val page2Url = "http://127.0.0.1:$serverPort/page2-resume.jpg"
         val page2RequestCount = AtomicInteger(0)
         server.createContext("/page2-resume.jpg") { exchange ->
             page2RequestCount.incrementAndGet()
-            val bytes = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xe0.toByte())
+            val bytes = validDownloadImage()
             exchange.sendResponseHeaders(200, bytes.size.toLong())
             exchange.responseBody.use { it.write(bytes) }
         }
@@ -338,7 +339,7 @@ class DesktopDownloaderTest {
                     maximum.updateAndGet { previous -> maxOf(previous, now) }
                     try {
                         Thread.sleep(120)
-                        val bytes = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xe0.toByte())
+                        val bytes = validDownloadImage()
                         exchange.sendResponseHeaders(200, bytes.size.toLong())
                         exchange.responseBody.use { it.write(bytes) }
                     } finally {
@@ -387,7 +388,7 @@ class DesktopDownloaderTest {
         val requests = AtomicInteger(0)
         server.createContext("/control.jpg") { exchange ->
             requests.incrementAndGet()
-            val bytes = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xe0.toByte())
+            val bytes = validDownloadImage()
             exchange.sendResponseHeaders(200, bytes.size.toLong())
             exchange.responseBody.use { it.write(bytes) }
         }

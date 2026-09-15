@@ -56,6 +56,10 @@ fun UpdatesScreen(
     onReadChapter: (chapterId: Long) -> Unit,
     onOpenUpcoming: () -> Unit = {},
     modifier: Modifier = Modifier,
+    runState: mihon.desktop.library.update.LibraryUpdateRunState? = null,
+    progress: mihon.desktop.library.update.LibraryUpdateProgress? = null,
+    sourceNameFor: (Long) -> String = { "Source #$it" },
+    onCancelUpdate: () -> Unit = {},
 ) {
     val strings = mihon.desktop.i18n.LocalStrings.current
     Column(
@@ -80,7 +84,11 @@ fun UpdatesScreen(
                     isUpdating -> strings.updatesChecking
                     lastResult != null -> {
                         if (lastResult.newChaptersFound > 0) {
-                            "Found ${lastResult.newChaptersFound} new chapters across ${lastResult.mangaWithNewChapters} manga"
+                            mihon.desktop.i18n.recoveryText(
+                                "${lastResult.mangaWithNewChapters} manga · ${lastResult.newChaptersFound} new chapters",
+                                "${lastResult.mangaWithNewChapters} 部漫画 · ${lastResult.newChaptersFound} 个新章节",
+                                "${lastResult.mangaWithNewChapters} 部漫畫 · ${lastResult.newChaptersFound} 個新章節",
+                            )
                         } else {
                             strings.updatesEmptySubtitle
                         }
@@ -108,13 +116,12 @@ fun UpdatesScreen(
                         modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Upcoming")
+                    Text(mihon.desktop.i18n.recoveryText("Upcoming", "更新日历", "更新日曆"))
                 }
 
                 Button(
-                    onClick = onCheckForUpdates,
+                    onClick = if (isUpdating) onCancelUpdate else onCheckForUpdates,
                     modifier = Modifier.testTag(UPDATES_CHECK_NOW_BUTTON_TEST_TAG),
-                    enabled = !isUpdating,
                 ) {
                     if (isUpdating) {
                         CircularProgressIndicator(
@@ -123,7 +130,7 @@ fun UpdatesScreen(
                             strokeWidth = 2.dp,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(strings.updatesChecking)
+                        Text(mihon.desktop.i18n.recoveryText("Cancel update", "取消更新"))
                     } else {
                         Icon(
                             imageVector = Icons.Rounded.Refresh,
@@ -138,6 +145,44 @@ fun UpdatesScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        if (isUpdating && progress != null) {
+            Text(
+                listOfNotNull(
+                    "${progress.currentIndex}/${progress.totalManga}",
+                    progress.currentSourceId?.let(sourceNameFor),
+                    progress.currentMangaTitle,
+                ).joinToString(" · "),
+                modifier = Modifier.padding(bottom = 12.dp).testTag("library-update-progress"),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+        if (!isUpdating && runState != null) {
+            val notice = when (runState.status) {
+                mihon.desktop.library.update.LibraryUpdateStatus.FAILED -> {
+                    val retry = runState.retryAfterEpochMillis.takeIf { it > System.currentTimeMillis() }
+                        ?.let { java.text.DateFormat.getDateTimeInstance().format(java.util.Date(it)) }
+                    listOfNotNull(
+                        runState.error ?: mihon.desktop.i18n.recoveryText("Update failed", "更新失败", "更新失敗"),
+                        retry?.let { mihon.desktop.i18n.recoveryText("Retry after $it", "将在 $it 后重试", "將在 $it 後重試") },
+                    ).joinToString("\n")
+                }
+                mihon.desktop.library.update.LibraryUpdateStatus.CANCELLED ->
+                    mihon.desktop.i18n.recoveryText(
+                        "Update cancelled. Finished updates are saved.",
+                        "更新已取消，已完成的结果已保存。",
+                        "更新已取消，已完成的結果已儲存。",
+                    )
+                else -> null
+            }
+            notice?.let {
+                Surface(
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp).testTag("library-update-recovery"),
+                ) { Text(it, modifier = Modifier.padding(12.dp), style = MaterialTheme.typography.bodyMedium) }
+            }
+        }
 
         if (updatedChapters.isEmpty()) {
             Box(

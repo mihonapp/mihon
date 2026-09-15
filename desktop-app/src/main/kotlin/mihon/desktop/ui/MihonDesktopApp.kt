@@ -165,9 +165,10 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
             scope = presenterScope,
             preferences = runtime.preferences,
             downloader = runtime.downloader,
-        )
+        ).also { runtime.onShutdown(it::shutdown) }
     }
     val libraryState by libraryPresenter.state.collectAsState()
+    val libraryBatchState by libraryPresenter.batchState.collectAsState()
     val mangaDetailState by libraryPresenter.detailState.collectAsState()
     val sourceNames = remember(runtime.sourceManager, libraryState.items) {
         runCatching {
@@ -233,6 +234,28 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
         downloader?.speedBytesPerSec ?: remember {
             kotlinx.coroutines.flow.MutableStateFlow(0.0)
         }
+        ).collectAsState()
+
+    val downloadStorageError by (
+        downloader?.storageError ?: remember { kotlinx.coroutines.flow.MutableStateFlow<String?>(null) }
+        ).collectAsState()
+    val downloadRecovery by (
+        runtime.downloadStore?.recoveryReport
+            ?: remember {
+                kotlinx.coroutines.flow.MutableStateFlow<mihon.desktop.download.DownloadRecoveryReport?>(null)
+            }
+        ).collectAsState()
+    val updateRunState by (
+        runtime.libraryUpdateScheduler?.runState
+            ?: remember {
+                kotlinx.coroutines.flow.MutableStateFlow(mihon.desktop.library.update.LibraryUpdateRunState())
+            }
+        ).collectAsState()
+    val updateProgress by (
+        runtime.libraryUpdateScheduler?.currentProgress
+            ?: remember {
+                kotlinx.coroutines.flow.MutableStateFlow<mihon.desktop.library.update.LibraryUpdateProgress?>(null)
+            }
         ).collectAsState()
 
     val isUpdatingLibrary by (
@@ -626,6 +649,7 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                             navigator.navigate(selectedDestination)
                                         },
                                         libraryState = libraryState,
+                                        libraryBatchState = libraryBatchState,
                                         mangaDetailState = mangaDetailState,
                                         mangaDetailActions = sharedMangaDetailActions,
                                         onToggleMangaLibrary = {
@@ -717,6 +741,8 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         downloadsQueue = downloadsQueue,
                                         isDownloaderRunning = isDownloaderRunning,
                                         downloadSpeedBytesPerSec = downloadSpeed,
+                                        downloadRecoveryMessage = downloadRecovery?.message,
+                                        downloadStorageError = downloadStorageError,
                                         onPauseAllDownloads = { downloader?.pause() },
                                         onResumeAllDownloads = { downloader?.resume() },
                                         onClearCompletedDownloads = { downloader?.clearCompleted() },
@@ -724,6 +750,9 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         onRetryDownload = { downloader?.retry(it) },
                                         isUpdatingLibrary = isUpdatingLibrary,
                                         lastUpdateResult = lastUpdateResult,
+                                        updateRunState = updateRunState,
+                                        updateProgress = updateProgress,
+                                        onCancelLibraryUpdate = { runtime.libraryUpdateScheduler?.cancelUpdate() },
                                         updatedChapters = updatedChapters,
                                         onCheckForUpdates = {
                                             presenterScope.launch { runtime.libraryUpdateScheduler?.triggerUpdateNow() }
@@ -752,7 +781,9 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         },
                                         diagnosticService = runtime.diagnosticService,
                                         trackerManager = runtime.trackerManager,
+                                        trackSyncService = runtime.trackSyncService,
                                         backupScheduler = runtime.backupScheduler,
+                                        backgroundScheduler = runtime.backgroundScheduler,
                                         updateScheduler = runtime.libraryUpdateScheduler,
                                         cookieStore = runtime.cookieStore,
                                         onUpdateLibrary = {

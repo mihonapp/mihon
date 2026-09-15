@@ -18,6 +18,30 @@ kotlin {
     jvmToolchain(mihonx.versions.java.get().toInt())
 }
 
+val desktopVersion = rootProject.file("desktop-version.txt").readText().trim()
+val desktopRevision = providers.exec { commandLine("git", "rev-parse", "HEAD") }.standardOutput.asText.map { it.trim() }
+val desktopDirty = providers.exec {
+    commandLine("git", "status", "--porcelain")
+}.standardOutput.asText.map { it.isNotBlank() }
+val generatedVersionResources = layout.buildDirectory.dir("generated/version-resources")
+val generateDesktopVersion by tasks.registering {
+    inputs.file(rootProject.file("desktop-version.txt"))
+    inputs.property("revision", desktopRevision)
+    inputs.property("dirty", desktopDirty)
+    outputs.dir(generatedVersionResources)
+    doLast {
+        generatedVersionResources.get().file("mihon-desktop-version.txt").asFile.apply {
+            parentFile.mkdirs()
+            writeText(desktopVersion)
+        }
+        generatedVersionResources.get().file("mihon-build-info.properties").asFile.writeText(
+            "version=$desktopVersion\nrevision=${desktopRevision.get()}\ndirty=${desktopDirty.get()}\n",
+        )
+    }
+}
+sourceSets.main { resources.srcDir(generatedVersionResources) }
+tasks.named("processResources") { dependsOn(generateDesktopVersion) }
+
 val desktopJavaHome = extensions
     .getByType<JavaToolchainService>()
     .launcherFor {
@@ -43,6 +67,7 @@ dependencies {
     implementation(libs.okhttp.core)
     implementation("com.github.ThexXTURBOXx.dex2jar:dex-translator:v64")
     implementation("com.github.ThexXTURBOXx.dex2jar:dex-tools:v64")
+    testImplementation("com.github.ThexXTURBOXx.dex2jar:dex-writer:v64")
     implementation("org.slf4j:slf4j-nop:2.0.17")
 
     testImplementation(libs.bundles.test)
@@ -151,16 +176,33 @@ tasks.test {
     systemProperty("mihon.reader.heicFixture", readerHeicFixture.get().asFile.absolutePath)
 }
 
+val distributionResourcesRoot = layout.buildDirectory.dir("distribution-resources")
+val stageDistributionResources by tasks.registering(Sync::class) {
+    dependsOn(stageReaderCodec, ":desktop-webview-host:installDist", ":desktop-webview-host:stageBrowserRuntime")
+    from(readerCodecResourcesRoot)
+    from(project(":desktop-webview-host").layout.buildDirectory.dir("browser-runtime")) {
+        into("windows/browser/runtime")
+    }
+    from(project(":desktop-webview-host").layout.buildDirectory.dir("install/desktop-webview-host")) {
+        into("windows/browser/app")
+    }
+    from(rootProject.file("THIRD-PARTY-DESKTOP.txt")) { into("windows") }
+    from(project.file("packaging/licenses")) { into("windows/licenses") }
+    from(rootProject.file("scripts/remove-background-tasks.ps1")) { into("windows/maintenance") }
+    into(distributionResourcesRoot)
+}
+
 compose.desktop {
     application {
         mainClass = "mihon.desktop.MainKt"
         javaHome = desktopJavaHome
+        jvmArgs += "-Djava.net.useSystemProxies=true"
 
         nativeDistributions {
-            appResourcesRootDir.set(readerCodecResourcesRoot)
+            appResourcesRootDir.set(distributionResourcesRoot)
             targetFormats(TargetFormat.Exe, TargetFormat.Msi)
             packageName = "MihonW"
-            packageVersion = "0.1.3"
+            packageVersion = desktopVersion
             description = "Mihon manga reader for Windows"
             vendor = "Mihon W"
             licenseFile.set(rootProject.file("LICENSE"))
@@ -190,7 +232,7 @@ tasks.configureEach {
             "packageDistributionForCurrentOS",
         )
     ) {
-        dependsOn(stageReaderCodec)
+        dependsOn(stageDistributionResources)
     }
 }
 
@@ -201,7 +243,7 @@ val packagePortableZip by tasks.registering(Zip::class) {
 
     archiveBaseName.set("MihonW")
     archiveClassifier.set("windows-x64-portable")
-    archiveVersion.set("0.1.3")
+    archiveVersion.set(desktopVersion)
     destinationDirectory.set(layout.buildDirectory.dir("compose/binaries/main/portable"))
 
     from(layout.buildDirectory.dir("compose/binaries/main/app/MihonW")) {
@@ -221,4 +263,80 @@ val packagePortableZip by tasks.registering(Zip::class) {
     from(rootProject.file("scripts/MihonUpdater.ps1")) {
         into("MihonW")
     }
+}
+
+// Compose clears its private resource directory during packaging. Package the finished image
+// directly so the verified WiX override survives and paths never pass through an argument file.
+tasks.withType<org.jetbrains.compose.desktop.application.tasks.AbstractJPackageTask>().configureEach {
+    if (name in setOf("packageMsi", "packageExe")) {
+        dependsOn("createDistributable")
+        inputs.dir(project.file("packaging/windows"))
+        actions.clear()
+        doLast {
+            val format = if (name == "packageMsi") "msi" else "exe"
+            val output = layout.buildDirectory.dir("compose/binaries/main/$format").get().asFile
+            output.mkdirs()
+            val artifact = File(output, "MihonW-$desktopVersion.$format")
+            if (artifact.exists()) check(artifact.delete()) { "Cannot replace previous $artifact" }
+            val arguments = listOf(
+                File(desktopJavaHome, "bin/jpackage.exe").absolutePath,
+                "--type", format,
+                "--app-image", layout.buildDirectory.dir("compose/binaries/main/app/MihonW").get().asFile.absolutePath,
+                "--dest", output.absolutePath,
+                "--name", "MihonW", "--app-version", desktopVersion,
+                "--vendor", "Mihon W", "--description", "Mihon manga reader for Windows",
+                "--resource-dir", project.file("packaging/windows").absolutePath,
+                "--license-file", rootProject.file("LICENSE").absolutePath,
+                "--win-per-user-install", "--win-dir-chooser", "--win-menu", "--win-shortcut",
+                "--win-menu-group", "Mihon W", "--win-upgrade-uuid", "07E02BEA-9179-4E54-A1AF-CFC185C91398",
+            )
+            val process = ProcessBuilder(arguments).inheritIO()
+            val environment = process.environment()
+            val pathKey = environment.keys.firstOrNull { it.equals("PATH", ignoreCase = true) } ?: "PATH"
+            environment[pathKey] = rootProject.layout.buildDirectory.dir("wix311").get().asFile.absolutePath +
+                File.pathSeparator + environment[pathKey].orEmpty()
+            check(process.start().waitFor() == 0) { "jpackage $format failed" }
+            check(artifact.isFile) { "jpackage did not produce $artifact" }
+        }
+    }
+}
+
+val assembleWindowsRelease by tasks.registering(Sync::class) {
+    group = "distribution"
+    description = "Collects version-matched Windows artifacts and a complete SHA-256 manifest"
+    dependsOn("packageMsi", "packageExe", packagePortableZip)
+    into(layout.buildDirectory.dir("releases/$desktopVersion"))
+    from(layout.buildDirectory.dir("compose/binaries/main/app/MihonW")) { into("app-image/MihonW") }
+    from(layout.buildDirectory.dir("compose/binaries/main/msi")) { include("MihonW-$desktopVersion.msi") }
+    from(layout.buildDirectory.dir("compose/binaries/main/exe")) { include("MihonW-$desktopVersion.exe") }
+    from(packagePortableZip.flatMap { it.archiveFile })
+    from(rootProject.file("desktop-version.txt"))
+    from(generatedVersionResources) { include("mihon-build-info.properties") }
+    doLast {
+        val root = destinationDir.toPath()
+        val manifest = root.resolve("SHA256SUMS.txt").toFile()
+        val lines = destinationDir.walkTopDown().filter {
+            it.isFile && it != manifest
+        }.sortedBy { it.path }.map { file ->
+            val digest = MessageDigest.getInstance("SHA-256")
+            file.inputStream().use { input ->
+                val buffer = ByteArray(65536)
+                while (true) {
+                    val count = input.read(buffer)
+                    if (count < 0) break
+                    digest.update(buffer, 0, count)
+                }
+            }
+            digest.digest().joinToString("") { "%02x".format(it) } + "  " +
+                root.relativize(file.toPath()).toString().replace('\\', '/')
+        }.toList()
+        check(lines.any { it.endsWith("MihonW-$desktopVersion.msi") }) { "MSI missing" }
+        check(lines.any { it.endsWith("MihonW-$desktopVersion.exe") }) { "Installer EXE missing" }
+        manifest.writeText(lines.joinToString("\n", postfix = "\n"))
+    }
+}
+
+// Real APK manifest fixtures are binary AXML despite their .xml suffix; preserve exact bytes.
+configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+    format("xml") { targetExclude("src/test/resources/real-manifests/**") }
 }

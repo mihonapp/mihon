@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.runBlocking
 import mihon.desktop.cli.CommandLineException
 import mihon.desktop.cli.DesktopCommand
@@ -39,7 +40,7 @@ class DesktopRuntime(
     val localLibraryRoot: Path,
     val readerFactory: DesktopReaderFactory? = null,
     val downloader: mihon.desktop.download.DesktopDownloader? = null,
-    val updateService: mihon.desktop.updates.DesktopLibraryUpdateService? = null,
+    val downloadStore: mihon.desktop.download.DownloadStore? = null,
     val notificationService: mihon.desktop.notification.DesktopNotificationService? = null,
     val historyService: mihon.desktop.history.DesktopHistoryService? = null,
     val categoryService: mihon.desktop.category.DesktopCategoryService? = null,
@@ -54,6 +55,8 @@ class DesktopRuntime(
     val desktopNotificationService: mihon.desktop.platform.DesktopNotificationService? = null,
     val libraryUpdateService: mihon.desktop.library.update.LibraryUpdateService? = null,
     val libraryUpdateScheduler: mihon.desktop.library.update.LibraryUpdateScheduler? = null,
+    val backgroundScheduler: mihon.desktop.platform.WindowsBackgroundScheduler? = null,
+    val webViews: mihon.desktop.webview.DesktopWebViewManager? = null,
     val customCoverManager: mihon.desktop.image.CustomCoverManager =
         mihon.desktop.image.CustomCoverManager(directories.covers),
     val imageLoader: mihon.desktop.image.DesktopImageLoader =
@@ -92,6 +95,13 @@ class DesktopRuntime(
 ) : AutoCloseable {
     private val shutdownLock = Any()
     private var shutdownResult: CompletableDeferred<Result<Unit>>? = null
+    private val shutdownHooks = mutableListOf<suspend () -> Unit>()
+
+    fun onShutdown(hook: suspend () -> Unit) = synchronized(shutdownLock) {
+        check(shutdownResult == null) { "Runtime is shutting down" }
+        shutdownHooks.add(hook)
+        Unit
+    }
 
     /** Stops session admission, flushes sessions, then disposes runtime services and the database. */
     suspend fun shutdown() {
@@ -112,6 +122,14 @@ class DesktopRuntime(
 
         var failure: Throwable? = null
         try {
+            shutdownHooks.forEach { hook ->
+                try {
+                    hook()
+                } catch (error: Throwable) {
+                    failure = failure.append(error)
+                }
+            }
+            shutdownHooks.clear()
             try {
                 closeReaderSessions()
             } catch (error: Throwable) {
@@ -127,10 +145,11 @@ class DesktopRuntime(
             } catch (error: Throwable) {
                 failure = failure.append(error)
             }
-            if (failure == null) {
+            val shutdownFailure = failure
+            if (shutdownFailure == null) {
                 deferred.complete(Result.success(Unit))
             } else {
-                deferred.complete(Result.failure(failure))
+                deferred.complete(Result.failure(shutdownFailure))
             }
         } catch (error: Throwable) {
             deferred.complete(Result.failure(error))
@@ -226,15 +245,34 @@ object DesktopRuntimeFactory {
             val downloadDiskProvider = mihon.desktop.download.DownloadDiskProvider(downloadsDir)
             val downloadStore = mihon.desktop.download.DownloadStore(directories.root.resolve("downloads.json"))
             val cookieStore = mihon.desktop.extension.DesktopCookieStore(directories.root.resolve("cookies.json"))
-            val networkHelper = mihon.desktop.extension.DesktopNetworkHelper(cookieStore = cookieStore)
+            val networkSettings = mihon.desktop.extension.DesktopNetworkSettingsStore(preferences)
+            val networkHelper = mihon.desktop.extension.DesktopNetworkHelper(
+                cookieStore = cookieStore,
+                policyProvider = networkSettings::load,
+            )
             val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+            val browserResources = System.getProperty("compose.application.resources.dir")?.let(Path::of)
+                ?.resolve("browser")
+            val webViews = mihon.desktop.webview.DesktopWebViewManager(
+                browserRuntime = environment["MIHON_WEBVIEW_RUNTIME"]?.let(Path::of)
+                    ?: browserResources?.resolve("runtime")
+                    ?: Path.of("desktop-webview-host/build/browser-runtime").toAbsolutePath(),
+                hostDistribution = environment["MIHON_WEBVIEW_HOST_DISTRIBUTION"]?.let(Path::of)
+                    ?: browserResources?.resolve("app")
+                    ?: Path.of("desktop-webview-host/build/install/desktop-webview-host").toAbsolutePath(),
+                cacheDirectory = directories.cache.resolve("browser"),
+                network = networkHelper,
+                cookies = cookieStore,
+            )
 
             val extensionDir = directories.root.resolve("extensions").toFile()
             val extensionHostDir = directories.root.resolve("extension-host").toFile()
             val processManager = mihon.desktop.extension.WindowsExtensionProcessManager(
                 workingDirectory = extensionHostDir,
                 sourceSessionFile = directories.root.resolve("cookies.json").toFile(),
+                networkHelper = networkHelper,
                 onBrokerHttp = { request -> networkHelper.executeBrokeredRequest(request) },
+                onWebView = webViews::handleExtensionRequest,
                 scope = appScope,
             )
             val extensionInstaller = mihon.desktop.extension.DesktopExtensionInstaller(
@@ -292,16 +330,6 @@ object DesktopRuntimeFactory {
                     )
                 },
             )
-            val updateService = mihon.desktop.updates.DesktopLibraryUpdateService(
-                repository = library,
-                mutationPort = library,
-                processManager = processManager,
-                onUpdateCompleted = { result ->
-                    if (result.newChaptersFound > 0) {
-                        notificationService.notifyLibraryUpdate(result.newChaptersFound, result.mangaWithNewChapters)
-                    }
-                },
-            )
             val historyService = mihon.desktop.history.DesktopHistoryService(
                 repository = library,
                 mutationPort = library,
@@ -351,9 +379,27 @@ object DesktopRuntimeFactory {
                 updateService = libraryUpdateService,
                 preferenceStore = preferences,
                 scope = appScope,
+                recoveryFile = directories.root.resolve("library-update-state.properties"),
+                startAutomatically = command == DesktopCommand.LaunchUi,
             )
             if (command == DesktopCommand.LaunchUi) {
                 backupScheduler.start()
+                trackSyncService.start(appScope)
+            }
+            val packagedExecutable = ProcessHandle.current().info().command().orElse(null)?.let(Path::of)
+                ?.takeIf { it.fileName.toString().equals("MihonW.exe", ignoreCase = true) }
+            val backgroundScheduler = packagedExecutable?.let {
+                mihon.desktop.platform.WindowsBackgroundScheduler(it, directories.root)
+            }
+            if (command == DesktopCommand.LaunchUi && preferences.load().backgroundTasksEnabled) {
+                val schedulePreferences = preferences.load()
+                runCatching {
+                    backgroundScheduler?.reconcile(
+                        true,
+                        schedulePreferences.libraryUpdateIntervalHours,
+                        schedulePreferences.backupIntervalHours,
+                    )
+                }
             }
             return DesktopRuntime(
                 directories = directories,
@@ -365,7 +411,7 @@ object DesktopRuntimeFactory {
                 localLibraryRoot = localLibraryRoot,
                 readerFactory = readerFactory,
                 downloader = downloader,
-                updateService = updateService,
+                downloadStore = downloadStore,
                 notificationService = notificationService,
                 historyService = historyService,
                 categoryService = categoryService,
@@ -380,6 +426,8 @@ object DesktopRuntimeFactory {
                 desktopNotificationService = desktopNotificationService,
                 libraryUpdateService = libraryUpdateService,
                 libraryUpdateScheduler = libraryUpdateScheduler,
+                backgroundScheduler = backgroundScheduler,
+                webViews = webViews,
                 extensionInstaller = extensionInstaller,
                 extensionStoreService = extensionStoreService,
                 processManager = processManager,
@@ -387,10 +435,15 @@ object DesktopRuntimeFactory {
                 onlineMangaSyncService = onlineMangaSyncService,
                 closeReaderServices = {
                     backupScheduler.stop()
+                    libraryUpdateScheduler.stop()
+                    trackSyncService.close()
+                    runBlocking { downloader.shutdown() }
                     readerFactory?.closeServices()
                     sourceManager.close()
                     processManager.close()
-                    appScope.cancel()
+                    webViews.close()
+                    networkHelper.close()
+                    runBlocking { appScope.coroutineContext[kotlinx.coroutines.Job]?.cancelAndJoin() }
                 },
             )
         } catch (error: Throwable) {

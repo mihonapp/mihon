@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -54,6 +56,42 @@ class DesktopCommandRunner(
 ) {
     fun run(command: DesktopCommand): Int = try {
         when (command) {
+            DesktopCommand.RemoveBackgroundTasks -> {
+                val scheduler = requireNotNull(runtime.backgroundScheduler) { "Packaged scheduler unavailable" }
+                val failures = scheduler.removeAll().filter { it.exitCode != 0 }.map { it.output }
+                writeJson(
+                    BackgroundOutput(
+                        "remove-background-tasks",
+                        if (failures.isEmpty()) "SUCCEEDED" else "FAILED",
+                        failures,
+                    ),
+                )
+                if (failures.isEmpty()) 0 else 1
+            }
+            DesktopCommand.BackgroundUpdate -> {
+                val scheduler = requireNotNull(runtime.libraryUpdateScheduler) { "Library scheduler unavailable" }
+                val report = runBlocking { scheduler.checkAndRunAutoUpdate() }
+                writeJson(
+                    BackgroundOutput(
+                        "background-update",
+                        if (report == null) {
+                            "SKIPPED"
+                        } else if (report.errors.isEmpty()) {
+                            "SUCCEEDED"
+                        } else {
+                            "FAILED"
+                        },
+                        report?.errors.orEmpty(),
+                    ),
+                )
+                if (report?.errors?.isNotEmpty() == true) 1 else 0
+            }
+            DesktopCommand.BackgroundBackup -> {
+                val scheduler = requireNotNull(runtime.backupScheduler) { "Backup scheduler unavailable" }
+                val path = runBlocking { scheduler.checkAndRunAutoBackup() }
+                writeJson(BackgroundOutput("background-backup", if (path == null) "SKIPPED" else "SUCCEEDED"))
+                0
+            }
             DesktopCommand.LaunchUi -> error("LaunchUi is not a headless command")
             DesktopCommand.Help -> {
                 writeUtf8Line(output, HELP_TEXT)
@@ -152,6 +190,13 @@ class DesktopCommandRunner(
 }
 
 @Serializable
+private data class BackgroundOutput(
+    val command: String,
+    val status: String,
+    val errors: List<String> = emptyList(),
+)
+
+@Serializable
 private data class ExportOutput(
     val command: String,
     val status: String,
@@ -240,6 +285,9 @@ data class ReaderVerificationSummary(
     val cacheResidentHighWaterBytes: Long,
     val coreResidentAndInFlightHighWaterBytes: Long,
     val progressRows: List<ReaderProgressRow>,
+    @OptIn(ExperimentalSerializationApi::class)
+    @EncodeDefault(EncodeDefault.Mode.NEVER)
+    val soak: ReaderSoakSummary? = null,
 )
 
 @Serializable
@@ -273,8 +321,16 @@ internal data class ReaderFixtureFileRecord(
 internal class PackagedReaderVerifier(
     private val runtime: DesktopRuntime,
     private val nowMillis: () -> Long,
+    private val environment: Map<String, String> = System.getenv(),
 ) {
-    suspend fun verify(requestedRoot: Path): ReaderVerificationSummary {
+    suspend fun verify(requestedRoot: Path): ReaderVerificationSummary = try {
+        verifyInternal(requestedRoot)
+    } catch (error: Throwable) {
+        if (ReaderSoak.seconds(environment) > 0) error.printStackTrace(System.err)
+        throw error
+    }
+
+    private suspend fun verifyInternal(requestedRoot: Path): ReaderVerificationSummary {
         val fixture = validateFixture(requestedRoot)
         val importReport = runtime.localImporter.import(fixture.mangaRoot, runtime.localLibraryRoot, nowMillis())
         check(importReport.status.name == "SUCCEEDED") { "reader fixture import failed" }
@@ -365,6 +421,24 @@ internal class PackagedReaderVerifier(
             check(targetAfter.completed == (desiredPage == targetPageCount - 1)) {
                 "reader progress completion state was not persisted"
             }
+            val soakSeconds = ReaderSoak.seconds(environment)
+            val soak = if (soakSeconds > 0) {
+                val samples = environment["MIHON_W_READER_SOAK_OUTPUT"]?.let(Path::of)
+                    ?: fixture.root.resolve("reader-soak-${ProcessHandle.current().pid()}-${System.nanoTime()}.jsonl")
+                ReaderSoak.run(soakSeconds, samples, { factory.memoryBudget.metrics }) {
+                    // Evict unpinned tiles so each cycle performs decoding, not only cache lookup.
+                    factory.cache.relievePressure()
+                    var tiles = verifyAsset("standalone", standaloneAsset, factory, scope).decodedTileCount
+                    for ((chapter, asset) in assets) {
+                        tiles +=
+                            verifyAsset(assetLabel(chapter.name), asset, factory, scope).decodedTileCount
+                    }
+                    exerciseSessions(chapters, pageCounts, targetBefore.id, desiredPage, desiredPage, factory)
+                    tiles
+                }
+            } else {
+                null
+            }
             val coreHighWater = memoryHighWater.stop()
             check(coreHighWater in 1..factory.memoryBudget.metrics.limitBytes) {
                 "core resident and in-flight high-water is outside the reader budget"
@@ -379,6 +453,7 @@ internal class PackagedReaderVerifier(
                 cacheResidentHighWaterBytes = factory.cache.metrics.highWaterBytes,
                 coreResidentAndInFlightHighWaterBytes = coreHighWater,
                 progressRows = rows,
+                soak = soak,
             )
         } finally {
             memoryHighWater.close()
@@ -655,6 +730,9 @@ private fun sha256(path: Path): String {
 private fun ByteArray.toHex(): String = joinToString("") { byte -> "%02x".format(byte.toInt() and 0xff) }
 
 private fun DesktopCommand.commandName(): String = when (this) {
+    DesktopCommand.RemoveBackgroundTasks -> "remove-background-tasks"
+    DesktopCommand.BackgroundUpdate -> "background-update"
+    DesktopCommand.BackgroundBackup -> "background-backup"
     DesktopCommand.LaunchUi -> "launch-ui"
     DesktopCommand.FoundationSmoke -> "foundation-smoke"
     DesktopCommand.Help -> "help"
@@ -687,6 +765,9 @@ Options:
   --export-backup=<path>      Export library to Android .tachibk backup file headlessly
   --import-local=<path>       Import local manga directory or CBZ/ZIP archive headlessly
   --list-library-json         Output library contents as JSON to stdout
+  --remove-background-tasks   Remove current profile tasks; preserve data
+  --background-update         Run one due library update without opening a window
+  --background-backup         Run one due automatic backup without opening a window
   --smoke-test                Verify database initialization and exit
 
 File Associations:

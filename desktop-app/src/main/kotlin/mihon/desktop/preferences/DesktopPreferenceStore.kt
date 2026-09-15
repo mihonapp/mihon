@@ -53,6 +53,7 @@ data class DesktopPreferences(
     val backupStoragePath: String = "",
     val backupRetentionCount: Int = 10,
     val lastAutoBackupEpochMillis: Long = 0L,
+    val backgroundTasksEnabled: Boolean = false,
     val libraryUpdateIntervalHours: Int = 0,
     val libraryUpdateSkipCompleted: Boolean = true,
     val libraryUpdateSkipUnread: Boolean = false,
@@ -125,6 +126,8 @@ class DesktopPreferenceStore(private val file: Path) {
             backupStoragePath = properties.getProperty("backup.storage_path") ?: "",
             backupRetentionCount = properties.getProperty("backup.retention_count")?.toIntOrNull() ?: 10,
             lastAutoBackupEpochMillis = properties.getProperty("backup.last_epoch_millis")?.toLongOrNull() ?: 0L,
+            backgroundTasksEnabled =
+            properties.getProperty("background.tasks_enabled")?.toBooleanStrictOrNull() ?: false,
             libraryUpdateIntervalHours = properties.getProperty("library.update_interval_hours")?.toIntOrNull() ?: 0,
             libraryUpdateSkipCompleted = properties.getProperty("library.update_skip_completed")
                 ?.toBooleanStrictOrNull() ?: true,
@@ -192,6 +195,7 @@ class DesktopPreferenceStore(private val file: Path) {
         properties.setProperty("backup.storage_path", preferences.backupStoragePath)
         properties.setProperty("backup.retention_count", preferences.backupRetentionCount.toString())
         properties.setProperty("backup.last_epoch_millis", preferences.lastAutoBackupEpochMillis.toString())
+        properties.setProperty("background.tasks_enabled", preferences.backgroundTasksEnabled.toString())
         properties.setProperty(
             "library.update_interval_hours",
             preferences.libraryUpdateIntervalHours.toString(),
@@ -246,6 +250,12 @@ class DesktopPreferenceStore(private val file: Path) {
 
     @Synchronized
     fun property(key: String): String? = readProperties().getProperty(key)
+
+    @Synchronized
+    fun propertiesWithPrefix(prefix: String): Map<String, String> = readProperties().let { properties ->
+        properties.stringPropertyNames().filter { it.startsWith(prefix) }
+            .associateWith { properties.getProperty(it) }
+    }
 
     @Synchronized
     fun update(block: Properties.() -> Unit) {

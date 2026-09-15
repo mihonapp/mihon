@@ -1,20 +1,20 @@
+param([string]$PortableZip, [switch]$SkipBuild)
 $ErrorActionPreference = 'Stop'
 
-Write-Host "=== Phase 8: Clean-Machine Sandbox Verification ===" -ForegroundColor Cyan
+Write-Host "=== Local isolated-directory verification; not a clean Windows machine ===" -ForegroundColor Cyan
 
-$env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'
+$expectedVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../desktop-version.txt') -Raw).Trim()
 
 # 1. Build portable package
 Write-Host "`n1. Building portable ZIP distribution..." -ForegroundColor Yellow
-.\gradlew.bat :desktop-app:packagePortableZip
-if ($LASTEXITCODE -ne 0) { throw "packagePortableZip failed" }
-
-$portableDirectory = Resolve-Path "desktop-app\build\compose\binaries\main\portable"
-$portableZips = @(Get-ChildItem -LiteralPath $portableDirectory -Filter "MihonW-*-windows-x64-portable.zip" -File)
-if ($portableZips.Count -ne 1) {
-    throw "Expected exactly one portable ZIP in $portableDirectory; found $($portableZips.Count)."
+if (-not $SkipBuild) {
+    & (Join-Path $PSScriptRoot '../.superpowers/sdd/run-gradle.ps1') -GradleArguments @(':desktop-app:packagePortableZip')
+    if ($LASTEXITCODE -ne 0) { throw 'packagePortableZip failed' }
 }
-$portableZip = $portableZips[0].FullName
+if (-not $PortableZip) {
+    $PortableZip = Join-Path $PSScriptRoot "../desktop-app/build/compose/binaries/main/portable/MihonW-$expectedVersion-windows-x64-portable.zip"
+}
+$portableZip = (Resolve-Path -LiteralPath $PortableZip).Path
 Write-Host "Found portable zip: $portableZip ($((Get-Item $portableZip).Length / 1MB) MB)" -ForegroundColor Green
 
 # 2. Setup isolated sandbox
@@ -48,7 +48,7 @@ if ($versionProcess.ExitCode -ne 0) {
 }
 $versionStr = Get-Content -LiteralPath $versionOutput -Raw
 Write-Host "Output: $versionStr" -ForegroundColor DarkGray
-if ($versionStr -notmatch "Mihon W 0.1.3") {
+if ($versionStr -notmatch [regex]::Escape("Mihon W $expectedVersion")) {
     throw "Output did not match expected version string!"
 }
 Write-Host "--version verified successfully." -ForegroundColor Green
@@ -72,7 +72,7 @@ Write-Host "`n5. Testing portable isolation & headless export..." -ForegroundCol
 $targetBackup = Join-Path $sandboxDir "exported-sandbox-backup.tachibk"
 $exportOutput = Join-Path $sandboxDir "export.stdout"
 $exportError = Join-Path $sandboxDir "export.stderr"
-$exportProcess = Start-Process -FilePath $exePath -ArgumentList "--export-backup=$targetBackup" -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput $exportOutput -RedirectStandardError $exportError
+$exportProcess = Start-Process -FilePath $exePath -ArgumentList ('"--export-backup={0}"' -f $targetBackup) -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput $exportOutput -RedirectStandardError $exportError
 if ($exportProcess.ExitCode -ne 0) {
     throw "MihonW --export-backup exited with non-zero code: $($exportProcess.ExitCode)"
 }
@@ -91,9 +91,14 @@ if (-not (Test-Path $targetBackup)) {
 Write-Host "Portable isolation verified! Data directory: $localDataDir" -ForegroundColor Green
 Write-Host "Exported backup verified! File: $targetBackup" -ForegroundColor Green
 
-    Write-Host "`n=== Clean-Machine Verification Passed with 100% Isolation! ===" -ForegroundColor Green
+    Write-Host "`n=== Local isolated-directory checks passed; Win10/Win11 clean-machine acceptance remains separate ===" -ForegroundColor Green
 } finally {
     Write-Host "`n6. Cleaning up sandbox..." -ForegroundColor Yellow
-    Remove-Item -Recurse -Force $sandboxDir -ErrorAction SilentlyContinue
+    $resolvedSandbox = [IO.Path]::GetFullPath($sandboxDir)
+    $tempRoot = [IO.Path]::GetFullPath($env:TEMP).TrimEnd('\') + '\'
+    if (-not $resolvedSandbox.StartsWith($tempRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Unsafe sandbox cleanup path'
+    }
+    Remove-Item -LiteralPath $resolvedSandbox -Recurse -Force -ErrorAction SilentlyContinue
     Write-Host "Sandbox cleanly removed." -ForegroundColor Green
 }

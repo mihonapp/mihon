@@ -691,6 +691,11 @@ private fun SelectLibrary.toModel() = LibraryManga(
     chapterCount = chapter_count,
     unreadCount = unread_count,
     author = author,
+    bookmarkCount = bookmark_count,
+    downloadedCount = downloaded_count,
+    dateAdded = date_added,
+    lastRead = last_read,
+    lastUpdate = last_update,
 )
 
 private fun SelectLibraryByCategory.toModel() = LibraryManga(
@@ -702,6 +707,11 @@ private fun SelectLibraryByCategory.toModel() = LibraryManga(
     chapterCount = chapter_count,
     unreadCount = unread_count,
     author = author,
+    bookmarkCount = bookmark_count,
+    downloadedCount = downloaded_count,
+    dateAdded = date_added,
+    lastRead = last_read,
+    lastUpdate = last_update,
 )
 
 private fun Manga.toRecord() = MangaRecord(

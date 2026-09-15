@@ -105,7 +105,20 @@ open class OnlineChapterSource(
             }
             if (cached != null) return@withLock cached
             val bytes = try {
-                downloadSourcePage(sourceId, page, chapter.url, networkHelper, sourceManager)
+                val visible = kotlinx.coroutines.currentCoroutineContext()[mihon.reader.prefetch.PageLoadPriority]
+                    ?.isVisible?.invoke() ?: true
+                downloadSourcePage(
+                    sourceId,
+                    page,
+                    chapter.url,
+                    networkHelper,
+                    sourceManager,
+                    priority = if (visible) {
+                        mihon.extension.ipc.RequestPriority.READER
+                    } else {
+                        mihon.extension.ipc.RequestPriority.NORMAL
+                    },
+                )
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: ReaderFailure) {

@@ -27,7 +27,8 @@ class AndroidBackupValidator {
         backup.backupCategories.forEachIndexed { index, category ->
             val path = "backupCategories[$index]"
             checkString(category.name, "$path.name", limits)
-            if (!categoryIds.add(category.id)) reject("$path.id", "duplicate category id")
+            // Suwayomi does not emit Mihon field 3: zero is an absent ID, not an identity.
+            if (category.id != 0L && !categoryIds.add(category.id)) reject("$path.id", "duplicate category id")
             if (!categoryNames.add(category.name.lowercase(Locale.ROOT))) {
                 reject("$path.name", "duplicate category name")
             }

@@ -43,6 +43,7 @@ fun DesktopShell(
     selected: DesktopDestination,
     onDestinationSelected: (DesktopDestination) -> Unit,
     libraryState: LibraryUiState = LibraryUiState(),
+    libraryBatchState: mihon.desktop.ui.library.LibraryBatchState = mihon.desktop.ui.library.LibraryBatchState(),
     mangaDetailState: MangaDetailUiState = MangaDetailUiState(),
     mangaDetailActions: MangaDetailActions? = null,
     onToggleMangaLibrary: (() -> Unit)? = null,
@@ -61,6 +62,8 @@ fun DesktopShell(
     downloadsQueue: List<mihon.desktop.download.DesktopDownload> = emptyList(),
     isDownloaderRunning: Boolean = false,
     downloadSpeedBytesPerSec: Double = 0.0,
+    downloadRecoveryMessage: String? = null,
+    downloadStorageError: String? = null,
     onPauseAllDownloads: () -> Unit = {},
     onResumeAllDownloads: () -> Unit = {},
     onClearCompletedDownloads: () -> Unit = {},
@@ -71,6 +74,9 @@ fun DesktopShell(
     isUpdatingLibrary: Boolean = false,
     lastUpdateResult: mihon.desktop.updates.LibraryUpdateResult? = null,
     onCheckForUpdates: () -> Unit = {},
+    updateRunState: mihon.desktop.library.update.LibraryUpdateRunState? = null,
+    updateProgress: mihon.desktop.library.update.LibraryUpdateProgress? = null,
+    onCancelLibraryUpdate: () -> Unit = {},
     // Upcoming calendar (transient view opened from Updates)
     isUpcomingOpen: Boolean = false,
     upcomingContent: (@Composable () -> Unit)? = null,
@@ -111,7 +117,9 @@ fun DesktopShell(
     readerSettingsStore: mihon.desktop.reader.DesktopReaderSettingsStore? = null,
     diagnosticService: mihon.desktop.diagnostics.DiagnosticBundleService? = null,
     trackerManager: mihon.desktop.track.DesktopTrackerManager? = null,
+    trackSyncService: mihon.desktop.track.TrackOnReadSyncService? = null,
     backupScheduler: mihon.desktop.backup.DesktopBackupScheduler? = null,
+    backgroundScheduler: mihon.desktop.platform.WindowsBackgroundScheduler? = null,
     onExportBackup: () -> Unit = {},
     onPreferencesChanged: ((mihon.desktop.preferences.DesktopPreferences) -> Unit)? = null,
     // Phase 14: Stats & Incognito
@@ -207,6 +215,30 @@ fun DesktopShell(
                 }
             }
             Column(modifier = Modifier.fillMaxSize().padding(32.dp)) {
+                if (libraryBatchState.running || libraryBatchState.error != null) {
+                    Surface(
+                        color = if (libraryBatchState.error !=
+                            null
+                        ) {
+                            androidx.compose.material3.MaterialTheme.colorScheme.errorContainer
+                        } else {
+                            androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer
+                        },
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp).testTag("library-batch-progress"),
+                    ) {
+                        Text(
+                            libraryBatchState.error ?: mihon.desktop.i18n.recoveryText(
+                                "Processing ${libraryBatchState.processed}/${libraryBatchState.total}",
+                                "正在处理 ${libraryBatchState.processed}/${libraryBatchState.total}",
+                                "正在處理 ${libraryBatchState.processed}/${libraryBatchState.total}",
+                            ),
+                            modifier = Modifier.padding(12.dp),
+                        )
+                    }
+                }
+                if (trackSyncService != null && trackerManager != null) {
+                    mihon.desktop.ui.track.TrackingRecoveryNotice(trackSyncService, trackerManager)
+                }
                 if (incognitoMode) {
                     Surface(
                         color = androidx.compose.material3.MaterialTheme.colorScheme.tertiaryContainer,
@@ -327,6 +359,8 @@ fun DesktopShell(
                                 onClearCompleted = onClearCompletedDownloads,
                                 onCancel = onCancelDownload,
                                 onRetry = onRetryDownload,
+                                recoveryMessage = downloadRecoveryMessage,
+                                storageError = downloadStorageError,
                             )
                         }
                         DesktopDestination.Updates -> {
@@ -347,6 +381,10 @@ fun DesktopShell(
                                     onCheckForUpdates = onCheckForUpdates,
                                     onReadChapter = onReadChapter,
                                     onOpenUpcoming = onOpenUpcoming,
+                                    runState = updateRunState,
+                                    progress = updateProgress,
+                                    sourceNameFor = sourceNameFor,
+                                    onCancelUpdate = onCancelLibraryUpdate,
                                 )
                             }
                         }
@@ -358,6 +396,7 @@ fun DesktopShell(
                                     diagnosticService = diagnosticService,
                                     trackerManager = trackerManager,
                                     backupScheduler = backupScheduler,
+                                    backgroundScheduler = backgroundScheduler,
                                     updateScheduler = updateScheduler,
                                     onOpenCookieManager = { isCookieManagerOpen = true },
                                     onImportBackup = onImportBackup,

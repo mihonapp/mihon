@@ -117,6 +117,62 @@ class DesktopBackupSchedulerTest {
         assertEquals(listOf("mihon_backup_2026-09-04.tachibk", "mihon_backup_2026-09-05.tachibk"), remainingFiles)
     }
 
+    @Test
+    fun `manual backups in same second remain distinct restore points`() = runBlocking {
+        val scheduler = DesktopBackupScheduler(
+            AndroidBackupExporter(FakeLibraryRepository()),
+            DesktopPreferenceStore(tempDir.resolve("prefs.properties")),
+            tempDir.resolve("backups"),
+            CoroutineScope(SupervisorJob()),
+            clock = { 123456789L },
+        )
+        val first = scheduler.performBackup(isManual = true)
+        val second = scheduler.performBackup(isManual = true)
+        assertTrue(first != second)
+        assertTrue(Files.exists(first))
+        assertTrue(Files.exists(second))
+    }
+
+    @Test
+    fun `retention always preserves the backup just completed when old timestamps are in future`() = runBlocking {
+        val dir = tempDir.resolve("backups")
+        Files.createDirectories(dir)
+        val old = dir.resolve("mihon_backup_future.tachibk")
+        Files.writeString(old, "old")
+        Files.setLastModifiedTime(old, FileTime.fromMillis(4102444800000L))
+        val store = DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
+        store.save(DesktopPreferences(backupRetentionCount = 1))
+        val scheduler = DesktopBackupScheduler(
+            AndroidBackupExporter(FakeLibraryRepository()),
+            store,
+            dir,
+            CoroutineScope(SupervisorJob()),
+        )
+        val result = scheduler.performBackup(isManual = true)
+        assertTrue(Files.exists(result))
+        assertEquals(result, scheduler.lastResult?.path)
+        assertNull(scheduler.lastResult?.error)
+    }
+
+    @Test
+    fun `failed automatic backup reports error and does not advance last success`() = runBlocking {
+        val dir = tempDir.resolve("not-a-directory")
+        Files.writeString(dir, "keep")
+        val store = DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
+        store.save(DesktopPreferences(backupIntervalHours = 1, lastAutoBackupEpochMillis = 0))
+        val scheduler = DesktopBackupScheduler(
+            AndroidBackupExporter(FakeLibraryRepository()),
+            store,
+            dir,
+            CoroutineScope(SupervisorJob()),
+            clock = { 7200000L },
+        )
+        val result = runCatching { scheduler.checkAndRunAutoBackup() }
+        assertTrue(result.isFailure)
+        assertNotNull(scheduler.lastResult?.error)
+        assertEquals(0L, store.load().lastAutoBackupEpochMillis)
+        assertEquals("keep", Files.readString(dir))
+    }
     private class FakeLibraryRepository : LibraryRepository {
         override fun observeLibrary(categoryId: Long?) = emptyFlow<List<LibraryManga>>()
         override fun observeManga(id: Long) = emptyFlow<MangaDetails?>()

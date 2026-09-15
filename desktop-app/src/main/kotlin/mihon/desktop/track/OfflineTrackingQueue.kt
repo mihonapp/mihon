@@ -16,6 +16,8 @@ data class QueuedTrackingUpdate(
     val chapterNumber: Double,
     val timestamp: Long = System.currentTimeMillis(),
     val retryCount: Int = 0,
+    val nextAttemptAt: Long = 0,
+    val authenticationRequired: Boolean = false,
 )
 
 class OfflineTrackingQueue(
@@ -34,7 +36,12 @@ class OfflineTrackingQueue(
         if (existingIndex >= 0) {
             val existing = current[existingIndex]
             if (update.chapterNumber >= existing.chapterNumber) {
-                current[existingIndex] = update
+                current[existingIndex] =
+                    update.copy(
+                        retryCount = existing.retryCount,
+                        nextAttemptAt = existing.nextAttemptAt,
+                        authenticationRequired = existing.authenticationRequired,
+                    )
             }
         } else {
             current.add(update)
@@ -63,13 +70,38 @@ class OfflineTrackingQueue(
         saveUnsafe(current)
     }
 
-    suspend fun updateRetry(update: QueuedTrackingUpdate) = mutex.withLock {
+    suspend fun updateRetry(
+        update: QueuedTrackingUpdate,
+        now: Long = System.currentTimeMillis(),
+        authenticationRequired: Boolean = false,
+    ) = mutex.withLock {
         val current = loadUnsafe().toMutableList()
         val index = current.indexOfFirst { it.mangaId == update.mangaId && it.trackerId == update.trackerId }
         if (index >= 0) {
-            current[index] = current[index].copy(retryCount = current[index].retryCount + 1)
+            val retries = current[index].retryCount + 1
+            val backoff = minOf(3_600_000L, 5_000L * (1L shl minOf(retries - 1, 10)))
+            current[index] =
+                current[index].copy(
+                    retryCount = retries,
+                    nextAttemptAt = now + backoff,
+                    authenticationRequired = authenticationRequired,
+                )
             saveUnsafe(current)
         }
+    }
+
+    suspend fun resumeAuthentication(trackerId: Long) = mutex.withLock {
+        saveUnsafe(
+            loadUnsafe().map {
+                if (it.trackerId ==
+                    trackerId
+                ) {
+                    it.copy(authenticationRequired = false, nextAttemptAt = 0, retryCount = 0)
+                } else {
+                    it
+                }
+            },
+        )
     }
 
     suspend fun clear() = mutex.withLock {

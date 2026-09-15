@@ -97,7 +97,7 @@ object AxmlManifestParser {
             val chunkType = buffer.getShort(pos).toInt() and 0xFFFF
             val headerSize = buffer.getShort(pos + 2).toInt() and 0xFFFF
             val chunkSize = buffer.getInt(pos + 4)
-            if (chunkSize <= 0 || pos + chunkSize > bytes.size) break
+            require(chunkSize >= 8 && chunkSize <= bytes.size - pos) { "Invalid AXML chunk size" }
 
             when (chunkType) {
                 0x0001 -> { // String pool chunk
@@ -109,7 +109,7 @@ object AxmlManifestParser {
 
                     val offsets = IntArray(stringCount)
                     for (i in 0 until stringCount) {
-                        offsets[i] = buffer.getInt(pos + 28 + i * 4)
+                        offsets[i] = buffer.getInt(pos + headerSize + i * 4)
                     }
 
                     for (off in offsets) {
@@ -121,32 +121,43 @@ object AxmlManifestParser {
                         if (isUtf8) {
                             val l1 = bytes[p].toInt() and 0xFF
                             p += if (l1 < 0x80) 1 else 2
-                            val l2 = bytes[p].toInt() and 0xFF
-                            p += if (l2 < 0x80) 1 else 2
-                            val end = (p + l2).coerceAtMost(bytes.size)
+                            val l2 = bytes[p++].toInt() and 0xFF
+                            val length = if (l2 < 0x80) l2 else ((l2 and 0x7F) shl 8) or (bytes[p++].toInt() and 0xFF)
+                            val end = p + length
+                            require(end <= pos + chunkSize) { "Truncated AXML UTF-8 string" }
                             strings.add(bytes.copyOfRange(p, end).decodeToString())
                         } else {
                             val l = buffer.getShort(p).toInt() and 0xFFFF
-                            p += if ((l and 0x8000) != 0) 4 else 2
-                            val charCount = l and 0x7FFF
+                            p += 2
+                            val charCount = if ((l and 0x8000) == 0) {
+                                l
+                            } else {
+                                val low = buffer.getShort(p).toInt() and 0xFFFF
+                                p += 2
+                                ((l and 0x7FFF) shl 16) or low
+                            }
                             val byteCount = charCount * 2
-                            val end = (p + byteCount).coerceAtMost(bytes.size)
+                            require(byteCount >= 0 && byteCount <= pos + chunkSize - p) {
+                                "Truncated AXML UTF-16 string"
+                            }
+                            val end = p + byteCount
                             strings.add(String(bytes, p, end - p, Charsets.UTF_16LE))
                         }
                     }
                 }
 
                 0x0102 -> { // Start tag chunk
-                    val tagNsIdx = buffer.getInt(pos + 16)
+                    require(chunkSize >= 36) { "Truncated AXML start tag" }
                     val tagNameIdx = buffer.getInt(pos + 20)
-                    val attrStart = buffer.getShort(pos + 28).toInt() and 0xFFFF
-                    val attrCount = buffer.getShort(pos + 32).toInt() and 0xFFFF
+                    val attrStart = buffer.getShort(pos + 24).toInt() and 0xFFFF
+                    val attrSize = buffer.getShort(pos + 26).toInt() and 0xFFFF
+                    val attrCount = buffer.getShort(pos + 28).toInt() and 0xFFFF
                     val tagName = strings.getOrNull(tagNameIdx) ?: ""
 
                     val attrMap = mutableMapOf<String, String>()
-                    var attrPos = pos + 20 + attrStart
+                    var attrPos = pos + 16 + attrStart
                     for (i in 0 until attrCount) {
-                        if (attrPos + 20 > bytes.size) break
+                        require(attrSize >= 20 && attrPos + attrSize <= pos + chunkSize) { "Truncated AXML attribute" }
                         val aNameIdx = buffer.getInt(attrPos + 4)
                         val aValIdx = buffer.getInt(attrPos + 8)
                         val aDataType = (buffer.get(attrPos + 15).toInt() and 0xFF)
@@ -155,6 +166,10 @@ object AxmlManifestParser {
                         val aName = strings.getOrNull(aNameIdx) ?: ""
                         val aVal = if (aValIdx != -1 && aValIdx < strings.size) {
                             strings[aValIdx]
+                        } else if (aDataType == 0x03) {
+                            strings.getOrNull(aData) ?: error("Invalid AXML string reference")
+                        } else if (aDataType == 0x04) {
+                            Float.fromBits(aData).toString()
                         } else if (aDataType == 0x10 || aDataType == 0x11) { // decimal or hex integer
                             aData.toString()
                         } else if (aDataType == 0x12) { // boolean
@@ -163,7 +178,7 @@ object AxmlManifestParser {
                             aData.toString()
                         }
                         attrMap[aName] = aVal
-                        attrPos += 20
+                        attrPos += attrSize
                     }
 
                     when (tagName) {
@@ -208,10 +223,7 @@ object AxmlManifestParser {
             pos += chunkSize
         }
 
-        if (packageId.isBlank()) {
-            // Fallback: look for package-like string in strings pool
-            packageId = strings.firstOrNull { it.startsWith("eu.kanade.tachiyomi.extension.") } ?: "unknown.extension"
-        }
+        require(packageId.isNotBlank()) { "Could not find package attribute in binary AndroidManifest.xml" }
         if (name.isBlank()) {
             name = packageId.substringAfterLast('.').replaceFirstChar { it.uppercase() }
         }

@@ -9,6 +9,11 @@ data class LibraryManga(
     val chapterCount: Long,
     val unreadCount: Long,
     val author: String? = null,
+    val bookmarkCount: Long = 0,
+    val downloadedCount: Long = 0,
+    val dateAdded: Long = 0,
+    val lastRead: Long = 0,
+    val lastUpdate: Long = 0,
 )
 
 data class MangaDetails(

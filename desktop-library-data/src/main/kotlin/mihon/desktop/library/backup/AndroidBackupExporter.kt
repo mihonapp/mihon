@@ -14,6 +14,7 @@ import mihon.desktop.library.model.PreferenceSnapshotRecord
 import mihon.desktop.library.model.SourcePreferenceSnapshotRecord
 import mihon.desktop.library.model.SourceRecord
 import mihon.desktop.library.model.TrackingRecord
+import mihon.desktop.library.repository.LibraryMutationPort
 import mihon.desktop.library.repository.LibraryRepository
 import java.nio.file.Path
 
@@ -28,6 +29,15 @@ class AndroidBackupExporter(
     }
 
     fun createBackup(): AndroidBackup {
+        val transactional = repository as? LibraryMutationPort
+        return if (transactional != null) {
+            transactional.transaction { createSnapshot() }
+        } else {
+            createSnapshot()
+        }
+    }
+
+    private fun createSnapshot(): AndroidBackup {
         val mangas = repository.allMangaSnapshot()
         val chapters = repository.allChaptersSnapshot()
         val categories = repository.allCategoriesSnapshot()
@@ -42,7 +52,13 @@ class AndroidBackupExporter(
         val trackingByMangaId = tracking.groupBy { it.mangaId }
         val historyByChapterId = history.associateBy { it.chapterId }
 
-        val categoryOrderById = categories.associate { it.id to it.sortOrder }
+        // Desktop merges can leave equal sort orders. Wire category references are orders, not IDs.
+        val categoryOrderById = if (categories.map { it.sortOrder }.distinct().size == categories.size) {
+            categories.associate { it.id to it.sortOrder }
+        } else {
+            categories.sortedWith(compareBy<CategoryRecord> { it.sortOrder }.thenBy { it.id })
+                .mapIndexed { index, category -> category.id to index.toLong() }.toMap()
+        }
 
         val backupManga = mangas.map { manga ->
             val mangaChapters = chaptersByMangaId[manga.id].orEmpty()
@@ -154,7 +170,7 @@ class AndroidBackupExporter(
         val backupCategories = categories.map { cat ->
             AndroidBackupCategory(
                 name = cat.name,
-                order = cat.sortOrder,
+                order = categoryOrderById.getValue(cat.id),
                 id = cat.id,
                 flags = cat.flags,
             )

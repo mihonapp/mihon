@@ -1,4 +1,4 @@
-﻿package mihon.extension.host
+package mihon.extension.host
 
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.source.SourceFactory
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -41,6 +42,21 @@ import java.nio.file.Path
 class ExtensionHostEngineTest {
 
     private val json = Json { ignoreUnknownKeys = true }
+
+    class BlockingFactory : SourceFactory {
+        override fun createSources(): List<Source> = listOf(object : CatalogueSource by CountingCatalogueSource(
+            999L,
+            "Blocking",
+        ) {
+            override suspend fun getPopularManga(page: Int): eu.kanade.tachiyomi.source.model.MangasPage {
+                started.complete(Unit)
+                kotlinx.coroutines.awaitCancellation()
+            }
+        })
+        companion object {
+            var started = kotlinx.coroutines.CompletableDeferred<Unit>()
+        }
+    }
 
     class CountingSourceFactory : SourceFactory {
         override fun createSources(): List<Source> {
@@ -427,5 +443,63 @@ class ExtensionHostEngineTest {
 
         CountingSourceFactory.invocations shouldBe 1
         sources.map { it.id }.toSet() shouldBe setOf(1001L, 2002L)
+    }
+
+    @Test
+    fun `unload command removes registered extension sources`(@TempDir tempDir: Path): Unit = runBlocking {
+        val manifest = mihon.extension.model.ExtensionManifest(
+            id = "ext.unload",
+            name = "Unload",
+            version = "1.0.0",
+            versionCode = 1,
+            libVersion = 1.4,
+            lang = "en",
+            sources = listOf(SourceDescriptor(1001L, "Test", "en", CountingSourceFactory::class.java.name)),
+        )
+        val mext = tempDir.resolve("unload.mext").toFile()
+        java.util.zip.ZipOutputStream(mext.outputStream()).use {
+            it.putNextEntry(java.util.zip.ZipEntry("manifest.json"))
+            it.write(json.encodeToString(manifest).toByteArray())
+            it.closeEntry()
+        }
+        val engine = ExtensionHostEngine(BrokeredHttpClient { null })
+        engine.loadExtension(mext, tempDir.resolve("work").toFile())
+        val response = engine.handleRequest(IpcRequest(20, "unload_extension", """{"pkg":"ext.unload"}"""))
+        response.success shouldBe true
+        val sources = engine.handleRequest(IpcRequest(21, IpcCommands.GET_SOURCES))
+        json.decodeFromString<List<SourceDescriptor>>(sources.payloadJson) shouldBe emptyList()
+    }
+
+    @Test
+    fun `unload cancels an active extension source request`(@TempDir tempDir: Path): Unit = runBlocking {
+        BlockingFactory.started = kotlinx.coroutines.CompletableDeferred()
+        val manifest = mihon.extension.model.ExtensionManifest(
+            "ext.blocking",
+            "Blocking",
+            "1.0.0",
+            1,
+            1.4,
+            "en",
+            sources = listOf(SourceDescriptor(999L, "Blocking", "en", BlockingFactory::class.java.name)),
+        )
+        val mext = tempDir.resolve("blocking.mext").toFile()
+        java.util.zip.ZipOutputStream(mext.outputStream()).use {
+            it.putNextEntry(java.util.zip.ZipEntry("manifest.json"))
+            it.write(json.encodeToString(manifest).toByteArray())
+            it.closeEntry()
+        }
+        val engine = ExtensionHostEngine(BrokeredHttpClient { null })
+        engine.loadExtension(mext, tempDir.resolve("work").toFile())
+        val request = kotlinx.coroutines.CoroutineScope(coroutineContext).launch {
+            engine.handleRequest(IpcRequest(22, IpcCommands.GET_POPULAR, json.encodeToString(GetPagePayload(999L, 1))))
+        }
+        try {
+            kotlinx.coroutines.withTimeout(3000) { BlockingFactory.started.await() }
+            engine.unloadExtension("ext.blocking")
+            kotlinx.coroutines.withTimeout(1000) { request.join() }
+            request.isCancelled shouldBe true
+        } finally {
+            request.cancel()
+        }
     }
 }

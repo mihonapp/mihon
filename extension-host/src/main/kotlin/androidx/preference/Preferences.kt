@@ -41,7 +41,14 @@ open class PreferenceGroup(context: Context) : Preference(context) {
 
 open class PreferenceScreen(context: Context) : PreferenceGroup(context)
 
-open class ListPreference(context: Context) : Preference(context) {
+open class DialogPreference(context: Context) : Preference(context) {
+    open var dialogTitle: CharSequence? = null
+    open var dialogMessage: CharSequence? = null
+    open var positiveButtonText: CharSequence? = null
+    open var negativeButtonText: CharSequence? = null
+}
+
+open class ListPreference(context: Context) : DialogPreference(context) {
     open var entries: Array<CharSequence>? = null
     open var entryValues: Array<CharSequence>? = null
     open var value: String? = null
@@ -51,7 +58,7 @@ open class ListPreference(context: Context) : Preference(context) {
     }
 }
 
-open class MultiSelectListPreference(context: Context) : Preference(context) {
+open class MultiSelectListPreference(context: Context) : DialogPreference(context) {
     open var entries: Array<CharSequence>? = null
     open var entryValues: Array<CharSequence>? = null
     open var values: Set<String> = emptySet()
@@ -63,8 +70,14 @@ open class CheckBoxPreference(context: Context) : Preference(context) {
 
 open class SwitchPreferenceCompat(context: Context) : Preference(context) {
     open var isChecked: Boolean = false
+    open var summaryOn: CharSequence? = null
+    open var summaryOff: CharSequence? = null
 }
 
-open class EditTextPreference(context: Context) : Preference(context) {
+open class EditTextPreference(context: Context) : DialogPreference(context) {
     open var text: String? = null
+    open var onBindEditTextListener: OnBindEditTextListener? = null
+    fun interface OnBindEditTextListener {
+        fun onBindEditText(editText: android.widget.EditText)
+    }
 }

@@ -7,7 +7,9 @@ import kotlinx.coroutines.runBlocking
 import mihon.desktop.extension.compat.AxmlManifestParser
 import mihon.desktop.extension.compat.TachiyomiExtensionConverter
 import mihon.desktop.preferences.DesktopPreferenceStore
+import mihon.extension.model.SourceDescriptor
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -18,6 +20,83 @@ import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
 class TachiyomiExtensionCompatibilityTest {
+    @Test
+    fun `conversion versions and source changes invalidate cache`(@TempDir tempDir: Path) {
+        val source = tempDir.resolve("cache.apk").toFile()
+        val target = tempDir.resolve("cache.mext").toFile()
+        createSampleTachiyomiJar(source, "ext.cache", "ext.cache.Source", "Cache")
+        TachiyomiExtensionConverter.convertToMext(source, target)
+        target.setLastModified(123_000L)
+        TachiyomiExtensionConverter.convertToMext(source, target, converterVersion = "next")
+        (target.lastModified() > 123_000L) shouldBe true
+        target.setLastModified(123_000L)
+        TachiyomiExtensionConverter.convertToMext(
+            source,
+            target,
+            converterVersion = "next",
+            compatibilityVersion = "next",
+        )
+        (target.lastModified() > 123_000L) shouldBe true
+        createSampleTachiyomiJar(source, "ext.cache", "ext.cache.Source", "Changed")
+        TachiyomiExtensionConverter.convertToMext(
+            source,
+            target,
+            converterVersion = "next",
+            compatibilityVersion = "next",
+        ).name shouldBe
+            "Changed"
+    }
+
+    @Test
+    fun `conversion translates primary and secondary dex files`(@TempDir tempDir: Path) {
+        fun dex(className: String): ByteArray {
+            val writer = com.googlecode.d2j.dex.writer.DexFileWriter()
+            writer.visit(1, "L$className;", "Ljava/lang/Object;", emptyArray()).visitEnd()
+            writer.visitEnd()
+            return writer.toByteArray()
+        }
+        val source = tempDir.resolve("multidex.apk").toFile()
+        ZipOutputStream(source.outputStream()).use { zip ->
+            val entries = mapOf(
+                "AndroidManifest.xml" to (
+"""<manifest package="ext.multidex" android:versionName="1.4.1"><application android:lab""" +
+"""el="Multi"><meta-data android:name="tachiyomi.extension.class" android:value="ext.Sec""" +
+"""ondary"/></application></manifest>"""
+                    ).toByteArray(),
+                "classes.dex" to dex("ext/Primary"),
+                "classes2.dex" to dex("ext/Secondary"),
+            )
+            entries.forEach { (name, bytes) ->
+                zip.putNextEntry(ZipEntry(name))
+                zip.write(bytes)
+                zip.closeEntry()
+            }
+        }
+        val target = tempDir.resolve("multidex.mext").toFile()
+        TachiyomiExtensionConverter.convertToMext(source, target)
+        ZipFile(target).use { zip ->
+            mapOf(
+                "classes.jar" to "ext/Primary.class",
+                "classes2.jar" to "ext/Secondary.class",
+            ).forEach { (name, expectedClass) ->
+                val entry = zip.getEntry(name).shouldNotBeNull()
+                java.util.zip.ZipInputStream(zip.getInputStream(entry)).use { nested ->
+                    generateSequence { nested.nextEntry }.map { it.name }.toList().contains(expectedClass) shouldBe true
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `unchanged source reuses validated conversion cache`(@TempDir tempDir: Path) {
+        val source = tempDir.resolve("cache.apk").toFile()
+        val target = tempDir.resolve("cache.mext").toFile()
+        createSampleTachiyomiJar(source, "ext.cache", "ext.cache.Source", "Cache")
+        TachiyomiExtensionConverter.convertToMext(source, target)
+        target.setLastModified(123_000L)
+        TachiyomiExtensionConverter.convertToMext(source, target)
+        target.lastModified() shouldBe 123_000L
+    }
 
     private fun createSampleTachiyomiJar(file: File, packageId: String, className: String, name: String) {
         val xml = """
@@ -44,10 +123,65 @@ class TachiyomiExtensionCompatibilityTest {
             zos.closeEntry()
 
             // Dummy class entry
+            zos.putNextEntry(ZipEntry("assets/config.json"))
+            zos.write("{\"enabled\":true}".toByteArray())
+            zos.closeEntry()
+
+            // Dummy class entry
             val classPath = className.replace('.', '/') + ".class"
             zos.putNextEntry(ZipEntry(classPath))
             zos.write(byteArrayOf(0xCA.toByte(), 0xFE.toByte(), 0xBA.toByte(), 0xBE.toByte()))
             zos.closeEntry()
+        }
+    }
+
+    @Test
+    fun `conversion preserves source assets`(@TempDir tempDir: Path) {
+        val source = tempDir.resolve("assets.jar").toFile()
+        val target = tempDir.resolve("assets.mext").toFile()
+        createSampleTachiyomiJar(source, "ext.assets", "ext.assets.Source", "Assets")
+        TachiyomiExtensionConverter.convertToMext(source, target)
+        ZipFile(target).use { zip ->
+            val entry = zip.getEntry("assets/config.json").shouldNotBeNull()
+            zip.getInputStream(entry).use { it.readBytes().decodeToString() } shouldBe "{\"enabled\":true}"
+        }
+    }
+
+    @Test
+    fun `conversion rejects unsupported standard APK version API`(@TempDir tempDir: Path) {
+        val source = tempDir.resolve("future-standard.apk").toFile()
+        ZipOutputStream(source.outputStream()).use { zip ->
+            zip.putNextEntry(ZipEntry("AndroidManifest.xml"))
+            zip.write(
+                (
+"""<manifest package="ext.future" android:versionName="1.7.1"><application android:label""" +
+"""="Future"><meta-data android:name="tachiyomi.extension.class" android:value="ext.Sour""" +
+"""ce"/></application></manifest>"""
+                    ).toByteArray(),
+            )
+            zip.closeEntry()
+        }
+        assertThrows<IllegalArgumentException> {
+            TachiyomiExtensionConverter.convertToMext(source, tempDir.resolve("future-standard.mext").toFile())
+        }
+    }
+
+    @Test
+    fun `conversion rejects unsupported API before publishing package`(@TempDir tempDir: Path) {
+        val source = tempDir.resolve("future.jar").toFile()
+        ZipOutputStream(source.outputStream()).use { zip ->
+            zip.putNextEntry(ZipEntry("AndroidManifest.xml"))
+            zip.write(
+                (
+"""<manifest package="ext.future"><application android:label="Future"><meta-data android""" +
+""":name="tachiyomi.extension.class" android:value="ext.Source"/><meta-data android:name""" +
+"""="tachiyomix.extensionLib" android:value="99.0"/></application></manifest>"""
+                    ).toByteArray(),
+            )
+            zip.closeEntry()
+        }
+        assertThrows<IllegalArgumentException> {
+            TachiyomiExtensionConverter.convertToMext(source, tempDir.resolve("future.mext").toFile())
         }
     }
 
@@ -132,6 +266,11 @@ class TachiyomiExtensionCompatibilityTest {
             val installRoot = tempDir.resolve("installed").toFile()
             val prefStore = DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
             val installer = DesktopExtensionInstaller(installRoot, prefStore)
+            val process = object : WindowsExtensionProcessManager(tempDir.resolve("probe").toFile()) {
+                override suspend fun loadExtension(packageFile: File): List<SourceDescriptor> =
+                    listOf(SourceDescriptor(987654321L, "CopyManga", "zh", "runtime.GeneratedSource"))
+            }
+            val sourceManager = DesktopSourceManager(installer, process, prefStore)
 
             val jarFile = tempDir.resolve("sample-extension.jar").toFile()
             createSampleTachiyomiJar(
@@ -144,12 +283,14 @@ class TachiyomiExtensionCompatibilityTest {
             val installed = installer.installFromLocalFile(jarFile, trustOnInstall = true)
             installed.pkg shouldBe "eu.kanade.tachiyomi.extension.zh.copymanga"
             installed.manifest.name shouldBe "CopyManga"
+            installed.manifest.sources.single().id shouldBe 987654321L
             installed.manifest.sources.first().className shouldBe "eu.kanade.tachiyomi.extension.zh.copymanga.CopyManga"
             installed.isEnabled shouldBe true
             installed.iconPath.shouldNotBeNull()
             File(installed.iconPath!!).exists() shouldBe true
 
             installer.getInstalledExtensions() shouldHaveSize 1
+            sourceManager.close()
         }
     }
 

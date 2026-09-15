@@ -78,10 +78,10 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 **文件：** 当前 12 个修改文件；新增 `docs/superpowers/evidence/2026-09-15-suwayomi-baseline.md`、`docs/upstream/suwayomi-reference.md`。
 
-- [ ] 记录 HEAD、当前 diff、现有包的版本/时间/文件清单；区分已提交、工作区修改、已有测试及安装产物。
-- [ ] 使用现有测试验证 source 缺失单次恢复、SourceFactory 只初始化一次、注册表原子切换、加载中取消与关闭资源。
-- [ ] 只修复该组测试暴露的问题；保存已验证的补丁边界，为后续 `codex/suwayomi-*` 分支确定起点。
-- [ ] 固定上游 tag/SHA，建立“上游文件 → 本地文件 → 采用原因 → 行为差异 → 验证”的清单。发生源码复制时一并保留原始版权和许可文本，更新第三方清单。
+- [x] 记录 HEAD、当前 diff、现有包的版本/时间/文件清单；区分已提交、工作区修改、已有测试及安装产物。
+- [x] 使用现有测试验证 source 缺失单次恢复、SourceFactory 只初始化一次、注册表原子切换、加载中取消与关闭资源。
+- [x] 只修复该组测试暴露的问题；保存已验证的补丁边界，为后续 `codex/suwayomi-*` 分支确定起点。
+- [x] 固定上游 tag/SHA，建立“上游文件 → 本地文件 → 采用原因 → 行为差异 → 验证”的清单。发生源码复制时一并保留原始版权和许可文本，更新第三方清单。
 
 **验证：** `DesktopSourceManagerTest`、`DesktopSourceManagerSourcePreferenceIpcTest`、`WindowsExtensionProcessManagerTest`、`ExtensionHostEngineTest`、`ReaderScreenActionsTest`、`DefaultReaderSessionTest`。已有新增断言通过前，不将修改记为完成。
 
@@ -101,11 +101,11 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 **新增：** `extension-host/src/test/kotlin/mihon/extension/host/ExtensionContextPersistenceTest.kt`。
 
-- [ ] 将 Context files/cache/preferences 按扩展身份分区持久化；源特有偏好继续按 sourceId 区分，避免所有扩展使用公共临时目录。
-- [ ] 在 source 初始化后、业务调用前回放保存的偏好。重启或崩溃恢复不依赖打开“图源设置”页面。
-- [ ] 确保同一扩展并发加载共享一次初始化；SourceFactory 一次生成多个 source；失败不发布半套注册表。
-- [ ] 安装/更新时核对原始 sourceId、入口类、多 dex、assets 和 API 版本范围；扩展来源迁移不生成新的书库身份。
-- [ ] 卸载/替换时取消所属任务、关闭 ClassLoader 和文件句柄；Windows 锁文件时保留旧可用版本并记录下次启动清理项。
+- [x] 将 Context files/cache/preferences 按扩展身份分区持久化；源特有偏好继续按 sourceId 区分，避免所有扩展使用公共临时目录。
+- [x] 在 source 初始化后、业务调用前回放保存的偏好。重启或崩溃恢复不依赖打开“图源设置”页面。
+- [x] 确保同一扩展并发加载共享一次初始化；SourceFactory 一次生成多个 source；失败不发布半套注册表。
+- [x] 安装/更新时核对原始 sourceId、入口类、多 dex、assets 和 API 版本范围；扩展来源迁移不生成新的书库身份。
+- [x] 卸载/替换时取消所属任务、关闭 ClassLoader 和文件句柄；Windows 锁文件时保留旧可用版本并记录下次启动清理项。
 
 **验收：** 源 A 修改偏好后重启，直接搜索/阅读使用新值；源 B 不受影响；host 崩溃后恢复同样成立；更新失败可继续用旧版本；多语言源不丢失、不重复。
 
@@ -125,12 +125,12 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 **新增：** `desktop-app/src/test/kotlin/mihon/desktop/extension/ExtensionNetworkSessionContractTest.kt`。
 
-- [ ] 为网络调用携带扩展/source 身份和 requestId；声明域、动态图片域、Cookie 与取消范围都属于该身份，避免全局域名并集授权给所有扩展。
-- [ ] 将兼容扩展标准 OkHttp 的实际传输接到统一网络策略，保留扩展自定义拦截器、`getImage` 和图片解混淆执行顺序。
-- [ ] 统一代理、UA、超时、请求头、Referer、重定向、Cookie 读写和持久化；配置改变后使受影响的客户端/来源缓存失效。
-- [ ] 用可取消的 OkHttp Call 桥接协程，取消请求向 IPC 和底层 Call 传播；单个阅读请求取消不杀死同一来源的其他下载任务。
-- [ ] Cookie 按 name/domain/path 唯一键存储，并执行 hostOnly/path/secure/expiry 匹配；接收的 Set-Cookie 能跨 host 重启恢复。
-- [ ] 明确错误分类：离线、超时、代理/TLS、429、登录过期、验证页面、解析失败；重试只针对可重试错误。
+- [x] 为网络调用携带扩展/source 身份和 requestId；声明域、动态图片域、Cookie 与取消范围都属于该身份，避免全局域名并集授权给所有扩展。
+- [x] 将兼容扩展标准 OkHttp 的实际传输接到统一网络策略，保留扩展自定义拦截器、`getImage` 和图片解混淆执行顺序。
+- [x] 统一代理、UA、超时、请求头、Referer、重定向、Cookie 读写和持久化；配置改变后使受影响的客户端/来源缓存失效。
+- [x] 用可取消的 OkHttp Call 桥接协程，取消请求向 IPC 和底层 Call 传播；单个阅读请求取消不杀死同一来源的其他下载任务。
+- [x] Cookie 按 name/domain/path 唯一键存储，并执行 hostOnly/path/secure/expiry 匹配；接收的 Set-Cookie 能跨 host 重启恢复。
+- [x] 明确错误分类：离线、超时、代理/TLS、429、登录过期、验证页面、解析失败；重试只针对可重试错误。
 
 **验收：** 本地 HTTP 测试服务覆盖两源同名 Cookie 隔离、跨域重定向、UA/代理切换、请求头传递、错误页面误当图片、延迟响应取消。取消后 UI 在下一次调度即可返回，底层调用在确定性测试中 1 秒内结束；Cookie 不进入不匹配域。
 
@@ -160,11 +160,11 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 **修改：** `settings.gradle.kts`、`desktop-app/build.gradle.kts`，以及样本所需的 host WebView 兼容入口。
 
-- [ ] 先完成单个浏览器会话的 Windows 技术验证：JCEF/KCEF 初始化、带 headers 加载、JavaScript 结果回调、Cookie 交换、取消、销毁。
-- [ ] 浏览器组件按需独立启动；主程序和普通 HTTP 扩展保持 Java 17。浏览器辅助进程使用验证过的 Java 21 运行时及固定 Chromium 原生组件，独立打包并记录摘要。
-- [ ] 以 sessionId/sourceId 隔离浏览器会话，使用 T2 的网络会话边界；浏览器专用代理和 Cookie 设置与普通请求保持一致。
+- [x] 先完成单个浏览器会话的 Windows 技术验证：JCEF/KCEF 初始化、带 headers 加载、JavaScript 结果回调、Cookie 交换、取消、销毁。
+- [x] 浏览器组件按需独立启动；主程序和普通 HTTP 扩展保持 Java 17。浏览器辅助进程使用验证过的 Java 21 运行时及固定 Chromium 原生组件，独立打包并记录摘要。
+- [x] 以 sessionId/sourceId 隔离浏览器会话，使用 T2 的网络会话边界；浏览器专用代理和 Cookie 设置与普通请求保持一致。
 - [ ] 提供“需要登录/网页验证 → 打开对应页面 → 返回并重试”的完整流程；验证码由用户完成，失败有明确状态。
-- [ ] 关闭应用或取消请求时销毁会话和辅助进程；崩溃可重建，不影响本地阅读和书库。
+- [x] 关闭应用或取消请求时销毁会话和辅助进程；崩溃可重建，不影响本地阅读和书库。
 
 **验收：** 普通 HTTP 源不启动浏览器进程；WebView 样本完整阅读；关闭会话后无持续后台加载；登录会话可用于后续图片请求；Chromium 缺失/加载失败时可恢复。分别记录启动时间、常驻内存和包体增量，不将浏览器技术验证直接视为所有网站兼容。
 
@@ -174,11 +174,11 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 **修改：** `desktop-app/src/main/kotlin/mihon/desktop/download/DesktopDownloader.kt`、`DownloadStore.kt`、`DownloadModels.kt`、`DownloadDiskProvider.kt`；测试使用同模块下的 `DesktopDownloaderTest.kt`、`DownloadStoreTest.kt`、`DownloadAndReadOfflinePipelineTest.kt`。
 
-- [ ] 增加按 source/host 的公平调度及并发上限，429 遵守 Retry-After；前台阅读优先级高于预取和批量下载。
-- [ ] 保留当前原子 JSON 队列、任务顺序、状态、失败原因和已完成页，不在本轮无理由迁移数据库或替换成仅保存章节 ID 的集合。
-- [ ] 恢复时验证已有页，损坏或不完整页重新获取；整个章节全部校验通过后才标记下载完成。
-- [ ] 队列文件损坏时保留原文件并给出恢复信息，支持最近有效快照；不能静默变成空队列。
-- [ ] 接入 T2 取消语义，处理磁盘满、下载目录失联和临时文件清理；暂停/退出后不继续偷偷写文件。
+- [x] 增加按 source/host 的公平调度及并发上限，429 遵守 Retry-After；前台阅读优先级高于预取和批量下载。
+- [x] 保留当前原子 JSON 队列、任务顺序、状态、失败原因和已完成页，不在本轮无理由迁移数据库或替换成仅保存章节 ID 的集合。
+- [x] 恢复时验证已有页，损坏或不完整页重新获取；整个章节全部校验通过后才标记下载完成。
+- [x] 队列文件损坏时保留原文件并给出恢复信息，支持最近有效快照；不能静默变成空队列。
+- [x] 接入 T2 取消语义，处理磁盘满、下载目录失联和临时文件清理；暂停/退出后不继续偷偷写文件。
 
 **验收：** 两源并行，一源持续失败不阻塞另一源；中途退出重启保留已完成页与顺序；损坏页只重下该页；磁盘满保留恢复点；断网后已下载章节完整可读。
 
@@ -190,11 +190,11 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 **新增：** `desktop-app/src/test/kotlin/mihon/desktop/library/update/LibraryUpdateRecoveryTest.kt`。
 
-- [ ] 以当前 UI 使用的 `library/update` 实现为唯一更新入口，迁移旧实例的实际消费者和必要测试后再移除重复实现。
-- [ ] 同源串行、跨源有界并发；统一任务中心进度、当前来源、失败原因和取消状态。
-- [ ] 手动、定时和启动补跑共享去重及运行锁；不会对同一漫画启动重复刷新或重复自动下载。
-- [ ] 保留分类 include/exclude、完结/未读/未开始过滤和新增章节下载设置。
-- [ ] 显式重抛 CancellationException，保存最后完成时间和重试状态；失败来源不阻塞其他来源。
+- [x] 以当前 UI 使用的 `library/update` 实现为唯一更新入口，迁移旧实例的实际消费者和必要测试后再移除重复实现。
+- [x] 同源串行、跨源有界并发；统一任务中心进度、当前来源、失败原因和取消状态。
+- [x] 手动、定时和启动补跑共享去重及运行锁；不会对同一漫画启动重复刷新或重复自动下载。
+- [x] 保留分类 include/exclude、完结/未读/未开始过滤和新增章节下载设置。
+- [x] 显式重抛 CancellationException，保存最后完成时间和重试状态；失败来源不阻塞其他来源。
 
 **验收：** 定时运行中点击手动刷新不重复入队；取消停止后续请求；一源超时其他源完成；重启只执行有界补跑，不积累历史周期的所有任务。Windows 应用关闭后的运行由 T10 接线。
 
@@ -207,10 +207,10 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 **新增：** `desktop-app/src/main/kotlin/mihon/desktop/platform/WindowsCredentialStore.kt`、`desktop-app/src/main/kotlin/mihon/desktop/track/MangaBakaTracker.kt`、`HikkaTracker.kt`、`desktop-app/src/test/kotlin/mihon/desktop/track/TrackingRecoveryTest.kt`。
 
 - [ ] 复用已有 9 个 tracker，覆盖登录恢复、搜索绑定、读进度、刷新、退出及服务故障；Suwayomi/Kavita 按现有真实实现继续改进。
-- [ ] 将当前 Android 清单中存在的 MangaBaka/Hikka 补入桌面；以仓库中的对应 Android 实现为字段和业务语义参考，执行时核对官方 API 与 OAuth 配置要求。
-- [ ] 将明文 preferences token 迁入 Windows Credential Manager：写入并回读成功后才删除旧值；失败不丢失账户。便携版换机器允许重新登录，普通备份不导出密钥。
-- [ ] 应用启动、登录成功、联网恢复和退避到期触发同一队列处理器，保证单实例处理；离线不会使阅读失败。
-- [ ] 同一漫画的更新有序处理；401 暂停并提示重新登录，429/5xx 按退避重试；有实际进度冲突时展示本地与远端值。
+- [x] 将当前 Android 清单中存在的 MangaBaka/Hikka 补入桌面；以仓库中的对应 Android 实现为字段和业务语义参考，执行时核对官方 API 与 OAuth 配置要求。
+- [x] 将明文 preferences token 迁入 Windows Credential Manager：写入并回读成功后才删除旧值；失败不丢失账户。便携版换机器允许重新登录，普通备份不导出密钥。
+- [x] 应用启动、登录成功、联网恢复和退避到期触发同一队列处理器，保证单实例处理；离线不会使阅读失败。
+- [x] 同一漫画的更新有序处理；401 暂停并提示重新登录，429/5xx 按退避重试；有实际进度冲突时展示本地与远端值。
 
 **验收：** 离线阅读 → 退出 → 重启联网，无需重新登录操作即可同步待办；重复触发不重复发送；token 迁移失败可恢复；新增 tracker 通过真实 HTTP 契约，账户实测结果单独记录。
 
@@ -223,9 +223,9 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 **测试：** `desktop-library-data/src/test/kotlin/mihon/desktop/library/backup/AndroidBackupRoundTripTest.kt`；新增 `desktop-library-data/src/test/kotlin/mihon/desktop/library/backup/SuwayomiBackupCompatibilityTest.kt`。
 
 - [ ] 为 Android Mihon → MihonW → Android Mihon、Suwayomi → MihonW 建立脱敏真实样本和字段比对；以当前备份 codec 为基础补缺失映射。
-- [ ] 比较漫画/章节身份、分类顺序、进度、书签、历史、跟踪和可迁移偏好，不能只检查“文件能解析”。
-- [ ] 缺少扩展、source 暂不可用、未知字段和平台专用设置生成明确导入报告；不将 source 缺失当作丢弃漫画的理由。
-- [ ] 验证源迁移和重复导入保留进度、书签与库成员状态；事务中途失败回滚，不留下部分导入数据。
+- [x] 比较漫画/章节身份、分类顺序、进度、书签、历史、跟踪和可迁移偏好，不能只检查“文件能解析”。
+- [x] 缺少扩展、source 暂不可用、未知字段和平台专用设置生成明确导入报告；不将 source 缺失当作丢弃漫画的理由。
+- [x] 验证源迁移和重复导入保留进度、书签与库成员状态；事务中途失败回滚，不留下部分导入数据。
 - [ ] 验证自动备份原子落盘、保留数量、损坏文件处理以及升级前一致性快照；恢复过程提供进度和取消结果。
 
 **验收：** 真实非空备份在目标应用能打开，关键字段语义一致；损坏备份不改变原库；连续两次导入不重复漫画/分类。Windows 私有字段被明确保留或报告，不悄悄丢失。
@@ -238,10 +238,10 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 **新增：** `scripts/measure-desktop-performance.ps1`、`docs/superpowers/evidence/suwayomi-desktop-acceptance.md`。
 
-- [ ] 运行安装扩展 → 搜索 → 详情 → 显式入库 → 下载 → 离线阅读 → 进度/历史 → 更新 → 备份的完整场景。
+- [x] 运行安装扩展 → 搜索 → 详情 → 显式入库 → 下载 → 离线阅读 → 进度/历史 → 更新 → 备份的完整场景。（真实 Windows/IPC/HTTP/SQLite，内容为合成 fixture；生产图源验收另列。）
 - [ ] 在浏览和书库两入口检查统一详情的刷新、入库/移除、分类、跟踪、章节筛选、批量下载、书签等功能；复用已有页面，不再新建另一套详情。
 - [ ] 加载取消、损坏图片重试、切换图源、host 重启都有可理解的状态；取消后不会被过期回调重新导航到阅读器。
-- [ ] 以 10,000 漫画库测试搜索、筛选、滚动和批量操作；只针对结果修复分页、重复查询、无效重组和封面加载。
+- [x] 以 10,000 漫画库测试搜索、筛选、滚动和批量操作；只针对结果修复分页、重复查询、无效重组和封面加载。（真实 EXE 搜索/滚动/书签筛选，SQLite/presenter 批量操作；不代表帧率门槛通过。）
 - [ ] 长章节反复翻页、跨章、动画与大图验证预取/分块缓存，保留当前 reader-core 256 MiB 预算；分别记录 JVM heap、进程私有内存和子进程内存，不能把预算当成整个应用 RSS 上限。
 - [ ] 截图检查宽屏/窄窗、100%/150%/200% 缩放、键盘焦点和控件布局；覆盖六类阅读模式及滚轮隐藏控件规则。
 
@@ -255,10 +255,10 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 
 **新增：** `desktop-app/src/main/kotlin/mihon/desktop/platform/WindowsBackgroundScheduler.kt`、`desktop-app/src/main/kotlin/mihon/desktop/extension/WindowsAppContainerLauncher.kt`、`desktop-app/src/test/kotlin/mihon/desktop/extension/WindowsExtensionIsolationTest.kt`。
 
-- [ ] T2 网络代理稳定后，完成原批准设计的 AppContainer 启动、身份验证 Named Pipe IPC 和 Job Object 资源/退出联动；限制扩展访问其私有目录。
-- [ ] 检测扩展自行创建 HTTP 客户端等绕开统一网络入口的行为；受限制环境无法执行的能力明确报错，不能静默退回无隔离进程。
-- [ ] 为用户设置的后台更新/备份注册 Windows 计划任务，使用既有可执行程序的无界面命令；默认不开启新的系统后台任务。
-- [ ] 主界面运行、计划任务和多开共用数据目录锁/任务锁；系统错过触发时间后下次启动有界补跑。
+- [x] T2 网络代理稳定后，完成原批准设计的 AppContainer 启动、身份验证 Named Pipe IPC 和 Job Object 资源/退出联动；限制扩展访问其私有目录。
+- [x] 检测扩展自行创建 HTTP 客户端等绕开统一网络入口的行为；受限制环境无法执行的能力明确报错，不能静默退回无隔离进程。
+- [x] 为用户设置的后台更新/备份注册 Windows 计划任务，使用既有可执行程序的无界面命令；默认不开启新的系统后台任务。
+- [x] 主界面运行、计划任务和多开共用数据目录锁/任务锁；系统错过触发时间后下次启动有界补跑。
 - [ ] 安装路径变化后更新计划任务；卸载时按用户选择保留数据并清理应用拥有的任务。
 
 **验收：** 扩展 host 无法写其他扩展目录或主数据库；普通取消、超限终止与主程序退出都无孤儿进程；中文/空格路径可执行后台命令；计划任务与主程序同时启动不产生重复下载或数据库冲突。
@@ -277,7 +277,7 @@ Suwayomi 是完整服务端，并非可直接加入现有 Java 17 应用的后�
 - [ ] 验证旧版升级、数据迁移失败回滚、更新包摘要失败、portable 原子替换、文件关联、卸载保留数据；升级下载成功不等于安装成功。
 - [ ] 安装/更新后启动真实 EXE，执行 T9 主流程；记录安装版本、构建提交、完整 app 内容摘要、截图和退出码。
 - [ ] 检查 0.1.3 的三个旧格式升级到同一新版本，portable 用户数据仅写自己的 data 目录；新机器无浏览器缓存也能初始化。
-- [ ] 将原批准设计的每个功能映射至当前实现和验收证据。缺环境、缺账户或站点失效的检查明确列为未验证，不计为完成。
+- [x] 将原批准设计的每个功能映射至当前实现和验收证据。缺环境、缺账户或站点失效的检查明确列为未验证，不计为完成。
 
 **发行门槛：** 两个 Windows 版本分别通过全流程；三个发行包版本一致；真实非空备份往返通过；至少 6 类扩展样本有结果且代表性的普通 HTTP / SourceFactory / 会话型 / WebView 源完成实机流程；无已知数据丢失、持续加载无法退出或更新失败无法恢复的问题。
 

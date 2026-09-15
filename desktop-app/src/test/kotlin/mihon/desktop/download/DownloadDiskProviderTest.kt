@@ -43,8 +43,8 @@ class DownloadDiskProviderTest {
         val tempChapterDir = provider.getTempChapterDir(sourceId, mangaTitle, chapterName)
         tempChapterDir.fileName.toString() shouldEndWith "_tmp"
 
-        val page1Bytes = byteArrayOf(1, 2, 3, 4)
-        val page2Bytes = byteArrayOf(5, 6, 7, 8)
+        val page1Bytes = validDownloadImage()
+        val page2Bytes = validDownloadImage()
 
         provider.savePage(tempChapterDir, 0, page1Bytes)
         provider.savePage(tempChapterDir, 1, page2Bytes)
@@ -108,7 +108,7 @@ class DownloadDiskProviderTest {
         insertedManga[0].mangaId shouldBe mangaId
         insertedChapters.size shouldBe 1
         insertedChapters[0].chapterId shouldBe chapterId
-        insertedChapters[0].sizeBytes shouldBe 8L
+        insertedChapters[0].sizeBytes shouldBe (page1Bytes.size + page2Bytes.size).toLong()
         insertedChapters[0].assetKind shouldBe "DIRECTORY"
 
         provider.isChapterDownloaded(sourceId, mangaTitle, chapterName) shouldBe true
@@ -118,7 +118,7 @@ class DownloadDiskProviderTest {
     fun `finalizeChapter fails if any page is missing`(@TempDir tempDir: Path) {
         val provider = DownloadDiskProvider(tempDir)
         val tempChapterDir = provider.getTempChapterDir(1L, "Manga", "Ch1")
-        provider.savePage(tempChapterDir, 0, byteArrayOf(1, 2, 3))
+        provider.savePage(tempChapterDir, 0, validDownloadImage())
         // Page 1 (index 1) is missing, but totalPages is 2
 
         shouldThrow<IOException> {
