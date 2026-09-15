@@ -1,0 +1,9 @@
+CREATE TABLE manga_update_errors(
+    manga_id INTEGER NOT NULL,
+    error_message TEXT,
+    timestamp INTEGER NOT NULL,
+    PRIMARY KEY(manga_id),
+    FOREIGN KEY(manga_id) REFERENCES mangas(_id) ON DELETE CASCADE
+);
+
+CREATE INDEX manga_update_errors_timestamp_index ON manga_update_errors(timestamp);
