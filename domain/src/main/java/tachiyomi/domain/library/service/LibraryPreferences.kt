@@ -219,6 +219,10 @@ class LibraryPreferences(
         "disallow_non_ascii_filenames",
         false,
     )
+    val disableChapterNameHash: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_disable_chapter_name_hash",
+        false,
+    )
 
     // endregion
 
