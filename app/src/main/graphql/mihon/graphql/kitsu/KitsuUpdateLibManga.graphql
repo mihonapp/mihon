@@ -1,0 +1,30 @@
+mutation KitsuUpdateLibManga(
+  $library_id: ID!,
+  $status: LibraryEntryStatusEnum!,
+  $progress: Int!,
+  $private: Boolean!,
+  $rating: Int,
+  $startedAt: ISO8601DateTime,
+  $finishedAt: ISO8601DateTime,
+) {
+  libraryEntry {
+    update(
+      input: {
+        id: $library_id,
+        status: $status,
+        progress: $progress,
+        private: $private,
+        rating: $rating,
+        startedAt: $startedAt,
+        finishedAt: $finishedAt,
+      }
+    ) {
+      errors {
+        message
+      }
+      libraryEntry {
+        id
+      }
+    }
+  }
+}

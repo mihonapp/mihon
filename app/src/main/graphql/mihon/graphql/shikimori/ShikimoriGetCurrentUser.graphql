@@ -1,0 +1,6 @@
+query ShikimoriGetCurrentUser {
+  currentUser {
+    id
+    nickname
+  }
+}
