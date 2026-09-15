@@ -116,7 +116,8 @@ data object UpdatesTab : Tab {
         }
 
         LaunchedEffect(state.selectionMode) {
-            HomeScreen.showBottomNav(!state.selectionMode)
+            // TODO(homescreen): bottomnav
+            // HomeScreen.showBottomNav(!state.selectionMode)
         }
 
         LaunchedEffect(state.isLoading) {

@@ -57,6 +57,7 @@ materialKolor = "5.0.1"
 metro = "1.4.3"
 mockk = "1.14.11"
 moko-resources = "0.26.4"
+nav3-core = "1.2.0-rc01"
 okhttp = "5.5.0"
 okio = "3.18.2"
 photoView = "2.3.0"
@@ -108,6 +109,9 @@ androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", 
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodelNavigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3-core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3-core" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
@@ -218,7 +222,8 @@ sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 valkyrie = { id = "io.github.composegears.valkyrie", version.ref = "valkyrie" }
 
 [bundles]
-androidx-lifecycle = ["androidx-lifecycle-common", "androidx-lifecycle-process", "androidx-lifecycle-runtime", "androidx-lifecycle-viewmodel", "androidx-lifecycle-viewmodelCompose"]
+androidx-lifecycle = ["androidx-lifecycle-common", "androidx-lifecycle-process", "androidx-lifecycle-runtime", "androidx-lifecycle-viewmodel", "androidx-lifecycle-viewmodelCompose", "androidx-lifecycle-viewmodelNavigation3"]
+androidx-navigation = ["androidx-navigation3-runtime", "androidx-navigation3-ui"]
 coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 kotlinx-coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-android", "kotlinx-coroutines-guava"]
 markdown = ["markdown-core", "markdown-coil"]

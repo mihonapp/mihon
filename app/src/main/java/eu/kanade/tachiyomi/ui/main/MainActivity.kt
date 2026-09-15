@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ValueAnimator
-import android.app.SearchManager
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
@@ -13,6 +12,7 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +39,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,10 +61,13 @@ import androidx.core.util.Consumer
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
-import cafe.adriel.voyager.navigator.LocalNavigator
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.interactor.GetIncognitoState
@@ -72,24 +76,17 @@ import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
-import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
-import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.util.AssistContentScreen
-import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
+import eu.kanade.tachiyomi.navigation.appEntries
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
-import eu.kanade.tachiyomi.ui.deeplink.DeepLinkScreen
-import eu.kanade.tachiyomi.ui.home.HomeScreen
-import eu.kanade.tachiyomi.ui.manga.MangaScreen
+import eu.kanade.tachiyomi.ui.home.HomeRoute
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
-import eu.kanade.tachiyomi.ui.more.OnboardingScreen
-import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
@@ -102,16 +99,17 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.AppGraph
 import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.core.migration.Migrator
-import mihon.feature.support.SupportUsScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.materialsymbols.rounded.VolunteerActivism
+import soup.compose.material.motion.animation.materialSharedAxisXIn
+import soup.compose.material.motion.animation.materialSharedAxisXOut
+import soup.compose.material.motion.animation.rememberSlideDistance
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
@@ -195,26 +193,26 @@ class MainActivity : BaseActivity() {
                 )
             }
 
-            Navigator(
-                screen = HomeScreen,
-                disposeBehavior = NavigatorDisposeBehavior(disposeNestedNavigators = false, disposeSteps = true),
-            ) { navigator ->
-                LaunchedEffect(navigator) {
-                    this@MainActivity.navigator = navigator
-
+            val backStack = rememberNavBackStack(HomeRoute)
+            CompositionLocalProvider(
+                LocalBackStack provides backStack,
+            ) {
+                LaunchedEffect(backStack) {
                     if (isLaunch) {
                         // Set start screen
-                        handleIntentAction(intent, navigator)
+                        // TODO(nav): intent
+                        // handleIntentAction(intent, navigator)
 
                         // Reset Incognito Mode on relaunch
                         preferences.incognitoMode.set(false)
                     }
                 }
-                LaunchedEffect(navigator.lastItem) {
-                    (navigator.lastItem as? BrowseSourceScreen)?.sourceId
-                        .let(getIncognitoState::subscribe)
-                        .collectLatest { incognito = it }
-                }
+
+                // TODO(nav): incognito
+                // val currentRoute = backStack.lastOrNull()
+                // LaunchedEffect(currentRoute) {
+                //     ...
+                // }
 
                 val scaffoldInsets = WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
                 Scaffold(
@@ -230,9 +228,36 @@ class MainActivity : BaseActivity() {
                 ) { contentPadding ->
                     // Consume insets already used by app state banners
                     Box {
-                        // Shows current screen
-                        DefaultNavigatorScreenTransition(
-                            navigator = navigator,
+                        val slideDistance = rememberSlideDistance()
+                        NavDisplay(
+                            backStack = backStack,
+                            onBack = { backStack.removeLastOrNull() },
+                            transitionSpec = {
+                                materialSharedAxisXIn(
+                                    forward = true,
+                                    slideDistance = slideDistance,
+                                ) togetherWith materialSharedAxisXOut(
+                                    forward = true,
+                                    slideDistance = slideDistance,
+                                )
+                            },
+                            popTransitionSpec = {
+                                materialSharedAxisXIn(
+                                    forward = false,
+                                    slideDistance = slideDistance,
+                                ) togetherWith materialSharedAxisXOut(
+                                    forward = false,
+                                    slideDistance = slideDistance,
+                                )
+                            },
+                            entryDecorators = listOf(
+                                rememberSaveableStateHolderNavEntryDecorator(),
+                                rememberViewModelStoreNavEntryDecorator(),
+                                rememberResultEventBusNavEntryDecorator(),
+                            ),
+                            entryProvider = entryProvider {
+                                appEntries()
+                            },
                             modifier = Modifier
                                 .padding(contentPadding)
                                 .consumeWindowInsets(contentPadding),
@@ -258,17 +283,20 @@ class MainActivity : BaseActivity() {
                         .drop(1)
                         .filter { !it }
                         .onEach {
-                            val currentScreen = navigator.lastItem
-                            if (currentScreen is BrowseSourceScreen ||
-                                (currentScreen is MangaScreen && currentScreen.fromSource)
-                            ) {
-                                navigator.popUntilRoot()
-                            }
+                            val currentScreen = backStack.lastOrNull()
+                            // TODO(nav): incognito
+                            // if (currentScreen is BrowseSourceScreen ||
+                            //     (currentScreen is MangaScreen && currentScreen.fromSource)
+                            // ) {
+                            //     while (backStack.size > 1) {
+                            //         backStack.removeAll { it != HomeRoute }
+                            //     }
+                            // }
                         }
                         .launchIn(this)
                 }
 
-                HandleOnNewIntent(context = context, navigator = navigator)
+                HandleOnNewIntent(context = context)
 
                 if (!isBenchmarkBuildType) {
                     if (isLaunch) CheckForUpdates()
@@ -302,7 +330,7 @@ class MainActivity : BaseActivity() {
     }
 
     @Composable
-    private fun HandleOnNewIntent(context: Context, navigator: Navigator) {
+    private fun HandleOnNewIntent(context: Context) {
         LaunchedEffect(Unit) {
             callbackFlow {
                 val componentActivity = context as ComponentActivity
@@ -310,14 +338,17 @@ class MainActivity : BaseActivity() {
                 componentActivity.addOnNewIntentListener(consumer)
                 awaitClose { componentActivity.removeOnNewIntentListener(consumer) }
             }
-                .collectLatest { handleIntentAction(it, navigator) }
+                .collectLatest {
+                    // TODO(nav): intent
+                    // handleIntentAction(it, navigator)
+                }
         }
     }
 
     @Composable
     private fun CheckForUpdates() {
         val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+        val backStack = LocalBackStack.current
 
         // App updates
         LaunchedEffect(Unit) {
@@ -331,7 +362,8 @@ class MainActivity : BaseActivity() {
                             releaseLink = result.release.releaseLink,
                             downloadLink = result.release.downloadLink,
                         )
-                        navigator.push(updateScreen)
+                        // TODO(nav): update
+                        // navigator.push(updateScreen)
                     }
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e)
@@ -351,18 +383,19 @@ class MainActivity : BaseActivity() {
 
     @Composable
     private fun ShowOnboarding() {
-        val navigator = LocalNavigator.currentOrThrow
+        val backStack = LocalBackStack.current
 
         LaunchedEffect(Unit) {
-            if (!preferences.shownOnboardingFlow.get() && navigator.lastItem !is OnboardingScreen) {
-                navigator.push(OnboardingScreen())
-            }
+            // TODO(nav): onboarding
+            // if (!preferences.shownOnboardingFlow.get() && navigator.lastItem !is OnboardingScreen) {
+            //     navigator.push(OnboardingScreen())
+            // }
         }
     }
 
     @Composable
     private fun ShowDonationCampaign() {
-        val navigator = LocalNavigator.currentOrThrow
+        val backStack = LocalBackStack.current
 
         var showCampaign by remember { mutableStateOf(false) }
         if (showCampaign) {
@@ -412,7 +445,8 @@ class MainActivity : BaseActivity() {
                             .padding(horizontal = MaterialTheme.padding.medium)
                             .fillMaxWidth(),
                         onClick = {
-                            navigator.push(SupportUsScreen())
+                            // TODO(nav): support
+                            // navigator.push(SupportUsScreen())
                             dismissSupportMessage()
                         },
                     ) {
@@ -534,6 +568,8 @@ class MainActivity : BaseActivity() {
             )
         }
 
+        // TODO(homescreen): tab
+        /*
         val tabToOpen = when (intent.action) {
             Constants.SHORTCUT_LIBRARY -> HomeScreen.Tab.Library()
             Constants.SHORTCUT_MANGA -> {
@@ -596,6 +632,7 @@ class MainActivity : BaseActivity() {
         if (tabToOpen != null) {
             lifecycleScope.launch { HomeScreen.openTab(tabToOpen) }
         }
+        */
 
         ready = true
         return true
