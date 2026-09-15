@@ -61,7 +61,6 @@ class ExtensionStoreService(
 ) {
     companion object {
         const val PREF_KEY_REPOSITORIES = "extension.repositories"
-        const val DEFAULT_REPO = "https://raw.githubusercontent.com/keiyoushi/extensions/repo"
 
         /** Desktop can't install these promotional/meta packages; hide them from the store. */
         val HIDDEN_EXTENSION_PACKAGES = setOf(
@@ -78,11 +77,7 @@ class ExtensionStoreService(
     @Synchronized
     fun getRepositories(): List<String> {
         val stored = preferenceStore.property(PREF_KEY_REPOSITORIES)
-        return if (stored.isNullOrBlank()) {
-            listOf(DEFAULT_REPO)
-        } else {
-            stored.split("\n").map { it.trim() }.filter { it.isNotEmpty() }.distinct()
-        }
+        return stored.orEmpty().split("\n").map { it.trim() }.filter { it.isNotEmpty() }.distinct()
     }
 
     @Synchronized

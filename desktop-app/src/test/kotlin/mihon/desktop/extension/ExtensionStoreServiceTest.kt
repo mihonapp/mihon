@@ -5,10 +5,14 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.runBlocking
 import mihon.desktop.preferences.DesktopPreferenceStore
+import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import java.io.IOException
 import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicInteger
 
 class ExtensionStoreServiceTest {
 
@@ -18,16 +22,54 @@ class ExtensionStoreServiceTest {
         val prefStore = DesktopPreferenceStore(storeFile)
         val service = ExtensionStoreService(prefStore)
 
-        // Default repo present
-        service.getRepositories() shouldBe listOf(ExtensionStoreService.DEFAULT_REPO)
+        service.getRepositories() shouldBe emptyList()
 
         // Add repo
         service.addRepository("https://example.com/repo/")
-        service.getRepositories() shouldContain "https://example.com/repo"
+        service.getRepositories() shouldBe listOf("https://example.com/repo")
+        ExtensionStoreService(DesktopPreferenceStore(storeFile)).getRepositories() shouldBe
+            listOf("https://example.com/repo")
 
         // Remove repo
         service.removeRepository("https://example.com/repo")
-        service.getRepositories() shouldBe listOf(ExtensionStoreService.DEFAULT_REPO)
+        service.getRepositories() shouldBe emptyList()
+        ExtensionStoreService(DesktopPreferenceStore(storeFile)).getRepositories() shouldBe emptyList()
+    }
+
+    @Test
+    fun `fresh profile does not fetch any extension repository`(@TempDir tempDir: Path) = runBlocking {
+        val requests = AtomicInteger()
+        val client = OkHttpClient.Builder().addInterceptor {
+            requests.incrementAndGet()
+            throw IOException("Unexpected repository request")
+        }.build()
+        val service = ExtensionStoreService(DesktopPreferenceStore(tempDir.resolve("prefs.properties")), client)
+
+        service.fetchAvailableExtensions() shouldBe emptyList()
+        requests.get() shouldBe 0
+        Unit
+    }
+
+    @Test
+    fun `blank saved repository list stays empty`(@TempDir tempDir: Path) {
+        val store = DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
+        store.update { setProperty(ExtensionStoreService.PREF_KEY_REPOSITORIES, " \n\t ") }
+
+        ExtensionStoreService(store).getRepositories() shouldBe emptyList()
+    }
+
+    @Test
+    fun `existing explicitly configured repositories are preserved`(@TempDir tempDir: Path) {
+        val store = DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
+        store.update {
+            setProperty(
+                ExtensionStoreService.PREF_KEY_REPOSITORIES,
+                "https://example.com/first\nhttps://example.com/second",
+            )
+        }
+
+        ExtensionStoreService(store).getRepositories() shouldBe
+            listOf("https://example.com/first", "https://example.com/second")
     }
 
     @Test

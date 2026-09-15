@@ -223,6 +223,22 @@ compose.desktop {
     }
 }
 
+val verifyCleanDistribution by tasks.registering(Exec::class) {
+    group = "verification"
+    description = "Rejects user profiles and installed extensions before Windows packaging"
+    dependsOn("createDistributable")
+    commandLine(
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        rootProject.file("scripts/verify-release-clean.ps1").absolutePath,
+        "-ImagePath",
+        layout.buildDirectory.dir("compose/binaries/main/app/MihonW").get().asFile.absolutePath,
+    )
+}
+
 tasks.configureEach {
     if (
         name in setOf(
@@ -238,7 +254,7 @@ tasks.configureEach {
 }
 
 val packagePortableZip by tasks.registering(Zip::class) {
-    dependsOn("createDistributable")
+    dependsOn(verifyCleanDistribution)
     group = "compose desktop"
     description = "Packages the portable distribution as a standalone ZIP archive"
 
@@ -270,7 +286,7 @@ val packagePortableZip by tasks.registering(Zip::class) {
 // directly so the verified WiX override survives and paths never pass through an argument file.
 tasks.withType<org.jetbrains.compose.desktop.application.tasks.AbstractJPackageTask>().configureEach {
     if (name in setOf("packageMsi", "packageExe")) {
-        dependsOn("createDistributable")
+        dependsOn(verifyCleanDistribution)
         inputs.dir(project.file("packaging/windows"))
         actions.clear()
         doLast {

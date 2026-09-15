@@ -13,20 +13,22 @@
 ![Windows x64](https://img.shields.io/badge/Windows-x64-0078d4)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-64748b)](LICENSE)
 
-**[下载 Windows 版](https://github.com/1873412297-art/mihon-w/releases/latest)** · [版本说明](https://github.com/1873412297-art/mihon-w/releases/tag/v0.2.3) · [反馈问题](https://github.com/1873412297-art/mihon-w/issues)
+**[下载 Windows 版](https://github.com/1873412297-art/mihon-w/releases/latest)** · [版本说明](https://github.com/1873412297-art/mihon-w/releases/tag/v0.2.4) · [反馈问题](https://github.com/1873412297-art/mihon-w/issues)
 
 </div>
 
 ## 下载与安装
 
-当前版本：**0.2.3**。面向 **Windows 10 22H2 / Windows 11，x64**，发行包已内置运行环境，无需另装 Java。
+当前版本：**0.2.4**。面向 **Windows 10 22H2 / Windows 11，x64**，发行包已内置运行环境，无需另装 Java。
 
 | 下载 | 适用方式 |
 | --- | --- |
-| **[EXE 安装包](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.3/MihonW-0.2.3.exe)** | 推荐使用，下载后按向导安装 |
-| [MSI 安装包](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.3/MihonW-0.2.3.msi) | 需要 MSI 安装方式时使用 |
-| [便携 ZIP](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.3/MihonW-0.2.3-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `MihonW.exe` |
-| [SHA-256 校验文件](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.3/SHA256SUMS.txt) | 校验下载文件的完整性 |
+| **[EXE 安装包](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.4/MihonW-0.2.4.exe)** | 推荐使用，下载后按向导安装 |
+| [MSI 安装包](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.4/MihonW-0.2.4.msi) | 需要 MSI 安装方式时使用 |
+| [便携 ZIP](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.4/MihonW-0.2.4-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `MihonW.exe` |
+| [SHA-256 校验文件](https://github.com/1873412297-art/mihon-w/releases/download/v0.2.4/SHA256SUMS.txt) | 校验下载文件的完整性 |
+
+**干净发行包**：不预装图源或扩展仓库，不包含开发者的书架、账号、Cookie、阅读记录或个人设置。首次使用请自行添加仓库或安装扩展；升级会继续使用你本机已有的数据。
 
 安装版默认将数据保存在 `%APPDATA%\MihonW`；便携版保存在 `MihonW.exe` 同目录下的 `data` 文件夹。迁移便携版时请一并保留该文件夹。
 
@@ -48,14 +50,14 @@
 3. **阅读在线内容**：在浏览页安装扩展包，再选择图源。安装入口支持 `.mext`，也可尝试转换受支持的扩展 `.apk`。
 4. **保留阅读数据**：使用备份功能定期导出。备份不包含已下载的漫画图片。
 
-## 0.2.3 更新
+## 0.2.4 更新
 
-- 修复图源宿主丢失、网页地址获取失败和扩展网络请求身份异常。
-- 修复部分旧扩展缺少域名声明造成的访问失败。
-- 修复 Windows 沙箱内临时文件创建失败，恢复相关筛选缓存与解压功能。
-- 区分网站封锁、网页验证和登录错误，显示中文原因及出错域名。
+- 首次启动不再自动填入扩展仓库，也不会主动获取预设仓库的图源列表。
+- 删除最后一个仓库后，空列表会保持，不再自动恢复默认仓库。
+- 保留用户已保存的仓库配置。
+- EXE、MSI 和便携 ZIP 打包前统一检查，发现个人数据目录、已安装扩展或偏好文件时终止打包。
 
-本次发行已通过 52 项针对性回归测试，并完成本机安装升级验证。详见[发布说明](https://github.com/1873412297-art/mihon-w/releases/tag/v0.2.3)和[修复验证记录](docs/superpowers/evidence/2026-09-15-extension-temp-and-site-block.md)。
+详见[本版发布说明](https://github.com/1873412297-art/mihon-w/releases/tag/v0.2.4)。此前的图源兼容修复见 [0.2.3 发布说明](https://github.com/1873412297-art/mihon-w/releases/tag/v0.2.3)。
 
 ## 当前限制
 
@@ -63,7 +65,7 @@ MihonW 仍在持续开发，桌面端尚未覆盖 Mihon 的全部功能。
 
 - **扩展兼容性因图源而异**：扩展通过桌面兼容层运行；能够安装或加载，并不代表该图源的所有功能都可用。
 - **网站验证与封锁**：登录或验证可以使用程序提供的网页入口；能否通过取决于网站。0.2.3 测试时，EZmanga 的网页和 API 均返回 403 封锁，本版本能识别并说明该情况，无法解除网站封锁。
-- **手动更新**：0.2.3 内置更新检查仍指向旧的默认仓库，请从[本仓库 Releases](https://github.com/1873412297-art/mihon-w/releases/latest)下载后续版本。
+- **手动更新**：0.2.4 内置更新检查仍指向旧的默认仓库，请从[本仓库 Releases](https://github.com/1873412297-art/mihon-w/releases/latest)下载后续版本。
 - **备份与跟踪服务**：部分设置不会迁移，生产账户的完整登录与同步流程仍需继续验证。请查看[备份兼容范围](docs/superpowers/evidence/suwayomi-backup-compatibility.md)和[功能覆盖说明](docs/superpowers/evidence/suwayomi-feature-coverage.md)。
 
 ## 反馈与开发
