@@ -168,6 +168,13 @@ internal class WindowsAppContainerLauncher(
                     }
                 }
                 envValues.putAll(extraEnvironment)
+                // jpackage restarts itself unless its own app directory is already on PATH.
+                // That extra process violates our single-process Job and authenticated peer PID.
+                // Use only the staged, read-only application directory, never the parent's PATH.
+                val packagedAppDirectory = stagedRuntime.resolve("app")
+                if (packagedAppDirectory.resolve("${sandboxExecutable.nameWithoutExtension}.cfg").isFile) {
+                    envValues["PATH"] = packagedAppDirectory.absolutePath
+                }
                 envValues["TEMP"] = directory.absolutePath
                 envValues["TMP"] = directory.absolutePath
                 envValues["USERPROFILE"] = directory.absolutePath
