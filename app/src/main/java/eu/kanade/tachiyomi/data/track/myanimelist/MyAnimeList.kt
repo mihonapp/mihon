@@ -144,6 +144,11 @@ class MyAnimeList(id: Long) : BaseTracker(id, "MyAnimeList"), DeletableTracker {
         }
     }
 
+    override suspend fun updateUserConfig() {
+        val username = api.getCurrentUser()
+        saveDisplayUsername(username)
+    }
+
     override fun logout() {
         super.logout()
         trackPreferences.trackToken(this).delete()
