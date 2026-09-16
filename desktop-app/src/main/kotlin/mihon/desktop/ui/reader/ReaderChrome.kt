@@ -134,6 +134,7 @@ internal fun ReaderChrome(
             Surface(
                 modifier = Modifier.fillMaxWidth().then(controlsHover).testTag("reader-top-bar"),
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
+                contentColor = MaterialTheme.colorScheme.onSurface,
                 tonalElevation = 3.dp,
             ) {
                 Row(
@@ -308,6 +309,7 @@ internal fun ReaderChrome(
             Surface(
                 modifier = Modifier.fillMaxWidth().then(controlsHover).testTag("reader-bottom-bar"),
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
+                contentColor = MaterialTheme.colorScheme.onSurface,
                 tonalElevation = 3.dp,
             ) {
                 Column(
