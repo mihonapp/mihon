@@ -1,6 +1,6 @@
 # NHentai image CDN redirect repair
 
-Branch: `codex/fix-download-host-recovery`. Intended installed version: 0.2.11.
+Branch: `codex/fix-download-host-recovery`. Verified installed version: 0.2.11.
 
 ## Reproduction and root cause
 
@@ -53,3 +53,40 @@ classes and takes the profile lock. It retries a selected original queue entry,
 registers its offline assets in the database, and opens it using a reader with
 no online source or network supplied. It is explicitly invoked, never part of
 the default automated test suite.
+
+## Installed artifact and original profile verification
+
+`:desktop-app:packageMsi` and `verifyCleanDistribution` passed. The MSI is
+`desktop-app/build/compose/binaries/main/msi/mihondesk-0.2.11.msi`, SHA-256
+`D4A2506DB5CD7695AB2DCC8A8FE707934BE77F2C6D1788DD3EEB066DABF41DC3`.
+Windows Installer completed the normal upgrade with exit code 0. Before retrying
+the task, the original preferences, queue, and database hashes still matched
+their pre-install backups.
+
+The installed application at `C:\Users\18734\AppData\Local\mihondesk` reports
+version 0.2.11, revision `6854210df544db20bb70d0aaed7c39871f33cb01`, dirty=false.
+Its desktop JAR matches the packaged JAR, SHA-256
+`715E8D73ED40B00E1B51A896EDBF8041B6100D8DCF2EC938E37D7C69E28B82BD`.
+
+The manual helper loaded the installed application JAR and used the installed
+EXE as its isolated extension host. It retried chapter 12 in the original user
+profile, with its real download directory and database mutation port:
+
+```text
+INSTALLED_RETRY status=COMPLETED ready=48 bytes=13563047 error=null
+OFFLINE_READER page=1 decoded=true
+OFFLINE_READER page=24 decoded=true
+OFFLINE_READER page=48 decoded=true
+```
+
+The first manual invocation completed the download, but its separate reader
+check lacked the packaged launcher's Skiko native-library option. Repeating the
+helper with `-Dskiko.library.path=<installed>/app` from `mihondesk.cfg` verified
+all three offline pages successfully, exit code 0. No production reader change
+was needed. The original queue now records chapter 12 as COMPLETED, 48/48 READY,
+with no error; the existing chapter 9 remains COMPLETED, 145/145 READY.
+
+Local execution logs and profile backups are under the ignored
+`build/cdn-redirect-evidence/` directory. This evidence covers the reported
+NHentai task and scoped redirect compatibility; it does not establish that
+every extension or future CDN migration works.
