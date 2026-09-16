@@ -480,23 +480,18 @@ private object UniFileAsStringSerializer : KSerializer<UniFile?> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("UniFile", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: UniFile?) {
-        if (value == null) {
-            encoder.encodeString("")
+        return if (value == null) {
+            encoder.encodeNull()
         } else {
             encoder.encodeString(value.uri.toString())
         }
     }
 
     override fun deserialize(decoder: Decoder): UniFile? {
-        val uriString = decoder.decodeString()
-        return if (uriString.isNotEmpty()) {
-            try {
-                UniFile.fromUri(Injekt.get<Context>(), uriString.toUri())
-            } catch (_: Throwable) {
-                null
-            }
+        return if (decoder.decodeNotNullMark()) {
+            UniFile.fromUri(Injekt.get<Context>(), decoder.decodeString().toUri())
         } else {
-            null
+            decoder.decodeNull()
         }
     }
 }
