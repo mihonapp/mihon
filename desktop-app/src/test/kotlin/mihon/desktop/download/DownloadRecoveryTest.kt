@@ -13,6 +13,62 @@ import java.util.Collections
 
 class DownloadRecoveryTest {
     @Test
+    fun `missing completed chapter becomes retryable on startup`(@TempDir dir: Path) =
+        restoreCompletedChapter(dir, missingPages = 2)
+
+    @Test
+    fun `retry of incomplete completed chapter reuses surviving pages`(@TempDir dir: Path) =
+        restoreCompletedChapter(dir, missingPages = 1)
+
+    @Test
+    fun `intact completed chapter stays completed on startup`(@TempDir dir: Path) =
+        restoreCompletedChapter(dir, missingPages = 0)
+
+    private fun restoreCompletedChapter(dir: Path, missingPages: Int): Unit = runBlocking {
+        val bytes = validDownloadImage()
+        val requests = java.util.concurrent.atomic.AtomicInteger()
+        val server = com.sun.net.httpserver.HttpServer.create(java.net.InetSocketAddress("127.0.0.1", 0), 0)
+        server.createContext("/image") { exchange ->
+            requests.incrementAndGet()
+            exchange.sendResponseHeaders(200, bytes.size.toLong())
+            exchange.responseBody.use { it.write(bytes) }
+        }
+        server.start()
+        val disk = DownloadDiskProvider(dir.resolve("pages"))
+        val chapterDir = disk.getChapterDir(1, "Manga", "Chapter 1")
+        repeat(2 - missingPages) { disk.savePage(chapterDir, it, bytes) }
+        val url = "http://127.0.0.1:${server.address.port}/image"
+        val store = DownloadStore(dir.resolve("queue.json"))
+        store.save(
+            listOf(
+                item(1).copy(
+                    status = DownloadStatus.COMPLETED,
+                    progress = 1f,
+                    bytesDownloaded = bytes.size * 2L,
+                    pages = List(2) { DownloadPage(it, url, imageUrl = url, status = PageStatus.READY, progress = 1f) },
+                ),
+            ),
+        )
+        val network = DesktopNetworkHelper()
+        val downloader = DesktopDownloader(store, disk, network)
+        try {
+            if (missingPages > 0) {
+                downloader.queueState.value.single().status shouldBe DownloadStatus.ERROR
+                store.restore().single().status shouldBe DownloadStatus.ERROR
+                downloader.retry(1)
+                withTimeout(5_000) { while (downloader.isRunning.value) delay(10) }
+            }
+            downloader.queueState.value.single().status shouldBe DownloadStatus.COMPLETED
+            requests.get() shouldBe missingPages
+            repeat(2) { Files.readAllBytes(disk.getPageFile(chapterDir, it)).toList() shouldBe bytes.toList() }
+        } finally {
+            downloader.close()
+            network.close()
+            server.stop(0)
+        }
+    }
+
+    @Test
     fun `database failure keeps new pages retryable and previous chapter intact`(@TempDir dir: Path) {
         mihon.desktop.library.db.DesktopLibraryDatabaseFactory.open(dir.resolve("library.db")).use { repository ->
             val mangaId = repository.insertManga(

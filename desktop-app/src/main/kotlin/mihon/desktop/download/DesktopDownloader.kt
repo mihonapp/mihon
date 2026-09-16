@@ -84,7 +84,39 @@ class DesktopDownloader(
 
     init {
         val restored = store.restore()
-        _queueState.value = restored
+        _queueState.value = restored.map(::recoverMissingFiles)
+        if (_queueState.value != restored) persistQueue()
+    }
+
+    /** A persisted completion marker cannot outlive the files it describes. */
+    private fun recoverMissingFiles(download: DesktopDownload): DesktopDownload {
+        if (download.status != DownloadStatus.COMPLETED) return download
+        val directory = diskProvider.getChapterDir(download.sourceId, download.mangaTitle, download.chapterName)
+        val present = download.pages.mapNotNull { page ->
+            val path = diskProvider.getPageFile(directory, page.index)
+            runCatching { Files.size(path).takeIf { Files.isRegularFile(path) && it > 0L } }
+                .getOrNull()?.let { page.index to it }
+        }.toMap()
+        if (Files.isDirectory(directory) && present.size == download.pages.size) return download
+        val message = "Downloaded files are missing. Retry to download them again."
+        return download.copy(
+            status = DownloadStatus.ERROR,
+            error = message,
+            progress = if (download.pages.isEmpty()) 0f else present.size.toFloat() / download.pages.size,
+            bytesDownloaded = present.values.sum(),
+            pages = download.pages.map { page ->
+                if (page.index in present) {
+                    page
+                } else {
+                    page.copy(
+                        status = PageStatus.ERROR,
+                        progress = 0f,
+                        bytesWritten = 0L,
+                        error = message,
+                    )
+                }
+            },
+        )
     }
 
     suspend fun enqueue(
@@ -95,15 +127,21 @@ class DesktopDownloader(
         autoStart: Boolean = true,
     ) {
         queueMutex.withLock {
-            val current = _queueState.value
-            val newItems = mutableListOf<DesktopDownload>()
+            val current = _queueState.value.toMutableList()
 
             for (chapter in chapters) {
-                // Deduplicate: check if already in queue or already downloaded
-                if (current.any { it.chapterId == chapter.id }) continue
+                val existingIndex = current.indexOfFirst { it.chapterId == chapter.id }
+                if (existingIndex >= 0) {
+                    val existing = current[existingIndex]
+                    val recovered = recoverMissingFiles(existing)
+                    if (recovered != existing || existing.status == DownloadStatus.ERROR) {
+                        current[existingIndex] = recovered.copy(status = DownloadStatus.QUEUED, error = null)
+                    }
+                    continue
+                }
                 if (diskProvider.isChapterDownloaded(sourceId, mangaTitle, chapter.name)) continue
 
-                newItems.add(
+                current.add(
                     DesktopDownload(
                         chapterId = chapter.id,
                         mangaId = mangaId,
@@ -116,9 +154,8 @@ class DesktopDownloader(
                 )
             }
 
-            if (newItems.isNotEmpty()) {
-                val updated = current + newItems
-                _queueState.value = updated
+            if (current != _queueState.value) {
+                _queueState.value = current
                 persistQueue()
             }
         }
@@ -176,7 +213,15 @@ class DesktopDownloader(
     ) = checkAndDownloadAhead(manga.sourceId, manga.id, manga.title, currentChapter, allChapters, count, autoStart)
 
     fun deleteDownloadedChapter(sourceId: Long, mangaTitle: String, chapterName: String): Boolean {
-        return diskProvider.deleteChapter(sourceId, mangaTitle, chapterName)
+        if (!diskProvider.deleteChapter(sourceId, mangaTitle, chapterName)) return false
+        _queueState.update { queue ->
+            queue.filterNot {
+                it.status == DownloadStatus.COMPLETED && it.sourceId == sourceId &&
+                    it.mangaTitle == mangaTitle && it.chapterName == chapterName
+            }
+        }
+        persistQueue()
+        return true
     }
 
     fun deleteDownloadedChapter(manga: LibraryManga, chapter: LibraryChapter): Boolean =

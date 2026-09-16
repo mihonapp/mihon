@@ -712,7 +712,7 @@ class LibraryPresenter(
         val chapters = detailState.value.allChapters.filter { it.id in chapterIds }
         if (chapters.isEmpty()) return
         chapters.forEach { ch ->
-            downloader?.diskProvider?.deleteChapter(manga.sourceId, manga.title, ch.name)
+            downloader?.deleteDownloadedChapter(manga, ch)
         }
         detailRetryRequest.value = System.currentTimeMillis()
     }
@@ -764,7 +764,7 @@ class LibraryPresenter(
     fun deleteChapterDownload(chapterId: Long) {
         val manga = detailState.value.manga ?: return
         val ch = detailState.value.allChapters.find { it.id == chapterId } ?: return
-        downloader?.diskProvider?.deleteChapter(manga.sourceId, manga.title, ch.name)
+        downloader?.deleteDownloadedChapter(manga, ch)
         detailRetryRequest.value = System.currentTimeMillis()
     }
 

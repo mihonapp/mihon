@@ -37,6 +37,83 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
 class DesktopDownloaderTest {
+    @Test
+    fun `deleting a completed download removes its stale queue entry`(@TempDir tempDir: Path): Unit = runBlocking {
+        val disk = DownloadDiskProvider(tempDir.resolve("downloads"))
+        val manga = createManga()
+        val chapter = createChapter()
+        val store = DownloadStore(tempDir.resolve("queue.json"))
+        val bytes = validDownloadImage()
+        disk.savePage(disk.getChapterDir(manga.sourceId, manga.title, chapter.name), 0, bytes)
+        store.save(
+            listOf(
+                DesktopDownload(
+                    chapter.id,
+                    manga.id,
+                    manga.sourceId,
+                    manga.title,
+                    chapter.name,
+                    chapter.url,
+                    pages = listOf(DownloadPage(0, "/image", status = PageStatus.READY)),
+                    status = DownloadStatus.COMPLETED,
+                ),
+            ),
+        )
+        DesktopDownloader(store, disk, networkHelper).use { downloader ->
+            downloader.deleteDownloadedChapter(manga, chapter) shouldBe true
+            downloader.queueState.value shouldBe emptyList()
+            store.restore() shouldBe emptyList()
+            downloader.enqueue(manga, listOf(chapter), autoStart = false)
+            downloader.queueState.value.single().status shouldBe DownloadStatus.QUEUED
+        }
+    }
+
+    @Test
+    fun `enqueue redownloads a completed chapter removed after startup`(@TempDir tempDir: Path) =
+        redownloadMissingChapter(tempDir, missingBeforeStartup = false)
+
+    @Test
+    fun `enqueue resumes a missing completed chapter recovered at startup`(@TempDir tempDir: Path) =
+        redownloadMissingChapter(tempDir, missingBeforeStartup = true)
+
+    private fun redownloadMissingChapter(tempDir: Path, missingBeforeStartup: Boolean): Unit = runBlocking {
+        val disk = DownloadDiskProvider(tempDir.resolve("downloads"))
+        val manga = createManga()
+        val chapter = createChapter()
+        val store = DownloadStore(tempDir.resolve("queue.json"))
+        val bytes = validDownloadImage()
+        val requests = AtomicInteger()
+        server.createContext("/replacement") { exchange ->
+            requests.incrementAndGet()
+            exchange.sendResponseHeaders(200, bytes.size.toLong())
+            exchange.responseBody.use { it.write(bytes) }
+        }
+        val url = "http://127.0.0.1:$serverPort/replacement"
+        disk.savePage(disk.getChapterDir(manga.sourceId, manga.title, chapter.name), 0, bytes)
+        store.save(
+            listOf(
+                DesktopDownload(
+                    chapter.id,
+                    manga.id,
+                    manga.sourceId,
+                    manga.title,
+                    chapter.name,
+                    chapter.url,
+                    pages = listOf(DownloadPage(0, url, imageUrl = url, status = PageStatus.READY)),
+                    status = DownloadStatus.COMPLETED,
+                ),
+            ),
+        )
+        if (missingBeforeStartup) disk.deleteChapter(manga.sourceId, manga.title, chapter.name) shouldBe true
+        DesktopDownloader(store, disk, networkHelper).use { downloader ->
+            if (!missingBeforeStartup) disk.deleteChapter(manga.sourceId, manga.title, chapter.name) shouldBe true
+            downloader.enqueue(manga, listOf(chapter))
+            withTimeout(5_000) { while (downloader.isRunning.value) delay(10) }
+            requests.get() shouldBe 1
+            downloader.queueState.value.single().status shouldBe DownloadStatus.COMPLETED
+            disk.isChapterDownloaded(manga.sourceId, manga.title, chapter.name) shouldBe true
+        }
+    }
 
     @Test
     fun `failed page does not prevent later pages from downloading`(@TempDir tempDir: Path): Unit = runBlocking {
