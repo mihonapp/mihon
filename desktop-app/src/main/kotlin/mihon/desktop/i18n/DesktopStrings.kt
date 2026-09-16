@@ -635,6 +635,10 @@ interface DesktopStrings {
     // Settings & Diagnostics & Reports
     val settingsDownloadCustomPath: String
     val settingsDownloadCustomPathPlaceholder: String
+    val settingsDownloadChooseFolder: String
+    val settingsDownloadUseDefault: String
+    fun settingsDownloadActivePath(path: String): String
+    val settingsDownloadRestartRequired: String
     val settingsDownloadAheadTitle: String
     val settingsDownloadAheadDesc: String
     val settingsDownloadAheadDisabled: String
@@ -1361,6 +1365,10 @@ object EnglishStrings : DesktopStrings {
     // Settings & Diagnostics & Reports
     override val settingsDownloadCustomPath = "Custom Download Path"
     override val settingsDownloadCustomPathPlaceholder = "Leave blank for default (media/downloads)"
+    override val settingsDownloadChooseFolder = "Choose Folder"
+    override val settingsDownloadUseDefault = "Use Default"
+    override fun settingsDownloadActivePath(path: String) = "Currently used: $path"
+    override val settingsDownloadRestartRequired = "Path changes take effect after restarting MihonW."
     override val settingsDownloadAheadTitle = "Download Ahead While Reading"
     override val settingsDownloadAheadDesc = "Automatically download the next unread chapters while reading."
     override val settingsDownloadAheadDisabled = "Disabled"
@@ -2089,6 +2097,10 @@ object SimplifiedChineseStrings : DesktopStrings {
     // Settings & Diagnostics & Reports
     override val settingsDownloadCustomPath = "自定义下载路径"
     override val settingsDownloadCustomPathPlaceholder = "留空则使用默认路径 (media/downloads)"
+    override val settingsDownloadChooseFolder = "选择文件夹"
+    override val settingsDownloadUseDefault = "恢复默认"
+    override fun settingsDownloadActivePath(path: String) = "当前使用：$path"
+    override val settingsDownloadRestartRequired = "路径更改会在重启 MihonW 后生效。"
     override val settingsDownloadAheadTitle = "阅读时自动预下载"
     override val settingsDownloadAheadDesc = "在阅读当前章节时，自动在后台下载后续未读章节。"
     override val settingsDownloadAheadDisabled = "已禁用"
@@ -2813,6 +2825,10 @@ object TraditionalChineseStrings : DesktopStrings {
     // Settings & Diagnostics & Reports
     override val settingsDownloadCustomPath = "自訂下載路徑"
     override val settingsDownloadCustomPathPlaceholder = "留空則使用預設路徑 (media/downloads)"
+    override val settingsDownloadChooseFolder = "選擇資料夾"
+    override val settingsDownloadUseDefault = "恢復預設"
+    override fun settingsDownloadActivePath(path: String) = "目前使用：$path"
+    override val settingsDownloadRestartRequired = "路徑變更會在重新啟動 MihonW 後生效。"
     override val settingsDownloadAheadTitle = "閱讀時自動預先下載"
     override val settingsDownloadAheadDesc = "在閱讀當前章節時，自動在背景下載後續未讀章節。"
     override val settingsDownloadAheadDisabled = "已停用"

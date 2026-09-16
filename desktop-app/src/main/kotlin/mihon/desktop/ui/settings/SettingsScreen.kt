@@ -85,6 +85,7 @@ import mihon.desktop.ui.track.TrackerLoginDialog
 import mihon.reader.model.ReadingMode
 import mihon.reader.model.ScaleMode
 import java.nio.file.Path
+import javax.swing.JFileChooser
 
 enum class SettingsSection(val label: String) {
     General("General"),
@@ -243,7 +244,11 @@ fun SettingsScreen(
                     notifyPreferencesChanged,
                 )
                 SettingsSection.Reader -> ReaderSettingsPane(readerSettingsStore)
-                SettingsSection.Downloads -> DownloadsSettingsPane(preferenceStore, notifyPreferencesChanged)
+                SettingsSection.Downloads -> DownloadsSettingsPane(
+                    preferenceStore = preferenceStore,
+                    onPreferencesChanged = notifyPreferencesChanged,
+                    downloadsDir = downloadsDir,
+                )
                 SettingsSection.Tracking -> TrackingSettingsPane(trackerManager)
                 SettingsSection.Backup -> BackupSettingsPane(
                     preferenceStore = preferenceStore,
@@ -1206,6 +1211,7 @@ private fun ReaderSettingsPane(readerSettingsStore: DesktopReaderSettingsStore) 
 private fun DownloadsSettingsPane(
     preferenceStore: DesktopPreferenceStore,
     onPreferencesChanged: ((DesktopPreferences) -> Unit)?,
+    downloadsDir: Path?,
 ) {
     val strings = LocalStrings.current
     var preferences by remember { mutableStateOf(preferenceStore.load()) }
@@ -1225,26 +1231,64 @@ private fun DownloadsSettingsPane(
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(strings.settingsDownloadLocation, fontWeight = FontWeight.Bold)
                 Text(
-                    text = if (preferences.downloadStoragePath.isNotBlank()) {
-                        preferences.downloadStoragePath
-                    } else {
-                        strings.settingsDefaultStorageFolder
-                    },
+                    text = downloadsDir?.let { strings.settingsDownloadActivePath(it.toString()) }
+                        ?: strings.settingsDefaultStorageFolder,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                OutlinedTextField(
-                    value = preferences.downloadStoragePath,
-                    onValueChange = { path ->
-                        val updated = preferences.copy(downloadStoragePath = path)
-                        preferences = updated
-                        preferenceStore.save(updated)
-                        onPreferencesChanged?.invoke(updated)
-                    },
-                    label = { Text(strings.settingsDownloadCustomPath) },
-                    placeholder = { Text(strings.settingsDownloadCustomPathPlaceholder) },
-                    modifier = Modifier.fillMaxWidth().testTag("download-storage-input"),
-                    singleLine = true,
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    OutlinedTextField(
+                        value = preferences.downloadStoragePath,
+                        onValueChange = { path ->
+                            val updated = preferences.copy(downloadStoragePath = path)
+                            preferences = updated
+                            preferenceStore.save(updated)
+                            onPreferencesChanged?.invoke(updated)
+                        },
+                        label = { Text(strings.settingsDownloadCustomPath) },
+                        placeholder = { Text(strings.settingsDownloadCustomPathPlaceholder) },
+                        modifier = Modifier.weight(1f).testTag("download-storage-input"),
+                        singleLine = true,
+                    )
+                    OutlinedButton(
+                        onClick = {
+                            chooseDownloadDirectory(
+                                initialPath = preferences.downloadStoragePath,
+                                activePath = downloadsDir,
+                                title = strings.settingsDownloadChooseFolder,
+                            )?.let { selected ->
+                                val updated = preferences.copy(downloadStoragePath = selected.toString())
+                                preferences = updated
+                                preferenceStore.save(updated)
+                                onPreferencesChanged?.invoke(updated)
+                            }
+                        },
+                        modifier = Modifier.testTag("download-storage-choose"),
+                    ) {
+                        Text(strings.settingsDownloadChooseFolder)
+                    }
+                }
+                if (preferences.downloadStoragePath.isNotBlank()) {
+                    TextButton(
+                        onClick = {
+                            val updated = preferences.copy(downloadStoragePath = "")
+                            preferences = updated
+                            preferenceStore.save(updated)
+                            onPreferencesChanged?.invoke(updated)
+                        },
+                        modifier = Modifier.testTag("download-storage-default"),
+                    ) {
+                        Text(strings.settingsDownloadUseDefault)
+                    }
+                }
+                Text(
+                    strings.settingsDownloadRestartRequired,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -1379,6 +1423,27 @@ private fun DownloadsSettingsPane(
             }
         }
     }
+}
+
+private fun chooseDownloadDirectory(initialPath: String, activePath: Path?, title: String): Path? {
+    val initial = runCatching {
+        initialPath.takeIf(String::isNotBlank)?.let(Path::of)
+    }.getOrNull() ?: activePath
+    val chooser = JFileChooser().apply {
+        dialogTitle = title
+        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        isAcceptAllFileFilterUsed = false
+        initial?.toFile()?.let { selected ->
+            currentDirectory = when {
+                selected.isDirectory -> selected
+                selected.parentFile?.isDirectory == true -> selected.parentFile
+                else -> null
+            }
+        }
+    }
+    if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) return null
+    val selected = chooser.selectedFile?.toPath() ?: return null
+    return selected.toAbsolutePath().normalize().takeIf { chooser.selectedFile.isDirectory }
 }
 
 @Composable

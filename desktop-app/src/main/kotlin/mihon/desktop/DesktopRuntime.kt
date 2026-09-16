@@ -212,6 +212,17 @@ class DesktopRuntime(
     }
 }
 
+internal fun resolveDownloadStoragePath(dataRoot: Path, configuredPath: String): Path? {
+    val trimmed = configuredPath.trim()
+    if (trimmed.isEmpty()) return null
+    return runCatching {
+        val selected = Path.of(trimmed)
+        (if (selected.isAbsolute) selected else dataRoot.resolve(selected))
+            .toAbsolutePath()
+            .normalize()
+    }.getOrNull()
+}
+
 object DesktopRuntimeFactory {
     fun create(
         args: Array<String>,
@@ -255,8 +266,25 @@ object DesktopRuntimeFactory {
                 enabledProvider = { preferences.load().desktopNotificationsEnabled },
                 hideContentProvider = { preferences.load().desktopNotificationsHideContent },
             )
-            val downloadsDir = directories.root.resolve("media").resolve("downloads").toAbsolutePath().normalize()
-            val downloadDiskProvider = mihon.desktop.download.DownloadDiskProvider(downloadsDir)
+            val defaultDownloadsDir = directories.root.resolve("media").resolve("downloads")
+                .toAbsolutePath()
+                .normalize()
+            val configuredDownloadsDir = resolveDownloadStoragePath(
+                dataRoot = directories.root,
+                configuredPath = preferences.load().downloadStoragePath,
+            ) ?: defaultDownloadsDir
+            val downloadDiskProvider = runCatching {
+                mihon.desktop.download.DownloadDiskProvider(
+                    downloadsDir = configuredDownloadsDir,
+                    legacyDownloadsDirs = listOf(defaultDownloadsDir).filterNot { it == configuredDownloadsDir },
+                )
+            }.getOrElse { error ->
+                System.err.println(
+                    "Configured download directory is unavailable ($configuredDownloadsDir): ${error.message}. " +
+                        "Using $defaultDownloadsDir.",
+                )
+                mihon.desktop.download.DownloadDiskProvider(defaultDownloadsDir)
+            }
             val downloadStore = mihon.desktop.download.DownloadStore(directories.root.resolve("downloads.json"))
             val cookieStore = mihon.desktop.extension.DesktopCookieStore(directories.root.resolve("cookies.json"))
             val networkSettings = mihon.desktop.extension.DesktopNetworkSettingsStore(preferences)

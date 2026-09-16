@@ -16,7 +16,7 @@ class DownloadCacheCleaner(
     private val diskProvider: DownloadDiskProvider,
     private val coordinatedDelete: ((MangaRecord, LibraryChapter) -> Boolean)? = null,
 ) {
-    fun calculateDownloadSize(): Long = Companion.calculateDownloadSize(diskProvider.downloadsDir)
+    fun calculateDownloadSize(): Long = diskProvider.downloadRoots.sumOf(Companion::calculateDownloadSize)
 
     fun deleteReadChapters(): CleanReport =
         Companion.deleteReadChapters(repository, diskProvider, coordinatedDelete)
@@ -76,8 +76,8 @@ class DownloadCacheCleaner(
                 val chapters = repository.chapterSnapshot(manga.id)
                 for (ch in chapters) {
                     if (ch.read) {
-                        val chapterDir = diskProvider.getChapterDir(manga.sourceId, manga.title, ch.name)
-                        if (Files.exists(chapterDir)) {
+                        val chapterDir = diskProvider.findChapterDir(manga.sourceId, manga.title, ch.name)
+                        if (chapterDir != null && Files.exists(chapterDir)) {
                             val size = getDirectorySize(chapterDir)
                             val success = coordinatedDelete?.invoke(manga, ch)
                                 ?: diskProvider.deleteChapter(manga.sourceId, manga.title, ch.name)

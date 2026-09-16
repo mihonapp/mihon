@@ -25,6 +25,32 @@ import java.nio.file.Path
 class DownloadDiskProviderTest {
 
     @Test
+    fun `custom root still discovers completed chapters in the previous default root`(@TempDir tempDir: Path) {
+        val oldRoot = tempDir.resolve("old-downloads")
+        val activeRoot = tempDir.resolve("new-downloads")
+        val sourceId = 42L
+        val mangaTitle = "Moved Manga"
+        val chapterName = "Chapter 1"
+        val oldProvider = DownloadDiskProvider(oldRoot)
+        val temporary = oldProvider.getTempChapterDir(sourceId, mangaTitle, chapterName)
+        oldProvider.savePage(temporary, 0, validDownloadImage())
+        val published = oldProvider.finalizeChapter(
+            sourceId = sourceId,
+            mangaId = 100L,
+            chapterId = 200L,
+            mangaTitle = mangaTitle,
+            chapterName = chapterName,
+            totalPages = 1,
+        )
+
+        val provider = DownloadDiskProvider(activeRoot, legacyDownloadsDirs = listOf(oldRoot))
+
+        provider.isChapterDownloaded(sourceId, mangaTitle, chapterName) shouldBe true
+        provider.findChapterDir(sourceId, mangaTitle, chapterName) shouldBe published
+        provider.getTempChapterDir(sourceId, mangaTitle, "Chapter 2").startsWith(activeRoot) shouldBe true
+    }
+
+    @Test
     fun `sanitizes illegal Windows characters in file and directory names`(@TempDir tempDir: Path) {
         val provider = DownloadDiskProvider(tempDir)
         val sanitized = provider.sanitizeFileName("Manga: Volume 1 / Part 2? *Special* <Final>")

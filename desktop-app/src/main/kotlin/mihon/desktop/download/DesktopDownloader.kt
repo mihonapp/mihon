@@ -303,8 +303,8 @@ class DesktopDownloader(
         val effectiveMangaTitle = saved?.mangaTitle ?: mangaTitle
         val effectiveChapterId = saved?.chapterId ?: chapterId
         val effectiveChapterName = saved?.chapterName ?: chapterName
-        val chapterDir = diskProvider.getChapterDir(effectiveSourceId, effectiveMangaTitle, effectiveChapterName)
-        val existed = Files.exists(chapterDir)
+        val chapterDir = diskProvider.findChapterDir(effectiveSourceId, effectiveMangaTitle, effectiveChapterName)
+        val existed = chapterDir != null && Files.exists(chapterDir)
         if (existed &&
             !diskProvider.deleteChapter(effectiveSourceId, effectiveMangaTitle, effectiveChapterName)
         ) {
@@ -554,7 +554,8 @@ class DesktopDownloader(
         diskProvider.cleanPartialPages(tempDir)
         // A previous run may have published the images before database registration failed.
         // Only reuse pages the saved queue marked ready, and validate their bytes again.
-        val publishedDir = diskProvider.getChapterDir(download.sourceId, download.mangaTitle, download.chapterName)
+        val publishedDir = diskProvider.findChapterDir(download.sourceId, download.mangaTitle, download.chapterName)
+            ?: diskProvider.getChapterDir(download.sourceId, download.mangaTitle, download.chapterName)
         pages.filter { it.status == PageStatus.READY }.forEach { page ->
             val temporaryPage = diskProvider.getPageFile(tempDir, page.index)
             val publishedPage = diskProvider.getPageFile(publishedDir, page.index)

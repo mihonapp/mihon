@@ -130,6 +130,7 @@ class SettingsScreenTest {
         val readerSettingsStore = DesktopReaderSettingsStore(prefStore)
         val trackerStore = mihon.desktop.track.DesktopTrackerStore(prefStore)
         val trackerManager = mihon.desktop.track.DesktopTrackerManager(store = trackerStore)
+        val activeDownloads = tempDir.resolve("active-downloads")
 
         setContent {
             Box(modifier = Modifier.requiredSize(800.dp, 600.dp)) {
@@ -138,6 +139,7 @@ class SettingsScreenTest {
                     readerSettingsStore = readerSettingsStore,
                     diagnosticService = null,
                     trackerManager = trackerManager,
+                    downloadsDir = activeDownloads,
                 )
             }
         }
@@ -145,11 +147,13 @@ class SettingsScreenTest {
         // Switch to Downloads pane
         onNodeWithTag("settings-section-Downloads").performClick()
         onNodeWithTag("download-storage-input").assertExists()
+        onNodeWithTag("download-storage-choose").assertExists()
+        onNodeWithText("Currently used: $activeDownloads").assertExists()
         onNodeWithTag("parallel-downloads-5").performClick()
         prefStore.load().downloadParallelCount shouldBe 5
         onNodeWithTag("parallel-pages-3").performClick()
         prefStore.load().downloadPageParallelCount shouldBe 3
-        onNodeWithTag("download-ahead-2").performClick()
+        onNodeWithTag("download-ahead-2").performScrollTo().performClick()
         prefStore.load().downloadAhead shouldBe 2
         onNodeWithTag("delete-downloaded-read-switch").performScrollTo().performClick()
         prefStore.load().deleteDownloadedRead shouldBe true

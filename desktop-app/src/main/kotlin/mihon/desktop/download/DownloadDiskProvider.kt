@@ -39,14 +39,23 @@ internal data class DownloadChapterInspection(
 }
 
 class DownloadDiskProvider(
-    val downloadsDir: Path,
+    downloadsDir: Path,
+    legacyDownloadsDirs: List<Path> = emptyList(),
     private val minDiskSpaceBytes: Long = 50L * 1024 * 1024, // 50 MB safety margin
 ) {
     private val manifestJson = Json { ignoreUnknownKeys = true }
+    val downloadsDir: Path = downloadsDir.toAbsolutePath().normalize()
+    val downloadRoots: List<Path> = buildList {
+        add(this@DownloadDiskProvider.downloadsDir)
+        legacyDownloadsDirs.forEach { add(it.toAbsolutePath().normalize()) }
+    }.distinct()
 
     init {
         if (!Files.exists(downloadsDir)) {
             Files.createDirectories(downloadsDir)
+        }
+        if (!Files.isDirectory(downloadsDir)) {
+            throw IOException("Download path is not a directory: $downloadsDir")
         }
     }
 
@@ -56,12 +65,17 @@ class DownloadDiskProvider(
     }
 
     fun getMangaDir(sourceId: Long, mangaTitle: String): Path {
-        return downloadsDir.resolve(sourceId.toString()).resolve(sanitizeFileName(mangaTitle))
+        return getMangaDir(downloadsDir, sourceId, mangaTitle)
     }
 
     fun getChapterDir(sourceId: Long, mangaTitle: String, chapterName: String): Path {
         return getMangaDir(sourceId, mangaTitle).resolve(sanitizeFileName(chapterName))
     }
+
+    fun findChapterDir(sourceId: Long, mangaTitle: String, chapterName: String): Path? =
+        downloadRoots.asSequence()
+            .map { root -> getMangaDir(root, sourceId, mangaTitle).resolve(sanitizeFileName(chapterName)) }
+            .firstOrNull(Files::isDirectory)
 
     fun getTempChapterDir(sourceId: Long, mangaTitle: String, chapterName: String): Path {
         return getMangaDir(sourceId, mangaTitle).resolve("${sanitizeFileName(chapterName)}_tmp")
@@ -186,54 +200,18 @@ class DownloadDiskProvider(
         chapterName: String,
         expectedPageIndexes: List<Int>,
     ): DownloadChapterInspection {
-        val chapterDir = getChapterDir(sourceId, mangaTitle, chapterName)
-        if (!Files.isDirectory(chapterDir) || expectedPageIndexes.isEmpty()) {
-            return DownloadChapterInspection(expectedPageIndexes.size, emptyMap())
-        }
-        val expected = expectedPageIndexes.distinct().sorted()
-        if (expected.size != expectedPageIndexes.size) {
-            return DownloadChapterInspection(expectedPageIndexes.size, emptyMap())
-        }
-        val manifest = readManifest(chapterDir)?.takeIf { saved ->
-            saved.version == MANIFEST_VERSION &&
-                saved.totalPages == expected.size &&
-                saved.pages.map(DownloadedPageMetadata::index).sorted() == expected
-        }
-        val manifestPages = manifest?.pages?.associateBy(DownloadedPageMetadata::index).orEmpty()
-        val valid = buildMap {
-            expected.forEach { index ->
-                val path = getPageFile(chapterDir, index)
-                val saved = manifestPages[index]
-                val unchanged = saved != null && runCatching {
-                    Files.isRegularFile(path) &&
-                        Files.size(path) == saved.sizeBytes &&
-                        Files.getLastModifiedTime(path).toMillis() == saved.modifiedAtMillis
-                }.getOrDefault(false)
-                if (unchanged || isValidPage(path)) {
-                    pageMetadata(path, index)?.let { put(index, it) }
-                }
-            }
-        }
-        if (valid.size == expected.size) {
-            val current = valid.values.sortedBy(DownloadedPageMetadata::index)
-            if (manifest?.pages != current) runCatching { writeManifest(chapterDir, current) }
-        }
-        return DownloadChapterInspection(expected.size, valid)
+        val chapterDir = findChapterDir(sourceId, mangaTitle, chapterName)
+            ?: return DownloadChapterInspection(expectedPageIndexes.size, emptyMap())
+        return inspectChapterAt(chapterDir, expectedPageIndexes)
     }
 
     fun isChapterDownloaded(sourceId: Long, mangaTitle: String, chapterName: String): Boolean {
-        val chapterDir = getChapterDir(sourceId, mangaTitle, chapterName)
-        if (!Files.isDirectory(chapterDir)) return false
+        val chapterDir = findChapterDir(sourceId, mangaTitle, chapterName) ?: return false
         val manifestFile = manifestPath(chapterDir)
         val manifest = readManifest(chapterDir)
         if (Files.exists(manifestFile) && manifest == null) return false
         if (manifest != null && manifest.totalPages > 0) {
-            return inspectChapter(
-                sourceId,
-                mangaTitle,
-                chapterName,
-                manifest.pages.map(DownloadedPageMetadata::index),
-            ).isComplete
+            return inspectChapterAt(chapterDir, manifest.pages.map(DownloadedPageMetadata::index)).isComplete
         }
         // Older downloads may predate manifests. The saved queue migrates them during startup.
         return runCatching {
@@ -249,19 +227,19 @@ class DownloadDiskProvider(
     }
 
     fun deleteChapter(sourceId: Long, mangaTitle: String, chapterName: String): Boolean {
-        val chapterDir = getChapterDir(sourceId, mangaTitle, chapterName)
-        if (!Files.exists(chapterDir)) return false
-        return try {
-            deleteDirectory(chapterDir)
+        val chapterDirs = downloadRoots.map { root ->
+            getMangaDir(root, sourceId, mangaTitle).resolve(sanitizeFileName(chapterName))
+        }
+            .filter(Files::exists)
+        if (chapterDirs.isEmpty()) return false
+        return chapterDirs.all { chapterDir ->
             runCatching {
+                deleteDirectory(chapterDir)
                 val mangaDir = chapterDir.parent
                 if (Files.isDirectory(mangaDir) && Files.list(mangaDir).use { !it.findAny().isPresent }) {
                     Files.deleteIfExists(mangaDir)
                 }
-            }
-            true
-        } catch (_: Exception) {
-            false
+            }.isSuccess
         }
     }
 
@@ -344,7 +322,8 @@ class DownloadDiskProvider(
         mutationPort: LibraryMutationPort?,
     ) {
         mutationPort?.transaction {
-            val mangaDir = getMangaDir(sourceId, mangaTitle)
+            val mangaDir = findChapterDir(sourceId, mangaTitle, chapterName)?.parent
+                ?: getMangaDir(sourceId, mangaTitle)
             insertLocalManga(
                 LocalMangaRecord(
                     mangaId = mangaId,
@@ -375,7 +354,8 @@ class DownloadDiskProvider(
         mutationPort: LibraryMutationPort,
     ): Boolean = mutationPort.isLocalChapterAssetRegistered(
         mangaId = mangaId,
-        storagePath = getMangaDir(sourceId, mangaTitle).toAbsolutePath().toString(),
+        storagePath = (findChapterDir(sourceId, mangaTitle, chapterName)?.parent
+            ?: getMangaDir(sourceId, mangaTitle)).toAbsolutePath().toString(),
         chapterId = chapterId,
         relativePath = sanitizeFileName(chapterName),
         sizeBytes = totalBytes,
@@ -389,6 +369,47 @@ class DownloadDiskProvider(
             modifiedAtMillis = Files.getLastModifiedTime(path).toMillis(),
         )
     }.getOrNull()
+
+    private fun getMangaDir(root: Path, sourceId: Long, mangaTitle: String): Path =
+        root.resolve(sourceId.toString()).resolve(sanitizeFileName(mangaTitle))
+
+    private fun inspectChapterAt(
+        chapterDir: Path,
+        expectedPageIndexes: List<Int>,
+    ): DownloadChapterInspection {
+        if (!Files.isDirectory(chapterDir) || expectedPageIndexes.isEmpty()) {
+            return DownloadChapterInspection(expectedPageIndexes.size, emptyMap())
+        }
+        val expected = expectedPageIndexes.distinct().sorted()
+        if (expected.size != expectedPageIndexes.size) {
+            return DownloadChapterInspection(expectedPageIndexes.size, emptyMap())
+        }
+        val manifest = readManifest(chapterDir)?.takeIf { saved ->
+            saved.version == MANIFEST_VERSION &&
+                saved.totalPages == expected.size &&
+                saved.pages.map(DownloadedPageMetadata::index).sorted() == expected
+        }
+        val manifestPages = manifest?.pages?.associateBy(DownloadedPageMetadata::index).orEmpty()
+        val valid = buildMap {
+            expected.forEach { index ->
+                val path = getPageFile(chapterDir, index)
+                val saved = manifestPages[index]
+                val unchanged = saved != null && runCatching {
+                    Files.isRegularFile(path) &&
+                        Files.size(path) == saved.sizeBytes &&
+                        Files.getLastModifiedTime(path).toMillis() == saved.modifiedAtMillis
+                }.getOrDefault(false)
+                if (unchanged || isValidPage(path)) {
+                    pageMetadata(path, index)?.let { put(index, it) }
+                }
+            }
+        }
+        if (valid.size == expected.size) {
+            val current = valid.values.sortedBy(DownloadedPageMetadata::index)
+            if (manifest?.pages != current) runCatching { writeManifest(chapterDir, current) }
+        }
+        return DownloadChapterInspection(expected.size, valid)
+    }
 
     private fun manifestPath(chapterDir: Path): Path = chapterDir.resolve(MANIFEST_FILE)
 

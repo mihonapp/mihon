@@ -8,6 +8,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import mihon.desktop.cli.DesktopCommand
 import mihon.desktop.extension.builtin.BundledLocalSource
+import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.desktop.reader.DesktopReaderFactory
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -21,6 +22,46 @@ class DesktopRuntimeFactoryTest {
 
     @TempDir
     lateinit var tempDir: Path
+
+    @Test
+    fun `configured download storage path becomes the active download root`() {
+        val chosen = tempDir.resolve("custom-download-profile")
+        val customDownloads = tempDir.resolve("download-volume/Mihon downloads")
+        Files.createDirectories(chosen)
+        val preferenceStore = DesktopPreferenceStore(chosen.resolve("preferences.properties"))
+        preferenceStore.save(
+            preferenceStore.load().copy(downloadStoragePath = customDownloads.toString()),
+        )
+
+        DesktopRuntimeFactory.create(
+            args = arrayOf("--data-dir=$chosen"),
+            environment = emptyMap(),
+            executableDirectory = tempDir.resolve("bin"),
+        ).use { runtime ->
+            runtime.downloader?.diskProvider?.downloadsDir shouldBe customDownloads.toAbsolutePath().normalize()
+            Files.isDirectory(customDownloads) shouldBe true
+        }
+    }
+
+    @Test
+    fun `unavailable configured download path falls back to the profile download root`() {
+        val chosen = tempDir.resolve("invalid-download-profile")
+        val fileInsteadOfDirectory = Files.writeString(tempDir.resolve("not-a-directory"), "occupied")
+        Files.createDirectories(chosen)
+        val preferenceStore = DesktopPreferenceStore(chosen.resolve("preferences.properties"))
+        preferenceStore.save(
+            preferenceStore.load().copy(downloadStoragePath = fileInsteadOfDirectory.toString()),
+        )
+
+        DesktopRuntimeFactory.create(
+            args = arrayOf("--data-dir=$chosen"),
+            environment = emptyMap(),
+            executableDirectory = tempDir.resolve("bin"),
+        ).use { runtime ->
+            runtime.downloader?.diskProvider?.downloadsDir shouldBe
+                chosen.resolve("media/downloads").toAbsolutePath().normalize()
+        }
+    }
 
     @Test
     fun `downloaded online manga does not prevent the next startup or enter import cleanup`() {
