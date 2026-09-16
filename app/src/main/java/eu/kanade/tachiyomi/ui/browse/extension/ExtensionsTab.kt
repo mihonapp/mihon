@@ -11,15 +11,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
-import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.tachiyomi.extension.model.Extension
-import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
-import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -28,7 +23,6 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun extensionsTab(
     extensionsViewModel: ExtensionsViewModel,
 ): TabContent {
-    val navigator = LocalNavigator.currentOrThrow
     val context = LocalContext.current
 
     val updatesCount by extensionsViewModel.updatesCount.collectAsStateWithLifecycle()
@@ -41,11 +35,17 @@ fun extensionsTab(
         actions = listOf(
             AppBar.OverflowAction(
                 title = stringResource(MR.strings.action_filter),
-                onClick = { navigator.push(ExtensionFilterScreen()) },
+                onClick = {
+                    // TODO(nav): screen
+                    // navigator.push(ExtensionFilterScreen())
+                },
             ),
             AppBar.OverflowAction(
                 title = stringResource(MR.strings.extensionStores),
-                onClick = { navigator.push(ExtensionStoresScreen()) },
+                onClick = {
+                    // TODO(nav): screen
+                    // navigator.push(ExtensionStoresScreen())
+                },
             ),
         ),
         content = { contentPadding, _ ->
@@ -75,17 +75,21 @@ fun extensionsTab(
                 onClickUpdateAll = extensionsViewModel::updateAllExtensions,
                 onOpenWebView = { extension ->
                     extension.sources.getOrNull(0)?.let {
-                        navigator.push(
-                            WebViewScreen(
-                                url = it.baseUrl,
-                                initialTitle = it.name,
-                                sourceId = it.id,
-                            ),
-                        )
+                        // TODO(nav): screen
+                        // navigator.push(
+                        //     WebViewScreen(
+                        //         url = it.baseUrl,
+                        //         initialTitle = it.name,
+                        //         sourceId = it.id,
+                        //     ),
+                        // )
                     }
                 },
                 onInstallExtension = extensionsViewModel::installExtension,
-                onOpenExtension = { navigator.push(ExtensionDetailsScreen(it.pkgName)) },
+                onOpenExtension = {
+                    // TODO(nav): screen
+                    // navigator.push(ExtensionDetailsScreen(it.pkgName))
+                },
                 onTrustExtension = { extensionsViewModel.trustExtension(it) },
                 onUninstallExtension = { extensionsViewModel.uninstallExtension(it) },
                 onUpdateExtension = extensionsViewModel::updateExtension,

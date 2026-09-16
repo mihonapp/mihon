@@ -1,7 +1,8 @@
 package eu.kanade.tachiyomi.ui.home
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Badge
@@ -15,11 +16,9 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
@@ -28,11 +27,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import cafe.adriel.voyager.navigator.tab.TabNavigator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import eu.kanade.presentation.util.LocalTopLevelBackStack
+import eu.kanade.presentation.util.TabOptions
 import eu.kanade.presentation.util.isTabletUi
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.BrowseTab
 import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTab
@@ -49,133 +49,207 @@ import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Serializable
 data object HomeRoute : NavKey
 
+@Serializable
+sealed interface TopLevelRoute : NavKey {
+
+    @Composable
+    fun options(isSelected: Boolean): TabOptions
+
+    @Serializable
+    data object Library : TopLevelRoute {
+        @Composable
+        override fun options(isSelected: Boolean): TabOptions {
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_library_enter)
+            return TabOptions(
+                title = stringResource(MR.strings.label_library),
+                icon = rememberAnimatedVectorPainter(image, isSelected),
+            )
+        }
+    }
+
+    @Serializable
+    data object Updates : TopLevelRoute {
+        @Composable
+        override fun options(isSelected: Boolean): TabOptions {
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_updates_enter)
+            return TabOptions(
+                title = stringResource(MR.strings.label_recent_updates),
+                icon = rememberAnimatedVectorPainter(image, isSelected),
+            )
+        }
+    }
+
+    @Serializable
+    data object History : TopLevelRoute {
+        @Composable
+        override fun options(isSelected: Boolean): TabOptions {
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_history_enter)
+            return TabOptions(
+                title = stringResource(MR.strings.label_recent_manga),
+                icon = rememberAnimatedVectorPainter(image, isSelected),
+            )
+        }
+    }
+
+    @Serializable
+    data object Browse : TopLevelRoute {
+        @Composable
+        override fun options(isSelected: Boolean): TabOptions {
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_browse_enter)
+            return TabOptions(
+                title = stringResource(MR.strings.browse),
+                icon = rememberAnimatedVectorPainter(image, isSelected),
+            )
+        }
+    }
+
+    @Serializable
+    data object More : TopLevelRoute {
+        @Composable
+        override fun options(isSelected: Boolean): TabOptions {
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_more_enter)
+            return TabOptions(
+                title = stringResource(MR.strings.label_more),
+                icon = rememberAnimatedVectorPainter(image, isSelected),
+            )
+        }
+    }
+}
+
 @Composable
 fun HomeScreen() {
-    TabNavigator(
-        tab = LibraryTab,
-        key = TabNavigatorKey,
-    ) { tabNavigator ->
-        // Provide usable navigator to content screen
-        CompositionLocalProvider {
-            val tabletUi = isTabletUi()
-            val navigationSuiteType = if (tabletUi) {
-                NavigationSuiteType.NavigationRail
+    val topLevelBackStack = LocalTopLevelBackStack.current
+    val tabletUi = isTabletUi()
+    val navigationSuiteType = if (tabletUi) {
+        NavigationSuiteType.NavigationRail
+    } else {
+        NavigationSuiteType.NavigationBar
+    }
+    val navigationSuiteState = rememberNavigationSuiteScaffoldState()
+    LaunchedEffect(navigationSuiteState, tabletUi) {
+        if (tabletUi) navigationSuiteState.show()
+        showBottomNavEvent.receiveAsFlow().collectLatest { show ->
+            if (tabletUi || show) {
+                navigationSuiteState.show()
             } else {
-                NavigationSuiteType.NavigationBar
-            }
-            val navigationSuiteState = rememberNavigationSuiteScaffoldState()
-            LaunchedEffect(navigationSuiteState, tabletUi) {
-                if (tabletUi) navigationSuiteState.show()
-                showBottomNavEvent.receiveAsFlow().collectLatest { show ->
-                    if (tabletUi || show) {
-                        navigationSuiteState.show()
-                    } else {
-                        navigationSuiteState.hide()
-                    }
-                }
-            }
-
-            NavigationSuiteScaffold(
-                navigationSuiteType = navigationSuiteType,
-                state = navigationSuiteState,
-                navigationSuiteColors = NavigationSuiteDefaults.colors(
-                    navigationRailContainerColor = MaterialTheme.colorScheme
-                        .surfaceColorAtElevation(3.dp),
-                ),
-                navigationItemVerticalArrangement = Arrangement.Center,
-                navigationItems = {
-                    TABS.fastForEach { NavigationSuiteItem(it, navigationSuiteType) }
-                },
-            ) {
-                AnimatedContent(
-                    targetState = tabNavigator.current,
-                    transitionSpec = {
-                        materialFadeThroughIn(
-                            initialScale = 1f,
-                            durationMillis = TabFadeDuration,
-                        ) togetherWith materialFadeThroughOut(durationMillis = TabFadeDuration)
-                    },
-                    label = "tabContent",
-                ) {
-                    tabNavigator.saveableState(key = "currentTab", it) {
-                        it.Content()
-                    }
-                }
+                navigationSuiteState.hide()
             }
         }
+    }
 
-        val goToLibraryTab = { tabNavigator.current = LibraryTab }
-
-        BackHandler(enabled = tabNavigator.current != LibraryTab, onBack = goToLibraryTab)
-
-        LaunchedEffect(Unit) {
-            launch {
-                librarySearchEvent.receiveAsFlow().collectLatest {
-                    goToLibraryTab()
-                    LibraryTab.search(it)
+    NavigationSuiteScaffold(
+        navigationSuiteType = navigationSuiteType,
+        state = navigationSuiteState,
+        navigationSuiteColors = NavigationSuiteDefaults.colors(
+            navigationRailContainerColor = MaterialTheme.colorScheme
+                .surfaceColorAtElevation(3.dp),
+        ),
+        navigationItemVerticalArrangement = Arrangement.Center,
+        navigationItems = {
+            TABS.fastForEach { NavigationSuiteItem(it, navigationSuiteType) }
+        },
+    ) {
+        NavDisplay(
+            backStack = topLevelBackStack.backStack,
+            onBack = {
+                topLevelBackStack.removeLast()
+            },
+            transitionSpec = { spec },
+            popTransitionSpec = { spec },
+            predictivePopTransitionSpec = { spec },
+            entryProvider = entryProvider {
+                entry<TopLevelRoute.Library> {
+                    LibraryTab()
                 }
+
+                entry<TopLevelRoute.Updates> {
+                    UpdatesTab()
+                }
+
+                entry<TopLevelRoute.History> {
+                    HistoryTab()
+                }
+
+                entry<TopLevelRoute.Browse> {
+                    BrowseTab()
+                }
+
+                entry<TopLevelRoute.More> {
+                    MoreTab()
+                }
+            },
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        launch {
+            librarySearchEvent.receiveAsFlow().collectLatest {
+                topLevelBackStack.setTopLevel(TopLevelRoute.Library)
+                LibraryTab.search(it)
             }
-            launch {
-                openTabEvent.receiveAsFlow().collectLatest {
-                    tabNavigator.current = when (it) {
-                        is Tab.Library -> LibraryTab
-                        Tab.Updates -> UpdatesTab
-                        Tab.History -> HistoryTab
-                        is Tab.Browse -> {
-                            if (it.toExtensions) {
-                                BrowseTab.showExtension()
-                            }
-                            BrowseTab
-                        }
-                        is Tab.More -> MoreTab
-                    }
+        }
+        launch {
+            openTabEvent.receiveAsFlow().collectLatest {
+                // TODO(homescreen): open tab
+                // tabNavigator.current = when (it) {
+                //     is Tab.Library -> LibraryTab
+                //     Tab.Updates -> UpdatesTab
+                //     Tab.History -> HistoryTab
+                //     is Tab.Browse -> {
+                //         if (it.toExtensions) {
+                //             BrowseTab.showExtension()
+                //         }
+                //         BrowseTab
+                //     }
+                //     is Tab.More -> MoreTab
+                // }
 
-                    // TODO(homescreen): navigation
-                    // if (it is Tab.Library && it.mangaIdToOpen != null) {
-                    //     navigator.push(MangaScreen(it.mangaIdToOpen))
-                    // }
-                    // if (it is Tab.More && it.toDownloads) {
-                    //     navigator.push(DownloadQueueScreen)
-                    // }
-                }
+                // TODO(homescreen): navigation
+                // if (it is Tab.Library && it.mangaIdToOpen != null) {
+                //     navigator.push(MangaScreen(it.mangaIdToOpen))
+                // }
+                // if (it is Tab.More && it.toDownloads) {
+                //     navigator.push(DownloadQueueScreen)
+                // }
             }
         }
     }
 }
 
-
 @Composable
 private fun NavigationSuiteItem(
-    tab: eu.kanade.presentation.util.Tab,
+    tab: TopLevelRoute,
     navigationSuiteType: NavigationSuiteType,
 ) {
-    val tabNavigator = LocalTabNavigator.current
-    val navigator = LocalNavigator.currentOrThrow
-    val scope = rememberCoroutineScope()
-    val selected = tabNavigator.current::class == tab::class
+    val topLevelBackStack = LocalTopLevelBackStack.current
+    val selected = topLevelBackStack.topLevelKey == tab
+    val options = tab.options(selected)
+
     NavigationSuiteItem(
         navigationSuiteType = navigationSuiteType,
         selected = selected,
         onClick = {
             if (!selected) {
-                tabNavigator.current = tab
+                topLevelBackStack.setTopLevel(tab)
             } else {
-                scope.launch { tab.onReselect(navigator) }
+                // TODO(nav): reselect
+                // scope.launch { tab.onReselect(navigator) }
             }
         },
         icon = {
             Icon(
-                painter = tab.options.icon!!,
-                contentDescription = tab.options.title,
+                painter = options.icon,
+                contentDescription = options.title,
             )
         },
         label = {
             Text(
-                text = tab.options.title,
+                text = options.title,
                 style = MaterialTheme.typography.labelLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -186,12 +260,12 @@ private fun NavigationSuiteItem(
 }
 
 @Composable
-private fun tabBadge(tab: eu.kanade.presentation.util.Tab): (@Composable () -> Unit)? {
+private fun tabBadge(tab: TopLevelRoute): (@Composable () -> Unit)? {
     val context = LocalContext.current
     val count by produceState(initialValue = 0, tab) {
         val graph = context.appGraph
         when (tab) {
-            is UpdatesTab -> {
+            is TopLevelRoute.Updates -> {
                 combine(
                     graph.libraryPreferences.newShowUpdatesCount.changes(),
                     graph.libraryPreferences.newUpdatesCount.changes(),
@@ -201,7 +275,7 @@ private fun tabBadge(tab: eu.kanade.presentation.util.Tab): (@Composable () -> U
                     .collectLatest { value = it }
             }
 
-            is BrowseTab -> {
+            is TopLevelRoute.Browse -> {
                 graph.sourcePreferences.extensionUpdatesCount.changes()
                     .collectLatest { value = it }
             }
@@ -213,13 +287,13 @@ private fun tabBadge(tab: eu.kanade.presentation.util.Tab): (@Composable () -> U
     return {
         Badge {
             val desc = when (tab) {
-                is UpdatesTab -> pluralStringResource(
+                is TopLevelRoute.Updates -> pluralStringResource(
                     MR.plurals.notification_chapters_generic,
                     count = count,
                     count,
                 )
 
-                is BrowseTab -> pluralStringResource(
+                is TopLevelRoute.Browse -> pluralStringResource(
                     MR.plurals.update_check_notification_ext_updates,
                     count = count,
                     count,
@@ -264,13 +338,16 @@ private val showBottomNavEvent = Channel<Boolean>()
 @Suppress("ConstPropertyName")
 private const val TabFadeDuration = 200
 
-@Suppress("ConstPropertyName")
-private const val TabNavigatorKey = "HomeTabs"
+private val spec = materialFadeThroughIn(
+    initialScale = 1f,
+    durationMillis = TabFadeDuration,
+) togetherWith materialFadeThroughOut(durationMillis = TabFadeDuration)
 
-private val TABS = listOf(
-    LibraryTab,
-    UpdatesTab,
-    HistoryTab,
-    BrowseTab,
-    MoreTab,
+// Home screen
+private val TABS: List<TopLevelRoute> = listOf(
+    TopLevelRoute.Library,
+    TopLevelRoute.Updates,
+    TopLevelRoute.History,
+    TopLevelRoute.Browse,
+    TopLevelRoute.More,
 )
