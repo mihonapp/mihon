@@ -23,16 +23,16 @@ AI 辅助开发的开源项目 · 基于 Mihon · Kotlin / Compose Desktop
 
 ## 下载与安装
 
-当前版本：**0.2.10**。面向 **Windows 10 22H2 / Windows 11，x64**，发行包已内置运行环境，无需另装 Java。
+当前版本：**0.2.13**。面向 **Windows 10 22H2 / Windows 11，x64**，发行包已内置运行环境，无需另装 Java。
 
 程序、安装包和快捷方式现已统一命名为 **mihondesk**。安装版继续使用原有数据目录，支持从 MihonW 升级。
 
 | 下载 | 适用方式 |
 | --- | --- |
-| **[EXE 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.10/mihondesk-0.2.10.exe)** | 推荐使用，下载后按向导安装 |
-| [MSI 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.10/mihondesk-0.2.10.msi) | 需要 MSI 安装方式时使用 |
-| [便携 ZIP](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.10/mihondesk-0.2.10-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `mihondesk.exe` |
-| [SHA-256 校验文件](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.10/SHA256SUMS.txt) | 校验下载文件的完整性 |
+| **[EXE 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.13/mihondesk-0.2.13.exe)** | 推荐使用，下载后按向导安装 |
+| [MSI 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.13/mihondesk-0.2.13.msi) | 需要 MSI 安装方式时使用 |
+| [便携 ZIP](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.13/mihondesk-0.2.13-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `mihondesk.exe` |
+| [SHA-256 校验文件](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.13/SHA256SUMS.txt) | 校验下载文件的完整性 |
 
 **首次使用**：发行包不预装在线图源或扩展仓库，请自行添加仓库或安装扩展。本地文件阅读无需安装图源。升级会保留已有书架、设置和阅读数据。
 
@@ -56,13 +56,14 @@ AI 辅助开发的开源项目 · 基于 Mihon · Kotlin / Compose Desktop
 3. **阅读在线内容**：在浏览页安装扩展包，再选择图源。安装入口支持 `.mext`，也可尝试转换受支持的扩展 `.apk`。
 4. **保留阅读数据**：使用备份功能定期导出。备份不包含已下载的漫画图片。
 
-## 0.2.10 更新
+## 0.2.13 更新
 
-- 全新“展开书页与书签”图标，统一应用窗口、任务栏、桌面快捷方式和安装包的视觉。
-- 更新 GitHub 首页、项目图片、更新日志与贡献说明，明确 Windows 桌面项目和 AI 辅助开发定位。
-- 延续阅读器直达书籍详情、下载页直接阅读及不预装在线图源的发行方式。
+- 修复下载队列与本地文件状态不同步、离线章节丢失后的重试，以及特定图源图片 CDN 跳转被拒绝的问题。
+- 支持选择下载目录，设置页展示当前使用路径。
+- 修复深色与纯黑主题下阅读器工具栏、更新日历文字不清楚的问题。
+- 补齐阅读器、章节筛选、下载提示、应用锁和扩展管理的中文，统一简繁体用词与日期格式。
 
-详见[本版发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.10)和[更新日志](CHANGELOG.md)。
+详见[本版发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.13)和[更新日志](CHANGELOG.md)。
 
 ## 当前限制
 

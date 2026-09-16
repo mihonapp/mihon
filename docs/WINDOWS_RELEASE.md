@@ -46,6 +46,8 @@ EXE、MSI 和便携 ZIP 都依赖 `verifyCleanDistribution`，打包前执行 `s
 
 最后一个脚本验证独立目录中的便携运行、版本、帮助和备份导出。Windows 10 / 11 的全新系统验收需另外执行。
 
+推送代码分支不会发布 Windows 新版本。仓库保留的上游 Release 工作流只为上游 Android 仓库运行。Windows 发布时还需更新首页与更新日志，将验证后的 EXE、MSI、便携 ZIP、版本与构建信息、SHA-256 清单上传到对应版本的 GitHub Release，核对远程附件摘要后设为最新正式版。清单应只列出随 Release 上传的文件。
+
 ## 更新
 
 从 0.2.5 起，内置更新检查访问 `1873412297-art/mihondesk` 仓库的最新 Release，并按安装版或便携版选择附件。0.2.4 及更早版本仍需先手动下载新版本。
