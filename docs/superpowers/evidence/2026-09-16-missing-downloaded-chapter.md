@@ -47,3 +47,17 @@ Final targeted command:
 ```
 
 Raw local verification logs are under `build/download-host-evidence/` and are excluded from Git.
+
+## Application image verification
+
+`spotlessCheck` and `createDistributable` passed. The resulting application image is under `desktop-app/build/compose/binaries/main/app/mihondesk/`, with embedded build information `version=0.2.10`, `revision=ffbfd4aa4412ce74f1d4e717a243ca00d3210ee7`, `dirty=false`.
+
+- Launcher SHA-256: `36590fc50b34e78471fd8af882250730478787ae77f2d0d84406055362b8a76f`.
+- Desktop application JAR SHA-256: `f8ebcf4a50986d7fb0ecf7824919a5820b6ea38043338542e1fe168bf6bb1979`.
+- Clean-distribution verification passed: no user profile, installed extensions, or saved user configuration in the application image.
+
+Both the old installed EXE and the newly built EXE were launched with `--smoke-test` against separate temporary profiles containing the same completed queue and no downloaded files. Both exited 0. The old EXE left the entry `COMPLETED` with 145 ready pages. The fixed EXE persisted `ERROR`, zero ready pages, and the message `Downloaded files are missing. Retry to download them again.` This verifies the behavior in the actual packaged launchers and bundled runtimes.
+
+The restored real chapter was then read using the new application image's classes and native resources on Java 17. It again opened 145 pages and decoded pages 0, 72, and 144 successfully. A Java 17 check of the installed version also passed after the file restoration.
+
+Original queue SHA-256 remained unchanged, and original chapter 9 retained `last_page_read=95`, `read=0`. The installed application's binary files were not replaced. The preventive code change is available in the branch application image; the original profile's missing chapter files have already been restored.
