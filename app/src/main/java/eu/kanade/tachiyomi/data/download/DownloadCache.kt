@@ -325,7 +325,6 @@ class DownloadCache(
     fun invalidateCache() {
         lastRenew = 0L
         renewalJob?.cancel()
-        diskCacheFile.delete()
         renewCache()
     }
 
@@ -428,7 +427,10 @@ class DownloadCache(
             val bytes = ProtoBuf.encodeToByteArray(rootDownloadsDir)
             ensureActive()
             try {
-                diskCacheFile.writeBytes(bytes)
+                diskCacheFile.apply {
+                    delete()
+                    writeBytes(bytes)
+                }
             } catch (e: Throwable) {
                 logcat(
                     priority = LogPriority.ERROR,
