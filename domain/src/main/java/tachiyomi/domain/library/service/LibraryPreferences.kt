@@ -221,7 +221,7 @@ class LibraryPreferences(
     )
     val enableChapterNameHash: Preference<Boolean> = preferenceStore.getBoolean(
         "pref_enable_chapter_name_hash",
-        true,
+        false,
     )
 
     // endregion
