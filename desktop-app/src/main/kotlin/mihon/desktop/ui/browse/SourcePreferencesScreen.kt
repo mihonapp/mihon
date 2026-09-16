@@ -51,6 +51,8 @@ import mihon.desktop.extension.SourcePreferencesSnapshot
 import mihon.desktop.extension.decodeSourcePreferenceListValue
 import mihon.desktop.extension.encodeSourcePreferenceListValue
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.extension.model.SourceDescriptor
 
 /**
@@ -183,7 +185,7 @@ fun SourcePreferencesScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = strings.mangaDetailBack,
                         )
                     }
                 },
@@ -229,7 +231,7 @@ fun SourcePreferencesScreen(
                         PreferencesStateMessage(
                             tag = "source-preferences-unsupported",
                             title = strings.sourcePreferencesUnsupported,
-                            detail = "This source does not expose configurable options on desktop.",
+                            detail = strings.text(UiText.SourceNoDesktopSettings),
                         )
                     }
                 }
@@ -239,7 +241,7 @@ fun SourcePreferencesScreen(
                         PreferencesStateMessage(
                             tag = "source-preferences-empty",
                             title = strings.sourcePreferencesEmpty,
-                            detail = "No configurable settings available.",
+                            detail = strings.sourcePreferencesEmpty,
                         )
                     }
                 }

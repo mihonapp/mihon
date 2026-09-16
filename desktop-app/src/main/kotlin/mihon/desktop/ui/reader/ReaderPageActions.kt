@@ -134,6 +134,7 @@ fun ImageBitmap.encodePageImage(target: ReaderPageActionTarget): ReaderPageImage
 fun defaultReaderPageActionHandler(
     imageStore: ReaderPageImageStore,
     customCoverManager: CustomCoverManager?,
+    saveDialogTitle: String = "Save page image",
 ): ReaderPageActionHandler = object : ReaderPageActionHandler {
     override suspend fun loadImage(target: ReaderPageActionTarget): ReaderPageImage? =
         withContext(Dispatchers.Default) {
@@ -141,7 +142,7 @@ fun defaultReaderPageActionHandler(
         }
 
     override fun saveImage(target: ReaderPageActionTarget, image: ReaderPageImage): Boolean =
-        ReaderPageFileActions.saveWithDialog(image)
+        ReaderPageFileActions.saveWithDialog(image, saveDialogTitle)
 
     override fun copyImage(image: ReaderPageImage): Boolean =
         ReaderPageClipboard.copyImage(image)
@@ -194,10 +195,10 @@ private object ReaderPageClipboard {
 }
 
 private object ReaderPageFileActions {
-    fun saveWithDialog(image: ReaderPageImage): Boolean {
+    fun saveWithDialog(image: ReaderPageImage, title: String): Boolean {
         if (GraphicsEnvironment.isHeadless()) return false
         return runCatching {
-            val dialog = FileDialog(null as Frame?, "Save page image", FileDialog.SAVE).apply {
+            val dialog = FileDialog(null as Frame?, title, FileDialog.SAVE).apply {
                 file = image.fileName
                 isVisible = true
             }

@@ -29,6 +29,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.locale
+import mihon.desktop.i18n.text
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -62,10 +66,22 @@ fun UpcomingCalendar(
     onSelectDate: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val locale = Locale.getDefault()
+    val strings = LocalStrings.current
+    val locale = strings.locale
     val firstDayOfWeek = remember(locale) { WeekFields.of(locale).firstDayOfWeek }
     val monthTitle = remember(selectedMonth, locale) {
-        selectedMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy", locale))
+        selectedMonth.format(
+            DateTimeFormatter.ofPattern(
+                if (locale.language ==
+                    "zh"
+                ) {
+                    "yyyy年M月"
+                } else {
+                    "MMMM yyyy"
+                },
+                locale,
+            ),
+        )
     }
 
     Column(
@@ -88,13 +104,13 @@ fun UpcomingCalendar(
                     onClick = onPreviousMonth,
                     modifier = Modifier.testTag(UPCOMING_PREVIOUS_MONTH_TEST_TAG),
                 ) {
-                    Icon(Icons.Rounded.ChevronLeft, contentDescription = "Previous month")
+                    Icon(Icons.Rounded.ChevronLeft, contentDescription = strings.text(UiText.PreviousMonth))
                 }
                 IconButton(
                     onClick = onNextMonth,
                     modifier = Modifier.testTag(UPCOMING_NEXT_MONTH_TEST_TAG),
                 ) {
-                    Icon(Icons.Rounded.ChevronRight, contentDescription = "Next month")
+                    Icon(Icons.Rounded.ChevronRight, contentDescription = strings.text(UiText.NextMonth))
                 }
             }
         }

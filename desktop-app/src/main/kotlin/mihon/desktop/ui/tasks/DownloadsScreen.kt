@@ -41,6 +41,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mihon.desktop.download.DesktopDownload
 import mihon.desktop.download.DownloadStatus
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 
 const val DOWNLOADS_SCREEN_TEST_TAG = "downloads_screen"
 const val DOWNLOADS_PAUSE_ALL_BUTTON_TEST_TAG = "downloads_pause_all"
@@ -221,6 +224,7 @@ private fun DownloadCard(
     onRetry: () -> Unit,
     onRead: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -266,13 +270,21 @@ private fun DownloadCard(
                 val statusDetail = when (download.status) {
                     DownloadStatus.DOWNLOADING, DownloadStatus.QUEUED, DownloadStatus.PAUSED -> {
                         if (download.totalPages > 0) {
-                            "${download.downloadedImages} / ${download.totalPages} pages (${(download.progress * 100).toInt()}%)"
+                            strings.text(
+                                UiText.DownloadProgress,
+                                download.downloadedImages,
+                                download.totalPages,
+                                (
+                                    download.progress *
+                                        100
+                                    ).toInt(),
+                            )
                         } else {
-                            "Preparing..."
+                            strings.text(UiText.PreparingDownload)
                         }
                     }
-                    DownloadStatus.COMPLETED -> "Downloaded (${download.downloadedImages} pages)"
-                    DownloadStatus.ERROR -> download.error ?: "Download failed"
+                    DownloadStatus.COMPLETED -> strings.text(UiText.DownloadedPages, download.downloadedImages)
+                    DownloadStatus.ERROR -> download.error ?: strings.text(UiText.DownloadFailed)
                 }
 
                 Text(
@@ -289,7 +301,6 @@ private fun DownloadCard(
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    val strings = mihon.desktop.i18n.LocalStrings.current
                     if (download.status == DownloadStatus.COMPLETED) {
                         FilledTonalButton(
                             onClick = onRead,

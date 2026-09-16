@@ -92,7 +92,7 @@ fun MangaNotesDialog(
                         onClick = onDismissRequest,
                         modifier = Modifier.testTag("manga-notes-dialog-close"),
                     ) {
-                        Icon(imageVector = Icons.Rounded.Close, contentDescription = "Close")
+                        Icon(imageVector = Icons.Rounded.Close, contentDescription = strings.dialogClose)
                     }
                 }
 

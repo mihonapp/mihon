@@ -35,6 +35,9 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 
 /**
  * Mihon-style page actions. Buttons only emit callbacks so the surface is trivially testable and
@@ -52,6 +55,7 @@ fun ReaderPageActionsDialog(
     canOpenInBrowser: Boolean = false,
     busy: Boolean = false,
 ) {
+    val strings = LocalStrings.current
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
     AlertDialog(
@@ -68,7 +72,7 @@ fun ReaderPageActionsDialog(
             .testTag("reader-page-actions-dialog"),
         title = {
             Text(
-                text = "Page actions",
+                text = strings.text(UiText.PageActions),
                 style = MaterialTheme.typography.titleLarge,
             )
         },
@@ -79,28 +83,28 @@ fun ReaderPageActionsDialog(
             ) {
                 PageActionButton(
                     tag = "reader-page-action-save",
-                    label = "Save page image",
+                    label = strings.text(UiText.SavePageImage),
                     icon = Icons.Rounded.Save,
                     enabled = !busy,
                     onClick = onSave,
                 )
                 PageActionButton(
                     tag = "reader-page-action-copy",
-                    label = "Copy image",
+                    label = strings.text(UiText.CopyImage),
                     icon = Icons.Rounded.ContentCopy,
                     enabled = !busy,
                     onClick = onCopy,
                 )
                 PageActionButton(
                     tag = "reader-page-action-share",
-                    label = "Share image",
+                    label = strings.text(UiText.ShareImage),
                     icon = Icons.Rounded.Share,
                     enabled = !busy,
                     onClick = onShare,
                 )
                 PageActionButton(
                     tag = "reader-page-action-cover",
-                    label = "Set as manga cover",
+                    label = strings.text(UiText.SetMangaCover),
                     icon = Icons.Rounded.Photo,
                     enabled = !busy && canSetAsCover,
                     onClick = onSetAsCover,
@@ -108,7 +112,7 @@ fun ReaderPageActionsDialog(
                 if (canOpenInBrowser) {
                     PageActionButton(
                         tag = "reader-page-action-browser",
-                        label = "Open page in browser",
+                        label = strings.text(UiText.OpenPageBrowser),
                         icon = Icons.Rounded.OpenInBrowser,
                         enabled = !busy,
                         onClick = onOpenInBrowser,
@@ -131,7 +135,7 @@ fun ReaderPageActionsDialog(
                     }
                     .testTag("reader-page-actions-cancel"),
             ) {
-                Text("Cancel")
+                Text(strings.dialogCancel)
             }
         },
     )

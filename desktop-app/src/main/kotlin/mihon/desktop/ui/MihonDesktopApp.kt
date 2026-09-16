@@ -44,6 +44,9 @@ import mihon.desktop.DesktopRuntime
 import mihon.desktop.category.DesktopCategory
 import mihon.desktop.category.SYSTEM_ALL_CATEGORY
 import mihon.desktop.extension.builtin.isLocalSource
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.navigation.DesktopDestination
 import mihon.desktop.navigation.DesktopNavigator
 import mihon.desktop.reader.DesktopReaderSettingsStore
@@ -201,8 +204,11 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
     val importController = remember(runtime.backupImporter, runtime.localImporter, runtime.localLibraryRoot) {
         LibraryImportController(runtime.backupImporter, runtime.localImporter, runtime.localLibraryRoot)
     }
-    val importActions = remember(importController) {
+    val importActions = remember(importController, preferences.language) {
+        val importStrings = mihon.desktop.i18n.DesktopStrings.resolve(preferences.language)
         LibraryImportActions(
+            chooseBackup = { mihon.desktop.ui.library.chooseAndroidBackup(importStrings.libraryImportBackup) },
+            chooseLocal = { mihon.desktop.ui.library.chooseLocalMangaDirectory(importStrings.libraryImportLocal) },
             importBackup = importController::importBackup,
             importLocal = importController::importLocal,
         )
@@ -450,6 +456,7 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         mangaDetailState.readerAvailability,
                                         mangaDetailState.downloadedChapterIds,
                                         mangaDetailState.chapterSettings.displayMode,
+                                        strings,
                                     ) {
                                         sortedAllChapters.map { chapter ->
                                             ReaderChapterTransitionChapter(
@@ -457,6 +464,7 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                                 title = chapterDisplayLabel(
                                                     chapter,
                                                     mangaDetailState.chapterSettings.displayMode,
+                                                    strings,
                                                 ),
                                                 chapterNumber = chapter.chapterNumber,
                                                 scanlator = chapter.scanlator,
@@ -536,8 +544,9 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                             chapterDisplayLabel(
                                                 chapter,
                                                 mangaDetailState.chapterSettings.displayMode,
+                                                strings,
                                             )
-                                        } ?: "Chapter ${destination.chapterId}",
+                                        } ?: strings.text(UiText.ChapterNumberLabel, destination.chapterId),
                                         mangaId = readerManga?.id,
                                         chapterCatalog = transitionCatalog,
                                         previousChapter = transitionPrevious,
@@ -853,7 +862,7 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         onDuplicateAddAnyway = libraryPresenter::addDuplicateAnyway,
                                         onDuplicateDismiss = libraryPresenter::dismissDuplicateDialog,
                                         sourceNameFor = { sourceId ->
-                                            sourceNames[sourceId] ?: "Source #$sourceId"
+                                            sourceNames[sourceId] ?: strings.text(UiText.SourceFallback, sourceId)
                                         },
                                         downloadCacheCleaner = runtime.downloadCacheCleaner,
                                         downloadsDir = runtime.downloader?.diskProvider?.downloadsDir
@@ -863,7 +872,10 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         onExportBackup = {
                                             presenterScope.launch {
                                                 val path =
-                                                    mihon.desktop.ui.library.chooseExportBackup() ?: return@launch
+                                                    mihon.desktop.ui.library.chooseExportBackup(
+                                                        strings.text(UiText.ExportBackup),
+                                                    )
+                                                        ?: return@launch
                                                 try {
                                                     withContext(Dispatchers.IO) {
                                                         runtime.backupExporter.export(path)

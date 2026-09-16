@@ -24,6 +24,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.DesktopStrings
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.reader.DesktopReaderSettings
 
 enum class ReaderChapterTransitionDirection {
@@ -131,6 +135,7 @@ fun ReaderChapterTransitionSurface(
     settings: DesktopReaderSettings = DesktopReaderSettings(),
     allowDismiss: Boolean = true,
 ) {
+    val strings = LocalStrings.current
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -153,41 +158,41 @@ fun ReaderChapterTransitionSurface(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 Text(
-                    text = "Chapter transition",
+                    text = strings.text(UiText.ChapterTransition),
                     style = MaterialTheme.typography.titleLarge,
                 )
                 Text(
                     text = when (transition.direction) {
-                        ReaderChapterTransitionDirection.PREVIOUS -> "Previous chapter"
-                        ReaderChapterTransitionDirection.NEXT -> "Next chapter"
+                        ReaderChapterTransitionDirection.PREVIOUS -> strings.readerPreviousChapter
+                        ReaderChapterTransitionDirection.NEXT -> strings.readerNextChapter
                     },
                     modifier = Modifier.testTag("reader-transition-direction"),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
                 TransitionChapterRow(
-                    label = "Previous",
+                    label = strings.text(UiText.Previous),
                     chapter = transition.previous,
-                    missingText = "No previous chapter",
+                    missingText = strings.text(UiText.NoPreviousChapter),
                     tag = "reader-transition-previous",
                     settings = settings,
                 )
                 TransitionChapterRow(
-                    label = "Current",
+                    label = strings.text(UiText.Current),
                     chapter = transition.current,
-                    missingText = "Current chapter unavailable",
+                    missingText = strings.text(UiText.CurrentChapterUnavailable),
                     tag = "reader-transition-current",
                     settings = settings,
                 )
                 TransitionChapterRow(
-                    label = "Next",
+                    label = strings.text(UiText.Next),
                     chapter = transition.next,
-                    missingText = "No next chapter",
+                    missingText = strings.text(UiText.NoNextChapter),
                     tag = "reader-transition-next",
                     settings = settings,
                 )
                 Text(
-                    text = transitionTargetLabel(transition),
+                    text = transitionTargetLabel(transition, strings),
                     modifier = Modifier.testTag("reader-transition-target"),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -202,14 +207,14 @@ fun ReaderChapterTransitionSurface(
                             onClick = onDismiss,
                             modifier = Modifier.testTag("reader-transition-dismiss"),
                         ) {
-                            Text("Stay here")
+                            Text(strings.text(UiText.StayHere))
                         }
                     }
                     Button(
                         onClick = onContinue,
                         modifier = Modifier.testTag("reader-transition-continue"),
                     ) {
-                        Text(if (transition.target != null) "Continue" else "Close")
+                        Text(if (transition.target != null) strings.text(UiText.Continue) else strings.dialogClose)
                     }
                 }
             }
@@ -225,6 +230,7 @@ private fun TransitionChapterRow(
     tag: String,
     settings: DesktopReaderSettings,
 ) {
+    val strings = LocalStrings.current
     Column(
         modifier = Modifier.fillMaxWidth().testTag(tag),
         verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -251,7 +257,13 @@ private fun TransitionChapterRow(
             )
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = chapter.statusLabel,
+                    text = strings.text(
+                        when {
+                            !chapter.available -> UiText.Missing
+                            chapter.downloaded -> UiText.Downloaded
+                            else -> UiText.NotDownloaded
+                        },
+                    ),
                     modifier = Modifier.testTag("$tag-status"),
                     style = MaterialTheme.typography.bodySmall,
                     color = when {
@@ -262,7 +274,7 @@ private fun TransitionChapterRow(
                 )
                 chapter.chapterNumber?.let { number ->
                     Text(
-                        text = "Ch. ${formatChapterNumber(number)}",
+                        text = strings.text(UiText.ChapterNumberLabel, formatChapterNumber(number)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -277,10 +289,18 @@ private fun TransitionChapterRow(
                     )
                 }
             }
-            val skipReasons = chapter.skipReasons(settings)
+            val skipReasons = chapter.skipReasons(settings).map { reason ->
+                strings.text(
+                    when (reason) {
+                        "read" -> UiText.ReadReason
+                        "filtered" -> UiText.FilteredReason
+                        else -> UiText.DuplicateReason
+                    },
+                )
+            }
             if (skipReasons.isNotEmpty()) {
                 Text(
-                    text = "Skipped (${skipReasons.joinToString(", ")})",
+                    text = strings.text(UiText.Skipped, skipReasons.joinToString(", ")),
                     modifier = Modifier.testTag("$tag-skipped"),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
@@ -290,19 +310,19 @@ private fun TransitionChapterRow(
     }
 }
 
-private fun transitionTargetLabel(transition: ReaderChapterTransition): String {
+private fun transitionTargetLabel(transition: ReaderChapterTransition, strings: DesktopStrings): String {
     val target = transition.target
     return when {
         target == null && transition.direction == ReaderChapterTransitionDirection.NEXT ->
-            "No next chapter available"
-        target == null -> "No previous chapter available"
+            strings.text(UiText.NoNextAvailable)
+        target == null -> strings.text(UiText.NoPreviousAvailable)
         transition.direction == ReaderChapterTransitionDirection.NEXT &&
             transition.next?.id != null &&
-            target.id != transition.next.id -> "Skipping to ${target.title}"
+            target.id != transition.next.id -> strings.text(UiText.SkippingTo, target.title)
         transition.direction == ReaderChapterTransitionDirection.PREVIOUS &&
             transition.previous?.id != null &&
-            target.id != transition.previous.id -> "Skipping to ${target.title}"
-        else -> "Continuing to ${target.title}"
+            target.id != transition.previous.id -> strings.text(UiText.SkippingTo, target.title)
+        else -> strings.text(UiText.ContinuingTo, target.title)
     }
 }
 

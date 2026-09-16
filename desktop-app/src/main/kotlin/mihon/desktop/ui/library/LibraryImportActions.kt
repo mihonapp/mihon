@@ -78,8 +78,8 @@ class LibraryImportController(
 }
 
 class LibraryImportActions(
-    private val chooseBackup: () -> Path? = ::chooseAndroidBackup,
-    private val chooseLocal: () -> Path? = ::chooseLocalMangaDirectory,
+    private val chooseBackup: () -> Path? = { chooseAndroidBackup() },
+    private val chooseLocal: () -> Path? = { chooseLocalMangaDirectory() },
     private val importBackup: suspend (Path) -> ImportActionState,
     private val importLocal: suspend (Path) -> ImportActionState,
 ) {
@@ -106,8 +106,8 @@ private fun ImportReport.sanitized() = SanitizedImportResult(
 private val SAFE_SKIP_REASON_NAMES = PreferenceSkipReason.entries.mapTo(mutableSetOf()) { it.name }
 private const val UNKNOWN_SKIP_REASON = "UNKNOWN_SKIP_REASON"
 
-private fun chooseAndroidBackup(): Path? {
-    val dialog = FileDialog(null as Frame?, "Import Android backup", FileDialog.LOAD).apply {
+internal fun chooseAndroidBackup(title: String = "Import Android backup"): Path? {
+    val dialog = FileDialog(null as Frame?, title, FileDialog.LOAD).apply {
         setFilenameFilter { _, name -> name.endsWith(".tachibk", ignoreCase = true) }
         file = "*.tachibk"
     }
@@ -122,9 +122,9 @@ private fun chooseAndroidBackup(): Path? {
     }
 }
 
-private fun chooseLocalMangaDirectory(): Path? {
+internal fun chooseLocalMangaDirectory(title: String = "Import local manga"): Path? {
     val chooser = JFileChooser().apply {
-        dialogTitle = "Import local manga"
+        dialogTitle = title
         fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
         isAcceptAllFileFilterUsed = false
     }
@@ -133,9 +133,9 @@ private fun chooseLocalMangaDirectory(): Path? {
     return selected.takeIf { chooser.selectedFile.isDirectory }
 }
 
-fun chooseExportBackup(): Path? {
+fun chooseExportBackup(title: String = "Export Android backup"): Path? {
     val timestamp = java.text.SimpleDateFormat("yyyy-MM-dd-HHmmss").format(java.util.Date())
-    val dialog = FileDialog(null as Frame?, "Export Android backup", FileDialog.SAVE).apply {
+    val dialog = FileDialog(null as Frame?, title, FileDialog.SAVE).apply {
         file = "mihon-backup-$timestamp.tachibk"
     }
     return try {

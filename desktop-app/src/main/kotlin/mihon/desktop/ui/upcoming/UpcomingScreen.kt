@@ -25,6 +25,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,6 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.chapterCountLabel
+import mihon.desktop.i18n.locale
+import mihon.desktop.i18n.text
 import mihon.desktop.ui.library.TriStateFilter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -64,53 +70,54 @@ fun UpcomingScreen(
     onRetry: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize().testTag(UPCOMING_SCREEN_TEST_TAG),
-    ) {
-        UpcomingToolbar(
-            state = state,
-            onBack = onBack,
-            onOpenFilter = onOpenFilter,
-            onClearFilters = onClearFilters,
-        )
-        HorizontalDivider()
-        Row(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+    Surface(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize().testTag(UPCOMING_SCREEN_TEST_TAG),
         ) {
-            Column(modifier = Modifier.width(360.dp).fillMaxHeight()) {
-                UpcomingCalendar(
-                    selectedMonth = state.selectedMonth,
-                    selectedDate = state.selectedDate,
-                    today = state.today,
-                    eventCounts = state.monthDays,
-                    onPreviousMonth = onPreviousMonth,
-                    onNextMonth = onNextMonth,
-                    onSelectDate = { onSelectDate(it) },
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .width(1.dp)
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.outlineVariant),
+            UpcomingToolbar(
+                state = state,
+                onBack = onBack,
+                onOpenFilter = onOpenFilter,
+                onClearFilters = onClearFilters,
             )
-            Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
-                UpcomingListHeader(
-                    state = state,
-                    onSelectDate = onSelectDate,
+            HorizontalDivider()
+            Row(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Column(modifier = Modifier.width(360.dp).fillMaxHeight()) {
+                    UpcomingCalendar(
+                        selectedMonth = state.selectedMonth,
+                        selectedDate = state.selectedDate,
+                        today = state.today,
+                        eventCounts = state.monthDays,
+                        onPreviousMonth = onPreviousMonth,
+                        onNextMonth = onNextMonth,
+                        onSelectDate = { onSelectDate(it) },
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .fillMaxHeight()
+                        .background(MaterialTheme.colorScheme.outlineVariant),
                 )
-                Spacer(modifier = Modifier.size(8.dp))
-                when {
-                    state.loading -> UpcomingLoading()
-                    state.errorMessage != null -> UpcomingError(state.errorMessage, onRetry)
-                    state.visibleEntries.isEmpty() -> UpcomingEmptyState(state, onClearFilters)
-                    else -> UpcomingEntryList(state, onOpenManga)
+                Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
+                    UpcomingListHeader(
+                        state = state,
+                        onSelectDate = onSelectDate,
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                    when {
+                        state.loading -> UpcomingLoading()
+                        state.errorMessage != null -> UpcomingError(state.errorMessage, onRetry)
+                        state.visibleEntries.isEmpty() -> UpcomingEmptyState(state, onClearFilters)
+                        else -> UpcomingEntryList(state, onOpenManga)
+                    }
                 }
             }
         }
     }
-
     if (state.isFilterDialogOpen) {
         UpcomingFilterDialog(
             categories = state.categories,
@@ -129,6 +136,7 @@ private fun UpcomingToolbar(
     onOpenFilter: () -> Unit,
     onClearFilters: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -139,11 +147,11 @@ private fun UpcomingToolbar(
                 onClick = onBack,
                 modifier = Modifier.testTag(UPCOMING_BACK_BUTTON_TEST_TAG),
             ) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = strings.mangaDetailBack)
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Upcoming",
+                text = strings.text(UiText.Upcoming),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
             )
@@ -154,7 +162,7 @@ private fun UpcomingToolbar(
                     onClick = onClearFilters,
                     modifier = Modifier.testTag(UPCOMING_CLEAR_FILTERS_TEST_TAG),
                 ) {
-                    Text("Clear filters")
+                    Text(strings.text(UiText.ClearFilters))
                 }
             }
             FilledTonalButton(
@@ -164,7 +172,7 @@ private fun UpcomingToolbar(
                 Icon(Icons.Rounded.FilterList, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(6.dp))
                 val activeCount = state.categoryFilters.values.count { it != TriStateFilter.Disabled }
-                Text(if (activeCount > 0) "Filters ($activeCount)" else "Filters")
+                Text(strings.browseFiltersButton(activeCount))
             }
         }
     }
@@ -175,7 +183,8 @@ private fun UpcomingListHeader(
     state: UpcomingUiState,
     onSelectDate: (LocalDate?) -> Unit,
 ) {
-    val locale = Locale.getDefault()
+    val strings = LocalStrings.current
+    val locale = strings.locale
     if (state.selectedDate != null) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -190,7 +199,7 @@ private fun UpcomingListHeader(
                     modifier = Modifier.testTag(UPCOMING_DAY_HEADER_TEST_TAG),
                 )
                 Text(
-                    text = "${state.visibleEntries.size} chapter${if (state.visibleEntries.size == 1) "" else "s"}",
+                    text = strings.chapterCountLabel(state.visibleEntries.size.toLong()),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -199,12 +208,23 @@ private fun UpcomingListHeader(
                 onClick = { onSelectDate(null) },
                 modifier = Modifier.testTag(UPCOMING_SHOW_MONTH_TEST_TAG),
             ) {
-                Text("Show month")
+                Text(strings.text(UiText.ShowMonth))
             }
         }
     } else {
         Text(
-            text = state.selectedMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy", locale)),
+            text = state.selectedMonth.format(
+                DateTimeFormatter.ofPattern(
+                    if (locale.language ==
+                        "zh"
+                    ) {
+                        "yyyy年M月"
+                    } else {
+                        "MMMM yyyy"
+                    },
+                    locale,
+                ),
+            ),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.testTag(UPCOMING_LIST_HEADER_TEST_TAG),
@@ -224,6 +244,7 @@ private fun UpcomingError(
     message: String,
     onRetry: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     Column(
         modifier = Modifier.fillMaxSize().testTag(UPCOMING_ERROR_STATE_TEST_TAG),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -235,7 +256,7 @@ private fun UpcomingError(
             color = MaterialTheme.colorScheme.error,
         )
         TextButton(onClick = onRetry) {
-            Text("Retry")
+            Text(strings.libraryRetry)
         }
     }
 }
@@ -245,6 +266,7 @@ private fun UpcomingEmptyState(
     state: UpcomingUiState,
     onClearFilters: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     Column(
         modifier = Modifier.fillMaxSize().testTag(UPCOMING_EMPTY_STATE_TEST_TAG),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -258,13 +280,13 @@ private fun UpcomingEmptyState(
         )
         Spacer(modifier = Modifier.size(12.dp))
         Text(
-            text = state.emptyTitle,
+            text = state.emptyTitle(strings),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
         )
         Spacer(modifier = Modifier.size(4.dp))
         Text(
-            text = state.emptySubtitle,
+            text = state.emptySubtitle(strings),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -274,7 +296,7 @@ private fun UpcomingEmptyState(
                 onClick = onClearFilters,
                 modifier = Modifier.testTag(UPCOMING_EMPTY_CLEAR_FILTERS_TEST_TAG),
             ) {
-                Text("Clear filters")
+                Text(strings.text(UiText.ClearFilters))
             }
         }
     }

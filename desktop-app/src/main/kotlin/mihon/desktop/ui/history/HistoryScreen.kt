@@ -46,6 +46,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import mihon.desktop.history.DesktopHistoryGroup
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.library.model.HistoryWithDetails
 import mihon.desktop.ui.common.MangaCover
 import java.time.Instant
@@ -217,6 +220,7 @@ private fun HistoryItemRow(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = LocalStrings.current
     val timeStr = remember(item.lastRead) {
         Instant.ofEpochMilli(item.lastRead).atZone(ZoneId.systemDefault()).format(timeFormatter)
     }
@@ -260,7 +264,7 @@ private fun HistoryItemRow(
                 if (item.readDuration > 0) {
                     val durationMin = (item.readDuration / 60000).coerceAtLeast(1)
                     Text(
-                        text = "Read for ~$durationMin min",
+                        text = strings.text(UiText.ReadingDuration, durationMin),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.secondary,
                     )

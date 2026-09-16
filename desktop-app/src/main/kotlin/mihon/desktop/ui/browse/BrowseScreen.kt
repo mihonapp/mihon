@@ -54,6 +54,9 @@ import mihon.desktop.extension.SourcePreferenceDefinition
 import mihon.desktop.extension.SourceState
 import mihon.desktop.extension.builtin.BundledLocalSource
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
+import mihon.desktop.i18n.trustStatusLabel
 import mihon.desktop.library.model.LibraryManga
 import mihon.extension.model.SourceDescriptor
 import mihon.extension.source.model.SManga
@@ -93,10 +96,10 @@ data class BrowseUiState(
     val globalSearchResults: List<GlobalSearchSourceResult> = emptyList(),
 )
 
-fun chooseMextFile(): File? {
+fun chooseMextFile(title: String = "Select Extension Package (.mext, .apk, .jar)"): File? {
     val dialog = java.awt.FileDialog(
         null as java.awt.Frame?,
-        "Select Extension Package (.mext, .apk, .jar)",
+        title,
         java.awt.FileDialog.LOAD,
     )
     dialog.setFilenameFilter { _, name ->
@@ -258,7 +261,7 @@ fun BrowseScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 OutlinedButton(
                     onClick = {
-                        val file = chooseMextFile()
+                        val file = chooseMextFile(strings.text(UiText.ChooseExtension))
                         if (file != null) {
                             onInstallFromFile(file)
                         }
@@ -409,12 +412,12 @@ fun BrowseScreen(
                     val usableSigningKey = ExtensionTrustStore.normalizeFingerprint(item.signingKey)
                     if (usableSigningKey.isNotBlank()) {
                         Text(
-                            text = "Repository signing key: $usableSigningKey",
+                            text = strings.text(UiText.RepositorySigningKey, usableSigningKey),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     } else {
                         Text(
-                            text = "No repository signing key. You must explicitly trust this package's signature.",
+                            text = strings.text(UiText.NoRepositoryKey),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.testTag("unsigned-extension-warning"),
@@ -462,15 +465,15 @@ fun BrowseScreen(
         val request = pendingTrustRequest
         AlertDialog(
             onDismissRequest = { activeTrustStore?.clearPendingTrustRequest() },
-            title = { Text("Trust extension signature?") },
+            title = { Text(strings.text(UiText.TrustExtensionSignature)) },
             text = {
                 Column {
-                    Text("Package: ${request.pkg}")
+                    Text(strings.browsePackageLabel(request.pkg))
                     Text(
                         text = if (request.fingerprints.isEmpty()) {
-                            "This package is unsigned. Trusting it allows the extension to run."
+                            strings.text(UiText.UnsignedExtensionHint)
                         } else {
-                            "Signer SHA-256: ${request.fingerprints.joinToString()}"
+                            strings.text(UiText.SignerFingerprint, request.fingerprints.joinToString())
                         },
                         style = MaterialTheme.typography.bodySmall,
                     )
@@ -498,7 +501,7 @@ fun BrowseScreen(
                     },
                     modifier = Modifier.testTag("confirm-trust-install-button"),
                 ) {
-                    Text("Trust & Install")
+                    Text(strings.browseTrustAndInstall)
                 }
             },
             dismissButton = {
@@ -867,7 +870,7 @@ private fun ExtensionsListView(
             item {
                 Text(
                     text = if (state.availableExtensions.isEmpty()) {
-                        "No extension repositories loaded. Add a repository or install a .mext file from your disk."
+                        strings.text(UiText.NoRepositories)
                     } else {
                         strings.browseNoMangaFound
                     },
@@ -960,7 +963,7 @@ private fun ExtensionItemRow(
                 )
                 if (item.sources.isNotEmpty()) {
                     Text(
-                        text = "Sources: ${item.sources.joinToString(", ") { it.name }}",
+                        text = strings.text(UiText.ExtensionSources, item.sources.joinToString(", ") { it.name }),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -1030,7 +1033,7 @@ private fun ExtensionItemRow(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = displayTrustStatus.label,
+                text = strings.trustStatusLabel(displayTrustStatus),
                 style = MaterialTheme.typography.bodySmall,
                 color = when (displayTrustStatus) {
                     ExtensionTrustStatus.TRUSTED -> MaterialTheme.colorScheme.primary
@@ -1044,13 +1047,13 @@ private fun ExtensionItemRow(
                     onClick = { onTrustExtension(installed) },
                     modifier = Modifier.testTag("trust-btn-${item.pkg}"),
                 ) {
-                    Text("Trust")
+                    Text(strings.extensionTrust)
                 }
                 TextButton(
                     onClick = { onRevokeExtension(installed) },
                     modifier = Modifier.testTag("revoke-btn-${item.pkg}"),
                 ) {
-                    Text("Revoke")
+                    Text(strings.extensionRevoke)
                 }
             }
         }

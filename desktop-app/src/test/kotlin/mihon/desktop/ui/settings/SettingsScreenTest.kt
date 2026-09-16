@@ -82,7 +82,7 @@ class SettingsScreenTest {
         }
 
         onNodeWithTag("about-screen").assertExists()
-        onNodeWithText("About Mihon W").assertExists()
+        onNodeWithText("About mihondesk").assertExists()
         onNodeWithText("Licensed under the Apache License, Version 2.0.").assertExists()
     }
 
@@ -119,7 +119,7 @@ class SettingsScreenTest {
         }
 
         onNodeWithTag("about-screen").assertExists()
-        onNodeWithText("关于 Mihon W").assertExists()
+        onNodeWithText("关于 mihondesk").assertExists()
         onNodeWithText("开源许可证").assertExists()
     }
 

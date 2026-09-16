@@ -74,6 +74,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.Json
 import mihon.desktop.category.DesktopCategory
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.ui.common.MangaBackdropBanner
 
@@ -124,6 +127,7 @@ fun MangaDetailScreen(
     onSetChapterSettingsAsDefault: (Boolean) -> Unit = actions.onSetChapterSettingsAsDefault,
     onResetChapterSettingsToDefault: () -> Unit = actions.onResetChapterSettingsToDefault,
 ) {
+    val strings = LocalStrings.current
     Surface(
         modifier = modifier.testTag("manga-detail-pane"),
         color = MaterialTheme.colorScheme.surface,
@@ -144,7 +148,7 @@ fun MangaDetailScreen(
                 onRetry = onRetry,
             )
             state.manga == null -> DetailMessage(
-                message = "This manga is no longer in your library.",
+                message = strings.text(UiText.MangaRemoved),
                 tag = "manga-detail-missing",
                 onBack = onBack,
                 showBack = showBack,
@@ -388,7 +392,7 @@ fun MangaDetailScreen(
                                         }
                                         androidx.compose.material3.OutlinedButton(
                                             onClick = {
-                                                val picked = chooseCoverImage()
+                                                val picked = chooseCoverImage(strings.text(UiText.ChooseCover))
                                                 if (picked != null) {
                                                     customCoverManager?.setCustomCover(manga.id, picked)
                                                     imageLoader?.clearMemoryCache()
@@ -662,7 +666,7 @@ fun MangaDetailScreen(
                                                 ) {
                                                     Icon(
                                                         imageVector = Icons.Rounded.Settings,
-                                                        contentDescription = "Chapter settings",
+                                                        contentDescription = strings.text(UiText.ChapterSettings),
                                                         tint = MaterialTheme.colorScheme.primary,
                                                     )
                                                 }
@@ -676,7 +680,7 @@ fun MangaDetailScreen(
                                             ) {
                                                 Icon(
                                                     imageVector = Icons.Rounded.Search,
-                                                    contentDescription = "Search chapters",
+                                                    contentDescription = strings.text(UiText.SearchChapters),
                                                     tint = if (isSearchingChapters || chapterSearchQuery.isNotEmpty()) {
                                                         MaterialTheme.colorScheme.primary
                                                     } else {
@@ -730,7 +734,7 @@ fun MangaDetailScreen(
                                                     IconButton(onClick = { chapterSearchQuery = "" }) {
                                                         Icon(
                                                             imageVector = Icons.Rounded.Close,
-                                                            contentDescription = "Clear search",
+                                                            contentDescription = strings.text(UiText.ClearSearch),
                                                             modifier = Modifier.size(18.dp),
                                                         )
                                                     }
@@ -827,7 +831,11 @@ fun MangaDetailScreen(
                                 when (item) {
                                     is ChapterListItem.Chapter -> ChapterRow(
                                         chapter = item.chapter,
-                                        displayName = item.label,
+                                        displayName = chapterDisplayLabel(
+                                            item.chapter,
+                                            state.chapterSettings.displayMode,
+                                            strings,
+                                        ),
                                         availability = state.readerAvailability[item.chapter.id]
                                             ?: ChapterReaderAvailability.RemoteOnly,
                                         isDownloaded = state.downloadedChapterIds.contains(item.chapter.id),
@@ -946,7 +954,7 @@ fun MangaDetailScreen(
                         isCustomCover = hasCustomCover,
                         onDismissRequest = { isCoverDialogOpen = false },
                         onChangeCover = {
-                            val picked = chooseCoverImage()
+                            val picked = chooseCoverImage(strings.text(UiText.ChooseCover))
                             if (picked != null) {
                                 customCoverManager?.setCustomCover(manga.id, picked)
                                 imageLoader?.clearMemoryCache()
@@ -1265,7 +1273,7 @@ private fun ChapterRow(
                 enabled = availability is ChapterReaderAvailability.Readable,
                 modifier = Modifier.testTag("chapter-reader-action"),
             ) {
-                Text(chapterActionLabel(chapter, availability))
+                Text(chapterActionLabel(chapter, availability, strings))
             }
         }
     }
@@ -1274,14 +1282,15 @@ private fun ChapterRow(
 private fun chapterActionLabel(
     chapter: LibraryChapter,
     availability: ChapterReaderAvailability,
+    strings: mihon.desktop.i18n.DesktopStrings,
 ): String = when (availability) {
     ChapterReaderAvailability.Readable -> if (chapter.lastPageRead > 0L) {
-        "Continue · Page ${chapter.lastPageRead}"
+        strings.text(UiText.ContinuePage, chapter.lastPageRead)
     } else {
-        "Read"
+        strings.text(UiText.ReadChapter)
     }
-    ChapterReaderAvailability.MissingLocalContent -> "Locate or re-import local content"
-    ChapterReaderAvailability.RemoteOnly -> "Available after source support"
+    ChapterReaderAvailability.MissingLocalContent -> strings.text(UiText.LocateContent)
+    ChapterReaderAvailability.RemoteOnly -> strings.text(UiText.SourceSupportRequired)
 }
 
 @Composable
@@ -1340,8 +1349,8 @@ private fun decodeGenres(raw: String): List<String> = try {
     emptyList()
 }
 
-internal fun chooseCoverImage(): java.nio.file.Path? {
-    val dialog = java.awt.FileDialog(null as java.awt.Frame?, "Choose Cover Image", java.awt.FileDialog.LOAD)
+internal fun chooseCoverImage(title: String = "Choose Cover Image"): java.nio.file.Path? {
+    val dialog = java.awt.FileDialog(null as java.awt.Frame?, title, java.awt.FileDialog.LOAD)
     dialog.setFilenameFilter { _, name ->
         val l = name.lowercase()
         l.endsWith(".jpg") || l.endsWith(".jpeg") || l.endsWith(".png") || l.endsWith(".webp")

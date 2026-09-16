@@ -118,6 +118,7 @@ class BrowsePresenterTest {
                 processManager = null,
                 preferenceStore = prefStore,
             )
+            sourceManager.registerBuiltinSource(BundledMangaDexSource())
             val presenter = BrowsePresenter(
                 sourceManager = sourceManager,
                 installer = installer,
@@ -211,6 +212,7 @@ class BrowsePresenterTest {
             preferenceStore = prefStore,
             cookieStore = cookieStore,
         )
+        sourceManager.registerBuiltinSource(BundledMangaDexSource())
         val presenter = BrowsePresenter(
             sourceManager = sourceManager,
             installer = installer,

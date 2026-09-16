@@ -59,6 +59,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.ReaderBackgroundColor
 import mihon.desktop.reader.ReaderClickAction
@@ -187,14 +189,14 @@ internal fun ReaderChrome(
                             onClick = { overflowExpanded = true },
                             modifier = Modifier.testTag("reader-overflow"),
                         ) {
-                            Icon(Icons.Rounded.MoreVert, contentDescription = "More reader actions")
+                            Icon(Icons.Rounded.MoreVert, contentDescription = strings.text(UiText.MoreReaderActions))
                         }
                         DropdownMenu(
                             expanded = overflowExpanded,
                             onDismissRequest = { overflowExpanded = false },
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Page actions") },
+                                text = { Text(strings.text(UiText.PageActions)) },
                                 onClick = {
                                     overflowExpanded = false
                                     onOpenPageActions()
@@ -238,7 +240,7 @@ internal fun ReaderChrome(
                                 modifier = Modifier.testTag("reader-borderless"),
                             )
                             DropdownMenuItem(
-                                text = { Text("Zoom out") },
+                                text = { Text(strings.text(UiText.ZoomOut)) },
                                 onClick = {
                                     overflowExpanded = false
                                     onZoom(state.zoom - 0.25f)
@@ -246,7 +248,7 @@ internal fun ReaderChrome(
                                 modifier = Modifier.testTag("reader-zoom-out"),
                             )
                             DropdownMenuItem(
-                                text = { Text("Reset zoom (${(state.zoom * 100).toInt()}%)") },
+                                text = { Text(strings.text(UiText.ResetZoom, (state.zoom * 100).toInt())) },
                                 onClick = {
                                     overflowExpanded = false
                                     onZoom(1f)
@@ -254,7 +256,7 @@ internal fun ReaderChrome(
                                 modifier = Modifier.testTag("reader-zoom-reset"),
                             )
                             DropdownMenuItem(
-                                text = { Text("Zoom in") },
+                                text = { Text(strings.text(UiText.ZoomIn)) },
                                 onClick = {
                                     overflowExpanded = false
                                     onZoom(state.zoom + 0.25f)
@@ -523,14 +525,14 @@ private fun LegacyReaderSettingsDialog(
                     valueRange = 0f..30f,
                     modifier = Modifier.testTag("reader-setting-webtoon-side-padding"),
                 )
-                Text("Chapter transitions", style = MaterialTheme.typography.titleSmall)
+                Text(strings.readerChapterTransitions, style = MaterialTheme.typography.titleSmall)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = draft.alwaysShowChapterTransition,
                         onCheckedChange = { draft = draft.copy(alwaysShowChapterTransition = it) },
                         modifier = Modifier.testTag("reader-setting-always-show-transition"),
                     )
-                    Text("Always show chapter transition")
+                    Text(strings.readerAlwaysShowChapterTransition)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
@@ -538,7 +540,7 @@ private fun LegacyReaderSettingsDialog(
                         onCheckedChange = { draft = draft.copy(skipReadChapters = it) },
                         modifier = Modifier.testTag("reader-setting-skip-read"),
                     )
-                    Text("Skip read chapters")
+                    Text(strings.readerSkipReadChapters)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
@@ -546,7 +548,7 @@ private fun LegacyReaderSettingsDialog(
                         onCheckedChange = { draft = draft.copy(skipFilteredChapters = it) },
                         modifier = Modifier.testTag("reader-setting-skip-filtered"),
                     )
-                    Text("Skip filtered chapters")
+                    Text(strings.readerSkipFilteredChapters)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
@@ -554,7 +556,7 @@ private fun LegacyReaderSettingsDialog(
                         onCheckedChange = { draft = draft.copy(skipDuplicateChapters = it) },
                         modifier = Modifier.testTag("reader-setting-skip-duplicate"),
                     )
-                    Text("Skip duplicate chapters")
+                    Text(strings.readerSkipDuplicateChapters)
                 }
             }
         },
@@ -765,22 +767,22 @@ internal fun ReaderShortcutsDialog(onDismiss: () -> Unit) {
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                ShortcutSectionHeader("Navigation")
-                ShortcutItemRow("← / → or A / D", "Previous / Next page")
-                ShortcutItemRow("PageUp / PageDown", "Scroll / Flip page")
-                ShortcutItemRow("Home / End", "First / Last page")
-                ShortcutItemRow("Mouse Back / Forward", "Previous / Next page")
+                ShortcutSectionHeader(strings.text(UiText.Navigation))
+                ShortcutItemRow(strings.text(UiText.ArrowKeys), strings.text(UiText.PreviousNextPage))
+                ShortcutItemRow("PageUp / PageDown", strings.text(UiText.ScrollFlipPage))
+                ShortcutItemRow("Home / End", strings.text(UiText.FirstLastPage))
+                ShortcutItemRow(strings.text(UiText.MouseBackForward), strings.text(UiText.PreviousNextPage))
 
-                ShortcutSectionHeader("Zoom & Window")
-                ShortcutItemRow("+ / −", "Zoom in / Zoom out")
-                ShortcutItemRow("0", "Reset zoom (100%)")
-                ShortcutItemRow("F", "Toggle fullscreen")
-                ShortcutItemRow("B", "Toggle borderless window")
-                ShortcutItemRow("Escape", "Exit reader")
+                ShortcutSectionHeader(strings.text(UiText.ZoomWindow))
+                ShortcutItemRow("+ / −", strings.text(UiText.ZoomInOut))
+                ShortcutItemRow("0", strings.text(UiText.ResetZoomFull))
+                ShortcutItemRow("F", strings.text(UiText.ToggleFullscreen))
+                ShortcutItemRow("B", strings.text(UiText.ToggleBorderless))
+                ShortcutItemRow("Escape", strings.text(UiText.ExitReader))
 
-                ShortcutSectionHeader("Controls & Cheatsheet")
-                ShortcutItemRow("Click Center", "Show / hide controls")
-                ShortcutItemRow("? or F1", "Show this shortcuts cheatsheet")
+                ShortcutSectionHeader(strings.text(UiText.ControlsHelp))
+                ShortcutItemRow(strings.text(UiText.ClickCenter), strings.text(UiText.ShowHideControls))
+                ShortcutItemRow(strings.text(UiText.HelpKeys), strings.text(UiText.ShowShortcuts))
             }
         },
         confirmButton = {

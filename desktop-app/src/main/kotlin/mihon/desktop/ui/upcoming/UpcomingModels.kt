@@ -1,6 +1,10 @@
 package mihon.desktop.ui.upcoming
 
 import mihon.desktop.category.DesktopCategory
+import mihon.desktop.i18n.DesktopStrings
+import mihon.desktop.i18n.EnglishStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.ui.library.TriStateFilter
 import java.time.Instant
 import java.time.LocalDate
@@ -88,19 +92,21 @@ data class UpcomingUiState(
     val isEmpty: Boolean
         get() = visibleEntries.isEmpty()
 
-    val emptyTitle: String
-        get() = when {
-            !hasAnyUpcomingBeforeFilters -> "No upcoming chapters"
-            hasActiveFilters && visibleEntries.isEmpty() -> "No matching upcoming chapters"
-            selectedDate != null -> "No chapters on this day"
-            else -> "No upcoming chapters this month"
-        }
+    val emptyTitle: String get() = emptyTitle(EnglishStrings)
 
-    val emptySubtitle: String
-        get() = when {
-            !hasAnyUpcomingBeforeFilters -> "Future chapter release dates from your library will appear here."
-            hasActiveFilters -> "Try clearing or changing the category filters."
-            selectedDate != null -> "Pick another day or show the whole month."
-            else -> "Browse another month to see upcoming chapters."
-        }
+    fun emptyTitle(strings: DesktopStrings): String = when {
+        !hasAnyUpcomingBeforeFilters -> strings.text(UiText.UpcomingEmpty)
+        hasActiveFilters && visibleEntries.isEmpty() -> strings.text(UiText.UpcomingNoMatches)
+        selectedDate != null -> strings.text(UiText.UpcomingNoDay)
+        else -> strings.text(UiText.UpcomingNoMonth)
+    }
+
+    val emptySubtitle: String get() = emptySubtitle(EnglishStrings)
+
+    fun emptySubtitle(strings: DesktopStrings): String = when {
+        !hasAnyUpcomingBeforeFilters -> strings.text(UiText.UpcomingEmptyHint)
+        hasActiveFilters -> strings.text(UiText.UpcomingFilterHint)
+        selectedDate != null -> strings.text(UiText.UpcomingDayHint)
+        else -> strings.text(UiText.UpcomingMonthHint)
+    }
 }

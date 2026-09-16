@@ -27,6 +27,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.chapterCountLabel
+import mihon.desktop.i18n.text
 import mihon.desktop.library.model.LibraryManga
 import java.util.Locale
 
@@ -79,10 +83,11 @@ fun DuplicateMangaDialog(
     onMigrate: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = LocalStrings.current
     AlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier.testTag("duplicate-manga-dialog"),
-        title = { Text("Possible duplicates") },
+        title = { Text(strings.text(UiText.PossibleDuplicates)) },
         text = {
             Column(
                 modifier = Modifier
@@ -91,7 +96,7 @@ fun DuplicateMangaDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
-                    "The manga you added may already be in your library from a different source.",
+                    strings.text(UiText.DuplicateHint),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Surface(
@@ -100,7 +105,7 @@ fun DuplicateMangaDialog(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text("Added", style = MaterialTheme.typography.labelSmall)
+                        Text(strings.text(UiText.Added), style = MaterialTheme.typography.labelSmall)
                         Text(
                             text = state.target.title,
                             style = MaterialTheme.typography.titleSmall,
@@ -130,7 +135,7 @@ fun DuplicateMangaDialog(
                 onClick = onDismissRequest,
                 modifier = Modifier.testTag("duplicate-cancel"),
             ) {
-                Text("Cancel")
+                Text(strings.dialogCancel)
             }
         },
         confirmButton = {
@@ -138,7 +143,7 @@ fun DuplicateMangaDialog(
                 onClick = onAddAnyway,
                 modifier = Modifier.testTag("duplicate-add-anyway"),
             ) {
-                Text("Add anyway")
+                Text(strings.text(UiText.AddAnyway))
             }
         },
     )
@@ -151,6 +156,7 @@ private fun DuplicateCandidateRow(
     onOpen: () -> Unit,
     onMigrate: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,7 +188,7 @@ private fun DuplicateCandidateRow(
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                text = "${candidate.chapterCount} ${if (candidate.chapterCount == 1L) "chapter" else "chapters"}",
+                text = strings.chapterCountLabel(candidate.chapterCount),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.outline,
             )
@@ -192,13 +198,13 @@ private fun DuplicateCandidateRow(
                 onClick = onOpen,
                 modifier = Modifier.testTag("duplicate-open-${candidate.id}"),
             ) {
-                Text("Open")
+                Text(strings.text(UiText.Open))
             }
             Button(
                 onClick = onMigrate,
                 modifier = Modifier.testTag("duplicate-migrate-${candidate.id}"),
             ) {
-                Text("Migrate")
+                Text(strings.migrateAction)
             }
         }
     }

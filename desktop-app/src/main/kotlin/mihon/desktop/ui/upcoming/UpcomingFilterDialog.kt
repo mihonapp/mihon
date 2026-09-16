@@ -25,6 +25,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mihon.desktop.category.DesktopCategory
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.ui.library.TriStateFilter
 
 const val UPCOMING_FILTER_DIALOG_TEST_TAG = "upcoming_filter_dialog"
@@ -40,6 +43,7 @@ fun UpcomingFilterDialog(
     onClearFilters: () -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     val hasActiveFilters = filters.values.any { it != TriStateFilter.Disabled }
 
     AlertDialog(
@@ -47,7 +51,7 @@ fun UpcomingFilterDialog(
         modifier = Modifier.testTag(UPCOMING_FILTER_DIALOG_TEST_TAG),
         title = {
             Text(
-                text = "Category filters",
+                text = strings.text(UiText.CategoryFilters),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
             )
@@ -55,7 +59,7 @@ fun UpcomingFilterDialog(
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Click a category to cycle: Off -> Include -> Exclude",
+                    text = strings.text(UiText.CategoryCycleHint),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -63,7 +67,7 @@ fun UpcomingFilterDialog(
 
                 if (categories.isEmpty()) {
                     Text(
-                        text = "No library categories available.",
+                        text = strings.text(UiText.NoCategories),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -90,7 +94,7 @@ fun UpcomingFilterDialog(
                     enabled = hasActiveFilters,
                     modifier = Modifier.align(Alignment.End).testTag(UPCOMING_FILTER_CLEAR_TEST_TAG),
                 ) {
-                    Text("Clear filters")
+                    Text(strings.text(UiText.ClearFilters))
                 }
             }
         },
@@ -99,7 +103,7 @@ fun UpcomingFilterDialog(
                 onClick = onDismiss,
                 modifier = Modifier.testTag(UPCOMING_FILTER_DONE_TEST_TAG),
             ) {
-                Text("Done")
+                Text(strings.libraryBatchDone)
             }
         },
     )

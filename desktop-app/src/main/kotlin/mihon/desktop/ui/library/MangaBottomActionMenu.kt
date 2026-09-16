@@ -35,6 +35,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 
 @Composable
 fun MangaBottomActionMenu(
@@ -82,7 +84,7 @@ fun MangaBottomActionMenu(
                     onClick = onCloseClicked,
                     modifier = Modifier.testTag("batch-chapter-close"),
                 ) {
-                    Icon(imageVector = Icons.Rounded.Close, contentDescription = "Close selection")
+                    Icon(imageVector = Icons.Rounded.Close, contentDescription = strings.text(UiText.CloseSelection))
                 }
                 Text(
                     text = strings.chapterBatchSelected(selectedCount),

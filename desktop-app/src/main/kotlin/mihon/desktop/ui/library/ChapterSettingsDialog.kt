@@ -36,6 +36,9 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.library.model.LibraryChapter
 import mihon.desktop.library.model.MangaDetails
 import kotlin.math.floor
@@ -235,10 +238,14 @@ fun formatChapterNumber(number: Double): String? {
     return if (number == integral) integral.toLong().toString() else number.toString()
 }
 
-fun chapterDisplayLabel(chapter: LibraryChapter, displayMode: ChapterDisplayMode): String = when (displayMode) {
+fun chapterDisplayLabel(
+    chapter: LibraryChapter,
+    displayMode: ChapterDisplayMode,
+    strings: mihon.desktop.i18n.DesktopStrings = mihon.desktop.i18n.EnglishStrings,
+): String = when (displayMode) {
     ChapterDisplayMode.Name -> chapter.name
     ChapterDisplayMode.Number -> formatChapterNumber(chapter.chapterNumber) ?: chapter.name
-    ChapterDisplayMode.SourceOrder -> "Source #${chapter.sourceOrder + 1}"
+    ChapterDisplayMode.SourceOrder -> strings.text(UiText.SourceOrderNumber, chapter.sourceOrder + 1)
 }
 
 fun calculateChapterGap(higherChapterNumber: Double, lowerChapterNumber: Double): Int {
@@ -297,13 +304,14 @@ fun ChapterSettingsDialog(
     onResetToDefault: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = LocalStrings.current
     var showScanlatorDialog by remember { mutableStateOf(false) }
     var showSetAsDefaultDialog by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier.testTag("chapter-settings-dialog"),
-        title = { Text("Chapter settings") },
+        title = { Text(strings.text(UiText.ChapterSettings)) },
         text = {
             Column(
                 modifier = Modifier
@@ -311,7 +319,7 @@ fun ChapterSettingsDialog(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                SettingsSection("Scanlators")
+                SettingsSection(strings.text(UiText.Scanlators))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -321,15 +329,15 @@ fun ChapterSettingsDialog(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Scanlator filter",
+                        text = strings.text(UiText.ScanlatorFilter),
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
                     )
                     Text(
                         text = if (settings.excludedScanlators.isEmpty()) {
-                            "All"
+                            strings.text(UiText.All)
                         } else {
-                            "${settings.excludedScanlators.size} excluded"
+                            strings.text(UiText.ExcludedCount, settings.excludedScanlators.size)
                         },
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -338,13 +346,13 @@ fun ChapterSettingsDialog(
 
                 HorizontalDivider()
 
-                SettingsSection("Chapter display")
+                SettingsSection(strings.text(UiText.ChapterDisplay))
                 ChapterDisplayMode.entries.forEach { mode ->
                     RadioOption(
                         label = when (mode) {
-                            ChapterDisplayMode.Name -> "Chapter name"
-                            ChapterDisplayMode.Number -> "Chapter number"
-                            ChapterDisplayMode.SourceOrder -> "Source order"
+                            ChapterDisplayMode.Name -> strings.text(UiText.ChapterName)
+                            ChapterDisplayMode.Number -> strings.text(UiText.ChapterNumber)
+                            ChapterDisplayMode.SourceOrder -> strings.text(UiText.SourceOrder)
                         },
                         selected = settings.displayMode == mode,
                         onClick = { onDisplayModeChange(mode) },
@@ -365,16 +373,16 @@ fun ChapterSettingsDialog(
                         onCheckedChange = onShowMissingChaptersChange,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Show missing chapter indicators", style = MaterialTheme.typography.bodyMedium)
+                    Text(strings.text(UiText.ShowMissingChapters), style = MaterialTheme.typography.bodyMedium)
                 }
 
                 HorizontalDivider()
 
-                SettingsSection("Sort")
+                SettingsSection(strings.text(UiText.Sort))
                 listOf(
-                    ChapterSortMode.SourceOrder to "Sort by source",
-                    ChapterSortMode.ChapterNumber to "Sort by number",
-                    ChapterSortMode.UploadDate to "Sort by upload date",
+                    ChapterSortMode.SourceOrder to strings.sortSourceOrder,
+                    ChapterSortMode.ChapterNumber to strings.sortChapterNumber,
+                    ChapterSortMode.UploadDate to strings.sortUploadDate,
                 ).forEach { (mode, label) ->
                     RadioOption(
                         label = label,
@@ -396,7 +404,7 @@ fun ChapterSettingsDialog(
                         onCheckedChange = { onSortModeChange(settings.sortMode, it) },
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Ascending order", style = MaterialTheme.typography.bodyMedium)
+                    Text(strings.librarySortAscending, style = MaterialTheme.typography.bodyMedium)
                 }
 
                 HorizontalDivider()
@@ -410,13 +418,13 @@ fun ChapterSettingsDialog(
                         onClick = { showSetAsDefaultDialog = true },
                         modifier = Modifier.testTag("chapter-settings-set-default"),
                     ) {
-                        Text("Set as default")
+                        Text(strings.text(UiText.SetDefault))
                     }
                     TextButton(
                         onClick = onResetToDefault,
                         modifier = Modifier.testTag("chapter-settings-reset"),
                     ) {
-                        Text("Reset")
+                        Text(strings.filterReset)
                     }
                 }
             }
@@ -426,7 +434,7 @@ fun ChapterSettingsDialog(
                 onClick = onDismissRequest,
                 modifier = Modifier.testTag("chapter-settings-done"),
             ) {
-                Text("Done")
+                Text(strings.libraryBatchDone)
             }
         },
     )
@@ -492,6 +500,7 @@ fun ScanlatorFilterDialog(
     onConfirm: (Set<String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = LocalStrings.current
     val sortedScanlators = remember(availableScanlators) {
         availableScanlators.sortedWith(String.CASE_INSENSITIVE_ORDER)
     }
@@ -502,14 +511,14 @@ fun ScanlatorFilterDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier.testTag("scanlator-filter-dialog"),
-        title = { Text("Exclude scanlators") },
+        title = { Text(strings.text(UiText.ExcludeScanlators)) },
         text = {
             if (sortedScanlators.isEmpty()) {
-                Text("No scanlators found")
+                Text(strings.text(UiText.NoScanlators))
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        "Chapters from checked scanlators are hidden from the chapter list and reader navigation.",
+                        strings.text(UiText.ExcludeScanlatorsHint),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -545,7 +554,7 @@ fun ScanlatorFilterDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text("Cancel")
+                Text(strings.dialogCancel)
             }
         },
         confirmButton = {
@@ -557,7 +566,7 @@ fun ScanlatorFilterDialog(
                         },
                         modifier = Modifier.testTag("scanlator-filter-toggle-all"),
                     ) {
-                        Text(if (selected.isEmpty()) "Select all" else "Clear")
+                        Text(if (selected.isEmpty()) strings.chapterBatchSelectAll else strings.text(UiText.Clear))
                     }
                 }
                 TextButton(
@@ -567,7 +576,7 @@ fun ScanlatorFilterDialog(
                     },
                     modifier = Modifier.testTag("scanlator-filter-confirm"),
                 ) {
-                    Text("OK")
+                    Text(strings.dialogOk)
                 }
             }
         },
@@ -579,14 +588,15 @@ private fun SetChapterSettingsAsDefaultDialog(
     onDismissRequest: () -> Unit,
     onConfirmed: (applyToExistingManga: Boolean) -> Unit,
 ) {
+    val strings = LocalStrings.current
     var applyToExisting by remember { mutableStateOf(false) }
     AlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = Modifier.testTag("chapter-settings-set-default-dialog"),
-        title = { Text("Default chapter settings") },
+        title = { Text(strings.text(UiText.DefaultChapterSettings)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Apply these chapter settings to all new manga?")
+                Text(strings.text(UiText.ApplyChapterDefaults))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -600,13 +610,13 @@ private fun SetChapterSettingsAsDefaultDialog(
                         onCheckedChange = { applyToExisting = it },
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Also apply to existing library manga", style = MaterialTheme.typography.bodyMedium)
+                    Text(strings.text(UiText.ApplyExistingManga), style = MaterialTheme.typography.bodyMedium)
                 }
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text("Cancel")
+                Text(strings.dialogCancel)
             }
         },
         confirmButton = {
@@ -614,7 +624,7 @@ private fun SetChapterSettingsAsDefaultDialog(
                 onClick = { onConfirmed(applyToExisting) },
                 modifier = Modifier.testTag("chapter-settings-set-default-confirm"),
             ) {
-                Text("OK")
+                Text(strings.dialogOk)
             }
         },
     )

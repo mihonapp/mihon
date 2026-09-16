@@ -21,6 +21,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.reader.ReaderBackgroundColor
 import mihon.reader.model.PageDescriptor
 import mihon.reader.model.PageId
@@ -130,6 +133,7 @@ internal fun ReaderPageFrame(
     intrinsicSize: PageSize? = null,
     viewportTiling: Boolean = true,
 ) {
+    val strings = LocalStrings.current
     val effectivePage = page.withIntrinsicSize(intrinsicSize)
     BoxWithConstraints(
         modifier = modifier
@@ -148,7 +152,7 @@ internal fun ReaderPageFrame(
                 .fillMaxSize()
                 .testTag(pageTag(pageIndex))
                 .semantics {
-                    contentDescription = "Page ${pageIndex + 1} of $totalPages"
+                    contentDescription = strings.text(UiText.PageDescription, pageIndex + 1, totalPages)
                     readerPageIndex = pageIndex
                     readerScaleMode = scaleMode
                     readerZoom = transform.zoom

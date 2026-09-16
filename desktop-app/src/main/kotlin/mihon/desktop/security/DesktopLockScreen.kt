@@ -31,6 +31,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 
 const val DESKTOP_LOCK_SCREEN_TEST_TAG = "desktop-lock-screen"
 const val DESKTOP_LOCK_PIN_FIELD_TEST_TAG = "desktop-lock-pin-field"
@@ -51,13 +54,14 @@ fun DesktopLockScreen(
     modifier: Modifier = Modifier,
     appName: String = "mihondesk",
 ) {
+    val strings = LocalStrings.current
     var pin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
     var showForgotConfirmation by remember { mutableStateOf(false) }
 
     fun submitPin() {
         if (pin.isBlank()) {
-            error = "Enter your PIN to unlock."
+            error = strings.text(UiText.EnterPin)
             return
         }
         if (onUnlock(pin)) {
@@ -65,7 +69,7 @@ fun DesktopLockScreen(
             error = null
         } else {
             pin = ""
-            error = "Incorrect PIN. Try again."
+            error = strings.text(UiText.WrongPin)
         }
     }
 
@@ -86,12 +90,12 @@ fun DesktopLockScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "$appName is locked",
+                text = strings.text(UiText.AppLocked, appName),
                 style = MaterialTheme.typography.headlineMedium,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Enter your PIN to view your library.",
+                text = strings.text(UiText.EnterPinLibrary),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -102,7 +106,7 @@ fun DesktopLockScreen(
                     pin = it
                     error = null
                 },
-                label = { Text("PIN") },
+                label = { Text(strings.text(UiText.Pin)) },
                 singleLine = true,
                 isError = error != null,
                 visualTransformation = PasswordVisualTransformation(),
@@ -127,14 +131,14 @@ fun DesktopLockScreen(
                 onClick = { submitPin() },
                 modifier = Modifier.testTag(DESKTOP_LOCK_UNLOCK_BUTTON_TEST_TAG),
             ) {
-                Text("Unlock")
+                Text(strings.text(UiText.Unlock))
             }
             Spacer(modifier = Modifier.height(8.dp))
             TextButton(
                 onClick = { showForgotConfirmation = true },
                 modifier = Modifier.testTag(DESKTOP_LOCK_FORGOT_PIN_BUTTON_TEST_TAG),
             ) {
-                Text("Forgot PIN?")
+                Text(strings.text(UiText.ForgotPin))
             }
         }
     }
@@ -142,12 +146,10 @@ fun DesktopLockScreen(
     if (showForgotConfirmation) {
         AlertDialog(
             onDismissRequest = { showForgotConfirmation = false },
-            title = { Text("Disable app lock?") },
+            title = { Text(strings.text(UiText.DisableLockQuestion)) },
             text = {
                 Text(
-                    "If you forgot your PIN you can disable app lock. Your library, downloads " +
-                        "and reading history are not deleted. You will need to set a new PIN to " +
-                        "lock the app again.",
+                    strings.text(UiText.ForgotPinHint),
                 )
             },
             confirmButton = {
@@ -158,7 +160,7 @@ fun DesktopLockScreen(
                     },
                     modifier = Modifier.testTag(DESKTOP_LOCK_FORGOT_CONFIRM_BUTTON_TEST_TAG),
                 ) {
-                    Text("Disable lock")
+                    Text(strings.text(UiText.DisableLockAction))
                 }
             },
             dismissButton = {
@@ -166,7 +168,7 @@ fun DesktopLockScreen(
                     onClick = { showForgotConfirmation = false },
                     modifier = Modifier.testTag(DESKTOP_LOCK_FORGOT_CANCEL_BUTTON_TEST_TAG),
                 ) {
-                    Text("Cancel")
+                    Text(strings.dialogCancel)
                 }
             },
         )

@@ -65,6 +65,8 @@ import mihon.desktop.diagnostics.DiagnosticSummary
 import mihon.desktop.i18n.AppLanguage
 import mihon.desktop.i18n.DesktopStrings
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.desktop.preferences.DesktopPreferences
 import mihon.desktop.preferences.ThemeMode
@@ -114,10 +116,7 @@ enum class SettingsSection(val label: String) {
 
     fun localized(strings: DesktopStrings): String = when (this) {
         General -> strings.settingsSectionGeneral
-        Security -> when (strings) {
-            mihon.desktop.i18n.SimplifiedChineseStrings, mihon.desktop.i18n.TraditionalChineseStrings -> "安全"
-            else -> "Security"
-        }
+        Security -> strings.text(UiText.Security)
         Appearance -> strings.settingsSectionAppearance
         Library -> strings.libraryTitle
         Reader -> strings.settingsSectionReader
@@ -396,11 +395,11 @@ private fun SecuritySettingsPane(
 
     fun enableWithPin(pin: String, confirm: String): Boolean {
         if (pin.length < MIN_PIN_LENGTH) {
-            setPinError = "PIN must be at least $MIN_PIN_LENGTH characters."
+            setPinError = strings.text(UiText.PinMinimum, MIN_PIN_LENGTH)
             return false
         }
         if (pin != confirm) {
-            setPinError = "PINs do not match."
+            setPinError = strings.text(UiText.PinsMismatch)
             return false
         }
         val enabled = appLockController.enableWithPin(
@@ -409,14 +408,14 @@ private fun SecuritySettingsPane(
             idleTimeoutMinutes = preferences.appLockIdleTimeoutMinutes,
         )
         if (!enabled) {
-            setPinError = "Could not set PIN."
+            setPinError = strings.text(UiText.CouldNotSetPin)
             return false
         }
         setPin = ""
         setPinConfirm = ""
         setPinError = null
         refreshPreferences()
-        pinMessage = "App lock enabled."
+        pinMessage = strings.text(UiText.LockEnabled)
         return true
     }
 
@@ -425,7 +424,7 @@ private fun SecuritySettingsPane(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
-            text = "Security",
+            text = strings.text(UiText.Security),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
         )
@@ -441,12 +440,12 @@ private fun SecuritySettingsPane(
                     modifier = Modifier.weight(1f).padding(end = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    Text("App Lock", fontWeight = FontWeight.Bold)
+                    Text(strings.text(UiText.AppLock), fontWeight = FontWeight.Bold)
                     Text(
                         text = if (preferences.appLockEnabled) {
-                            "App lock is on. A PIN is required to view your library."
+                            strings.text(UiText.LockEnabledHint)
                         } else {
-                            "App lock is off. Anyone at this PC can view your library."
+                            strings.text(UiText.LockDisabledHint)
                         },
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -463,7 +462,7 @@ private fun SecuritySettingsPane(
                                 appLockController.isPinConfigured() -> {
                                     appLockController.enableWithStoredPin()
                                     refreshPreferences()
-                                    pinMessage = "App lock enabled."
+                                    pinMessage = strings.text(UiText.LockEnabled)
                                 }
                                 setPin.length >= MIN_PIN_LENGTH && setPin == setPinConfirm -> {
                                     enableWithPin(setPin, setPinConfirm)
@@ -476,7 +475,7 @@ private fun SecuritySettingsPane(
                         } else {
                             appLockController.disableLock()
                             refreshPreferences()
-                            pinMessage = "App lock disabled."
+                            pinMessage = strings.text(UiText.LockDisabled)
                         }
                     },
                     modifier = Modifier.testTag("security-enable-switch"),
@@ -487,9 +486,9 @@ private fun SecuritySettingsPane(
         if (!preferences.appLockEnabled && !showSetPinDialog) {
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Set PIN", fontWeight = FontWeight.Bold)
+                    Text(strings.text(UiText.SetPin), fontWeight = FontWeight.Bold)
                     Text(
-                        "Use at least $MIN_PIN_LENGTH characters. Only a salted PBKDF2 hash is stored.",
+                        strings.text(UiText.PinHint, MIN_PIN_LENGTH),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -499,7 +498,7 @@ private fun SecuritySettingsPane(
                             setPin = it
                             setPinError = null
                         },
-                        label = { Text("New PIN") },
+                        label = { Text(strings.text(UiText.NewPin)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth().testTag("security-pin-field"),
@@ -510,7 +509,7 @@ private fun SecuritySettingsPane(
                             setPinConfirm = it
                             setPinError = null
                         },
-                        label = { Text("Confirm PIN") },
+                        label = { Text(strings.text(UiText.ConfirmPin)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth().testTag("security-pin-confirm-field"),
@@ -528,7 +527,7 @@ private fun SecuritySettingsPane(
                             onClick = { enableWithPin(setPin, setPinConfirm) },
                             modifier = Modifier.testTag("security-enable-button"),
                         ) {
-                            Text("Enable app lock")
+                            Text(strings.text(UiText.EnableLock))
                         }
                         OutlinedButton(
                             onClick = {
@@ -537,7 +536,7 @@ private fun SecuritySettingsPane(
                             },
                             modifier = Modifier.testTag("security-set-pin-button"),
                         ) {
-                            Text("Set PIN...")
+                            Text(strings.text(UiText.SetPinMore))
                         }
                     }
                 }
@@ -547,14 +546,14 @@ private fun SecuritySettingsPane(
         if (preferences.appLockEnabled) {
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Change PIN", fontWeight = FontWeight.Bold)
+                    Text(strings.text(UiText.ChangePin), fontWeight = FontWeight.Bold)
                     OutlinedTextField(
                         value = currentPin,
                         onValueChange = {
                             currentPin = it
                             pinError = null
                         },
-                        label = { Text("Current PIN") },
+                        label = { Text(strings.text(UiText.CurrentPin)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth().testTag("security-current-pin-field"),
@@ -565,7 +564,7 @@ private fun SecuritySettingsPane(
                             newPin = it
                             pinError = null
                         },
-                        label = { Text("New PIN") },
+                        label = { Text(strings.text(UiText.NewPin)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth().testTag("security-new-pin-field"),
@@ -576,7 +575,7 @@ private fun SecuritySettingsPane(
                             newPinConfirm = it
                             pinError = null
                         },
-                        label = { Text("Confirm new PIN") },
+                        label = { Text(strings.text(UiText.ConfirmNewPin)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth().testTag("security-new-pin-confirm-field"),
@@ -596,13 +595,13 @@ private fun SecuritySettingsPane(
                                 pinMessage = null
                                 when {
                                     currentPin.length < MIN_PIN_LENGTH -> {
-                                        pinError = "Enter your current PIN."
+                                        pinError = strings.text(UiText.EnterCurrentPin)
                                     }
                                     newPin.length < MIN_PIN_LENGTH -> {
-                                        pinError = "New PIN must be at least $MIN_PIN_LENGTH characters."
+                                        pinError = strings.text(UiText.NewPinMinimum, MIN_PIN_LENGTH)
                                     }
                                     newPin != newPinConfirm -> {
-                                        pinError = "New PINs do not match."
+                                        pinError = strings.text(UiText.NewPinsMismatch)
                                     }
                                     else -> {
                                         when (appLockController.changePin(currentPin, newPin)) {
@@ -611,17 +610,17 @@ private fun SecuritySettingsPane(
                                                 newPin = ""
                                                 newPinConfirm = ""
                                                 refreshPreferences()
-                                                pinMessage = "PIN changed."
+                                                pinMessage = strings.text(UiText.PinChanged)
                                             }
                                             ChangePinResult.WrongCurrentPin -> {
-                                                pinError = "Current PIN is incorrect."
+                                                pinError = strings.text(UiText.WrongCurrentPin)
                                             }
                                             ChangePinResult.InvalidNewPin -> {
                                                 pinError =
-                                                    "New PIN must be at least $MIN_PIN_LENGTH characters."
+                                                    strings.text(UiText.NewPinMinimum, MIN_PIN_LENGTH)
                                             }
                                             ChangePinResult.NotConfigured -> {
-                                                pinError = "App lock is not configured."
+                                                pinError = strings.text(UiText.LockNotConfigured)
                                             }
                                         }
                                     }
@@ -629,18 +628,18 @@ private fun SecuritySettingsPane(
                             },
                             modifier = Modifier.testTag("security-change-pin-button"),
                         ) {
-                            Text("Change PIN")
+                            Text(strings.text(UiText.ChangePin))
                         }
                         OutlinedButton(
                             onClick = {
                                 pinError = null
                                 appLockController.disableLock()
                                 refreshPreferences()
-                                pinMessage = "App lock disabled."
+                                pinMessage = strings.text(UiText.LockDisabled)
                             },
                             modifier = Modifier.testTag("security-disable-button"),
                         ) {
-                            Text("Disable app lock")
+                            Text(strings.text(UiText.DisableLock))
                         }
                     }
                 }
@@ -648,7 +647,7 @@ private fun SecuritySettingsPane(
 
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text("Lock behavior", fontWeight = FontWeight.Bold)
+                    Text(strings.text(UiText.LockBehavior), fontWeight = FontWeight.Bold)
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -659,9 +658,9 @@ private fun SecuritySettingsPane(
                             modifier = Modifier.weight(1f).padding(end = 16.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
-                            Text("Lock on startup", fontWeight = FontWeight.Medium)
+                            Text(strings.text(UiText.LockOnStartup), fontWeight = FontWeight.Medium)
                             Text(
-                                "Require the PIN the next time the app starts.",
+                                strings.text(UiText.LockOnStartupHint),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -679,16 +678,22 @@ private fun SecuritySettingsPane(
                     HorizontalDivider()
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Auto-lock after inactivity", fontWeight = FontWeight.Medium)
+                        Text(strings.text(UiText.AutoLock), fontWeight = FontWeight.Medium)
                         Text(
-                            "Lock automatically when there is no pointer or keyboard activity.",
+                            strings.text(UiText.AutoLockHint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             APP_LOCK_TIMEOUT_OPTIONS.forEach { minutes ->
                                 val isSelected = preferences.appLockIdleTimeoutMinutes == minutes
-                                val label = if (minutes == 0) "Never" else "$minutes min"
+                                val label = if (minutes ==
+                                    0
+                                ) {
+                                    strings.text(UiText.Never)
+                                } else {
+                                    strings.text(UiText.Minutes, minutes)
+                                }
                                 if (isSelected) {
                                     Button(
                                         onClick = {},
@@ -722,9 +727,9 @@ private fun SecuritySettingsPane(
                             modifier = Modifier.weight(1f).padding(end = 16.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
-                            Text("Lock now", fontWeight = FontWeight.Medium)
+                            Text(strings.text(UiText.LockNow), fontWeight = FontWeight.Medium)
                             Text(
-                                "Lock the app immediately without closing it.",
+                                strings.text(UiText.LockNowHint),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -733,7 +738,7 @@ private fun SecuritySettingsPane(
                             onClick = { appLockController.lockNow() },
                             modifier = Modifier.testTag("security-lock-now-button"),
                         ) {
-                            Text("Lock now")
+                            Text(strings.text(UiText.LockNow))
                         }
                     }
                 }
@@ -753,11 +758,11 @@ private fun SecuritySettingsPane(
     if (showSetPinDialog) {
         AlertDialog(
             onDismissRequest = { showSetPinDialog = false },
-            title = { Text("Set app lock PIN") },
+            title = { Text(strings.text(UiText.SetAppLockPin)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
-                        "Use at least $MIN_PIN_LENGTH characters. Only a salted PBKDF2 hash is stored.",
+                        strings.text(UiText.PinHint, MIN_PIN_LENGTH),
                     )
                     OutlinedTextField(
                         value = setPin,
@@ -765,7 +770,7 @@ private fun SecuritySettingsPane(
                             setPin = it
                             setPinError = null
                         },
-                        label = { Text("New PIN") },
+                        label = { Text(strings.text(UiText.NewPin)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth().testTag("security-pin-field"),
@@ -776,7 +781,7 @@ private fun SecuritySettingsPane(
                             setPinConfirm = it
                             setPinError = null
                         },
-                        label = { Text("Confirm PIN") },
+                        label = { Text(strings.text(UiText.ConfirmPin)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth().testTag("security-pin-confirm-field"),
@@ -1323,7 +1328,7 @@ private fun DownloadsSettingsPane(
                     }
                 }
 
-                Text("Parallel pages per chapter", fontWeight = FontWeight.Medium)
+                Text(strings.text(UiText.ParallelPages), fontWeight = FontWeight.Medium)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(1, 2, 3, 5).forEach { count ->
                         val isSelected = preferences.downloadPageParallelCount == count
@@ -1719,7 +1724,7 @@ private fun BackupSettingsPane(
                                         preferences = preferenceStore.load()
                                         backupMessage = strings.backupExportSuccess(path.toString())
                                     } catch (e: Exception) {
-                                        backupMessage = "Backup failed: ${e.message}"
+                                        backupMessage = strings.text(UiText.BackupFailed, e.message.orEmpty())
                                     } finally {
                                         backupInProgress = false
                                     }
@@ -1862,7 +1867,7 @@ private fun LibrarySettingsPane(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text("Skip manga that have not been started")
+                    Text(strings.text(UiText.SkipNotStarted))
                     Switch(
                         checked = preferences.libraryUpdateSkipStarted,
                         onCheckedChange = { checked ->
@@ -1883,7 +1888,7 @@ private fun LibrarySettingsPane(
                         preferenceStore.save(updated)
                         onPreferencesChanged?.invoke(updated)
                     },
-                    label = { Text("Only update category IDs") },
+                    label = { Text(strings.text(UiText.IncludeCategoryIds)) },
                     modifier = Modifier.fillMaxWidth().testTag("update-include-categories"),
                     singleLine = true,
                 )
@@ -1896,7 +1901,7 @@ private fun LibrarySettingsPane(
                         preferenceStore.save(updated)
                         onPreferencesChanged?.invoke(updated)
                     },
-                    label = { Text("Exclude category IDs") },
+                    label = { Text(strings.text(UiText.ExcludeCategoryIds)) },
                     modifier = Modifier.fillMaxWidth().testTag("update-exclude-categories"),
                     singleLine = true,
                 )
@@ -1946,7 +1951,7 @@ private fun LibrarySettingsPane(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text("Hide notification content")
+                    Text(strings.text(UiText.HideNotificationContent))
                     Switch(
                         checked = preferences.desktopNotificationsHideContent,
                         onCheckedChange = { checked ->

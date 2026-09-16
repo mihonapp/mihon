@@ -65,6 +65,9 @@ import mihon.desktop.extension.ExtensionTrustStore
 import mihon.desktop.extension.InstalledExtension
 import mihon.desktop.extension.SourceState
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
+import mihon.desktop.i18n.trustStatusLabel
 import mihon.extension.model.SourceDescriptor
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
@@ -199,7 +202,7 @@ fun ExtensionDetailsScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = strings.mangaDetailBack,
                         )
                     }
                 },
@@ -225,7 +228,7 @@ fun ExtensionDetailsScreen(
                         IconButton(onClick = { showMenu = true }) {
                             Icon(
                                 imageVector = Icons.Rounded.MoreVert,
-                                contentDescription = "More",
+                                contentDescription = strings.text(UiText.More),
                             )
                         }
 
@@ -369,7 +372,7 @@ fun ExtensionDetailsScreen(
             if (sources.isEmpty()) {
                 item {
                     Text(
-                        text = "No sources reported by this extension.",
+                        text = strings.text(UiText.NoExtensionSources),
                         color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -641,7 +644,7 @@ private fun DetailsHeader(
                 color = MaterialTheme.colorScheme.outline,
             )
             Text(
-                text = "Trust: ${effectiveTrustStatus.label}",
+                text = strings.text(UiText.TrustState, strings.trustStatusLabel(effectiveTrustStatus)),
                 style = MaterialTheme.typography.labelMedium,
                 color = when (effectiveTrustStatus) {
                     ExtensionTrustStatus.TRUSTED -> MaterialTheme.colorScheme.primary
@@ -651,7 +654,7 @@ private fun DetailsHeader(
                 modifier = Modifier.testTag("extension-details-trust-label"),
             )
             Text(
-                text = effectiveTrustStatus.label,
+                text = strings.trustStatusLabel(effectiveTrustStatus),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier.testTag("extension-details-trust-status"),

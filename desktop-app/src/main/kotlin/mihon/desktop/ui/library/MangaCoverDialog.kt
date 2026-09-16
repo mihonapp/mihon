@@ -48,6 +48,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.library.model.LibraryManga
 import mihon.desktop.ui.common.MangaCover
 import java.io.File
@@ -125,7 +127,7 @@ fun MangaCoverDialog(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Close,
-                                contentDescription = "Close",
+                                contentDescription = strings.dialogClose,
                                 modifier = Modifier.size(20.dp),
                             )
                         }
@@ -184,7 +186,7 @@ fun MangaCoverDialog(
                                             }
                                         } catch (e: Exception) {
                                             withContext(Dispatchers.Main) {
-                                                saveStatusMessage = "Save failed: ${e.message}"
+                                                saveStatusMessage = strings.text(UiText.SaveFailed, e.message.orEmpty())
                                             }
                                         }
                                     } else {

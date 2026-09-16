@@ -27,6 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.navigation.DesktopDestination
 import mihon.desktop.security.DesktopAppLockController
 import mihon.desktop.ui.library.LibraryScreen
@@ -209,7 +212,7 @@ fun DesktopShell(
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.Lock,
-                                    contentDescription = "Lock app",
+                                    contentDescription = strings.text(UiText.LockApp),
                                 )
                             }
                         }
@@ -230,7 +233,7 @@ fun DesktopShell(
                     ) {
                         Text(
                             libraryBatchState.error ?: mihon.desktop.i18n.recoveryText(
-                                "Processing ${libraryBatchState.processed}/${libraryBatchState.total}",
+                                strings.text(UiText.Processing, libraryBatchState.processed, libraryBatchState.total),
                                 "正在处理 ${libraryBatchState.processed}/${libraryBatchState.total}",
                                 "正在處理 ${libraryBatchState.processed}/${libraryBatchState.total}",
                             ),

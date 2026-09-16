@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import kotlinx.coroutines.CancellationException
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.reader.DesktopReaderContent
 import mihon.desktop.reader.DesktopReaderPageFrame
 import mihon.desktop.reader.ReaderColorFilter
@@ -38,6 +41,7 @@ fun DecodedReaderPage(
     colorFilter: ReaderColorFilter = LocalReaderColorFilter.current,
     cropBorders: Boolean = LocalReaderCropBorders.current,
 ) {
+    val strings = LocalStrings.current
     val pageSizeSink = LocalReaderPageSizeSink.current
     val imageStore = LocalReaderPageImageStore.current
     val readerForeground = LocalReaderForeground.current
@@ -126,7 +130,7 @@ fun DecodedReaderPage(
             )
             current != null -> Image(
                 bitmap = current.tile.image,
-                contentDescription = "Decoded page ${page.id.entryName}",
+                contentDescription = strings.text(UiText.DecodedPage, page.id.entryName),
                 modifier = Modifier.matchParentSize().testTag("reader-decoded-${page.id.entryName}"),
                 contentScale = ContentScale.Fit,
                 colorFilter = colorFilter.toComposeColorFilter(),

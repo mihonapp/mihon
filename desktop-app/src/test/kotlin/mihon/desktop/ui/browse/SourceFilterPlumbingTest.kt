@@ -115,6 +115,7 @@ class SourceFilterPlumbingTest {
     @Test
     fun `builtin MangaDex filters remain available`() {
         val manager = DesktopSourceManager(processManager = null)
+        manager.registerBuiltinSource(BundledMangaDexSource())
 
         try {
             val filters = manager.getFilterList(BundledMangaDexSource.MANGADEX_SOURCE_ID)

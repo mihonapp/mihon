@@ -16,6 +16,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.reader.image.TileKey
 import mihon.reader.model.FrameId
 import java.awt.image.BufferedImage
@@ -52,6 +55,7 @@ fun AnimatedPage(
     modifier: Modifier = Modifier,
 ) {
     var current by remember(bridge) { mutableStateOf<ComposeTileBridge.BridgeTile?>(null) }
+    val strings = LocalStrings.current
     var renderedFrame by remember(bridge) { mutableStateOf<FrameId?>(null) }
 
     LaunchedEffect(visibilityReporter, contentVisible) {
@@ -90,7 +94,7 @@ fun AnimatedPage(
         modifier = modifier
             .testTag("reader-animated-page")
             .semantics {
-                contentDescription = "Animated page frame ${renderedFrame?.frameIndex ?: 0}"
+                contentDescription = strings.text(UiText.AnimatedFrame, renderedFrame?.frameIndex ?: 0)
                 readerFrameIndex = renderedFrame?.frameIndex ?: 0
             },
         contentAlignment = Alignment.Center,

@@ -18,6 +18,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.locale
+import mihon.desktop.i18n.text
 import mihon.desktop.ui.common.MangaCover
 import java.time.Instant
 import java.time.LocalDate
@@ -33,6 +37,7 @@ fun UpcomingItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = LocalStrings.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -70,7 +75,7 @@ fun UpcomingItem(
             )
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
-                    text = formatUpcomingDate(entry.dateUpload),
+                    text = formatUpcomingDate(entry.dateUpload, locale = strings.locale),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -80,7 +85,9 @@ fun UpcomingItem(
                     color = MaterialTheme.colorScheme.outline,
                 )
                 Text(
-                    text = entry.sourceLabel,
+                    text =
+                    entry.sourceName?.takeIf { it.isNotBlank() }
+                        ?: strings.text(UiText.SourceFallback, entry.sourceId),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.outline,
                     maxLines = 1,
@@ -97,9 +104,31 @@ internal fun formatUpcomingDate(
     locale: Locale = Locale.getDefault(),
 ): String = Instant.ofEpochMilli(dateUpload)
     .atZone(zoneId)
-    .format(DateTimeFormatter.ofPattern("MMM d, yyyy HH:mm", locale))
+    .format(
+        DateTimeFormatter.ofPattern(
+            if (locale.language ==
+                "zh"
+            ) {
+                "yyyy年M月d日 HH:mm"
+            } else {
+                "MMM d, yyyy HH:mm"
+            },
+            locale,
+        ),
+    )
 
 internal fun formatUpcomingDayHeading(
     date: LocalDate,
     locale: Locale = Locale.getDefault(),
-): String = date.format(DateTimeFormatter.ofPattern("EEEE, MMM d, yyyy", locale))
+): String = date.format(
+    DateTimeFormatter.ofPattern(
+        if (locale.language ==
+            "zh"
+        ) {
+            "yyyy年M月d日 EEEE"
+        } else {
+            "EEEE, MMM d, yyyy"
+        },
+        locale,
+    ),
+)

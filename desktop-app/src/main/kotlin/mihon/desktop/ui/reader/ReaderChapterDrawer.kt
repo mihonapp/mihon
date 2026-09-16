@@ -47,6 +47,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 
 /**
  * Material 3 chapter drawer for in-reader chapter browsing, search, and navigation.
@@ -143,7 +145,7 @@ fun ReaderChapterDrawer(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.Sort,
-                                contentDescription = "Sort order",
+                                contentDescription = strings.text(UiText.SortOrder),
                                 tint = if (isAscending) {
                                     MaterialTheme.colorScheme.primary
                                 } else {
@@ -157,7 +159,7 @@ fun ReaderChapterDrawer(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Close,
-                                contentDescription = "Close",
+                                contentDescription = strings.dialogClose,
                             )
                         }
                     }
@@ -186,7 +188,7 @@ fun ReaderChapterDrawer(
                                 IconButton(onClick = { searchQuery = "" }) {
                                     Icon(
                                         imageVector = Icons.Rounded.Close,
-                                        contentDescription = "Clear search",
+                                        contentDescription = strings.text(UiText.ClearSearch),
                                         modifier = Modifier.size(16.dp),
                                     )
                                 }
@@ -283,7 +285,7 @@ fun ReaderChapterDrawer(
                                     if (chapter.downloaded) {
                                         Icon(
                                             imageVector = Icons.Rounded.CheckCircle,
-                                            contentDescription = "Downloaded",
+                                            contentDescription = strings.text(UiText.Downloaded),
                                             modifier = Modifier.size(16.dp),
                                             tint = MaterialTheme.colorScheme.primary,
                                         )

@@ -45,7 +45,7 @@ class DiagnosticBundleServiceTest {
                 val summaryEntry = zip.getEntry("diagnostics/summary.txt")
                 summaryEntry shouldBe summaryEntry // Not null
                 val summaryText = zip.getInputStream(summaryEntry).bufferedReader().readText()
-                summaryText shouldContain "Mihon W Diagnostic Summary"
+                summaryText shouldContain "mihondesk Diagnostic Summary"
                 summaryText shouldContain "DB Integrity: ok"
 
                 val logEntry = zip.getEntry("diagnostics/logs/test.log")

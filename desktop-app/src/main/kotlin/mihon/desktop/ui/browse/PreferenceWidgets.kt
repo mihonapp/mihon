@@ -47,6 +47,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 
 internal val PrefsHorizontalPadding = 16.dp
 internal val PrefsVerticalPadding = 12.dp
@@ -399,7 +401,7 @@ fun EditTextPreferenceWidget(
                         trailingIcon = {
                             if (textInput.isNotEmpty()) {
                                 IconButton(onClick = { textInput = "" }) {
-                                    Icon(Icons.Rounded.Clear, contentDescription = "Clear")
+                                    Icon(Icons.Rounded.Clear, contentDescription = strings.text(UiText.Clear))
                                 }
                             }
                         },

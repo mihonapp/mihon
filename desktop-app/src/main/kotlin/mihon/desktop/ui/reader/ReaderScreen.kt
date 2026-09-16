@@ -57,6 +57,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.desktop.i18n.EnglishStrings
 import mihon.desktop.i18n.LocalStrings
+import mihon.desktop.i18n.UiText
+import mihon.desktop.i18n.text
 import mihon.desktop.image.LocalCustomCoverManager
 import mihon.desktop.reader.DesktopReaderSettings
 import mihon.desktop.reader.DesktopReaderSettingsStore
@@ -161,8 +163,9 @@ fun ReaderScreen(
     val sizeChapterId = remember(session) { mutableStateOf<Long?>(null) }
     val imageStore = remember(session, pageImageStore) { pageImageStore ?: ReaderPageImageStore() }
     val customCoverManager = LocalCustomCoverManager.current
-    val effectivePageActionHandler = remember(pageActionHandler, imageStore, customCoverManager) {
-        pageActionHandler ?: defaultReaderPageActionHandler(imageStore, customCoverManager)
+    val effectivePageActionHandler = remember(pageActionHandler, imageStore, customCoverManager, strings) {
+        pageActionHandler
+            ?: defaultReaderPageActionHandler(imageStore, customCoverManager, strings.text(UiText.SavePageImage))
     }
     val effectiveBookmarkStore = remember(bookmarkStore, settingsStore) {
         bookmarkStore ?: settingsStore?.bookmarkStore()
@@ -275,7 +278,7 @@ fun ReaderScreen(
         pageActionsTarget = null
         scope.launch {
             val success = runCatching { block(effectivePageActionHandler, target) }.getOrDefault(false)
-            if (!success) pageActionMessage = "Unable to complete page action"
+            if (!success) pageActionMessage = strings.text(UiText.PageActionFailed)
         }
     }
 
@@ -787,7 +790,7 @@ fun ReaderScreen(
     pageActionMessage?.let { message ->
         AlertDialog(
             onDismissRequest = { pageActionMessage = null },
-            title = { Text("Page action") },
+            title = { Text(strings.text(UiText.PageAction)) },
             text = { Text(message) },
             confirmButton = {
                 TextButton(
