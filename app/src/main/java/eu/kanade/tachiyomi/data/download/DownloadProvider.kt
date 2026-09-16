@@ -204,24 +204,27 @@ class DownloadProvider(
             },
         )
 
-        // Get the filename that would be generated if the user were
-        // using the other values for the non-ASCII filenames or
-        // chapter name hash settings. This ensures that chapters downloaded
-        // before the user changed these settings can still be found.
-        val otherChapterDirName =
-            getChapterDirName(
-                chapterName,
-                chapterScanlator,
-                chapterUrl,
-                !libraryPreferences.disallowNonAsciiFilenames.get(),
-                !libraryPreferences.enableChapterNameHash.get(),
-            )
+        // Generate all possible legacy directory name variations by combining
+        // different states of non-ASCII filenames and chapter name hash settings.
+        // This ensures that chapters downloaded under any past configuration
+        // combination can still be successfully found.
+        val othersChapterDirNames = listOf(true, false)
+            .let { it.flatMap { a -> it.map { b -> a to b } } }
+            .map { (disallowNonAsciiFilenames, enableChapterNameHash) ->
+                getChapterDirName(
+                    chapterName,
+                    chapterScanlator,
+                    chapterUrl,
+                    disallowNonAsciiFilenames,
+                    enableChapterNameHash,
+                )
+            }
 
-        return buildSet(2) {
+        return buildSet {
             // Chapter name without hash (unable to handle duplicate
             // chapter names)
             add(chapterNameV1)
-            add(otherChapterDirName)
+            addAll(othersChapterDirNames)
         }
     }
 
