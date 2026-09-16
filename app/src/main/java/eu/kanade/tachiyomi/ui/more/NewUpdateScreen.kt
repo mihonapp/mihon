@@ -9,6 +9,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.more.NewUpdateScreen
 import eu.kanade.presentation.util.Screen
+import mihon.app.di.appGraph
 import eu.kanade.tachiyomi.util.system.openInBrowser
 
 class NewUpdateScreen(
@@ -43,6 +44,10 @@ class NewUpdateScreen(
                 }
             },
             onRejectUpdate = navigator::pop,
+            onSkipUpdate = {
+                context.appGraph.basePreferences.skippedUpdateVersion.set(versionName)
+                navigator.pop()
+            },
         )
     }
 }
