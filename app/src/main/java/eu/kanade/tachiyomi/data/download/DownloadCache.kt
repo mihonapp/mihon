@@ -47,6 +47,7 @@ import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.storage.service.StorageManager
@@ -69,6 +70,7 @@ class DownloadCache(
     private val provider: DownloadProvider,
     private val sourceManager: SourceManager,
     private val storageManager: StorageManager,
+    private val libraryPreferences: LibraryPreferences,
 ) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -352,7 +354,7 @@ class DownloadCache(
             val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
 
             rootDownloadsDirMutex.withLock {
-                val updatedRootDir = RootDirectory(storageManager.getDownloadsDirectory(), createdAt = System.currentTimeMillis())
+                val updatedRootDir = RootDirectory(storageManager.getDownloadsDirectory())
 
                 updatedRootDir.sourceDirs = updatedRootDir.dir?.listFiles().orEmpty()
                     .filter { it.isDirectory && !it.name.isNullOrBlank() }
@@ -390,7 +392,10 @@ class DownloadCache(
                 }
                     .awaitAll()
 
-                rootDownloadsDir = updatedRootDir
+                rootDownloadsDir = updatedRootDir.apply {
+                    ttl = libraryPreferences.downloadCacheTTLInterval.get().toLong().seconds.inWholeMilliseconds
+                    createdAt = System.currentTimeMillis()
+                }
             }
 
             _isInitializing.emit(false)
@@ -451,7 +456,7 @@ private class RootDirectory(
     val dir: UniFile?,
     var sourceDirs: Map<Long, SourceDirectory> = mapOf(),
     var createdAt: Long = 0L,
-    val ttl: Long = 1.hours.inWholeMilliseconds
+    var ttl: Long = 1.hours.inWholeMilliseconds
 ) {
     fun isExpired() = createdAt + ttl <= System.currentTimeMillis()
 }
