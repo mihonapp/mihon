@@ -289,6 +289,7 @@ tasks.withType<org.jetbrains.compose.desktop.application.tasks.AbstractJPackageT
     if (name in setOf("packageMsi", "packageExe")) {
         dependsOn(verifyCleanDistribution)
         inputs.dir(project.file("packaging/windows"))
+        inputs.file(project.file("src/main/resources/icon.ico"))
         actions.clear()
         doLast {
             val format = if (name == "packageMsi") "msi" else "exe"
@@ -306,6 +307,7 @@ tasks.withType<org.jetbrains.compose.desktop.application.tasks.AbstractJPackageT
                 "--dest", output.absolutePath,
                 "--name", "mihondesk", "--app-version", desktopVersion,
                 "--vendor", "mihondesk", "--description", "mihondesk manga reader for Windows",
+                "--icon", project.file("src/main/resources/icon.ico").absolutePath,
                 "--resource-dir", project.file("packaging/windows").absolutePath,
                 "--license-file", rootProject.file("LICENSE").absolutePath,
                 "--win-per-user-install", "--win-dir-chooser", "--win-menu", "--win-shortcut",
