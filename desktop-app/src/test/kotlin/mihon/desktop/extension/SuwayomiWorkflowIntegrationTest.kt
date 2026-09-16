@@ -200,7 +200,14 @@ class SuwayomiWorkflowIntegrationTest {
     }
 
     @Test
-    fun `restored failed downloads grant their image host before the first extension request`() = runBlocking {
+    fun `restored failed downloads grant their image host before the first extension request`() =
+        retrySavedImages(dropRoute = false)
+
+    @Test
+    fun `restored download reloads its isolated route lost immediately before requesting an image`() =
+        retrySavedImages(dropRoute = true)
+
+    private fun retrySavedImages(dropRoute: Boolean): Unit = runBlocking {
         assumeTrue(Platform.isWindows())
         val image = ByteArrayOutputStream().also {
             javax.imageio.ImageIO.write(
@@ -221,11 +228,18 @@ class SuwayomiWorkflowIntegrationTest {
         val installer = DesktopExtensionInstaller(temp.resolve("extensions").toFile(), prefs)
         val installed = installer.installFromLocalFile(createPackage(), trustOnInstall = true)
         val network = DesktopNetworkHelper()
-        val manager = WindowsExtensionProcessManager(
+        var imageAttempts = 0
+        val manager = object : WindowsExtensionProcessManager(
             temp.resolve("hosts").toFile(),
             onBrokerHttp = network::executeBrokeredRequest,
             networkHelper = network,
-        )
+        ) {
+            override suspend fun getImage(sourceId: Long, page: mihon.extension.source.model.Page): ByteArray? {
+                imageAttempts++
+                if (dropRoute && imageAttempts == 1) unloadExtension(installed.pkg)
+                return super.getImage(sourceId, page)
+            }
+        }
         val sources = DesktopSourceManager(installer = installer, processManager = manager)
         val store = DownloadStore(temp.resolve("queue.json"))
         val imageUrl = "http://localhost:${server.address.port}/restored.png"
@@ -273,6 +287,7 @@ class SuwayomiWorkflowIntegrationTest {
             assertEquals(1, result.downloadedImages)
             assertEquals(image.size.toLong(), result.bytesDownloaded)
             assertEquals(listOf("/restored.png"), requests)
+            assertEquals(if (dropRoute) 2 else 1, imageAttempts)
             assertFalse(network.isDomainAllowed("localhost", "unrelated.extension"))
             assertFalse(network.isDomainAllowed("unrelated.invalid", installed.pkg))
         } finally {
