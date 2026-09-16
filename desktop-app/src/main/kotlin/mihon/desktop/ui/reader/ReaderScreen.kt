@@ -650,6 +650,13 @@ fun ReaderScreen(
                 closeAndThen(onBack)
             },
             onOpenMangaDetails = if (mangaId != null) ({ closeAndThen(onOpenMangaDetails) }) else null,
+            onControlsHovered = { hovered ->
+                overlayVisibility = reduceReaderOverlayVisibility(
+                    overlayVisibility,
+                    if (hovered) ReaderOverlayEvent.ControlEntered else ReaderOverlayEvent.ControlExited,
+                )
+                hideGeneration++
+            },
             onMode = { applySettings(settings.copy(mode = it)) },
             onScale = { applySettings(settings.copy(scaleMode = it)) },
             onCoverOffset = { applySettings(settings.copy(coverOffset = it)) },

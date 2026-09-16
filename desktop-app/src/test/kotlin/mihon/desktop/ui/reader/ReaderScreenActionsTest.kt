@@ -41,6 +41,29 @@ class ReaderScreenActionsTest {
     lateinit var tempDir: Path
 
     @Test
+    fun `details button remains clickable while the pointer rests on the toolbar`() = runComposeUiTest {
+        mainClock.autoAdvance = false
+        val session = TestReaderSession(testReaderState())
+        var openedDetails = false
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            mangaId = 99L,
+            onOpenMangaDetails = { openedDetails = true },
+        )
+        onNodeWithTag("reader-screen").performKeyInput {
+            keyDown(Key.DirectionRight)
+            keyUp(Key.DirectionRight)
+        }
+        mainClock.advanceTimeBy(400)
+        onNodeWithTag("reader-manga-details").performMouseInput { moveTo(center) }
+        mainClock.advanceTimeBy(3_000)
+        onNodeWithTag("reader-manga-details").assertIsDisplayed().performMouseInput { click(center) }
+        waitUntil { openedDetails }
+        session.closeRequests shouldBe 1
+    }
+
+    @Test
     fun `reader offers a direct manga details action and flushes only once`() = runComposeUiTest {
         val session = TestReaderSession(testReaderState())
         var openedDetails = 0

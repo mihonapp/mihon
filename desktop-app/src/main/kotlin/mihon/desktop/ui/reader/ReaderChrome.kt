@@ -47,7 +47,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -66,6 +69,7 @@ import mihon.reader.model.ScaleMode
 import mihon.reader.session.ReaderState
 
 @Composable
+@OptIn(ExperimentalComposeUiApi::class)
 internal fun ReaderChrome(
     state: ReaderState,
     title: String,
@@ -102,10 +106,14 @@ internal fun ReaderChrome(
     currentChapterId: Long? = null,
     onChapterSelected: (Long) -> Unit = {},
     onOpenMangaDetails: (() -> Unit)? = null,
+    onControlsHovered: (Boolean) -> Unit = {},
 ) {
     val strings = LocalStrings.current
     var isChapterDrawerOpen by remember { mutableStateOf(false) }
     var overflowExpanded by remember { mutableStateOf(false) }
+    val controlsHover = Modifier
+        .onPointerEvent(PointerEventType.Enter) { onControlsHovered(true) }
+        .onPointerEvent(PointerEventType.Exit) { onControlsHovered(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -124,7 +132,7 @@ internal fun ReaderChrome(
                 fadeOut(tween(READER_BARS_FADE_MILLIS)),
         ) {
             Surface(
-                modifier = Modifier.fillMaxWidth().testTag("reader-top-bar"),
+                modifier = Modifier.fillMaxWidth().then(controlsHover).testTag("reader-top-bar"),
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
                 tonalElevation = 3.dp,
             ) {
@@ -298,7 +306,7 @@ internal fun ReaderChrome(
                 fadeOut(tween(READER_BARS_FADE_MILLIS)),
         ) {
             Surface(
-                modifier = Modifier.fillMaxWidth().testTag("reader-bottom-bar"),
+                modifier = Modifier.fillMaxWidth().then(controlsHover).testTag("reader-bottom-bar"),
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
                 tonalElevation = 3.dp,
             ) {
