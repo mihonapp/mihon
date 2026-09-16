@@ -483,6 +483,27 @@ class SqlDelightLibraryRepository(
         )
     }
 
+    override fun isLocalChapterAssetRegistered(
+        mangaId: Long,
+        storagePath: String,
+        chapterId: Long,
+        relativePath: String,
+        sizeBytes: Long,
+    ): Boolean = queries.isLocalChapterAssetRegistered(
+        chapter_id = chapterId,
+        manga_id = mangaId,
+        storage_path = storagePath,
+        relative_path = relativePath,
+        size_bytes = sizeBytes,
+    ).executeAsOne()
+
+    override fun deleteLocalChapterAsset(mangaId: Long, chapterId: Long) {
+        database.transaction {
+            queries.deleteLocalChapterAsset(chapterId)
+            queries.deleteLocalMangaEntryIfUnused(mangaId)
+        }
+    }
+
     override fun insertReport(value: ImportReportRecord): Long = database.transactionWithResult {
         queries.insertImportReport(
             import_type = value.importType.name,

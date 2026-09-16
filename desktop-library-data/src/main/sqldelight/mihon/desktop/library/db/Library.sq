@@ -516,6 +516,33 @@ VALUES (?, ?, ?, ?, ?)
 ON CONFLICT(chapter_id) DO UPDATE SET relative_path=excluded.relative_path,
   asset_kind=excluded.asset_kind, size_bytes=excluded.size_bytes, modified_at=excluded.modified_at;
 
+isLocalChapterAssetRegistered:
+SELECT EXISTS(
+  SELECT 1
+  FROM local_chapter_asset
+  JOIN chapter ON chapter.id = local_chapter_asset.chapter_id
+  JOIN local_manga_entry ON local_manga_entry.manga_id = chapter.manga_id
+  WHERE local_chapter_asset.chapter_id = ?
+    AND local_manga_entry.manga_id = ?
+    AND local_manga_entry.storage_path = ?
+    AND local_chapter_asset.relative_path = ?
+    AND local_chapter_asset.asset_kind = 'DIRECTORY'
+    AND local_chapter_asset.size_bytes = ?
+);
+
+deleteLocalChapterAsset:
+DELETE FROM local_chapter_asset WHERE chapter_id = ?;
+
+deleteLocalMangaEntryIfUnused:
+DELETE FROM local_manga_entry
+WHERE manga_id = ?
+  AND NOT EXISTS (
+    SELECT 1
+    FROM local_chapter_asset
+    JOIN chapter ON chapter.id = local_chapter_asset.chapter_id
+    WHERE chapter.manga_id = local_manga_entry.manga_id
+  );
+
 insertImportReport:
 INSERT INTO import_report(
   import_type, source_path, status, started_at, finished_at, manga_inserted, manga_merged,

@@ -131,4 +131,69 @@ class DownloadCacheCleanerTest {
         Files.exists(ch1Dir) shouldBe false
         Files.exists(ch2Dir) shouldBe true
     }
+
+    @Test
+    fun `deleteReadChapters uses coordinated deletion when available`() {
+        val downloads = tempDir.resolve("coordinated-downloads")
+        val diskProvider = DownloadDiskProvider(downloads)
+        val manga = MangaRecord(id = 1L, sourceId = 100L, url = "/manga/1", title = "Test Manga")
+        val chapter = LibraryChapter(
+            id = 101L,
+            mangaId = manga.id,
+            url = "/ch/1",
+            name = "Chapter 1",
+            scanlator = null,
+            read = true,
+            bookmark = false,
+            lastPageRead = 1L,
+            dateFetch = 0L,
+            dateUpload = 0L,
+            chapterNumber = 1.0,
+            sourceOrder = 1L,
+            lastModifiedAt = 0L,
+            version = 1L,
+            memoJson = "{}",
+        )
+        val chapterDir = diskProvider.getChapterDir(manga.sourceId, manga.title, chapter.name)
+        Files.createDirectories(chapterDir)
+        Files.writeString(chapterDir.resolve("001.jpg"), "bytes")
+        val repository = fakeRepository(manga, listOf(chapter))
+        var coordinatedDeletes = 0
+        val cleaner = DownloadCacheCleaner(repository, diskProvider) { deletedManga, deletedChapter ->
+            deletedManga.id shouldBe manga.id
+            deletedChapter.id shouldBe chapter.id
+            coordinatedDeletes++
+            diskProvider.deleteChapter(deletedManga.sourceId, deletedManga.title, deletedChapter.name)
+        }
+
+        cleaner.deleteReadChapters().deletedChaptersCount shouldBe 1
+        coordinatedDeletes shouldBe 1
+    }
+
+    private fun fakeRepository(manga: MangaRecord, chapters: List<LibraryChapter>): LibraryRepository =
+        object : LibraryRepository {
+            override fun observeLibrary(categoryId: Long?): Flow<List<LibraryManga>> = emptyFlow()
+            override fun observeManga(id: Long): Flow<MangaDetails?> = emptyFlow()
+            override fun observeChapters(mangaId: Long): Flow<List<LibraryChapter>> = emptyFlow()
+            override fun observeCategories(): Flow<List<CategoryRecord>> = emptyFlow()
+            override fun observeHistory(query: String): Flow<List<HistoryWithDetails>> = emptyFlow()
+            override fun observeTracking(mangaId: Long): Flow<List<TrackingRecord>> = emptyFlow()
+            override fun librarySnapshot(categoryId: Long?): List<LibraryManga> = emptyList()
+            override fun mangaSnapshot(id: Long): MangaDetails? = null
+            override fun chapterSnapshot(mangaId: Long): List<LibraryChapter> = chapters
+            override fun categoriesSnapshot(): List<CategoryRecord> = emptyList()
+            override fun historySnapshot(query: String): List<HistoryWithDetails> = emptyList()
+            override fun trackingSnapshot(mangaId: Long): List<TrackingRecord> = emptyList()
+            override fun latestImportReport(): ImportReport? = null
+            override fun allMangaSnapshot(): List<MangaRecord> = listOf(manga)
+            override fun allChaptersSnapshot(): List<ChapterRecord> = emptyList()
+            override fun allCategoriesSnapshot(): List<CategoryRecord> = emptyList()
+            override fun mangaCategoryLinksSnapshot(): Map<Long, List<Long>> = emptyMap()
+            override fun allHistorySnapshot(): List<HistoryRecord> = emptyList()
+            override fun allTrackingSnapshot(): List<TrackingRecord> = emptyList()
+            override fun allSourcesSnapshot(): List<SourceRecord> = emptyList()
+            override fun allPreferenceSnapshots(): List<PreferenceSnapshotRecord> = emptyList()
+            override fun allSourcePreferenceSnapshots(): List<SourcePreferenceSnapshotRecord> = emptyList()
+            override fun checkIntegrity(): List<String> = emptyList()
+        }
 }

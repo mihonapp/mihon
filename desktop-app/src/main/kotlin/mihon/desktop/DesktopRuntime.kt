@@ -87,7 +87,21 @@ class DesktopRuntime(
     val diskProvider: DownloadDiskProvider =
         downloader?.diskProvider ?: DownloadDiskProvider(directories.root.resolve("media").resolve("downloads")),
     val downloadCacheCleaner: DownloadCacheCleaner =
-        DownloadCacheCleaner(repository = library, diskProvider = diskProvider),
+        DownloadCacheCleaner(
+            repository = library,
+            diskProvider = diskProvider,
+            coordinatedDelete = downloader?.let { activeDownloader ->
+                { manga, chapter ->
+                    activeDownloader.deleteDownloadedChapter(
+                        sourceId = manga.sourceId,
+                        mangaId = manga.id,
+                        mangaTitle = manga.title,
+                        chapterId = chapter.id,
+                        chapterName = chapter.name,
+                    )
+                }
+            },
+        ),
     private val closeReaderSessions: suspend () -> Unit = readerFactory?.let { it::shutdown } ?: {},
     private val closeReaderServices: () -> Unit = readerFactory?.let { it::closeServices } ?: {},
     internal val closeLibrary: () -> Unit = library::close,

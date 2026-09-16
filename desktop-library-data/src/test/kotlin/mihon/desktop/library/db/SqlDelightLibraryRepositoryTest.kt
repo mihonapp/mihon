@@ -259,6 +259,38 @@ class SqlDelightLibraryRepositoryTest {
     }
 
     @Test
+    fun `removing the last downloaded chapter clears its local asset and empty manga registration`() {
+        val file = tempDir.resolve("delete-download-registration.db")
+        DesktopLibraryDatabaseFactory.open(file).use { repository ->
+            val mangaId = repository.insertManga(MangaRecord(sourceId = 3, url = "/online", title = "Online"))
+            val chapterId = repository.insertChapter(
+                ChapterRecord(mangaId = mangaId, url = "/chapter", name = "Chapter"),
+            )
+            repository.insertLocalManga(LocalMangaRecord(mangaId, "downloads/online", "", 1L))
+            repository.insertLocalChapter(LocalChapterRecord(chapterId, "Chapter", "DIRECTORY", 10L, 2L))
+
+            repository.isLocalChapterAssetRegistered(
+                mangaId = mangaId,
+                storagePath = "downloads/online",
+                chapterId = chapterId,
+                relativePath = "Chapter",
+                sizeBytes = 10L,
+            ) shouldBe true
+
+            repository.deleteLocalChapterAsset(mangaId, chapterId)
+
+            repository.isLocalChapterAssetRegistered(
+                mangaId = mangaId,
+                storagePath = "downloads/online",
+                chapterId = chapterId,
+                relativePath = "Chapter",
+                sizeBytes = 10L,
+            ) shouldBe false
+            repository.localMangaStoragePaths() shouldBe emptySet()
+        }
+    }
+
+    @Test
     fun `closing the repository closes its owned writer`() {
         val repository = DesktopLibraryDatabaseFactory.open(tempDir.resolve("closed.db"))
         repository.close()

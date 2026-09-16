@@ -1,5 +1,9 @@
 package mihon.desktop.download
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import mihon.desktop.library.model.LocalChapterRecord
 import mihon.desktop.library.model.LocalMangaRecord
 import mihon.desktop.library.repository.LibraryMutationPort
@@ -9,10 +13,37 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
+@Serializable
+private data class DownloadChapterManifest(
+    val version: Int = 1,
+    val totalPages: Int,
+    val pages: List<DownloadedPageMetadata>,
+)
+
+@Serializable
+internal data class DownloadedPageMetadata(
+    val index: Int,
+    val sizeBytes: Long,
+    val modifiedAtMillis: Long,
+)
+
+internal data class DownloadChapterInspection(
+    val expectedPages: Int,
+    val validPages: Map<Int, DownloadedPageMetadata>,
+) {
+    val isComplete: Boolean
+        get() = expectedPages > 0 && validPages.size == expectedPages
+
+    val totalBytes: Long
+        get() = validPages.values.sumOf(DownloadedPageMetadata::sizeBytes)
+}
+
 class DownloadDiskProvider(
     val downloadsDir: Path,
     private val minDiskSpaceBytes: Long = 50L * 1024 * 1024, // 50 MB safety margin
 ) {
+    private val manifestJson = Json { ignoreUnknownKeys = true }
+
     init {
         if (!Files.exists(downloadsDir)) {
             Files.createDirectories(downloadsDir)
@@ -144,9 +175,77 @@ class DownloadDiskProvider(
             paths.sorted(Comparator.reverseOrder()).forEach { Files.deleteIfExists(it) }
         }
     }
+
+    /**
+     * Verifies a published chapter against its cheap completion manifest. Legacy or changed files
+     * are decoded once and receive a fresh manifest so later startup checks remain inexpensive.
+     */
+    internal fun inspectChapter(
+        sourceId: Long,
+        mangaTitle: String,
+        chapterName: String,
+        expectedPageIndexes: List<Int>,
+    ): DownloadChapterInspection {
+        val chapterDir = getChapterDir(sourceId, mangaTitle, chapterName)
+        if (!Files.isDirectory(chapterDir) || expectedPageIndexes.isEmpty()) {
+            return DownloadChapterInspection(expectedPageIndexes.size, emptyMap())
+        }
+        val expected = expectedPageIndexes.distinct().sorted()
+        if (expected.size != expectedPageIndexes.size) {
+            return DownloadChapterInspection(expectedPageIndexes.size, emptyMap())
+        }
+        val manifest = readManifest(chapterDir)?.takeIf { saved ->
+            saved.version == MANIFEST_VERSION &&
+                saved.totalPages == expected.size &&
+                saved.pages.map(DownloadedPageMetadata::index).sorted() == expected
+        }
+        val manifestPages = manifest?.pages?.associateBy(DownloadedPageMetadata::index).orEmpty()
+        val valid = buildMap {
+            expected.forEach { index ->
+                val path = getPageFile(chapterDir, index)
+                val saved = manifestPages[index]
+                val unchanged = saved != null && runCatching {
+                    Files.isRegularFile(path) &&
+                        Files.size(path) == saved.sizeBytes &&
+                        Files.getLastModifiedTime(path).toMillis() == saved.modifiedAtMillis
+                }.getOrDefault(false)
+                if (unchanged || isValidPage(path)) {
+                    pageMetadata(path, index)?.let { put(index, it) }
+                }
+            }
+        }
+        if (valid.size == expected.size) {
+            val current = valid.values.sortedBy(DownloadedPageMetadata::index)
+            if (manifest?.pages != current) runCatching { writeManifest(chapterDir, current) }
+        }
+        return DownloadChapterInspection(expected.size, valid)
+    }
+
     fun isChapterDownloaded(sourceId: Long, mangaTitle: String, chapterName: String): Boolean {
         val chapterDir = getChapterDir(sourceId, mangaTitle, chapterName)
-        return Files.exists(chapterDir) && Files.isDirectory(chapterDir)
+        if (!Files.isDirectory(chapterDir)) return false
+        val manifestFile = manifestPath(chapterDir)
+        val manifest = readManifest(chapterDir)
+        if (Files.exists(manifestFile) && manifest == null) return false
+        if (manifest != null && manifest.totalPages > 0) {
+            return inspectChapter(
+                sourceId,
+                mangaTitle,
+                chapterName,
+                manifest.pages.map(DownloadedPageMetadata::index),
+            ).isComplete
+        }
+        // Older downloads may predate manifests. The saved queue migrates them during startup.
+        return runCatching {
+            Files.list(chapterDir).use { paths ->
+                paths.anyMatch { path ->
+                    Files.isRegularFile(path) &&
+                        path.fileName.toString() != MANIFEST_FILE &&
+                        !path.fileName.toString().endsWith(".part") &&
+                        runCatching { Files.size(path) > 0L }.getOrDefault(false)
+                }
+            }
+        }.getOrDefault(false)
     }
 
     fun deleteChapter(sourceId: Long, mangaTitle: String, chapterName: String): Boolean {
@@ -154,6 +253,12 @@ class DownloadDiskProvider(
         if (!Files.exists(chapterDir)) return false
         return try {
             deleteDirectory(chapterDir)
+            runCatching {
+                val mangaDir = chapterDir.parent
+                if (Files.isDirectory(mangaDir) && Files.list(mangaDir).use { !it.findAny().isPresent }) {
+                    Files.deleteIfExists(mangaDir)
+                }
+            }
             true
         } catch (_: Exception) {
             false
@@ -177,16 +282,19 @@ class DownloadDiskProvider(
         }
 
         // Every page must remain decodable before publishing an offline chapter.
-        var totalBytes = 0L
+        val metadata = mutableListOf<DownloadedPageMetadata>()
         for (i in 0 until totalPages) {
             val pagePath = getPageFile(tempDir, i)
             if (!isValidPage(pagePath)) {
                 throw IOException("Page $i ($pagePath) is missing, corrupt or incomplete")
             }
-            totalBytes += Files.size(pagePath)
+            pageMetadata(pagePath, i)?.let(metadata::add)
+                ?: throw IOException("Page $i ($pagePath) disappeared while finalizing")
         }
+        val totalBytes = metadata.sumOf(DownloadedPageMetadata::sizeBytes)
 
         cleanPartialPages(tempDir)
+        writeManifest(tempDir, metadata)
         val previousDir = targetDir.resolveSibling("${targetDir.fileName}.previous")
         // Keep the previous complete chapter until replacement succeeds.
         if (Files.exists(targetDir)) {
@@ -203,26 +311,15 @@ class DownloadDiskProvider(
             published = true
             // Commit both records together. A registration failure must leave the downloaded
             // pages retryable and retain any previously registered offline chapter.
-            mutationPort?.transaction {
-                val mangaDir = getMangaDir(sourceId, mangaTitle)
-                insertLocalManga(
-                    LocalMangaRecord(
-                        mangaId = mangaId,
-                        storagePath = mangaDir.toAbsolutePath().toString(),
-                        manifestSha256 = "",
-                        importedAt = System.currentTimeMillis(),
-                    ),
-                )
-                insertLocalChapter(
-                    LocalChapterRecord(
-                        chapterId = chapterId,
-                        relativePath = sanitizeFileName(chapterName),
-                        assetKind = "DIRECTORY",
-                        sizeBytes = totalBytes,
-                        modifiedAt = System.currentTimeMillis(),
-                    ),
-                )
-            }
+            registerCompletedChapter(
+                sourceId = sourceId,
+                mangaId = mangaId,
+                chapterId = chapterId,
+                mangaTitle = mangaTitle,
+                chapterName = chapterName,
+                totalBytes = totalBytes,
+                mutationPort = mutationPort,
+            )
         } catch (error: Exception) {
             runCatching {
                 if (published) Files.move(targetDir, tempDir)
@@ -235,5 +332,100 @@ class DownloadDiskProvider(
         deleteDirectory(previousDir)
 
         return targetDir
+    }
+
+    internal fun registerCompletedChapter(
+        sourceId: Long,
+        mangaId: Long,
+        chapterId: Long,
+        mangaTitle: String,
+        chapterName: String,
+        totalBytes: Long,
+        mutationPort: LibraryMutationPort?,
+    ) {
+        mutationPort?.transaction {
+            val mangaDir = getMangaDir(sourceId, mangaTitle)
+            insertLocalManga(
+                LocalMangaRecord(
+                    mangaId = mangaId,
+                    storagePath = mangaDir.toAbsolutePath().toString(),
+                    manifestSha256 = "",
+                    importedAt = System.currentTimeMillis(),
+                ),
+            )
+            insertLocalChapter(
+                LocalChapterRecord(
+                    chapterId = chapterId,
+                    relativePath = sanitizeFileName(chapterName),
+                    assetKind = "DIRECTORY",
+                    sizeBytes = totalBytes,
+                    modifiedAt = System.currentTimeMillis(),
+                ),
+            )
+        }
+    }
+
+    internal fun isChapterRegistrationCurrent(
+        sourceId: Long,
+        mangaId: Long,
+        chapterId: Long,
+        mangaTitle: String,
+        chapterName: String,
+        totalBytes: Long,
+        mutationPort: LibraryMutationPort,
+    ): Boolean = mutationPort.isLocalChapterAssetRegistered(
+        mangaId = mangaId,
+        storagePath = getMangaDir(sourceId, mangaTitle).toAbsolutePath().toString(),
+        chapterId = chapterId,
+        relativePath = sanitizeFileName(chapterName),
+        sizeBytes = totalBytes,
+    )
+
+    private fun pageMetadata(path: Path, index: Int): DownloadedPageMetadata? = runCatching {
+        if (!Files.isRegularFile(path)) return@runCatching null
+        DownloadedPageMetadata(
+            index = index,
+            sizeBytes = Files.size(path),
+            modifiedAtMillis = Files.getLastModifiedTime(path).toMillis(),
+        )
+    }.getOrNull()
+
+    private fun manifestPath(chapterDir: Path): Path = chapterDir.resolve(MANIFEST_FILE)
+
+    private fun readManifest(chapterDir: Path): DownloadChapterManifest? = runCatching {
+        val path = manifestPath(chapterDir)
+        if (!Files.isRegularFile(path)) return@runCatching null
+        manifestJson.decodeFromString<DownloadChapterManifest>(Files.readString(path))
+    }.getOrNull()
+
+    private fun writeManifest(chapterDir: Path, pages: List<DownloadedPageMetadata>) {
+        val sorted = pages.sortedBy(DownloadedPageMetadata::index)
+        val path = manifestPath(chapterDir)
+        val partial = path.resolveSibling("${path.fileName}.part")
+        Files.createDirectories(chapterDir)
+        try {
+            Files.writeString(
+                partial,
+                manifestJson.encodeToString(
+                    DownloadChapterManifest(
+                        version = MANIFEST_VERSION,
+                        totalPages = sorted.size,
+                        pages = sorted,
+                    ),
+                ),
+            )
+            try {
+                Files.move(partial, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+            } catch (_: AtomicMoveNotSupportedException) {
+                Files.move(partial, path, StandardCopyOption.REPLACE_EXISTING)
+            }
+        } finally {
+            Files.deleteIfExists(partial)
+        }
+    }
+
+    private companion object {
+        const val MANIFEST_VERSION = 1
+        const val MANIFEST_FILE = ".mihon-download.json"
     }
 }

@@ -115,6 +115,30 @@ class DownloadDiskProviderTest {
     }
 
     @Test
+    fun `published chapter stops reporting downloaded when a page is corrupted`(@TempDir tempDir: Path) {
+        val provider = DownloadDiskProvider(tempDir)
+        val sourceId = 42L
+        val mangaTitle = "Integrity Manga"
+        val chapterName = "Chapter 1"
+        val tempChapterDir = provider.getTempChapterDir(sourceId, mangaTitle, chapterName)
+        provider.savePage(tempChapterDir, 0, validDownloadImage())
+        val targetDir = provider.finalizeChapter(
+            sourceId = sourceId,
+            mangaId = 100L,
+            chapterId = 200L,
+            mangaTitle = mangaTitle,
+            chapterName = chapterName,
+            totalPages = 1,
+        )
+
+        provider.isChapterDownloaded(sourceId, mangaTitle, chapterName) shouldBe true
+        Files.writeString(targetDir.resolve("001.jpg"), "not-an-image")
+
+        provider.isChapterDownloaded(sourceId, mangaTitle, chapterName) shouldBe false
+        provider.isChapterDownloaded(sourceId, mangaTitle, chapterName) shouldBe false
+    }
+
+    @Test
     fun `finalizeChapter fails if any page is missing`(@TempDir tempDir: Path) {
         val provider = DownloadDiskProvider(tempDir)
         val tempChapterDir = provider.getTempChapterDir(1L, "Manga", "Ch1")

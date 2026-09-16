@@ -1,5 +1,7 @@
 package mihon.desktop.download
 
+import mihon.desktop.library.model.LibraryChapter
+import mihon.desktop.library.model.MangaRecord
 import mihon.desktop.library.repository.LibraryRepository
 import java.nio.file.Files
 import java.nio.file.Path
@@ -12,10 +14,12 @@ data class CleanReport(
 class DownloadCacheCleaner(
     private val repository: LibraryRepository,
     private val diskProvider: DownloadDiskProvider,
+    private val coordinatedDelete: ((MangaRecord, LibraryChapter) -> Boolean)? = null,
 ) {
     fun calculateDownloadSize(): Long = Companion.calculateDownloadSize(diskProvider.downloadsDir)
 
-    fun deleteReadChapters(): CleanReport = Companion.deleteReadChapters(repository, diskProvider)
+    fun deleteReadChapters(): CleanReport =
+        Companion.deleteReadChapters(repository, diskProvider, coordinatedDelete)
 
     fun clearImageDiskCache(cacheDir: Path): Long = Companion.clearImageDiskCache(cacheDir)
 
@@ -62,6 +66,7 @@ class DownloadCacheCleaner(
         fun deleteReadChapters(
             repository: LibraryRepository,
             diskProvider: DownloadDiskProvider,
+            coordinatedDelete: ((MangaRecord, LibraryChapter) -> Boolean)? = null,
         ): CleanReport {
             val allManga = repository.allMangaSnapshot()
             var deletedCount = 0
@@ -74,7 +79,8 @@ class DownloadCacheCleaner(
                         val chapterDir = diskProvider.getChapterDir(manga.sourceId, manga.title, ch.name)
                         if (Files.exists(chapterDir)) {
                             val size = getDirectorySize(chapterDir)
-                            val success = diskProvider.deleteChapter(manga.sourceId, manga.title, ch.name)
+                            val success = coordinatedDelete?.invoke(manga, ch)
+                                ?: diskProvider.deleteChapter(manga.sourceId, manga.title, ch.name)
                             if (success) {
                                 deletedCount++
                                 totalFreed += size

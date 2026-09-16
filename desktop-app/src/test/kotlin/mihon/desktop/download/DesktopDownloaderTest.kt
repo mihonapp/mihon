@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import mihon.desktop.extension.DesktopNetworkHelper
+import mihon.desktop.library.db.DesktopLibraryDatabaseFactory
 import mihon.desktop.library.model.CategoryRecord
 import mihon.desktop.library.model.ChapterRecord
 import mihon.desktop.library.model.HistoryRecord
@@ -37,6 +38,99 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
 class DesktopDownloaderTest {
+    @Test
+    fun `startup repairs offline registration and coordinated deletion removes it`(@TempDir tempDir: Path) {
+        DesktopLibraryDatabaseFactory.open(tempDir.resolve("library.db")).use { repository ->
+            val sourceId = 100L
+            val mangaId = repository.insertManga(
+                MangaRecord(sourceId = sourceId, url = "/manga/test", title = "Test Manga"),
+            )
+            val chapterId = repository.insertChapter(
+                ChapterRecord(mangaId = mangaId, url = "/chapter/1", name = "Chapter 1"),
+            )
+            val manga = createManga(id = mangaId, sourceId = sourceId)
+            val chapter = createChapter(id = chapterId, mangaId = mangaId)
+            val disk = DownloadDiskProvider(tempDir.resolve("downloads"))
+            val store = DownloadStore(tempDir.resolve("queue.json"))
+            val page = validDownloadImage()
+            disk.savePage(disk.getChapterDir(sourceId, manga.title, chapter.name), 0, page)
+            store.save(
+                listOf(
+                    DesktopDownload(
+                        chapter.id,
+                        manga.id,
+                        manga.sourceId,
+                        manga.title,
+                        chapter.name,
+                        chapter.url,
+                        pages = listOf(DownloadPage(0, "/image", status = PageStatus.READY)),
+                        status = DownloadStatus.COMPLETED,
+                    ),
+                ),
+            )
+
+            DesktopDownloader(store, disk, networkHelper, mutationPort = repository).use { downloader ->
+                Files.isRegularFile(
+                    disk.getChapterDir(sourceId, manga.title, chapter.name).resolve(".mihon-download.json"),
+                ) shouldBe true
+                downloader.queueState.value.single().pages.single().bytesWritten shouldBe page.size.toLong()
+                repository.isLocalChapterAssetRegistered(
+                    mangaId = manga.id,
+                    storagePath = disk.getMangaDir(sourceId, manga.title).toAbsolutePath().toString(),
+                    chapterId = chapter.id,
+                    relativePath = disk.sanitizeFileName(chapter.name),
+                    sizeBytes = page.size.toLong(),
+                ) shouldBe true
+
+                downloader.deleteDownloadedChapter(
+                    manga.copy(title = "Renamed after download"),
+                    chapter.copy(name = "Renamed chapter"),
+                ) shouldBe true
+
+                repository.isLocalChapterAssetRegistered(
+                    mangaId = manga.id,
+                    storagePath = disk.getMangaDir(sourceId, manga.title).toAbsolutePath().toString(),
+                    chapterId = chapter.id,
+                    relativePath = disk.sanitizeFileName(chapter.name),
+                    sizeBytes = page.size.toLong(),
+                ) shouldBe false
+                repository.localMangaStoragePaths() shouldBe emptySet()
+                downloader.queueState.value shouldBe emptyList()
+            }
+        }
+    }
+
+    @Test
+    fun `startup rejects a nonempty corrupt page from a saved completed download`(@TempDir tempDir: Path) {
+        val disk = DownloadDiskProvider(tempDir.resolve("downloads"))
+        val manga = createManga()
+        val chapter = createChapter()
+        val store = DownloadStore(tempDir.resolve("queue.json"))
+        val chapterDir = disk.getChapterDir(manga.sourceId, manga.title, chapter.name)
+        Files.createDirectories(chapterDir)
+        Files.writeString(chapterDir.resolve("001.jpg"), "not-an-image")
+        store.save(
+            listOf(
+                DesktopDownload(
+                    chapter.id,
+                    manga.id,
+                    manga.sourceId,
+                    manga.title,
+                    chapter.name,
+                    chapter.url,
+                    pages = listOf(DownloadPage(0, "/image", status = PageStatus.READY)),
+                    status = DownloadStatus.COMPLETED,
+                ),
+            ),
+        )
+
+        DesktopDownloader(store, disk, networkHelper).use { downloader ->
+            downloader.queueState.value.single().status shouldBe DownloadStatus.ERROR
+            downloader.queueState.value.single().pages.single().status shouldBe PageStatus.ERROR
+            downloader.isChapterDownloaded(manga.sourceId, manga.title, chapter.id, chapter.name) shouldBe false
+        }
+    }
+
     @Test
     fun `deleting a completed download removes its stale queue entry`(@TempDir tempDir: Path): Unit = runBlocking {
         val disk = DownloadDiskProvider(tempDir.resolve("downloads"))

@@ -45,6 +45,18 @@ interface LibraryMutationPort {
     fun importedMangaStoragePaths(): Set<String> = localMangaStoragePaths()
     fun insertLocalManga(value: LocalMangaRecord)
     fun insertLocalChapter(value: LocalChapterRecord)
+
+    /** True only when both the manga root and chapter asset match the published download. */
+    fun isLocalChapterAssetRegistered(
+        mangaId: Long,
+        storagePath: String,
+        chapterId: Long,
+        relativePath: String,
+        sizeBytes: Long,
+    ): Boolean = false
+
+    /** Removes the chapter asset and its manga root when no other local assets use that root. */
+    fun deleteLocalChapterAsset(mangaId: Long, chapterId: Long) = Unit
     fun insertReport(value: ImportReportRecord): Long
     fun insertReportItem(reportId: Long, value: ImportReportItemRecord)
 }
