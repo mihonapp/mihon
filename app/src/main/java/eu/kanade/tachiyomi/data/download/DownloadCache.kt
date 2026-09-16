@@ -1,7 +1,9 @@
 package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
+import android.util.AtomicFile
 import androidx.core.net.toUri
+import androidx.core.util.writeBytes
 import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -25,7 +27,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
@@ -57,8 +58,8 @@ import kotlin.time.Duration.Companion.seconds
 
 /**
  * Cache where we dump the downloads directory from the filesystem. This class is needed because
- * directory checking is expensive and it slows down the app. The cache is invalidated by the time
- * defined in [renewInterval] as we don't have any control over the filesystem and the user can
+ * directory checking is expensive, and it slows down the app. The cache is invalidated by the time
+ * defined in [RootDirectory.ttl] as we don't have any control over the filesystem and the user can
  * delete the folders at any time without the app noticing.
  */
 @Inject
@@ -81,12 +82,7 @@ class DownloadCache(
      * The interval after which this cache should be invalidated. 1 hour shouldn't cause major
      * issues, as the cache is only used for UI feedback.
      */
-    private val renewInterval = 1.hours.inWholeMilliseconds
 
-    /**
-     * The last time the cache was refreshed.
-     */
-    private var lastRenew = 0L
     private var renewalJob: Job? = null
 
     private val _isInitializing = MutableStateFlow(false)
@@ -94,31 +90,35 @@ class DownloadCache(
         .debounce(1.seconds) // Don't notify if it finishes quickly enough
         .stateIn(scope, SharingStarted.WhileSubscribed(), false)
 
-    private val diskCacheFile: File
-        get() = File(context.cacheDir, "dl_index_cache_v3")
+    private val diskCacheFile: AtomicFile
+        get() = AtomicFile(File(context.cacheDir, "dl_index_cache_v3"))
 
     private val rootDownloadsDirMutex = Mutex()
     private var rootDownloadsDir = RootDirectory(storageManager.getDownloadsDirectory())
 
-    init {
-        // Attempt to read cache file
-        scope.launch {
-            rootDownloadsDirMutex.withLock {
-                try {
-                    if (diskCacheFile.exists()) {
-                        val diskCache = diskCacheFile.inputStream().use {
-                            ProtoBuf.decodeFromByteArray<RootDirectory>(it.readBytes())
-                        }
-                        rootDownloadsDir = diskCache
-                        lastRenew = System.currentTimeMillis()
-                    }
-                } catch (e: Throwable) {
-                    logcat(LogPriority.ERROR, e) { "Failed to initialize from disk cache" }
-                    diskCacheFile.delete()
+    private val initJob: Job = scope.launchIO {
+        _isInitializing.emit(true)
+        rootDownloadsDirMutex.withLock {
+            try {
+                rootDownloadsDir = diskCacheFile.openRead().use {
+                    ProtoBuf.decodeFromByteArray<RootDirectory>(it.readBytes())
                 }
+            } catch (e: Throwable) {
+                logcat(LogPriority.ERROR, e) { "Failed to initialize from disk cache" }
+                diskCacheFile.delete()
             }
         }
+        if (rootDownloadsDir.isExpired()) {
+            renewCache(forceRenew = true)
+        } else {
+            scope.launchNonCancellable {
+                _changes.send(Unit)
+            }
+        }
+        _isInitializing.emit(false)
+    }
 
+    init {
         storageManager.changes
             .onEach { invalidateCache() }
             .launchIn(scope)
@@ -323,22 +323,23 @@ class DownloadCache(
     }
 
     fun invalidateCache() {
-        lastRenew = 0L
+        initJob.cancel()
         renewalJob?.cancel()
-        renewCache()
+        rootDownloadsDir.createdAt = 0L
+        renewCache(forceRenew = true)
     }
 
     /**
      * Renews the downloads cache.
      */
-    private fun renewCache() {
+    private fun renewCache(forceRenew: Boolean = false) {
         // Avoid renewing cache if in the process nor too often
-        if (lastRenew + renewInterval >= System.currentTimeMillis() || renewalJob?.isActive == true) {
+        if (!forceRenew && (!initJob.isCompleted || !rootDownloadsDir.isExpired() || renewalJob?.isActive == true) ) {
             return
         }
 
         renewalJob = scope.launchIO {
-            if (lastRenew == 0L) {
+            if (rootDownloadsDir.isExpired()) {
                 _isInitializing.emit(true)
             }
 
@@ -351,7 +352,7 @@ class DownloadCache(
             val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
 
             rootDownloadsDirMutex.withLock {
-                val updatedRootDir = RootDirectory(storageManager.getDownloadsDirectory())
+                val updatedRootDir = RootDirectory(storageManager.getDownloadsDirectory(), createdAt = System.currentTimeMillis())
 
                 updatedRootDir.sourceDirs = updatedRootDir.dir?.listFiles().orEmpty()
                     .filter { it.isDirectory && !it.name.isNullOrBlank() }
@@ -398,13 +399,14 @@ class DownloadCache(
                 if (exception != null && exception !is CancellationException) {
                     logcat(LogPriority.ERROR, exception) { "DownloadCache: failed to create cache" }
                 }
-                lastRenew = System.currentTimeMillis()
                 notifyChanges()
             }
         }
 
         // Mainly to notify the indexing notifier UI
-        notifyChanges()
+        scope.launchNonCancellable {
+            _changes.send(Unit)
+        }
     }
 
     private suspend fun getSources(): List<Source> {
@@ -424,13 +426,11 @@ class DownloadCache(
         updateDiskCacheJob = scope.launchIO {
             delay(1.seconds)
             ensureActive()
-            val bytes = ProtoBuf.encodeToByteArray(rootDownloadsDir)
-            ensureActive()
             try {
-                diskCacheFile.apply {
-                    delete()
-                    writeBytes(bytes)
+                val bytes = rootDownloadsDirMutex.withLock {
+                    ProtoBuf.encodeToByteArray(rootDownloadsDir)
                 }
+                diskCacheFile.writeBytes(bytes)
             } catch (e: Throwable) {
                 logcat(
                     priority = LogPriority.ERROR,
@@ -450,7 +450,11 @@ private class RootDirectory(
     @Serializable(with = UniFileAsStringSerializer::class)
     val dir: UniFile?,
     var sourceDirs: Map<Long, SourceDirectory> = mapOf(),
-)
+    var createdAt: Long = 0L,
+    val ttl: Long = 1.hours.inWholeMilliseconds
+) {
+    fun isExpired() = createdAt + ttl <= System.currentTimeMillis()
+}
 
 /**
  * Class to store the files under a source directory.
@@ -476,18 +480,23 @@ private object UniFileAsStringSerializer : KSerializer<UniFile?> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("UniFile", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: UniFile?) {
-        return if (value == null) {
-            encoder.encodeNull()
+        if (value == null) {
+            encoder.encodeString("")
         } else {
             encoder.encodeString(value.uri.toString())
         }
     }
 
     override fun deserialize(decoder: Decoder): UniFile? {
-        return if (decoder.decodeNotNullMark()) {
-            UniFile.fromUri(Injekt.get<Context>(), decoder.decodeString().toUri())
+        val uriString = decoder.decodeString()
+        return if (uriString.isNotEmpty()) {
+            try {
+                UniFile.fromUri(Injekt.get<Context>(), uriString.toUri())
+            } catch (_: Throwable) {
+                null
+            }
         } else {
-            decoder.decodeNull()
+            null
         }
     }
 }
