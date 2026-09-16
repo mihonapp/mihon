@@ -4,23 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.MigrateSourceScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
-import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrateMangaScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
-fun Screen.migrateSourceTab(): TabContent {
+fun migrateSourceTab(): TabContent {
     val uriHandler = LocalUriHandler.current
-    val navigator = LocalNavigator.currentOrThrow
     val viewModel = metroViewModel<MigrateSourceViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -40,7 +35,8 @@ fun Screen.migrateSourceTab(): TabContent {
                 state = state,
                 contentPadding = contentPadding,
                 onClickItem = { source ->
-                    navigator.push(MigrateMangaScreen(source.id))
+                    // TODO(nav): screen
+                    // navigator.push(MigrateMangaScreen(source.id))
                 },
                 onToggleSortingDirection = viewModel::toggleSortingDirection,
                 onToggleSortingMode = viewModel::toggleSortingMode,

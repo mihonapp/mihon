@@ -78,6 +78,8 @@ import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.LocalBackStack
+import eu.kanade.presentation.util.LocalTopLevelBackStack
+import eu.kanade.presentation.util.rememberTopLevelBackStack
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -86,6 +88,7 @@ import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.navigation.appEntries
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.home.HomeRoute
+import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
@@ -194,8 +197,10 @@ class MainActivity : BaseActivity() {
             }
 
             val backStack = rememberNavBackStack(HomeRoute)
+            val topLevelBackStack = rememberTopLevelBackStack(TopLevelRoute.Library)
             CompositionLocalProvider(
                 LocalBackStack provides backStack,
+                LocalTopLevelBackStack provides topLevelBackStack,
             ) {
                 LaunchedEffect(backStack) {
                     if (isLaunch) {
@@ -632,7 +637,7 @@ class MainActivity : BaseActivity() {
         if (tabToOpen != null) {
             lifecycleScope.launch { HomeScreen.openTab(tabToOpen) }
         }
-        */
+         */
 
         ready = true
         return true
