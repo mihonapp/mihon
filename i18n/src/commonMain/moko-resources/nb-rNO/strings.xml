@@ -387,9 +387,6 @@
     <string name="channel_progress">Framdrift</string>
     <string name="pref_remove_bookmarked_chapters">Tillat sletting av bokmerkede kapitler</string>
     <string name="pref_category_delete_chapters">Slett kapitler</string>
-    <string name="ext_nsfw_warning">Kan inneholde innhold for 18+</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Dette forhindrer ikke uoffisielle eller potensielt feilaktig kategoriserte tillegg fra å vise innhold for 18+ i appen.</string>
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
     <string name="share_page_info">%1$s: %2$s, side %3$d</string>
     <string name="chapter_settings">Kapittelinnstillinger</string>
@@ -431,8 +428,6 @@
     <string name="edge_nav">Kant</string>
     <string name="kindlish_nav">Kindle-basert</string>
     <string name="l_nav">L-formet</string>
-    <string name="pref_show_nsfw_source">Vis i kilde- og utvidelseslister</string>
-    <string name="pref_category_nsfw_content">Aldersgrense 18+ kilder</string>
     <string name="action_desc">Synkende</string>
     <string name="action_asc">Stigende</string>
     <string name="action_order_by_chapter_number">Etter kapittelnummer</string>
@@ -588,7 +583,6 @@
     <string name="download_notifier_split_page_not_found">Side %d ble ikke funnet under deling</string>
     <string name="pref_reset_viewer_flags">Tilbakestill leserinnstillinger per serie</string>
     <string name="theme_tidalwave">Tidevannsbølge</string>
-    <string name="ext_info_age_rating">Aldersvurdering</string>
     <string name="error_user_agent_string_blank">Strengen for brukeragent kan ikke være tom</string>
     <string name="complete_list">Komplett liste</string>
     <string name="on_hold_list">På vent liste</string>

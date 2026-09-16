@@ -399,10 +399,7 @@
     <string name="channel_errors">Greške</string>
     <string name="pref_remove_bookmarked_chapters">Dozvoli brisanje zabilježenih poglavlja</string>
     <string name="pref_category_delete_chapters">Izbriši poglavlja</string>
-    <string name="ext_nsfw_warning">Izvori ovog proširenja mogu sadržavati neprikladan sadržaj (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="backup_restore_missing_trackers">Usluge praćenja bez prijave:</string>
-    <string name="parental_controls_info">To ne sprečava neslužbene ili potencijalno krivo označena proširenja prikazati neprikladan sadržaj (18+) unutar aplikacije.</string>
     <string name="no_chapters_error">Nema poglavlja</string>
     <string name="chapter_settings_updated">Standardne postavke poglavlja su aktualizirane</string>
     <string name="share_page_info">%1$s: %2$s, %3$d. stranica</string>
@@ -421,10 +418,8 @@
     <string name="spen_next_page">Sljedeća stranica</string>
     <string name="spen_previous_page">Prethodna stranica</string>
     <string name="migration_help_guide">Vodič za migraciju izvora</string>
-    <string name="pref_category_nsfw_content">Izvori neprikladnog sadržaja (18+)</string>
     <string name="file_picker_error">Nije pronađena nijedna aplikacija za biranje datoteka</string>
     <string name="myanimelist_relogin">Ponovo se prijavi na MAL</string>
-    <string name="pref_show_nsfw_source">Prikaži u popisu izvora i proširenja</string>
     <string name="track_finished_reading_date">Datum kraja</string>
     <string name="track_started_reading_date">Datum početka</string>
     <string name="pref_dump_crash_logs_summary">Sprema zapise grešaka u datoteku za dijeljenje podataka s programerima</string>
@@ -585,7 +580,6 @@
     <string name="ext_info_language">Jezik</string>
     <string name="ext_info_version">Verzija</string>
     <string name="popular">Popularni</string>
-    <string name="ext_info_age_rating">Dobna granica</string>
     <string name="download_ahead">Preuzmi unaprijed</string>
     <string name="multi_lang">Višejezičnost</string>
     <string name="missing_storage_permission">Dozvole za spremište nisu odobrena</string>

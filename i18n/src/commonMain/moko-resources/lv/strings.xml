@@ -172,7 +172,6 @@
     <string name="ext_downloading">Lejupielādē</string>
     <string name="ext_installing">Instalē</string>
     <string name="ext_app_info">Aplikācijas informācija</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="confirm_lock_change">Autentificējaties, lai apstriprinātu izmaiņas</string>
     <string name="pref_update_only_non_completed">Ar \'\'Pabeigts\'\' statusu</string>
     <string name="action_start_downloading_now">Sākt lejupielādi tūlīt</string>
@@ -185,11 +184,9 @@
     <string name="charging">Uzlādējot</string>
     <string name="ext_info_version">Versija</string>
     <string name="ext_info_language">Valoda</string>
-    <string name="ext_info_age_rating">Vecuma grupa</string>
     <string name="action_sort_last_manga_update">Pēdējā atjauninājuma pārbaude</string>
     <string name="action_sort_unread_count">Neizlasītais skaits</string>
     <string name="action_show_manga">Rādīt ierakstu</string>
-    <string name="ext_nsfw_warning">Šī paplašinājuma avoti var saturēt NSFW (18+) saturu</string>
     <string name="ext_install_service_notif">Instalē paplašinājumu…</string>
     <string name="ext_installer_pref">Instalētājs</string>
     <string name="ext_installer_shizuku_stopped">Shizuku nedarbojas</string>
@@ -197,14 +194,11 @@
     <string name="action_sort_count">Visi ieraksti</string>
     <string name="cancel_all_for_series">Atcelt visu šai sērijai</string>
     <string name="action_order_by_upload_date">Pēc augšupielādes datuma</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) avoti</string>
-    <string name="pref_show_nsfw_source">Rādīt avotos un paplašinājumu sarakstos</string>
     <string name="update_never">Izslēgts</string>
     <string name="action_display_language_badge">Valoda</string>
     <string name="action_sort_chapter_fetch_date">Nodaļas ieneses datums</string>
     <string name="action_close">Aizvērt</string>
     <string name="pref_category_library_update">Globāls atjauninājums</string>
-    <string name="parental_controls_info">Šis neliedz neoficiāliem vai, iespējams, nepareizi atzīmētiem paplašinājumiem parādīties NSFW (18+) saturu lietotnē.</string>
     <string name="relative_time_today">Šodien</string>
     <string name="pref_library_update_interval">Automātiskie atjauninājumi</string>
     <string name="update_weekly">Katru nedēļu</string>

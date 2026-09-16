@@ -399,10 +399,7 @@
     <string name="channel_errors">Σφάλματα</string>
     <string name="backup_restore_missing_trackers">Trackers που δεν έχουν συνδεθεί:</string>
     <string name="pref_category_delete_chapters">Διαγραφή κεφαλαίων</string>
-    <string name="ext_nsfw_warning">Πηγές από αυτήν την επέκταση ενδέχεται να περιέχουν περιεχόμενο NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">Να επιτρέπεται η διαγραφή κεφαλαίων με σελιδοδείκτη</string>
-    <string name="parental_controls_info">Αυτό δεν εμποδίζει τις ανεπίσημες ή ενδεχομένως εσφαλμένα επισημασμένες επεκτάσεις να εμφανίζουν περιεχόμενο NSFW (18+) μέσα στην εφαρμογή.</string>
     <string name="no_chapters_error">Δεν βρέθηκαν κεφάλαια</string>
     <string name="chapter_settings_updated">Ενημερώθηκαν οι προεπιλεγμένες ρυθμίσεις κεφαλαίου</string>
     <string name="set_chapter_settings_as_default">Ορισμός ως προεπιλογής</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Επόμενη σελίδα</string>
     <string name="spen_previous_page">Προηγούμενη σελίδα</string>
     <string name="migration_help_guide">Οδηγός μεταφοράς πηγής</string>
-    <string name="pref_category_nsfw_content">Πηγές NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Εμφάνιση στις λίστες πηγών και επεκτάσεων</string>
     <string name="file_picker_error">Δεν βρέθηκε εφαρμογή επιλογής αρχείων</string>
     <string name="myanimelist_relogin">Συνδεθείτε ξανά στο MAL</string>
     <string name="pref_viewer_nav">Ζώνες πατήματος</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">Λοιπόν, αυτό είναι άβολο</string>
     <string name="ext_info_version">Έκδοση</string>
     <string name="ext_info_language">Γλώσσα</string>
-    <string name="ext_info_age_rating">Ηλικιακή βαθμολογία</string>
     <string name="unfinished_list">Ημιτελής λίστα</string>
     <string name="complete_list">Πλήρης Λίστα</string>
     <string name="wish_list">Λίστα επιθυμιών</string>

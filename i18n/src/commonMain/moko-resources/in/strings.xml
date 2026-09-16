@@ -396,11 +396,8 @@
     <string name="channel_progress">Kemajuan</string>
     <string name="channel_errors">Masalah</string>
     <string name="backup_restore_missing_trackers">Pelacakan tidak tersinkronisasi di:</string>
-    <string name="ext_nsfw_warning">Sumber dari ekstensi ini mungkin berisi konten DEWASA (NSFW 18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">Hapus bab yang ditandai</string>
     <string name="pref_category_delete_chapters">Hapus chapter</string>
-    <string name="parental_controls_info">Hal ini tidak mencegah ekstensi non-resmi atau konten DEWASA (NSFW 18+) yang tidak ditandai dengan benar muncul di dalam aplikasi.</string>
     <string name="no_chapters_error">Tidak ada bab yang ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan bab bawaan diperbarui</string>
     <string name="set_chapter_settings_as_default">Terapkan sebagai bawaan</string>
@@ -416,13 +413,11 @@
     <string name="pref_clear_history">Hapus riwayat</string>
     <string name="clear_history_confirmation">Apakah anda yakin? Semua riwayat akan terhapus.</string>
     <string name="clear_history_completed">Riwayat telah dihapus</string>
-    <string name="pref_category_nsfw_content">Sumber NSFW (18+)</string>
     <string name="spen_next_page">Halaman selanjutnya</string>
     <string name="spen_previous_page">Halaman sebelumnya</string>
     <string name="migration_help_guide">Petunjuk migrasi</string>
     <string name="file_picker_error">Tidak ada aplikasi pemilih berkas yang ditemukan</string>
     <string name="myanimelist_relogin">Harap login kembali ke MAL</string>
-    <string name="pref_show_nsfw_source">Tampilkan di daftar sumber dan ekstensi</string>
     <string name="edge_nav">Tepi</string>
     <string name="l_nav">Bentuk L</string>
     <string name="action_desc">Urutan turun</string>
@@ -580,7 +575,6 @@
     <string name="pref_reset_viewer_flags_error">Tidak bisa mengatur ulang setelan pembaca</string>
     <string name="ext_info_version">Versi</string>
     <string name="ext_info_language">Bahasa</string>
-    <string name="ext_info_age_rating">Rating Umur</string>
     <string name="reading_list">Daftar Bacaan</string>
     <string name="unfinished_list">Daftar Yang Belum Selesai</string>
     <string name="wish_list">Daftar Keinginan</string>

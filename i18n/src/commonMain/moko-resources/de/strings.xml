@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Nicht-angemeldete Tracker:</string>
     <string name="pref_remove_bookmarked_chapters">Erlauben, mit Lesezeichen versehene Kapitel zu löschen</string>
     <string name="pref_category_delete_chapters">Kapitel löschen</string>
-    <string name="ext_nsfw_warning">Quellen dieser Erweiterung könnten NSFW/Ü18-Inhalte enthalten</string>
-    <string name="ext_nsfw_short">Ü18</string>
-    <string name="parental_controls_info">Dies verhindert nicht, dass inoffizielle oder möglicherweise falsch gekennzeichnete Erweiterungen NSFW/Ü18-Inhalte in der App anzeigen.</string>
     <string name="no_chapters_error">Keine Kapitel gefunden</string>
     <string name="chapter_settings_updated">Standard-Kapiteleinstellungen aktualisiert</string>
     <string name="set_chapter_settings_as_default">Als Standard setzen</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Nächste Seite</string>
     <string name="spen_previous_page">Vorherige Seite</string>
     <string name="migration_help_guide">Quellenmigration</string>
-    <string name="pref_category_nsfw_content">NSFW/Ü18-Quellen</string>
-    <string name="pref_show_nsfw_source">In Quellen- und Erweiterungslisten anzeigen</string>
     <string name="file_picker_error">Keine Dateiauswahl-App gefunden</string>
     <string name="myanimelist_relogin">Bitte logge dich erneut in MAL ein</string>
     <string name="edge_nav">Rand</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">Tja, das ist jetzt etwas peinlich</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Sprache</string>
-    <string name="ext_info_age_rating">Altersfreigabe</string>
     <string name="wish_list">Wunschliste</string>
     <string name="complete_list">Abgeschlossen-Liste</string>
     <string name="on_hold_list">Warteliste</string>
