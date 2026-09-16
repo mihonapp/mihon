@@ -59,6 +59,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import java.io.File
+import kotlin.time.Duration.Companion.minutes
 
 object SettingsAdvancedScreen : SearchableSettings {
 
@@ -115,7 +116,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                 },
             ),
             getBackgroundActivityGroup(),
-            getDataGroup(),
+            getDataGroup(libraryPreferences = libraryPreferences),
             getNetworkGroup(networkPreferences = networkPreferences),
             getLibraryGroup(libraryPreferences = libraryPreferences),
             getReaderGroup(basePreferences = basePreferences),
@@ -163,7 +164,9 @@ object SettingsAdvancedScreen : SearchableSettings {
     }
 
     @Composable
-    private fun getDataGroup(): Preference.PreferenceGroup {
+    private fun getDataGroup(
+        libraryPreferences: LibraryPreferences,
+    ): Preference.PreferenceGroup {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
 
@@ -176,6 +179,18 @@ object SettingsAdvancedScreen : SearchableSettings {
                     onClick = {
                         context.appGraph.downloadCache.invalidateCache()
                         context.toast(MR.strings.download_cache_invalidated)
+                    },
+                ),
+                Preference.PreferenceItem.EditTextPreference(
+                    preference = libraryPreferences.downloadCacheTTLInterval,
+                    title = stringResource(MR.strings.pref_download_cache_ttl_interval),
+                    subtitle = stringResource(MR.strings.pref_download_cache_ttl_interval_summary),
+                    onValueChanged = {
+                        it.toLongOrNull()?.takeUnless { it < 30.minutes.inWholeSeconds } ?: return@EditTextPreference false.also {
+                            context.toast(MR.strings.pref_download_cache_ttl_invalid)
+                        }
+                        context.toast(MR.strings.pref_download_cache_ttl_toast_applied)
+                        true
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
