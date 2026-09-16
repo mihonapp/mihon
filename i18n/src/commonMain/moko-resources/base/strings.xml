@@ -653,6 +653,10 @@
     <string name="cookies_cleared">Cookies cleared</string>
     <string name="pref_invalidate_download_cache">Reindex downloads</string>
     <string name="pref_invalidate_download_cache_summary">Force app to recheck downloaded chapters</string>
+    <string name="pref_download_cache_ttl_interval">Cache expiration time</string>
+    <string name="pref_download_cache_ttl_interval_summary">Define the maximum time (in seconds) that downloaded chapter data is kept in the cache before scanning the files again.</string>
+    <string name="pref_download_cache_ttl_toast_applied">The new TTL will be applied on the next cache invalidation</string>
+    <string name="pref_download_cache_ttl_invalid">Invalid TTL value. Must be a number and at least 1800 seconds.</string>
     <string name="download_cache_invalidated">Recreating download index</string>
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>
