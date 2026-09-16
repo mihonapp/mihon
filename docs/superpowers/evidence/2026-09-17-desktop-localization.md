@@ -52,4 +52,24 @@ run's unaffected cases are retained separately; this is not a claim that the
 initial full run passed. Source renders of the reader menu, chapter settings,
 image actions, and calendar were saved and reviewed at desktop width.
 
-Installed-package evidence will be appended after validation.
+## Installed verification
+
+`:desktop-app:packageMsi` and `verifyCleanDistribution` passed for 0.2.13.
+The MSI is `desktop-app/build/compose/binaries/main/msi/mihondesk-0.2.13.msi`,
+SHA-256 `681F583D9DF5311500A2D5B36972EDFC10B2DC9E6D2D459463A363CA3BDAEEA5`.
+Windows Installer returned 0. Preferences, download queue, and library database
+matched the hashes captured before the upgrade, before restarting the app.
+
+The installed JAR at `C:\Users\18734\AppData\Local\mihondesk\app` matches the
+packaged JAR, SHA-256
+`43B3BBC65E2BB04F936726C3468C10F8E8B2B2CC6614D08AC25CA128E4CEB7AB`.
+Its embedded build information reports version 0.2.13, revision
+`8ae0812ebaa5cbec1be688698b8fbb46cabdfff6`, dirty=false.
+
+All four localization UI cases and all three light/dark/AMOLED reader contrast
+cases passed with installed JARs first on the runtime classpath. The reader tests
+asserted their production classes came from the installation directory. These
+tests render synthetic content without modifying the user's library. Installed
+render evidence and XML results are under `build/localization-evidence/`;
+the installed Chinese reader menu was also visually checked. The installed EXE
+was started after verification.
