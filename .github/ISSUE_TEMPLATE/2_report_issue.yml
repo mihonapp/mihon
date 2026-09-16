@@ -3,10 +3,10 @@ description: 报告 mihondesk 在 Windows 上的运行、阅读或扩展兼容�
 labels: [bug]
 body:
   - type: input
-    id: mihonw-version
+    id: mihondesk-version
     attributes:
       label: 应用版本
-      placeholder: 例如 0.2.4；自行构建请附提交号
+      placeholder: 例如 0.2.10；自行构建请附提交号
     validations:
       required: true
   - type: input

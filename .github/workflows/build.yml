@@ -99,7 +99,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: mihon-w-reader-failure-${{ github.sha }}
+          name: mihondesk-reader-failure-${{ github.sha }}
           path: |
-            desktop-app/build/compose/binaries/main/app/MihonW/MihonW.exe
+            desktop-app/build/compose/binaries/main/app/mihondesk/mihondesk.exe
             desktop-app/build/verification/reader

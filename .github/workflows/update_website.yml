@@ -9,6 +9,7 @@ on:
 
 jobs:
   update_website:
+    if: github.repository == 'mihonapp/mihon'
     runs-on: 'ubuntu-24.04'
 
     steps:

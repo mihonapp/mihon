@@ -1,12 +1,11 @@
-<!--
-  Please include a summary of the change and which issue is fixed.
-  Also make sure you've tested your code and also done a self-review of it.
-  Don't forget to check all base themes and tablet mode for relevant changes.
-  
-  If your changes are visual, please provide images below:
+## 改动
 
-### Images
-| Image 1 | Image 2 |
-| ------- | ------- |
-| ![](https://github.githubassets.com/images/modules/logos_page/Octocat.png) | ![](https://github.githubassets.com/images/modules/logos_page/Octocat.png) |
--->
+<!-- 说明解决的问题和最终行为。有关联 Issue 时，请添加链接。 -->
+
+## 验证
+
+<!-- 列出实际运行的测试或检查。界面改动请附桌面宽度截图；发行改动请注明验证过的安装包与版本。 -->
+
+## 来源
+
+<!-- 引入上游代码、素材或使用 AI 辅助时，说明来源和实际完成的验证。保留第三方署名与许可。无此类改动可删除本节。 -->

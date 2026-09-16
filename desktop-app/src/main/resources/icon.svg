@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <title>mihondesk</title>
+  <desc>An open book with a cyan bookmark on a cobalt blue rounded square.</desc>
+  <defs>
+    <linearGradient id="tile" x1="70" y1="36" x2="438" y2="486" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#336CF5"/>
+      <stop offset="1" stop-color="#1739B8"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="url(#tile)"/>
+  <g transform="translate(0 -20)">
+  <path d="M96 178C96 168 102 162 112 160C160 153 203 166 244 194V355C200 329 158 320 111 327C101 329 96 323 96 313V178Z" fill="#F6F1E4"/>
+  <path d="M268 194C309 166 352 153 400 160C410 162 416 168 416 178V313C416 323 411 329 401 327C354 320 312 329 268 355V194Z" fill="#FFFFFF"/>
+  <path d="M96 346C148 336 197 346 244 375V398C197 369 148 359 96 369V346Z" fill="#C5D5FF"/>
+  <path d="M268 375C315 346 364 336 416 346V369C364 359 315 369 268 398V375Z" fill="#C5D5FF"/>
+  <path d="M339 159C351 156 363 155 376 156V244L357.5 231L339 244V159Z" fill="#54E5CF"/>
+  </g>
+</svg>

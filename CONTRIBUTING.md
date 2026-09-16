@@ -34,9 +34,17 @@ Windows 相关模块主要包括：
 .\gradlew.bat :desktop-app:assembleWindowsRelease
 ```
 
-发行版本由 `desktop-version.txt` 管理，产物位于 `desktop-app/build/releases/<版本>/`。环境与打包细节见 [Windows 发行说明](docs/superpowers/evidence/suwayomi-windows-release-acceptance.md)。
+发行版本由 `desktop-version.txt` 管理，产物位于 `desktop-app/build/releases/<版本>/`。环境与打包细节见[开发指南](docs/windows-development.md)和 [Windows 发行说明](docs/WINDOWS_RELEASE.md)。
 
 提交前检查改动格式，并运行与改动相关的测试。扩展修复请区分“能够转换或加载”与“真实网站完整阅读通过”；网站自身拒绝访问时，请如实记录结果。
+
+## 文档、图标与 AI 辅助贡献
+
+面向使用者的文档请使用公开、可复现的说明；不要提交个人目录、账号、Cookie、书架、阅读记录或私有验证材料。截图请使用可公开展示的示例内容。
+
+应用图标的可编辑源文件和导出方式见[品牌资源说明](docs/BRANDING.md)。图标改动需要同时检查窗口、任务栏、快捷方式和 GitHub 图片。
+
+本项目使用 AI 编程助手辅助开发与维护，也欢迎 AI 辅助的贡献。提交者仍需理解改动、核对来源和许可，并说明实际完成的验证；生成的代码或文案不能代替测试结果。
 
 ## 上游与许可
 

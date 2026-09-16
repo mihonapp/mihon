@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420">
+  <title>mihondesk — Windows 漫画阅读器</title>
+  <rect width="1280" height="420" rx="28" fill="#0C1632"/>
+  <path d="M785 0H1280V420H1010Z" fill="#142344"/>
+  <rect x="66" y="64" width="6" height="28" rx="3" fill="#54E5CF"/>
+  <text x="87" y="86" fill="#A9BDD9" font-family="Segoe UI, Arial, sans-serif" font-size="20" letter-spacing="3">READ ON YOUR DESKTOP</text>
+  <text x="62" y="199" fill="#F6F1E4" font-family="Segoe UI, Arial, sans-serif" font-size="88" font-weight="700" letter-spacing="-4">mihondesk</text>
+  <text x="68" y="254" fill="#F6F1E4" font-family="Microsoft YaHei UI, Microsoft YaHei, sans-serif" font-size="30">Windows 漫画阅读器</text>
+  <text x="68" y="321" fill="#A9BDD9" font-family="Microsoft YaHei UI, Microsoft YaHei, sans-serif" font-size="21">本地阅读 · 书架管理 · 离线下载</text>
+  <text x="68" y="362" fill="#54E5CF" font-family="Segoe UI, Arial, sans-serif" font-size="17">OPEN SOURCE / AI-ASSISTED DEVELOPMENT</text>
+<svg x="840" y="44" width="340" height="340" viewBox="0 0 512 512" fill="none">
+  <title>mihondesk</title>
+  <desc>An open book with a cyan bookmark on a cobalt blue rounded square.</desc>
+  <defs>
+    <linearGradient id="tile" x1="70" y1="36" x2="438" y2="486" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#336CF5"/>
+      <stop offset="1" stop-color="#1739B8"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="url(#tile)"/>
+  <g transform="translate(0 -20)">
+  <path d="M96 178C96 168 102 162 112 160C160 153 203 166 244 194V355C200 329 158 320 111 327C101 329 96 323 96 313V178Z" fill="#F6F1E4"/>
+  <path d="M268 194C309 166 352 153 400 160C410 162 416 168 416 178V313C416 323 411 329 401 327C354 320 312 329 268 355V194Z" fill="#FFFFFF"/>
+  <path d="M96 346C148 336 197 346 244 375V398C197 369 148 359 96 369V346Z" fill="#C5D5FF"/>
+  <path d="M268 375C315 346 364 336 416 346V369C364 359 315 369 268 398V375Z" fill="#C5D5FF"/>
+  <path d="M339 159C351 156 363 155 376 156V244L357.5 231L339 244V159Z" fill="#54E5CF"/>
+  </g>
+</svg>
+
+</svg>
