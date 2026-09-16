@@ -21,6 +21,13 @@ enum class DesktopDestination(val label: String, val shortLabel: String) : Deskt
         }
     }
 
+    /** Details opened outside the library, including books that have not been favorited. */
+    data class MangaDetails(val mangaId: Long) : DesktopRoute {
+        init {
+            require(mangaId > 0L) { "mangaId must be positive" }
+        }
+    }
+
     /**
      * A transient route for the Upcoming calendar. It is opened from Updates and is intentionally
      * not part of [entries] so it can never be persisted as the shell destination.

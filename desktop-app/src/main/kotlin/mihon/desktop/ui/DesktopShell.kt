@@ -45,6 +45,7 @@ fun DesktopShell(
     libraryState: LibraryUiState = LibraryUiState(),
     libraryBatchState: mihon.desktop.ui.library.LibraryBatchState = mihon.desktop.ui.library.LibraryBatchState(),
     mangaDetailState: MangaDetailUiState = MangaDetailUiState(),
+    standaloneMangaDetails: Boolean = false,
     mangaDetailActions: MangaDetailActions? = null,
     onToggleMangaLibrary: (() -> Unit)? = null,
     onRefreshMangaSource: (() -> Unit)? = null,
@@ -275,6 +276,7 @@ fun DesktopShell(
                             LibraryScreen(
                                 state = libraryState,
                                 detailState = mangaDetailState,
+                                standaloneDetails = standaloneMangaDetails,
                                 onQueryChange = onLibraryQueryChange,
                                 onMangaSelected = onMangaSelected,
                                 onBackFromDetail = onBackFromMangaDetail,

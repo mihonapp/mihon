@@ -8,6 +8,34 @@ import org.junit.jupiter.api.Test
 
 class ReaderNavigationIntegrationTest {
     @Test
+    fun `download reader can open details and return to downloads without persisting transient routes`() {
+        val persisted = mutableListOf<DesktopDestination>()
+        val navigator = DesktopNavigator(DesktopDestination.Downloads, persisted::add)
+        navigator.navigate(DesktopDestination.Reader(72))
+        navigator.navigate(DesktopDestination.MangaDetails(9))
+        navigator.current shouldBe DesktopDestination.MangaDetails(9)
+        navigator.back()
+        navigator.current shouldBe DesktopDestination.Downloads
+        persisted.shouldContainExactly()
+    }
+
+    @Test
+    fun `reading again from details returns to the same details after chapter switches`() {
+        val navigator = DesktopNavigator(DesktopDestination.Downloads) {}
+        val details = DesktopDestination.MangaDetails(9)
+        navigator.navigate(DesktopDestination.Reader(72))
+        navigator.navigate(details)
+        navigator.navigate(DesktopDestination.Reader(72))
+        navigator.navigate(DesktopDestination.Reader(73))
+        navigator.back()
+        navigator.current shouldBe details
+        navigator.navigate(DesktopDestination.Reader(73))
+        navigator.navigate(details)
+        navigator.back()
+        navigator.current shouldBe DesktopDestination.Downloads
+    }
+
+    @Test
     fun `reading downloaded chapters returns to downloads even after chapter navigation`() {
         val persistedDestinations = mutableListOf<DesktopDestination>()
         val navigator = DesktopNavigator(DesktopDestination.Downloads, persistedDestinations::add)

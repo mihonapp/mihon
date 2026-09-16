@@ -93,6 +93,7 @@ fun ReaderScreen(
     chapterTitle: String,
     settingsStore: DesktopReaderSettingsStore?,
     onBack: () -> Unit,
+    onOpenMangaDetails: () -> Unit = {},
     modifier: Modifier = Modifier,
     onFullscreen: () -> Unit = {},
     onBorderless: () -> Unit = {},
@@ -648,6 +649,7 @@ fun ReaderScreen(
             onBack = {
                 closeAndThen(onBack)
             },
+            onOpenMangaDetails = if (mangaId != null) ({ closeAndThen(onOpenMangaDetails) }) else null,
             onMode = { applySettings(settings.copy(mode = it)) },
             onScale = { applySettings(settings.copy(scaleMode = it)) },
             onCoverOffset = { applySettings(settings.copy(coverOffset = it)) },

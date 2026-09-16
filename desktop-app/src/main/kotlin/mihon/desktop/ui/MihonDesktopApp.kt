@@ -490,6 +490,42 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         }
                                     }
 
+                                    val readerManga = mangaDetailState.manga?.takeIf { manga ->
+                                        mangaDetailState.allChapters.any {
+                                            it.id == destination.chapterId && it.mangaId == manga.id
+                                        }
+                                    }
+                                    fun leaveReader(afterClose: () -> Unit) {
+                                        val chapter = mangaDetailState.allChapters.firstOrNull {
+                                            it.id == destination.chapterId
+                                        }
+                                        val manga = readerManga
+                                        if (chapter != null && manga != null) {
+                                            presenterScope.launch {
+                                                val prefs = runtime.preferences.load()
+                                                if (!prefs.incognitoMode) {
+                                                    runtime.trackSyncService?.onChapterRead(
+                                                        manga.id,
+                                                        chapter.chapterNumber,
+                                                    )
+                                                }
+                                                if (prefs.downloadAhead > 0) {
+                                                    runtime.downloader?.checkAndDownloadAhead(
+                                                        manga = manga,
+                                                        currentChapter = chapter,
+                                                        allChapters = mangaDetailState.chapters,
+                                                        count = prefs.downloadAhead,
+                                                    )
+                                                }
+                                                if (prefs.deleteDownloadedRead && !prefs.incognitoMode) {
+                                                    runtime.downloader?.deleteDownloadedChapter(manga, chapter)
+                                                }
+                                            }
+                                        }
+                                        transitionReaderWindow(ReaderWindowMode.NORMAL)
+                                        afterClose()
+                                    }
+
                                     ReaderDestination(
                                         destination = destination,
                                         runtime = runtime,
@@ -502,7 +538,7 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                                 mangaDetailState.chapterSettings.displayMode,
                                             )
                                         } ?: "Chapter ${destination.chapterId}",
-                                        mangaId = mangaDetailState.manga?.id,
+                                        mangaId = readerManga?.id,
                                         chapterCatalog = transitionCatalog,
                                         previousChapter = transitionPrevious,
                                         nextChapter = transitionNext,
@@ -510,35 +546,14 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         currentChapterDownloaded =
                                         mangaDetailState.downloadedChapterIds.contains(currentChapterId),
                                         bookmarkStore = readerBookmarkStore,
-                                        onBack = {
-                                            val chapter = mangaDetailState.allChapters.firstOrNull {
-                                                it.id == destination.chapterId
-                                            }
-                                            val manga = mangaDetailState.manga
-                                            if (chapter != null && manga != null) {
-                                                presenterScope.launch {
-                                                    val prefs = runtime.preferences.load()
-                                                    if (!prefs.incognitoMode) {
-                                                        runtime.trackSyncService?.onChapterRead(
-                                                            manga.id,
-                                                            chapter.chapterNumber,
-                                                        )
-                                                    }
-                                                    if (prefs.downloadAhead > 0) {
-                                                        runtime.downloader?.checkAndDownloadAhead(
-                                                            manga = manga,
-                                                            currentChapter = chapter,
-                                                            allChapters = mangaDetailState.chapters,
-                                                            count = prefs.downloadAhead,
-                                                        )
-                                                    }
-                                                    if (prefs.deleteDownloadedRead && !prefs.incognitoMode) {
-                                                        runtime.downloader?.deleteDownloadedChapter(manga, chapter)
-                                                    }
+                                        onBack = { leaveReader { navigator.back() } },
+                                        onOpenMangaDetails = {
+                                            readerManga?.let { manga ->
+                                                leaveReader {
+                                                    libraryPresenter.openMangaDetail(manga.id)
+                                                    navigator.navigate(DesktopDestination.MangaDetails(manga.id))
                                                 }
                                             }
-                                            transitionReaderWindow(ReaderWindowMode.NORMAL)
-                                            navigator.back()
                                         },
                                         onPreviousChapter = {
                                             if (prevChapter != null) {
@@ -643,7 +658,8 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         libraryPresenter::resetChapterSettingsToDefault,
                                     )
                                     DesktopShell(
-                                        selected = destination as DesktopDestination,
+                                        selected = destination as? DesktopDestination ?: DesktopDestination.Library,
+                                        standaloneMangaDetails = destination is DesktopDestination.MangaDetails,
                                         onDestinationSelected = { selectedDestination ->
                                             isUpcomingOpen = false
                                             navigator.navigate(selectedDestination)
@@ -699,7 +715,10 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         isMangaSourceRefreshing = isMangaSourceRefreshing,
                                         onLibraryQueryChange = libraryPresenter::setQuery,
                                         onMangaSelected = libraryPresenter::selectManga,
-                                        onBackFromMangaDetail = { libraryPresenter.selectManga(null) },
+                                        onBackFromMangaDetail = {
+                                            libraryPresenter.selectManga(null)
+                                            if (destination is DesktopDestination.MangaDetails) navigator.back()
+                                        },
                                         onReadChapter = { chapterId ->
                                             navigator.navigate(DesktopDestination.Reader(chapterId))
                                         },
@@ -1064,6 +1083,7 @@ private fun ReaderDestination(
     mangaTitle: String,
     chapterTitle: String,
     onBack: () -> Unit,
+    onOpenMangaDetails: () -> Unit,
     onFullscreen: () -> Unit,
     onBorderless: () -> Unit,
     onEscape: () -> Boolean,
@@ -1115,6 +1135,7 @@ private fun ReaderDestination(
             chapterTitle = chapterTitle,
             settingsStore = DesktopReaderSettingsStore(runtime.preferences),
             onBack = onBack,
+            onOpenMangaDetails = onOpenMangaDetails,
             onFullscreen = onFullscreen,
             onBorderless = onBorderless,
             onEscape = onEscape,

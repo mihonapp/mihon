@@ -6,7 +6,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import mihon.desktop.extension.builtin.BundledLocalSource
-import mihon.desktop.extension.builtin.BundledMangaDexSource
 import mihon.desktop.library.repository.LibraryRepository
 import mihon.desktop.preferences.DesktopPreferenceStore
 import mihon.extension.ipc.BooleanPreferenceValueDto
@@ -213,9 +212,6 @@ class DesktopSourceManager(
 
     init {
         registerActiveManager(this)
-        // Register default out-of-the-box bundled sources
-        val mangadex = BundledMangaDexSource()
-        registerBuiltinSource(mangadex)
         registerBuiltinSource(localSource)
     }
 

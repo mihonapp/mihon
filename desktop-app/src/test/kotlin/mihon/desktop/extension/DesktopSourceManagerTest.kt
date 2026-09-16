@@ -73,16 +73,13 @@ class DesktopSourceManagerTest {
     }
 
     @Test
-    fun `registers bundled MangaDex source and retrieves it by id`(@TempDir tempDir: Path) {
+    fun `starts with only the local source`(@TempDir tempDir: Path) {
         val dummyProcessManager = WindowsExtensionProcessManager(tempDir.toFile())
         val manager = DesktopSourceManager(installer = null, processManager = dummyProcessManager)
 
         val sources = manager.getSources()
-        sources.any { it.id == BundledMangaDexSource.MANGADEX_SOURCE_ID } shouldBe true
-
-        val mangaDex = manager.findSourceDescriptor(BundledMangaDexSource.MANGADEX_SOURCE_ID)
-        mangaDex shouldNotBe null
-        mangaDex?.name shouldBe "MangaDex"
+        sources.map { it.id } shouldBe listOf(BundledLocalSource.ID)
+        manager.findSourceDescriptor(BundledMangaDexSource.MANGADEX_SOURCE_ID) shouldBe null
     }
 
     @Test
@@ -360,6 +357,7 @@ class DesktopSourceManagerTest {
         val prefStore = DesktopPreferenceStore(tempDir.resolve("prefs.properties"))
         val manager = DesktopSourceManager(installer = null, processManager = null, preferenceStore = prefStore)
         val sourceId = BundledMangaDexSource.MANGADEX_SOURCE_ID
+        manager.registerBuiltinSource(BundledMangaDexSource())
 
         manager.getSources().any { it.id == sourceId } shouldBe true
         manager.isSourceEnabled(sourceId) shouldBe true
@@ -373,6 +371,7 @@ class DesktopSourceManagerTest {
         manager.getSourceStates().first { it.source.id == sourceId }.isIncognito shouldBe true
 
         val reopened = DesktopSourceManager(installer = null, processManager = null, preferenceStore = prefStore)
+        reopened.registerBuiltinSource(BundledMangaDexSource())
         reopened.isSourceEnabled(sourceId) shouldBe false
         reopened.isSourceIncognito(sourceId) shouldBe true
         reopened.getSources().none { it.id == sourceId } shouldBe true
@@ -541,6 +540,7 @@ class DesktopSourceManagerTest {
         cookieStore.setCookies("api.mangadex.org", mapOf("cf_clearance" to "token"))
 
         val manager = DesktopSourceManager(installer = null, processManager = null, cookieStore = cookieStore)
+        manager.registerBuiltinSource(BundledMangaDexSource())
         manager.clearSourceCookies(BundledMangaDexSource.MANGADEX_SOURCE_ID) shouldBe 1
         cookieStore.getDomainConfig("api.mangadex.org") shouldBe null
     }

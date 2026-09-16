@@ -8,7 +8,8 @@ class DesktopNavigator(
     initialDestination: DesktopDestination,
     private val onDestinationChanged: (DesktopDestination) -> Unit,
 ) {
-    private var readerReturnDestination = initialDestination
+    private var readerReturnDestination: DesktopRoute = initialDestination
+    private var detailsReturnDestination = initialDestination
 
     var current: DesktopRoute by mutableStateOf(initialDestination)
         private set
@@ -21,7 +22,14 @@ class DesktopNavigator(
 
     fun navigate(destination: DesktopDestination.Reader) {
         if (destination == current) return
-        (current as? DesktopDestination)?.let { readerReturnDestination = it }
+        if (current !is DesktopDestination.Reader) readerReturnDestination = current
+        current = destination
+    }
+
+    fun navigate(destination: DesktopDestination.MangaDetails) {
+        if (destination == current) return
+        val origin = if (current is DesktopDestination.Reader) readerReturnDestination else current
+        (origin as? DesktopDestination)?.let { detailsReturnDestination = it }
         current = destination
     }
 
@@ -29,6 +37,8 @@ class DesktopNavigator(
         val currentDestination = current
         if (currentDestination is DesktopDestination.Reader) {
             current = readerReturnDestination
+        } else if (currentDestination is DesktopDestination.MangaDetails) {
+            current = detailsReturnDestination
         }
     }
 }

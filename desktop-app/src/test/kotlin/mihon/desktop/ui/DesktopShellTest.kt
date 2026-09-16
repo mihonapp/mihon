@@ -29,6 +29,23 @@ import org.junit.jupiter.api.Test
 class DesktopShellTest {
     @OptIn(ExperimentalTestApi::class)
     @Test
+    fun `standalone details render without a selected library row even on wide desktop`() = runComposeUiTest {
+        setContent {
+            Box(modifier = Modifier.requiredSize(1400.dp, 900.dp)) {
+                DesktopShell(
+                    selected = DesktopDestination.Library,
+                    onDestinationSelected = {},
+                    libraryState = LibraryUiState(loading = false, selectedMangaId = null),
+                    standaloneMangaDetails = true,
+                )
+            }
+        }
+        onNodeWithTag("manga-detail-pane").assertExists()
+        onNodeWithTag("library-grid-pane").assertDoesNotExist()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
     fun `completed downloads expose a reader action while unfinished downloads do not`() = runComposeUiTest {
         var readChapterId: Long? = null
         var readMangaId: Long? = null

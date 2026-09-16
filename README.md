@@ -15,7 +15,7 @@ AI 辅助开发的开源 Windows 漫画阅读器 · 基于 Mihon · Kotlin / Com
 ![Windows x64](https://img.shields.io/badge/Windows-x64-0078d4)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-64748b)](LICENSE)
 
-**[下载 Windows 版](https://github.com/1873412297-art/mihondesk/releases/latest)** · [版本说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.8) · [反馈问题](https://github.com/1873412297-art/mihondesk/issues)
+**[下载 Windows 版](https://github.com/1873412297-art/mihondesk/releases/latest)** · [版本说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.9) · [反馈问题](https://github.com/1873412297-art/mihondesk/issues)
 
 </div>
 
@@ -23,18 +23,18 @@ AI 辅助开发的开源 Windows 漫画阅读器 · 基于 Mihon · Kotlin / Com
 
 ## 下载与安装
 
-当前版本：**0.2.8**。面向 **Windows 10 22H2 / Windows 11，x64**，发行包已内置运行环境，无需另装 Java。
+当前版本：**0.2.9**。面向 **Windows 10 22H2 / Windows 11，x64**，发行包已内置运行环境，无需另装 Java。
 
 程序、安装包和快捷方式现已统一命名为 **mihondesk**。安装版继续使用原有数据目录，支持从 MihonW 升级。
 
 | 下载 | 适用方式 |
 | --- | --- |
-| **[EXE 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.8/mihondesk-0.2.8.exe)** | 推荐使用，下载后按向导安装 |
-| [MSI 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.8/mihondesk-0.2.8.msi) | 需要 MSI 安装方式时使用 |
-| [便携 ZIP](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.8/mihondesk-0.2.8-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `mihondesk.exe` |
-| [SHA-256 校验文件](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.8/SHA256SUMS.txt) | 校验下载文件的完整性 |
+| **[EXE 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.9/mihondesk-0.2.9.exe)** | 推荐使用，下载后按向导安装 |
+| [MSI 安装包](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.9/mihondesk-0.2.9.msi) | 需要 MSI 安装方式时使用 |
+| [便携 ZIP](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.9/mihondesk-0.2.9-windows-x64-portable.zip) | 完整解压到可写目录，运行其中的 `mihondesk.exe` |
+| [SHA-256 校验文件](https://github.com/1873412297-art/mihondesk/releases/download/v0.2.9/SHA256SUMS.txt) | 校验下载文件的完整性 |
 
-**首次使用**：发行包不预装图源或扩展仓库，请自行添加仓库或安装扩展。升级会保留已有书架、设置和阅读数据。
+**首次使用**：发行包不预装在线图源或扩展仓库，请自行添加仓库或安装扩展。本地文件阅读无需安装图源。升级会保留已有书架、设置和阅读数据。
 
 安装版默认将数据保存在 `%APPDATA%\MihonW`；便携版保存在 `mihondesk.exe` 同目录下的 `data` 文件夹。迁移便携版时请一并保留该文件夹。
 
@@ -56,13 +56,13 @@ AI 辅助开发的开源 Windows 漫画阅读器 · 基于 Mihon · Kotlin / Com
 3. **阅读在线内容**：在浏览页安装扩展包，再选择图源。安装入口支持 `.mext`，也可尝试转换受支持的扩展 `.apk`。
 4. **保留阅读数据**：使用备份功能定期导出。备份不包含已下载的漫画图片。
 
-## 0.2.8 更新
+## 0.2.9 更新
 
-- 在下载页的已完成章节上新增“阅读”按钮，直接打开对应的离线内容。
-- 支持阅读未加入书架的已下载漫画，并显示正确的漫画与章节信息。
-- 退出阅读器后返回进入时的页面；从下载页阅读并切换章节后，仍返回下载页。
+- 阅读器顶部新增“书籍详情”按钮，保存阅读进度后直接跳转到当前书籍的详情页。
+- 支持查看未加入书架的下载内容详情；从详情继续阅读后，返回时仍回到该详情页。
+- 移除默认内置的 MangaDex。发行版不预装在线图源或扩展仓库，保留本地阅读与自行安装扩展的能力。
 
-详见[本版发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.8)。此前的下载修复见 [0.2.7 发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.7)。
+详见[本版发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.9)。下载页直接阅读功能见 [0.2.8 发布说明](https://github.com/1873412297-art/mihondesk/releases/tag/v0.2.8)。
 
 ## 当前限制
 

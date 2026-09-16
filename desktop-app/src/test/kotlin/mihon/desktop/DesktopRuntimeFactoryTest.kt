@@ -7,6 +7,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import mihon.desktop.cli.DesktopCommand
+import mihon.desktop.extension.builtin.BundledLocalSource
 import mihon.desktop.reader.DesktopReaderFactory
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -206,7 +207,7 @@ class DesktopRuntimeFactoryTest {
     }
 
     @Test
-    fun `runtime initializes sourceManager with bundled MangaDex source`() {
+    fun `fresh runtime includes only local content and no preinstalled online sources`() {
         val runtime = DesktopRuntimeFactory.create(
             args = emptyArray(),
             environment = mapOf("APPDATA" to tempDir.resolve("Roaming").toString()),
@@ -214,7 +215,8 @@ class DesktopRuntimeFactoryTest {
         )
         try {
             val sources = runtime.sourceManager.getSources()
-            sources.any { it.name.contains("MangaDex") } shouldBe true
+            sources.map { it.id } shouldBe listOf(BundledLocalSource.ID)
+            runtime.extensionInstaller.getInstalledExtensions() shouldBe emptyList()
         } finally {
             runtime.close()
         }

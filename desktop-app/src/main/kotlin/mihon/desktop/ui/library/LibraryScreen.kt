@@ -75,6 +75,7 @@ import mihon.desktop.ui.common.MangaCover
 fun LibraryScreen(
     state: LibraryUiState,
     detailState: MangaDetailUiState = MangaDetailUiState(),
+    standaloneDetails: Boolean = false,
     onQueryChange: (String) -> Unit,
     onMangaSelected: (Long) -> Unit,
     onBackFromDetail: () -> Unit = {},
@@ -180,7 +181,7 @@ fun LibraryScreen(
     BoxWithConstraints(modifier = Modifier.fillMaxSize().testTag("library-screen")) {
         val selected = state.selectedMangaId != null
         val wide = maxWidth >= 1100.dp
-        if (wide && selected) {
+        if (wide && selected && !standaloneDetails) {
             Row(modifier = Modifier.fillMaxSize()) {
                 LibraryPane(
                     state = state,
@@ -220,7 +221,7 @@ fun LibraryScreen(
                     modifier = Modifier.weight(0.45f).fillMaxHeight(),
                 )
             }
-        } else if (selected) {
+        } else if (selected || standaloneDetails) {
             MangaDetailScreen(
                 state = detailState,
                 onBack = onBackFromDetail,

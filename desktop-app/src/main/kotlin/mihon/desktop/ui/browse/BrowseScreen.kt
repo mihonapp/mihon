@@ -694,7 +694,6 @@ private fun SourceListItem(
                     fontWeight = FontWeight.SemiBold,
                 )
                 val builtinBadge = when (source.id) {
-                    2499283573021220255L -> "[Built-in]"
                     BundledLocalSource.ID -> "[Local]"
                     else -> null
                 }

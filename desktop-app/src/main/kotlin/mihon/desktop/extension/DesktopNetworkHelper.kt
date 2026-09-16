@@ -80,13 +80,6 @@ class DesktopNetworkHelper(
     private val sourceOwners = ConcurrentHashMap<Long, String>()
     private val memoryCookies = ConcurrentHashMap<String, List<Cookie>>()
 
-    init {
-        registerExtensionDomains(
-            "builtin",
-            listOf("api.mangadex.org", "uploads.mangadex.org", "*.mangadex.org", "*.mangadex.network"),
-        )
-    }
-
     fun userAgentFor(url: String): String = cookieStore?.getUserAgent(url.toHttpUrl().host)
         ?: policyProvider().userAgent.takeIf { it.isNotBlank() } ?: defaultUserAgent
 

@@ -270,6 +270,7 @@ interface DesktopStrings {
     val actionSettings: String
 
     // Reader
+    val readerMangaDetails: String
     val readerModeSingleLtr: String
     val readerModeSingleRtl: String
     val readerModeWebtoon: String
@@ -917,6 +918,7 @@ object EnglishStrings : DesktopStrings {
     override val actionCancel = "Cancel"
     override val actionSettings = "Settings"
 
+    override val readerMangaDetails = "Book details"
     override val readerModeSingleLtr = "Left to Right"
     override val readerModeSingleRtl = "Right to Left"
     override val readerModeWebtoon = "Webtoon/Vertical"
@@ -1642,6 +1644,7 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val actionCancel = "取消"
     override val actionSettings = "设置"
 
+    override val readerMangaDetails = "书籍详情"
     override val readerModeSingleLtr = "单页式（从左到右）"
     override val readerModeSingleRtl = "单页式（从右到左）"
     override val readerModeWebtoon = "条漫"
@@ -2365,6 +2368,7 @@ object TraditionalChineseStrings : DesktopStrings {
     override val actionCancel = "取消"
     override val actionSettings = "設定"
 
+    override val readerMangaDetails = "書籍詳情"
     override val readerModeSingleLtr = "單頁式（從左到右）"
     override val readerModeSingleRtl = "單頁式（從右到左）"
     override val readerModeWebtoon = "條漫"

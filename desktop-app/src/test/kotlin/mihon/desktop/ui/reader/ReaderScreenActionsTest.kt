@@ -41,6 +41,42 @@ class ReaderScreenActionsTest {
     lateinit var tempDir: Path
 
     @Test
+    fun `reader offers a direct manga details action and flushes only once`() = runComposeUiTest {
+        val session = TestReaderSession(testReaderState())
+        var openedDetails = 0
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            mangaId = 99L,
+            onOpenMangaDetails = {
+                session.closeRequests shouldBe 1
+                openedDetails++
+            },
+        )
+        onNodeWithTag("reader-manga-details").assertIsDisplayed().performClick()
+        onNodeWithTag("reader-manga-details").performClick()
+        waitUntil { openedDetails == 1 }
+        session.closeRequests shouldBe 1
+    }
+
+    @Test
+    fun `details navigation still completes when progress persistence fails`() = runComposeUiTest {
+        val session = TestReaderSession(testReaderState()).also {
+            it.closeFailure = IllegalStateException("database unavailable")
+        }
+        var openedDetails = false
+        setReaderScreen(
+            session = session,
+            store = settingsStore(),
+            mangaId = 99L,
+            onOpenMangaDetails = { openedDetails = true },
+        )
+        onNodeWithTag("reader-manga-details").performClick()
+        waitUntil { openedDetails }
+        session.closeRequests shouldBe 1
+    }
+
+    @Test
     fun `chrome menu and long press open the page actions dialog with local actions`() = runComposeUiTest {
         val handler = RecordingPageActionHandler()
         val session = TestReaderSession(testReaderState())
@@ -471,6 +507,7 @@ class ReaderScreenActionsTest {
         mangaId: Long? = null,
         pageUrlResolver: (PageDescriptor) -> String? = { null },
         onBack: () -> Unit = {},
+        onOpenMangaDetails: () -> Unit = {},
         onEscape: () -> Boolean = { true },
     ) {
         setContent {
@@ -483,6 +520,7 @@ class ReaderScreenActionsTest {
                             chapterTitle = "Chapter 2",
                             settingsStore = store,
                             onBack = onBack,
+                            onOpenMangaDetails = onOpenMangaDetails,
                             onEscape = onEscape,
                             onPreviousChapter = onPreviousChapter,
                             onNextChapter = onNextChapter,

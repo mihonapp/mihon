@@ -101,6 +101,7 @@ internal fun ReaderChrome(
     chapterCatalog: List<ReaderChapterTransitionChapter> = emptyList(),
     currentChapterId: Long? = null,
     onChapterSelected: (Long) -> Unit = {},
+    onOpenMangaDetails: (() -> Unit)? = null,
 ) {
     val strings = LocalStrings.current
     var isChapterDrawerOpen by remember { mutableStateOf(false) }
@@ -154,6 +155,14 @@ internal fun ReaderChrome(
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
+                    }
+                    if (onOpenMangaDetails != null) {
+                        TextButton(
+                            onClick = onOpenMangaDetails,
+                            modifier = Modifier.testTag("reader-manga-details"),
+                        ) {
+                            Text(strings.readerMangaDetails)
+                        }
                     }
                     IconButton(
                         onClick = onToggleBookmark,
