@@ -47,9 +47,6 @@
     <string name="pref_library_columns">Elementai eilutėje</string>
     <string name="pref_category_display">Rodinys</string>
     <string name="relative_time_today">Šiandien</string>
-    <string name="parental_controls_info">Tai nesustabdo neoficialių ar potencialiai neteisingai pažymėtų plėtinių nuo N18+ turinio rodymo programoje.</string>
-    <string name="pref_show_nsfw_source">Rodyti šaltiniuose ir plėtinių sąrašuose</string>
-    <string name="pref_category_nsfw_content">N18+ šaltiniai</string>
     <string name="hide_notification_content">Slėpti pranešimo turinį</string>
     <string name="secure_screen_summary">Slėpti programos turinį, kai įjungiama kita programa ir neleisti daryti ekrano nuotraukų</string>
     <string name="secure_screen">Saugus užraktas</string>
@@ -181,8 +178,6 @@
     <string name="pref_dual_page_split">Perskirti plačius puslapius</string>
     <string name="pref_show_navigation_mode_summary">Trumpai parodyti skaitytuvą, kai atidarytas</string>
     <string name="pref_fullscreen">Pilno ekrano rėžimas</string>
-    <string name="ext_nsfw_warning">Šaltiniuose gali būti N18 turinio</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="obsolete_extension_message">Šis plėtinys nebėra prieinamas. Plėtinys gali veikti netinkamai arba sukelti problemas programėlėje. Rekomenduojama išdiegti plėtinį.</string>
     <string name="untrusted_extension_message">Šis plėtinys buvo pasirašytas nepatikimu sertifikatu ir nebuvo aktyvuotas. \n \nPlėtinys, su negeranoriškais ketinimais, gali perskaityti prisijungimo duomenys patalpintus Mihon arba gali paleisti kenkėjišką kodą. \n \nJūs priimate šias rizikas pasitikėdami sertifikatu.</string>
     <string name="untrusted_extension">Nepatikimas plėtinys</string>
@@ -409,7 +404,6 @@
     <string name="backup_restore_missing_trackers">Sekimo priemonės, neprijungtos prie:</string>
     <string name="split_tall_images_summary">Pagerina skaitytuvo našumą</string>
     <string name="ext_info_language">Kalba</string>
-    <string name="ext_info_age_rating">Amžiaus reitingas</string>
     <string name="rotation_reverse_portrait">Apverstas portretas</string>
     <string name="action_track">Trasa</string>
     <string name="edge_nav">Kraštas</string>

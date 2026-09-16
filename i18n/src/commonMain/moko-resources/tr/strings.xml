@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Giriş yapılmamış izleyiciler:</string>
     <string name="pref_remove_bookmarked_chapters">Yer imi eklenmiş bölümleri silmeye izin ver</string>
     <string name="pref_category_delete_chapters">Bölümleri sil</string>
-    <string name="ext_nsfw_warning">Bu uzantıdaki kaynaklar yetişkin içerik (18+) içerebilir</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Bu, resmî olmayan veya yanlış işaretlenmiş uzantıların uygulama içinde yetişkin içeriği (18+) göstermesini engellemez.</string>
     <string name="no_chapters_error">Bölüm bulunamadı</string>
     <string name="chapter_settings_updated">Varsayılan bölüm ayarları güncellendi</string>
     <string name="set_chapter_settings_as_default">Varsayılan olarak ayarla</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Sonraki sayfa</string>
     <string name="spen_previous_page">Önceki sayfa</string>
     <string name="migration_help_guide">Kaynak taşıma kılavuzu</string>
-    <string name="pref_category_nsfw_content">Yetişkin içerik (18+) kaynakları</string>
-    <string name="pref_show_nsfw_source">Kaynaklar ve uzantılar listelerinde göster</string>
     <string name="file_picker_error">Dosya seçme uygulaması bulunamadı</string>
     <string name="myanimelist_relogin">Lütfen MAL\'a tekrar giriş yapın</string>
     <string name="pref_viewer_nav">Dokunma bölgeleri</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">Peki, bu garip</string>
     <string name="ext_info_version">Sürüm</string>
     <string name="ext_info_language">Dil</string>
-    <string name="ext_info_age_rating">Yaş derecelendirmesi</string>
     <string name="wish_list">İstek Listesi</string>
     <string name="on_hold_list">Beklemede Listesi</string>
     <string name="unfinished_list">Bitirilmemiş Listesi</string>

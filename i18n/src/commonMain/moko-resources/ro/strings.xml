@@ -399,9 +399,6 @@
     <string name="backup_restore_missing_trackers">Serviciile de urmărire nu sunt conectate la:</string>
     <string name="pref_remove_bookmarked_chapters">Permite ștergerea capitolelor marcate</string>
     <string name="pref_category_delete_chapters">Ștergeți capitole</string>
-    <string name="ext_nsfw_warning">Sursele din această extensie pot avea conținut NSFW (18+)</string>
-    <string name="ext_nsfw_short">Peste 18</string>
-    <string name="parental_controls_info">Acest lucru nu împiedică extensiile neoficiale sau potențial semnalizate incorect să iasă la suprafață cu conținut 18+ în cadrul aplicației.</string>
     <string name="no_pinned_sources">Nu aveți surse fixate</string>
     <string name="no_chapters_error">Nu a fost găsit niciun capitol</string>
     <string name="chapter_settings_updated">S-au actualizat setările implicite ale capitolului</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Pagina următoare</string>
     <string name="spen_previous_page">Pagina anterioară</string>
     <string name="migration_help_guide">Ghid de migrare a sursei</string>
-    <string name="pref_category_nsfw_content">Conținut NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Afișați în listele de surse și extensii</string>
     <string name="file_picker_error">Nicio aplicație de ales fișiere nu a fost găsite</string>
     <string name="myanimelist_relogin">Te rugăm să te loghezi la MAL din nou</string>
     <string name="pref_dual_page_invert">Inversează plasamentul paginilor duble despărțite</string>
@@ -591,7 +586,6 @@
     <string name="action_sort_count">Total intrări</string>
     <string name="action_search_hint">Caută…</string>
     <string name="theme_tidalwave">Tsunami</string>
-    <string name="ext_info_age_rating">Vârsta minimă</string>
     <string name="ext_installer_legacy">Versiune veche</string>
     <string name="tracking_guide">Ghid de urmărire</string>
     <string name="rotation_reverse_portrait">Format portret întors</string>

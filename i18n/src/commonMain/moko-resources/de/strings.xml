@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Nicht-angemeldete Tracker:</string>
     <string name="pref_remove_bookmarked_chapters">Erlauben, mit Lesezeichen versehene Kapitel zu löschen</string>
     <string name="pref_category_delete_chapters">Kapitel löschen</string>
-    <string name="ext_nsfw_warning">Quellen dieser Erweiterung könnten NSFW/Ü18-Inhalte enthalten</string>
-    <string name="ext_nsfw_short">Ü18</string>
-    <string name="parental_controls_info">Dies verhindert nicht, dass inoffizielle oder möglicherweise falsch gekennzeichnete Erweiterungen NSFW/Ü18-Inhalte in der App anzeigen.</string>
     <string name="no_chapters_error">Keine Kapitel gefunden</string>
     <string name="chapter_settings_updated">Standard-Kapiteleinstellungen aktualisiert</string>
     <string name="set_chapter_settings_as_default">Als Standard setzen</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Nächste Seite</string>
     <string name="spen_previous_page">Vorherige Seite</string>
     <string name="migration_help_guide">Quellenmigration</string>
-    <string name="pref_category_nsfw_content">NSFW/Ü18-Quellen</string>
-    <string name="pref_show_nsfw_source">In Quellen- und Erweiterungslisten anzeigen</string>
     <string name="file_picker_error">Keine Dateiauswahl-App gefunden</string>
     <string name="myanimelist_relogin">Bitte logge dich erneut in MAL ein</string>
     <string name="edge_nav">Rand</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">Tja, das ist jetzt etwas peinlich</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Sprache</string>
-    <string name="ext_info_age_rating">Altersfreigabe</string>
     <string name="wish_list">Wunschliste</string>
     <string name="complete_list">Abgeschlossen-Liste</string>
     <string name="on_hold_list">Warteliste</string>
@@ -907,4 +901,13 @@
     <string name="downloading_with_progress">Wird heruntergeladen… (%d%%)</string>
     <string name="pref_filter_update_categories_details">Aktualisierungen in ausgeschlossen Kategorien werden nicht angezeigt, selbst wenn sie in eingeschlossenen Kategorien vorkommen.</string>
     <string name="pref_filter_upcoming_categories_details">Titel in ausgeschlossen Kategorien werden nicht angezeigt, selbst wenn sie in eingeschlossenen Kategorien vorkommen.</string>
+    <string name="pref_category_extensions">Erweiterungen</string>
+    <string name="pref_allowed_content_warnings">Erlaubte Inhaltswarnungen</string>
+    <string name="pref_apply_content_warnings_to_installed">Auch auf installierte Erweiterungen anwenden</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">Wenn deaktiviert, werden bereits installierte Erweiterungen unabhängig von ihren Warnungen weiterhin geladen und aktualisiert</string>
+    <string name="content_warnings_info">Installierte Erweiterungen, die nicht geladen sind, bleiben ohne ihre Quellen gelistet; nicht installierte Erweiterungen bleiben versteckt. Dies verhindert nicht, dass inoffizielle oder potentiell falsch markierte Erweiterungen Ü18-Inhalte in der App anzeigen.</string>
+    <string name="ext_filtered">Gefiltert</string>
+    <string name="ext_not_loaded">Nicht geladen</string>
+    <string name="ext_not_loaded_dialog">Konnte nicht geladen werden</string>
+    <string name="ext_copy_stacktrace">Stacktrace kopieren</string>
 </resources>

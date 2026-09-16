@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">尚未登录进度记录平台：</string>
     <string name="pref_remove_bookmarked_chapters">允许删除添加了书签的章节</string>
     <string name="pref_category_delete_chapters">删除章节</string>
-    <string name="ext_nsfw_warning">来自此插件的图源可能包含 NSFW (18+) 内容</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">如果有插件标记错误，这项设置无法阻止它们展示 NSFW (18+) 内容。</string>
     <string name="no_chapters_error">没有章节</string>
     <string name="chapter_settings_updated">已更新默认章节设置</string>
     <string name="set_chapter_settings_as_default">设为默认</string>
@@ -421,10 +418,8 @@
     <string name="spen_next_page">下一页</string>
     <string name="spen_previous_page">上一页</string>
     <string name="migration_help_guide">图源迁移指南</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) 图源</string>
     <string name="file_picker_error">没有文件管理器</string>
     <string name="myanimelist_relogin">请重新登录 MAL</string>
-    <string name="pref_show_nsfw_source">在图源和插件列表中显示</string>
     <string name="pref_viewer_nav">点按区域</string>
     <string name="edge_nav">两侧</string>
     <string name="kindlish_nav">Kindle</string>
@@ -578,7 +573,6 @@
     <string name="pref_reset_viewer_flags_success">已重置所有阅读器设置</string>
     <string name="pref_reset_viewer_flags_error">重置阅读器设置失败</string>
     <string name="empty_screen">呃…尴尬了</string>
-    <string name="ext_info_age_rating">分级</string>
     <string name="ext_info_version">版本</string>
     <string name="ext_info_language">语言</string>
     <string name="reading_list">在读</string>

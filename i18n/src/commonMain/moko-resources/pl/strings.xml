@@ -418,13 +418,8 @@
     <string name="backup_restore_missing_trackers">Serwisy, do których nie zalogowono:</string>
     <string name="pref_remove_bookmarked_chapters">Usuwaj rozdziały dodane do zakładek</string>
     <string name="pref_category_delete_chapters">Usuń rozdziały</string>
-    <string name="ext_nsfw_warning">Źródła z tej wtyczki mogą zawierać treści NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Nie zapobiega to nieoficjalnym lub potencjalnie niepoprawnie oflagowanym rozszerzeniom przed pokazywaniem zwartości NSFW(18+) w aplikacji.</string>
-    <string name="pref_category_nsfw_content">NFSW Materiały 18+</string>
     <string name="file_picker_error">Nie znaleziono aplikacji do przeglądania plików</string>
     <string name="myanimelist_relogin">Wymagane ponowne zalogowanie do MAL</string>
-    <string name="pref_show_nsfw_source">Pokazuj na liście źródeł i rozszerzeń</string>
     <string name="track_finished_reading_date">Data zakończenia</string>
     <string name="track_started_reading_date">Data rozpoczęcia</string>
     <string name="pref_dump_crash_logs_summary">Zapisuje logi błędów do pliku do udostępnienia programistom</string>
@@ -590,7 +585,6 @@
     <string name="pref_reset_viewer_flags">Resetowanie ustawień czytników serii</string>
     <string name="pref_reset_viewer_flags_summary">Resetuje tryb czytania i orientację wszystkich serii</string>
     <string name="download_notifier_split_page_not_found">Strona %d nie została znaleziona podczas podziału</string>
-    <string name="ext_info_age_rating">Oznaczenie wiekowe</string>
     <string name="rotation_reverse_portrait">Do góry nogami</string>
     <string name="download_notifier_split_page_path_not_found">Nie można było znaleźć ścieżki %d strony</string>
     <string name="pref_user_agent_string">Domyślny user agent string</string>
