@@ -195,7 +195,7 @@ class DownloadProvider(
         chapterName: String,
         chapterScanlator: String?,
         chapterUrl: String,
-    ): List<String> {
+    ): Set<String> {
         val sanitizedChapterName = sanitizeChapterName(chapterName)
         val chapterNameV1 = DiskUtil.buildValidFilename(
             when {
@@ -217,7 +217,7 @@ class DownloadProvider(
                 !libraryPreferences.enableChapterNameHash.get(),
             )
 
-        return buildList(2) {
+        return buildSet(2) {
             // Chapter name without hash (unable to handle duplicate
             // chapter names)
             add(chapterNameV1)
