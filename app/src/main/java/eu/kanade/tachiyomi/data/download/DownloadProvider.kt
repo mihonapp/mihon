@@ -167,7 +167,7 @@ class DownloadProvider(
         chapterScanlator: String?,
         chapterUrl: String,
         disallowNonAsciiFilenames: Boolean = libraryPreferences.disallowNonAsciiFilenames.get(),
-        disableChapterNameHash: Boolean = libraryPreferences.disableChapterNameHash.get(),
+        enableChapterNameHash: Boolean = libraryPreferences.enableChapterNameHash.get(),
     ): String {
         return buildString {
             if (!chapterScanlator.isNullOrBlank()) {
@@ -176,7 +176,7 @@ class DownloadProvider(
 
             // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
             append(DiskUtil.buildValidFilename(sanitizeChapterName(chapterName), DiskUtil.MAX_FILE_NAME_BYTES - 11, disallowNonAsciiFilenames))
-            if(!disableChapterNameHash) {
+            if(enableChapterNameHash) {
                 append("_${md5(chapterUrl).take(6)}")
             }
         }
@@ -205,15 +205,16 @@ class DownloadProvider(
         )
 
         // Get the filename that would be generated if the user were
-        // using the other value for the disallow non-ASCII
-        // filenames setting. This ensures that chapters downloaded
-        // before the user changed the setting can still be found.
+        // using the other values for the non-ASCII filenames or
+        // chapter name hash settings. This ensures that chapters downloaded
+        // before the user changed these settings can still be found.
         val otherChapterDirName =
             getChapterDirName(
                 chapterName,
                 chapterScanlator,
                 chapterUrl,
                 !libraryPreferences.disallowNonAsciiFilenames.get(),
+                !libraryPreferences.enableChapterNameHash.get(),
             )
 
         return buildList(2) {

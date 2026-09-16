@@ -319,9 +319,9 @@ object SettingsAdvancedScreen : SearchableSettings {
                     subtitle = stringResource(MR.strings.pref_disallow_non_ascii_filenames_details),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    preference = libraryPreferences.disableChapterNameHash,
-                    title = stringResource(MR.strings.pref_disable_chapter_name_hash),
-                    subtitle = stringResource(MR.strings.pref_disable_chapter_name_hash_details),
+                    preference = libraryPreferences.enableChapterNameHash,
+                    title = stringResource(MR.strings.pref_enable_chapter_name_hash),
+                    subtitle = stringResource(MR.strings.pref_enable_chapter_name_hash_details),
                 ),
             ),
         )
