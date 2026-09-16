@@ -14,6 +14,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.width
+import io.kotest.matchers.shouldBe
 import mihon.desktop.navigation.DesktopDestination
 import mihon.desktop.ui.library.LibraryUiState
 import mihon.desktop.ui.upcoming.UPCOMING_BACK_BUTTON_TEST_TAG
@@ -26,6 +27,43 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class DesktopShellTest {
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun `completed downloads expose a reader action while unfinished downloads do not`() = runComposeUiTest {
+        var readChapterId: Long? = null
+        var readMangaId: Long? = null
+        val queue = mihon.desktop.download.DownloadStatus.entries.mapIndexed { index, status ->
+            mihon.desktop.download.DesktopDownload(
+                chapterId = index + 1L,
+                mangaId = 42L,
+                sourceId = 100L,
+                mangaTitle = "Downloaded manga",
+                chapterName = status.name,
+                chapterUrl = "/$index",
+                status = status,
+            )
+        }
+        setContent {
+            Box(modifier = Modifier.requiredSize(1100.dp, 1200.dp)) {
+                DesktopShell(
+                    selected = DesktopDestination.Downloads,
+                    onDestinationSelected = {},
+                    downloadsQueue = queue,
+                    onReadDownloadedChapter = { mangaId, chapterId ->
+                        readMangaId = mangaId
+                        readChapterId = chapterId
+                    },
+                )
+            }
+        }
+        queue.filter { it.status != mihon.desktop.download.DownloadStatus.COMPLETED }.forEach { item ->
+            onNodeWithTag("download_read_${item.chapterId}").assertDoesNotExist()
+        }
+        val completed = queue.single { it.status == mihon.desktop.download.DownloadStatus.COMPLETED }
+        onNodeWithTag("download_read_${completed.chapterId}").performClick()
+        readChapterId shouldBe completed.chapterId
+        readMangaId shouldBe completed.mangaId
+    }
 
     @OptIn(ExperimentalTestApi::class)
     @Test

@@ -32,6 +32,7 @@ class DownloadsScreenTest {
                     onClearCompleted = {},
                     onCancel = {},
                     onRetry = {},
+                    onReadChapter = { _, _ -> },
                 )
             }
         }
@@ -71,6 +72,7 @@ class DownloadsScreenTest {
                     onClearCompleted = {},
                     onCancel = { cancelledId = it },
                     onRetry = {},
+                    onReadChapter = { _, _ -> },
                 )
             }
         }

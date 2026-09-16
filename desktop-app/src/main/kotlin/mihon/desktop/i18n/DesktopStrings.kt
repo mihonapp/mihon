@@ -220,6 +220,7 @@ interface DesktopStrings {
     val downloadsStatusError: String
     val downloadsCancel: String
     val downloadsRetry: String
+    val downloadsRead: String
     fun downloadsActiveSpeed(activeCount: Int, speedText: String): String
 
     // Browse
@@ -867,6 +868,7 @@ object EnglishStrings : DesktopStrings {
     override val downloadsStatusError = "Error"
     override val downloadsCancel = "Cancel"
     override val downloadsRetry = "Retry"
+    override val downloadsRead = "Read"
     override fun downloadsActiveSpeed(activeCount: Int, speedText: String) = "$activeCount active items • $speedText"
 
     override val browseTitle = "Browse"
@@ -1593,6 +1595,7 @@ object SimplifiedChineseStrings : DesktopStrings {
     override val downloadsStatusError = "出错了"
     override val downloadsCancel = "取消"
     override val downloadsRetry = "重试"
+    override val downloadsRead = "阅读"
     override fun downloadsActiveSpeed(activeCount: Int, speedText: String) = "$activeCount 个进行中 • $speedText"
 
     override val browseTitle = "浏览"
@@ -2315,6 +2318,7 @@ object TraditionalChineseStrings : DesktopStrings {
     override val downloadsStatusError = "發生錯誤"
     override val downloadsCancel = "取消"
     override val downloadsRetry = "重試"
+    override val downloadsRead = "閱讀"
     override fun downloadsActiveSpeed(activeCount: Int, speedText: String) = "$activeCount 個進行中 • $speedText"
 
     override val browseTitle = "瀏覽"

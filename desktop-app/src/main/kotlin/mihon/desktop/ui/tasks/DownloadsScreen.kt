@@ -24,6 +24,7 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +47,7 @@ const val DOWNLOADS_PAUSE_ALL_BUTTON_TEST_TAG = "downloads_pause_all"
 const val DOWNLOADS_RESUME_ALL_BUTTON_TEST_TAG = "downloads_resume_all"
 const val DOWNLOADS_CLEAR_COMPLETED_BUTTON_TEST_TAG = "downloads_clear_completed"
 const val DOWNLOAD_ITEM_TEST_TAG_PREFIX = "download_item_"
+const val DOWNLOAD_READ_BUTTON_TEST_TAG_PREFIX = "download_read_"
 
 @Composable
 fun DownloadsScreen(
@@ -57,6 +59,7 @@ fun DownloadsScreen(
     onClearCompleted: () -> Unit,
     onCancel: (chapterId: Long) -> Unit,
     onRetry: (chapterId: Long) -> Unit,
+    onReadChapter: (mangaId: Long, chapterId: Long) -> Unit,
     modifier: Modifier = Modifier,
     recoveryMessage: String? = null,
     storageError: String? = null,
@@ -203,6 +206,7 @@ fun DownloadsScreen(
                         download = item,
                         onCancel = { onCancel(item.chapterId) },
                         onRetry = { onRetry(item.chapterId) },
+                        onRead = { onReadChapter(item.mangaId, item.chapterId) },
                     )
                 }
             }
@@ -215,6 +219,7 @@ private fun DownloadCard(
     download: DesktopDownload,
     onCancel: () -> Unit,
     onRetry: () -> Unit,
+    onRead: () -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -272,6 +277,7 @@ private fun DownloadCard(
 
                 Text(
                     text = statusDetail,
+                    modifier = Modifier.weight(1f).padding(end = 8.dp),
                     style = MaterialTheme.typography.labelSmall,
                     color = if (download.status ==
                         DownloadStatus.ERROR
@@ -284,6 +290,20 @@ private fun DownloadCard(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     val strings = mihon.desktop.i18n.LocalStrings.current
+                    if (download.status == DownloadStatus.COMPLETED) {
+                        FilledTonalButton(
+                            onClick = onRead,
+                            modifier = Modifier.testTag(DOWNLOAD_READ_BUTTON_TEST_TAG_PREFIX + download.chapterId),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.PlayArrow,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(strings.downloadsRead)
+                        }
+                    }
                     if (download.status == DownloadStatus.ERROR) {
                         TextButton(onClick = onRetry) {
                             Icon(

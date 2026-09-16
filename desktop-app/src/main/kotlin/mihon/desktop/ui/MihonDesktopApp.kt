@@ -748,6 +748,10 @@ fun ApplicationScope.MihonDesktopApp(runtime: DesktopRuntime) {
                                         onClearCompletedDownloads = { downloader?.clearCompleted() },
                                         onCancelDownload = { downloader?.cancel(it) },
                                         onRetryDownload = { downloader?.retry(it) },
+                                        onReadDownloadedChapter = { mangaId, chapterId ->
+                                            libraryPresenter.openMangaDetail(mangaId)
+                                            navigator.navigate(DesktopDestination.Reader(chapterId))
+                                        },
                                         isUpdatingLibrary = isUpdatingLibrary,
                                         lastUpdateResult = lastUpdateResult,
                                         updateRunState = updateRunState,

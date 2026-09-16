@@ -8,6 +8,8 @@ class DesktopNavigator(
     initialDestination: DesktopDestination,
     private val onDestinationChanged: (DesktopDestination) -> Unit,
 ) {
+    private var readerReturnDestination = initialDestination
+
     var current: DesktopRoute by mutableStateOf(initialDestination)
         private set
 
@@ -19,13 +21,14 @@ class DesktopNavigator(
 
     fun navigate(destination: DesktopDestination.Reader) {
         if (destination == current) return
+        (current as? DesktopDestination)?.let { readerReturnDestination = it }
         current = destination
     }
 
     fun back() {
         val currentDestination = current
         if (currentDestination is DesktopDestination.Reader) {
-            current = DesktopDestination.Library
+            current = readerReturnDestination
         }
     }
 }

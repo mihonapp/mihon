@@ -42,6 +42,7 @@ class TaskRecoveryUiTest {
             MaterialTheme {
                 DownloadsScreen(
                     emptyList(), false, 0.0, {}, {}, {}, {}, {},
+                    onReadChapter = { _, _ -> },
                     recoveryMessage = "Recovered from backup", storageError = "Download disk unavailable",
                 )
             }

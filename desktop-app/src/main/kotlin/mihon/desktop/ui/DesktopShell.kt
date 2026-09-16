@@ -69,6 +69,7 @@ fun DesktopShell(
     onClearCompletedDownloads: () -> Unit = {},
     onCancelDownload: (Long) -> Unit = {},
     onRetryDownload: (Long) -> Unit = {},
+    onReadDownloadedChapter: (mangaId: Long, chapterId: Long) -> Unit = { _, chapterId -> onReadChapter(chapterId) },
     // Updates
     updatedChapters: List<mihon.desktop.updates.UpdatedChapterItem> = emptyList(),
     isUpdatingLibrary: Boolean = false,
@@ -359,6 +360,7 @@ fun DesktopShell(
                                 onClearCompleted = onClearCompletedDownloads,
                                 onCancel = onCancelDownload,
                                 onRetry = onRetryDownload,
+                                onReadChapter = onReadDownloadedChapter,
                                 recoveryMessage = downloadRecoveryMessage,
                                 storageError = downloadStorageError,
                             )
