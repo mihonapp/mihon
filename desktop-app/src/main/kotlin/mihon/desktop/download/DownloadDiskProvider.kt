@@ -354,8 +354,10 @@ class DownloadDiskProvider(
         mutationPort: LibraryMutationPort,
     ): Boolean = mutationPort.isLocalChapterAssetRegistered(
         mangaId = mangaId,
-        storagePath = (findChapterDir(sourceId, mangaTitle, chapterName)?.parent
-            ?: getMangaDir(sourceId, mangaTitle)).toAbsolutePath().toString(),
+        storagePath = (
+            findChapterDir(sourceId, mangaTitle, chapterName)?.parent
+                ?: getMangaDir(sourceId, mangaTitle)
+            ).toAbsolutePath().toString(),
         chapterId = chapterId,
         relativePath = sanitizeFileName(chapterName),
         sizeBytes = totalBytes,

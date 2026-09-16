@@ -171,6 +171,7 @@ class DesktopNetworkHelper(
         val owner = request.extensionId ?: request.sourceId?.let(sourceOwners::get)
         val identity = owner ?: LEGACY_OWNER
         var url = request.url.toHttpUrl()
+        var permittedCdnRedirect: HttpUrl? = null
         var method = request.method.uppercase()
         var bytes = request.bodyBase64?.let { Base64.getDecoder().decode(it) } ?: request.body?.toByteArray()
         require((bytes?.size ?: 0) <= MAX_RESPONSE_BYTES) { "Request body exceeds 64 MiB" }
@@ -181,7 +182,7 @@ class DesktopNetworkHelper(
             headers[key] = values
         }
         repeat(MAX_REDIRECTS + 1) { hop ->
-            if (!isDomainAllowed(url.host, owner)) {
+            if (url != permittedCdnRedirect && !isDomainAllowed(url.host, owner)) {
                 throw SecurityException(
                     "Access denied: domain '${url.host}' is not declared for ${owner ?: "the request"}",
                 )
@@ -225,6 +226,7 @@ class DesktopNetworkHelper(
             if (response.code !in REDIRECT_CODES || location == null) return response
             if (hop == MAX_REDIRECTS) throw IOException("Too many HTTP redirects")
             val next = url.resolve(location) ?: throw IOException("Invalid HTTP redirect")
+            permittedCdnRedirect = next.takeIf { ImageCdnRedirectPolicy.allows(owner, method, url, it) }
             if (next.host != url.host || next.scheme != url.scheme || next.port != url.port) {
                 headers.keys.removeAll {
                     it.equals("Authorization", true) || it.equals("Cookie", true) || it.equals("Host", true)
