@@ -272,8 +272,8 @@ class LocalSource(
         comicInfo.translator?.let { chapter.scanlator = it.value }
 
         // only bother with partial dates if the year is not null, abandon date parsing otherwise
-        val year = comicInfo.year?.value?.takeIf { it > 0 }?.toString()?.padStart(2, '0') ?: return
-        val month = (comicInfo.month?.value?.coerceIn(1, 31) ?: 1).toString().padStart(2, '0')
+        val year = comicInfo.year?.value?.takeIf { it > 0 }?.toString()?.padStart(4, '0') ?: return
+        val month = (comicInfo.month?.value?.coerceIn(1, 12) ?: 1).toString().padStart(2, '0')
         val day = (comicInfo.day?.value?.coerceIn(1, 31) ?: 1).toString().padStart(2, '0')
 
         val dateInstant = try {
