@@ -305,8 +305,6 @@
     <string name="pref_dual_page_split">แยกส่วนหน้ากว้าง</string>
     <string name="pref_show_navigation_mode_summary">แสดงครู่หนึ่งเมื่อเปิดตัวอ่าน</string>
     <string name="pref_show_navigation_mode">แสดงตำแหน่งโซนการแตะ</string>
-    <string name="ext_nsfw_warning">แหล่งที่มาจากส่วนขยายนี้อาจมีเนื้อหา NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="obsolete_extension_message">ส่วนขยายนี้ไม่สามารถใช้ได้อีกต่อไป แอปอาจทำงานไม่ถูกต้องและอาจทำให้เกิดปัญหากับแอปได้ ขอแนะนำให้ถอนการติดตั้งออก</string>
     <string name="ext_obsolete">ล้าสมัย</string>
     <string name="ext_updates_pending">อัปเดตที่รอดำเนินการ</string>
@@ -318,9 +316,6 @@
     <string name="pref_library_update_refresh_metadata">โหลดข้อมูลเมตาใหม่โดยอัตโนมัติ</string>
     <string name="pref_category_library_update">อัปเดตทั้งหมด</string>
     <string name="pref_category_display">การแสดงผล</string>
-    <string name="parental_controls_info">นี่ไม่ได้เป็นการป้องกันไม่ให้ส่วนขยายที่ไม่เป็นทางการ หรือที่อาจถูกตั้งค่าสถานะไม่ถูกต้อง ให้แสดงเนื้อหา NSFW (18+) ภายในแอป</string>
-    <string name="pref_show_nsfw_source">แสดงในรายการแหล่งข้อมูลและส่วนขยาย</string>
-    <string name="pref_category_nsfw_content">แหล่งที่มา NSFW (18+)</string>
     <string name="hide_notification_content">ซ่อนเนื้อหาการแจ้งเตือน</string>
     <string name="secure_screen_summary">หน้าจอปลอดภัยจะซ่อนเนื้อหาของแอปเมื่อสลับแอปและกันไม่ให้ถ่ายภาพหน้าจอ</string>
     <string name="secure_screen">หน้าจอความปลอดภัย</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">เอ่อ นี้มันงี่เง่าชะมัด</string>
     <string name="ext_info_version">เวอร์ชัน</string>
     <string name="ext_info_language">ภาษา</string>
-    <string name="ext_info_age_rating">ระดับความเหมาะสม</string>
     <string name="wish_list">รายการที่อยากอ่าน</string>
     <string name="on_hold_list">รายการที่พักอ่านไว้</string>
     <string name="unfinished_list">รายการที่ยังไม่จบ</string>

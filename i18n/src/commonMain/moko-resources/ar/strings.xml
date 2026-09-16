@@ -386,9 +386,6 @@
     <string name="pref_remove_bookmarked_chapters">حذف الفصول ذات العلامة المرجعية</string>
     <string name="pref_category_delete_chapters">حذف الفصول</string>
     <string name="pref_category_reading_mode">وضع القراءة</string>
-    <string name="ext_nsfw_warning">بعض المصادر من هذا الامتداد قد تحتوى على محتوى للبالغين (+18)</string>
-    <string name="ext_nsfw_short">محتوى غير لائق</string>
-    <string name="parental_controls_info">هذا لا يمنع الإضافات غير الرسمية أو التي تم وضع علامة عليها بشكل غير صحيح من إظهار محتوى غير لائق داخل التطبيق.</string>
     <string name="tapping_inverted_both">كليهما</string>
     <string name="tapping_inverted_vertical">عمودي</string>
     <string name="tapping_inverted_horizontal">أفقي</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">الصفحة التالية</string>
     <string name="spen_previous_page">الصفحة السابقة</string>
     <string name="migration_help_guide">دليل نقل المصدر</string>
-    <string name="pref_category_nsfw_content">محتوى +18</string>
-    <string name="pref_show_nsfw_source">اعرض في قوائم المصادر والامتدادات</string>
     <string name="myanimelist_relogin">رجاء سجل دخولك في MAL مجدداً</string>
     <string name="file_picker_error">لم يتم العثور على تطبيق منتقي الملفات</string>
     <string name="pref_viewer_nav">مناطق اللمس</string>
@@ -576,7 +571,6 @@
     <string name="pref_reset_viewer_flags_success">اعادة تعيين جميع اعدادات القارئ</string>
     <string name="pref_reset_viewer_flags_summary">إعادة تعيين اعدادات القراءه لكل القصص</string>
     <string name="ext_info_language">اللغة</string>
-    <string name="ext_info_age_rating">التقييم العمري</string>
     <string name="ext_info_version">الإصدار</string>
     <string name="pref_reset_viewer_flags_error">لم يمكن إعادة تعيين إعدادات القارئ</string>
     <string name="empty_screen">هذا محرج</string>

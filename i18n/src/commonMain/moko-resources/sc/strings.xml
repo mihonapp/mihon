@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Arrastadores a sos cales no as fatu atzessu:</string>
     <string name="pref_remove_bookmarked_chapters">Permite s\'iscantzelladura de sos capìtulos cun sinnalibros</string>
     <string name="pref_category_delete_chapters">Iscantzella capìtulos</string>
-    <string name="ext_nsfw_warning">Sas fontes de custa estensione diant pòdere cuntènnere cuntenutos NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Custu no impedit a estensiones no ufitziales o potentzialmente non curretas de ammustrare cuntenutos NSFW (18+) in s\'aplicatzione.</string>
     <string name="no_chapters_error">Perunu capìtulu agatadu</string>
     <string name="chapter_settings_updated">Impostatziones predefinidas de sos capìtulos agiornadas</string>
     <string name="set_chapter_settings_as_default">Imposta comente predefinidu</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Pàgina imbeniente</string>
     <string name="spen_previous_page">Pàgina anteposta</string>
     <string name="migration_help_guide">Ghia a sa tràmuda de sas fontes</string>
-    <string name="pref_category_nsfw_content">Cuntenutu NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Ammustra in sa lista de sas fontes e de sas estensiones</string>
     <string name="file_picker_error">Peruna aplicatzione pro ischertare documentos agatada</string>
     <string name="myanimelist_relogin">Pro praghere torra a intrare in MAL</string>
     <string name="edge_nav">Oru</string>
@@ -578,7 +573,6 @@
     <string name="pref_reset_viewer_flags_summary">Resetat sa modalidade de leghidura e s\'orientamentu de totu sas sèries</string>
     <string name="pref_reset_viewer_flags_success">Totu sas impostatziones de su leghidore resetadas</string>
     <string name="pref_reset_viewer_flags_error">No at fatu a resetare sas impostatziones de su leghidore</string>
-    <string name="ext_info_age_rating">Classificatzione pro edade</string>
     <string name="ext_info_language">Limba</string>
     <string name="ext_info_version">Versione</string>
     <string name="download_notifier_split_page_path_not_found">No at fatu a agatare s\'àndala de su documentu de sa pàgina %d</string>

@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Traceurs non connectés :</string>
     <string name="pref_remove_bookmarked_chapters">Permettre la suppression des chapitres marqués d\'un marque-page</string>
     <string name="pref_category_delete_chapters">Suppression des chapitres</string>
-    <string name="ext_nsfw_warning">Les sources de cette extension peuvent contenir du contenu NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Ceci n\'empêche pas les extensions de diffuser du contenu +18 dans l\'application.</string>
     <string name="no_chapters_error">Aucun chapitre trouvé</string>
     <string name="confirm_set_chapter_settings">Appliquer ce paramétrage par défaut ?</string>
     <string name="chapter_settings">Paramètres du chapitre</string>
@@ -421,10 +418,8 @@
     <string name="spen_next_page">Page suivante</string>
     <string name="spen_previous_page">Page précédente</string>
     <string name="migration_help_guide">Guide de migration des sources</string>
-    <string name="pref_category_nsfw_content">Contenu +18</string>
     <string name="myanimelist_relogin">Veuillez vous reconnecter à MAL</string>
     <string name="file_picker_error">L’application de sélection de fichier est introuvable</string>
-    <string name="pref_show_nsfw_source">Afficher dans les listes de sources et d\'extensions</string>
     <string name="track_finished_reading_date">Date de fin</string>
     <string name="track_started_reading_date">Date de début</string>
     <string name="kindlish_nav">Style Kindle</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">Eh bien, c\'est gênant</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Langue</string>
-    <string name="ext_info_age_rating">Classification par âge</string>
     <string name="reading_list">Liste de lecture</string>
     <string name="wish_list">Liste de souhaits</string>
     <string name="on_hold_list">Liste d\'attente</string>

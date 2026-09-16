@@ -393,13 +393,10 @@
     <string name="action_disable">გამორთვა</string>
     <string name="action_start">დაწყება</string>
     <string name="action_sort_date_added">დამატების თარიღი</string>
-    <string name="ext_nsfw_warning">შეიძლება შეიჩაცდეს უცენზურო(18+) კონტენტს</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">მონიშნული თავების წაშლა</string>
     <string name="pref_category_delete_chapters">თავების წაშლა</string>
     <string name="right_and_left_nav">მარჯვენა და მარცხენა</string>
     <string name="pref_dual_page_split">განიერი გვერდების გაყოფა</string>
-    <string name="parental_controls_info">ეს არ აღმოფხვრავს პროგრამაში NSFW (18+) შიგთავსის არაოფიციალურ, ან შესაძლო არასწორად მონიშნული გაფართოებებოიდან გამოჩენას.</string>
     <string name="action_display_show_number_of_items">საგნების რაოდენობის ჩვენება</string>
     <string name="action_search_settings">პარამეტრების ძიება</string>
     <string name="action_start_downloading_now">დაიწყე ჩამოტვირთვა</string>

@@ -75,8 +75,6 @@
     <string name="pref_page_transitions">Animar transición de páxinas</string>
     <string name="pref_cutout_short">Mostrar contido na área recortada</string>
     <string name="pref_fullscreen">Pantalla completa</string>
-    <string name="ext_nsfw_warning">As fontes desta extensión poden ter contido NSFW (+18)</string>
-    <string name="ext_nsfw_short">+18</string>
     <string name="obsolete_extension_message">Esta extensión xa non está dispoñible. Pode que non funcione ben e cause problemas na aplicación. Recoméndase desinstalala.</string>
     <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardada en Mihon ou executar calquera tipo de código. \n \nSe confías nesta extensión, aceptas estes riscos.</string>
     <string name="untrusted_extension">Extensión non confiable</string>
@@ -111,7 +109,6 @@
     <string name="portrait">Vertical</string>
     <string name="pref_library_columns">Tamaño da reixa</string>
     <string name="pref_category_display">Amosar</string>
-    <string name="parental_controls_info">Isto non evita que as extensións non oficiais ou mal clasificadas mostren contido NSFW (+18) dentro da aplicación.</string>
     <string name="hide_notification_content">Esconder o contido das notificacións</string>
     <string name="secure_screen_summary">O modo discreto esconde o contido da aplicación ao cambiar entre aplicacións e bloquea as capturas de pantalla</string>
     <string name="secure_screen">Modo discreto</string>
@@ -122,8 +119,6 @@
     <string name="file_picker_error">Non se atopou unha aplicación para seleccionar ficheiros</string>
     <string name="myanimelist_relogin">Inicia sesión en MAL de novo</string>
     <string name="requires_app_restart">Require reiniciar a aplicación para que surxa efecto</string>
-    <string name="pref_show_nsfw_source">Amosar na lista de fontes e extensións</string>
-    <string name="pref_category_nsfw_content">Fontes NSFW (+18)</string>
     <string name="pref_category_security">Seguridade e privacidade</string>
     <string name="pref_manage_notifications">Xestionar notificacións</string>
     <string name="pref_date_format">Formato da data</string>
@@ -353,7 +348,6 @@
     <string name="password">Contrasinal</string>
     <string name="fdroid_warning">As versións de F-Droid non teñen soporte oficial. \nPreme para saber máis.</string>
     <string name="login_success">Conectado</string>
-    <string name="ext_info_age_rating">Clasificación por idades</string>
     <string name="enhanced_services">Servizos de seguimento mellorados</string>
     <string name="enhanced_tracking_info">Estes servizos proporcionan funcións melloradas para fontes concretas. Faise un seguimento automático dos elementos ao engadilos á biblioteca.</string>
     <string name="backup_in_progress">Xa se está facendo unha copia de seguridade</string>

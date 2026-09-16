@@ -396,7 +396,6 @@
     <string name="no_pinned_sources">ಯಾವುದೆ ಪಿನ್ ಮಾಡಿರುವ ಸೋರ್ಸ್ ಗಳು ಇಲ್ಲ</string>
     <string name="channel_complete">ಪೂರ್ಣ</string>
     <string name="channel_progress">ಪ್ರಗತಿ</string>
-    <string name="parental_controls_info">ಇದು ಅನಧಿಕೃತ ಮತ್ತು ತಪ್ಪಾಗಿ ಚಿಹ್ನಿಸಿದ ವಿಸ್ತರಣೆಗಳಿಂದ 18+ ಮೂಲಗಳನ್ನು ಮರೆಮಾಚಲಾಗುವುದಿಲ್ಲ.</string>
     <string name="channel_errors">ದೋಷಗಳು</string>
     <string name="chapter_settings_updated">ಅಧ್ಯಾಯದ ಡೀಫಾಲ್ಟ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ನವೀಕರಿಸಲಾಗಿದೆ</string>
     <string name="share_page_info">%1$s: %2$s, ಪುಟ %3$d</string>
@@ -410,8 +409,6 @@
     <string name="backup_restore_missing_trackers">ಟ್ರ್ಯಾಕರ್ ಗಳು ಲಾಗಿನ್ ಆಗಿಲ್ಲ:</string>
     <string name="pref_remove_bookmarked_chapters">ಬುಕ್ ಮಾರ್ಕ್ ಮಾಡಿದ ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸಿ</string>
     <string name="pref_category_delete_chapters">ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸಿ</string>
-    <string name="ext_nsfw_warning">NSFW (18+) ವಿಷಯವನ್ನು ಹೊಂದಿರಬಹುದು</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="action_search_settings">ಸಂಯೋಜನೆಗಳಲ್ಲಿ ಹುಡುಕಿ</string>
     <string name="spen_next_page">ಮುಂದಿನ ಪುಟ</string>
     <string name="spen_previous_page">ಹಿಂದಿನ ಪುಟ</string>
@@ -423,8 +420,6 @@
     <string name="pref_clear_history">ಇತಿಹಾಸವನ್ನು ತೆರವುಗೊಳಿಸಿ</string>
     <string name="clear_history_confirmation">ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ? ಎಲ್ಲಾ ಇತಿಹಾಸವೂ ಕಳೆದುಹೋಗುತ್ತದೆ.</string>
     <string name="clear_history_completed">ಇತಿಹಾಸವನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
-    <string name="pref_show_nsfw_source">ಮೂಲಗಳ ಪಟ್ಟಿಯಲ್ಲಿ ತೋರಿಸಿ</string>
-    <string name="pref_category_nsfw_content">ವಯಸ್ಕ (18+) ಮೂಲಗಳು</string>
     <string name="action_filter_tracked">ಟ್ರ್ಯಾಕ್ ಮಾಡಲಾದ</string>
     <string name="action_desc">ಮೊದಲು ಚಿಕ್ಕದು</string>
     <string name="action_asc">ಮೊದಲ ಸಾಣ್ಣದ್ದು</string>
