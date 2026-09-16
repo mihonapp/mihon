@@ -9,8 +9,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.more.NewUpdateScreen
 import eu.kanade.presentation.util.Screen
-import mihon.app.di.appGraph
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import mihon.app.di.appGraph
 
 class NewUpdateScreen(
     private val versionName: String,
