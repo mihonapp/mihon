@@ -9,6 +9,10 @@ import eu.kanade.presentation.browse.SourceOptionsDialog
 import eu.kanade.presentation.browse.SourcesScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
+import eu.kanade.presentation.util.LocalBackStack
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -19,6 +23,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun sourcesTab(): TabContent {
+    val backStack = LocalBackStack.current
     val viewModel = metroViewModel<SourcesViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -28,18 +33,12 @@ fun sourcesTab(): TabContent {
             AppBar.Action(
                 title = stringResource(MR.strings.action_global_search),
                 icon = MaterialSymbols.Rounded.TravelExplore,
-                onClick = {
-                    // TODO(nav): screen
-                    // navigator.push(GlobalSearchScreen())
-                },
+                onClick = { backStack.add(GlobalSearchRoute()) },
             ),
             AppBar.Action(
                 title = stringResource(MR.strings.action_filter),
                 icon = MaterialSymbols.Rounded.FilterList,
-                onClick = {
-                    // TODO(nav): screen
-                    // navigator.push(SourcesFilterScreen())
-                },
+                onClick = { backStack.add(SourcesFilterRoute) },
             ),
         ),
         content = { contentPadding, snackbarHostState ->
@@ -47,8 +46,7 @@ fun sourcesTab(): TabContent {
                 state = state,
                 contentPadding = contentPadding,
                 onClickItem = { source, listing ->
-                    // TODO(nav): screen
-                    // navigator.push(BrowseSourceScreen(source.id, listing.query))
+                    backStack.add(BrowseSourceRoute(source.id, listing.query))
                 },
                 onClickPin = viewModel::togglePin,
                 onLongClickItem = viewModel::showSourceDialog,

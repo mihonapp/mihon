@@ -1,7 +1,8 @@
 package tachiyomi.domain.track.model
 
-import java.io.Serializable
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Track(
     val id: Long,
     val mangaId: Long,
@@ -17,4 +18,4 @@ data class Track(
     val startDate: Long,
     val finishDate: Long,
     val private: Boolean,
-) : Serializable
+)

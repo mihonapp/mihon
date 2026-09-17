@@ -8,6 +8,8 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.MigrateSourceScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
+import eu.kanade.presentation.util.LocalBackStack
+import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrateMangaRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.i18n.MR
@@ -16,6 +18,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun migrateSourceTab(): TabContent {
     val uriHandler = LocalUriHandler.current
+    val backStack = LocalBackStack.current
     val viewModel = metroViewModel<MigrateSourceViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -35,8 +38,7 @@ fun migrateSourceTab(): TabContent {
                 state = state,
                 contentPadding = contentPadding,
                 onClickItem = { source ->
-                    // TODO(nav): screen
-                    // navigator.push(MigrateMangaScreen(source.id))
+                    backStack.add(MigrateMangaRoute(source.id))
                 },
                 onToggleSortingDirection = viewModel::toggleSortingDirection,
                 onToggleSortingMode = viewModel::toggleSortingMode,

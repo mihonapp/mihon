@@ -15,16 +15,24 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.ui.category.CategoryRoute
+import eu.kanade.tachiyomi.ui.download.DownloadQueueRoute
+import eu.kanade.tachiyomi.ui.setting.SettingsDestination
+import eu.kanade.tachiyomi.ui.setting.SettingsRoute
+import eu.kanade.tachiyomi.ui.stats.StatsRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import mihon.feature.support.SupportUsRoute
 import tachiyomi.core.common.util.lang.launchIO
 
 @Composable
 fun MoreTab() {
+    val backStack = LocalBackStack.current
     val viewModel = metroViewModel<MoreViewModel>()
     val downloadQueueState by viewModel.downloadQueueState.collectAsState()
     MoreScreen(
@@ -33,34 +41,13 @@ fun MoreTab() {
         onDownloadedOnlyChange = { viewModel.downloadedOnly = it },
         incognitoMode = viewModel.incognitoMode,
         onIncognitoModeChange = { viewModel.incognitoMode = it },
-        onClickDownloadQueue = {
-            // TODO(nav): screen
-            // navigator.push(DownloadQueueScreen)
-        },
-        onClickCategories = {
-            // TODO(nav): screen
-            // navigator.push(CategoryScreen())
-        },
-        onClickStats = {
-            // TODO(nav): screen
-            // navigator.push(StatsScreen())
-        },
-        onClickDataAndStorage = {
-            // TODO(nav): screen
-            // navigator.push(SettingsScreen(SettingsScreen.Destination.DataAndStorage))
-        },
-        onClickSettings = {
-            // TODO(nav): screen
-            // navigator.push(SettingsScreen())
-        },
-        onClickSupport = {
-            // TODO(nav): screen
-            // navigator.push(SupportUsScreen())
-        },
-        onClickAbout = {
-            // TODO(nav): screen
-            // navigator.push(SettingsScreen(SettingsScreen.Destination.About))
-        },
+        onClickDownloadQueue = { backStack.add(DownloadQueueRoute) },
+        onClickCategories = { backStack.add(CategoryRoute) },
+        onClickStats = { backStack.add(StatsRoute) },
+        onClickDataAndStorage = { backStack.add(SettingsRoute(SettingsDestination.DataAndStorage)) },
+        onClickSettings = { backStack.add(SettingsRoute()) },
+        onClickSupport = { backStack.add(SupportUsRoute) },
+        onClickAbout = { backStack.add(SettingsRoute(SettingsDestination.About)) },
     )
 }
 

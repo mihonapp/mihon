@@ -14,7 +14,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
+import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresRoute
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.extension.model.Extension
+import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsRoute
+import eu.kanade.tachiyomi.ui.webview.WebViewRoute
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -23,6 +27,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun extensionsTab(
     extensionsViewModel: ExtensionsViewModel,
 ): TabContent {
+    val backStack = LocalBackStack.current
     val context = LocalContext.current
 
     val updatesCount by extensionsViewModel.updatesCount.collectAsStateWithLifecycle()
@@ -35,17 +40,11 @@ fun extensionsTab(
         actions = listOf(
             AppBar.OverflowAction(
                 title = stringResource(MR.strings.action_filter),
-                onClick = {
-                    // TODO(nav): screen
-                    // navigator.push(ExtensionFilterScreen())
-                },
+                onClick = { backStack.add(ExtensionFilterRoute) },
             ),
             AppBar.OverflowAction(
                 title = stringResource(MR.strings.extensionStores),
-                onClick = {
-                    // TODO(nav): screen
-                    // navigator.push(ExtensionStoresScreen())
-                },
+                onClick = { backStack.add(ExtensionStoresRoute()) },
             ),
         ),
         content = { contentPadding, _ ->
@@ -75,21 +74,17 @@ fun extensionsTab(
                 onClickUpdateAll = extensionsViewModel::updateAllExtensions,
                 onOpenWebView = { extension ->
                     extension.sources.getOrNull(0)?.let {
-                        // TODO(nav): screen
-                        // navigator.push(
-                        //     WebViewScreen(
-                        //         url = it.baseUrl,
-                        //         initialTitle = it.name,
-                        //         sourceId = it.id,
-                        //     ),
-                        // )
+                        backStack.add(
+                            WebViewRoute(
+                                url = it.baseUrl,
+                                initialTitle = it.name,
+                                sourceId = it.id,
+                            )
+                        )
                     }
                 },
                 onInstallExtension = extensionsViewModel::installExtension,
-                onOpenExtension = {
-                    // TODO(nav): screen
-                    // navigator.push(ExtensionDetailsScreen(it.pkgName))
-                },
+                onOpenExtension = { backStack.add(ExtensionDetailsRoute(it.pkgName)) },
                 onTrustExtension = { extensionsViewModel.trustExtension(it) },
                 onUninstallExtension = { extensionsViewModel.uninstallExtension(it) },
                 onUpdateExtension = extensionsViewModel::updateExtension,

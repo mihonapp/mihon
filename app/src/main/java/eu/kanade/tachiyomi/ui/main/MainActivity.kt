@@ -89,7 +89,9 @@ import eu.kanade.tachiyomi.navigation.appEntries
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.home.HomeRoute
 import eu.kanade.tachiyomi.ui.home.TopLevelRoute
+import eu.kanade.tachiyomi.ui.more.NewUpdateRoute
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
+import eu.kanade.tachiyomi.ui.more.OnboardingRoute
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
@@ -107,6 +109,7 @@ import mihon.app.di.AppGraph
 import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.core.migration.Migrator
+import mihon.feature.support.SupportUsRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.materialsymbols.rounded.VolunteerActivism
@@ -361,14 +364,13 @@ class MainActivity : BaseActivity() {
                 try {
                     val result = context.appGraph.updateChecker.checkForUpdate()
                     if (result is GetApplicationRelease.Result.NewUpdate) {
-                        val updateScreen = NewUpdateScreen(
+                        val updateRoute = NewUpdateRoute(
                             versionName = result.release.version,
                             changelogInfo = result.release.info,
                             releaseLink = result.release.releaseLink,
                             downloadLink = result.release.downloadLink,
                         )
-                        // TODO(nav): update
-                        // navigator.push(updateScreen)
+                        backStack.add(updateRoute)
                     }
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e)
@@ -391,10 +393,9 @@ class MainActivity : BaseActivity() {
         val backStack = LocalBackStack.current
 
         LaunchedEffect(Unit) {
-            // TODO(nav): onboarding
-            // if (!preferences.shownOnboardingFlow.get() && navigator.lastItem !is OnboardingScreen) {
-            //     navigator.push(OnboardingScreen())
-            // }
+            if (!preferences.shownOnboardingFlow.get() && backStack.lastOrNull() !is OnboardingRoute) {
+                backStack.add(OnboardingRoute)
+            }
         }
     }
 
@@ -450,8 +451,7 @@ class MainActivity : BaseActivity() {
                             .padding(horizontal = MaterialTheme.padding.medium)
                             .fillMaxWidth(),
                         onClick = {
-                            // TODO(nav): support
-                            // navigator.push(SupportUsScreen())
+                            backStack.add(SupportUsRoute)
                             dismissSupportMessage()
                         },
                     ) {

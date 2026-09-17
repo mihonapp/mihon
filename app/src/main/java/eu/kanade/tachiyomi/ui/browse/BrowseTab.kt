@@ -56,7 +56,7 @@ fun BrowseTab() {
 data object BrowseTab {
 
     suspend fun onReselect(navigator: Navigator) {
-        navigator.push(GlobalSearchScreen())
+        // navigator.push(GlobalSearchScreen())
     }
 
     private val switchToExtensionTabChannel = Channel<Unit>(1, BufferOverflow.DROP_OLDEST)

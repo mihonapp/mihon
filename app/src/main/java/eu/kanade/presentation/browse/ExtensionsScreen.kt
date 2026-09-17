@@ -40,6 +40,8 @@ import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.browse.components.label
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
+import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresRoute
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
@@ -86,6 +88,8 @@ fun ExtensionScreen(
     onClickUpdateAll: () -> Unit,
     onRefresh: () -> Unit,
 ) {
+    val backStack = LocalBackStack.current
+
     PullRefresh(
         refreshing = state.isRefreshing,
         onRefresh = onRefresh,
@@ -106,10 +110,7 @@ fun ExtensionScreen(
                         EmptyScreenAction(
                             stringRes = MR.strings.extensionStores,
                             icon = MaterialSymbols.Rounded.Settings,
-                            onClick = {
-                                // TODO(nav): screen
-                                // navigator.push(ExtensionStoresScreen())
-                            },
+                            onClick = { backStack.add(ExtensionStoresRoute()) },
                         ),
                     ),
                 )

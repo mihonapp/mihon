@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation3.runtime.NavKey
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -30,6 +31,7 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -39,6 +41,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.ContentCopy
@@ -48,128 +51,127 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.plus
 import kotlin.time.Instant
 
-class WorkerInfoScreen : Screen() {
 
-    companion object {
-        const val TITLE = "Worker info"
-    }
+@Serializable
+data object WorkerInfoRoute : NavKey {
+    const val TITLE = "Worker info"
+}
 
-    @Composable
-    override fun Content() {
-        val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+@Composable
+fun WorkerInfoScreen() {
+    val context = LocalContext.current
+    val backStack = LocalBackStack.current
 
-        val viewModel = metroViewModel<WorkerInfoViewModel>()
-        val enqueued by viewModel.enqueued.collectAsState()
-        val finished by viewModel.finished.collectAsState()
-        val running by viewModel.running.collectAsState()
+    val viewModel = metroViewModel<WorkerInfoViewModel>()
+    val enqueued by viewModel.enqueued.collectAsState()
+    val finished by viewModel.finished.collectAsState()
+    val running by viewModel.running.collectAsState()
 
-        Scaffold(
-            topBar = {
-                AppBar(
-                    title = TITLE,
-                    navigateUp = navigator::pop,
-                    actions = {
-                        AppBarActions(
-                            listOf(
-                                AppBar.Action(
-                                    title = stringResource(MR.strings.action_copy_to_clipboard),
-                                    icon = MaterialSymbols.Rounded.ContentCopy,
-                                    onClick = {
-                                        context.copyToClipboard(TITLE, enqueued + finished + running)
-                                    },
-                                ),
+    Scaffold(
+        topBar = {
+            AppBar(
+                title = WorkerInfoRoute.TITLE,
+                navigateUp = backStack::removeLastOrNull,
+                actions = {
+                    AppBarActions(
+                        listOf(
+                            AppBar.Action(
+                                title = stringResource(MR.strings.action_copy_to_clipboard),
+                                icon = MaterialSymbols.Rounded.ContentCopy,
+                                onClick = {
+                                    context.copyToClipboard(WorkerInfoRoute.TITLE, enqueued + finished + running)
+                                },
                             ),
-                        )
-                    },
-                    scrollBehavior = it,
-                )
-            },
-        ) { contentPadding ->
-            LazyColumn(
-                contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-            ) {
-                item { SectionTitle(title = "Enqueued") }
-                item { SectionText(text = enqueued) }
+                        ),
+                    )
+                },
+                scrollBehavior = it,
+            )
+        },
+    ) { contentPadding ->
+        LazyColumn(
+            contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+        ) {
+            item { SectionTitle(title = "Enqueued") }
+            item { SectionText(text = enqueued) }
 
-                item { SectionTitle(title = "Finished") }
-                item { SectionText(text = finished) }
+            item { SectionTitle(title = "Finished") }
+            item { SectionText(text = finished) }
 
-                item { SectionTitle(title = "Running") }
-                item { SectionText(text = running) }
-            }
+            item { SectionTitle(title = "Running") }
+            item { SectionText(text = running) }
         }
     }
+}
 
-    @Composable
-    private fun SectionTitle(title: String) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(vertical = 8.dp),
+@Composable
+private fun SectionTitle(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.padding(vertical = 8.dp),
+    )
+}
+
+@Composable
+private fun SectionText(text: String) {
+    Text(
+        text = text,
+        softWrap = false,
+        fontFamily = FontFamily.Monospace,
+    )
+}
+
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
+class WorkerInfoViewModel(
+    private val context: Context,
+) : ViewModel() {
+
+    private val workManager = context.workManager
+
+    val finished = workManager
+        .getWorkInfosFlow(
+            WorkQuery.fromStates(WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED, WorkInfo.State.CANCELLED),
         )
-    }
+        .map(::constructString)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
 
-    @Composable
-    private fun SectionText(text: String) {
-        Text(
-            text = text,
-            softWrap = false,
-            fontFamily = FontFamily.Monospace,
-        )
-    }
+    val running = workManager
+        .getWorkInfosFlow(WorkQuery.fromStates(WorkInfo.State.RUNNING))
+        .map(::constructString)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
 
-    @Inject
-    @ViewModelKey
-    @ContributesIntoMap(AppScope::class)
-    class WorkerInfoViewModel(
-        private val context: Context,
-    ) : ViewModel() {
+    val enqueued = workManager
+        .getWorkInfosFlow(WorkQuery.fromStates(WorkInfo.State.ENQUEUED))
+        .map(::constructString)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
 
-        private val workManager = context.workManager
-
-        val finished = workManager
-            .getWorkInfosFlow(
-                WorkQuery.fromStates(WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED, WorkInfo.State.CANCELLED),
-            )
-            .map(::constructString)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
-
-        val running = workManager
-            .getWorkInfosFlow(WorkQuery.fromStates(WorkInfo.State.RUNNING))
-            .map(::constructString)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
-
-        val enqueued = workManager
-            .getWorkInfosFlow(WorkQuery.fromStates(WorkInfo.State.ENQUEUED))
-            .map(::constructString)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
-
-        private fun constructString(list: List<WorkInfo>) = buildString {
-            if (list.isEmpty()) {
-                appendLine("-")
-            } else {
-                list.fastForEach { workInfo ->
-                    appendLine("Id: ${workInfo.id}")
-                    appendLine("Tags:")
-                    workInfo.tags.forEach {
-                        appendLine(" - $it")
-                    }
-                    appendLine("State: ${workInfo.state}")
-                    if (workInfo.state == WorkInfo.State.ENQUEUED) {
-                        val timestamp = Instant.fromEpochMilliseconds(workInfo.nextScheduleTimeMillis)
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
-                            .toDateTimestampString(
-                                UiPreferences.dateFormat(
-                                    context.appGraph.uiPreferences.dateFormat.get(),
-                                ),
-                            )
-                        appendLine("Next scheduled run: $timestamp")
-                        appendLine("Attempt #${workInfo.runAttemptCount + 1}")
-                    }
-                    appendLine()
+    private fun constructString(list: List<WorkInfo>) = buildString {
+        if (list.isEmpty()) {
+            appendLine("-")
+        } else {
+            list.fastForEach { workInfo ->
+                appendLine("Id: ${workInfo.id}")
+                appendLine("Tags:")
+                workInfo.tags.forEach {
+                    appendLine(" - $it")
                 }
+                appendLine("State: ${workInfo.state}")
+                if (workInfo.state == WorkInfo.State.ENQUEUED) {
+                    val timestamp = Instant.fromEpochMilliseconds(workInfo.nextScheduleTimeMillis)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                        .toDateTimestampString(
+                            UiPreferences.dateFormat(
+                                context.appGraph.uiPreferences.dateFormat.get(),
+                            ),
+                        )
+                    appendLine("Next scheduled run: $timestamp")
+                    appendLine("Attempt #${workInfo.runAttemptCount + 1}")
+                }
+                appendLine()
             }
         }
     }

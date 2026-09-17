@@ -31,6 +31,23 @@ data class TabOptions(
     val icon: Painter,
 )
 
+fun NavBackStack<NavKey>.replace(screen: NavKey) {
+    if (isNotEmpty()) removeLastOrNull()
+    add(screen)
+}
+
+fun NavBackStack<NavKey>.popUntil(predicate: (NavKey) -> Boolean) {
+    while (isNotEmpty() && !predicate(last())) {
+        removeLastOrNull()
+    }
+}
+
+fun NavBackStack<NavKey>.popUntilRoot() {
+    while (size > 1) {
+        removeLastOrNull()
+    }
+}
+
 class TopLevelBackStack(val startKey: TopLevelRoute) {
 
     // Expose the current top level route for consumers
