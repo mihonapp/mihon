@@ -1,0 +1,11 @@
+query ShikimoriSearchManga(
+  $search: String!
+) {
+  mangas(
+    search: $search,
+    limit: 20,
+    kind:"!light_novel,!novel",
+  ) {
+    ...MangaFragment
+  }
+}
