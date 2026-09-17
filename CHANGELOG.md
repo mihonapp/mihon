@@ -18,6 +18,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add support for the Year, Month, and Day fields in ComicInfo.xml files for chapter dating ([@MajorTanya](https://github.com/MajorTanya)) ([#3967](https://github.com/mihonapp/mihon/pull/3967))
 - Add refresh buttons to trackers in Settings to update displayed usernames (all trackers) & rating systems (where supported) ([@MajorTanya](https://github.com/MajorTanya)) ([#3828](https://github.com/mihonapp/mihon/pull/3828))
 - Add setting to toggle chapter name hash suffix ([@choppeh](https://github.com/choppeh)) ([#3966](https://github.com/mihonapp/mihon/pull/3966))
+- Add setting to configure download cache expiration time (TTL) ([@choppeh](https://github.com/choppeh)) ([#3968](https://github.com/mihonapp/mihon/pull/3968))
 
 ### Improved
 - Show updates and upcoming filter icon as active for categories ([@Secozzi](https://github.com/Secozzi)) ([#3772](https://github.com/mihonapp/mihon/pull/3772))
@@ -33,6 +34,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed AniList rate limit ([@MajorTanya](https://github.com/MajorTanya)) ([#3942](https://github.com/mihonapp/mihon/pull/3942))
 - Fixed library search when clicking source name in manga info screen ([@choppeh](https://github.com/choppeh)) ([#4002](https://github.com/mihonapp/mihon/pull/4002))
 - Fixed entries being incorrectly marked as duplicates when tracked with some trackers ([@Secozzi](https://github.com/Secozzi)) ([#4008](https://github.com/mihonapp/mihon/pull/4008))
+- Fixed temporary absence of downloaded chapters ([@choppeh](https://github.com/choppeh)) ([#3968](https://github.com/mihonapp/mihon/pull/3968))
+- Fixed cache load startup race condition ([@choppeh](https://github.com/choppeh)) ([#3968](https://github.com/mihonapp/mihon/pull/3968))
 
 ## [v0.20.4] - 2026-08-05
 ### Fixed
