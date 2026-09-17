@@ -80,12 +80,10 @@ class DownloadCache(
         .onStart { emit(Unit) }
         .shareIn(scope, SharingStarted.Lazily, 1)
 
-    /**
-     * The interval after which this cache should be invalidated. 1 hour shouldn't cause major
-     * issues, as the cache is only used for UI feedback.
-     */
 
     private var renewalJob: Job? = null
+
+    private var initJob: Job
 
     private val _isInitializing = MutableStateFlow(false)
     val isInitializing = _isInitializing
@@ -98,29 +96,29 @@ class DownloadCache(
     private val rootDownloadsDirMutex = Mutex()
     private var rootDownloadsDir = RootDirectory(storageManager.getDownloadsDirectory())
 
-    private val initJob: Job = scope.launchIO {
-        _isInitializing.emit(true)
-        rootDownloadsDirMutex.withLock {
-            try {
-                rootDownloadsDir = diskCacheFile.openRead().use {
-                    ProtoBuf.decodeFromByteArray<RootDirectory>(it.readBytes())
-                }
-            } catch (e: Throwable) {
-                logcat(LogPriority.ERROR, e) { "Failed to initialize from disk cache" }
-                diskCacheFile.delete()
-            }
-        }
-        if (rootDownloadsDir.isExpired()) {
-            renewCache(forceRenew = true)
-        } else {
-            scope.launchNonCancellable {
-                _changes.send(Unit)
-            }
-        }
-        _isInitializing.emit(false)
-    }
-
     init {
+        initJob = scope.launchIO {
+            _isInitializing.emit(true)
+            rootDownloadsDirMutex.withLock {
+                try {
+                    rootDownloadsDir = diskCacheFile.openRead().use {
+                        ProtoBuf.decodeFromByteArray<RootDirectory>(it.readBytes())
+                    }
+                } catch (e: Throwable) {
+                    logcat(LogPriority.ERROR, e) { "Failed to initialize from disk cache" }
+                    diskCacheFile.delete()
+                }
+            }
+            if (rootDownloadsDir.isExpired()) {
+                renewCache(forceRenew = true)
+            } else {
+                scope.launchNonCancellable {
+                    _changes.send(Unit)
+                }
+            }
+            _isInitializing.emit(false)
+        }
+
         storageManager.changes
             .onEach { invalidateCache() }
             .launchIn(scope)
