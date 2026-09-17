@@ -19,17 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import androidx.navigation3.runtime.NavKey
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.LogoHeader
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
-import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.updater.RELEASE_URL
-import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
+import eu.kanade.tachiyomi.ui.more.NewUpdateRoute
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.isFossBuildType
@@ -39,6 +38,7 @@ import eu.kanade.tachiyomi.util.system.updaterEnabled
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -63,227 +63,227 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import kotlin.time.Instant
 
-object AboutScreen : Screen() {
+@Serializable
+data object AboutRoute : NavKey
 
-    @Composable
-    override fun Content() {
-        val scope = rememberCoroutineScope()
-        val context = LocalContext.current
-        val uriHandler = LocalUriHandler.current
-        val handleBack = LocalBackPress.current
-        val navigator = LocalNavigator.currentOrThrow
-        var isCheckingUpdates by remember { mutableStateOf(false) }
-        val crashLogUtil = remember { context.appGraph.crashLogUtil }
+@Composable
+fun AboutScreen() {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
+    val handleBack = LocalBackPress.current
+    val backStack = LocalBackStack.current
+    var isCheckingUpdates by remember { mutableStateOf(false) }
+    val crashLogUtil = remember { context.appGraph.crashLogUtil }
 
-        Scaffold(
-            topBar = { scrollBehavior ->
-                AppBar(
-                    title = stringResource(MR.strings.pref_category_about),
-                    navigateUp = if (handleBack != null) handleBack::invoke else null,
-                    scrollBehavior = scrollBehavior,
+    Scaffold(
+        topBar = { scrollBehavior ->
+            AppBar(
+                title = stringResource(MR.strings.pref_category_about),
+                navigateUp = if (handleBack != null) handleBack::invoke else null,
+                scrollBehavior = scrollBehavior,
+            )
+        },
+    ) { contentPadding ->
+        ScrollbarLazyColumn(
+            contentPadding = contentPadding,
+        ) {
+            item {
+                LogoHeader(
+                    iconPadding = PaddingValues(vertical = 56.dp),
                 )
-            },
-        ) { contentPadding ->
-            ScrollbarLazyColumn(
-                contentPadding = contentPadding,
-            ) {
-                item {
-                    LogoHeader(
-                        iconPadding = PaddingValues(vertical = 56.dp),
-                    )
-                }
+            }
 
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(MR.strings.version),
+                    subtitle = getVersionName(withBuildDate = true),
+                    onPreferenceClick = {
+                        val deviceInfo = crashLogUtil.getDebugInfo()
+                        context.copyToClipboard("Debug information", deviceInfo)
+                    },
+                )
+            }
+
+            if (updaterEnabled) {
                 item {
                     TextPreferenceWidget(
-                        title = stringResource(MR.strings.version),
-                        subtitle = getVersionName(withBuildDate = true),
+                        title = stringResource(MR.strings.check_for_updates),
+                        widget = {
+                            AnimatedVisibility(visible = isCheckingUpdates) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(28.dp),
+                                    strokeWidth = 3.dp,
+                                )
+                            }
+                        },
                         onPreferenceClick = {
-                            val deviceInfo = crashLogUtil.getDebugInfo()
-                            context.copyToClipboard("Debug information", deviceInfo)
+                            if (!isCheckingUpdates) {
+                                scope.launch {
+                                    isCheckingUpdates = true
+
+                                    checkVersion(
+                                        context = context,
+                                        onAvailableUpdate = { result ->
+                                            val updateRoute = NewUpdateRoute(
+                                                versionName = result.release.version,
+                                                changelogInfo = result.release.info,
+                                                releaseLink = result.release.releaseLink,
+                                                downloadLink = result.release.downloadLink,
+                                            )
+                                            backStack.add(updateRoute)
+                                        },
+                                        onFinish = {
+                                            isCheckingUpdates = false
+                                        },
+                                    )
+                                }
+                            }
                         },
                     )
                 }
+            }
 
-                if (updaterEnabled) {
-                    item {
-                        TextPreferenceWidget(
-                            title = stringResource(MR.strings.check_for_updates),
-                            widget = {
-                                AnimatedVisibility(visible = isCheckingUpdates) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(28.dp),
-                                        strokeWidth = 3.dp,
-                                    )
-                                }
-                            },
-                            onPreferenceClick = {
-                                if (!isCheckingUpdates) {
-                                    scope.launch {
-                                        isCheckingUpdates = true
-
-                                        checkVersion(
-                                            context = context,
-                                            onAvailableUpdate = { result ->
-                                                val updateScreen = NewUpdateScreen(
-                                                    versionName = result.release.version,
-                                                    changelogInfo = result.release.info,
-                                                    releaseLink = result.release.releaseLink,
-                                                    downloadLink = result.release.downloadLink,
-                                                )
-                                                navigator.push(updateScreen)
-                                            },
-                                            onFinish = {
-                                                isCheckingUpdates = false
-                                            },
-                                        )
-                                    }
-                                }
-                            },
-                        )
-                    }
-                }
-
-                if (!BuildConfig.DEBUG) {
-                    item {
-                        TextPreferenceWidget(
-                            title = stringResource(MR.strings.whats_new),
-                            onPreferenceClick = { uriHandler.openUri(RELEASE_URL) },
-                        )
-                    }
-                }
-
+            if (!BuildConfig.DEBUG) {
                 item {
                     TextPreferenceWidget(
-                        title = stringResource(MR.strings.licenses),
-                        onPreferenceClick = { navigator.push(OpenSourceLicensesScreen()) },
+                        title = stringResource(MR.strings.whats_new),
+                        onPreferenceClick = { uriHandler.openUri(RELEASE_URL) },
                     )
                 }
-
-                item {
-                    TextPreferenceWidget(
-                        title = stringResource(MR.strings.privacy_policy),
-                        onPreferenceClick = { uriHandler.openUri("https://mihon.app/privacy/") },
-                    )
-                }
-
-                item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        LinkIcon(
-                            label = stringResource(MR.strings.website),
-                            icon = MaterialSymbols.Rounded.Public,
-                            url = "https://mihon.app",
-                        )
-                        LinkIcon(
-                            label = "Discord",
-                            icon = SimpleIcons.Discord,
-                            url = Constants.URL_DISCORD,
-                        )
-                        LinkIcon(
-                            label = "X",
-                            icon = SimpleIcons.X,
-                            url = "https://x.com/mihonapp",
-                        )
-                        LinkIcon(
-                            label = "Facebook",
-                            icon = SimpleIcons.Facebook,
-                            url = "https://facebook.com/mihonapp",
-                        )
-                        LinkIcon(
-                            label = "Reddit",
-                            icon = SimpleIcons.Reddit,
-                            url = "https://www.reddit.com/r/mihonapp",
-                        )
-                        LinkIcon(
-                            label = "GitHub",
-                            icon = SimpleIcons.Github,
-                            url = "https://github.com/mihonapp",
-                        )
-                    }
-                }
             }
-        }
-    }
 
-    /**
-     * Checks version and shows a user prompt if an update is available.
-     */
-    private suspend fun checkVersion(
-        context: Context,
-        onAvailableUpdate: (GetApplicationRelease.Result.NewUpdate) -> Unit,
-        onFinish: () -> Unit,
-    ) {
-        val updateChecker = context.appGraph.updateChecker
-        withUIContext {
-            try {
-                when (val result = withIOContext { updateChecker.checkForUpdate(forceCheck = true) }) {
-                    is GetApplicationRelease.Result.NewUpdate -> {
-                        onAvailableUpdate(result)
-                    }
-                    is GetApplicationRelease.Result.NoNewUpdate -> {
-                        context.toast(MR.strings.update_check_no_new_updates)
-                    }
-                    is GetApplicationRelease.Result.OsTooOld -> {
-                        context.toast(MR.strings.update_check_eol)
-                    }
-                }
-            } catch (e: Exception) {
-                context.toast(e.message)
-                logcat(LogPriority.ERROR, e)
-            } finally {
-                onFinish()
-            }
-        }
-    }
-
-    fun getVersionName(withBuildDate: Boolean): String {
-        return when {
-            BuildConfig.DEBUG -> {
-                "Debug ${BuildConfig.COMMIT_SHA}".let {
-                    if (withBuildDate) {
-                        "$it (${getFormattedBuildTime()})"
-                    } else {
-                        it
-                    }
-                }
-            }
-            isNightlyBuildType -> {
-                "Nightly r${BuildConfig.COMMIT_COUNT}".let {
-                    if (withBuildDate) {
-                        "$it (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
-                    } else {
-                        "$it (${BuildConfig.COMMIT_SHA})"
-                    }
-                }
-            }
-            else -> {
-                val channel = if (isFossBuildType) "FOSS" else "Stable"
-                "$channel v${BuildConfig.VERSION_NAME}".let {
-                    if (withBuildDate) {
-                        "$it (${getFormattedBuildTime()})"
-                    } else {
-                        it
-                    }
-                }
-            }
-        }
-    }
-
-    internal fun getFormattedBuildTime(): String {
-        return try {
-            Instant.parse(BuildConfig.BUILD_TIME)
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-                .toDateTimestampString(
-                    UiPreferences.dateFormat(
-                        Injekt.get<Context>().appGraph.uiPreferences.dateFormat.get(),
-                    ),
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(MR.strings.licenses),
+                    onPreferenceClick = { backStack.add(OpenSourceLicensesRoute) },
                 )
-        } catch (_: Exception) {
-            BuildConfig.BUILD_TIME
+            }
+
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(MR.strings.privacy_policy),
+                    onPreferenceClick = { uriHandler.openUri("https://mihon.app/privacy/") },
+                )
+            }
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    LinkIcon(
+                        label = stringResource(MR.strings.website),
+                        icon = MaterialSymbols.Rounded.Public,
+                        url = "https://mihon.app",
+                    )
+                    LinkIcon(
+                        label = "Discord",
+                        icon = SimpleIcons.Discord,
+                        url = Constants.URL_DISCORD,
+                    )
+                    LinkIcon(
+                        label = "X",
+                        icon = SimpleIcons.X,
+                        url = "https://x.com/mihonapp",
+                    )
+                    LinkIcon(
+                        label = "Facebook",
+                        icon = SimpleIcons.Facebook,
+                        url = "https://facebook.com/mihonapp",
+                    )
+                    LinkIcon(
+                        label = "Reddit",
+                        icon = SimpleIcons.Reddit,
+                        url = "https://www.reddit.com/r/mihonapp",
+                    )
+                    LinkIcon(
+                        label = "GitHub",
+                        icon = SimpleIcons.Github,
+                        url = "https://github.com/mihonapp",
+                    )
+                }
+            }
         }
+    }
+}
+
+/**
+ * Checks version and shows a user prompt if an update is available.
+ */
+private suspend fun checkVersion(
+    context: Context,
+    onAvailableUpdate: (GetApplicationRelease.Result.NewUpdate) -> Unit,
+    onFinish: () -> Unit,
+) {
+    val updateChecker = context.appGraph.updateChecker
+    withUIContext {
+        try {
+            when (val result = withIOContext { updateChecker.checkForUpdate(forceCheck = true) }) {
+                is GetApplicationRelease.Result.NewUpdate -> {
+                    onAvailableUpdate(result)
+                }
+                is GetApplicationRelease.Result.NoNewUpdate -> {
+                    context.toast(MR.strings.update_check_no_new_updates)
+                }
+                is GetApplicationRelease.Result.OsTooOld -> {
+                    context.toast(MR.strings.update_check_eol)
+                }
+            }
+        } catch (e: Exception) {
+            context.toast(e.message)
+            logcat(LogPriority.ERROR, e)
+        } finally {
+            onFinish()
+        }
+    }
+}
+
+fun getVersionName(withBuildDate: Boolean): String {
+    return when {
+        BuildConfig.DEBUG -> {
+            "Debug ${BuildConfig.COMMIT_SHA}".let {
+                if (withBuildDate) {
+                    "$it (${getFormattedBuildTime()})"
+                } else {
+                    it
+                }
+            }
+        }
+        isNightlyBuildType -> {
+            "Nightly r${BuildConfig.COMMIT_COUNT}".let {
+                if (withBuildDate) {
+                    "$it (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
+                } else {
+                    "$it (${BuildConfig.COMMIT_SHA})"
+                }
+            }
+        }
+        else -> {
+            val channel = if (isFossBuildType) "FOSS" else "Stable"
+            "$channel v${BuildConfig.VERSION_NAME}".let {
+                if (withBuildDate) {
+                    "$it (${getFormattedBuildTime()})"
+                } else {
+                    it
+                }
+            }
+        }
+    }
+}
+
+internal fun getFormattedBuildTime(): String {
+    return try {
+        Instant.parse(BuildConfig.BUILD_TIME)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .toDateTimestampString(
+                UiPreferences.dateFormat(
+                    Injekt.get<Context>().appGraph.uiPreferences.dateFormat.get(),
+                ),
+            )
+    } catch (_: Exception) {
+        BuildConfig.BUILD_TIME
     }
 }

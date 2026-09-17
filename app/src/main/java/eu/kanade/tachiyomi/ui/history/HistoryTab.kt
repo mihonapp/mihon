@@ -15,7 +15,10 @@ import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
+import eu.kanade.presentation.util.LocalBackStack
+import eu.kanade.tachiyomi.ui.category.CategoryRoute
 import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +29,7 @@ import tachiyomi.i18n.MR
 
 @Composable
 fun HistoryTab() {
+    val backStack = LocalBackStack.current
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -36,10 +40,7 @@ fun HistoryTab() {
         state = state,
         snackbarHostState = snackbarHostState,
         onSearchQueryChange = viewModel::updateSearchQuery,
-        onClickCover = {
-            // TODO(nav): screen
-            // navigator.push(MangaScreen(it))
-        },
+        onClickCover = { backStack.add(MangaRoute(it)) },
         onClickResume = viewModel::getNextChapterForManga,
         onDialogChange = viewModel::setDialog,
         onClickFavorite = viewModel::addFavorite,
@@ -70,10 +71,7 @@ fun HistoryTab() {
                 duplicates = dialog.duplicates,
                 onDismissRequest = onDismissRequest,
                 onConfirm = { viewModel.addFavorite(dialog.manga) },
-                onOpenManga = {
-                    // TODO(nav): screen
-                    // navigator.push(MangaScreen(it.id))
-                },
+                onOpenManga = { backStack.add(MangaRoute(it.id)) },
                 onMigrate = { viewModel.showMigrateDialog(dialog.manga, it) },
             )
         }
@@ -81,10 +79,7 @@ fun HistoryTab() {
             ChangeCategoryDialog(
                 initialSelection = dialog.initialSelection,
                 onDismissRequest = onDismissRequest,
-                onEditCategories = {
-                    // TODO(nav): screen
-                    // navigator.push(CategoryScreen())
-                },
+                onEditCategories = { backStack.add(CategoryRoute) },
                 onConfirm = { include, _ ->
                     viewModel.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
                 },
@@ -95,10 +90,7 @@ fun HistoryTab() {
                 current = dialog.current,
                 target = dialog.target,
                 // Initiated from the context of [dialog.target] so we show [dialog.current].
-                onClickTitle = {
-                    // TODO(nav): screen
-                    // navigator.push(MangaScreen(dialog.current.id))
-                },
+                onClickTitle = { backStack.add(MangaRoute(dialog.current.id)) },
                 onDismissRequest = onDismissRequest,
             )
         }

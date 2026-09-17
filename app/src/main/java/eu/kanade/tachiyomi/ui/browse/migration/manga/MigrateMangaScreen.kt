@@ -17,15 +17,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.manga.components.BaseMangaListItem
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.serialization.Serializable
+import mihon.feature.migration.config.MigrationConfigRoute
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
@@ -39,127 +44,125 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.selectedBackground
 import tachiyomi.presentation.core.util.shouldExpandFAB
 
-data class MigrateMangaScreen(
-    private val sourceId: Long,
-) : Screen() {
+@Serializable
+data class MigrateMangaRoute(val sourceId: Long) : NavKey
 
-    @Composable
-    override fun Content() {
-        val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
-        val viewModel =
-            assistedMetroViewModel<MigrateMangaViewModel, MigrateMangaViewModel.Factory> { create(sourceId = sourceId) }
+@Composable
+fun MigrateMangaScreen(sourceId: Long) {
+    val context = LocalContext.current
+    val backStack = LocalBackStack.current
+    val viewModel =
+        assistedMetroViewModel<MigrateMangaViewModel, MigrateMangaViewModel.Factory> { create(sourceId = sourceId) }
 
-        val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-        if (state.isLoading) {
-            LoadingScreen()
-            return
-        }
+    if (state.isLoading) {
+        LoadingScreen()
+        return
+    }
 
-        BackHandler(enabled = state.selectionMode) {
-            viewModel.clearSelection()
-        }
+    BackHandler(enabled = state.selectionMode) {
+        viewModel.clearSelection()
+    }
 
-        val lazyListState = rememberLazyListState()
+    val lazyListState = rememberLazyListState()
 
-        Scaffold(
-            topBar = { scrollBehavior ->
-                AppBar(
-                    title = state.source!!.name,
-                    navigateUp = {
-                        if (state.selectionMode) {
-                            viewModel.clearSelection()
-                        } else {
-                            navigator.pop()
-                        }
-                    },
-                    scrollBehavior = scrollBehavior,
-                )
-            },
-            floatingActionButton = {
-                SmallExtendedFloatingActionButton(
-                    text = { Text(text = stringResource(MR.strings.migrationConfigScreen_continueButtonText)) },
-                    icon = {
-                        Icon(imageVector = MaterialSymbols.AutoMirroredRounded.ArrowForward, contentDescription = null)
-                    },
-                    onClick = {
-                        val selection = state.selection
+    Scaffold(
+        topBar = { scrollBehavior ->
+            AppBar(
+                title = state.source!!.name,
+                navigateUp = {
+                    if (state.selectionMode) {
                         viewModel.clearSelection()
-                        navigator.push(MigrationConfigScreen(selection))
-                    },
-                    expanded = lazyListState.shouldExpandFAB(),
-                    modifier = Modifier.animateFloatingActionButton(
-                        visible = state.selectionMode,
-                        alignment = Alignment.BottomEnd,
-                    ),
-                )
-            },
-        ) { contentPadding ->
-            if (state.isEmpty) {
-                EmptyScreen(
-                    stringRes = MR.strings.empty_screen,
-                    modifier = Modifier.padding(contentPadding),
-                )
-                return@Scaffold
-            }
-
-            MigrateMangaContent(
-                lazyListState = lazyListState,
-                contentPadding = contentPadding,
-                state = state,
-                onClickItem = viewModel::toggleSelection,
-                onClickCover = { navigator.push(MangaScreen(it.id)) },
+                    } else {
+                        backStack.removeLastOrNull()
+                    }
+                },
+                scrollBehavior = scrollBehavior,
             )
+        },
+        floatingActionButton = {
+            SmallExtendedFloatingActionButton(
+                text = { Text(text = stringResource(MR.strings.migrationConfigScreen_continueButtonText)) },
+                icon = {
+                    Icon(imageVector = MaterialSymbols.AutoMirroredRounded.ArrowForward, contentDescription = null)
+                },
+                onClick = {
+                    val selection = state.selection
+                    viewModel.clearSelection()
+                    backStack.add(MigrationConfigRoute(selection))
+                },
+                expanded = lazyListState.shouldExpandFAB(),
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = state.selectionMode,
+                    alignment = Alignment.BottomEnd,
+                ),
+            )
+        },
+    ) { contentPadding ->
+        if (state.isEmpty) {
+            EmptyScreen(
+                stringRes = MR.strings.empty_screen,
+                modifier = Modifier.padding(contentPadding),
+            )
+            return@Scaffold
         }
 
-        LaunchedEffect(Unit) {
-            viewModel.events.collectLatest { event ->
-                when (event) {
-                    MigrationMangaEvent.FailedFetchingFavorites -> {
-                        context.toast(MR.strings.internal_error)
-                    }
+        MigrateMangaContent(
+            lazyListState = lazyListState,
+            contentPadding = contentPadding,
+            state = state,
+            onClickItem = viewModel::toggleSelection,
+            onClickCover = { backStack.add(MangaRoute(it.id)) },
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collectLatest { event ->
+            when (event) {
+                MigrationMangaEvent.FailedFetchingFavorites -> {
+                    context.toast(MR.strings.internal_error)
                 }
             }
         }
     }
+}
 
-    @Composable
-    private fun MigrateMangaContent(
-        lazyListState: LazyListState,
-        contentPadding: PaddingValues,
-        state: MigrateMangaViewModel.State,
-        onClickItem: (Manga) -> Unit,
-        onClickCover: (Manga) -> Unit,
+@Composable
+private fun MigrateMangaContent(
+    lazyListState: LazyListState,
+    contentPadding: PaddingValues,
+    state: MigrateMangaViewModel.State,
+    onClickItem: (Manga) -> Unit,
+    onClickCover: (Manga) -> Unit,
+) {
+    FastScrollLazyColumn(
+        state = lazyListState,
+        contentPadding = contentPadding,
     ) {
-        FastScrollLazyColumn(
-            state = lazyListState,
-            contentPadding = contentPadding,
-        ) {
-            items(state.titles) { manga ->
-                MigrateMangaItem(
-                    manga = manga,
-                    isSelected = manga.id in state.selection,
-                    onClickItem = onClickItem,
-                    onClickCover = onClickCover,
-                )
-            }
+        items(state.titles) { manga ->
+            MigrateMangaItem(
+                manga = manga,
+                isSelected = manga.id in state.selection,
+                onClickItem = onClickItem,
+                onClickCover = onClickCover,
+            )
         }
     }
+}
 
-    @Composable
-    private fun MigrateMangaItem(
-        manga: Manga,
-        isSelected: Boolean,
-        onClickItem: (Manga) -> Unit,
-        onClickCover: (Manga) -> Unit,
-        modifier: Modifier = Modifier,
-    ) {
-        BaseMangaListItem(
-            modifier = modifier.selectedBackground(isSelected),
-            manga = manga,
-            onClickItem = { onClickItem(manga) },
-            onClickCover = { onClickCover(manga) },
-        )
-    }
+@Composable
+private fun MigrateMangaItem(
+    manga: Manga,
+    isSelected: Boolean,
+    onClickItem: (Manga) -> Unit,
+    onClickCover: (Manga) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BaseMangaListItem(
+        modifier = modifier.selectedBackground(isSelected),
+        manga = manga,
+        onClickItem = { onClickItem(manga) },
+        onClickCover = { onClickCover(manga) },
+    )
 }

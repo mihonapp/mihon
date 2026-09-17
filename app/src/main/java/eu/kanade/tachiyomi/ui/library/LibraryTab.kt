@@ -25,12 +25,17 @@ import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.presentation.manga.components.LibraryBottomActionMenu
 import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
+import eu.kanade.tachiyomi.ui.category.CategoryRoute
 import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import mihon.feature.migration.config.MigrationConfigRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
@@ -48,6 +53,7 @@ import tachiyomi.source.local.isLocal
 
 @Composable
 fun LibraryTab() {
+    val backStack = LocalBackStack.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
@@ -92,8 +98,7 @@ fun LibraryTab() {
                     scope.launch {
                         val randomItem = viewModel.getRandomLibraryItemForCurrentCategory()
                         if (randomItem != null) {
-                            // TODO(nav): screen
-                            // navigator.push(MangaScreen(randomItem.libraryManga.manga.id))
+                            backStack.add(MangaRoute(randomItem.libraryManga.manga.id))
                         } else {
                             snackbarHostState.showSnackbar(
                                 context.stringResource(MR.strings.information_no_entries_found),
@@ -119,8 +124,7 @@ fun LibraryTab() {
                 onMigrateClicked = {
                     val selection = state.selection
                     viewModel.clearSelection()
-                    // TODO(nav): screen
-                    // navigator.push(MigrationConfigScreen(selection))
+                    backStack.add(MigrationConfigRoute(selection))
                 },
             )
         },
@@ -154,10 +158,7 @@ fun LibraryTab() {
                     hasActiveFilters = state.hasActiveFilters,
                     showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
                     onChangeCurrentPage = viewModel::updateActiveCategoryIndex,
-                    onClickManga = {
-                        // TODO(nav): screen
-                        // navigator.push(MangaScreen(it))
-                    },
+                    onClickManga = { backStack.add(MangaRoute(it)) },
                     onContinueReadingClicked = { it: LibraryManga ->
                         scope.launchIO {
                             val chapter = viewModel.getNextUnreadChapter(it.manga)
@@ -177,10 +178,7 @@ fun LibraryTab() {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     },
                     onRefresh = { onClickRefresh(state.activeCategory) },
-                    onGlobalSearchClicked = {
-                        // TODO(nav): screen
-                        // navigator.push(GlobalSearchScreen(viewModel.state.value.searchQuery ?: ""))
-                    },
+                    onGlobalSearchClicked = { backStack.add(GlobalSearchRoute(viewModel.state.value.searchQuery ?: "")) },
                     getItemCountForCategory = { state.getItemCountForCategory(it) },
                     getDisplayMode = { viewModel.getDisplayMode() },
                     getColumnsForOrientation = { viewModel.getColumnsForOrientation(it) },
@@ -205,8 +203,7 @@ fun LibraryTab() {
                 onDismissRequest = onDismissRequest,
                 onEditCategories = {
                     viewModel.clearSelection()
-                    // TODO(nav): screen
-                    // navigator.push(CategoryScreen())
+                    backStack.add(CategoryRoute)
                 },
                 onConfirm = { include, exclude ->
                     viewModel.clearSelection()

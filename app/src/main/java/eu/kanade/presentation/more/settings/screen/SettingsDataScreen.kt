@@ -40,11 +40,14 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.more.settings.screen.data.CreateBackupRoute
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
+import eu.kanade.presentation.more.settings.screen.data.RestoreBackupRoute
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
@@ -180,7 +183,7 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun getBackupAndRestoreGroup(backupPreferences: BackupPreferences): Preference.PreferenceGroup {
         val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+        val backStack = LocalBackStack.current
 
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp.collectAsState()
 
@@ -201,7 +204,7 @@ object SettingsDataScreen : SearchableSettings {
                 logcat(LogPriority.ERROR, e)
             }
 
-            navigator.push(RestoreBackupScreen(it.toString()))
+            backStack.add(RestoreBackupRoute(it.toString()))
         }
 
         return Preference.PreferenceGroup(
@@ -222,7 +225,7 @@ object SettingsDataScreen : SearchableSettings {
                                 SegmentedButton(
                                     modifier = Modifier.fillMaxHeight(),
                                     checked = false,
-                                    onCheckedChange = { navigator.push(CreateBackupScreen()) },
+                                    onCheckedChange = { backStack.add(CreateBackupRoute) },
                                     shape = SegmentedButtonDefaults.itemShape(0, 2),
                                 ) {
                                     Text(stringResource(MR.strings.pref_create_backup))

@@ -11,17 +11,21 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.updates.UpdateScreen
 import eu.kanade.presentation.updates.UpdatesDeleteConfirmationDialog
 import eu.kanade.presentation.updates.UpdatesFilterDialog
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.ui.download.DownloadQueueScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
+import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.updates.UpdatesViewModel.Event
 import kotlinx.coroutines.flow.collectLatest
+import mihon.feature.upcoming.UpcomingRoute
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 
 @Composable
 fun UpdatesTab() {
     val context = LocalContext.current
+    val backStack = LocalBackStack.current
     val viewModel = metroViewModel<UpdatesViewModel>()
     val settingsViewModel = metroViewModel<UpdatesSettingsViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -30,10 +34,7 @@ fun UpdatesTab() {
         state = state,
         snackbarHostState = viewModel.snackbarHostState,
         lastUpdated = viewModel.lastUpdated,
-        onClickCover = {
-            // TODO(nav): screen
-            // item -> navigator.push(MangaScreen(item.update.mangaId))
-        },
+        onClickCover = { item -> backStack.add(MangaRoute(item.update.mangaId)) },
         onSelectAll = viewModel::toggleAllSelection,
         onInvertSelection = viewModel::invertSelection,
         onUpdateLibrary = viewModel::updateLibrary,
@@ -46,10 +47,7 @@ fun UpdatesTab() {
             val intent = ReaderActivity.newIntent(context, it.update.mangaId, it.update.chapterId)
             context.startActivity(intent)
         },
-        onCalendarClicked = {
-            // TODO(nav): screen
-            // navigator.push(UpcomingScreen()
-        },
+        onCalendarClicked = { backStack.add(UpcomingRoute) },
         onFilterClicked = viewModel::showFilterDialog,
         hasActiveFilters = state.hasActiveFilters,
     )
@@ -110,6 +108,6 @@ fun UpdatesTab() {
 
 data object UpdatesTab {
     suspend fun onReselect(navigator: Navigator) {
-        navigator.push(DownloadQueueScreen)
+        // navigator.push(DownloadQueueScreen)
     }
 }
