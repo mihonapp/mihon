@@ -44,6 +44,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import mihon.core.common.utils.mutate
 import mihon.domain.library.model.search.QueryNode
+import mihon.domain.source.interactor.UpdateMangaFromRemote
 import mihon.feature.library.matches
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -85,6 +86,7 @@ class LibraryViewModel(
     private val getBookmarkedChaptersByMangaId: GetBookmarkedChaptersByMangaId,
     private val setReadStatus: SetReadStatus,
     private val updateManga: UpdateManga,
+    private val updateMangaFromRemote: UpdateMangaFromRemote,
     private val setMangaCategories: SetMangaCategories,
     private val preferences: BasePreferences,
     private val libraryPreferences: LibraryPreferences,
@@ -505,6 +507,8 @@ class LibraryViewModel(
         val mangas = selectedManga
         viewModelScope.launchNonCancellable {
             mangas.forEach { manga ->
+                fetchChaptersIfNeeded(manga)
+
                 val chapters = getNextChapters.await(manga.id)
                     .fastFilterNot { chapter ->
                         downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
@@ -541,6 +545,21 @@ class LibraryViewModel(
                 downloadManager.downloadChapters(manga, chapters)
             }
         }
+    }
+
+    /**
+     * Fetches the chapter list from the source for a manga that has never had its chapters fetched
+     * (i.e. there are no chapters in the database yet), so batch downloads include manga that have
+     * not been opened in the app before.
+     */
+    private suspend fun fetchChaptersIfNeeded(manga: Manga) {
+        if (manga.isLocal() || getChaptersByMangaId.await(manga.id).isNotEmpty()) return
+
+        updateMangaFromRemote(
+            manga = manga,
+            fetchDetails = !manga.initialized,
+            fetchChapters = true,
+        )
     }
 
     /**
