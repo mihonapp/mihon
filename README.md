@@ -11,6 +11,9 @@ Discover and read manga, webtoons, comics, and more – easier than ever on your
 
 [![Discord server](https://img.shields.io/discord/1195734228319617024.svg?label=&labelColor=6A7EC2&color=7389D8&logo=discord&logoColor=FFFFFF)](https://discord.gg/mihon)
 [![GitHub downloads](https://img.shields.io/github/downloads/mihonapp/mihon/total?label=downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://mihon.app/download)
+[![Patreon](https://img.shields.io/badge/Patreon-F96854?labelColor=27303D&logo=patreon&logoColor=FFFFFF)](https://www.patreon.com/cw/mihon/membership)
+[![Open Collective](https://img.shields.io/badge/Open%20Collective-7FADF2?labelColor=27303D&logo=opencollective&logoColor=FFFFFF)](https://opencollective.com/mihon/contribute)
+
 
 [![CI](https://img.shields.io/github/actions/workflow/status/mihonapp/mihon/build.yml?labelColor=27303D)](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml)
 [![License: Apache-2.0](https://img.shields.io/github/license/mihonapp/mihon?labelColor=27303D&color=0877d2)](/LICENSE)
