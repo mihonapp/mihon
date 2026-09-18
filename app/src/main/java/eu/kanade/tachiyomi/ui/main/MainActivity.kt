@@ -62,6 +62,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -80,6 +81,7 @@ import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.LocalTopLevelBackStack
 import eu.kanade.presentation.util.rememberTopLevelBackStack
+import eu.kanade.presentation.util.rememberTwoPaneSettingsSceneStrategy
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -90,7 +92,6 @@ import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.home.HomeRoute
 import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.more.NewUpdateRoute
-import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.ui.more.OnboardingRoute
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
@@ -201,6 +202,8 @@ class MainActivity : BaseActivity() {
 
             val backStack = rememberNavBackStack(HomeRoute)
             val topLevelBackStack = rememberTopLevelBackStack(TopLevelRoute.Library)
+            val twoPaneStrategy = rememberTwoPaneSettingsSceneStrategy<NavKey>()
+
             CompositionLocalProvider(
                 LocalBackStack provides backStack,
                 LocalTopLevelBackStack provides topLevelBackStack,
@@ -240,6 +243,7 @@ class MainActivity : BaseActivity() {
                         NavDisplay(
                             backStack = backStack,
                             onBack = { backStack.removeLastOrNull() },
+                            sceneStrategies = listOf(twoPaneStrategy),
                             transitionSpec = {
                                 materialSharedAxisXIn(
                                     forward = true,

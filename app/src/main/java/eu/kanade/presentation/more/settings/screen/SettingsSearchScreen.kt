@@ -44,12 +44,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.replace
 import kotlinx.serialization.Serializable
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -151,8 +148,7 @@ fun SettingsSearchScreen() {
             contentPadding = contentPadding,
         ) { result ->
             SearchableSettings.highlightKey = result.highlightKey
-            // TODO(nav): search
-            // backStack.replace(result.route)
+            backStack.replace(result.route)
         }
     }
 }
@@ -268,11 +264,11 @@ private fun SearchResult(
 @Composable
 @NonRestartableComposable
 private fun getIndex() = settingScreens
-    .map { screen ->
+    .map { route ->
         SettingsData(
-            title = stringResource(screen.getTitleRes()),
-            route = screen,
-            contents = screen.getPreferences(),
+            title = stringResource(route.getTitleRes()),
+            route = route,
+            contents = route.getPreferences(),
         )
     }
 
@@ -290,26 +286,26 @@ private fun getLocalizedBreadcrumb(path: String, node: String?, isLtr: Boolean):
     }
 }
 
-private val settingScreens = listOf(
-    SettingsAppearanceScreen,
-    SettingsLibraryScreen,
-    SettingsReaderScreen,
-    SettingsDownloadScreen,
-    SettingsTrackingScreen,
-    SettingsBrowseScreen,
-    SettingsDataScreen,
-    SettingsSecurityScreen,
-    SettingsAdvancedScreen,
+private val settingScreens: List<SearchableRoute> = listOf(
+    SettingsAppearanceRoute,
+    SettingsLibraryRoute,
+    SettingsReaderRoute,
+    SettingsDownloadRoute,
+    SettingsTrackingRoute,
+    SettingsBrowseRoute,
+    SettingsDataRoute,
+    SettingsSecurityRoute,
+    SettingsAdvancedRoute,
 )
 
 private data class SettingsData(
     val title: String,
-    val route: VoyagerScreen,
+    val route: NavKey,
     val contents: List<Preference>,
 )
 
 private data class SearchResultItem(
-    val route: VoyagerScreen,
+    val route: NavKey,
     val title: String,
     val breadcrumbs: String,
     val highlightKey: String,
