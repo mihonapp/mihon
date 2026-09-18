@@ -2,10 +2,17 @@ package eu.kanade.tachiyomi.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import eu.kanade.presentation.more.settings.screen.SettingsMainRoute
-import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
+import eu.kanade.presentation.more.settings.screen.SettingsAdvancedRoute
+import eu.kanade.presentation.more.settings.screen.SettingsAppearanceRoute
+import eu.kanade.presentation.more.settings.screen.SettingsBrowseRoute
+import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
+import eu.kanade.presentation.more.settings.screen.SettingsDownloadRoute
+import eu.kanade.presentation.more.settings.screen.SettingsLibraryRoute
+import eu.kanade.presentation.more.settings.screen.SettingsReaderRoute
 import eu.kanade.presentation.more.settings.screen.SettingsSearchRoute
 import eu.kanade.presentation.more.settings.screen.SettingsSearchScreen
+import eu.kanade.presentation.more.settings.screen.SettingsSecurityRoute
+import eu.kanade.presentation.more.settings.screen.SettingsTrackingRoute
 import eu.kanade.presentation.more.settings.screen.about.AboutRoute
 import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.more.settings.screen.about.OpenSourceLicensesRoute
@@ -26,6 +33,7 @@ import eu.kanade.presentation.more.settings.screen.debug.DebugInfoRoute
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoRoute
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoScreen
+import eu.kanade.presentation.util.TwoPaneSettingsScene
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterRoute
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterScreen
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsRoute
@@ -197,7 +205,7 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<OnboardingRoute> {
         OnboardingScreen()
     }
-    entry<SettingsRoute> { route ->
+    entry<SettingsRoute>(metadata = TwoPaneSettingsScene.listPane()) { route ->
         SettingsScreen(route.settingsDestination)
     }
     entry<StatsRoute> {
@@ -235,13 +243,39 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<RestoreBackupRoute> { route ->
         RestoreBackupScreen(route.uri)
     }
-    entry<SettingsMainRoute> {
-        SettingsMainScreen()
-    }
     entry<SettingsSearchRoute> {
         SettingsSearchScreen()
     }
     entry<WorkerInfoRoute> {
         WorkerInfoScreen()
+    }
+
+    // Searchable settings
+    entry<SettingsAdvancedRoute> {
+        SettingsAdvancedRoute.Content()
+    }
+    entry<SettingsAppearanceRoute> {
+        SettingsAppearanceRoute.Content()
+    }
+    entry<SettingsBrowseRoute> {
+        SettingsBrowseRoute.Content()
+    }
+    entry<SettingsDataRoute> {
+        SettingsDataRoute.Content()
+    }
+    entry<SettingsDownloadRoute> {
+        SettingsDownloadRoute.Content()
+    }
+    entry<SettingsLibraryRoute> {
+        SettingsLibraryRoute.Content()
+    }
+    entry<SettingsReaderRoute> {
+        SettingsReaderRoute.Content()
+    }
+    entry<SettingsSecurityRoute> {
+        SettingsSecurityRoute.Content()
+    }
+    entry<SettingsTrackingRoute> {
+        SettingsTrackingRoute.Content()
     }
 }

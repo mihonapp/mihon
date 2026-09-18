@@ -6,16 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.onboarding.OnboardingScreen
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
-import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
+import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.setting.SettingsDestination
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
-import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import tachiyomi.presentation.core.i18n.stringResource
@@ -37,7 +33,7 @@ fun OnboardingScreen() {
         backStack.removeLastOrNull()
     }
 
-    val restoreSettingKey = stringResource(SettingsDataScreen.restorePreferenceKeyString)
+    val restoreSettingKey = stringResource(SettingsDataRoute.restorePreferenceKeyString)
 
     BackHandler(enabled = !shownOnboardingFlow) {
         // Prevent exiting if onboarding hasn't been completed

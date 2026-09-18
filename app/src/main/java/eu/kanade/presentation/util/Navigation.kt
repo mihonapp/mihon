@@ -31,9 +31,9 @@ data class TabOptions(
     val icon: Painter,
 )
 
-fun NavBackStack<NavKey>.replace(screen: NavKey) {
+fun NavBackStack<NavKey>.replace(source: NavKey) {
     if (isNotEmpty()) removeLastOrNull()
-    add(screen)
+    add(source)
 }
 
 fun NavBackStack<NavKey>.popUntil(predicate: (NavKey) -> Boolean) {

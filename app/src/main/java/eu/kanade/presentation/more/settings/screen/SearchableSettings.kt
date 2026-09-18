@@ -3,13 +3,18 @@ package eu.kanade.presentation.more.settings.screen
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.navigation3.runtime.NavKey
 import cafe.adriel.voyager.core.screen.Screen
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
+import eu.kanade.presentation.util.LocalBackButtonVisibility
 import eu.kanade.presentation.util.LocalBackPress
+import eu.kanade.presentation.util.LocalBackStack
 
-interface SearchableSettings : Screen {
+interface SearchableRoute : NavKey, SearchableSettings
+
+interface SearchableSettings {
 
     @Composable
     @ReadOnlyComposable
@@ -23,11 +28,16 @@ interface SearchableSettings : Screen {
     }
 
     @Composable
-    override fun Content() {
-        val handleBack = LocalBackPress.current
+    fun Content() {
+        val backStack = LocalBackStack.current
+        val backVisibility = LocalBackButtonVisibility.current
+
         PreferenceScaffold(
             titleRes = getTitleRes(),
-            onBackPressed = if (handleBack != null) handleBack::invoke else null,
+            onBackPressed = {
+                backStack.removeLastOrNull()
+                Unit
+            }.takeIf { backVisibility },
             actions = { AppBarAction() },
             itemsProvider = { getPreferences() },
         )
