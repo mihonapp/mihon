@@ -94,7 +94,7 @@ jobs:
           cache-disabled: true
 
       - name: Build
-        run: ./gradlew assembleFoss -Penable-updater
+        run: ./gradlew assembleFoss
         env:
           storeFileBase64: ${{ secrets.SIGNING_KEY }}
           storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
