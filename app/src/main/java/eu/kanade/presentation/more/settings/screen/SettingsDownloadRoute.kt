@@ -13,6 +13,7 @@ import androidx.compose.ui.util.fastMap
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
+import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -21,7 +22,8 @@ import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
-object SettingsDownloadScreen : SearchableSettings {
+@Serializable
+object SettingsDownloadRoute : SearchableRoute {
 
     @ReadOnlyComposable
     @Composable

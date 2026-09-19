@@ -11,18 +11,19 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation3.runtime.NavKey
 import androidx.profileinstaller.ProfileVerifier
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
-import eu.kanade.presentation.more.settings.screen.about.AboutScreen
-import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.more.settings.screen.about.getFormattedBuildTime
+import eu.kanade.presentation.more.settings.screen.about.getVersionName
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.common.FeatureFlags
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -30,155 +31,155 @@ import mihon.icons.materialsymbols.rounded.Autorenew
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
 
-class DebugInfoScreen : Screen() {
+@Serializable
+data object DebugInfoRoute : NavKey
 
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        PreferenceScaffold(
-            titleRes = MR.strings.pref_debug_info,
-            onBackPressed = navigator::pop,
-            itemsProvider = {
-                listOf(
-                    Preference.PreferenceItem.TextPreference(
-                        title = WorkerInfoScreen.TITLE,
-                        onClick = { navigator.push(WorkerInfoScreen()) },
-                    ),
-                    Preference.PreferenceItem.TextPreference(
-                        title = BackupSchemaScreen.TITLE,
-                        onClick = { navigator.push(BackupSchemaScreen()) },
-                    ),
-                    getAppInfoGroup(),
-                    getDeviceInfoGroup(),
-                )
-            },
-        )
+@Composable
+fun DebugInfoScreen() {
+    val backStack = LocalBackStack.current
+    PreferenceScaffold(
+        titleRes = MR.strings.pref_debug_info,
+        onBackPressed = backStack::removeLastOrNull,
+        itemsProvider = {
+            listOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = WorkerInfoRoute.TITLE,
+                    onClick = { backStack.add(WorkerInfoRoute) },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = BackupSchemaRoute.TITLE,
+                    onClick = { backStack.add(BackupSchemaRoute) },
+                ),
+                getAppInfoGroup(),
+                getDeviceInfoGroup(),
+            )
+        },
+    )
+}
+
+@Composable
+private fun getAppInfoGroup(): Preference.PreferenceGroup {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val installationIdPref = remember { context.appGraph.basePreferences.installationId }
+    val installationId by installationIdPref.collectAsState()
+
+    return Preference.PreferenceGroup(
+        title = "App info",
+        preferenceItems = listOf(
+            Preference.PreferenceItem.TextPreference(
+                title = "Version",
+                subtitle = getVersionName(false),
+            ),
+            Preference.PreferenceItem.TextPreference(
+                title = "Build time",
+                subtitle = getFormattedBuildTime(),
+            ),
+            Preference.PreferenceItem.TextPreference(
+                title = "Installation ID",
+                subtitle = installationId,
+                widget = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                installationIdPref.set(FeatureFlags.newInstallationId())
+                            }
+                        },
+                    ) {
+                        Icon(
+                            imageVector = MaterialSymbols.Rounded.Autorenew,
+                            tint = MaterialTheme.colorScheme.primary,
+                            contentDescription = null,
+                        )
+                    }
+                },
+                onClick = {
+                    context.copyToClipboard(installationId, installationId)
+                },
+            ),
+            getProfileVerifierPreference(),
+            Preference.PreferenceItem.TextPreference(
+                title = "WebView version",
+                subtitle = getWebViewVersion(),
+            ),
+        ),
+    )
+}
+
+@Composable
+@ReadOnlyComposable
+private fun getWebViewVersion(): String {
+    return WebViewUtil.getVersion(LocalContext.current)
+}
+
+@Composable
+private fun getProfileVerifierPreference(): Preference.PreferenceItem.TextPreference {
+    val status by produceState(initialValue = "-") {
+        val result = ProfileVerifier.getCompilationStatusAsync().await().profileInstallResultCode
+        value = when (result) {
+            ProfileVerifier.CompilationStatus.RESULT_CODE_NO_PROFILE_INSTALLED -> "No profile installed"
+            ProfileVerifier.CompilationStatus.RESULT_CODE_COMPILED_WITH_PROFILE -> "Compiled"
+            ProfileVerifier.CompilationStatus.RESULT_CODE_COMPILED_WITH_PROFILE_NON_MATCHING ->
+                "Compiled non-matching"
+            ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_CACHE_FILE_EXISTS_BUT_CANNOT_BE_READ,
+            ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_CANT_WRITE_PROFILE_VERIFICATION_RESULT_CACHE_FILE,
+            ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_PACKAGE_NAME_DOES_NOT_EXIST,
+            -> "Error $result"
+            ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_UNSUPPORTED_API_VERSION -> "Not supported"
+            ProfileVerifier.CompilationStatus.RESULT_CODE_PROFILE_ENQUEUED_FOR_COMPILATION -> "Pending compilation"
+            ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_NO_PROFILE_EMBEDDED -> "No profile embedded"
+            else -> "Unknown code $result"
+        }
     }
+    return Preference.PreferenceItem.TextPreference(
+        title = "Profile compilation status",
+        subtitle = status,
+    )
+}
 
-    @Composable
-    private fun getAppInfoGroup(): Preference.PreferenceGroup {
-        val context = LocalContext.current
-        val scope = rememberCoroutineScope()
+private fun getDeviceInfoGroup(): Preference.PreferenceGroup {
+    val items = buildList {
+        add(
+            Preference.PreferenceItem.TextPreference(
+                title = "Model",
+                subtitle = "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})",
+            ),
+        )
 
-        val installationIdPref = remember { context.appGraph.basePreferences.installationId }
-        val installationId by installationIdPref.collectAsState()
+        if (DeviceUtil.oneUiVersion != null) {
+            add(
+                Preference.PreferenceItem.TextPreference(
+                    title = "OneUI version",
+                    subtitle = "${DeviceUtil.oneUiVersion}",
+                ),
+            )
+        } else if (DeviceUtil.miuiMajorVersion != null) {
+            add(
+                Preference.PreferenceItem.TextPreference(
+                    title = "MIUI version",
+                    subtitle = "${DeviceUtil.miuiMajorVersion}",
+                ),
+            )
+        }
 
-        return Preference.PreferenceGroup(
-            title = "App info",
-            preferenceItems = listOf(
-                Preference.PreferenceItem.TextPreference(
-                    title = "Version",
-                    subtitle = AboutScreen.getVersionName(false),
-                ),
-                Preference.PreferenceItem.TextPreference(
-                    title = "Build time",
-                    subtitle = AboutScreen.getFormattedBuildTime(),
-                ),
-                Preference.PreferenceItem.TextPreference(
-                    title = "Installation ID",
-                    subtitle = installationId,
-                    widget = {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    installationIdPref.set(FeatureFlags.newInstallationId())
-                                }
-                            },
-                        ) {
-                            Icon(
-                                imageVector = MaterialSymbols.Rounded.Autorenew,
-                                tint = MaterialTheme.colorScheme.primary,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                    onClick = {
-                        context.copyToClipboard(installationId, installationId)
-                    },
-                ),
-                getProfileVerifierPreference(),
-                Preference.PreferenceItem.TextPreference(
-                    title = "WebView version",
-                    subtitle = getWebViewVersion(),
-                ),
+        val androidVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Build.VERSION.RELEASE_OR_CODENAME
+        } else {
+            Build.VERSION.RELEASE
+        }
+        add(
+            Preference.PreferenceItem.TextPreference(
+                title = "Android version",
+                subtitle = "$androidVersion (${Build.DISPLAY})",
             ),
         )
     }
 
-    @Composable
-    @ReadOnlyComposable
-    private fun getWebViewVersion(): String {
-        return WebViewUtil.getVersion(LocalContext.current)
-    }
-
-    @Composable
-    private fun getProfileVerifierPreference(): Preference.PreferenceItem.TextPreference {
-        val status by produceState(initialValue = "-") {
-            val result = ProfileVerifier.getCompilationStatusAsync().await().profileInstallResultCode
-            value = when (result) {
-                ProfileVerifier.CompilationStatus.RESULT_CODE_NO_PROFILE_INSTALLED -> "No profile installed"
-                ProfileVerifier.CompilationStatus.RESULT_CODE_COMPILED_WITH_PROFILE -> "Compiled"
-                ProfileVerifier.CompilationStatus.RESULT_CODE_COMPILED_WITH_PROFILE_NON_MATCHING ->
-                    "Compiled non-matching"
-                ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_CACHE_FILE_EXISTS_BUT_CANNOT_BE_READ,
-                ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_CANT_WRITE_PROFILE_VERIFICATION_RESULT_CACHE_FILE,
-                ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_PACKAGE_NAME_DOES_NOT_EXIST,
-                -> "Error $result"
-                ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_UNSUPPORTED_API_VERSION -> "Not supported"
-                ProfileVerifier.CompilationStatus.RESULT_CODE_PROFILE_ENQUEUED_FOR_COMPILATION -> "Pending compilation"
-                ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_NO_PROFILE_EMBEDDED -> "No profile embedded"
-                else -> "Unknown code $result"
-            }
-        }
-        return Preference.PreferenceItem.TextPreference(
-            title = "Profile compilation status",
-            subtitle = status,
-        )
-    }
-
-    private fun getDeviceInfoGroup(): Preference.PreferenceGroup {
-        val items = buildList {
-            add(
-                Preference.PreferenceItem.TextPreference(
-                    title = "Model",
-                    subtitle = "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})",
-                ),
-            )
-
-            if (DeviceUtil.oneUiVersion != null) {
-                add(
-                    Preference.PreferenceItem.TextPreference(
-                        title = "OneUI version",
-                        subtitle = "${DeviceUtil.oneUiVersion}",
-                    ),
-                )
-            } else if (DeviceUtil.miuiMajorVersion != null) {
-                add(
-                    Preference.PreferenceItem.TextPreference(
-                        title = "MIUI version",
-                        subtitle = "${DeviceUtil.miuiMajorVersion}",
-                    ),
-                )
-            }
-
-            val androidVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                Build.VERSION.RELEASE_OR_CODENAME
-            } else {
-                Build.VERSION.RELEASE
-            }
-            add(
-                Preference.PreferenceItem.TextPreference(
-                    title = "Android version",
-                    subtitle = "$androidVersion (${Build.DISPLAY})",
-                ),
-            )
-        }
-
-        return Preference.PreferenceGroup(
-            title = "Device info",
-            preferenceItems = items,
-        )
-    }
+    return Preference.PreferenceGroup(
+        title = "Device info",
+        preferenceItems = items,
+    )
 }

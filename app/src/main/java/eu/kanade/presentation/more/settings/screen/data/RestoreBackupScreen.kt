@@ -21,8 +21,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -33,7 +32,7 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.WarningBanner
-import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
@@ -42,6 +41,7 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.serialization.Serializable
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
@@ -51,124 +51,122 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
-class RestoreBackupScreen(
-    private val uri: String,
-) : Screen() {
+@Serializable
+data class RestoreBackupRoute(val uri: String) : NavKey
 
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val viewModel =
-            assistedMetroViewModel<RestoreBackupViewModel, RestoreBackupViewModel.Factory> { create(uri = uri) }
-        val state by viewModel.state.collectAsState()
+@Composable
+fun RestoreBackupScreen(uri: String) {
+    val backStack = LocalBackStack.current
+    val viewModel =
+        assistedMetroViewModel<RestoreBackupViewModel, RestoreBackupViewModel.Factory> { create(uri = uri) }
+    val state by viewModel.state.collectAsState()
 
-        Scaffold(
-            topBar = {
-                AppBar(
-                    title = stringResource(MR.strings.pref_restore_backup),
-                    navigateUp = navigator::pop,
-                    scrollBehavior = it,
-                )
+    Scaffold(
+        topBar = {
+            AppBar(
+                title = stringResource(MR.strings.pref_restore_backup),
+                navigateUp = backStack::removeLastOrNull,
+                scrollBehavior = it,
+            )
+        },
+    ) { contentPadding ->
+        LazyColumnWithAction(
+            contentPadding = contentPadding,
+            actionLabel = stringResource(MR.strings.action_restore),
+            actionEnabled = state.canRestore && state.options.canRestore(),
+            onClickAction = {
+                viewModel.startRestore()
+                backStack.removeLastOrNull()
             },
-        ) { contentPadding ->
-            LazyColumnWithAction(
-                contentPadding = contentPadding,
-                actionLabel = stringResource(MR.strings.action_restore),
-                actionEnabled = state.canRestore && state.options.canRestore(),
-                onClickAction = {
-                    viewModel.startRestore()
-                    navigator.pop()
-                },
-            ) {
-                if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                    item {
-                        WarningBanner(MR.strings.restore_miui_warning)
-                    }
+        ) {
+            if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
+                item {
+                    WarningBanner(MR.strings.restore_miui_warning)
                 }
+            }
 
-                if (state.canRestore) {
-                    item {
-                        SectionCard {
-                            RestoreOptions.options.forEach { option ->
-                                LabeledCheckbox(
-                                    label = stringResource(option.label),
-                                    checked = option.getter(state.options),
-                                    onCheckedChange = {
-                                        viewModel.toggle(option.setter, it)
-                                    },
-                                )
-                            }
+            if (state.canRestore) {
+                item {
+                    SectionCard {
+                        RestoreOptions.options.forEach { option ->
+                            LabeledCheckbox(
+                                label = stringResource(option.label),
+                                checked = option.getter(state.options),
+                                onCheckedChange = {
+                                    viewModel.toggle(option.setter, it)
+                                },
+                            )
                         }
                     }
                 }
+            }
 
-                if (state.error != null) {
-                    errorMessageItem(state.error)
-                }
+            if (state.error != null) {
+                errorMessageItem(state.error)
             }
         }
     }
+}
 
-    private fun LazyListScope.errorMessageItem(
-        error: Any?,
-    ) {
-        item {
-            SectionCard {
-                Column(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                ) {
-                    val msg = buildAnnotatedString {
-                        when (error) {
-                            is MissingRestoreComponents -> {
-                                appendLine(stringResource(MR.strings.backup_restore_content_full))
-                                if (error.sources.isNotEmpty()) {
-                                    appendLine()
-                                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        appendLine(stringResource(MR.strings.backup_restore_missing_sources))
-                                    }
-                                    error.sources.joinTo(
-                                        this,
-                                        separator = "\n- ",
-                                        prefix = "- ",
-                                    )
-                                }
-                                if (error.trackers.isNotEmpty()) {
-                                    appendLine()
-                                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        appendLine(stringResource(MR.strings.backup_restore_missing_trackers))
-                                    }
-                                    error.trackers.joinTo(
-                                        this,
-                                        separator = "\n- ",
-                                        prefix = "- ",
-                                    )
-                                }
-                            }
-
-                            is InvalidRestore -> {
-                                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    appendLine(stringResource(MR.strings.invalid_backup_file))
-                                }
-                                appendLine(error.uri.toString())
-
+private fun LazyListScope.errorMessageItem(
+    error: Any?,
+) {
+    item {
+        SectionCard {
+            Column(
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            ) {
+                val msg = buildAnnotatedString {
+                    when (error) {
+                        is MissingRestoreComponents -> {
+                            appendLine(stringResource(MR.strings.backup_restore_content_full))
+                            if (error.sources.isNotEmpty()) {
                                 appendLine()
-
                                 withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    appendLine(stringResource(MR.strings.invalid_backup_file_error))
+                                    appendLine(stringResource(MR.strings.backup_restore_missing_sources))
                                 }
-                                appendLine(error.message)
+                                error.sources.joinTo(
+                                    this,
+                                    separator = "\n- ",
+                                    prefix = "- ",
+                                )
                             }
-
-                            else -> {
-                                appendLine(error.toString())
+                            if (error.trackers.isNotEmpty()) {
+                                appendLine()
+                                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    appendLine(stringResource(MR.strings.backup_restore_missing_trackers))
+                                }
+                                error.trackers.joinTo(
+                                    this,
+                                    separator = "\n- ",
+                                    prefix = "- ",
+                                )
                             }
                         }
-                    }
 
-                    SelectionContainer {
-                        Text(text = msg)
+                        is InvalidRestore -> {
+                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                appendLine(stringResource(MR.strings.invalid_backup_file))
+                            }
+                            appendLine(error.uri.toString())
+
+                            appendLine()
+
+                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                appendLine(stringResource(MR.strings.invalid_backup_file_error))
+                            }
+                            appendLine(error.message)
+                        }
+
+                        else -> {
+                            appendLine(error.toString())
+                        }
                     }
+                }
+
+                SelectionContainer {
+                    Text(text = msg)
                 }
             }
         }

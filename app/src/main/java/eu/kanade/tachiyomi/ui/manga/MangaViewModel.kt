@@ -1074,7 +1074,6 @@ class MangaViewModel(
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
         data object SettingsSheet : Dialog
-        data object TrackSheet : Dialog
         data object FullCover : Dialog
     }
 
@@ -1088,10 +1087,6 @@ class MangaViewModel(
 
     fun showSettingsDialog() {
         updateSuccessState { it.copy(dialog = Dialog.SettingsSheet) }
-    }
-
-    fun showTrackDialog() {
-        updateSuccessState { it.copy(dialog = Dialog.TrackSheet) }
     }
 
     fun showCoverDialog() {

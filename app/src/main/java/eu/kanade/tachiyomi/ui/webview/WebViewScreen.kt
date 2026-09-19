@@ -4,47 +4,51 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
-import eu.kanade.presentation.util.AssistContentScreen
-import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.util.AssistContentRoute
+import eu.kanade.presentation.util.LocalAssistContentManager
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.webview.WebViewScreenContent
+import kotlinx.serialization.Serializable
 import tachiyomi.presentation.core.screens.LoadingScreen
 
-class WebViewScreen(
-    private val url: String,
-    private val initialTitle: String? = null,
-    private val sourceId: Long? = null,
-) : Screen(), AssistContentScreen {
+@Serializable
+data class WebViewRoute(
+    val url: String,
+    val initialTitle: String? = null,
+    val sourceId: Long? = null,
+) : NavKey, AssistContentRoute
 
-    private var assistUrl: String? = null
+@Composable
+fun WebViewScreen(
+    url: String,
+    initialTitle: String?,
+    sourceId: Long?,
+) {
+    val backStack = LocalBackStack.current
+    val assistContentManager = LocalAssistContentManager.current
+    val context = LocalContext.current
+    val viewModel =
+        assistedMetroViewModel<WebViewViewModel, WebViewViewModel.Factory> { create(sourceId = sourceId) }
 
-    override fun onProvideAssistUrl() = assistUrl
-
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val context = LocalContext.current
-        val viewModel =
-            assistedMetroViewModel<WebViewViewModel, WebViewViewModel.Factory> { create(sourceId = sourceId) }
-
-        val headers by viewModel.headers.collectAsState()
-        if (headers == null) {
-            LoadingScreen()
-            return
-        }
-
-        WebViewScreenContent(
-            onNavigateUp = { navigator.pop() },
-            initialTitle = initialTitle,
-            url = url,
-            headers = headers.orEmpty(),
-            defaultUserAgentProvider = viewModel::defaultUserAgentProvider,
-            onUrlChange = { assistUrl = it },
-            onShare = { viewModel.shareWebpage(context, it) },
-            onOpenInBrowser = { viewModel.openInBrowser(context, it) },
-            onClearCookies = viewModel::clearCookies,
-        )
+    val headers by viewModel.headers.collectAsState()
+    if (headers == null) {
+        LoadingScreen()
+        return
     }
+
+    WebViewScreenContent(
+        onNavigateUp = backStack::removeLastOrNull,
+        initialTitle = initialTitle,
+        url = url,
+        headers = headers.orEmpty(),
+        defaultUserAgentProvider = viewModel::defaultUserAgentProvider,
+        onUrlChange = {
+            assistContentManager.currentAssistUrl = it
+        },
+        onShare = { viewModel.shareWebpage(context, it) },
+        onOpenInBrowser = { viewModel.openInBrowser(context, it) },
+        onClearCookies = viewModel::clearCookies,
+    )
 }

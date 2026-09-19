@@ -1,88 +1,61 @@
 package eu.kanade.tachiyomi.ui.browse
 
-import androidx.compose.animation.graphics.res.animatedVectorResource
-import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
-import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import cafe.adriel.voyager.navigator.tab.TabOptions
+import androidx.navigation3.runtime.result.ResultEffect
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.TabbedScreen
-import eu.kanade.presentation.util.Tab
-import eu.kanade.tachiyomi.R
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsViewModel
 import eu.kanade.tachiyomi.ui.browse.extension.extensionsTab
 import eu.kanade.tachiyomi.ui.browse.migration.sources.migrateSourceTab
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
+import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.stringResource
 
-data object BrowseTab : Tab {
+@Composable
+fun BrowseTab() {
+    val context = LocalContext.current
+    val backStack = LocalBackStack.current
 
-    override val options: TabOptions
-        @Composable
-        get() {
-            val isSelected = LocalTabNavigator.current.current.key == key
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_browse_enter)
-            return TabOptions(
-                index = 3u,
-                title = stringResource(MR.strings.browse),
-                icon = rememberAnimatedVectorPainter(image, isSelected),
-            )
-        }
+    // Hoisted for extensions tab's search bar
+    val extensionsViewModel = metroViewModel<ExtensionsViewModel>()
+    val extensionsSearchQuery by extensionsViewModel.searchQuery.collectAsStateWithLifecycle()
 
-    override suspend fun onReselect(navigator: Navigator) {
-        navigator.push(GlobalSearchScreen())
+    val tabs = listOf(
+        sourcesTab(),
+        extensionsTab(extensionsViewModel),
+        migrateSourceTab(),
+    )
+
+    val state = rememberPagerState { tabs.size }
+
+    TabbedScreen(
+        titleRes = MR.strings.browse,
+        tabs = tabs,
+        state = state,
+        searchQuery = extensionsSearchQuery,
+        onChangeSearchQuery = extensionsViewModel::search,
+    )
+
+    LaunchedEffect(Unit) {
+        (context as? MainActivity)?.ready = true
     }
 
-    private val switchToExtensionTabChannel = Channel<Unit>(1, BufferOverflow.DROP_OLDEST)
-
-    fun showExtension() {
-        switchToExtensionTabChannel.trySend(Unit)
+    ResultEffect<Unit>(resultKey = BrowseSwitchToExtensionEventKey) {
+        state.scrollToPage(1)
     }
 
-    @Composable
-    override fun Content() {
-        val context = LocalContext.current
-
-        // Hoisted for extensions tab's search bar
-        val extensionsViewModel = metroViewModel<ExtensionsViewModel>()
-        val extensionsSearchQuery by extensionsViewModel.searchQuery.collectAsStateWithLifecycle()
-
-        val tabs = listOf(
-            sourcesTab(),
-            extensionsTab(extensionsViewModel),
-            migrateSourceTab(),
-        )
-
-        val state = rememberPagerState { tabs.size }
-
-        TabbedScreen(
-            titleRes = MR.strings.browse,
-            tabs = tabs,
-            state = state,
-            searchQuery = extensionsSearchQuery,
-            onChangeSearchQuery = extensionsViewModel::search,
-        )
-        LaunchedEffect(Unit) {
-            switchToExtensionTabChannel.receiveAsFlow()
-                .collectLatest { state.scrollToPage(1) }
-        }
-
-        LaunchedEffect(Unit) {
-            (context as? MainActivity)?.ready = true
-        }
+    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+        backStack.add(GlobalSearchRoute())
     }
 }
+
+@Suppress("ConstPropertyName")
+const val BrowseSwitchToExtensionEventKey = "BrowseSwitchToExtensionEventKey"

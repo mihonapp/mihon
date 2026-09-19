@@ -4,16 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.SourceOptionsDialog
 import eu.kanade.presentation.browse.SourcesScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
+import eu.kanade.presentation.util.LocalBackStack
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -23,8 +21,8 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
-fun Screen.sourcesTab(): TabContent {
-    val navigator = LocalNavigator.currentOrThrow
+fun sourcesTab(): TabContent {
+    val backStack = LocalBackStack.current
     val viewModel = metroViewModel<SourcesViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -34,12 +32,12 @@ fun Screen.sourcesTab(): TabContent {
             AppBar.Action(
                 title = stringResource(MR.strings.action_global_search),
                 icon = MaterialSymbols.Rounded.TravelExplore,
-                onClick = { navigator.push(GlobalSearchScreen()) },
+                onClick = { backStack.add(GlobalSearchRoute()) },
             ),
             AppBar.Action(
                 title = stringResource(MR.strings.action_filter),
                 icon = MaterialSymbols.Rounded.FilterList,
-                onClick = { navigator.push(SourcesFilterScreen()) },
+                onClick = { backStack.add(SourcesFilterRoute) },
             ),
         ),
         content = { contentPadding, snackbarHostState ->
@@ -47,7 +45,7 @@ fun Screen.sourcesTab(): TabContent {
                 state = state,
                 contentPadding = contentPadding,
                 onClickItem = { source, listing ->
-                    navigator.push(BrowseSourceScreen(source.id, listing.query))
+                    backStack.add(BrowseSourceRoute(source.id, listing.query))
                 },
                 onClickPin = viewModel::togglePin,
                 onLongClickItem = viewModel::showSourceDialog,
