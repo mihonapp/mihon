@@ -39,7 +39,9 @@ import eu.kanade.presentation.browse.components.BrowseSourceToolbar
 import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
+import eu.kanade.presentation.util.AssistContentRoute
 import eu.kanade.presentation.util.AssistContentScreen
+import eu.kanade.presentation.util.LocalAssistContentManager
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -76,7 +78,7 @@ import tachiyomi.source.local.LocalSource
 data class BrowseSourceRoute(
     val sourceId: Long,
     val listingQuery: String?,
-) : NavKey
+) : NavKey, AssistContentRoute
 
 @Composable
 fun BrowseSourceScreen(
@@ -90,6 +92,7 @@ fun BrowseSourceScreen(
     val state by viewModel.state.collectAsState()
 
     val backStack = LocalBackStack.current
+    val assistContentManager = LocalAssistContentManager.current
     val navigateUp: () -> Unit = {
         when {
             !state.isUserQuery && state.toolbarQuery != null -> viewModel.setToolbarQuery(null)
@@ -129,8 +132,7 @@ fun BrowseSourceScreen(
     }
 
     LaunchedEffect(source) {
-        // TODO(nav): assist
-        // assistUrl = (source as? HttpSource)?.getHomeUrl()
+        assistContentManager.currentAssistUrl = (source as? HttpSource)?.getHomeUrl()
     }
 
     Scaffold(
