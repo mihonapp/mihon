@@ -7,9 +7,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.more.NewUpdateScreen
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import kotlinx.serialization.Serializable
+import mihon.navigation.util.LocalBackStack
 
 @Serializable
 data class NewUpdateRoute(

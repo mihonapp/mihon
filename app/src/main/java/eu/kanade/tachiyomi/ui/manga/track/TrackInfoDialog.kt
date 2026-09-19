@@ -12,8 +12,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import eu.kanade.presentation.components.AdaptiveSheet
-import eu.kanade.presentation.util.LocalBackStack
 import kotlinx.serialization.Serializable
+import mihon.navigation.util.LocalBackStack
 
 @Serializable
 data class TrackInfoDialogRoute(

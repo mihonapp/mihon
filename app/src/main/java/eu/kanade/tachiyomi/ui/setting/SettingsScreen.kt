@@ -40,9 +40,7 @@ import eu.kanade.presentation.more.settings.screen.SettingsTrackingRoute
 import eu.kanade.presentation.more.settings.screen.about.AboutRoute
 import eu.kanade.presentation.more.settings.screen.about.getVersionName
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.isTabletUi
-import eu.kanade.presentation.util.replace
 import kotlinx.serialization.Serializable
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ChromeReaderMode
@@ -56,6 +54,8 @@ import mihon.icons.materialsymbols.rounded.Search
 import mihon.icons.materialsymbols.rounded.Security
 import mihon.icons.materialsymbols.rounded.Storage
 import mihon.icons.materialsymbols.rounded.Sync
+import mihon.navigation.util.LocalBackStack
+import mihon.navigation.util.replace
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

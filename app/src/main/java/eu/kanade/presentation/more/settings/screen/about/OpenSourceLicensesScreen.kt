@@ -9,9 +9,9 @@ import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.variant.LibraryDetailMode
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.R
 import kotlinx.serialization.Serializable
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

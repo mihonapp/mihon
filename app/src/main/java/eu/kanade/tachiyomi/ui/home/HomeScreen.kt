@@ -31,9 +31,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.ui.NavDisplay
-import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.LocalTopLevelBackStack
-import eu.kanade.presentation.util.TabOptions
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.BrowseSwitchToExtensionEventKey
@@ -49,6 +46,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
+import mihon.navigation.util.LocalBackStack
+import mihon.navigation.util.LocalTopLevelBackStack
+import mihon.navigation.util.TabOptions
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.i18n.MR

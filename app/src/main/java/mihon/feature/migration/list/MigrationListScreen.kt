@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.ResultEffect
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchRoute
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.util.system.toast
@@ -18,6 +17,7 @@ import kotlinx.serialization.Serializable
 import mihon.feature.migration.list.components.MigrationExitDialog
 import mihon.feature.migration.list.components.MigrationMangaDialog
 import mihon.feature.migration.list.components.MigrationProgressDialog
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 
 @Serializable

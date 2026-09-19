@@ -15,7 +15,6 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
@@ -31,6 +30,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import mihon.feature.support.SupportUsRoute
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.launchIO
 
 @Composable

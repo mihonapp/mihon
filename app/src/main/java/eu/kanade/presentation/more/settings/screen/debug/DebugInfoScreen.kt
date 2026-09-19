@@ -17,7 +17,6 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
 import eu.kanade.presentation.more.settings.screen.about.getFormattedBuildTime
 import eu.kanade.presentation.more.settings.screen.about.getVersionName
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -28,6 +27,7 @@ import mihon.app.di.appGraph
 import mihon.core.common.FeatureFlags
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Autorenew
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
 

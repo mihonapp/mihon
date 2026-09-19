@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
-import eu.kanade.presentation.util.LocalBackStack
 import kotlinx.serialization.Serializable
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
@@ -32,6 +31,7 @@ import mihon.icons.simpleicons.Discord
 import mihon.icons.simpleicons.OpenCollective
 import mihon.icons.simpleicons.Patreon
 import mihon.icons.simpleicons.SimpleIcons
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.Constants
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding

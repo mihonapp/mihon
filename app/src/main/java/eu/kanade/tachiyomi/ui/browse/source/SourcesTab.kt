@@ -9,7 +9,6 @@ import eu.kanade.presentation.browse.SourceOptionsDialog
 import eu.kanade.presentation.browse.SourcesScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import kotlinx.coroutines.flow.collectLatest
@@ -17,6 +16,7 @@ import kotlinx.coroutines.launch
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.TravelExplore
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 

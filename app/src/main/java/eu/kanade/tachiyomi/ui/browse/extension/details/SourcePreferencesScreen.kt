@@ -32,7 +32,6 @@ import androidx.preference.R
 import androidx.preference.forEach
 import androidx.preference.getOnBindEditTextListener
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.data.preference.SharedPreferencesDataStore
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
@@ -41,6 +40,7 @@ import eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText.Companion.setIncogn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.LoadingScreen
 

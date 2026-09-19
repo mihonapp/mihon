@@ -10,11 +10,11 @@ import androidx.compose.runtime.setValue
 import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.GlobalSearchScreen
-import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.replace
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import kotlinx.serialization.Serializable
+import mihon.navigation.util.LocalBackStack
+import mihon.navigation.util.replace
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Serializable

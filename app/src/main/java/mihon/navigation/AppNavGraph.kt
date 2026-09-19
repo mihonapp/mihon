@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.navigation
+package mihon.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -33,9 +33,6 @@ import eu.kanade.presentation.more.settings.screen.debug.DebugInfoRoute
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoRoute
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoScreen
-import eu.kanade.presentation.util.AdaptiveSheetScene
-import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.TwoPaneSettingsScene
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterRoute
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterScreen
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsRoute
@@ -86,6 +83,9 @@ import mihon.feature.support.SupportUsRoute
 import mihon.feature.support.SupportUsScreen
 import mihon.feature.upcoming.UpcomingRoute
 import mihon.feature.upcoming.UpcomingScreen
+import mihon.navigation.util.AdaptiveSheetScene
+import mihon.navigation.util.LocalBackStack
+import mihon.navigation.util.TwoPaneSettingsScene
 
 fun EntryProviderScope<NavKey>.appEntries() {
     entry<HomeRoute> {

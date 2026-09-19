@@ -33,9 +33,6 @@ import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
-import eu.kanade.presentation.util.AssistContentRoute
-import eu.kanade.presentation.util.LocalAssistContentManager
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
@@ -62,6 +59,9 @@ import kotlinx.serialization.Serializable
 import logcat.LogPriority
 import mihon.feature.migration.config.MigrationConfigRoute
 import mihon.feature.migration.dialog.MigrateMangaDialog
+import mihon.navigation.util.AssistContentRoute
+import mihon.navigation.util.LocalAssistContentManager
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter

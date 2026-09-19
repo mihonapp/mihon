@@ -23,9 +23,9 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import kotlinx.serialization.Serializable
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.SettingsItemsPaddings

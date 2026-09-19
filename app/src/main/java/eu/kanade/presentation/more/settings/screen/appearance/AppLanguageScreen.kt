@@ -21,11 +21,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.LocaleListCompat
 import androidx.navigation3.runtime.NavKey
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.serialization.Serializable
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Check
+import mihon.navigation.util.LocalBackStack
 import org.xmlpull.v1.XmlPullParser
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR

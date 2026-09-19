@@ -11,10 +11,10 @@ import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionSt
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreCreateDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreDeleteDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoresScreen
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import kotlinx.serialization.Serializable
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Serializable

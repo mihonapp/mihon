@@ -6,11 +6,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
-import eu.kanade.presentation.util.AssistContentRoute
-import eu.kanade.presentation.util.LocalAssistContentManager
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.webview.WebViewScreenContent
 import kotlinx.serialization.Serializable
+import mihon.navigation.util.AssistContentRoute
+import mihon.navigation.util.LocalAssistContentManager
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Serializable

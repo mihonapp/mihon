@@ -1,4 +1,4 @@
-package eu.kanade.presentation.util
+package mihon.navigation.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

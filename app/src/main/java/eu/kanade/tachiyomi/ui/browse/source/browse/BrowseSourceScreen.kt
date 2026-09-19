@@ -37,9 +37,6 @@ import eu.kanade.presentation.browse.components.BrowseSourceToolbar
 import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
-import eu.kanade.presentation.util.AssistContentRoute
-import eu.kanade.presentation.util.LocalAssistContentManager
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesRoute
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel.Listing
@@ -52,6 +49,9 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.NewReleases
 import mihon.icons.materialsymbols.roundedfilled.Favorite
+import mihon.navigation.util.AssistContentRoute
+import mihon.navigation.util.LocalAssistContentManager
+import mihon.navigation.util.LocalBackStack
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO

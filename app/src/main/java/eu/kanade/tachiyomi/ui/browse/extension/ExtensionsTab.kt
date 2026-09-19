@@ -15,11 +15,11 @@ import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresRoute
-import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsRoute
 import eu.kanade.tachiyomi.ui.webview.WebViewRoute
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
+import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
