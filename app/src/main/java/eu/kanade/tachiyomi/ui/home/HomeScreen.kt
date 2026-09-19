@@ -30,13 +30,16 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.ui.NavDisplay
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.LocalTopLevelBackStack
 import eu.kanade.presentation.util.TabOptions
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.BrowseTab
+import eu.kanade.tachiyomi.ui.download.DownloadQueueRoute
 import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTab
+import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
 import kotlinx.coroutines.channels.Channel
@@ -125,6 +128,7 @@ sealed interface TopLevelRoute : NavKey {
 @Composable
 fun HomeScreen() {
     val topLevelBackStack = LocalTopLevelBackStack.current
+    val backStack = LocalBackStack.current
     val tabletUi = isTabletUi()
     val navigationSuiteType = if (tabletUi) {
         NavigationSuiteType.NavigationRail
@@ -188,36 +192,34 @@ fun HomeScreen() {
         )
     }
 
+    ResultEffect<TabEvent> {
+        val route = when (it) {
+            is TabEvent.Library -> TopLevelRoute.Library
+            TabEvent.Updates -> TopLevelRoute.Updates
+            TabEvent.History -> TopLevelRoute.History
+            is TabEvent.Browse -> {
+                if (it.toExtensions) {
+                    BrowseTab.showExtension()
+                }
+                TopLevelRoute.Browse
+            }
+            is TabEvent.More -> TopLevelRoute.More
+        }
+        topLevelBackStack.setTopLevel(route)
+
+        if (it is TabEvent.Library && it.mangaIdToOpen != null) {
+            backStack.add(MangaRoute(it.mangaIdToOpen))
+        }
+        if (it is TabEvent.More && it.toDownloads) {
+            backStack.add(DownloadQueueRoute)
+        }
+    }
+
     LaunchedEffect(Unit) {
         launch {
             librarySearchEvent.receiveAsFlow().collectLatest {
                 topLevelBackStack.setTopLevel(TopLevelRoute.Library)
                 LibraryTab.search(it)
-            }
-        }
-        launch {
-            openTabEvent.receiveAsFlow().collectLatest {
-                // TODO(homescreen): open tab
-                // tabNavigator.current = when (it) {
-                //     is Tab.Library -> LibraryTab
-                //     Tab.Updates -> UpdatesTab
-                //     Tab.History -> HistoryTab
-                //     is Tab.Browse -> {
-                //         if (it.toExtensions) {
-                //             BrowseTab.showExtension()
-                //         }
-                //         BrowseTab
-                //     }
-                //     is Tab.More -> MoreTab
-                // }
-
-                // TODO(homescreen): navigation
-                // if (it is Tab.Library && it.mangaIdToOpen != null) {
-                //     navigator.push(MangaScreen(it.mangaIdToOpen))
-                // }
-                // if (it is Tab.More && it.toDownloads) {
-                //     navigator.push(DownloadQueueScreen)
-                // }
             }
         }
     }
@@ -316,21 +318,16 @@ private fun tabBadge(tab: TopLevelRoute): (@Composable () -> Unit)? {
 // suspend fun search(query: String) {
 //     HomeScreen.librarySearchEvent.send(query)
 // }
-//
-// suspend fun openTab(tab: Tab) {
-//     HomeScreen.openTabEvent.send(tab)
-// }
 
-sealed interface Tab {
-    data class Library(val mangaIdToOpen: Long? = null) : Tab
-    data object Updates : Tab
-    data object History : Tab
-    data class Browse(val toExtensions: Boolean = false) : Tab
-    data class More(val toDownloads: Boolean) : Tab
+sealed interface TabEvent {
+    data class Library(val mangaIdToOpen: Long? = null) : TabEvent
+    data object Updates : TabEvent
+    data object History : TabEvent
+    data class Browse(val toExtensions: Boolean = false) : TabEvent
+    data class More(val toDownloads: Boolean) : TabEvent
 }
 
 private val librarySearchEvent = Channel<String>()
-private val openTabEvent = Channel<Tab>()
 
 @Suppress("ConstPropertyName")
 private const val TabFadeDuration = 200

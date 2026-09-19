@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.result.LocalResultEventBus
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -29,6 +30,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterDialog
 import eu.kanade.tachiyomi.ui.home.HomeScreen
+import eu.kanade.tachiyomi.ui.home.TabEvent
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewRoute
@@ -64,6 +66,7 @@ fun MigrateSourceSearchScreen(
 ) {
     val uriHandler = LocalUriHandler.current
     val backStack = LocalBackStack.current
+    val resultEventBus = LocalResultEventBus.current
     val scope = rememberCoroutineScope()
 
     val viewModel =
@@ -161,8 +164,9 @@ fun MigrateSourceSearchScreen(
                 onComplete = {
                     scope.launch {
                         backStack.popUntilRoot()
-                        // TODO(homescreen): result
-                        // HomeScreen.openTab(HomeScreen.Tab.Browse())
+                        resultEventBus.sendResult(
+                            result = TabEvent.Browse()
+                        )
                         backStack.add(MangaRoute(dialog.target.id))
                     }
                 },

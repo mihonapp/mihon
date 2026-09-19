@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.main
 
 import android.animation.ValueAnimator
+import android.app.SearchManager
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
@@ -62,10 +63,13 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.runtime.result.ResultEventBus
+import androidx.navigation3.runtime.result.rememberResultEventBus
 import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import cafe.adriel.voyager.navigator.Navigator
@@ -77,9 +81,12 @@ import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
+import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresRoute
+import eu.kanade.presentation.more.settings.screen.data.RestoreBackupRoute
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.LocalTopLevelBackStack
+import eu.kanade.presentation.util.popUntilRoot
 import eu.kanade.presentation.util.rememberTopLevelBackStack
 import eu.kanade.presentation.util.rememberTwoPaneSettingsSceneStrategy
 import eu.kanade.tachiyomi.data.cache.ChapterCache
@@ -89,10 +96,15 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.navigation.appEntries
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
+import eu.kanade.tachiyomi.ui.deeplink.DeepLinkRoute
 import eu.kanade.tachiyomi.ui.home.HomeRoute
+import eu.kanade.tachiyomi.ui.home.HomeScreen
+import eu.kanade.tachiyomi.ui.home.TabEvent
 import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.more.NewUpdateRoute
 import eu.kanade.tachiyomi.ui.more.OnboardingRoute
+import eu.kanade.tachiyomi.ui.setting.SettingsRoute
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
@@ -203,6 +215,10 @@ class MainActivity : BaseActivity() {
             val backStack = rememberNavBackStack(HomeRoute)
             val topLevelBackStack = rememberTopLevelBackStack(TopLevelRoute.Library)
             val twoPaneStrategy = rememberTwoPaneSettingsSceneStrategy<NavKey>()
+            val resultEventBus = rememberResultEventBus()
+            val resultEventBusNavEntryDecorator = rememberResultEventBusNavEntryDecorator<NavKey>(
+                resultEventBus = resultEventBus
+            )
 
             CompositionLocalProvider(
                 LocalBackStack provides backStack,
@@ -211,8 +227,7 @@ class MainActivity : BaseActivity() {
                 LaunchedEffect(backStack) {
                     if (isLaunch) {
                         // Set start screen
-                        // TODO(nav): intent
-                        // handleIntentAction(intent, navigator)
+                        handleIntentAction(intent, backStack, resultEventBus)
 
                         // Reset Incognito Mode on relaunch
                         preferences.incognitoMode.set(false)
@@ -265,7 +280,7 @@ class MainActivity : BaseActivity() {
                             entryDecorators = listOf(
                                 rememberSaveableStateHolderNavEntryDecorator(),
                                 rememberViewModelStoreNavEntryDecorator(),
-                                rememberResultEventBusNavEntryDecorator(),
+                                resultEventBusNavEntryDecorator,
                             ),
                             entryProvider = entryProvider {
                                 appEntries()
@@ -308,7 +323,11 @@ class MainActivity : BaseActivity() {
                         .launchIn(this)
                 }
 
-                HandleOnNewIntent(context = context)
+                HandleOnNewIntent(
+                    context = context,
+                    backStack = backStack,
+                    resultEventBus = resultEventBus,
+                )
 
                 if (!isBenchmarkBuildType) {
                     if (isLaunch) CheckForUpdates()
@@ -342,7 +361,11 @@ class MainActivity : BaseActivity() {
     }
 
     @Composable
-    private fun HandleOnNewIntent(context: Context) {
+    private fun HandleOnNewIntent(
+        context: Context,
+        backStack: NavBackStack<NavKey>,
+        resultEventBus: ResultEventBus,
+    ) {
         LaunchedEffect(Unit) {
             callbackFlow {
                 val componentActivity = context as ComponentActivity
@@ -351,8 +374,7 @@ class MainActivity : BaseActivity() {
                 awaitClose { componentActivity.removeOnNewIntentListener(consumer) }
             }
                 .collectLatest {
-                    // TODO(nav): intent
-                    // handleIntentAction(it, navigator)
+                    handleIntentAction(it, backStack, resultEventBus)
                 }
         }
     }
@@ -567,7 +589,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun handleIntentAction(intent: Intent, navigator: Navigator): Boolean {
+    private fun handleIntentAction(intent: Intent, backStack: NavBackStack<NavKey>, resultEventBus: ResultEventBus): Boolean {
         val notificationId = intent.getIntExtra("notificationId", -1)
         if (notificationId > -1) {
             NotificationReceiver.dismissNotification(
@@ -577,26 +599,24 @@ class MainActivity : BaseActivity() {
             )
         }
 
-        // TODO(homescreen): tab
-        /*
         val tabToOpen = when (intent.action) {
-            Constants.SHORTCUT_LIBRARY -> HomeScreen.Tab.Library()
+            Constants.SHORTCUT_LIBRARY -> TabEvent.Library()
             Constants.SHORTCUT_MANGA -> {
                 val idToOpen = intent.extras?.getLong(Constants.MANGA_EXTRA) ?: return false
-                navigator.popUntilRoot()
-                HomeScreen.Tab.Library(idToOpen)
+                backStack.popUntilRoot()
+                TabEvent.Library(idToOpen)
             }
-            Constants.SHORTCUT_UPDATES -> HomeScreen.Tab.Updates
-            Constants.SHORTCUT_HISTORY -> HomeScreen.Tab.History
-            Constants.SHORTCUT_SOURCES -> HomeScreen.Tab.Browse(false)
-            Constants.SHORTCUT_EXTENSIONS -> HomeScreen.Tab.Browse(true)
+            Constants.SHORTCUT_UPDATES -> TabEvent.Updates
+            Constants.SHORTCUT_HISTORY -> TabEvent.History
+            Constants.SHORTCUT_SOURCES -> TabEvent.Browse(false)
+            Constants.SHORTCUT_EXTENSIONS -> TabEvent.Browse(true)
             Constants.SHORTCUT_DOWNLOADS -> {
-                navigator.popUntilRoot()
-                HomeScreen.Tab.More(toDownloads = true)
+                backStack.popUntilRoot()
+                TabEvent.More(toDownloads = true)
             }
             Intent.ACTION_APPLICATION_PREFERENCES -> {
-                navigator.popUntilRoot()
-                navigator.push(SettingsScreen())
+                backStack.popUntilRoot()
+                backStack.add(SettingsRoute())
                 null
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {
@@ -606,8 +626,8 @@ class MainActivity : BaseActivity() {
                 // Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY) ?: intent.getStringExtra(Intent.EXTRA_TEXT)
                 if (!query.isNullOrEmpty()) {
-                    navigator.popUntilRoot()
-                    navigator.push(DeepLinkScreen(query))
+                    backStack.popUntilRoot()
+                    backStack.add(DeepLinkRoute(query))
                 }
                 null
             }
@@ -615,22 +635,22 @@ class MainActivity : BaseActivity() {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
                 if (!query.isNullOrEmpty()) {
                     val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
-                    navigator.popUntilRoot()
-                    navigator.push(GlobalSearchScreen(query, filter))
+                    backStack.popUntilRoot()
+                    backStack.add(GlobalSearchRoute(query, filter))
                 }
                 null
             }
             Intent.ACTION_VIEW -> {
                 // Handling opening of backup files
                 if (intent.data.toString().endsWith(".tachibk")) {
-                    navigator.popUntilRoot()
-                    navigator.push(RestoreBackupScreen(intent.data.toString()))
+                    backStack.popUntilRoot()
+                    backStack.add(RestoreBackupRoute(intent.data.toString()))
                 }
                 // Deep link to add extension store
                 else if (intent.isAddExtensionStoreIntent()) {
                     intent.data?.getQueryParameter("url")?.let { repoUrl ->
-                        navigator.popUntilRoot()
-                        navigator.push(ExtensionStoresScreen(repoUrl))
+                        backStack.popUntilRoot()
+                        backStack.add(ExtensionStoresRoute(repoUrl))
                     }
                 }
                 null
@@ -639,9 +659,8 @@ class MainActivity : BaseActivity() {
         }
 
         if (tabToOpen != null) {
-            lifecycleScope.launch { HomeScreen.openTab(tabToOpen) }
+            resultEventBus.sendResult(tabToOpen)
         }
-         */
 
         ready = true
         return true
