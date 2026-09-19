@@ -22,8 +22,6 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -34,6 +32,7 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.WarningBanner
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
@@ -57,7 +56,7 @@ data class RestoreBackupRoute(val uri: String) : NavKey
 
 @Composable
 fun RestoreBackupScreen(uri: String) {
-    val navigator = LocalNavigator.currentOrThrow
+    val backStack = LocalBackStack.current
     val viewModel =
         assistedMetroViewModel<RestoreBackupViewModel, RestoreBackupViewModel.Factory> { create(uri = uri) }
     val state by viewModel.state.collectAsState()
@@ -66,7 +65,7 @@ fun RestoreBackupScreen(uri: String) {
         topBar = {
             AppBar(
                 title = stringResource(MR.strings.pref_restore_backup),
-                navigateUp = navigator::pop,
+                navigateUp = backStack::removeLastOrNull,
                 scrollBehavior = it,
             )
         },
@@ -77,7 +76,7 @@ fun RestoreBackupScreen(uri: String) {
             actionEnabled = state.canRestore && state.options.canRestore(),
             onClickAction = {
                 viewModel.startRestore()
-                navigator.pop()
+                backStack.removeLastOrNull()
             },
         ) {
             if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {

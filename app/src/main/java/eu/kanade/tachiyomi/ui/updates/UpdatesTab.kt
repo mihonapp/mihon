@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
-import cafe.adriel.voyager.navigator.Navigator
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.updates.UpdateScreen
 import eu.kanade.presentation.updates.UpdatesDeleteConfirmationDialog
@@ -114,11 +113,5 @@ fun UpdatesTab() {
         onDispose {
             viewModel.resetNewUpdatesCount()
         }
-    }
-}
-
-data object UpdatesTab {
-    suspend fun onReselect(navigator: Navigator) {
-        // navigator.push(DownloadQueueScreen)
     }
 }

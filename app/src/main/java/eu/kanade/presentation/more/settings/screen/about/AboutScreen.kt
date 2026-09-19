@@ -24,7 +24,7 @@ import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.LogoHeader
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
-import eu.kanade.presentation.util.LocalBackPress
+import eu.kanade.presentation.util.LocalBackButtonVisibility
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.updater.RELEASE_URL
@@ -71,7 +71,7 @@ fun AboutScreen() {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
-    val handleBack = LocalBackPress.current
+    val backVisibility = LocalBackButtonVisibility.current
     val backStack = LocalBackStack.current
     var isCheckingUpdates by remember { mutableStateOf(false) }
     val crashLogUtil = remember { context.appGraph.crashLogUtil }
@@ -80,7 +80,10 @@ fun AboutScreen() {
         topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(MR.strings.pref_category_about),
-                navigateUp = if (handleBack != null) handleBack::invoke else null,
+                navigateUp = {
+                    backStack.removeLastOrNull()
+                    Unit
+                }.takeIf { backVisibility },
                 scrollBehavior = scrollBehavior,
             )
         },
