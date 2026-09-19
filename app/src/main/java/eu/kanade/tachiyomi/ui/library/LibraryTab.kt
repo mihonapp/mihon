@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
 import eu.kanade.tachiyomi.ui.home.ShowBottomNavEvent
+import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -249,6 +250,10 @@ fun LibraryTab() {
 
     ResultEffect<String>(resultKey = LibraryTabSearchEventKey) {
         viewModel.search(it)
+    }
+
+    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+        // TODO(library): event
     }
 
     // TODO(library): events

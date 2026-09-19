@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation3.runtime.result.ResultEffect
 import cafe.adriel.voyager.navigator.Navigator
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -19,6 +20,7 @@ import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
 import eu.kanade.tachiyomi.ui.download.DownloadQueueRoute
+import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.setting.SettingsDestination
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
 import eu.kanade.tachiyomi.ui.stats.StatsRoute
@@ -49,6 +51,10 @@ fun MoreTab() {
         onClickSupport = { backStack.add(SupportUsRoute) },
         onClickAbout = { backStack.add(SettingsRoute(SettingsDestination.About)) },
     )
+
+    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+        backStack.add(SettingsRoute())
+    }
 }
 
 data object MoreTab {

@@ -233,6 +233,7 @@ private fun NavigationSuiteItem(
     navigationSuiteType: NavigationSuiteType,
 ) {
     val topLevelBackStack = LocalTopLevelBackStack.current
+    val resultEventBus = LocalResultEventBus.current
     val selected = topLevelBackStack.topLevelKey == tab
     val options = tab.options(selected)
 
@@ -243,8 +244,10 @@ private fun NavigationSuiteItem(
             if (!selected) {
                 topLevelBackStack.setTopLevel(tab)
             } else {
-                // TODO(nav): reselect
-                // scope.launch { tab.onReselect(navigator) }
+                resultEventBus.sendResult(
+                    resultKey = TabReselectEventKey,
+                    result = Unit,
+                )
             }
         },
         icon = {
@@ -317,10 +320,6 @@ private fun tabBadge(tab: TopLevelRoute): (@Composable () -> Unit)? {
     }
 }
 
-// suspend fun search(query: String) {
-//     HomeScreen.librarySearchEvent.send(query)
-// }
-
 sealed interface TabEvent {
     data class Library(val mangaIdToOpen: Long? = null) : TabEvent
     data object Updates : TabEvent
@@ -329,9 +328,8 @@ sealed interface TabEvent {
     data class More(val toDownloads: Boolean) : TabEvent
 }
 
+const val TabReselectEventKey = "TabReselectEventKey"
 const val LibrarySearchEventKey = "LibrarySearchEventKey"
-
-private val librarySearchEvent = Channel<String>()
 
 @Suppress("ConstPropertyName")
 private const val TabFadeDuration = 200
