@@ -57,13 +57,6 @@ fun MoreTab() {
     }
 }
 
-data object MoreTab {
-    suspend fun onReselect(navigator: Navigator) {
-        // TODO(nav): screen
-// navigator.push(SettingsScreen())
-    }
-}
-
 @Inject
 @ViewModelKey
 @ContributesIntoMap(AppScope::class)
