@@ -57,7 +57,9 @@ import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.home.LibrarySearchEventKey
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesRoute
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
+import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeRoute
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
+import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.setting.SettingsDestination
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
@@ -155,7 +157,13 @@ fun MangaScreen(
             if (!successState.hasLoggedInTrackers) {
                 backStack.add(SettingsRoute(SettingsDestination.Tracking))
             } else {
-                viewModel.showTrackDialog()
+                backStack.add(
+                    TrackInfoDialogRoute(
+                        mangaId = successState.manga.id,
+                        mangaTitle = successState.manga.title,
+                        sourceId = successState.source.id,
+                    )
+                )
             }
         },
         onTagSearch = { scope.launch { performGenreSearch(backStack, resultEventBus, it, viewModel.source!!) } },
@@ -242,18 +250,6 @@ fun MangaScreen(
             scanlatorFilterActive = successState.scanlatorFilterActive,
             onScanlatorFilterClicked = { showScanlatorsDialog = true },
         )
-        MangaViewModel.Dialog.TrackSheet -> {
-            // TODO(nav): sheets
-            // NavigatorAdaptiveSheet(
-            //     screen = TrackInfoDialogHomeScreen(
-            //         mangaId = successState.manga.id,
-            //         mangaTitle = successState.manga.title,
-            //         sourceId = successState.source.id,
-            //     ),
-            //     enableSwipeDismiss = { it.lastItem is TrackInfoDialogHomeScreen },
-            //     onDismissRequest = onDismissRequest,
-            // )
-        }
         MangaViewModel.Dialog.FullCover -> {
             val vm =
                 assistedMetroViewModel<MangaCoverViewModel, MangaCoverViewModel.Factory> {

@@ -33,6 +33,8 @@ import eu.kanade.presentation.more.settings.screen.debug.DebugInfoRoute
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoRoute
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoScreen
+import eu.kanade.presentation.util.AdaptiveSheetScene
+import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.TwoPaneSettingsScene
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterRoute
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterScreen
@@ -70,8 +72,10 @@ import eu.kanade.tachiyomi.ui.manga.track.TrackDateRemoverRoute
 import eu.kanade.tachiyomi.ui.manga.track.TrackDateRemoverScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackDateSelectorRoute
 import eu.kanade.tachiyomi.ui.manga.track.TrackDateSelectorScreen
+import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialog
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeRoute
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
+import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogRoute
 import eu.kanade.tachiyomi.ui.manga.track.TrackScoreSelectorRoute
 import eu.kanade.tachiyomi.ui.manga.track.TrackScoreSelectorScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackStatusSelectorRoute
@@ -79,6 +83,7 @@ import eu.kanade.tachiyomi.ui.manga.track.TrackStatusSelectorScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackerRemoveRoute
 import eu.kanade.tachiyomi.ui.manga.track.TrackerRemoveScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackerSearchRoute
+import eu.kanade.tachiyomi.ui.manga.track.TrackerSearchScreen
 import eu.kanade.tachiyomi.ui.more.NewUpdateRoute
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.ui.more.OnboardingRoute
@@ -120,29 +125,14 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<MangaRoute> { route ->
         MangaScreen(route.mangaId, route.fromSource)
     }
-    entry<TrackerRemoveRoute> { route ->
-        TrackerRemoveScreen(route.mangaId, route.track, route.serviceId)
-    }
-    entry<TrackerSearchRoute> { route ->
-        TrackerSearchRoute(route.mangaId, route.initialQuery, route.currentUrl, route.serviceId)
-    }
-    entry<TrackChapterSelectorRoute> { route ->
-        TrackChapterSelectorScreen(route.track, route.serviceId)
-    }
-    entry<TrackDateRemoverRoute> { route ->
-        TrackDateRemoverScreen(route.track, route.serviceId, route.start)
-    }
-    entry<TrackDateSelectorRoute> { route ->
-        TrackDateSelectorScreen(route.track, route.serviceId, route.start)
-    }
-    entry<TrackInfoDialogHomeRoute> { route ->
-        TrackInfoDialogHomeScreen(route.mangaId, route.mangaTitle, route.sourceId)
-    }
-    entry<TrackScoreSelectorRoute> { route ->
-        TrackScoreSelectorScreen(route.track, route.serviceId)
-    }
-    entry<TrackStatusSelectorRoute> { route ->
-        TrackStatusSelectorScreen(route.track, route.serviceId)
+    entry<TrackInfoDialogRoute>(metadata = AdaptiveSheetScene.adaptiveSheet()) { route ->
+        val backStack = LocalBackStack.current
+        TrackInfoDialog(
+            mangaId = route.mangaId,
+            mangaTitle = route.mangaTitle,
+            sourceId = route.sourceId,
+            onDismissRequest = { backStack.removeLastOrNull() },
+        )
     }
 
     // Library tab

@@ -87,6 +87,7 @@ import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.LocalTopLevelBackStack
 import eu.kanade.presentation.util.popUntilRoot
+import eu.kanade.presentation.util.rememberAdaptiveSheetSceneStrategy
 import eu.kanade.presentation.util.rememberTopLevelBackStack
 import eu.kanade.presentation.util.rememberTwoPaneSettingsSceneStrategy
 import eu.kanade.tachiyomi.data.cache.ChapterCache
@@ -216,6 +217,7 @@ class MainActivity : BaseActivity() {
             val backStack = rememberNavBackStack(HomeRoute)
             val topLevelBackStack = rememberTopLevelBackStack(TopLevelRoute.Library)
             val twoPaneStrategy = rememberTwoPaneSettingsSceneStrategy<NavKey>()
+            val adaptiveSheetSceneStrategy = rememberAdaptiveSheetSceneStrategy<NavKey>()
             val resultEventBus = rememberResultEventBus()
             val resultEventBusNavEntryDecorator = rememberResultEventBusNavEntryDecorator<NavKey>(
                 resultEventBus = resultEventBus
@@ -260,7 +262,7 @@ class MainActivity : BaseActivity() {
                         NavDisplay(
                             backStack = backStack,
                             onBack = { backStack.removeLastOrNull() },
-                            sceneStrategies = listOf(twoPaneStrategy),
+                            sceneStrategies = listOf(twoPaneStrategy, adaptiveSheetSceneStrategy),
                             transitionSpec = {
                                 materialSharedAxisXIn(
                                     forward = true,
