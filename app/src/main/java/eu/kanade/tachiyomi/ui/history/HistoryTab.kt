@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.ResultEffect
 import cafe.adriel.voyager.navigator.Navigator
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
@@ -17,6 +18,7 @@ import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
+import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -120,6 +122,10 @@ fun HistoryTab() {
         // resumeLastChapterReadEvent.receiveAsFlow().collectLatest {
         //     openChapter(context, snackbarHostState, viewModel.getNextChapter())
         // }
+    }
+
+    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+        // TODO(history): event
     }
 }
 
