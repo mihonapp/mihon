@@ -19,6 +19,8 @@ import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.result.LocalResultEventBus
+import androidx.navigation3.runtime.result.ResultEventBus
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -42,13 +44,17 @@ import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSearchEventKey
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSearchGenreEventKey
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
+import eu.kanade.tachiyomi.ui.home.HomeRoute
 import eu.kanade.tachiyomi.ui.home.HomeScreen
+import eu.kanade.tachiyomi.ui.home.LibrarySearchEventKey
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesRoute
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
@@ -85,6 +91,7 @@ fun MangaScreen(
     fromSource: Boolean,
 ) {
     val backStack = LocalBackStack.current
+    val resultEventBus = LocalResultEventBus.current
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
@@ -151,11 +158,11 @@ fun MangaScreen(
                 viewModel.showTrackDialog()
             }
         },
-        onTagSearch = { scope.launch { performGenreSearch(backStack, it, viewModel.source!!) } },
+        onTagSearch = { scope.launch { performGenreSearch(backStack, resultEventBus, it, viewModel.source!!) } },
         onFilterButtonClicked = viewModel::showSettingsDialog,
         onRefresh = viewModel::fetchAllFromSource,
         onContinueReading = { continueReading(context, viewModel.getNextUnreadChapter()) },
-        onSearch = { query, global -> scope.launch { performSearch(backStack, query, global) } },
+        onSearch = { query, global -> scope.launch { performSearch(backStack, resultEventBus, query, global) } },
         onCoverClicked = viewModel::showCoverDialog,
         onShareClicked = { shareManga(context, viewModel.manga, viewModel.source) }.takeIf { isHttpSource },
         onDownloadActionClicked = viewModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
@@ -344,7 +351,12 @@ private fun shareManga(context: Context, manga_: Manga?, source_: Source?) {
  *
  * @param query the search query to the parent controller
  */
-private suspend fun performSearch(backStack: NavBackStack<NavKey>, query: String, global: Boolean) {
+private fun performSearch(
+    backStack: NavBackStack<NavKey>,
+    resultEventBus: ResultEventBus,
+    query: String,
+    global: Boolean,
+) {
     if (global) {
         backStack.add(GlobalSearchRoute(query))
         return
@@ -354,17 +366,22 @@ private suspend fun performSearch(backStack: NavBackStack<NavKey>, query: String
         return
     }
 
-    // TODO(homescreen): search
-    // when (val previousController = navigator.items[navigator.size - 2]) {
-    //     is HomeScreen -> {
-    //         navigator.pop()
-    //         previousController.search(query)
-    //     }
-    //     is BrowseSourceScreen -> {
-    //         navigator.pop()
-    //         previousController.search(query)
-    //     }
-    // }
+    when (backStack[backStack.lastIndex - 1]) {
+        is HomeRoute -> {
+            backStack.removeLastOrNull()
+            resultEventBus.sendResult(
+                resultKey = LibrarySearchEventKey,
+                result = query,
+            )
+        }
+        is BrowseSourceRoute -> {
+            backStack.removeLastOrNull()
+            resultEventBus.sendResult(
+                resultKey = BrowseSearchEventKey,
+                result = query,
+            )
+        }
+    }
 }
 
 /**
@@ -372,7 +389,12 @@ private suspend fun performSearch(backStack: NavBackStack<NavKey>, query: String
  *
  * @param genreName the search genre to the parent controller
  */
-private suspend fun performGenreSearch(backStack: NavBackStack<NavKey>, genreName: String, source: Source) {
+private fun performGenreSearch(
+    backStack: NavBackStack<NavKey>,
+    resultEventBus: ResultEventBus,
+    genreName: String,
+    source: Source,
+) {
     if (backStack.size < 2) {
         return
     }
@@ -380,10 +402,12 @@ private suspend fun performGenreSearch(backStack: NavBackStack<NavKey>, genreNam
     val previousController = backStack[backStack.size - 2]
     if (previousController is BrowseSourceRoute && source is HttpSource) {
         backStack.removeLastOrNull()
-        // TODO(nav): event
-        // previousController.searchGenre(genreName)
+        resultEventBus.sendResult(
+            resultKey = BrowseSearchGenreEventKey,
+            result = genreName,
+        )
     } else {
-        performSearch(backStack, genreName, global = false)
+        performSearch(backStack, resultEventBus, genreName, global = false)
     }
 }
 
