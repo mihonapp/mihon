@@ -36,7 +36,7 @@ fun Project.getCurrentTime(): Provider<String> {
 }
 
 private fun Project.git(vararg command: String, default: Provider<String>): Provider<Pair<String, Boolean>> {
-    val workTree = rootProject.layout.projectDirectory
+    val workTree = layout.settingsDirectory
     return providers.of(GitValueSource::class.java) {
         parameters.command.set(listOf("git", *command))
         parameters.workTree.set(workTree)
