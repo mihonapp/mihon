@@ -52,6 +52,7 @@ import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.setting.SettingsDestination
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
+import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import eu.kanade.tachiyomi.ui.webview.WebViewRoute
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toShareIntent
@@ -83,6 +84,7 @@ fun MangaScreen(
     val assistContentManager = LocalAssistContentManager.current
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+    val isTabletUi = isTabletUi()
     val scope = rememberCoroutineScope()
     val viewModel =
         assistedMetroViewModel<MangaViewModel, MangaViewModel.Factory> {
@@ -141,7 +143,7 @@ fun MangaScreen(
         }.takeIf { isHttpSource },
         onTrackingClicked = {
             if (!successState.hasLoggedInTrackers) {
-                backStack.add(SettingsRoute(SettingsDestination.Tracking))
+                backStack.addSettingsRoute(SettingsRoute(SettingsDestination.Tracking), isTabletUi)
             } else {
                 backStack.add(
                     TrackInfoDialogRoute(

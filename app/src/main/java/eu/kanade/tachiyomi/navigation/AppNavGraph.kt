@@ -179,8 +179,8 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<OnboardingRoute> {
         OnboardingScreen()
     }
-    entry<SettingsRoute>(metadata = TwoPaneSettingsScene.listPane()) { route ->
-        SettingsScreen(route.settingsDestination)
+    entry<SettingsRoute>(metadata = TwoPaneSettingsScene.listPane()) {
+        SettingsScreen()
     }
     entry<StatsRoute> {
         StatsScreen()

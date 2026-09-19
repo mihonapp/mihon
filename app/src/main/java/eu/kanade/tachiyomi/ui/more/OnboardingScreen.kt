@@ -10,8 +10,10 @@ import eu.kanade.presentation.more.onboarding.OnboardingScreen
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
 import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
 import eu.kanade.presentation.util.LocalBackStack
+import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.ui.setting.SettingsDestination
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
+import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import tachiyomi.presentation.core.i18n.stringResource
@@ -24,6 +26,7 @@ data object OnboardingRoute : NavKey
 fun OnboardingScreen() {
     val context = LocalContext.current
     val backStack = LocalBackStack.current
+    val isTabletUi = isTabletUi()
 
     val basePreferences = remember { context.appGraph.basePreferences }
     val shownOnboardingFlow by basePreferences.shownOnboardingFlow.collectAsState()
@@ -44,7 +47,7 @@ fun OnboardingScreen() {
         onRestoreBackup = {
             finishOnboarding()
             SearchableSettings.highlightKey = restoreSettingKey
-            backStack.add(SettingsRoute(SettingsDestination.DataAndStorage))
+            backStack.addSettingsRoute(SettingsRoute(SettingsDestination.DataAndStorage), isTabletUi)
         },
     )
 }
