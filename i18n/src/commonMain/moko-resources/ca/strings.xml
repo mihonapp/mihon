@@ -950,4 +950,7 @@
     <string name="donationCampaign.paragraph3">Sigui com sigui, els voluntaris i jo continuarem mantenint el Mihon i continuarà sent de codi obert.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Ignora</string>
+    <string name="refresh_tracker_profile">Actualitza el perfil del servei de seguiment</string>
+    <string name="refresh_tracker_success">S’ha actualitzat el perfil de %s</string>
+    <string name="refresh_tracker_error">S’ha produït un error en actualitzar %1$s: %2$s</string>
 </resources>
