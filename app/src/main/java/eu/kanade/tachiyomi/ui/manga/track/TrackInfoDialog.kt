@@ -68,7 +68,7 @@ fun TrackInfoDialog(
                     entry<TrackStatusSelectorRoute> { route ->
                         TrackStatusSelectorScreen(route.track, route.serviceId)
                     }
-                }
+                },
             )
         }
     }

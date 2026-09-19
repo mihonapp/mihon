@@ -21,14 +21,10 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEventBus
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
-import eu.kanade.presentation.components.NavigatorAdaptiveSheet
 import eu.kanade.presentation.manga.ChapterSettingsDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.manga.EditCoverAction
@@ -38,36 +34,25 @@ import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
 import eu.kanade.presentation.util.AssistContentRoute
-import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.LocalAssistContentManager
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSearchEventKey
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSearchGenreEventKey
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
+import eu.kanade.tachiyomi.ui.browse.source.browse.browseSearchGenreEventKey
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
-import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeRoute
-import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.home.LibrarySearchEventKey
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesRoute
-import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
-import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeRoute
-import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogHomeScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.setting.SettingsDestination
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
-import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewRoute
-import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
@@ -75,7 +60,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import logcat.LogPriority
 import mihon.feature.migration.config.MigrationConfigRoute
-import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
@@ -164,7 +148,7 @@ fun MangaScreen(
                         mangaId = successState.manga.id,
                         mangaTitle = successState.manga.title,
                         sourceId = successState.source.id,
-                    )
+                    ),
                 )
             }
         },
@@ -328,7 +312,7 @@ private fun openMangaInWebView(backStack: NavBackStack<NavKey>, manga_: Manga?, 
                 url = url,
                 initialTitle = manga_?.title,
                 sourceId = source_?.id,
-            )
+            ),
         )
     }
 }
@@ -401,7 +385,7 @@ private fun performGenreSearch(
     if (previousController is BrowseSourceRoute && source is HttpSource) {
         backStack.removeLastOrNull()
         resultEventBus.sendResult(
-            resultKey = BrowseSearchGenreEventKey,
+            resultKey = browseSearchGenreEventKey,
             result = genreName,
         )
     } else {

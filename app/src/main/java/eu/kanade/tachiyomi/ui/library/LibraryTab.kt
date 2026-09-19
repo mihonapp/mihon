@@ -18,7 +18,6 @@ import androidx.compose.ui.util.fastAll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
-import cafe.adriel.voyager.navigator.Navigator
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.library.DeleteLibraryMangaDialog
@@ -37,7 +36,6 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.workManager
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import mihon.feature.migration.config.MigrationConfigRoute
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -183,7 +181,9 @@ fun LibraryTab() {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     },
                     onRefresh = { onClickRefresh(state.activeCategory) },
-                    onGlobalSearchClicked = { backStack.add(GlobalSearchRoute(viewModel.state.value.searchQuery ?: "")) },
+                    onGlobalSearchClicked = {
+                        backStack.add(GlobalSearchRoute(viewModel.state.value.searchQuery ?: ""))
+                    },
                     getItemCountForCategory = { state.getItemCountForCategory(it) },
                     getDisplayMode = { viewModel.getDisplayMode() },
                     getColumnsForOrientation = { viewModel.getColumnsForOrientation(it) },
@@ -238,7 +238,7 @@ fun LibraryTab() {
 
     LaunchedEffect(state.selectionMode, state.dialog) {
         resultBus.sendResult(
-            result = ShowBottomNavEvent(!state.selectionMode)
+            result = ShowBottomNavEvent(!state.selectionMode),
         )
     }
 
@@ -253,8 +253,9 @@ fun LibraryTab() {
     }
 
     ResultEffect<Unit>(resultKey = TabReselectEventKey) {
-       viewModel.showSettingsDialog()
+        viewModel.showSettingsDialog()
     }
 }
 
+@Suppress("ConstPropertyName")
 const val LibraryTabSearchEventKey = "LibraryTabSearchEventKey"

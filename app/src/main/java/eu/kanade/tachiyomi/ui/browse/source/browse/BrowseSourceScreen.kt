@@ -30,8 +30,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.ResultEffect
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.browse.MissingSourceScreen
@@ -40,23 +38,14 @@ import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.AssistContentRoute
-import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.LocalAssistContentManager
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesRoute
-import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel.Listing
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
-import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
-import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewRoute
-import eu.kanade.tachiyomi.ui.webview.WebViewScreen
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.serialization.Serializable
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -307,18 +296,13 @@ fun BrowseSourceScreen(
         viewModel.search(it)
     }
 
-    ResultEffect<String>(resultKey = BrowseSearchGenreEventKey) {
+    ResultEffect<String>(resultKey = browseSearchGenreEventKey) {
         viewModel.searchGenre(it)
     }
 }
 
+@Suppress("ConstPropertyName")
 const val BrowseSearchEventKey = "BrowseSearchEventKey"
-const val BrowseSearchGenreEventKey = "BrowseSearchGenreEventKey"
 
-data class BrowseSourceScree(
-    val sourceId: Long,
-    private val listingQuery: String?,
-) {
-
-    private var assistUrl: String? = null
-}
+@Suppress("ConstPropertyName")
+const val browseSearchGenreEventKey = "BrowseSearchGenreEventKey"

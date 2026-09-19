@@ -5,12 +5,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.ExtensionDetailsScreen
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import kotlinx.serialization.Serializable
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -49,5 +46,4 @@ fun ExtensionDetailsScreen(pkgName: String) {
             )
         }
     }
-
 }

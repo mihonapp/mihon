@@ -31,8 +31,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.ui.NavDisplay
 import dev.icerock.moko.resources.StringResource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
@@ -308,7 +306,10 @@ data class TrackStatusSelectorRoute(
 @Composable
 fun TrackStatusSelectorScreen(track: Track, serviceId: Long) {
     val backStack = LocalBackStack.current
-    val viewModel = assistedMetroViewModel<TrackStatusSelectorViewModel, TrackStatusSelectorViewModel.Factory> { create(track = track, trackerId = serviceId) }
+    val viewModel =
+        assistedMetroViewModel<TrackStatusSelectorViewModel, TrackStatusSelectorViewModel.Factory> {
+            create(track = track, trackerId = serviceId)
+        }
     val state by viewModel.state.collectAsState()
     TrackStatusSelector(
         selection = state.selection,
@@ -370,7 +371,10 @@ data class TrackChapterSelectorRoute(
 @Composable
 fun TrackChapterSelectorScreen(track: Track, serviceId: Long) {
     val backStack = LocalBackStack.current
-    val viewModel = assistedMetroViewModel<TrackChapterSelectorViewModel, TrackChapterSelectorViewModel.Factory> { create(track = track, trackerId = serviceId) }
+    val viewModel =
+        assistedMetroViewModel<TrackChapterSelectorViewModel, TrackChapterSelectorViewModel.Factory> {
+            create(track = track, trackerId = serviceId)
+        }
     val state by viewModel.state.collectAsState()
 
     TrackChapterSelector(
@@ -438,7 +442,10 @@ data class TrackScoreSelectorRoute(
 @Composable
 fun TrackScoreSelectorScreen(track: Track, serviceId: Long) {
     val backStack = LocalBackStack.current
-    val viewModel = assistedMetroViewModel<TrackScoreSelectorViewModel, TrackScoreSelectorViewModel.Factory> { create(track = track, trackerId = serviceId) }
+    val viewModel =
+        assistedMetroViewModel<TrackScoreSelectorViewModel, TrackScoreSelectorViewModel.Factory> {
+            create(track = track, trackerId = serviceId)
+        }
     val state by viewModel.state.collectAsState()
 
     TrackScoreSelector(

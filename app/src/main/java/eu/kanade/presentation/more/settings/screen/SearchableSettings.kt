@@ -4,12 +4,10 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.core.screen.Screen
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
 import eu.kanade.presentation.util.LocalBackButtonVisibility
-import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.LocalBackStack
 
 interface SearchableRoute : NavKey, SearchableSettings

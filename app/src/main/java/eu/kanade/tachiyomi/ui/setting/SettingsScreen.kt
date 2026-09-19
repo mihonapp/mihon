@@ -24,11 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
-import eu.kanade.presentation.more.settings.screen.SearchableRoute
 import eu.kanade.presentation.more.settings.screen.SettingsAdvancedRoute
 import eu.kanade.presentation.more.settings.screen.SettingsAppearanceRoute
 import eu.kanade.presentation.more.settings.screen.SettingsBrowseRoute
@@ -42,7 +40,6 @@ import eu.kanade.presentation.more.settings.screen.SettingsTrackingRoute
 import eu.kanade.presentation.more.settings.screen.about.AboutRoute
 import eu.kanade.presentation.more.settings.screen.about.getVersionName
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
-import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.presentation.util.replace

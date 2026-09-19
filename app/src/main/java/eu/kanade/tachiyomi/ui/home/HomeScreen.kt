@@ -45,11 +45,8 @@ import eu.kanade.tachiyomi.ui.library.LibraryTabSearchEventKey
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import soup.compose.material.motion.animation.materialFadeThroughIn
@@ -332,7 +329,10 @@ sealed interface TabEvent {
     data class More(val toDownloads: Boolean) : TabEvent
 }
 
+@Suppress("ConstPropertyName")
 const val TabReselectEventKey = "TabReselectEventKey"
+
+@Suppress("ConstPropertyName")
 const val LibrarySearchEventKey = "LibrarySearchEventKey"
 
 @Suppress("ConstPropertyName")

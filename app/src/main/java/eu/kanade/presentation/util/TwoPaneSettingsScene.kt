@@ -27,7 +27,7 @@ data class TwoPaneSettingsScene<T : Any>(
     override val key: Any,
     override val previousEntries: List<NavEntry<T>>,
     val firstEntry: NavEntry<T>,
-    val secondEntry: NavEntry<T>
+    val secondEntry: NavEntry<T>,
 ) : Scene<T> {
     override val entries: List<NavEntry<T>> = listOf(firstEntry, secondEntry)
     override val content: @Composable (() -> Unit) = {
@@ -44,7 +44,7 @@ data class TwoPaneSettingsScene<T : Any>(
                                 forward = true,
                                 slideDistance = slideDistance,
                             )
-                        }
+                        },
                     ) { entry ->
                         entry.Content()
                     }
@@ -88,7 +88,8 @@ class TwoPaneSettingsSceneStrategy<T : Any>(val isTabletUi: Boolean) : SceneStra
             return null
         }
 
-        val detailEntry = entries.lastOrNull()?.takeUnless { it.metadata.contains(TwoPaneSettingsScene.ListKey) } ?: return null
+        val detailEntry =
+            entries.lastOrNull()?.takeUnless { it.metadata.contains(TwoPaneSettingsScene.ListKey) } ?: return null
         val listEntry = entries.findLast { it.metadata.contains(TwoPaneSettingsScene.ListKey) } ?: return null
 
         // We use the list's contentKey to uniquely identify the scene.
@@ -100,7 +101,7 @@ class TwoPaneSettingsSceneStrategy<T : Any>(val isTabletUi: Boolean) : SceneStra
             key = sceneKey,
             previousEntries = entries.dropLast(2),
             firstEntry = listEntry,
-            secondEntry = detailEntry
+            secondEntry = detailEntry,
         )
     }
 }

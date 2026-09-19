@@ -35,7 +35,7 @@ fun <T : Any> rememberAdaptiveSheetSceneStrategy(): AdaptiveSheetSceneStrategy<T
     return remember { AdaptiveSheetSceneStrategy() }
 }
 
-class AdaptiveSheetSceneStrategy<T: Any> : SceneStrategy<T> {
+class AdaptiveSheetSceneStrategy<T : Any> : SceneStrategy<T> {
 
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
         val lastEntry = entries.lastOrNull()
