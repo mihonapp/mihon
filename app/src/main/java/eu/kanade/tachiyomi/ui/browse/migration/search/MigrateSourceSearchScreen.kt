@@ -38,6 +38,7 @@ import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import mihon.feature.migration.dialog.MigrateMangaDialog
+import mihon.feature.migration.list.MatchOverrideEvent
 import mihon.feature.migration.list.MigrationListRoute
 import mihon.feature.migration.list.MigrationListScreen
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -114,8 +115,9 @@ fun MigrateSourceSearchScreen(
             if (migrateListRoute == null) {
                 viewModel.setDialog(BrowseSourceViewModel.Dialog.Migrate(target = it, current = currentManga))
             } else {
-                // TODO(nav): event
-                // migrateListRoute.addMatchOverride(current = currentManga.id, target = it.id)
+                resultEventBus.sendResult(
+                    result = MatchOverrideEvent(current = currentManga.id, target = it.id)
+                )
                 backStack.popUntil { screen -> screen is MigrationListRoute }
             }
         }
