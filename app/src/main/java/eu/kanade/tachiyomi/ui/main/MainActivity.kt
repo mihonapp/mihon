@@ -72,7 +72,6 @@ import androidx.navigation3.runtime.result.ResultEventBus
 import androidx.navigation3.runtime.result.rememberResultEventBus
 import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import cafe.adriel.voyager.navigator.Navigator
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.interactor.GetIncognitoState
@@ -85,7 +84,6 @@ import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresRoute
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupRoute
 import eu.kanade.presentation.util.AssistContentManager
 import eu.kanade.presentation.util.AssistContentRoute
-import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.LocalAssistContentManager
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.LocalTopLevelBackStack
@@ -225,7 +223,7 @@ class MainActivity : BaseActivity() {
             val adaptiveSheetSceneStrategy = rememberAdaptiveSheetSceneStrategy<NavKey>()
             val resultEventBus = rememberResultEventBus()
             val resultEventBusNavEntryDecorator = rememberResultEventBusNavEntryDecorator<NavKey>(
-                resultEventBus = resultEventBus
+                resultEventBus = resultEventBus,
             )
 
             CompositionLocalProvider(
@@ -602,7 +600,11 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun handleIntentAction(intent: Intent, backStack: NavBackStack<NavKey>, resultEventBus: ResultEventBus): Boolean {
+    private fun handleIntentAction(
+        intent: Intent,
+        backStack: NavBackStack<NavKey>,
+        resultEventBus: ResultEventBus,
+    ): Boolean {
         val notificationId = intent.getIntExtra("notificationId", -1)
         if (notificationId > -1) {
             NotificationReceiver.dismissNotification(

@@ -21,8 +21,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -32,7 +30,6 @@ import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.workManager
@@ -50,7 +47,6 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.plus
 import kotlin.time.Instant
-
 
 @Serializable
 data object WorkerInfoRoute : NavKey {

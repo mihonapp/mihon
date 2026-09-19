@@ -6,15 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreConfirmDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreCreateDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreDeleteDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoresScreen
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import kotlinx.serialization.Serializable

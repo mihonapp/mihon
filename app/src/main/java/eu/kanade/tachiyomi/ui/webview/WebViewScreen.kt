@@ -5,14 +5,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.util.AssistContentRoute
-import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.LocalAssistContentManager
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.webview.WebViewScreenContent
 import kotlinx.serialization.Serializable
 import tachiyomi.presentation.core.screens.LoadingScreen

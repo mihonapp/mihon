@@ -8,17 +8,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation3.runtime.NavKey
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.GlobalSearchScreen
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.replace
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
-import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import kotlinx.serialization.Serializable
 import tachiyomi.presentation.core.screens.LoadingScreen
 

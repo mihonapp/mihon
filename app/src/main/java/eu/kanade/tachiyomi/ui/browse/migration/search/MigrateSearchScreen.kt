@@ -5,22 +5,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.LocalResultEventBus
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.MigrateSearchScreen
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.popUntil
 import eu.kanade.presentation.util.replace
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
-import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import kotlinx.serialization.Serializable
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
 import mihon.feature.migration.list.MigrationListRoute
-import mihon.feature.migration.list.MigrationListScreen
 
 @Serializable
 data class MigrateSearchRoute(val mangaId: Long) : NavKey
@@ -53,7 +48,7 @@ fun MigrateSearchScreen(mangaId: Long) {
                 viewModel.setMigrateDialog(mangaId, it)
             } else {
                 resultEventBus.sendResult(
-                    result = MatchOverrideEvent(current = mangaId, target = it.id)
+                    result = MatchOverrideEvent(current = mangaId, target = it.id),
                 )
                 backStack.popUntil { screen -> screen is MigrationListRoute }
             }

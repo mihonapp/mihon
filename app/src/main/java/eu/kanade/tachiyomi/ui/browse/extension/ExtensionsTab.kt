@@ -79,7 +79,7 @@ fun extensionsTab(
                                 url = it.baseUrl,
                                 initialTitle = it.name,
                                 sourceId = it.id,
-                            )
+                            ),
                         )
                     }
                 },

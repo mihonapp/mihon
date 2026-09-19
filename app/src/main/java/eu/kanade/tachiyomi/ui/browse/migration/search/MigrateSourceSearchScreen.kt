@@ -17,30 +17,23 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.LocalResultEventBus
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.LocalBackStack
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.popUntil
 import eu.kanade.presentation.util.popUntilRoot
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterDialog
-import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.home.TabEvent
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
-import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewRoute
-import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
 import mihon.feature.migration.list.MigrationListRoute
-import mihon.feature.migration.list.MigrationListScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.presentation.core.util.collectAsLazyPagingItems
@@ -116,7 +109,7 @@ fun MigrateSourceSearchScreen(
                 viewModel.setDialog(BrowseSourceViewModel.Dialog.Migrate(target = it, current = currentManga))
             } else {
                 resultEventBus.sendResult(
-                    result = MatchOverrideEvent(current = currentManga.id, target = it.id)
+                    result = MatchOverrideEvent(current = currentManga.id, target = it.id),
                 )
                 backStack.popUntil { screen -> screen is MigrationListRoute }
             }
@@ -167,7 +160,7 @@ fun MigrateSourceSearchScreen(
                     scope.launch {
                         backStack.popUntilRoot()
                         resultEventBus.sendResult(
-                            result = TabEvent.Browse()
+                            result = TabEvent.Browse(),
                         )
                         backStack.add(MangaRoute(dialog.target.id))
                     }

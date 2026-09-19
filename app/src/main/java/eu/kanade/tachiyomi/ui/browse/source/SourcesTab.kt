@@ -11,7 +11,6 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
