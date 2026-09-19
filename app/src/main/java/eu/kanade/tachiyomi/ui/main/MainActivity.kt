@@ -96,12 +96,13 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.navigation.appEntries
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import eu.kanade.tachiyomi.ui.deeplink.DeepLinkRoute
 import eu.kanade.tachiyomi.ui.home.HomeRoute
-import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.home.TabEvent
 import eu.kanade.tachiyomi.ui.home.TopLevelRoute
+import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.more.NewUpdateRoute
 import eu.kanade.tachiyomi.ui.more.OnboardingRoute
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
@@ -234,11 +235,12 @@ class MainActivity : BaseActivity() {
                     }
                 }
 
-                // TODO(nav): incognito
-                // val currentRoute = backStack.lastOrNull()
-                // LaunchedEffect(currentRoute) {
-                //     ...
-                // }
+                val currentRoute = backStack.lastOrNull()
+                LaunchedEffect(currentRoute) {
+                    (currentRoute as? BrowseSourceRoute)?.sourceId
+                        .let(getIncognitoState::subscribe)
+                        .collectLatest { incognito = it }
+                }
 
                 val scaffoldInsets = WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
                 Scaffold(
@@ -304,21 +306,20 @@ class MainActivity : BaseActivity() {
                     }
                 }
 
-                // Pop source-related screens when incognito mode is turned off
+                // Pop source-related routes when incognito mode is turned off
                 LaunchedEffect(Unit) {
                     preferences.incognitoMode.changes()
                         .drop(1)
                         .filter { !it }
                         .onEach {
-                            val currentScreen = backStack.lastOrNull()
-                            // TODO(nav): incognito
-                            // if (currentScreen is BrowseSourceScreen ||
-                            //     (currentScreen is MangaScreen && currentScreen.fromSource)
-                            // ) {
-                            //     while (backStack.size > 1) {
-                            //         backStack.removeAll { it != HomeRoute }
-                            //     }
-                            // }
+                            val currentRoute = backStack.lastOrNull()
+                            if (currentRoute is BrowseSourceRoute ||
+                                (currentRoute is MangaRoute && currentRoute.fromSource)
+                            ) {
+                                while (backStack.size > 1) {
+                                    backStack.removeAll { it != HomeRoute }
+                                }
+                            }
                         }
                         .launchIn(this)
                 }

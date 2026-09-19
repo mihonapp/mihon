@@ -253,23 +253,8 @@ fun LibraryTab() {
     }
 
     ResultEffect<Unit>(resultKey = TabReselectEventKey) {
-        // TODO(library): event
+       viewModel.showSettingsDialog()
     }
-
-    // TODO(library): events
-    // LaunchedEffect(Unit) {
-    //     launch { requestSettingsSheetEvent.receiveAsFlow().collectLatest { viewModel.showSettingsDialog() } }
-    // }
 }
 
 const val LibraryTabSearchEventKey = "LibraryTabSearchEventKey"
-
-data object LibraryTab {
-    suspend fun onReselect(navigator: Navigator) {
-        requestOpenSettingsSheet()
-    }
-
-    // For opening settings sheet in LibraryController
-    private val requestSettingsSheetEvent = Channel<Unit>()
-    private suspend fun requestOpenSettingsSheet() = requestSettingsSheetEvent.send(Unit)
-}

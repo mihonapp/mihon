@@ -117,15 +117,8 @@ fun HistoryTab() {
         }
     }
 
-    LaunchedEffect(Unit) {
-        // TODO(history): event
-        // resumeLastChapterReadEvent.receiveAsFlow().collectLatest {
-        //     openChapter(context, snackbarHostState, viewModel.getNextChapter())
-        // }
-    }
-
     ResultEffect<Unit>(resultKey = TabReselectEventKey) {
-        // TODO(history): event
+        openChapter(context, snackbarHostState, viewModel.getNextChapter())
     }
 }
 
@@ -135,15 +128,5 @@ private suspend fun openChapter(context: Context, snackbarHostState: SnackbarHos
         context.startActivity(intent)
     } else {
         snackbarHostState.showSnackbar(context.stringResource(MR.strings.no_next_chapter))
-    }
-}
-
-data object HistoryTab {
-    private val snackbarHostState = SnackbarHostState()
-
-    private val resumeLastChapterReadEvent = Channel<Unit>()
-
-    suspend fun onReselect(navigator: Navigator) {
-        resumeLastChapterReadEvent.send(Unit)
     }
 }

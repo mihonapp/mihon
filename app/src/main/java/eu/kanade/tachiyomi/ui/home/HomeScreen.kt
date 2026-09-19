@@ -36,6 +36,7 @@ import eu.kanade.presentation.util.LocalTopLevelBackStack
 import eu.kanade.presentation.util.TabOptions
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.browse.BrowseSwitchToExtensionEventKey
 import eu.kanade.tachiyomi.ui.browse.BrowseTab
 import eu.kanade.tachiyomi.ui.download.DownloadQueueRoute
 import eu.kanade.tachiyomi.ui.history.HistoryTab
@@ -210,7 +211,10 @@ fun HomeScreen() {
             TabEvent.History -> TopLevelRoute.History
             is TabEvent.Browse -> {
                 if (it.toExtensions) {
-                    BrowseTab.showExtension()
+                    resultEventBus.sendResult(
+                        resultKey = BrowseSwitchToExtensionEventKey,
+                        result = Unit,
+                    )
                 }
                 TopLevelRoute.Browse
             }

@@ -47,14 +47,13 @@ fun BrowseTab() {
         searchQuery = extensionsSearchQuery,
         onChangeSearchQuery = extensionsViewModel::search,
     )
-    LaunchedEffect(Unit) {
-        // TODO(browse): event
-        // switchToExtensionTabChannel.receiveAsFlow()
-        //     .collectLatest { state.scrollToPage(1) }
-    }
 
     LaunchedEffect(Unit) {
         (context as? MainActivity)?.ready = true
+    }
+
+    ResultEffect<Unit>(resultKey = BrowseSwitchToExtensionEventKey) {
+        state.scrollToPage(1)
     }
 
     ResultEffect<Unit>(resultKey = TabReselectEventKey) {
@@ -62,15 +61,4 @@ fun BrowseTab() {
     }
 }
 
-data object BrowseTab {
-
-    suspend fun onReselect(navigator: Navigator) {
-        // navigator.push(GlobalSearchScreen())
-    }
-
-    private val switchToExtensionTabChannel = Channel<Unit>(1, BufferOverflow.DROP_OLDEST)
-
-    fun showExtension() {
-        switchToExtensionTabChannel.trySend(Unit)
-    }
-}
+const val BrowseSwitchToExtensionEventKey = "BrowseSwitchToExtensionEventKey"
