@@ -473,7 +473,6 @@
     <string name="pref_dump_crash_logs">오류 로그 공유</string>
     <string name="chapter_not_found">회차를 찾을 수 없습니다</string>
     <string name="error_no_match">결과가 없습니다</string>
-    <string name="ext_nsfw_warning">이 확장 앱의 소스는 성인 컨텐츠가 포함될 수 있습니다</string>
     <string name="action_filter_tracked">트래커 사용</string>
     <string name="action_start">시작</string>
     <string name="action_start_downloading_now">지금 다운로드 시작</string>
@@ -497,7 +496,6 @@
     <string name="ext_obsolete">연결된 스토어 없음</string>
     <string name="no_results_found">검색 결과가 없습니다</string>
     <string name="pref_dual_page_invert_summary">넓은 페이지 분할 시 배치가 읽는 방향과 다를 경우</string>
-    <string name="ext_nsfw_short">성인 컨텐츠</string>
     <string name="action_display_show_tabs">카테고리 탭 보이기</string>
     <string name="action_sort_chapter_fetch_date">챕터를 가져온 날짜순</string>
     <string name="action_sort_count">전체 항목 개수순</string>
@@ -548,9 +546,6 @@
     <string name="theme_tako">문어</string>
     <string name="theme_yinyang">음양</string>
     <string name="theme_yotsuba">요츠바</string>
-    <string name="pref_category_nsfw_content">성인 콘텐츠 소스</string>
-    <string name="pref_show_nsfw_source">소스 및 확장 기능 목록에 보이기</string>
-    <string name="parental_controls_info">이 옵션을 끄더라도 비공식 또는 분류가 잘못된 확장 기능으로 인하여 성인 컨텐츠가 표시될 수 있습니다.</string>
     <string name="action_show_errors">터치하여 자세히 보기</string>
     <string name="update_72hour">3일</string>
     <string name="restrictions">제한: %s</string>
@@ -588,7 +583,6 @@
     <string name="unfinished_list">미완성된 목록</string>
     <string name="empty_screen">와...이거 좀 어색하네</string>
     <string name="custom_cover">맞춤 표지</string>
-    <string name="ext_info_age_rating">연령 등급</string>
     <string name="action_remove_everything">모두 제거</string>
     <string name="pref_reset_viewer_flags_success">모든 뷰어 설정을 초기화했습니다</string>
     <string name="pref_user_agent_string">기본 사용자 에이전트 문자열</string>
@@ -907,4 +901,10 @@
     <string name="downloading_with_progress">다운로드 중… (%d%%)</string>
     <string name="pref_filter_update_categories_details">제외된 카테고리 업데이트는 포함되는 카테고리가 있어도 표시되지 않습니다.</string>
     <string name="pref_filter_upcoming_categories_details">제외 범주에 속한 작품은 포함 범주에 속해 있더라도 표시되지 않습니다.</string>
+    <string name="pref_category_extensions">확장 앱</string>
+    <string name="pref_allowed_content_warnings">허용 컨텐츠 등급</string>
+    <string name="pref_apply_content_warnings_to_installed">설치된 확장 앱에도 적용</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">비활성화하면 이미 설치한 확장 앱은 등급과 무관하게 컨텐츠를 불러오고 업데이트합니다</string>
+    <string name="content_warnings_info">허용하지 않은 등급의 확장 앱은 이미 설치된 경우 목록에 남지만 소스는 표시되지 않으며, 설치하지 않은 경우 목록에서 숨겨집니다. 이 설정으로도 비공식 확장 앱이나 등급이 잘못 지정된 확장 앱이 앱에 18+ 콘텐츠를 표시하는 것을 완전히 막을 수는 없습니다.</string>
+    <string name="ext_filtered">필터링됨</string>
 </resources>

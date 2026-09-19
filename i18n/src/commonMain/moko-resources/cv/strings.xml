@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Кӗмен йӗрлевсем:</string>
     <string name="pref_remove_bookmarked_chapters">Картнӑ сыпӑксене катертмелле</string>
     <string name="pref_category_delete_chapters">Сыпӑксене катерт</string>
-    <string name="ext_nsfw_warning">NSFW (18+) шалаш пулма пултарать</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Ҫакӑ апра чӑнлавлӑ мар йе тӗрӗс мар палӑртнӑ хушмасен NSFW (18+) шалашне кӑтартма чӑрмантармасть.</string>
     <string name="no_chapters_error">Сыпӑксем ҫук</string>
     <string name="also_set_chapter_settings_for_library">Тата манӑн вулавăшри пур манкӑ валли усӑ кур</string>
     <string name="chapter_settings_updated">Яланхилле сыпӑк ӗнерлев ҫӗнетнӗ</string>
@@ -421,10 +418,8 @@
     <string name="spen_next_page">Маллали сыпӑк</string>
     <string name="spen_previous_page">Умӗнхи эл</string>
     <string name="migration_help_guide">Ҫӑл куҫ куҫарассипе пулӑшу</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) ҫӑл куҫсем</string>
     <string name="file_picker_error">Файлсене суйламалли хушӑм тупӑнман</string>
     <string name="myanimelist_relogin">Тархасшӑн MAL-а ҫӗнӗрен кӗр</string>
-    <string name="pref_show_nsfw_source">Ҫӑл куҫсен тата хушмасен йат-йышӗнче кӑтартни</string>
     <string name="track_finished_reading_date">Вулама вӗҫленӗ вӑхӑчӗ</string>
     <string name="track_started_reading_date">Вулама пуҫланӑ вӑхӑчӗ</string>
     <string name="edge_nav">Хӗррипе</string>
@@ -545,7 +540,6 @@
     <string name="pref_chapter_swipe_start">Сулахайалла туртсан сыпӑк</string>
     <string name="ext_installer_pref">Ларткӑч</string>
     <string name="ext_installer_shizuku_stopped">Shizuku ӗҫлемест</string>
-    <string name="ext_info_age_rating">Ҫул-ӳсӗм чаравӗ</string>
     <string name="action_sort_next_updated">Тепӗр кӗтӗнекен ҫӗнетӳпе</string>
     <string name="ext_install_service_notif">Хушма лартни…</string>
     <string name="action_set_interval">Тӑтӑшлӑх палӑрт</string>

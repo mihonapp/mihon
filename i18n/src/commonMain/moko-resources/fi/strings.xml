@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Seurantapalvelimet joihin et ole kirjautunut sisään:</string>
     <string name="pref_remove_bookmarked_chapters">Poista kirjanmerkityt luvut</string>
     <string name="pref_category_delete_chapters">Poista luvut</string>
-    <string name="ext_nsfw_warning">Tämän laajennoksen lähteet voivat sisältää NSFW (18+) -sisältöä</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Tämä ei estä epävirallisia tai mahdollisesti väärin merkittyjä laajennuksia näyttämästä NSFW 18+ sisältöä sovelluksessa.</string>
     <string name="no_chapters_error">Lukuja ei löytynyt</string>
     <string name="chapter_settings_updated">Päivitetyt luvun oletusasetukset</string>
     <string name="set_chapter_settings_as_default">Aseta oletukseksi</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Seuraava sivu</string>
     <string name="spen_previous_page">Edellinen sivu</string>
     <string name="migration_help_guide">Lähteen siirto-opas</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) lähteet</string>
-    <string name="pref_show_nsfw_source">Näytä lähde- ja lisäosaluettelossa</string>
     <string name="file_picker_error">Tiedostonvalitsinsovellusta ei löytynyt</string>
     <string name="myanimelist_relogin">Kirjaudu uudelleen MAL: iin</string>
     <string name="pref_viewer_nav">Navigointiasettelu</string>
@@ -584,7 +579,6 @@
     <string name="manga_cover">Kansikuva</string>
     <string name="error_sharing_cover">Virhe jakaessa kansikuvaa</string>
     <string name="learn_more">Napauta saadaksesi lisätietoja</string>
-    <string name="ext_info_age_rating">Ikäluokitus</string>
     <string name="tracking_guide">Seurantaopas</string>
     <string name="pref_reset_viewer_flags_success">Kaikki lukijan asetukset poistettu</string>
     <string name="pref_verbose_logging">Yksityiskohtainen kirjaaminen</string>

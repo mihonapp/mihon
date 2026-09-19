@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Servicios de seguimiento sin conectar:</string>
     <string name="pref_remove_bookmarked_chapters">Permitir el borrado de capítulos marcados como favoritos</string>
     <string name="pref_category_delete_chapters">Borrar capítulos</string>
-    <string name="ext_nsfw_warning">Puede contener contenido para adultos (+18)</string>
-    <string name="ext_nsfw_short">+18</string>
-    <string name="parental_controls_info">Esto no evita que las extensiones extraoficiales o que estén mal clasificadas muestren contenido para mayores de 18 años en la aplicación.</string>
     <string name="no_chapters_error">No hay capítulos</string>
     <string name="chapter_settings_updated">Se han actualizado los ajustes predeterminados de capítulo</string>
     <string name="set_chapter_settings_as_default">Establecer como predeterminado</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Siguiente página</string>
     <string name="spen_previous_page">Página anterior</string>
     <string name="migration_help_guide">Guía de migración de fuentes</string>
-    <string name="pref_category_nsfw_content">Fuentes para adultos (+18)</string>
-    <string name="pref_show_nsfw_source">Mostrar en la lista de fuentes y extensiones</string>
     <string name="file_picker_error">No se ha encontrado ninguna aplicación con la que elegir archivos</string>
     <string name="myanimelist_relogin">Vuelve a iniciar sesión en MAL</string>
     <string name="kindlish_nav">Estilo Kindle</string>
@@ -580,7 +575,6 @@
     <string name="empty_screen">Houston, tenemos un problema</string>
     <string name="ext_info_version">Versión</string>
     <string name="ext_info_language">Idioma</string>
-    <string name="ext_info_age_rating">Clasificación por edades</string>
     <string name="reading_list">Leyendo</string>
     <string name="wish_list">A leer en un futuro</string>
     <string name="complete_list">Leídos del todo</string>

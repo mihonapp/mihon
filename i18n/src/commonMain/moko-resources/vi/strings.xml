@@ -342,10 +342,7 @@
     <string name="invalid_backup_file_missing_manga">Bản sao lưu không chứa truyện nào.</string>
     <string name="invalid_backup_file">Tệp sao lưu không hợp lệ:</string>
     <string name="add_to_library">Thêm vào thư viện</string>
-    <string name="ext_nsfw_warning">Nguồn truyền từ tiện ích mở rộng này có thể chứa nội dung NSFW 18+</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_library_update_refresh_metadata">Tự động làm mới chi tiết truyện</string>
-    <string name="parental_controls_info">Điều này không ngăn các tiện ích mở rộng không chính thức hoặc có khả năng bị gắn cờ không chính xác hiển thị nội dung NSFW (18+) trong ứng dụng.</string>
     <string name="label_downloaded_only">Chỉ hiện truyện đã tải</string>
     <string name="migration_help_guide">Hướng dẫn chuyển nguồn</string>
     <string name="action_search_settings">Cài đặt tìm kiếm</string>
@@ -460,8 +457,6 @@
     <string name="include">Bao gồm: %s</string>
     <string name="none">Không cái nào</string>
     <string name="action_display_show_number_of_items">Hiện số truyện</string>
-    <string name="pref_category_nsfw_content">Nguồn NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Hiển thị trong các danh sách nguồn và tiện ích mở rộng</string>
     <string name="action_show_errors">Chạm để xem toàn bộ chi tiết</string>
     <string name="action_desc">Giảm dần</string>
     <string name="action_asc">Tăng dần</string>
@@ -591,7 +586,6 @@
     <string name="on_hold_list">Danh sách đang chờ</string>
     <string name="wish_list">Danh sách muốn đọc</string>
     <string name="download_notifier_split_page_not_found">Trang %d không thể được tìm thấy khi chia cắt</string>
-    <string name="ext_info_age_rating">Phân loại độ tuổi</string>
     <string name="download_notifier_split_page_path_not_found">Không thể tìm thấy đường dẫn của trang %d</string>
     <string name="pref_reset_user_agent_string">Đặt lại chuỗi đại diện người dùng mặc định</string>
     <string name="description_placeholder">Không có mô tả</string>
