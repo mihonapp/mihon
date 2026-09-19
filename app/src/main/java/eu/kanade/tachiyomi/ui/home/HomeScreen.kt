@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.ui.NavDisplay
 import eu.kanade.presentation.util.LocalTopLevelBackStack
 import eu.kanade.presentation.util.TabOptions
@@ -133,12 +134,13 @@ fun HomeScreen() {
     val navigationSuiteState = rememberNavigationSuiteScaffoldState()
     LaunchedEffect(navigationSuiteState, tabletUi) {
         if (tabletUi) navigationSuiteState.show()
-        showBottomNavEvent.receiveAsFlow().collectLatest { show ->
-            if (tabletUi || show) {
-                navigationSuiteState.show()
-            } else {
-                navigationSuiteState.hide()
-            }
+    }
+
+    ResultEffect<ShowBottomNavEvent> {
+        if (tabletUi || it.visible) {
+            navigationSuiteState.show()
+        } else {
+            navigationSuiteState.hide()
         }
     }
 
@@ -318,10 +320,6 @@ private fun tabBadge(tab: TopLevelRoute): (@Composable () -> Unit)? {
 // suspend fun openTab(tab: Tab) {
 //     HomeScreen.openTabEvent.send(tab)
 // }
-//
-// suspend fun showBottomNav(show: Boolean) {
-//     HomeScreen.showBottomNavEvent.send(show)
-// }
 
 sealed interface Tab {
     data class Library(val mangaIdToOpen: Long? = null) : Tab
@@ -333,10 +331,11 @@ sealed interface Tab {
 
 private val librarySearchEvent = Channel<String>()
 private val openTabEvent = Channel<Tab>()
-private val showBottomNavEvent = Channel<Boolean>()
 
 @Suppress("ConstPropertyName")
 private const val TabFadeDuration = 200
+
+data class ShowBottomNavEvent(val visible: Boolean)
 
 private val spec = materialFadeThroughIn(
     initialScale = 1f,
