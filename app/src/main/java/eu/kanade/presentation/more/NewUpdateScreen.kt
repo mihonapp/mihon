@@ -34,6 +34,7 @@ fun NewUpdateScreen(
     onOpenInBrowser: () -> Unit,
     onAcceptUpdate: () -> Unit,
     onRejectUpdate: () -> Unit,
+    onSkipUpdate: () -> Unit,
 ) {
     InfoScreen(
         icon = MaterialSymbols.Rounded.NewReleases,
@@ -71,6 +72,13 @@ fun NewUpdateScreen(
                 Spacer(modifier = Modifier.width(MaterialTheme.padding.extraSmall))
                 Icon(imageVector = MaterialSymbols.AutoMirroredRounded.OpenInNew, contentDescription = null)
             }
+
+            TextButton(
+                onClick = onSkipUpdate,
+                modifier = Modifier.padding(top = MaterialTheme.padding.small),
+            ) {
+                Text(text = stringResource(MR.strings.action_skip_update))
+            }
         }
     }
 }
@@ -94,6 +102,7 @@ private fun NewUpdateScreenPreview() {
             onOpenInBrowser = {},
             onAcceptUpdate = {},
             onRejectUpdate = {},
+            onSkipUpdate = {},
         )
     }
 }

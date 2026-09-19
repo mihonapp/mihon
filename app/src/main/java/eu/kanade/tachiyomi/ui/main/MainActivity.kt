@@ -325,13 +325,16 @@ class MainActivity : BaseActivity() {
                 try {
                     val result = context.appGraph.updateChecker.checkForUpdate()
                     if (result is GetApplicationRelease.Result.NewUpdate) {
-                        val updateScreen = NewUpdateScreen(
-                            versionName = result.release.version,
-                            changelogInfo = result.release.info,
-                            releaseLink = result.release.releaseLink,
-                            downloadLink = result.release.downloadLink,
-                        )
-                        navigator.push(updateScreen)
+                        val skippedVersion = context.appGraph.basePreferences.skippedUpdateVersion.get()
+                        if (result.release.version != skippedVersion) {
+                            val updateScreen = NewUpdateScreen(
+                                versionName = result.release.version,
+                                changelogInfo = result.release.info,
+                                releaseLink = result.release.releaseLink,
+                                downloadLink = result.release.downloadLink,
+                            )
+                            navigator.push(updateScreen)
+                        }
                     }
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e)
