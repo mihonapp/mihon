@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.ui.NavDisplay
 import eu.kanade.presentation.util.LocalBackStack
@@ -39,6 +40,7 @@ import eu.kanade.tachiyomi.ui.browse.BrowseTab
 import eu.kanade.tachiyomi.ui.download.DownloadQueueRoute
 import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTab
+import eu.kanade.tachiyomi.ui.library.LibraryTabSearchEventKey
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
@@ -129,6 +131,7 @@ sealed interface TopLevelRoute : NavKey {
 fun HomeScreen() {
     val topLevelBackStack = LocalTopLevelBackStack.current
     val backStack = LocalBackStack.current
+    val resultEventBus = LocalResultEventBus.current
     val tabletUi = isTabletUi()
     val navigationSuiteType = if (tabletUi) {
         NavigationSuiteType.NavigationRail
@@ -192,6 +195,14 @@ fun HomeScreen() {
         )
     }
 
+    ResultEffect<String>(resultKey = LibrarySearchEventKey) {
+        topLevelBackStack.setTopLevel(TopLevelRoute.Library)
+        resultEventBus.sendResult(
+            resultKey = LibraryTabSearchEventKey,
+            result = it,
+        )
+    }
+
     ResultEffect<TabEvent> {
         val route = when (it) {
             is TabEvent.Library -> TopLevelRoute.Library
@@ -212,15 +223,6 @@ fun HomeScreen() {
         }
         if (it is TabEvent.More && it.toDownloads) {
             backStack.add(DownloadQueueRoute)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        launch {
-            librarySearchEvent.receiveAsFlow().collectLatest {
-                topLevelBackStack.setTopLevel(TopLevelRoute.Library)
-                LibraryTab.search(it)
-            }
         }
     }
 }
@@ -326,6 +328,8 @@ sealed interface TabEvent {
     data class Browse(val toExtensions: Boolean = false) : TabEvent
     data class More(val toDownloads: Boolean) : TabEvent
 }
+
+const val LibrarySearchEventKey = "LibrarySearchEventKey"
 
 private val librarySearchEvent = Channel<String>()
 

@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.result.ResultEffect
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -300,17 +301,17 @@ fun BrowseSourceScreen(
         else -> {}
     }
 
-    // TODO(browse): queryEvent
-    // LaunchedEffect(Unit) {
-    //     queryEvent.receiveAsFlow()
-    //         .collectLatest {
-    //             when (it) {
-    //                 is SearchType.Genre -> viewModel.searchGenre(it.txt)
-    //                 is SearchType.Text -> viewModel.search(it.txt)
-    //             }
-    //         }
-    // }
+    ResultEffect<String>(resultKey = BrowseSearchEventKey) {
+        viewModel.search(it)
+    }
+
+    ResultEffect<String>(resultKey = BrowseSearchGenreEventKey) {
+        viewModel.searchGenre(it)
+    }
 }
+
+const val BrowseSearchEventKey = "BrowseSearchEventKey"
+const val BrowseSearchGenreEventKey = "BrowseSearchGenreEventKey"
 
 data class BrowseSourceScree(
     val sourceId: Long,
@@ -318,16 +319,4 @@ data class BrowseSourceScree(
 ) {
 
     private var assistUrl: String? = null
-
-    suspend fun search(query: String) = queryEvent.send(SearchType.Text(query))
-    suspend fun searchGenre(name: String) = queryEvent.send(SearchType.Genre(name))
-
-    companion object {
-        private val queryEvent = Channel<SearchType>()
-    }
-
-    sealed class SearchType(val txt: String) {
-        class Text(txt: String) : SearchType(txt)
-        class Genre(txt: String) : SearchType(txt)
-    }
 }

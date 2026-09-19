@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.util.fastAll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.result.LocalResultEventBus
+import androidx.navigation3.runtime.result.ResultEffect
 import cafe.adriel.voyager.navigator.Navigator
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
@@ -246,21 +247,22 @@ fun LibraryTab() {
         }
     }
 
+    ResultEffect<String>(resultKey = LibraryTabSearchEventKey) {
+        viewModel.search(it)
+    }
+
     // TODO(library): events
     // LaunchedEffect(Unit) {
-    //     launch { queryEvent.receiveAsFlow().collect(viewModel::search) }
     //     launch { requestSettingsSheetEvent.receiveAsFlow().collectLatest { viewModel.showSettingsDialog() } }
     // }
 }
+
+const val LibraryTabSearchEventKey = "LibraryTabSearchEventKey"
 
 data object LibraryTab {
     suspend fun onReselect(navigator: Navigator) {
         requestOpenSettingsSheet()
     }
-
-    // For invoking search from other screen
-    private val queryEvent = Channel<String>()
-    suspend fun search(query: String) = queryEvent.send(query)
 
     // For opening settings sheet in LibraryController
     private val requestSettingsSheetEvent = Channel<Unit>()
