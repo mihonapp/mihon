@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.result.ResultEffect
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -43,18 +44,15 @@ fun MigrationListScreen(
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    // TODO(nav): event
-    // LaunchedEffect(matchOverride) {
-    //     val (current, target) = matchOverride ?: return@LaunchedEffect
-    //     viewModel.useMangaForMigration(
-    //         current = current,
-    //         target = target,
-    //         onMissingChapters = {
-    //             context.toast(MR.strings.migrationListScreen_matchWithoutChapterToast, Toast.LENGTH_LONG)
-    //         },
-    //     )
-    //     matchOverride = null
-    // }
+    ResultEffect<MatchOverrideEvent> {
+        viewModel.useMangaForMigration(
+            current = it.current,
+            target = it.target,
+            onMissingChapters = {
+                context.toast(MR.strings.migrationListScreen_matchWithoutChapterToast, Toast.LENGTH_LONG)
+            },
+        )
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.navigateBackEvent.collect {
@@ -112,3 +110,5 @@ fun MigrationListScreen(
         viewModel.showExitDialog()
     }
 }
+
+data class MatchOverrideEvent(val current: Long, val target: Long)

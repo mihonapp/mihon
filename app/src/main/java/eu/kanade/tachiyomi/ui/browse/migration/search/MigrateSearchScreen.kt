@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.result.LocalResultEventBus
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -17,6 +18,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import kotlinx.serialization.Serializable
 import mihon.feature.migration.dialog.MigrateMangaDialog
+import mihon.feature.migration.list.MatchOverrideEvent
 import mihon.feature.migration.list.MigrationListRoute
 import mihon.feature.migration.list.MigrationListScreen
 
@@ -26,6 +28,7 @@ data class MigrateSearchRoute(val mangaId: Long) : NavKey
 @Composable
 fun MigrateSearchScreen(mangaId: Long) {
     val backStack = LocalBackStack.current
+    val resultEventBus = LocalResultEventBus.current
 
     val viewModel =
         assistedMetroViewModel<MigrateSearchViewModel, MigrateSearchViewModel.Factory> { create(mangaId = mangaId) }
@@ -49,8 +52,9 @@ fun MigrateSearchScreen(mangaId: Long) {
             if (migrateListRoute == null) {
                 viewModel.setMigrateDialog(mangaId, it)
             } else {
-                // TODO(nav): event
-                // migrateListRoute.addMatchOverride(current = mangaId, target = it.id)
+                resultEventBus.sendResult(
+                    result = MatchOverrideEvent(current = mangaId, target = it.id)
+                )
                 backStack.popUntil { screen -> screen is MigrationListRoute }
             }
         },
