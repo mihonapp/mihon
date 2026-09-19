@@ -238,6 +238,28 @@ class DownloadManager(
     }
 
     /**
+     * Deletes the temporary files of the given downloads.
+     *
+     * Can be used to recover downloads that are stuck on unfinished temporary files.
+     *
+     * @param downloads the downloads whose temporary files should be deleted.
+     */
+    fun deleteTemporaryFiles(downloads: List<Download>) {
+        launchIO {
+            downloads.forEach { download ->
+                val mangaDir = provider.findMangaDir(download.manga.title, download.source) ?: return@forEach
+                val chapterDirName = provider.getChapterDirName(
+                    download.chapter.name,
+                    download.chapter.scanlator,
+                    download.chapter.url,
+                )
+                mangaDir.findFile(chapterDirName + Downloader.TMP_DIR_SUFFIX)?.delete()
+                mangaDir.findFile("$chapterDirName.cbz${Downloader.TMP_DIR_SUFFIX}")?.delete()
+            }
+        }
+    }
+
+    /**
      * Deletes the directories of a list of downloaded chapters.
      *
      * @param chapters the list of chapters to delete.
