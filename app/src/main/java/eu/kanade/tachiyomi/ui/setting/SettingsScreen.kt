@@ -75,25 +75,31 @@ sealed class SettingsDestination(val id: Int) {
     data object Tracking : SettingsDestination(2)
 }
 
+fun NavBackStack<NavKey>.addSettingsRoute(settingsRoute: SettingsRoute, isTabletUi: Boolean) {
+    val route = when (settingsRoute.settingsDestination) {
+        SettingsDestination.About -> AboutRoute
+        SettingsDestination.DataAndStorage -> SettingsDataRoute
+        SettingsDestination.Tracking -> SettingsTrackingRoute
+        null if isTabletUi -> SettingsAppearanceRoute
+        null -> null
+    }
+    if (route != null) {
+        if (isTabletUi) {
+            add(SettingsRoute())
+        }
+        add(route)
+    } else {
+        add(SettingsRoute())
+    }
+}
+
 @Composable
-fun SettingsScreen(settingsDestination: SettingsDestination?) {
+fun SettingsScreen() {
     val backStack = LocalBackStack.current
     val isTabletUi = isTabletUi()
 
     val containerColor = if (isTabletUi) getPalerSurface() else MaterialTheme.colorScheme.surface
     val topBarState = rememberTopAppBarState()
-
-    LaunchedEffect(isTabletUi, backStack.last(), settingsDestination) {
-        if (isTabletUi && backStack.last() is SettingsRoute) {
-            val route = when (settingsDestination) {
-                SettingsDestination.About -> AboutRoute
-                SettingsDestination.DataAndStorage -> SettingsDataRoute
-                SettingsDestination.Tracking -> SettingsTrackingRoute
-                null -> SettingsAppearanceRoute
-            }
-            backStack.add(route)
-        }
-    }
 
     Scaffold(
         topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState),

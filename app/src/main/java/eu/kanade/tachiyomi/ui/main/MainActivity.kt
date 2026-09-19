@@ -87,6 +87,7 @@ import eu.kanade.presentation.util.AssistContentRoute
 import eu.kanade.presentation.util.LocalAssistContentManager
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.LocalTopLevelBackStack
+import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.presentation.util.popUntilRoot
 import eu.kanade.presentation.util.rememberAdaptiveSheetSceneStrategy
 import eu.kanade.presentation.util.rememberTopLevelBackStack
@@ -108,6 +109,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.more.NewUpdateRoute
 import eu.kanade.tachiyomi.ui.more.OnboardingRoute
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
+import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
@@ -200,6 +202,7 @@ class MainActivity : BaseActivity() {
             val downloadOnly by preferences.downloadedOnly.collectAsState()
             val indexing by downloadCache.isInitializing.collectAsState()
 
+            val isTabletUi = isTabletUi()
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val statusBarBackgroundColor = when {
                 indexing -> IndexingBannerBackgroundColor
@@ -236,7 +239,7 @@ class MainActivity : BaseActivity() {
 
                     if (isLaunch) {
                         // Set start screen
-                        handleIntentAction(intent, backStack, resultEventBus)
+                        handleIntentAction(intent, backStack, resultEventBus, isTabletUi)
 
                         // Reset Incognito Mode on relaunch
                         preferences.incognitoMode.set(false)
@@ -279,6 +282,15 @@ class MainActivity : BaseActivity() {
                                 )
                             },
                             popTransitionSpec = {
+                                materialSharedAxisXIn(
+                                    forward = false,
+                                    slideDistance = slideDistance,
+                                ) togetherWith materialSharedAxisXOut(
+                                    forward = false,
+                                    slideDistance = slideDistance,
+                                )
+                            },
+                            predictivePopTransitionSpec = {
                                 materialSharedAxisXIn(
                                     forward = false,
                                     slideDistance = slideDistance,
@@ -336,6 +348,7 @@ class MainActivity : BaseActivity() {
                     context = context,
                     backStack = backStack,
                     resultEventBus = resultEventBus,
+                    isTabletUi = isTabletUi,
                 )
 
                 if (!isBenchmarkBuildType) {
@@ -376,6 +389,7 @@ class MainActivity : BaseActivity() {
         context: Context,
         backStack: NavBackStack<NavKey>,
         resultEventBus: ResultEventBus,
+        isTabletUi: Boolean,
     ) {
         LaunchedEffect(Unit) {
             callbackFlow {
@@ -385,7 +399,7 @@ class MainActivity : BaseActivity() {
                 awaitClose { componentActivity.removeOnNewIntentListener(consumer) }
             }
                 .collectLatest {
-                    handleIntentAction(it, backStack, resultEventBus)
+                    handleIntentAction(it, backStack, resultEventBus, isTabletUi)
                 }
         }
     }
@@ -604,6 +618,7 @@ class MainActivity : BaseActivity() {
         intent: Intent,
         backStack: NavBackStack<NavKey>,
         resultEventBus: ResultEventBus,
+        isTabletUi: Boolean,
     ): Boolean {
         val notificationId = intent.getIntExtra("notificationId", -1)
         if (notificationId > -1) {
@@ -631,7 +646,7 @@ class MainActivity : BaseActivity() {
             }
             Intent.ACTION_APPLICATION_PREFERENCES -> {
                 backStack.popUntilRoot()
-                backStack.add(SettingsRoute())
+                backStack.addSettingsRoute(SettingsRoute(), isTabletUi)
                 null
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {

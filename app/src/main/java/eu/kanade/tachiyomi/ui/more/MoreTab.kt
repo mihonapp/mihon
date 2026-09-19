@@ -16,12 +16,14 @@ import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
 import eu.kanade.presentation.util.LocalBackStack
+import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
 import eu.kanade.tachiyomi.ui.download.DownloadQueueRoute
 import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.setting.SettingsDestination
 import eu.kanade.tachiyomi.ui.setting.SettingsRoute
+import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import eu.kanade.tachiyomi.ui.stats.StatsRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +36,7 @@ import tachiyomi.core.common.util.lang.launchIO
 @Composable
 fun MoreTab() {
     val backStack = LocalBackStack.current
+    val isTabletUi = isTabletUi()
     val viewModel = metroViewModel<MoreViewModel>()
     val downloadQueueState by viewModel.downloadQueueState.collectAsState()
     MoreScreen(
@@ -45,14 +48,16 @@ fun MoreTab() {
         onClickDownloadQueue = { backStack.add(DownloadQueueRoute) },
         onClickCategories = { backStack.add(CategoryRoute) },
         onClickStats = { backStack.add(StatsRoute) },
-        onClickDataAndStorage = { backStack.add(SettingsRoute(SettingsDestination.DataAndStorage)) },
-        onClickSettings = { backStack.add(SettingsRoute()) },
+        onClickDataAndStorage = {
+            backStack.addSettingsRoute(SettingsRoute(SettingsDestination.DataAndStorage), isTabletUi)
+        },
+        onClickSettings = { backStack.addSettingsRoute(SettingsRoute(), isTabletUi) },
         onClickSupport = { backStack.add(SupportUsRoute) },
-        onClickAbout = { backStack.add(SettingsRoute(SettingsDestination.About)) },
+        onClickAbout = { backStack.addSettingsRoute(SettingsRoute(SettingsDestination.About), isTabletUi) },
     )
 
     ResultEffect<Unit>(resultKey = TabReselectEventKey) {
-        backStack.add(SettingsRoute())
+        backStack.addSettingsRoute(SettingsRoute(), isTabletUi)
     }
 }
 
