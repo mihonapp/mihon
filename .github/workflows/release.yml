@@ -15,7 +15,7 @@ jobs:
   get_tag:
     if: github.repository == 'mihonapp/mihon'
     name: Extract tag name
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
     outputs:
       tag: ${{ steps.extract.outputs.tag }}
 
@@ -27,7 +27,7 @@ jobs:
   build:
     if: github.repository == 'mihonapp/mihon'
     name: Build
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
     needs: get_tag
 
     steps:
@@ -75,7 +75,7 @@ jobs:
   build_foss:
     if: github.repository == 'mihonapp/mihon'
     name: Build (FOSS)
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: get_tag
 
     steps:
@@ -116,7 +116,7 @@ jobs:
   release:
     if: github.repository == 'mihonapp/mihon'
     name: Create GitHub Release
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [get_tag, build, build_foss]
 
     steps:

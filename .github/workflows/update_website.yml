@@ -9,7 +9,7 @@ on:
 
 jobs:
   update_website:
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
 
     steps:
       - name: Update website
