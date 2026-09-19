@@ -99,7 +99,6 @@
     <string name="ext_pending">Egiteke</string>
     <string name="ext_downloading">Deskargatzen</string>
     <string name="ext_installing">Instalatzen</string>
-    <string name="ext_nsfw_warning">NSFW (18+) edukia izan dezake</string>
     <string name="ext_installer_pref">Instalatzailea</string>
     <string name="pref_fullscreen">Pantaila osoa</string>
     <string name="pref_grayscale">Gris-eskala</string>
@@ -163,7 +162,6 @@
     <string name="update_check_confirm">Deskargatu</string>
     <string name="download_notifier_title_error">Errorea</string>
     <string name="ext_installer_legacy">Ondare</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="off">Itzali</string>
     <string name="pref_reader_navigation">Nabigazioa</string>
     <string name="color_filter_b_value">U</string>
@@ -395,9 +393,6 @@
     <string name="pref_category_security">Segurtasuna</string>
     <string name="lock_always">Beti</string>
     <string name="secure_screen_summary">Pantaila seguruak aplikazioaren edukia ezkutatzen du aplikazioak aldatzean, eta pantaila-argazkiak blokeatzen ditu</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) iturriak</string>
-    <string name="pref_show_nsfw_source">Erakutsi iturrien eta luzapenen zerrendetan</string>
-    <string name="parental_controls_info">Honek ez du eragozten ofizialak ez diren edo oker markatutako luzapenek NSFW (18+) edukia aplikazioan erakustea.</string>
     <string name="relative_time_today">Gaur</string>
     <string name="pref_category_display">Bistaratu</string>
     <string name="pref_library_columns">Errenkada bakoitzeko elementu kopurua</string>

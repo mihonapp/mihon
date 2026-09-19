@@ -79,9 +79,6 @@
     <string name="charging">Қуаттандыру кездінде</string>
     <string name="restrictions">Шектеулер: %s</string>
     <string name="secure_screen_summary">Қауіпсіз экран қолданбаларды ауыстырған кезде қолданба мазмұнын жасырады және скриншот жасауды бұғаттайды</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) дереккөздері</string>
-    <string name="pref_show_nsfw_source">Дереккөздер мен кеңейтулер тізімінде көрсету</string>
-    <string name="parental_controls_info">Бұл қолданбадағы NSFW (18+) мазмұнын көрсетуге бейресми немесе ықтимал қате белгіленген кеңейтулерге кедергі жасамайды.</string>
     <string name="action_mark_as_read">Оқылған деп белгілеу</string>
     <string name="action_mark_as_unread">Оқылмаған деп белгілеу</string>
     <string name="action_mark_previous_as_read">Алдыңғысын оқылған деп белгілеу</string>
@@ -200,7 +197,6 @@
     <string name="network_not_metered">Тек шексіз желіде</string>
     <string name="ext_info_version">Нұсқа</string>
     <string name="ext_info_language">Тіл</string>
-    <string name="ext_info_age_rating">Жас рейтингі</string>
     <string name="action_display_comfortable_grid">Ыңғайлы кесте</string>
     <string name="action_display_cover_only_grid">Атаусыз кесте</string>
     <string name="pref_library_update_refresh_metadata">Метадеректерді автоматты түрде жаңарту</string>
@@ -236,8 +232,6 @@
     <string name="ext_app_info">Қолданба туралы</string>
     <string name="untrusted_extension">Сенімсіз кеңейту</string>
     <string name="untrusted_extension_message">Бұл кеңейту сенімсіз сертификатпен қол қойылған және іске қосылмаған. \n \nЗиянды кеңейту Mihon-де сақталған кез келген кіру тіркелгі деректерін оқуы немесе еркін кодты орындауы мүмкін. \n \nОсы сертификатқа сену арқылы сіз осы қауіп-қатерді қабылдайсыз.</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="ext_nsfw_warning">Бұл кеңейту дереккөзінде NSFW (18+) мазмұны болуы мүмкін</string>
     <string name="ext_install_service_notif">Кеңейту орнатылуда…</string>
     <string name="pref_fullscreen">Толық экранды</string>
     <string name="pref_page_transitions">Беттің ауысуын анимациялау</string>

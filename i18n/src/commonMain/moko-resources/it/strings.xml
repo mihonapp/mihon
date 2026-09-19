@@ -399,11 +399,8 @@
     <string name="no_pinned_sources">Non hai fonti fissate</string>
     <string name="pref_remove_bookmarked_chapters">Consenti eliminazione capitoli con segnalibro</string>
     <string name="pref_category_delete_chapters">Elimina capitoli</string>
-    <string name="ext_nsfw_warning">Fonti di questa estensione potrebbero contenere materiale NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="backup_restore_missing_trackers">Tracker non collegati:</string>
     <string name="no_chapters_error">Nessun capitolo trovato</string>
-    <string name="parental_controls_info">Questo non impedisce a estensioni non ufficiali oppure incorrettamente segnalate di mostrare contenuti 18+ all\'interno dell\'applicazione.</string>
     <string name="chapter_settings_updated">Impostazioni predefinite dei capitoli aggiornate</string>
     <string name="share_page_info">%1$s: %2$s, pagina %3$d</string>
     <string name="set_chapter_settings_as_default">Imposta come predefinito</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Pagina successiva</string>
     <string name="spen_previous_page">Pagina precedente</string>
     <string name="migration_help_guide">Guida alla migrazione delle fonti</string>
-    <string name="pref_category_nsfw_content">Fonti NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Mostra nelle liste delle fonti e delle estensioni</string>
     <string name="myanimelist_relogin">Per favore accedi di nuovo a MAL</string>
     <string name="file_picker_error">Nessuna app per la selezione dei file trovata</string>
     <string name="pref_viewer_nav">Zone di tocco</string>
@@ -578,7 +573,6 @@
     <string name="pref_reset_viewer_flags_success">Ripristinate tutte le opzioni del lettore</string>
     <string name="pref_reset_viewer_flags_error">Impossibile ripristinare le opzioni del lettore</string>
     <string name="empty_screen">Beh, questo è imbarazzante</string>
-    <string name="ext_info_age_rating">Classificazione per età</string>
     <string name="ext_info_version">Versione</string>
     <string name="ext_info_language">Lingua</string>
     <string name="on_hold_list">In Pausa</string>
@@ -877,4 +871,16 @@
     <string name="download_bookmarked">Segnato</string>
     <string name="action_filter_excluded_scanlators">Filtrare i scanlator esclusi</string>
     <string name="considering">Considerando</string>
+    <string name="ext_content_warning_mixed_description">La fonte per questa estensione potebbe contenere contenuto non sicuro o 18+.</string>
+    <string name="downloading_with_progress">Scaricamento… (%d%%)</string>
+    <string name="ext_info_warning">Avviso</string>
+    <string name="ext_content_warning_nsfw">Per maggiorenni</string>
+    <string name="label_support_us">Supportaci</string>
+    <string name="pref_allowed_content_warnings">Avvisi sui contenuti consentiti</string>
+    <string name="ext_content_warning_nsfw_description">Le fonti per questa estensione sono dirette principalmente a contenuti 18+.</string>
+    <string name="theme_tokyonight">Tokyo Notte</string>
+    <string name="pref_category_extensions">Estensioni</string>
+    <string name="ext_content_warning_mixed">Misto</string>
+    <string name="ext_content_warning_safe">Sicuro</string>
+    <string name="content_warnings_info">Per rendere effettive le modifiche è necessario riavviare l\'app. Le estensioni che non sono caricate non forniranno le loro fonti in nessuna parte dell\'app. Ciò non impedisce alle estensioni non ufficiali o potenzialmente contrassegnate in modo errato di mostrare contenuti 18+ all\'interno dell\'app.</string>
 </resources>

@@ -124,9 +124,6 @@
     <string name="portrait">Кніжная</string>
     <string name="pref_library_columns">Элементаў у радку</string>
     <string name="pref_category_display">Адлюстраванне</string>
-    <string name="parental_controls_info">Гэта не перашкаджае неафіцыйным або патэнцыйна няправільна пазначаным пашырэнням паказваць кантэнт 18+ (NSFW) у праграме.</string>
-    <string name="pref_show_nsfw_source">Паказваць у спісе крыніц і пашырэнняў</string>
-    <string name="pref_category_nsfw_content">Крыніцы 18+ (NSFW)</string>
     <string name="hide_notification_content">Схаваць змесціва апавяшчэнняў</string>
     <string name="secure_screen_summary">Абарона экрана хавае змесціва праграмы пры пераключэнні паміж праграмамі і стварэнні скрыншотаў</string>
     <string name="secure_screen">Абарона экрана</string>
@@ -182,8 +179,6 @@
     <string name="pref_show_navigation_mode_summary">Кароткачасова паказваць пры адкрыцці чытанкі</string>
     <string name="pref_show_navigation_mode">Паказваць накладанне зон дотыку</string>
     <string name="pref_fullscreen">На ўвесь экран</string>
-    <string name="ext_nsfw_warning">Крыніцы з гэтага пашырэння могуць утрымліваць 18+ кантэнт (NSFW)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="obsolete_extension_message">Гэта пашырэнне больш недаступнае. Яно можа працаваць некарэктна і выклікаць праблемы ў праграме. Рэкамендуецца яго дэінсталяваць.</string>
     <string name="untrusted_extension_message">Шкодныя пашырэнні могуць счытваць любыя захаваныя ўліковыя даныя або выконваць адвольны код.\n\nДавяраючы гэтаму пашырэнню, вы прымаеце гэтыя рызыкі.</string>
     <string name="untrusted_extension">Ненадзейнае пашырэнне</string>
@@ -308,7 +303,6 @@
     <string name="delete_category_confirmation">Вы хочаце выдаліць катэгорыю «%s»?</string>
     <string name="internal_error">InternalError: Праверце журнал збояў для дадатковых зведак</string>
     <string name="ext_update_all">Абнавіць усё</string>
-    <string name="ext_info_age_rating">Узроставы цэнз</string>
     <string name="pref_update_only_started">Прапускаць непачатыя творы</string>
     <string name="action_show_manga">Паказаць твор</string>
     <string name="ext_info_version">Версія</string>

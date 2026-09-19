@@ -100,7 +100,6 @@
     <string name="pref_category_security">Sikkerheit</string>
     <string name="lock_always">Alltid</string>
     <string name="lock_never">Aldri</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) kjeder</string>
     <string name="relative_time_today">I dag</string>
     <string name="pref_category_display">Skjerm</string>
     <string name="pref_library_columns">Element per rad</string>
@@ -130,7 +129,6 @@
     <string name="ext_uninstall">Avinstaller</string>
     <string name="untrusted_extension">Ikkje-tiltrudd utvidelse</string>
     <string name="extension_api_error">Kunne ikkje henta utvidingslista</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="ext_install_service_notif">Installerer utviding…</string>
     <string name="ext_installer_pref">Installatør</string>
     <string name="ext_installer_shizuku_stopped">Shizuku køyrar ikkje</string>
@@ -234,7 +232,6 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Installer og start Shizuku for å bruka Shizuku som utvidingsinstallatør.</string>
     <string name="update_12hour">Kvar tolvte time</string>
     <string name="obsolete_extension_message">Denne utvidinga er ikkje lengre tilgjengeleg.</string>
-    <string name="ext_nsfw_warning">Kan innehalda NSFW (18+) innhald</string>
     <string name="pref_category_delete_chapters">Slett kapittel</string>
     <string name="pref_download_new_categories_details">Manga i utelatne kategoriar vil ikkje bli nedlasta sjølv om dei òg er i inkluderte kategoriar.</string>
     <string name="pref_backup_interval">Reservekopifrekvens</string>

@@ -352,11 +352,8 @@
     <string name="action_search_settings">Подешавања претраге</string>
     <string name="action_sort_date_added">Датум додавања</string>
     <string name="pref_show_reading_mode">Прикажи начин читања</string>
-    <string name="ext_nsfw_warning">Може садржати садржај за одрасле (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_library_update_refresh_metadata_summary">Провери да ли постоје нови омоти при ажурирању колекције</string>
     <string name="pref_library_update_refresh_metadata">Аутоматски освежи метаподатке</string>
-    <string name="parental_controls_info">Ово не спречава незваничне или потенцијално погрешно означене додатке да прикажу садржај за одрасле (18+) унутар апликације.</string>
     <string name="action_filter_tracked">Запраћено</string>
     <string name="label_warning">Упозорење</string>
     <string name="confirm_lock_change">Оверите да бисте потврдили промене</string>
@@ -384,8 +381,6 @@
     <string name="theme_tealturquoise">Плавозелена и тиркизна</string>
     <string name="theme_yinyang">Јин и јанг</string>
     <string name="pref_dark_theme_pure_black">Потпуно црна тема</string>
-    <string name="pref_category_nsfw_content">NSFW - извори за одрасле (18+)</string>
-    <string name="pref_show_nsfw_source">Покажи у листи за изворе и додатке</string>
     <string name="pref_category_reading_mode">Начин читања</string>
     <string name="ext_installer_pref">Инсталер</string>
     <string name="pref_category_auto_download">Аутоматско преузимање</string>
@@ -661,7 +656,6 @@
     <string name="pref_reset_user_agent_string">Ресетуј подразумевани низ корисничког агента</string>
     <string name="label_tracked_titles">Праћени наслови</string>
     <string name="label_tracker_section">Пратиоци</string>
-    <string name="ext_info_age_rating">Рангирање по узрасту</string>
     <string name="custom_cover">Персонализовани омот</string>
     <string name="pref_reset_viewer_flags">Ресетуј подешавања читача по наслову</string>
     <string name="source_empty_screen">Извор није пронађен</string>

@@ -352,14 +352,11 @@
     <string name="lock_when_idle">Uzamknúť pri nečinnosti</string>
     <string name="lock_always">Vždy</string>
     <string name="lock_never">Nikdy</string>
-    <string name="pref_show_nsfw_source">Zobraziť v zoznamoch zdrojov a rozšírení</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
     <string name="relative_time_today">Dnes</string>
     <string name="connected_to_wifi">Iba na Wi-Fi</string>
     <string name="restrictions">Obmedzenia: %s</string>
     <string name="pref_update_only_completely_read">S neprečítanými kapitolami</string>
     <string name="pref_update_only_started">Ktoré sa ešte nezačali</string>
-    <string name="parental_controls_info">Toto nastavenie avšak nebráni tomu, aby sa v aplikácii objavil neoficiálny alebo potenciálne nesprávne označený obsah NSFW (18+).</string>
     <string name="pref_category_library_update">Globálna aktualizácia</string>
     <string name="pref_library_update_refresh_metadata">Automatický obnoviť metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Pri aktualizácii knižnice skontrolujte nový obal a podrobnosti</string>
@@ -430,7 +427,6 @@
     <string name="add_tracking">Pridať sledovanie</string>
     <string name="unfinished_list">Nedokončený zoznam</string>
     <string name="information_empty_category_dialog">Zatiaľ nemáte žiadne kategórie.</string>
-    <string name="ext_info_age_rating">Vekové hodnotenie</string>
     <string name="date">Dátum</string>
     <string name="tapping_inverted_both">Obe</string>
     <string name="nav_zone_prev">Predchádzajúci</string>
@@ -546,8 +542,6 @@
     <string name="action_sort_last_manga_update">Posledná aktualizácia</string>
     <string name="action_remove_everything">Odstrániť všetko</string>
     <string name="internal_error">InternalError: Skontrolujte záznmy pre ďalšie informácie</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="ext_nsfw_warning">Zdroje z tohto rozšírenia môžu obsahovať obsah pre dospleých (18+)</string>
     <string name="pref_dual_page_invert_summary">Ak umiestnenie rozdelenia na dve strany nezodpovedá smeru čítania</string>
     <string name="pref_show_reading_mode">Zobraziť režim čítania</string>
     <string name="invalid_backup_file_missing_manga">Záloha neobsahuje žiadnu mangu.</string>

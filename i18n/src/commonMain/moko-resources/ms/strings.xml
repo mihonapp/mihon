@@ -400,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Penjejak yang tidak dilog masuk:</string>
     <string name="pref_remove_bookmarked_chapters">Benarkan memadam bab yang ditanda</string>
     <string name="pref_category_delete_chapters">Padam bab</string>
-    <string name="ext_nsfw_warning">Sumber daripada sambungan ini mungkin mengandungi kandungan 18+ tahun keatas</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Ini tidak menghalang sambungan yang tidak rasmi atau yang tidak ditandakan dengan betul daripada menayangkan kandungan 18+ tahun keatas dalam aplikasi.</string>
     <string name="no_chapters_error">Tiada bab dijumpai</string>
     <string name="chapter_settings_updated">Tetapan bab lalai dikemas kini</string>
     <string name="set_chapter_settings_as_default">Tetapkan sebagai lalai</string>
@@ -421,8 +418,6 @@
     <string name="spen_next_page">Muka surat seterusnya</string>
     <string name="spen_previous_page">Muka surat terdahulu</string>
     <string name="migration_help_guide">Panduan memindahkan sumber</string>
-    <string name="pref_category_nsfw_content">Sumber NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Tunjuk dalam senarai sumber dan sambungan</string>
     <string name="file_picker_error">Tiada aplikasi memilih fail</string>
     <string name="myanimelist_relogin">Sila log masuk ke MAL sekali lagi</string>
     <string name="pref_viewer_nav">Zon ketik</string>
@@ -579,7 +574,6 @@
     <string name="empty_screen">Hmm, ini agak menjanggalkan</string>
     <string name="pref_reset_viewer_flags_error">Tidak dapat set semula tetapan pembaca</string>
     <string name="ext_info_version">Versi</string>
-    <string name="ext_info_age_rating">Peringkat umur</string>
     <string name="ext_info_language">Bahasa</string>
     <string name="wish_list">Senarai Hajat</string>
     <string name="complete_list">Senarai Selesai</string>
