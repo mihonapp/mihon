@@ -83,7 +83,10 @@ import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresRoute
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupRoute
+import eu.kanade.presentation.util.AssistContentManager
+import eu.kanade.presentation.util.AssistContentRoute
 import eu.kanade.presentation.util.AssistContentScreen
+import eu.kanade.presentation.util.LocalAssistContentManager
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.LocalTopLevelBackStack
 import eu.kanade.presentation.util.popUntilRoot
@@ -167,7 +170,9 @@ class MainActivity : BaseActivity() {
     // To be checked by splash screen. If true then splash screen will be removed.
     var ready = false
 
-    private var navigator: Navigator? = null
+    private var backStack: NavBackStack<NavKey>? = null
+
+    private val assistContentManager = AssistContentManager()
 
     init {
         registerSecureActivity(this)
@@ -226,8 +231,11 @@ class MainActivity : BaseActivity() {
             CompositionLocalProvider(
                 LocalBackStack provides backStack,
                 LocalTopLevelBackStack provides topLevelBackStack,
+                LocalAssistContentManager provides assistContentManager,
             ) {
                 LaunchedEffect(backStack) {
+                    this@MainActivity.backStack = backStack
+
                     if (isLaunch) {
                         // Set start screen
                         handleIntentAction(intent, backStack, resultEventBus)
@@ -356,9 +364,11 @@ class MainActivity : BaseActivity() {
 
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        when (val screen = navigator?.lastItem) {
-            is AssistContentScreen -> {
-                screen.onProvideAssistUrl()?.let { outContent.webUri = it.toUri() }
+        when (backStack?.lastOrNull()) {
+            is AssistContentRoute -> {
+                assistContentManager.currentAssistUrl?.let {
+                    outContent.webUri = it.toUri()
+                }
             }
         }
     }

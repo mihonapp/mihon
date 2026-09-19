@@ -37,7 +37,9 @@ import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
+import eu.kanade.presentation.util.AssistContentRoute
 import eu.kanade.presentation.util.AssistContentScreen
+import eu.kanade.presentation.util.LocalAssistContentManager
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
@@ -85,7 +87,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 data class MangaRoute(
     val mangaId: Long,
     val fromSource: Boolean = false,
-) : NavKey
+) : NavKey, AssistContentRoute
 
 @Composable
 fun MangaScreen(
@@ -94,6 +96,7 @@ fun MangaScreen(
 ) {
     val backStack = LocalBackStack.current
     val resultEventBus = LocalResultEventBus.current
+    val assistContentManager = LocalAssistContentManager.current
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
@@ -116,8 +119,7 @@ fun MangaScreen(
         if (isHttpSource) {
             try {
                 withIOContext {
-                    // TODO(nav): assist
-                    // assistUrl = getMangaUrl(viewModel.manga, viewModel.source)
+                    assistContentManager.currentAssistUrl = getMangaUrl(viewModel.manga, viewModel.source)
                 }
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e) { "Failed to get manga URL" }
