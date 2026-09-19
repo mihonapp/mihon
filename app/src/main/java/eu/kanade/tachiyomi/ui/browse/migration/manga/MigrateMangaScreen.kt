@@ -17,15 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.manga.components.BaseMangaListItem
-import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.serialization.Serializable
-import mihon.feature.migration.config.MigrationConfigRoute
+import mihon.core.navigation.MangaRoute
+import mihon.core.navigation.MigrationConfigRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
 import mihon.navigation.util.LocalBackStack
@@ -38,9 +36,6 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.selectedBackground
 import tachiyomi.presentation.core.util.shouldExpandFAB
-
-@Serializable
-data class MigrateMangaRoute(val sourceId: Long) : NavKey
 
 @Composable
 fun MigrateMangaScreen(sourceId: Long) {

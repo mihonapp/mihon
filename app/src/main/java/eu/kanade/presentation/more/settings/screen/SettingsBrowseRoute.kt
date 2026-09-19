@@ -8,10 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresRoute
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
+import mihon.core.navigation.ExtensionStoresRoute
 import mihon.domain.extension.model.ContentWarning
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.i18n.stringResource

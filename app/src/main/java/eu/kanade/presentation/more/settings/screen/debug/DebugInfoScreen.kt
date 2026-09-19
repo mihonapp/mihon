@@ -11,7 +11,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation3.runtime.NavKey
 import androidx.profileinstaller.ProfileVerifier
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
@@ -22,17 +21,15 @@ import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.common.FeatureFlags
+import mihon.core.navigation.BackupSchemaRoute
+import mihon.core.navigation.WorkerInfoRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Autorenew
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
-
-@Serializable
-data object DebugInfoRoute : NavKey
 
 @Composable
 fun DebugInfoScreen() {

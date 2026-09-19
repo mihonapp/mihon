@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation3.runtime.NavKey
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
 import dev.zacsweers.metro.AppScope
@@ -37,8 +36,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
+import mihon.core.navigation.WorkerInfoRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.ContentCopy
 import mihon.navigation.util.LocalBackStack
@@ -47,11 +46,6 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.plus
 import kotlin.time.Instant
-
-@Serializable
-data object WorkerInfoRoute : NavKey {
-    const val TITLE = "Worker info"
-}
 
 @Composable
 fun WorkerInfoScreen() {

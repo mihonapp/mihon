@@ -4,21 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.webview.WebViewScreenContent
-import kotlinx.serialization.Serializable
-import mihon.navigation.util.AssistContentRoute
 import mihon.navigation.util.LocalAssistContentManager
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.screens.LoadingScreen
-
-@Serializable
-data class WebViewRoute(
-    val url: String,
-    val initialTitle: String? = null,
-    val sourceId: Long? = null,
-) : NavKey, AssistContentRoute
 
 @Composable
 fun WebViewScreen(

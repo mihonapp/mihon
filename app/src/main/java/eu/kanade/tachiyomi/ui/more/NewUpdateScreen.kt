@@ -4,20 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.more.NewUpdateScreen
 import eu.kanade.tachiyomi.util.system.openInBrowser
-import kotlinx.serialization.Serializable
 import mihon.navigation.util.LocalBackStack
-
-@Serializable
-data class NewUpdateRoute(
-    val versionName: String,
-    val changelogInfo: String,
-    val releaseLink: String,
-    val downloadLink: String,
-) : NavKey
 
 @Composable
 fun NewUpdateScreen(

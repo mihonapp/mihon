@@ -3,22 +3,18 @@ package eu.kanade.tachiyomi.ui.browse.migration.search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.MigrateSearchScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
-import eu.kanade.tachiyomi.ui.manga.MangaRoute
-import kotlinx.serialization.Serializable
+import mihon.core.navigation.MangaRoute
+import mihon.core.navigation.MigrateSourceSearchRoute
+import mihon.core.navigation.MigrationListRoute
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
-import mihon.feature.migration.list.MigrationListRoute
 import mihon.navigation.util.LocalBackStack
 import mihon.navigation.util.popUntil
 import mihon.navigation.util.replace
-
-@Serializable
-data class MigrateSearchRoute(val mangaId: Long) : NavKey
 
 @Composable
 fun MigrateSearchScreen(mangaId: Long) {

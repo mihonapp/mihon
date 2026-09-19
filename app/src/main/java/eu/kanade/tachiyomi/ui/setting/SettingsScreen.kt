@@ -34,14 +34,15 @@ import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
 import eu.kanade.presentation.more.settings.screen.SettingsDownloadRoute
 import eu.kanade.presentation.more.settings.screen.SettingsLibraryRoute
 import eu.kanade.presentation.more.settings.screen.SettingsReaderRoute
-import eu.kanade.presentation.more.settings.screen.SettingsSearchRoute
 import eu.kanade.presentation.more.settings.screen.SettingsSecurityRoute
 import eu.kanade.presentation.more.settings.screen.SettingsTrackingRoute
-import eu.kanade.presentation.more.settings.screen.about.AboutRoute
 import eu.kanade.presentation.more.settings.screen.about.getVersionName
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.isTabletUi
-import kotlinx.serialization.Serializable
+import mihon.core.navigation.AboutRoute
+import mihon.core.navigation.SettingsRoute
+import mihon.core.navigation.SettingsSearchRoute
+import mihon.core.navigation.domain.SettingsDestination
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ChromeReaderMode
 import mihon.icons.materialsymbols.rounded.Code
@@ -59,21 +60,6 @@ import mihon.navigation.util.replace
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
-
-@Serializable
-data class SettingsRoute(val settingsDestination: SettingsDestination? = null) : NavKey
-
-@Serializable
-sealed class SettingsDestination(val id: Int) {
-    @Serializable
-    data object About : SettingsDestination(0)
-
-    @Serializable
-    data object DataAndStorage : SettingsDestination(1)
-
-    @Serializable
-    data object Tracking : SettingsDestination(2)
-}
 
 fun NavBackStack<NavKey>.addSettingsRoute(settingsRoute: SettingsRoute, isTabletUi: Boolean) {
     val route = when (settingsRoute.settingsDestination) {

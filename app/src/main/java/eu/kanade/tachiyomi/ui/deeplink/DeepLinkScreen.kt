@@ -6,22 +6,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
-import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import kotlinx.serialization.Serializable
+import mihon.core.navigation.GlobalSearchRoute
+import mihon.core.navigation.MangaRoute
 import mihon.navigation.util.LocalBackStack
 import mihon.navigation.util.replace
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
-
-@Serializable
-data class DeepLinkRoute(val query: String = "") : NavKey
 
 @Composable
 fun DeepLinkScreen(query: String) {

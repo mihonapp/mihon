@@ -38,8 +38,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.more.settings.screen.data.CreateBackupRoute
-import eu.kanade.presentation.more.settings.screen.data.RestoreBackupRoute
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
@@ -57,6 +55,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import logcat.LogPriority
 import mihon.app.di.appGraph
+import mihon.core.navigation.CreateBackupRoute
+import mihon.core.navigation.RestoreBackupRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import mihon.navigation.util.LocalBackStack

@@ -19,10 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.LocaleListCompat
-import androidx.navigation3.runtime.NavKey
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import kotlinx.serialization.Serializable
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Check
 import mihon.navigation.util.LocalBackStack
@@ -32,9 +30,6 @@ import tachiyomi.i18n.MR
 import tachiyomi.i18n.R
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
-
-@Serializable
-data object AppLanguageRoute : NavKey
 
 @Composable
 fun AppLanguageScreen() {

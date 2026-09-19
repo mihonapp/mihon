@@ -15,12 +15,12 @@ import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
-import eu.kanade.tachiyomi.ui.category.CategoryRoute
 import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.coroutines.flow.collectLatest
+import mihon.core.navigation.CategoryRoute
+import mihon.core.navigation.MangaRoute
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.i18n.stringResource

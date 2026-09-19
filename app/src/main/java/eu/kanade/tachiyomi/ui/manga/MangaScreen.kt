@@ -38,28 +38,27 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSearchEventKey
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceRoute
 import eu.kanade.tachiyomi.ui.browse.source.browse.browseSearchGenreEventKey
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
-import eu.kanade.tachiyomi.ui.category.CategoryRoute
-import eu.kanade.tachiyomi.ui.home.HomeRoute
 import eu.kanade.tachiyomi.ui.home.LibrarySearchEventKey
-import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesRoute
-import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialogRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.ui.setting.SettingsDestination
-import eu.kanade.tachiyomi.ui.setting.SettingsRoute
 import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
-import eu.kanade.tachiyomi.ui.webview.WebViewRoute
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import logcat.LogPriority
-import mihon.feature.migration.config.MigrationConfigRoute
+import mihon.core.navigation.BrowseSourceRoute
+import mihon.core.navigation.CategoryRoute
+import mihon.core.navigation.GlobalSearchRoute
+import mihon.core.navigation.HomeRoute
+import mihon.core.navigation.MangaNotesRoute
+import mihon.core.navigation.MangaRoute
+import mihon.core.navigation.MigrationConfigRoute
+import mihon.core.navigation.SettingsRoute
+import mihon.core.navigation.TrackInfoDialogRoute
+import mihon.core.navigation.WebViewRoute
+import mihon.core.navigation.domain.SettingsDestination
 import mihon.feature.migration.dialog.MigrateMangaDialog
-import mihon.navigation.util.AssistContentRoute
 import mihon.navigation.util.LocalAssistContentManager
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.withIOContext
@@ -67,12 +66,6 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.screens.LoadingScreen
-
-@Serializable
-data class MangaRoute(
-    val mangaId: Long,
-    val fromSource: Boolean = false,
-) : NavKey, AssistContentRoute
 
 @Composable
 fun MangaScreen(

@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation3.runtime.NavKey
 import androidx.preference.DialogPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
@@ -38,14 +37,10 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.sourcePreferences
 import eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText.Companion.setIncognito
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.LoadingScreen
-
-@Serializable
-data class SourcePreferencesRoute(val sourceId: Long) : NavKey
 
 @Composable
 fun SourcePreferencesScreen(sourceId: Long) {

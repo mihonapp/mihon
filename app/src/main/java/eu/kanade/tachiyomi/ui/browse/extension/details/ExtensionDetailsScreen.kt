@@ -4,17 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.ExtensionDetailsScreen
-import kotlinx.serialization.Serializable
+import mihon.core.navigation.SourcePreferencesRoute
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
-
-@Serializable
-data class ExtensionDetailsRoute(val pkgName: String) : NavKey
 
 @Composable
 fun ExtensionDetailsScreen(pkgName: String) {

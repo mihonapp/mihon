@@ -21,7 +21,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation3.runtime.NavKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -40,7 +39,6 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.serialization.Serializable
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
@@ -50,9 +48,6 @@ import tachiyomi.presentation.core.components.SectionCard
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-
-@Serializable
-data class RestoreBackupRoute(val uri: String) : NavKey
 
 @Composable
 fun RestoreBackupScreen(uri: String) {

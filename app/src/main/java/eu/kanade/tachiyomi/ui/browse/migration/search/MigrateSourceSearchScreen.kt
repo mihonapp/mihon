@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.BrowseSourceContent
@@ -24,13 +23,12 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterDialog
 import eu.kanade.tachiyomi.ui.home.TabEvent
-import eu.kanade.tachiyomi.ui.manga.MangaRoute
-import eu.kanade.tachiyomi.ui.webview.WebViewRoute
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
+import mihon.core.navigation.MangaRoute
+import mihon.core.navigation.MigrationListRoute
+import mihon.core.navigation.WebViewRoute
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
-import mihon.feature.migration.list.MigrationListRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.navigation.util.LocalBackStack
@@ -44,13 +42,6 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
-
-@Serializable
-data class MigrateSourceSearchRoute(
-    val currentManga: Manga,
-    val sourceId: Long,
-    val query: String?,
-) : NavKey
 
 @Composable
 fun MigrateSourceSearchScreen(

@@ -5,22 +5,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation3.runtime.NavKey
 import eu.kanade.presentation.more.onboarding.OnboardingScreen
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
 import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
 import eu.kanade.presentation.util.isTabletUi
-import eu.kanade.tachiyomi.ui.setting.SettingsDestination
-import eu.kanade.tachiyomi.ui.setting.SettingsRoute
 import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
-import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
+import mihon.core.navigation.SettingsRoute
+import mihon.core.navigation.domain.SettingsDestination
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
-
-@Serializable
-data object OnboardingRoute : NavKey
 
 @Composable
 fun OnboardingScreen() {

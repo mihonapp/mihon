@@ -35,17 +35,17 @@ import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.BrowseSwitchToExtensionEventKey
 import eu.kanade.tachiyomi.ui.browse.BrowseTab
-import eu.kanade.tachiyomi.ui.download.DownloadQueueRoute
 import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTabSearchEventKey
-import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
+import mihon.core.navigation.DownloadQueueRoute
+import mihon.core.navigation.MangaRoute
 import mihon.navigation.util.LocalBackStack
 import mihon.navigation.util.LocalTopLevelBackStack
 import mihon.navigation.util.TabOptions
@@ -54,9 +54,6 @@ import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
-
-@Serializable
-data object HomeRoute : NavKey
 
 @Serializable
 sealed interface TopLevelRoute : NavKey {

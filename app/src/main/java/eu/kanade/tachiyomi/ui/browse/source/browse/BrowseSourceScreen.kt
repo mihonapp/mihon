@@ -28,7 +28,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.ResultEffect
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.BrowseSourceContent
@@ -38,18 +37,16 @@ import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesRoute
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel.Listing
-import eu.kanade.tachiyomi.ui.category.CategoryRoute
-import eu.kanade.tachiyomi.ui.manga.MangaRoute
-import eu.kanade.tachiyomi.ui.webview.WebViewRoute
-import kotlinx.serialization.Serializable
+import mihon.core.navigation.CategoryRoute
+import mihon.core.navigation.MangaRoute
+import mihon.core.navigation.SourcePreferencesRoute
+import mihon.core.navigation.WebViewRoute
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.NewReleases
 import mihon.icons.materialsymbols.roundedfilled.Favorite
-import mihon.navigation.util.AssistContentRoute
 import mihon.navigation.util.LocalAssistContentManager
 import mihon.navigation.util.LocalBackStack
 import mihon.presentation.core.util.collectAsLazyPagingItems
@@ -62,12 +59,6 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
-
-@Serializable
-data class BrowseSourceRoute(
-    val sourceId: Long,
-    val listingQuery: String?,
-) : NavKey, AssistContentRoute
 
 @Composable
 fun BrowseSourceScreen(

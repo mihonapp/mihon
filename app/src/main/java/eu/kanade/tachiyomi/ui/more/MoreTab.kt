@@ -17,19 +17,19 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.ui.category.CategoryRoute
-import eu.kanade.tachiyomi.ui.download.DownloadQueueRoute
 import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
-import eu.kanade.tachiyomi.ui.setting.SettingsDestination
-import eu.kanade.tachiyomi.ui.setting.SettingsRoute
 import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
-import eu.kanade.tachiyomi.ui.stats.StatsRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import mihon.feature.support.SupportUsRoute
+import mihon.core.navigation.CategoryRoute
+import mihon.core.navigation.DownloadQueueRoute
+import mihon.core.navigation.SettingsRoute
+import mihon.core.navigation.StatsRoute
+import mihon.core.navigation.SupportUsRoute
+import mihon.core.navigation.domain.SettingsDestination
 import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.launchIO
 
