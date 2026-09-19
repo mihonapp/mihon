@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.LocalResultEventBus
 import cafe.adriel.voyager.navigator.Navigator
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.updates.UpdateScreen
@@ -13,6 +14,7 @@ import eu.kanade.presentation.updates.UpdatesDeleteConfirmationDialog
 import eu.kanade.presentation.updates.UpdatesFilterDialog
 import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.ui.download.DownloadQueueScreen
+import eu.kanade.tachiyomi.ui.home.ShowBottomNavEvent
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -26,6 +28,7 @@ import tachiyomi.i18n.MR
 fun UpdatesTab() {
     val context = LocalContext.current
     val backStack = LocalBackStack.current
+    val resultBus = LocalResultEventBus.current
     val viewModel = metroViewModel<UpdatesViewModel>()
     val settingsViewModel = metroViewModel<UpdatesSettingsViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -88,8 +91,9 @@ fun UpdatesTab() {
     }
 
     LaunchedEffect(state.selectionMode) {
-        // TODO(homescreen): bottomnav
-        // HomeScreen.showBottomNav(!state.selectionMode)
+        resultBus.sendResult(
+            result = ShowBottomNavEvent(!state.selectionMode)
+        )
     }
 
     LaunchedEffect(state.isLoading) {

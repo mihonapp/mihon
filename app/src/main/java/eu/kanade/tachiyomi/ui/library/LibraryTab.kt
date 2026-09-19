@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.util.fastAll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.LocalResultEventBus
 import cafe.adriel.voyager.navigator.Navigator
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
@@ -29,6 +30,7 @@ import eu.kanade.presentation.util.LocalBackStack
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchRoute
 import eu.kanade.tachiyomi.ui.category.CategoryRoute
+import eu.kanade.tachiyomi.ui.home.ShowBottomNavEvent
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaRoute
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -55,6 +57,7 @@ import tachiyomi.source.local.isLocal
 fun LibraryTab() {
     val backStack = LocalBackStack.current
     val context = LocalContext.current
+    val resultBus = LocalResultEventBus.current
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
@@ -232,8 +235,9 @@ fun LibraryTab() {
     }
 
     LaunchedEffect(state.selectionMode, state.dialog) {
-        // TODO(homescreen): bottomnav
-        // HomeScreen.showBottomNav(!state.selectionMode)
+        resultBus.sendResult(
+            result = ShowBottomNavEvent(!state.selectionMode)
+        )
     }
 
     LaunchedEffect(state.isLoading) {
