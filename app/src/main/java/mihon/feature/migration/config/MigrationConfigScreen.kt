@@ -77,7 +77,7 @@ import tachiyomi.presentation.core.util.shouldExpandFAB
 fun MigrationConfigScreen(mangaIds: Collection<Long>) {
     val backStack = LocalBackStack.current
 
-    val viewModel = metroViewModel<Model>()
+    val viewModel = metroViewModel<MigrationConfigViewModel>()
     val state by viewModel.state.collectAsState()
 
     var migrationSheetOpen by rememberSaveable { mutableStateOf(false) }
@@ -121,20 +121,20 @@ fun MigrationConfigScreen(mangaIds: Collection<Long>) {
                             AppBar.Action(
                                 title = stringResource(MR.strings.migrationConfigScreen_selectAllLabel),
                                 icon = MaterialSymbols.Rounded.SelectAll,
-                                onClick = { viewModel.toggleSelection(Model.SelectionConfig.All) },
+                                onClick = { viewModel.toggleSelection(MigrationConfigViewModel.SelectionConfig.All) },
                             ),
                             AppBar.Action(
                                 title = stringResource(MR.strings.migrationConfigScreen_selectNoneLabel),
                                 icon = MaterialSymbols.Rounded.Deselect,
-                                onClick = { viewModel.toggleSelection(Model.SelectionConfig.None) },
+                                onClick = { viewModel.toggleSelection(MigrationConfigViewModel.SelectionConfig.None) },
                             ),
                             AppBar.OverflowAction(
                                 title = stringResource(MR.strings.migrationConfigScreen_selectEnabledLabel),
-                                onClick = { viewModel.toggleSelection(Model.SelectionConfig.Enabled) },
+                                onClick = { viewModel.toggleSelection(MigrationConfigViewModel.SelectionConfig.Enabled) },
                             ),
                             AppBar.OverflowAction(
                                 title = stringResource(MR.strings.migrationConfigScreen_selectPinnedLabel),
-                                onClick = { viewModel.toggleSelection(Model.SelectionConfig.Pinned) },
+                                onClick = { viewModel.toggleSelection(MigrationConfigViewModel.SelectionConfig.Pinned) },
                             ),
                         ),
                     )
@@ -311,13 +311,13 @@ private fun SourceItem(
 @Inject
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
-class Model(
+class MigrationConfigViewModel(
     val sourcePreferences: SourcePreferences,
     private val sourceManager: SourceManager,
 ) : ViewModel() {
 
-    val state: StateFlow<Model.State>
-        field = MutableStateFlow<Model.State>(State())
+    val state: StateFlow<MigrationConfigViewModel.State>
+        field = MutableStateFlow<MigrationConfigViewModel.State>(State())
 
     private val sourcesComparator = { includedSources: List<Long> ->
         compareBy<MigrationSource>(
