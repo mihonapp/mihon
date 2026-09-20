@@ -42,11 +42,18 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      - name: Decode signing keystore
+        run: echo "$SIGNING_KEY" | base64 -d > "${{ runner.temp }}/antsy.keystore"
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
       - name: Build
-        run: ./gradlew assembleRelease -Pinclude-telemetry -Penable-updater
+        run: ./gradlew assembleRelease -Pdist=github
         env:
-          storeFileBase64: ${{ secrets.SIGNING_KEY }}
+          storeFile: ${{ runner.temp }}/antsy.keystore
           storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyAlias: ${{ secrets.ALIAS }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
@@ -93,10 +100,15 @@ jobs:
         with:
           cache-disabled: true
 
-      - name: Build
-        run: ./gradlew assembleFoss -Penable-updater
+      - name: Decode signing keystore
+        run: echo "$SIGNING_KEY" | base64 -d > "${{ runner.temp }}/antsy.keystore"
         env:
-          storeFileBase64: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+
+      - name: Build
+        run: ./gradlew assembleFoss -Pdist=foss
+        env:
+          storeFile: ${{ runner.temp }}/antsy.keystore
           storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyAlias: ${{ secrets.ALIAS }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
