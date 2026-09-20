@@ -803,6 +803,18 @@ private fun LazyListScope.sharedChapterItems(
                     } else {
                         null
                     },
+                    onTranslateClick = {
+                        val appGraph = context.applicationContext as? mihon.app.di.AppGraphProvider
+                        val workManager = androidx.work.WorkManager.getInstance(context)
+                        val inputData = androidx.work.workDataOf(
+                            eu.kanade.tachiyomi.data.translation.TranslationJob.KEY_MANGA_ID to manga.id,
+                            eu.kanade.tachiyomi.data.translation.TranslationJob.KEY_CHAPTER_ID to item.chapter.id,
+                        )
+                        val request = androidx.work.OneTimeWorkRequestBuilder<eu.kanade.tachiyomi.data.translation.TranslationJob>()
+                            .setInputData(inputData)
+                            .build()
+                        workManager.enqueue(request)
+                    },
                     onChapterSwipe = {
                         onChapterSwipe(item, it)
                     },

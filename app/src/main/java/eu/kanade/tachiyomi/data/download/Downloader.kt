@@ -406,6 +406,24 @@ class Downloader(
             DiskUtil.createNoMediaFile(tmpDir, context)
 
             download.status = Download.State.DOWNLOADED
+
+            // Trigger auto translation if enabled
+            val appGraph = (context.applicationContext as? mihon.app.di.AppGraphProvider)?.appGraph
+            if (appGraph?.translationPreferences?.autoTranslateOnDownload?.get() == true) {
+                try {
+                    val workManager = androidx.work.WorkManager.getInstance(context)
+                    val inputData = androidx.work.workDataOf(
+                        eu.kanade.tachiyomi.data.translation.TranslationJob.KEY_MANGA_ID to download.manga.id,
+                        eu.kanade.tachiyomi.data.translation.TranslationJob.KEY_CHAPTER_ID to download.chapter.id,
+                    )
+                    val request = androidx.work.OneTimeWorkRequestBuilder<eu.kanade.tachiyomi.data.translation.TranslationJob>()
+                        .setInputData(inputData)
+                        .build()
+                    workManager.enqueue(request)
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "Failed to enqueue auto translation job" }
+                }
+            }
         } catch (error: Throwable) {
             if (error is CancellationException) throw error
             // If the page list threw, it will resume here

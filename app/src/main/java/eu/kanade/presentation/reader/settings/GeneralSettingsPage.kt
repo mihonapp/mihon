@@ -7,6 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import mihon.app.di.appGraph
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
@@ -60,6 +63,13 @@ internal fun ColumnScope.GeneralPage(viewModel: ReaderSettingsViewModel) {
     CheckboxItem(
         label = stringResource(MR.strings.pref_show_page_number),
         pref = viewModel.preferences.showPageNumber,
+    )
+
+    val context = LocalContext.current
+    val translationPreferences = remember { context.appGraph.translationPreferences }
+    CheckboxItem(
+        label = "Tampilkan Terjemahan",
+        pref = translationPreferences.showTranslationInReader,
     )
 
     val verticalNavigatorModes by viewModel.preferences.verticalNavigator.collectAsState()

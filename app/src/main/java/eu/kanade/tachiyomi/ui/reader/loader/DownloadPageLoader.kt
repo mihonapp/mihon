@@ -58,7 +58,31 @@ internal class DownloadPageLoader(
     }
 
     private fun getPagesFromDirectory(): List<ReaderPage> {
-        val pages = downloadManager.buildPageList(source, manga, chapter.chapter.toDomainChapter()!!)
+        val appGraph = context.applicationContext as? mihon.app.di.AppGraphProvider
+        val translationPreferences = appGraph?.appGraph?.translationPreferences
+        val translationManager = appGraph?.appGraph?.translationManager
+
+        val showTranslation = translationPreferences?.showTranslationInReader?.get() ?: false
+        val domainChapter = chapter.chapter.toDomainChapter()!!
+
+        if (showTranslation && translationManager != null) {
+            val transDir = translationManager.findTranslationChapterDir(source, manga, domainChapter)
+            val files = transDir?.listFiles()?.filter {
+                it.isFile && (it.name?.endsWith(".jpg", true) == true || it.name?.endsWith(".png", true) == true || it.name?.endsWith(".webp", true) == true)
+            }?.sortedBy { it.name }
+
+            if (!files.isNullOrEmpty()) {
+                return files.mapIndexed { index, file ->
+                    ReaderPage(index, "", "") {
+                        file.openInputStream()
+                    }.apply {
+                        status = Page.State.Ready
+                    }
+                }
+            }
+        }
+
+        val pages = downloadManager.buildPageList(source, manga, domainChapter)
         return pages.map { page ->
             ReaderPage(page.index, page.url, page.imageUrl) {
                 context.contentResolver.openInputStream(page.uri ?: Uri.EMPTY)!!

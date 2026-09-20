@@ -313,6 +313,10 @@ dependencies {
     implementation(libs.bundles.markdown)
     implementation(libs.materialKolor)
 
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.mlkit.language.id)
+    implementation(libs.mlkit.translate)
+
     // Logging
     implementation(libs.logcat)
 

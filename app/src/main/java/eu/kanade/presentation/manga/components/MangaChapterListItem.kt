@@ -33,7 +33,9 @@ import mihon.icons.materialsymbols.rounded.BookmarkAdd
 import mihon.icons.materialsymbols.rounded.BookmarkRemove
 import mihon.icons.materialsymbols.rounded.Delete
 import mihon.icons.materialsymbols.rounded.Done
+import androidx.compose.material3.IconButton
 import mihon.icons.materialsymbols.rounded.Download
+import mihon.icons.materialsymbols.rounded.Translate
 import mihon.icons.materialsymbols.rounded.FileDownloadOff
 import mihon.icons.materialsymbols.rounded.RemoveDone
 import mihon.icons.materialsymbols.roundedfilled.Bookmark
@@ -62,6 +64,7 @@ fun MangaChapterListItem(
     onLongClick: () -> Unit,
     onClick: () -> Unit,
     onDownloadClick: ((ChapterDownloadAction) -> Unit)?,
+    onTranslateClick: (() -> Unit)? = null,
     onChapterSwipe: (LibraryPreferences.ChapterSwipeAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -168,6 +171,19 @@ fun MangaChapterListItem(
                             )
                         }
                     }
+                }
+            }
+
+            if (downloadStateProvider() == Download.State.DOWNLOADED && onTranslateClick != null) {
+                IconButton(
+                    onClick = onTranslateClick,
+                    modifier = Modifier.padding(start = 2.dp),
+                ) {
+                    Icon(
+                        imageVector = MaterialSymbols.Rounded.Translate,
+                        contentDescription = "Translate Chapter",
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
                 }
             }
 

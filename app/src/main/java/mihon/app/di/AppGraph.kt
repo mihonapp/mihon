@@ -92,6 +92,7 @@ interface AppGraph : ViewModelGraph {
     val privacyPreferences: PrivacyPreferences
     val securityPreferences: SecurityPreferences
     val downloadPreferences: DownloadPreferences
+    val translationPreferences: tachiyomi.domain.translation.service.TranslationPreferences
 
     val crashLogUtil: CrashLogUtil
 
@@ -107,6 +108,9 @@ interface AppGraph : ViewModelGraph {
     val chapterCache: ChapterCache
     val coverCache: CoverCache
     val downloadCache: DownloadCache
+    val translationManager: eu.kanade.tachiyomi.data.translation.TranslationManager
+    val getManga: tachiyomi.domain.manga.interactor.GetManga
+    val getChapter: tachiyomi.domain.chapter.interactor.GetChapter
 
     val json: Json
     val protoBuf: ProtoBuf

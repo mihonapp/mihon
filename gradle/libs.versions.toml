@@ -78,6 +78,9 @@ webgpuviewer = "47"
 xmlutil = "1.0.2"
 
 [libraries]
+mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version = "16.0.1" }
+mlkit-language-id = { module = "com.google.mlkit:language-id", version = "17.0.6" }
+mlkit-translate = { module = "com.google.mlkit:translate", version = "17.0.3" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
 android-desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "android-desugar" }
 android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
