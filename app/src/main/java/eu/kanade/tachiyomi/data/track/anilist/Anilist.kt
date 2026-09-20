@@ -216,7 +216,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override suspend fun updateUserConfig() {
         val currentUser = api.getCurrentUser()
-        scorePreference.set(currentUser.mediaListOptions.scoreFormat)
+        scorePreference.set(currentUser.scoreFormat)
         saveDisplayUsername(currentUser.name)
     }
 
