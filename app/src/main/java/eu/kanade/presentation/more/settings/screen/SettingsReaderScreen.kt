@@ -133,20 +133,18 @@ object SettingsReaderScreen : SearchableSettings {
                     subtitle = stringResource(MR.strings.pref_flash_page_summ),
                 ),
                 Preference.PreferenceItem.SliderPreference(
-                    value = flashMillis / ReaderPreferences.MILLI_CONVERSION,
-                    valueRange = 1..15,
+                    preference = flashMillisPref,
+                    valueRange = 300..4500 step 300,
                     title = stringResource(MR.strings.pref_flash_duration),
-                    valueString = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
+                    valueText = { stringResource(MR.strings.pref_flash_duration_summary, it) },
                     enabled = flashPageState,
-                    onValueChanged = { flashMillisPref.set(it * ReaderPreferences.MILLI_CONVERSION) },
                 ),
                 Preference.PreferenceItem.SliderPreference(
-                    value = flashInterval,
+                    preference = flashIntervalPref,
                     valueRange = 1..10,
                     title = stringResource(MR.strings.pref_flash_page_interval),
-                    valueString = pluralStringResource(MR.plurals.pref_pages, flashInterval, flashInterval),
+                    valueText = { pluralStringResource(MR.plurals.pref_pages, it, it) },
                     enabled = flashPageState,
-                    onValueChanged = { flashIntervalPref.set(it) },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = flashColorPref,
@@ -318,13 +316,12 @@ object SettingsReaderScreen : SearchableSettings {
                     enabled = navMode != 5,
                 ),
                 Preference.PreferenceItem.SliderPreference(
-                    value = webtoonSidePadding,
+                    preference = webtoonSidePaddingPref,
                     valueRange = ReaderPreferences.let {
                         it.WEBTOON_PADDING_MIN..it.WEBTOON_PADDING_MAX
                     },
                     title = stringResource(MR.strings.pref_webtoon_side_padding),
-                    valueString = numberFormat.format(webtoonSidePadding / 100f),
-                    onValueChanged = { webtoonSidePaddingPref.set(it) },
+                    valueText = { numberFormat.format(it / 100f) },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = readerPreferences.readerHideThreshold,
@@ -412,11 +409,10 @@ object SettingsReaderScreen : SearchableSettings {
                     enabled = verticalNavigator.isNotEmpty(),
                 ),
                 Preference.PreferenceItem.SliderPreference(
-                    value = verticalNavigatorHeight,
+                    preference = verticalNavigatorHeightPref,
                     valueRange = 65..100,
                     steps = 6,
                     title = stringResource(MR.strings.pref_vertical_navigator_height),
-                    onValueChanged = { verticalNavigatorHeightPref.set(it) },
                     enabled = verticalNavigator.isNotEmpty(),
                 ),
             ),
