@@ -125,7 +125,7 @@ import mihon.core.navigation.util.LocalAssistContentManager
 import mihon.core.navigation.util.LocalBackStack
 import mihon.core.navigation.util.LocalTopLevelBackStack
 import mihon.core.navigation.util.popUntilRoot
-import mihon.core.navigation.util.rememberAdaptiveSheetSceneStrategy
+import mihon.core.navigation.util.rememberOverlaySheetSceneStrategy
 import mihon.core.navigation.util.rememberTopLevelBackStack
 import mihon.core.navigation.util.rememberTwoPaneSettingsSceneStrategy
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -223,7 +223,7 @@ class MainActivity : BaseActivity() {
             val backStack = rememberNavBackStack(HomeRoute)
             val topLevelBackStack = rememberTopLevelBackStack(TopLevelRoute.Library)
             val twoPaneStrategy = rememberTwoPaneSettingsSceneStrategy<NavKey>()
-            val adaptiveSheetSceneStrategy = rememberAdaptiveSheetSceneStrategy<NavKey>()
+            val overlaySheetSceneStrategy = rememberOverlaySheetSceneStrategy<NavKey>()
             val resultEventBus = rememberResultEventBus()
             val resultEventBusNavEntryDecorator = rememberResultEventBusNavEntryDecorator<NavKey>(
                 resultEventBus = resultEventBus,
@@ -271,7 +271,7 @@ class MainActivity : BaseActivity() {
                         NavDisplay(
                             backStack = backStack,
                             onBack = { backStack.removeLastOrNull() },
-                            sceneStrategies = listOf(twoPaneStrategy, adaptiveSheetSceneStrategy),
+                            sceneStrategies = listOf(twoPaneStrategy, overlaySheetSceneStrategy),
                             transitionSpec = {
                                 materialSharedAxisXIn(
                                     forward = true,

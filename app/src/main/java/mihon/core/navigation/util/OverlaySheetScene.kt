@@ -11,7 +11,7 @@ import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
 
-data class AdaptiveSheetScene<T : Any>(
+data class OverlaySheetScene<T : Any>(
     override val key: Any,
     override val previousEntries: List<NavEntry<T>>,
     private val entry: NavEntry<T>,
@@ -22,27 +22,27 @@ data class AdaptiveSheetScene<T : Any>(
     override val content: @Composable () -> Unit = { entry.Content() }
 
     companion object {
-        fun adaptiveSheet() = metadata {
-            put(AdaptiveSheetKey, true)
+        fun overlaySheet() = metadata {
+            put(OverlaySheetKey, true)
         }
     }
 
-    object AdaptiveSheetKey : NavMetadataKey<Boolean>
+    object OverlaySheetKey : NavMetadataKey<Boolean>
 }
 
 @Composable
-fun <T : Any> rememberAdaptiveSheetSceneStrategy(): AdaptiveSheetSceneStrategy<T> {
-    return remember { AdaptiveSheetSceneStrategy() }
+fun <T : Any> rememberOverlaySheetSceneStrategy(): OverlaySheetSceneStrategy<T> {
+    return remember { OverlaySheetSceneStrategy() }
 }
 
-class AdaptiveSheetSceneStrategy<T : Any> : SceneStrategy<T> {
+class OverlaySheetSceneStrategy<T : Any> : SceneStrategy<T> {
 
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
         val lastEntry = entries.lastOrNull()
-            ?.takeIf { it.metadata.contains(AdaptiveSheetScene.AdaptiveSheetKey) }
+            ?.takeIf { it.metadata.contains(OverlaySheetScene.OverlaySheetKey) }
             ?: return null
 
-        return AdaptiveSheetScene(
+        return OverlaySheetScene(
             key = lastEntry.contentKey,
             previousEntries = entries.dropLast(1),
             entry = lastEntry,
