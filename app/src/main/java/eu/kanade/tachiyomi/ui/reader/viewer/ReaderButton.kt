@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi.ui.reader.viewer
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
+import com.google.android.material.R
 import com.google.android.material.button.MaterialButton
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 
 /**
