@@ -117,29 +117,33 @@ class KitsuApi(
         val libraryId = track.libraryId
         requireNotNull(libraryId) { "Kitsu cannot delete track with null library_id" }
 
-        try {
-            graphQlClient
-                .mutation(
-                    KitsuDeleteLibEntryMutation(
-                        library_id = libraryId.toString(),
-                    ),
-                )
-                .execute()
-                .dataOrElse(
-                    errorLog = "Kitsu: Failed to delete manga",
-                    default = {},
-                ) {
-                    logcat { "Kitsu: Deleted library entry ${it.libraryEntry.delete?.libraryEntry?.id}" }
-                }
-        } catch (e: HttpException) {
-            // Deleting something not in the library (currently as of 2026-08-25) returns a 500 with a
-            // "Couldn't find LibraryEntry" msg
-            // dataOrElse would throw an HttpException but user gets their wish of "title not in library" so ignore it
-            // This may be overly broad but there is no access to the error message here
-            if (e.code == 500) return
-
-            throw e
-        }
+        graphQlClient
+            .mutation(
+                KitsuDeleteLibEntryMutation(
+                    library_id = libraryId.toString(),
+                ),
+            )
+            .execute()
+            .dataOrElse(
+                errorLog = "Kitsu: Failed to delete manga",
+                default = {},
+                onException = { e ->
+                    val body = e.body?.use { it.readUtf8() }
+                    if (
+                        e.statusCode == 500 &&
+                        body?.contains("Couldn't find LibraryEntry with 'id'=") == true
+                    ) {
+                        // Deleting something not in the library (currently as of 2026-09-20) returns a 500 with a
+                        // "Couldn't find LibraryEntry" error message at the error.message key --
+                        // but the user gets their wish of "title not in library" so ignore it
+                        return@dataOrElse
+                    } else {
+                        throw HttpException(e.statusCode).apply { stackTrace = e.stackTrace }
+                    }
+                },
+            ) {
+                logcat { "Kitsu: Deleted library entry ${it.libraryEntry.delete?.libraryEntry?.id}" }
+            }
     }
 
     suspend fun search(search: String): List<TrackSearch> {
