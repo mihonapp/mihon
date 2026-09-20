@@ -15,7 +15,6 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
-import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
@@ -31,6 +30,7 @@ import mihon.core.navigation.StatsRoute
 import mihon.core.navigation.SupportUsRoute
 import mihon.core.navigation.domain.SettingsDestination
 import mihon.core.navigation.util.LocalBackStack
+import mihon.presentation.core.util.isTabletUi
 import tachiyomi.core.common.util.lang.launchIO
 
 @Composable

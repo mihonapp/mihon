@@ -8,12 +8,12 @@ import androidx.compose.ui.platform.LocalContext
 import eu.kanade.presentation.more.onboarding.OnboardingScreen
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
 import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
-import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import mihon.app.di.appGraph
 import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.domain.SettingsDestination
 import mihon.core.navigation.util.LocalBackStack
+import mihon.presentation.core.util.isTabletUi
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 

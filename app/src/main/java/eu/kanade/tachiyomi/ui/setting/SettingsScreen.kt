@@ -38,7 +38,6 @@ import eu.kanade.presentation.more.settings.screen.SettingsSecurityRoute
 import eu.kanade.presentation.more.settings.screen.SettingsTrackingRoute
 import eu.kanade.presentation.more.settings.screen.about.getVersionName
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
-import eu.kanade.presentation.util.isTabletUi
 import mihon.core.navigation.AboutRoute
 import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.SettingsSearchRoute
@@ -57,6 +56,7 @@ import mihon.icons.materialsymbols.rounded.Search
 import mihon.icons.materialsymbols.rounded.Security
 import mihon.icons.materialsymbols.rounded.Storage
 import mihon.icons.materialsymbols.rounded.Sync
+import mihon.presentation.core.util.isTabletUi
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

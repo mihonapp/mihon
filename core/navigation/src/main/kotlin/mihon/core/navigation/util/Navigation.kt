@@ -11,8 +11,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.serialization.NavKeySerializer
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
-import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -48,17 +48,17 @@ fun NavBackStack<NavKey>.popUntilRoot() {
     }
 }
 
-class TopLevelBackStack(val startKey: TopLevelRoute) {
+class TopLevelBackStack(val startKey: NavKey) {
 
     // Expose the current top level route for consumers
     var topLevelKey by mutableStateOf(startKey)
         private set
 
     // Expose the back stack so it can be rendered by the NavDisplay
-    var backStack: SnapshotStateList<TopLevelRoute> = mutableStateListOf(startKey)
+    var backStack: SnapshotStateList<NavKey> = mutableStateListOf(startKey)
         private set
 
-    fun setTopLevel(key: TopLevelRoute) {
+    fun setTopLevel(key: NavKey) {
         if (key == startKey) {
             backStack.apply {
                 clear()
@@ -81,7 +81,7 @@ class TopLevelBackStack(val startKey: TopLevelRoute) {
         topLevelKey = backStack.last()
     }
 
-    internal constructor(stack: SnapshotStateList<TopLevelRoute>) : this(stack.first()) {
+    internal constructor(stack: SnapshotStateList<NavKey>) : this(stack.first()) {
         apply {
             backStack = stack
             topLevelKey = stack.last()
@@ -91,17 +91,17 @@ class TopLevelBackStack(val startKey: TopLevelRoute) {
 
 @Composable
 fun rememberTopLevelBackStack(
-    startDestination: TopLevelRoute,
+    startDestination: NavKey,
 ): TopLevelBackStack {
     return rememberSerializable(
-        serializer = TopLevelBackStackSerializer(elementSerializer = TopLevelRoute.serializer()),
+        serializer = TopLevelBackStackSerializer(elementSerializer = NavKeySerializer()),
     ) {
         TopLevelBackStack(startDestination)
     }
 }
 
 class TopLevelBackStackSerializer(
-    elementSerializer: KSerializer<TopLevelRoute>,
+    elementSerializer: KSerializer<NavKey>,
 ) : KSerializer<TopLevelBackStack> {
 
     private val delegate = SnapshotStateListSerializer(elementSerializer)

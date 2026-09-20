@@ -7,6 +7,7 @@ import android.os.Build
 import android.view.View
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.TabletUiMode
+import mihon.presentation.core.util.isTabletUi
 
 private const val TABLET_UI_REQUIRED_SCREEN_WIDTH_DP = 720
 
@@ -15,10 +16,6 @@ private const val TABLET_UI_MIN_SCREEN_WIDTH_PORTRAIT_DP = 700
 
 // make sure icons on the nav rail fit
 private const val TABLET_UI_MIN_SCREEN_WIDTH_LANDSCAPE_DP = 600
-
-fun Configuration.isTabletUi(): Boolean {
-    return smallestScreenWidthDp >= TABLET_UI_REQUIRED_SCREEN_WIDTH_DP
-}
 
 // TODO: move the logic to `isTabletUi()` when main activity is rewritten in Compose
 fun Context.prepareTabletUiContext(uiPreferences: UiPreferences): Context {

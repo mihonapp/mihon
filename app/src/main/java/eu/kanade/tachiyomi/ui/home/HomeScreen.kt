@@ -31,7 +31,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.ui.NavDisplay
-import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.BrowseSwitchToExtensionEventKey
 import eu.kanade.tachiyomi.ui.browse.BrowseTab
@@ -49,6 +48,7 @@ import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.util.LocalBackStack
 import mihon.core.navigation.util.LocalTopLevelBackStack
 import mihon.core.navigation.util.TabOptions
+import mihon.presentation.core.util.isTabletUi
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.i18n.MR

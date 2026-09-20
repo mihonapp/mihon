@@ -1,5 +1,6 @@
 plugins {
     alias(mihonx.plugins.android.library)
+    alias(mihonx.plugins.compose)
     alias(mihonx.plugins.spotless)
 
     alias(libs.plugins.kotlin.serialization)
@@ -11,8 +12,9 @@ android {
 
 dependencies {
     implementation(projects.domain)
+    implementation(projects.presentationCore)
     implementation(libs.bundles.androidx.navigation)
 
-    api(libs.androidx.compose.animationGraphics)
+    api(libs.composeMaterialMotion)
     api(libs.androidx.compose.ui)
 }

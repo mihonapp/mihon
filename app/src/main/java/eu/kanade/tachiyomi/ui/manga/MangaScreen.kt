@@ -33,7 +33,6 @@ import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
-import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -61,6 +60,7 @@ import mihon.core.navigation.domain.SettingsDestination
 import mihon.core.navigation.util.LocalAssistContentManager
 import mihon.core.navigation.util.LocalBackStack
 import mihon.feature.migration.dialog.MigrateMangaDialog
+import mihon.presentation.core.util.isTabletUi
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
