@@ -1,27 +1,15 @@
 fragment MangaFragment on MangaType {
-  artist
-  author
   description
   id
   status
   thumbnailUrl
   title
   url
-  genre
-  inLibraryAt
   chapters {
     totalCount
   }
-  latestUploadedChapter {
-    uploadDate
-  }
-  latestFetchedChapter {
-    fetchedAt
-  }
   latestReadChapter {
-    lastReadAt
     chapterNumber
   }
   unreadCount
-  downloadCount
 }
