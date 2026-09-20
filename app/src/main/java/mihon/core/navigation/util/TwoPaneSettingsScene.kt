@@ -1,4 +1,4 @@
-package mihon.navigation.util
+package mihon.core.navigation.util
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxSize

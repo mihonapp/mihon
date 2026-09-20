@@ -11,7 +11,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import eu.kanade.presentation.components.AdaptiveSheet
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 
 @Composable
 fun TrackInfoDialog(

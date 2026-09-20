@@ -13,7 +13,7 @@ import eu.kanade.presentation.category.components.CategoryDeleteDialog
 import eu.kanade.presentation.category.components.CategoryRenameDialog
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable

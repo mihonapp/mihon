@@ -38,9 +38,9 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import mihon.app.di.appGraph
 import mihon.core.navigation.WorkerInfoRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.ContentCopy
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

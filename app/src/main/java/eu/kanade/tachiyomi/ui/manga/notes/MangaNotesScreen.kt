@@ -18,7 +18,7 @@ import eu.kanade.presentation.manga.MangaNotesScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.domain.manga.interactor.UpdateMangaNotes
 import tachiyomi.domain.manga.model.Manga

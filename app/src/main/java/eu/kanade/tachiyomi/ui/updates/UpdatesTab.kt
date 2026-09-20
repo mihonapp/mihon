@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.collectLatest
 import mihon.core.navigation.DownloadQueueRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.UpcomingRoute
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 

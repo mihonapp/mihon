@@ -46,10 +46,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
+import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.replace
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
-import mihon.navigation.util.LocalBackStack
-import mihon.navigation.util.replace
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
 import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import mihon.core.navigation.GlobalSearchRoute
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 
 @Composable

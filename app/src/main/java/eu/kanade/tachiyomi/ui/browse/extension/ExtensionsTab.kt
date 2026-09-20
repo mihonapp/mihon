@@ -20,7 +20,7 @@ import mihon.core.navigation.ExtensionDetailsRoute
 import mihon.core.navigation.ExtensionFilterRoute
 import mihon.core.navigation.ExtensionStoresRoute
 import mihon.core.navigation.WebViewRoute
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 

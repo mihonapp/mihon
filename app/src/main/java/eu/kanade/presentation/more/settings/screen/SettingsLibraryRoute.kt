@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.CategoryRoute
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_CHARGING

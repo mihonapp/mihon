@@ -9,9 +9,9 @@ import eu.kanade.presentation.browse.MigrateSourceScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
 import mihon.core.navigation.MigrateMangaRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 

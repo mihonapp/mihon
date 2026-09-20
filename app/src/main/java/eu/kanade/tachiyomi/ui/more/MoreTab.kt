@@ -30,7 +30,7 @@ import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.StatsRoute
 import mihon.core.navigation.SupportUsRoute
 import mihon.core.navigation.domain.SettingsDestination
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.launchIO
 
 @Composable

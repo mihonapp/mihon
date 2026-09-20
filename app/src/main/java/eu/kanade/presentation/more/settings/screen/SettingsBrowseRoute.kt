@@ -12,8 +12,8 @@ import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.ExtensionStoresRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.domain.extension.model.ContentWarning
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource

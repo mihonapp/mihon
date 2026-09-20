@@ -11,8 +11,8 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.GlobalSearchScreen
 import mihon.core.navigation.BrowseSourceRoute
 import mihon.core.navigation.MangaRoute
-import mihon.navigation.util.LocalBackStack
-import mihon.navigation.util.replace
+import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.replace
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable

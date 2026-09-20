@@ -14,10 +14,10 @@ import kotlinx.coroutines.launch
 import mihon.core.navigation.BrowseSourceRoute
 import mihon.core.navigation.GlobalSearchRoute
 import mihon.core.navigation.SourcesFilterRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.TravelExplore
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 

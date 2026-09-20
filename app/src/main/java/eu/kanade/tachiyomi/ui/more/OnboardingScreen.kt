@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import mihon.app.di.appGraph
 import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.domain.SettingsDestination
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 

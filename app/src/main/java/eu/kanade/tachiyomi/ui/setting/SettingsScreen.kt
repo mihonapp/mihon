@@ -43,6 +43,8 @@ import mihon.core.navigation.AboutRoute
 import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.SettingsSearchRoute
 import mihon.core.navigation.domain.SettingsDestination
+import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.replace
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ChromeReaderMode
 import mihon.icons.materialsymbols.rounded.Code
@@ -55,8 +57,6 @@ import mihon.icons.materialsymbols.rounded.Search
 import mihon.icons.materialsymbols.rounded.Security
 import mihon.icons.materialsymbols.rounded.Storage
 import mihon.icons.materialsymbols.rounded.Sync
-import mihon.navigation.util.LocalBackStack
-import mihon.navigation.util.replace
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

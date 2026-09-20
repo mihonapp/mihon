@@ -6,8 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.webview.WebViewScreenContent
-import mihon.navigation.util.LocalAssistContentManager
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalAssistContentManager
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable

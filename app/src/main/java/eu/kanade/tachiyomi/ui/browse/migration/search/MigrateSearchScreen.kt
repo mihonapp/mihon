@@ -10,11 +10,11 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrateSourceSearchRoute
 import mihon.core.navigation.MigrationListRoute
+import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.popUntil
+import mihon.core.navigation.util.replace
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
-import mihon.navigation.util.LocalBackStack
-import mihon.navigation.util.popUntil
-import mihon.navigation.util.replace
 
 @Composable
 fun MigrateSearchScreen(mangaId: Long) {

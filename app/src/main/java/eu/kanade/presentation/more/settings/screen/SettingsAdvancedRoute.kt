@@ -49,7 +49,7 @@ import mihon.app.di.appGraph
 import mihon.core.navigation.ClearDatabaseRoute
 import mihon.core.navigation.DebugInfoRoute
 import mihon.core.navigation.OnboardingRoute
-import mihon.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalBackStack
 import okhttp3.Headers
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withUIContext

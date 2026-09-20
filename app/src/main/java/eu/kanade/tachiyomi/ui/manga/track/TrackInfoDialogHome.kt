@@ -70,10 +70,10 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import logcat.LogPriority
 import mihon.app.di.appGraph
+import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.popUntil
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Delete
-import mihon.navigation.util.LocalBackStack
-import mihon.navigation.util.popUntil
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withIOContext

@@ -46,9 +46,9 @@ import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.DownloadQueueRoute
 import mihon.core.navigation.MangaRoute
-import mihon.navigation.util.LocalBackStack
-import mihon.navigation.util.LocalTopLevelBackStack
-import mihon.navigation.util.TabOptions
+import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalTopLevelBackStack
+import mihon.core.navigation.util.TabOptions
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.i18n.MR

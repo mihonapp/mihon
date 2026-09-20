@@ -11,8 +11,8 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import mihon.core.navigation.GlobalSearchRoute
 import mihon.core.navigation.MangaRoute
-import mihon.navigation.util.LocalBackStack
-import mihon.navigation.util.replace
+import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.replace
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

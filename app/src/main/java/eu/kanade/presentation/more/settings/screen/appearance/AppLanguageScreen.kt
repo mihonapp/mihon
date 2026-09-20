@@ -21,9 +21,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.LocaleListCompat
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Check
-import mihon.navigation.util.LocalBackStack
 import org.xmlpull.v1.XmlPullParser
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR

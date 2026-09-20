@@ -12,10 +12,10 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.tachiyomi.util.system.toast
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrateSearchRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.feature.migration.list.components.MigrationExitDialog
 import mihon.feature.migration.list.components.MigrationMangaDialog
 import mihon.feature.migration.list.components.MigrationProgressDialog
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 
 @Composable

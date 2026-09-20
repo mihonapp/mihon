@@ -23,13 +23,13 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
+import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.simpleicons.Discord
 import mihon.icons.simpleicons.OpenCollective
 import mihon.icons.simpleicons.Patreon
 import mihon.icons.simpleicons.SimpleIcons
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.Constants
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding

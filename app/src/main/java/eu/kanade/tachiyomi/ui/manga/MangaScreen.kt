@@ -58,9 +58,9 @@ import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.TrackInfoDialogRoute
 import mihon.core.navigation.WebViewRoute
 import mihon.core.navigation.domain.SettingsDestination
+import mihon.core.navigation.util.LocalAssistContentManager
+import mihon.core.navigation.util.LocalBackStack
 import mihon.feature.migration.dialog.MigrateMangaDialog
-import mihon.navigation.util.LocalAssistContentManager
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter

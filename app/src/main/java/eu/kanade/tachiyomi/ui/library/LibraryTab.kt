@@ -37,9 +37,9 @@ import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.GlobalSearchRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationConfigRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.category.model.Category

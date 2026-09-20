@@ -38,6 +38,8 @@ import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.core.navigation.NewUpdateRoute
 import mihon.core.navigation.OpenSourceLicensesRoute
+import mihon.core.navigation.util.LocalBackButtonVisibility
+import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Public
 import mihon.icons.simpleicons.Discord
@@ -46,8 +48,6 @@ import mihon.icons.simpleicons.Github
 import mihon.icons.simpleicons.Reddit
 import mihon.icons.simpleicons.SimpleIcons
 import mihon.icons.simpleicons.X
-import mihon.navigation.util.LocalBackButtonVisibility
-import mihon.navigation.util.LocalBackStack
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
