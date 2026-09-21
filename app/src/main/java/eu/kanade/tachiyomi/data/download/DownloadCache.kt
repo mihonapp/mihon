@@ -60,7 +60,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Cache where we dump the downloads directory from the filesystem. This class is needed because
  * directory checking is expensive, and it slows down the app. The cache is invalidated by the time
- * defined in [RootDirectory.ttl] as we don't have any control over the filesystem and the user can
+ * defined in [RootDirectory.timeToLive] as we don't have any control over the filesystem and the user can
  * delete the folders at any time without the app noticing.
  */
 @Inject
@@ -391,7 +391,7 @@ class DownloadCache(
                     .awaitAll()
 
                 rootDownloadsDir = updatedRootDir.apply {
-                    ttl = libraryPreferences.downloadCacheTTLInterval.get().toLong().seconds.inWholeMilliseconds
+                    timeToLive = libraryPreferences.invalidateDownloadCacheInterval.get()
                     createdAt = System.currentTimeMillis()
                 }
             }
@@ -454,9 +454,9 @@ private class RootDirectory(
     val dir: UniFile?,
     var sourceDirs: Map<Long, SourceDirectory> = mapOf(),
     var createdAt: Long = 0L,
-    var ttl: Long = 1.hours.inWholeMilliseconds
+    var timeToLive: Long = 1.hours.inWholeMilliseconds
 ) {
-    fun isExpired() = createdAt + ttl <= System.currentTimeMillis()
+    fun isExpired() = createdAt + timeToLive <= System.currentTimeMillis()
 }
 
 /**

@@ -59,7 +59,8 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import java.io.File
-import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 
 object SettingsAdvancedScreen : SearchableSettings {
 
@@ -181,15 +182,21 @@ object SettingsAdvancedScreen : SearchableSettings {
                         context.toast(MR.strings.download_cache_invalidated)
                     },
                 ),
-                Preference.PreferenceItem.EditTextPreference(
-                    preference = libraryPreferences.downloadCacheTTLInterval,
-                    title = stringResource(MR.strings.pref_download_cache_ttl_interval),
-                    subtitle = stringResource(MR.strings.pref_download_cache_ttl_interval_summary),
+                Preference.PreferenceItem.ListPreference(
+                    preference = libraryPreferences.invalidateDownloadCacheInterval,
+                    entries = mapOf(
+                        1.hours.inWholeMilliseconds to stringResource(MR.strings.label_default),
+                        6.hours.inWholeMilliseconds to stringResource(MR.strings.update_6hour),
+                        12.hours.inWholeMilliseconds to stringResource(MR.strings.update_12hour),
+                        24.hours.inWholeMilliseconds to stringResource(MR.strings.update_24hour),
+                        48.hours.inWholeMilliseconds to stringResource(MR.strings.update_48hour),
+                        72.hours.inWholeMilliseconds to stringResource(MR.strings.update_72hour),
+                        7.days.inWholeMilliseconds to "1 ${stringResource(MR.strings.update_weekly)}",
+                    ),
+                    title = stringResource(MR.strings.pref_invalidate_download_cache_interval),
+                    subtitle = stringResource(MR.strings.pref_invalidate_download_cache_interval_summary),
                     onValueChanged = {
-                        it.toLongOrNull()?.takeUnless { it < 30.minutes.inWholeSeconds } ?: return@EditTextPreference false.also {
-                            context.toast(MR.strings.pref_download_cache_ttl_invalid)
-                        }
-                        context.toast(MR.strings.pref_download_cache_ttl_toast_applied)
+                        context.toast(MR.strings.requires_app_restart)
                         true
                     },
                 ),

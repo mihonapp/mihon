@@ -44,9 +44,9 @@ class LibraryPreferences(
     )
     val autoUpdateInterval: Preference<Int> = preferenceStore.getInt("pref_library_update_interval_key", 0)
 
-    val downloadCacheTTLInterval: Preference<String> = preferenceStore.getString(
-        "pref_download_cache_ttl_interval",
-        1.hours.inWholeSeconds.toString(),
+    val invalidateDownloadCacheInterval: Preference<Long> = preferenceStore.getLong(
+        "pref_invalidate_download_cache_interval",
+        1.hours.inWholeMilliseconds,
     )
 
     val autoUpdateDeviceRestrictions: Preference<Set<String>> = preferenceStore.getStringSet(
