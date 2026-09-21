@@ -175,8 +175,14 @@ class DownloadProvider(
             }
 
             // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
-            append(DiskUtil.buildValidFilename(sanitizeChapterName(chapterName), DiskUtil.MAX_FILE_NAME_BYTES - 11, disallowNonAsciiFilenames))
-            if(enableChapterNameHash) {
+            append(
+                DiskUtil.buildValidFilename(
+                    sanitizeChapterName(chapterName),
+                    DiskUtil.MAX_FILE_NAME_BYTES - 11,
+                    disallowNonAsciiFilenames,
+                ),
+            )
+            if (enableChapterNameHash) {
                 append("_${md5(chapterUrl).take(6)}")
             }
         }
