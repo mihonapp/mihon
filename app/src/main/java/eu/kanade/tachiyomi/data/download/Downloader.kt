@@ -384,6 +384,14 @@ class Downloader(
             // Do after download completes
 
             if (!isDownloadSuccessful(download, tmpDir)) {
+                // The one failure in here that logged nothing at all, and the
+                // one a download resumed after the process died lands in.
+                logcat(LogPriority.ERROR) {
+                    val failed = download.pages.orEmpty().count { it.status is Page.State.Error }
+                    "Download of ${download.chapter.name} incomplete: " +
+                        "${download.downloadedImages}/${download.pages?.size} pages ready, " +
+                        "$failed failed, ${tmpDir.listFiles().orEmpty().size} files in ${tmpDir.name}"
+                }
                 download.status = Download.State.ERROR
                 return
             }
@@ -546,13 +554,17 @@ class Downloader(
 
         try {
             val filenamePrefix = "%03d".format(Locale.ENGLISH, page.number)
-            val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) }
-                ?: error(context.stringResource(MR.strings.download_notifier_split_page_not_found, page.number))
+            val files = tmpDir.listFiles().orEmpty().filter { it.name.orEmpty().startsWith(filenamePrefix) }
+            if (files.isEmpty()) {
+                error(context.stringResource(MR.strings.download_notifier_split_page_not_found, page.number))
+            }
 
-            // If the original page was previously split, then skip
-            if (imageFile.name.orEmpty().startsWith("${filenamePrefix}__")) return
+            // splitTallImage deletes the original last, so an original still
+            // sitting next to parts means a split that was interrupted.
+            val original = files.firstOrNull { !it.name.orEmpty().startsWith("${filenamePrefix}__") }
+                ?: return
 
-            ImageUtil.splitTallImage(tmpDir, imageFile, filenamePrefix)
+            ImageUtil.splitTallImage(tmpDir, original, filenamePrefix)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to split downloaded image" }
         }
