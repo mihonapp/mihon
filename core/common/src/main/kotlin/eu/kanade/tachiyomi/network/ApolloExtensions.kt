@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.network
 import com.apollographql.apollo.api.ApolloResponse
 import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.exception.ApolloHttpException
+import com.apollographql.apollo.exception.ApolloNetworkException
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 
@@ -41,6 +42,10 @@ fun <D : Operation.Data, R> ApolloResponse<D>.dataOrElse(
             }
         }
         logcat(LogPriority.ERROR, throwable = e) { errorLog }
+        // Don't mask connection/IO-related issues
+        if (e is ApolloNetworkException && e.cause != null) {
+            throw e.cause!!
+        }
     } else if (!errors.isNullOrEmpty()) {
         val errorMessages = errors!!.joinToString(separator = "\n  ", prefix = "\n  ") { it.message }
         logcat(LogPriority.ERROR) { "$errorLog: $errorMessages" }
