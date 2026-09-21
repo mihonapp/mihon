@@ -455,7 +455,7 @@ class Downloader(
             }
 
             // When the page is ready, set page path, progress (just in case) and status
-            splitTallImageIfNeeded(page, tmpDir)
+            splitTallImageIfNeeded(page, tmpDir, filename)
 
             page.uri = file.uri
             page.progress = 100
@@ -549,12 +549,17 @@ class Downloader(
         return ImageUtil.getExtensionFromMimeType(mime) { file.openInputStream() }
     }
 
-    private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile) {
+    private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile, filenamePrefix: String) {
         if (!downloadPreferences.splitTallImages.get()) return
 
         try {
-            val filenamePrefix = "%03d".format(Locale.ENGLISH, page.number)
-            val files = tmpDir.listFiles().orEmpty().filter { it.name.orEmpty().startsWith(filenamePrefix) }
+            // Anchored on what follows the number: "001" is also a prefix of
+            // "0010". A half-written .tmp is not this page either.
+            val files = tmpDir.listFiles().orEmpty().filter {
+                val name = it.name.orEmpty()
+                !name.endsWith(".tmp") &&
+                    (name.startsWith("$filenamePrefix.") || name.startsWith("${filenamePrefix}__"))
+            }
             if (files.isEmpty()) {
                 error(context.stringResource(MR.strings.download_notifier_split_page_not_found, page.number))
             }
