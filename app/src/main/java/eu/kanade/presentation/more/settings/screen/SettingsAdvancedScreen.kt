@@ -191,7 +191,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                         24.hours.inWholeMilliseconds to stringResource(MR.strings.update_24hour),
                         48.hours.inWholeMilliseconds to stringResource(MR.strings.update_48hour),
                         72.hours.inWholeMilliseconds to stringResource(MR.strings.update_72hour),
-                        7.days.inWholeMilliseconds to "1 ${stringResource(MR.strings.update_weekly)}",
+                        7.days.inWholeMilliseconds to stringResource(MR.strings.update_weekly),
                     ),
                     title = stringResource(MR.strings.pref_invalidate_download_cache_interval),
                     subtitle = stringResource(MR.strings.pref_invalidate_download_cache_interval_summary),
