@@ -653,6 +653,8 @@
     <string name="cookies_cleared">Cookies cleared</string>
     <string name="pref_invalidate_download_cache">Reindex downloads</string>
     <string name="pref_invalidate_download_cache_summary">Force app to recheck downloaded chapters</string>
+    <string name="pref_invalidate_download_cache_interval">Reindex interval</string>
+    <string name="pref_invalidate_download_cache_interval_summary">Define how long downloaded chapter data is kept before chapters are rechecked. The new configuration will be applied on the next reindex.</string>
     <string name="download_cache_invalidated">Recreating download index</string>
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>

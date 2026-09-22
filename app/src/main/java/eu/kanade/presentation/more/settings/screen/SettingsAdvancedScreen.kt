@@ -59,6 +59,8 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import java.io.File
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 
 object SettingsAdvancedScreen : SearchableSettings {
 
@@ -115,7 +117,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                 },
             ),
             getBackgroundActivityGroup(),
-            getDataGroup(),
+            getDataGroup(libraryPreferences = libraryPreferences),
             getNetworkGroup(networkPreferences = networkPreferences),
             getLibraryGroup(libraryPreferences = libraryPreferences),
             getReaderGroup(basePreferences = basePreferences),
@@ -163,7 +165,9 @@ object SettingsAdvancedScreen : SearchableSettings {
     }
 
     @Composable
-    private fun getDataGroup(): Preference.PreferenceGroup {
+    private fun getDataGroup(
+        libraryPreferences: LibraryPreferences,
+    ): Preference.PreferenceGroup {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
 
@@ -176,6 +180,24 @@ object SettingsAdvancedScreen : SearchableSettings {
                     onClick = {
                         context.appGraph.downloadCache.invalidateCache()
                         context.toast(MR.strings.download_cache_invalidated)
+                    },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = libraryPreferences.invalidateDownloadCacheInterval,
+                    entries = mapOf(
+                        1.hours.inWholeMilliseconds to stringResource(MR.strings.label_default),
+                        6.hours.inWholeMilliseconds to stringResource(MR.strings.update_6hour),
+                        12.hours.inWholeMilliseconds to stringResource(MR.strings.update_12hour),
+                        24.hours.inWholeMilliseconds to stringResource(MR.strings.update_24hour),
+                        48.hours.inWholeMilliseconds to stringResource(MR.strings.update_48hour),
+                        72.hours.inWholeMilliseconds to stringResource(MR.strings.update_72hour),
+                        7.days.inWholeMilliseconds to stringResource(MR.strings.update_weekly),
+                    ),
+                    title = stringResource(MR.strings.pref_invalidate_download_cache_interval),
+                    subtitle = stringResource(MR.strings.pref_invalidate_download_cache_interval_summary),
+                    onValueChanged = {
+                        context.toast(MR.strings.requires_app_restart)
+                        true
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
