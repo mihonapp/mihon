@@ -19,6 +19,7 @@ kotlin {
 dependencies {
     implementation(projects.sourceApi)
     implementation(projects.core.common)
+    implementation(projects.core.metro)
 
     implementation(libs.metro.runtime)
     implementation(libs.bundles.kotlinx.coroutines)

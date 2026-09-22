@@ -18,10 +18,12 @@ import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import mihon.app.di.appGraph
+import mihon.core.metro.AppCoroutineScope
 import tachiyomi.core.common.Constants
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
@@ -51,6 +53,9 @@ class NotificationReceiver : BroadcastReceiver() {
     @Inject private lateinit var downloadPreferences: DownloadPreferences
 
     @Inject private lateinit var sourceManager: SourceManager
+
+    @Inject @AppCoroutineScope
+    private lateinit var scope: CoroutineScope
 
     override fun onReceive(context: Context, intent: Intent) {
         context.appGraph.inject(this)
@@ -189,7 +194,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param mangaId id of manga
      */
     private fun markAsRead(chapterUrls: Array<String>, mangaId: Long) {
-        launchIO {
+        launchAsync {
             val toUpdate = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
                 .map {
                     if (downloadPreferences.removeAfterMarkedAsRead.get()) {
@@ -214,10 +219,25 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param mangaId id of manga
      */
     private fun downloadChapters(chapterUrls: Array<String>, mangaId: Long) {
-        launchIO {
-            val manga = getManga.await(mangaId) ?: return@launchIO
+        launchAsync {
+            val manga = getManga.await(mangaId) ?: return@launchAsync
             val chapters = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
             downloadManager.downloadChapters(manga, chapters)
+        }
+    }
+
+    /**
+     * Runs [block] on the application scope while keeping the broadcast alive, so the process isn't torn down before
+     * the work finishes.
+     */
+    private fun launchAsync(block: suspend CoroutineScope.() -> Unit) {
+        val pendingResult = goAsync()
+        scope.launch {
+            try {
+                block()
+            } finally {
+                pendingResult.finish()
+            }
         }
     }
 

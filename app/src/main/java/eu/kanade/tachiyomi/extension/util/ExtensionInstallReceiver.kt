@@ -9,7 +9,6 @@ import androidx.core.net.toUri
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
@@ -19,10 +18,12 @@ import tachiyomi.core.common.util.system.logcat
  * notifies the given [listener] when the package is an extension.
  *
  * @param listener The listener that should be notified of extension installation events.
+ * @param scope The scope the listener is notified in.
  */
-internal class ExtensionInstallReceiver(private val listener: Listener) : BroadcastReceiver() {
-
-    val scope = CoroutineScope(SupervisorJob())
+internal class ExtensionInstallReceiver(
+    private val listener: Listener,
+    private val scope: CoroutineScope,
+) : BroadcastReceiver() {
 
     fun register(context: Context) {
         ContextCompat.registerReceiver(context, this, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
