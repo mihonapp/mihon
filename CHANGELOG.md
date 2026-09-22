@@ -17,6 +17,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add support for using the user's chosen rating system for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3818](https://github.com/mihonapp/mihon/pull/3818))
 - Add support for the Year, Month, and Day fields in ComicInfo.xml files for chapter dating ([@MajorTanya](https://github.com/MajorTanya)) ([#3967](https://github.com/mihonapp/mihon/pull/3967))
 - Add refresh buttons to trackers in Settings to update displayed usernames (all trackers) & rating systems (where supported) ([@MajorTanya](https://github.com/MajorTanya)) ([#3828](https://github.com/mihonapp/mihon/pull/3828))
+- Add setting to toggle chapter name hash suffix ([@choppeh](https://github.com/choppeh)) ([#3966](https://github.com/mihonapp/mihon/pull/3966))
 
 ### Improved
 - Show updates and upcoming filter icon as active for categories ([@Secozzi](https://github.com/Secozzi)) ([#3772](https://github.com/mihonapp/mihon/pull/3772))
