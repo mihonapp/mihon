@@ -54,6 +54,11 @@ class DownloadPreferences(
         false,
     )
 
+    val autoDownloadUnreadLimit: Preference<Int> = preferenceStore.getInt(
+        "auto_download_unread_limit",
+        0,
+    )
+
     val parallelSourceLimit: Preference<Int> = preferenceStore.getInt("download_parallel_source_limit", 5)
 
     val parallelPageLimit: Preference<Int> = preferenceStore.getInt("download_parallel_page_limit", 5)
