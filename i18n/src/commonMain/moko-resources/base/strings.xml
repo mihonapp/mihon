@@ -405,6 +405,8 @@
     <string name="pref_double_tap_zoom">Double tap to zoom</string>
     <string name="pref_cutout_short">Show content in cutout area</string>
     <string name="pref_page_transitions">Animate page transitions</string>
+    <string name="pref_reader_bookmark_btn_location">Bookmark button location</string>
+    <string name="pref_reader_bookmark_btn_location_summary">Toggled on: Top bar\nToggled off: Bottom bar</string>
     <string name="pref_flash_page">Flash on page change</string>
     <string name="pref_flash_page_summ">Reduces ghosting on e-ink displays</string>
     <string name="pref_flash_duration">Flash duration</string>
