@@ -1,0 +1,30 @@
+query SuwayomiGetMangaUnreadChapters(
+  $mangaId: Int!,
+  $chapterNumber: Float!,
+) {
+  chapters(
+    condition: {
+      mangaId: $mangaId,
+      isRead: false,
+    },
+    filter: {
+      and: [
+        {
+          chapterNumber: {
+            lessThanOrEqualTo: $chapterNumber
+          }
+        },
+        {
+          chapterNumber: {
+            greaterThan: 0
+          }
+        },
+      ]
+    },
+  ){
+    nodes {
+      id
+      chapterNumber
+    }
+  }
+}
