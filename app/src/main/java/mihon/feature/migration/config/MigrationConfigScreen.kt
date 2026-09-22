@@ -130,11 +130,15 @@ fun MigrationConfigScreen(mangaIds: Collection<Long>) {
                             ),
                             AppBar.OverflowAction(
                                 title = stringResource(MR.strings.migrationConfigScreen_selectEnabledLabel),
-                                onClick = { viewModel.toggleSelection(MigrationConfigViewModel.SelectionConfig.Enabled) },
+                                onClick = {
+                                    viewModel.toggleSelection(MigrationConfigViewModel.SelectionConfig.Enabled)
+                                },
                             ),
                             AppBar.OverflowAction(
                                 title = stringResource(MR.strings.migrationConfigScreen_selectPinnedLabel),
-                                onClick = { viewModel.toggleSelection(MigrationConfigViewModel.SelectionConfig.Pinned) },
+                                onClick = {
+                                    viewModel.toggleSelection(MigrationConfigViewModel.SelectionConfig.Pinned)
+                                },
                             ),
                         ),
                     )
