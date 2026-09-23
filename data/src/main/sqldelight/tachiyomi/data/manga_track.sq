@@ -24,63 +24,64 @@ CREATE INDEX manga_track_tracker_id_remote_id_index ON manga_track(tracker_id, r
 
 delete:
 DELETE FROM manga_track
-WHERE manga_id = :mangaId AND tracker_id = :syncId;
+WHERE manga_id = :mangaId
+AND tracker_id = :trackerId;
 
 getTracks:
 SELECT
-    id, manga_id, tracker_id, remote_id, library_id,
-    title, last_chapter_read, total_chapters, status, score,
-    remote_url, start_date, finish_date, private
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
 FROM manga_track;
 
 getTrackById:
 SELECT
-    id, manga_id, tracker_id, remote_id, library_id,
-    title, last_chapter_read, total_chapters, status, score,
-    remote_url, start_date, finish_date, private
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
 FROM manga_track
 WHERE id = :id;
 
 getTracksByMangaId:
 SELECT
-    id, manga_id, tracker_id, remote_id, library_id,
-    title, last_chapter_read, total_chapters, status, score,
-    remote_url, start_date, finish_date, private
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
 FROM manga_track
 WHERE manga_id = :mangaId;
 
 upsert:
-INSERT INTO manga_track(manga_id,tracker_id,remote_id,library_id,title,last_chapter_read,total_chapters,status,score,remote_url,start_date,finish_date,private)
-VALUES (:mangaId,:syncId,:remoteId,:libraryId,:title,:lastChapterRead,:totalChapters,:status,:score,:remoteUrl,:startDate,:finishDate,:private)
-ON CONFLICT(manga_id, tracker_id)
-DO UPDATE
-SET
-    remote_id = :remoteId,
-    library_id = :libraryId,
-    title = :title,
-    last_chapter_read = :lastChapterRead,
-    total_chapters = :totalChapters,
-    status = :status,
-    score = :score,
-    remote_url = :remoteUrl,
-    start_date = :startDate,
-    finish_date = :finishDate,
-    private = :private
-WHERE manga_id = :mangaId AND tracker_id = :syncId;
+INSERT INTO manga_track(
+    manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
+)
+VALUES (
+    :mangaId, :trackerId, :remoteId, :remoteUrl, :libraryId, :title, :lastChapterRead,
+    :totalChapters, :status, :score, :startDate, :finishDate, :private
+)
+ON CONFLICT(manga_id, tracker_id) DO UPDATE SET
+    remote_id = excluded.remote_id,
+    remote_url = excluded.remote_url,
+    library_id = excluded.library_id,
+    title = excluded.title,
+    last_chapter_read = excluded.last_chapter_read,
+    total_chapters = excluded.total_chapters,
+    status = excluded.status,
+    score = excluded.score,
+    start_date = excluded.start_date,
+    finish_date = excluded.finish_date,
+    private = excluded.private;
 
 update:
 UPDATE manga_track
 SET
     manga_id = coalesce(:mangaId, manga_id),
-    tracker_id = coalesce(:syncId, tracker_id),
-    remote_id = coalesce(:mediaId, remote_id),
+    tracker_id = coalesce(:trackerId, tracker_id),
+    remote_id = coalesce(:remoteId, remote_id),
+    remote_url = coalesce(:remoteUrl, remote_url),
     library_id = coalesce(:libraryId, library_id),
     title = coalesce(:title, title),
     last_chapter_read = coalesce(:lastChapterRead, last_chapter_read),
-    total_chapters = coalesce(:totalChapter, total_chapters),
+    total_chapters = coalesce(:totalChapters, total_chapters),
     status = coalesce(:status, status),
     score = coalesce(:score, score),
-    remote_url = coalesce(:trackingUrl, remote_url),
     start_date = coalesce(:startDate, start_date),
     finish_date = coalesce(:finishDate, finish_date),
     private = coalesce(:private, private)
