@@ -214,28 +214,30 @@ class RestoreRepositoryImpl(
         this.copy(id = 0L, mangaId = 0L, dateFetch = 0L, dateUpload = 0L)
 
     private suspend fun restoreHistory(manga: Manga, restoredHistory: List<RestoredHistory>) {
+        if (restoredHistory.isEmpty()) return
+        val chapterIdsByUrl = chapterRepository.getChapterByMangaId(manga.id).associate { it.url to it.id }
+        val dbHistoryByChapterId = database.historyQueries
+            .getHistoryByMangaId(manga.id)
+            .awaitAsList()
+            .associateBy { it.chapter_id }
+
         val toUpdate = restoredHistory
-            .groupBy { it.chapterUrl }
-            .mapNotNull { (chapterUrl, copies) ->
+            // Chapter doesn't exist; skip
+            .filter { it.chapterUrl in chapterIdsByUrl }
+            // A backup of a library that still had duplicate chapters carries a history entry for
+            // each copy; they are one chapter now, read as late as any copy and for as long as all
+            .groupBy { chapterIdsByUrl.getValue(it.chapterUrl) }
+            .map { (chapterId, copies) ->
                 val readAt = copies.maxOf { it.readAt?.time ?: 0L }
                 val readDuration = copies.sumOf { it.readDuration }
-                val dbHistory = database.historyQueries
-                    .getHistoryByChapterUrlAndMangaId(chapterUrl, manga.id)
-                    .awaitAsOneOrNull()
-
-                if (dbHistory == null) {
-                    val chapter = database.chapterQueries
-                        .getChapterByUrlAndMangaId(mangaId = manga.id, remoteUrl = chapterUrl)
-                        .awaitAsOneOrNull()
-                        // Chapter doesn't exist; skip
-                        ?: return@mapNotNull null
+                val dbHistory = dbHistoryByChapterId[chapterId]
                     // New history entry
-                    return@mapNotNull Triple(chapter.id, Date(readAt), readDuration)
-                }
+                    ?: return@map Triple(chapterId, Date(readAt), readDuration)
 
-                // Update history entry
+                // Update history entry. 0 is kept rather than written as NULL, since it marks history
+                // the user removed.
                 Triple(
-                    dbHistory.chapter_id,
+                    chapterId,
                     Date(max(readAt, dbHistory.read_at?.time ?: 0L)),
                     max(readDuration, dbHistory.read_duration) - dbHistory.read_duration,
                 )

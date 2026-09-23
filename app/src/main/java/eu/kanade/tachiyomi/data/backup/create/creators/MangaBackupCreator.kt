@@ -62,9 +62,11 @@ class MangaBackupCreator(
         if (options.history) {
             val historyByMangaId = getHistory.await(manga.id)
             if (historyByMangaId.isNotEmpty()) {
-                val history = historyByMangaId.map { history ->
-                    val chapter = checkNotNull(chapterRepository.getChapterById(history.chapterId))
-                    BackupHistory(chapter.url, history.readAt?.time ?: 0L, history.readDuration)
+                val chapterUrlsById = chapterRepository.getChapterByMangaId(manga.id).associate { it.id to it.url }
+                val history = historyByMangaId.mapNotNull { history ->
+                    // A chapter removed since its history was read takes that history with it
+                    val url = chapterUrlsById[history.chapterId] ?: return@mapNotNull null
+                    BackupHistory(url, history.readAt?.time ?: 0L, history.readDuration)
                 }
                 if (history.isNotEmpty()) {
                     mangaObject.history = history
