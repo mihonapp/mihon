@@ -183,28 +183,29 @@ class RestoreRepositoryImpl(
             .partition { it.id > 0 }
 
         newChapters.forEach { chapter ->
-            database.chapterQueries.insert(
+            database.chapterQueries.insertReturningId(
                 mangaId = chapter.mangaId,
-                url = chapter.url,
-                name = chapter.name,
-                scanlator = chapter.scanlator,
-                read = chapter.read,
-                bookmark = chapter.bookmark,
-                lastPageRead = chapter.lastPageRead,
-                chapterNumber = chapter.chapterNumber,
-                sourceOrder = chapter.sourceOrder,
-                dateFetch = chapter.dateFetch,
-                dateUpload = chapter.dateUpload,
-                memo = chapter.memo,
+                remoteUrl = chapter.url,
+                remoteName = chapter.name,
+                remoteScanlator = chapter.scanlator,
+                userRead = chapter.read,
+                userBookmark = chapter.bookmark,
+                userLastPageRead = chapter.lastPageRead,
+                remoteChapterNumber = chapter.chapterNumber,
+                remoteOrder = chapter.sourceOrder,
+                stateDateFetch = chapter.dateFetch,
+                remoteDateUpload = chapter.dateUpload,
+                remoteMemo = chapter.memo,
             )
+                .awaitAsOneOrNull()
         }
         existingChapters.forEach { chapter ->
             database.chapterQueries.updateFromBackup(
-                read = chapter.read,
-                bookmark = chapter.bookmark,
-                lastPageRead = chapter.lastPageRead,
-                chapterId = chapter.id,
-                memo = chapter.memo,
+                userRead = chapter.read,
+                userBookmark = chapter.bookmark,
+                userLastPageRead = chapter.lastPageRead,
+                id = chapter.id,
+                remoteMemo = chapter.memo,
             )
         }
     }
@@ -224,7 +225,7 @@ class RestoreRepositoryImpl(
 
                 if (dbHistory == null) {
                     val chapter = database.chapterQueries
-                        .getChapterByUrlAndMangaId(chapterUrl, manga.id)
+                        .getChapterByUrlAndMangaId(mangaId = manga.id, remoteUrl = chapterUrl)
                         .awaitAsOneOrNull()
                         // Chapter doesn't exist; skip
                         ?: return@mapNotNull null
