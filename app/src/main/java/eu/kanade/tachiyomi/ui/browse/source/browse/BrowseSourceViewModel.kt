@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
@@ -56,6 +57,7 @@ import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.interactor.GetRemoteManga
 import tachiyomi.domain.source.service.SourceManager
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 
 @AssistedInject
@@ -133,7 +135,7 @@ class BrowseSourceViewModel(
                 pagingData.map { manga ->
                     getManga.subscribe(manga.url, manga.source)
                         .map { it ?: manga }
-                        .stateIn(viewModelScope)
+                        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), manga)
                 }
                     .filter { !hideInLibraryItems || !it.value.favorite }
             }
