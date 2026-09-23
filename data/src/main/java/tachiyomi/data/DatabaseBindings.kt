@@ -43,8 +43,8 @@ object DatabaseBindings {
                 remote_update_strategyAdapter = UpdateStrategyColumnAdapter,
                 remote_memoAdapter = MemoColumnAdapter,
             ),
-            chaptersAdapter = Chapters.Adapter(
-                memoAdapter = MemoColumnAdapter,
+            chapterAdapter = Chapter.Adapter(
+                remote_memoAdapter = MemoColumnAdapter,
             ),
         )
     }

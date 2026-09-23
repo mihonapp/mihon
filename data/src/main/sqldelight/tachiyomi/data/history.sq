@@ -5,7 +5,7 @@ CREATE TABLE history(
     chapter_id INTEGER NOT NULL UNIQUE,
     last_read INTEGER AS Date,
     time_read INTEGER NOT NULL,
-    FOREIGN KEY(chapter_id) REFERENCES chapters (_id)
+    FOREIGN KEY(chapter_id) REFERENCES chapter (id)
     ON DELETE CASCADE
 );
 
@@ -19,9 +19,9 @@ H.chapter_id,
 H.last_read,
 H.time_read
 FROM history H
-JOIN chapters C
-ON H.chapter_id = C._id
-WHERE C.manga_id = :mangaId AND C._id = H.chapter_id;
+JOIN chapter C
+ON H.chapter_id = C.id
+WHERE C.manga_id = :mangaId AND C.id = H.chapter_id;
 
 getHistoryByChapterUrlAndMangaId:
 SELECT
@@ -30,9 +30,9 @@ H.chapter_id,
 H.last_read,
 H.time_read
 FROM history H
-JOIN chapters C
-ON H.chapter_id = C._id
-WHERE C.url = :chapterUrl AND C.manga_id = :mangaId AND C._id = H.chapter_id
+JOIN chapter C
+ON H.chapter_id = C.id
+WHERE C.remote_url = :chapterUrl AND C.manga_id = :mangaId AND C.id = H.chapter_id
 LIMIT 1;
 
 resetHistoryById:
@@ -46,10 +46,10 @@ SET last_read = 0
 WHERE _id IN (
     SELECT H._id
     FROM manga M
-    INNER JOIN chapters C
+    INNER JOIN chapter C
     ON M.id = C.manga_id
     INNER JOIN history H
-    ON C._id = H.chapter_id
+    ON C.id = H.chapter_id
     WHERE M.id = :mangaId
 );
 

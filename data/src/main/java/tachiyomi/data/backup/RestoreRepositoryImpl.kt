@@ -183,7 +183,7 @@ class RestoreRepositoryImpl(
             .partition { it.id > 0 }
 
         newChapters.forEach { chapter ->
-            database.chaptersQueries.insert(
+            database.chapterQueries.insert(
                 mangaId = chapter.mangaId,
                 url = chapter.url,
                 name = chapter.name,
@@ -199,7 +199,7 @@ class RestoreRepositoryImpl(
             )
         }
         existingChapters.forEach { chapter ->
-            database.chaptersQueries.updateFromBackup(
+            database.chapterQueries.updateFromBackup(
                 read = chapter.read,
                 bookmark = chapter.bookmark,
                 lastPageRead = chapter.lastPageRead,
@@ -223,13 +223,13 @@ class RestoreRepositoryImpl(
                     .awaitAsOneOrNull()
 
                 if (dbHistory == null) {
-                    val chapter = database.chaptersQueries
+                    val chapter = database.chapterQueries
                         .getChapterByUrlAndMangaId(chapterUrl, manga.id)
                         .awaitAsOneOrNull()
                         // Chapter doesn't exist; skip
                         ?: return@mapNotNull null
                     // New history entry
-                    return@mapNotNull Triple(chapter._id, Date(readAt), readDuration)
+                    return@mapNotNull Triple(chapter.id, Date(readAt), readDuration)
                 }
 
                 // Update history entry
