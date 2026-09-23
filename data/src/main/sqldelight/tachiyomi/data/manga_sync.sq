@@ -16,7 +16,7 @@ CREATE TABLE manga_sync(
     finish_date INTEGER NOT NULL,
     private INTEGER AS Boolean DEFAULT 0 NOT NULL,
     UNIQUE (manga_id, sync_id) ON CONFLICT REPLACE,
-    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
     ON DELETE CASCADE
 );
 

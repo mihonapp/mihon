@@ -35,10 +35,10 @@ class RestoreRepositoryImpl(
 ) : RestoreRepository {
 
     override suspend fun getMangaUrlsBySourceId(): Map<Long, List<String>> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getAllMangaSourceAndUrl()
             .awaitAsList()
-            .groupBy({ it.source }, { it.url })
+            .groupBy({ it.source_id }, { it.remote_url })
     }
 
     override suspend fun restoreManga(entries: List<RestoredManga>, update: suspend (Manga) -> MangaUpdate) {
@@ -92,7 +92,7 @@ class RestoreRepositoryImpl(
     }
 
     private suspend fun updateManga(manga: Manga): Manga {
-        database.mangasQueries.updateFromBackup(
+        database.mangaQueries.updateFromBackup(
             favoriteAt = manga.favoriteAt,
             artist = manga.artist,
             author = manga.author,
@@ -115,7 +115,7 @@ class RestoreRepositoryImpl(
     }
 
     private suspend fun insertManga(manga: Manga): Long {
-        return database.mangasQueries.insertReturningId(
+        return database.mangaQueries.insertReturningId(
             favoriteAt = manga.favoriteAt,
             source = manga.source,
             url = manga.url,

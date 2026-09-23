@@ -15,7 +15,7 @@ CREATE TABLE chapters(
     date_fetch INTEGER NOT NULL,
     date_upload INTEGER NOT NULL,
     memo BLOB AS JsonObject NOT NULL DEFAULT '{}',
-    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
     ON DELETE CASCADE
 );
 

@@ -38,10 +38,10 @@ object DatabaseBindings {
             historyAdapter = History.Adapter(
                 last_readAdapter = DateColumnAdapter,
             ),
-            mangasAdapter = Mangas.Adapter(
-                genreAdapter = StringListColumnAdapter,
-                update_strategyAdapter = UpdateStrategyColumnAdapter,
-                memoAdapter = MemoColumnAdapter,
+            mangaAdapter = Manga.Adapter(
+                remote_genreAdapter = StringListColumnAdapter,
+                remote_update_strategyAdapter = UpdateStrategyColumnAdapter,
+                remote_memoAdapter = MemoColumnAdapter,
             ),
             chaptersAdapter = Chapters.Adapter(
                 memoAdapter = MemoColumnAdapter,
