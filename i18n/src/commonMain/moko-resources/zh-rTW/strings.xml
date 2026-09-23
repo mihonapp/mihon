@@ -664,6 +664,8 @@
     <string name="track_error">%1$s 發生錯誤：%2$s</string>
     <string name="information_required_plain">*必填</string>
     <string name="pref_hide_in_library_items">隱藏已在書櫃的作品</string>
+    <string name="pref_volume_keys_navigation">音量按鈕翻頁</string>
+    <string name="pref_volume_keys_navigation_summary">在閱讀器之外使用音量按鈕翻閱清單</string>
     <string name="action_copy_to_clipboard">複製</string>
     <string name="action_update_category">更新類別</string>
     <string name="split_tall_images">分割過高的圖片</string>

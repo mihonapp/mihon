@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.rememberScrollState
@@ -14,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import eu.kanade.core.preference.PreferenceMutableState
+import eu.kanade.presentation.util.VolumeKeyPageScrollHandler
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
@@ -78,9 +82,16 @@ fun LibraryPager(
         val onClickManga: (LibraryManga) -> Unit = { onClickManga(category, it) }
         val onLongClickManga: (LibraryManga) -> Unit = { onLongClickManga(category, it) }
 
+        val listState = rememberSaveable(page, saver = LazyListState.Saver) { LazyListState() }
+        val gridState = rememberSaveable(page, saver = LazyGridState.Saver) { LazyGridState() }
+        // Offscreen pager pages keep their handler registered, so only the current page reacts
+        val volumeKeysEnabled = { state.currentPage == page && searchQuery.isNullOrEmpty() }
+
         when (displayMode) {
             LibraryDisplayMode.List -> {
+                VolumeKeyPageScrollHandler(listState, volumeKeysEnabled)
                 LibraryList(
+                    state = listState,
                     items = items,
                     contentPadding = contentPadding,
                     selection = selection,
@@ -92,7 +103,9 @@ fun LibraryPager(
                 )
             }
             LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
+                VolumeKeyPageScrollHandler(gridState, volumeKeysEnabled)
                 LibraryCompactGrid(
+                    state = gridState,
                     items = items,
                     showTitle = displayMode is LibraryDisplayMode.CompactGrid,
                     columns = columns,
@@ -106,7 +119,9 @@ fun LibraryPager(
                 )
             }
             LibraryDisplayMode.ComfortableGrid -> {
+                VolumeKeyPageScrollHandler(gridState, volumeKeysEnabled)
                 LibraryComfortableGrid(
+                    state = gridState,
                     items = items,
                     columns = columns,
                     contentPadding = contentPadding,

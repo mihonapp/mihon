@@ -3,6 +3,7 @@ package eu.kanade.presentation.library.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,6 +16,7 @@ import tachiyomi.presentation.core.util.plus
 
 @Composable
 internal fun LibraryList(
+    state: LazyListState,
     items: List<LibraryItem>,
     contentPadding: PaddingValues,
     selection: Set<Long>,
@@ -26,6 +28,7 @@ internal fun LibraryList(
 ) {
     FastScrollLazyColumn(
         modifier = Modifier.fillMaxSize(),
+        state = state,
         contentPadding = contentPadding + PaddingValues(vertical = 8.dp),
     ) {
         item {

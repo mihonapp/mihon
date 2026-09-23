@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -76,6 +77,7 @@ import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
+import eu.kanade.presentation.util.VolumeKeyNavigation
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -290,6 +292,22 @@ class MainActivity : BaseActivity() {
                 chapterCache.clear()
             }
         }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (graph.uiPreferences.volumeKeysNavigation.get() &&
+            (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
+        ) {
+            // activeHandler is only non-null for a visible, scrollable list
+            VolumeKeyNavigation.activeHandler?.let { handler ->
+                if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                    val inverted = graph.uiPreferences.volumeKeysNavigationInverted.get()
+                    handler.pageScroll(up = (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP) != inverted)
+                }
+                return true
+            }
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onProvideAssistContent(outContent: AssistContent) {
