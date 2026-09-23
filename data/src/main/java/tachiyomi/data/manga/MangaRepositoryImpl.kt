@@ -161,7 +161,11 @@ class MangaRepositoryImpl(
             excludedScanlators.minus(current).forEach { scanlator ->
                 database.excluded_scanlatorQueries.insert(mangaId, scanlator)
             }
-            database.excluded_scanlatorQueries.remove(mangaId, current.minus(excludedScanlators))
+            val toRemove = current.minus(excludedScanlators)
+            // An empty delete still tells every chapter query to run again
+            if (toRemove.isNotEmpty()) {
+                database.excluded_scanlatorQueries.remove(mangaId, toRemove)
+            }
         }
     }
 

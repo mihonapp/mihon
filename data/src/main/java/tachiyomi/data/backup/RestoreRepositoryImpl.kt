@@ -290,11 +290,6 @@ class RestoreRepositoryImpl(
     }
 
     private suspend fun restoreExcludedScanlators(manga: Manga, excludedScanlators: List<String>) {
-        if (excludedScanlators.isEmpty()) return
-        val existingExcludedScanlators = database.excluded_scanlatorQueries
-            .getExcludedScanlatorsByMangaId(manga.id)
-            .awaitAsList()
-        val toInsert = excludedScanlators.filter { it !in existingExcludedScanlators }
-        toInsert.forEach { database.excluded_scanlatorQueries.insert(manga.id, it) }
+        excludedScanlators.forEach { database.excluded_scanlatorQueries.insert(manga.id, it) }
     }
 }

@@ -9,7 +9,8 @@ CREATE TABLE excluded_scanlator(
 
 insert:
 INSERT INTO excluded_scanlator(manga_id, scanlator)
-VALUES (:mangaId, :scanlator);
+VALUES (:mangaId, :scanlator)
+ON CONFLICT(manga_id, scanlator) DO NOTHING;
 
 remove:
 DELETE FROM excluded_scanlator
