@@ -54,6 +54,7 @@ import eu.kanade.presentation.manga.components.MangaChapterListItem
 import eu.kanade.presentation.manga.components.MangaInfoBox
 import eu.kanade.presentation.manga.components.MangaToolbar
 import eu.kanade.presentation.manga.components.MissingChapterCountListItem
+import eu.kanade.presentation.util.VolumeKeyPageScrollHandler
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
@@ -258,6 +259,7 @@ private fun MangaScreenSmallImpl(
     onInvertSelection: () -> Unit,
 ) {
     val chapterListState = rememberLazyListState()
+    VolumeKeyPageScrollHandler(chapterListState)
 
     val (chapters, listItem, isAnySelected) = remember(state) {
         Triple(
@@ -514,6 +516,7 @@ fun MangaScreenLargeImpl(
     var topBarHeight by remember { mutableIntStateOf(0) }
 
     val chapterListState = rememberLazyListState()
+    VolumeKeyPageScrollHandler(chapterListState)
 
     BackHandler(enabled = isAnySelected) {
         onAllChapterSelected(false)
