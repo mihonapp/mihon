@@ -61,14 +61,14 @@ class CategoryRepositoryImpl(
     }
 
     override suspend fun updateName(categoryId: Long, name: String) {
-        database.categoryQueries.updateName(name = name, categoryId = categoryId)
+        database.categoryQueries.updateName(name = name, id = categoryId)
     }
 
     override suspend fun updateFlags(categoryId: Long, flags: Long) {
-        database.categoryQueries.updateFlags(flags = flags, categoryId = categoryId)
+        database.categoryQueries.updateFlags(flags = flags, id = categoryId)
     }
 
-    override suspend fun updateAllFlags(flags: Long?) {
+    override suspend fun updateAllFlags(flags: Long) {
         database.categoryQueries.updateAllFlags(flags = flags)
     }
 
@@ -77,16 +77,16 @@ class CategoryRepositoryImpl(
             val current = database.categoryQueries.getUserCategoryIds().awaitAsList()
             val ids = orderedIds.filter { it in current } + current.filterNot { it in orderedIds }
             ids.forEachIndexed { index, categoryId ->
-                database.categoryQueries.updateOrder(order = -index - 2L, categoryId = categoryId)
+                database.categoryQueries.updateOrder(order = -index - 2L, id = categoryId)
             }
             ids.forEachIndexed { index, categoryId ->
-                database.categoryQueries.updateOrder(order = index.toLong(), categoryId = categoryId)
+                database.categoryQueries.updateOrder(order = index.toLong(), id = categoryId)
             }
         }
     }
 
     override suspend fun delete(categoryId: Long) {
-        database.categoryQueries.delete(categoryId = categoryId)
+        database.categoryQueries.delete(id = categoryId)
     }
 
     private fun mapCategory(
