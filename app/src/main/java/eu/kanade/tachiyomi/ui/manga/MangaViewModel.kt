@@ -18,11 +18,11 @@ import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
+import eu.kanade.domain.chapter.model.applyFilters
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.chaptersFiltered
-import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.TrackChapter
@@ -80,7 +80,6 @@ import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
-import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
@@ -953,6 +952,19 @@ class MangaViewModel(
     }
 
     /**
+     * Sets which bookmark colors are visible when the bookmarked filter is enabled.
+     */
+    fun setBookmarkColorFilter(colors: Set<BookmarkColor>) {
+        val manga = successState?.manga ?: return
+        viewModelScope.launchNonCancellable {
+            setMangaChapterFlags.awaitSetBookmarkColorFilter(
+                manga,
+                Manga.bookmarkColorsToFlags(colors),
+            )
+        }
+    }
+
+    /**
      * Sets the active display mode.
      * @param mode the mode to set.
      */
@@ -1222,22 +1234,6 @@ class MangaViewModel(
 
             val filterActive: Boolean
                 get() = scanlatorFilterActive || manga.chaptersFiltered()
-
-            /**
-             * Applies the view filters to the list of chapters obtained from the database.
-             * @return an observable of the list of chapters filtered and sorted.
-             */
-            private fun List<ChapterList.Item>.applyFilters(manga: Manga): Sequence<ChapterList.Item> {
-                val isLocalManga = manga.isLocal()
-                val unreadFilter = manga.unreadFilter
-                val downloadedFilter = manga.downloadedFilter
-                val bookmarkedFilter = manga.bookmarkedFilter
-                return asSequence()
-                    .filter { (chapter) -> applyFilter(unreadFilter) { !chapter.read } }
-                    .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
-                    .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
-                    .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
-            }
         }
     }
 }

@@ -3,6 +3,7 @@ package eu.kanade.domain.chapter.model
 import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.manga.ChapterList
+import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.manga.model.Manga
@@ -17,10 +18,9 @@ fun List<Chapter>.applyFilters(manga: Manga, downloadManager: DownloadManager): 
     val isLocalManga = manga.isLocal()
     val unreadFilter = manga.unreadFilter
     val downloadedFilter = manga.downloadedFilter
-    val bookmarkedFilter = manga.bookmarkedFilter
 
     return filter { chapter -> applyFilter(unreadFilter) { !chapter.read } }
-        .filter { chapter -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
+        .filter { chapter -> chapter.matchesBookmarkFilter(manga) }
         .filter { chapter ->
             applyFilter(downloadedFilter) {
                 val downloaded = downloadManager.isChapterDownloaded(
@@ -44,10 +44,18 @@ fun List<ChapterList.Item>.applyFilters(manga: Manga): Sequence<ChapterList.Item
     val isLocalManga = manga.isLocal()
     val unreadFilter = manga.unreadFilter
     val downloadedFilter = manga.downloadedFilter
-    val bookmarkedFilter = manga.bookmarkedFilter
     return asSequence()
         .filter { (chapter) -> applyFilter(unreadFilter) { !chapter.read } }
-        .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
+        .filter { (chapter) -> chapter.matchesBookmarkFilter(manga) }
         .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
         .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
+}
+
+private fun Chapter.matchesBookmarkFilter(manga: Manga): Boolean {
+    val bookmarkedFilter = manga.bookmarkedFilter
+    if (!applyFilter(bookmarkedFilter) { bookmark }) return false
+    if (bookmarkedFilter == TriState.ENABLED_IS && !manga.includesBookmarkColor(bookmarkColor)) {
+        return false
+    }
+    return true
 }

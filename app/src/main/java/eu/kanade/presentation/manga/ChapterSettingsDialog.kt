@@ -31,13 +31,16 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
+import eu.kanade.presentation.manga.components.BookmarkColorFilterDialog
 import tachiyomi.core.common.preference.TriState
+import tachiyomi.domain.chapter.model.BookmarkColor
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.RadioItem
 import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.TriStateItem
+import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.theme.active
 import uy.kohesive.injekt.Injekt
@@ -50,6 +53,7 @@ fun ChapterSettingsDialog(
     onDownloadFilterChanged: (TriState) -> Unit,
     onUnreadFilterChanged: (TriState) -> Unit,
     onBookmarkedFilterChanged: (TriState) -> Unit,
+    onBookmarkColorFilterChanged: (Set<BookmarkColor>) -> Unit,
     scanlatorFilterActive: Boolean,
     onScanlatorFilterClicked: (() -> Unit),
     onSortModeChanged: (Long) -> Unit,
@@ -58,10 +62,18 @@ fun ChapterSettingsDialog(
     onResetToDefault: () -> Unit,
 ) {
     var showSetAsDefaultDialog by rememberSaveable { mutableStateOf(false) }
+    var showBookmarkColorFilterDialog by rememberSaveable { mutableStateOf(false) }
     if (showSetAsDefaultDialog) {
         SetAsDefaultDialog(
             onDismissRequest = { showSetAsDefaultDialog = false },
             onConfirmed = onSetAsDefault,
+        )
+    }
+    if (showBookmarkColorFilterDialog) {
+        BookmarkColorFilterDialog(
+            includedColors = manga?.includedBookmarkColors.orEmpty(),
+            onDismissRequest = { showBookmarkColorFilterDialog = false },
+            onConfirm = onBookmarkColorFilterChanged,
         )
     }
 
@@ -106,6 +118,10 @@ fun ChapterSettingsDialog(
                         onUnreadFilterChanged = onUnreadFilterChanged,
                         bookmarkedFilter = manga?.bookmarkedFilter ?: TriState.DISABLED,
                         onBookmarkedFilterChanged = onBookmarkedFilterChanged,
+                        bookmarkColorFilterActive = manga?.let {
+                            it.bookmarkedFilter == TriState.ENABLED_IS && it.bookmarkColorFilterRaw != 0L
+                        } ?: false,
+                        onBookmarkColorFilterClicked = { showBookmarkColorFilterDialog = true },
                         scanlatorFilterActive = scanlatorFilterActive,
                         onScanlatorFilterClicked = onScanlatorFilterClicked,
                     )
@@ -136,6 +152,8 @@ private fun ColumnScope.FilterPage(
     onUnreadFilterChanged: (TriState) -> Unit,
     bookmarkedFilter: TriState,
     onBookmarkedFilterChanged: (TriState) -> Unit,
+    bookmarkColorFilterActive: Boolean,
+    onBookmarkColorFilterClicked: () -> Unit,
     scanlatorFilterActive: Boolean,
     onScanlatorFilterClicked: (() -> Unit),
 ) {
@@ -149,11 +167,33 @@ private fun ColumnScope.FilterPage(
         state = unreadFilter,
         onClick = onUnreadFilterChanged,
     )
-    TriStateItem(
-        label = stringResource(MR.strings.action_filter_bookmarked),
-        state = bookmarkedFilter,
-        onClick = onBookmarkedFilterChanged,
-    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(modifier = Modifier.weight(1f)) {
+            TriStateItem(
+                label = stringResource(MR.strings.action_filter_bookmarked),
+                state = bookmarkedFilter,
+                onClick = onBookmarkedFilterChanged,
+            )
+        }
+        val colorFilterEnabled = bookmarkedFilter == TriState.ENABLED_IS
+        TextButton(
+            onClick = onBookmarkColorFilterClicked,
+            enabled = colorFilterEnabled,
+            modifier = Modifier.padding(end = 8.dp),
+        ) {
+            Text(
+                text = stringResource(MR.strings.action_edit),
+                color = when {
+                    !colorFilterEnabled -> LocalContentColor.current.copy(alpha = DISABLED_ALPHA)
+                    bookmarkColorFilterActive -> MaterialTheme.colorScheme.active
+                    else -> MaterialTheme.colorScheme.primary
+                },
+            )
+        }
+    }
     ScanlatorFilterItem(
         active = scanlatorFilterActive,
         onClick = onScanlatorFilterClicked,

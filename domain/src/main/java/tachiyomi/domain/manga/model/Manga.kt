@@ -9,6 +9,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import mihon.core.common.extensions.EMPTY
 import tachiyomi.core.common.preference.TriState
+import tachiyomi.domain.chapter.model.BookmarkColor
 import java.io.ObjectStreamException
 import kotlin.time.Instant
 import java.io.Serializable as JavaSerializable
@@ -64,6 +65,17 @@ data class Manga(
     val bookmarkedFilterRaw: Long
         get() = chapterFlags and CHAPTER_BOOKMARKED_MASK
 
+    val bookmarkColorFilterRaw: Long
+        get() = chapterFlags and CHAPTER_BOOKMARK_COLOR_MASK
+
+    val includedBookmarkColors: Set<BookmarkColor>
+        get() = bookmarkColorsFromFlags(bookmarkColorFilterRaw)
+
+    fun includesBookmarkColor(color: BookmarkColor): Boolean {
+        val raw = bookmarkColorFilterRaw
+        return raw == 0L || raw and colorToFlag(color) != 0L
+    }
+
     val unreadFilter: TriState
         get() = when (unreadFilterRaw) {
             CHAPTER_SHOW_UNREAD -> TriState.ENABLED_IS
@@ -101,6 +113,22 @@ data class Manga(
         const val CHAPTER_SHOW_BOOKMARKED = 0x00000020L
         const val CHAPTER_SHOW_NOT_BOOKMARKED = 0x00000040L
         const val CHAPTER_BOOKMARKED_MASK = 0x00000060L
+
+        const val CHAPTER_BOOKMARK_COLOR_SHIFT = 10
+        const val CHAPTER_BOOKMARK_COLOR_MASK = 0x0003FC00L
+
+        fun colorToFlag(color: BookmarkColor): Long = 1L shl (CHAPTER_BOOKMARK_COLOR_SHIFT + color.value)
+
+        fun bookmarkColorsToFlags(colors: Set<BookmarkColor>): Long {
+            if (colors.isEmpty() || colors.size == BookmarkColor.entries.size) return 0L
+            return colors.fold(0L) { acc, color -> acc or colorToFlag(color) }
+        }
+
+        fun bookmarkColorsFromFlags(flags: Long): Set<BookmarkColor> {
+            val raw = flags and CHAPTER_BOOKMARK_COLOR_MASK
+            if (raw == 0L) return BookmarkColor.entries.toSet()
+            return BookmarkColor.entries.filter { raw and colorToFlag(it) != 0L }.toSet()
+        }
 
         const val CHAPTER_SORTING_SOURCE = 0x00000000L
         const val CHAPTER_SORTING_NUMBER = 0x00000100L

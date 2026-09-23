@@ -94,6 +94,7 @@
     <string name="bookmark_color_blue">Blue</string>
     <string name="bookmark_color_purple">Purple</string>
     <string name="bookmark_color_pink">Pink</string>
+    <string name="action_filter_bookmark_colors">Bookmark colors</string>
     <string name="action_delete">Delete</string>
     <string name="action_update_library">Update library</string>
     <string name="action_enable_all">Enable all</string>

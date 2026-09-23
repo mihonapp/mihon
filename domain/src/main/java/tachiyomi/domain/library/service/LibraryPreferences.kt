@@ -162,6 +162,11 @@ class LibraryPreferences(
         Manga.SHOW_ALL,
     )
 
+    val filterChapterByBookmarkColors: Preference<Long> = preferenceStore.getLong(
+        "default_chapter_filter_by_bookmark_colors",
+        0L,
+    )
+
     // and upload date
     val sortChapterBySourceOrNumber: Preference<Long> = preferenceStore.getLong(
         "default_chapter_sort_by_source_or_number",
@@ -182,6 +187,7 @@ class LibraryPreferences(
         filterChapterByRead.set(manga.unreadFilterRaw)
         filterChapterByDownloaded.set(manga.downloadedFilterRaw)
         filterChapterByBookmarked.set(manga.bookmarkedFilterRaw)
+        filterChapterByBookmarkColors.set(manga.bookmarkColorFilterRaw)
         sortChapterBySourceOrNumber.set(manga.sorting)
         displayChapterByNameOrNumber.set(manga.displayMode)
         sortChapterByAscendingOrDescending.set(
