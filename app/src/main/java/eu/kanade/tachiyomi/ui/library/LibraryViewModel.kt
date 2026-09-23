@@ -458,32 +458,17 @@ class LibraryViewModel(
         }
     }
 
-    /**
-     * Returns the common categories for the given list of manga.
-     *
-     * @param mangas the list of manga.
-     */
-    private suspend fun getCommonCategories(mangas: List<Manga>): Collection<Category> {
-        if (mangas.isEmpty()) return emptyList()
-        return mangas
-            .map { getCategories.await(it.id).toSet() }
-            .reduce { set1, set2 -> set1.intersect(set2) }
+    private suspend fun getCategoryIds(manga: Manga): Set<Long> {
+        return state.value.libraryData.favoritesById[manga.id]
+            ?.libraryManga
+            ?.categories
+            // The library reports no category as 0
+            ?.filterTo(mutableSetOf()) { it != 0L }
+            ?: getCategories.await(manga.id).mapTo(mutableSetOf()) { it.id }
     }
 
     suspend fun getNextUnreadChapter(manga: Manga): Chapter? {
         return getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true).getNextUnread(manga, downloadManager)
-    }
-
-    /**
-     * Returns the mix (non-common) categories for the given list of manga.
-     *
-     * @param mangas the list of manga.
-     */
-    private suspend fun getMixCategories(mangas: List<Manga>): Collection<Category> {
-        if (mangas.isEmpty()) return emptyList()
-        val mangaCategories = mangas.map { getCategories.await(it.id).toSet() }
-        val common = mangaCategories.reduce { set1, set2 -> set1.intersect(set2) }
-        return mangaCategories.flatten().distinct().subtract(common)
     }
 
     /**
@@ -599,8 +584,7 @@ class LibraryViewModel(
     fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
         viewModelScope.launchNonCancellable {
             mangaList.forEach { manga ->
-                val categoryIds = getCategories.await(manga.id)
-                    .map { it.id }
+                val categoryIds = getCategoryIds(manga)
                     .subtract(removeCategories.toSet())
                     .plus(addCategories)
                     .toList()
@@ -729,13 +713,12 @@ class LibraryViewModel(
             // Hide the default category because it has a different behavior than the ones from db.
             val categories = state.value.displayedCategories.filter { it.id != 0L }
 
-            // Get indexes of the common categories to preselect.
-            val common = getCommonCategories(mangaList)
-            // Get indexes of the mix categories to preselect.
-            val mix = getMixCategories(mangaList)
+            val mangaCategoryIds = mangaList.map { getCategoryIds(it) }
+            val common = mangaCategoryIds.reduceOrNull { set1, set2 -> set1 intersect set2 }.orEmpty()
+            val mix = mangaCategoryIds.flatten().toSet() - common
             val preselected = categories
                 .map {
-                    when (it) {
+                    when (it.id) {
                         in common -> CheckboxState.State.Checked(it)
                         in mix -> CheckboxState.TriState.Exclude(it)
                         else -> CheckboxState.State.None(it)
