@@ -34,11 +34,12 @@ class RestoreRepositoryImpl(
     private val trackRepository: TrackRepository,
 ) : RestoreRepository {
 
-    override suspend fun getMangaUrlsBySourceId(): Map<Long, List<String>> {
+    override suspend fun getMangaUrlsBySourceId(): Map<Long, Set<String>> {
         return database.mangaQueries
             .getAllMangaSourceAndUrl()
             .awaitAsList()
             .groupBy({ it.source_id }, { it.remote_url })
+            .mapValues { it.value.toSet() }
     }
 
     override suspend fun restoreManga(entries: List<RestoredManga>, update: suspend (Manga) -> MangaUpdate) {
@@ -93,49 +94,49 @@ class RestoreRepositoryImpl(
 
     private suspend fun updateManga(manga: Manga): Manga {
         database.mangaQueries.updateFromBackup(
-            favoriteAt = manga.favoriteAt,
-            artist = manga.artist,
-            author = manga.author,
-            description = manga.description,
-            genre = manga.genre,
-            title = manga.title,
-            status = manga.status,
-            thumbnailUrl = manga.thumbnailUrl,
-            lastUpdate = manga.lastUpdate,
-            initialized = manga.initialized,
-            viewer = manga.viewerFlags,
-            chapterFlags = manga.chapterFlags,
-            coverLastModified = manga.coverLastModified,
-            mangaId = manga.id,
-            updateStrategy = manga.updateStrategy,
-            notes = manga.notes,
-            memo = manga.memo,
+            userFavoriteAt = manga.favoriteAt,
+            remoteArtist = manga.artist,
+            remoteAuthor = manga.author,
+            remoteDescription = manga.description,
+            remoteGenre = manga.genre,
+            remoteTitle = manga.title,
+            remoteStatus = manga.status,
+            remoteCover = manga.thumbnailUrl,
+            stateChapterLastUpdate = manga.lastUpdate,
+            stateInitialized = manga.initialized,
+            userReaderFlags = manga.viewerFlags,
+            userChapterFlags = manga.chapterFlags,
+            stateCoverLastModified = manga.coverLastModified,
+            id = manga.id,
+            remoteUpdateStrategy = manga.updateStrategy,
+            userNotes = manga.notes,
+            remoteMemo = manga.memo,
         )
         return manga
     }
 
     private suspend fun insertManga(manga: Manga): Long {
         return database.mangaQueries.insertReturningId(
-            favoriteAt = manga.favoriteAt,
-            source = manga.source,
-            url = manga.url,
-            artist = manga.artist,
-            author = manga.author,
-            description = manga.description,
-            genre = manga.genre,
-            title = manga.title,
-            status = manga.status,
-            thumbnailUrl = manga.thumbnailUrl,
-            lastUpdate = manga.lastUpdate,
-            nextUpdate = 0L,
-            calculateInterval = 0L,
-            initialized = manga.initialized,
-            viewerFlags = manga.viewerFlags,
-            chapterFlags = manga.chapterFlags,
-            coverLastModified = manga.coverLastModified,
-            updateStrategy = manga.updateStrategy,
-            notes = manga.notes,
-            memo = manga.memo,
+            userFavoriteAt = manga.favoriteAt,
+            sourceId = manga.source,
+            remoteUrl = manga.url,
+            remoteArtist = manga.artist,
+            remoteAuthor = manga.author,
+            remoteDescription = manga.description,
+            remoteGenre = manga.genre,
+            remoteTitle = manga.title,
+            remoteStatus = manga.status,
+            remoteCover = manga.thumbnailUrl,
+            stateChapterLastUpdate = manga.lastUpdate,
+            stateChapterNextUpdate = 0L,
+            stateChapterFetchInterval = 0L,
+            stateInitialized = manga.initialized,
+            userReaderFlags = manga.viewerFlags,
+            userChapterFlags = manga.chapterFlags,
+            stateCoverLastModified = manga.coverLastModified,
+            remoteUpdateStrategy = manga.updateStrategy,
+            userNotes = manga.notes,
+            remoteMemo = manga.memo,
         )
             .awaitAsOne()
     }
