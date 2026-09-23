@@ -21,23 +21,26 @@ SELECT
 FROM extension_store;
 
 getCount:
-SELECT COUNT(*)
+SELECT count(*)
 FROM extension_store;
 
 upsert:
-INSERT INTO extension_store(index_url, name, badge_label, signing_key, contact_website, contact_discord, is_legacy, extension_list_url)
-VALUES (:indexUrl, :name, :badgeLabel, :signingKey, :contactWebsite, :contactDiscord, :isLegacy, :extensionListUrl)
-ON CONFLICT(index_url)
-DO UPDATE
-SET
-    name = :name,
-    badge_label = :badgeLabel,
-    signing_key =: signingKey,
-    contact_website = :contactWebsite,
-    contact_discord = :contactDiscord,
-    is_legacy = :isLegacy,
-    extension_list_url = :extensionListUrl
-WHERE index_url = :indexUrl;
+INSERT INTO extension_store(
+    index_url, name, badge_label, signing_key, contact_website, contact_discord, is_legacy,
+    extension_list_url
+)
+VALUES (
+    :indexUrl, :name, :badgeLabel, :signingKey, :contactWebsite, :contactDiscord, :isLegacy,
+    :extensionListUrl
+)
+ON CONFLICT(index_url) DO UPDATE SET
+    name = excluded.name,
+    badge_label = excluded.badge_label,
+    signing_key = excluded.signing_key,
+    contact_website = excluded.contact_website,
+    contact_discord = excluded.contact_discord,
+    is_legacy = excluded.is_legacy,
+    extension_list_url = excluded.extension_list_url;
 
 delete:
 DELETE FROM extension_store
