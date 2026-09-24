@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.manga.model.Manga
 
 object LibraryExporter {
@@ -12,27 +14,50 @@ object LibraryExporter {
         val includeTitle: Boolean,
         val includeAuthor: Boolean,
         val includeArtist: Boolean,
+        val categories: List<Category> = emptyList(), // default no categories means all entries
     )
-
+    sealed class ExportResult {
+        data object Success: ExportResult()
+        data object Failure: ExportResult()
+        data object Empty: ExportResult()
+    }
     suspend fun exportToCsv(
         context: Context,
         uri: Uri,
         favorites: List<Manga>,
         options: ExportOptions,
+        getCategories: GetCategories,
         onExportComplete: () -> Unit,
-    ) {
-        withContext(Dispatchers.IO) {
-            context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                val csvData = generateCsvData(favorites, options)
-                outputStream.write(csvData.toByteArray())
+    ): ExportResult {
+        return try {
+            withContext(Dispatchers.IO) {
+                val filtered = filtering(favorites, options, getCategories)
+                if (filtered.isEmpty()){
+                    return@withContext ExportResult.Empty
+                }
+                context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    val csvData = generateCsvData(filtered, options)
+                    outputStream.write(csvData.toByteArray())
+                } ?: return@withContext ExportResult.Failure
+                onExportComplete()
+                ExportResult.Success
             }
-            onExportComplete()
+        } catch (e: Exception) {
+            ExportResult.Failure
         }
     }
-
+    suspend fun filtering(favorites: List<Manga>, options: ExportOptions, getCategories: GetCategories) : List<Manga> {
+        return if(options.categories.isEmpty()){
+            favorites
+        } else {
+            favorites.filter { manga ->
+                getCategories.await(manga.id).any { it in options.categories}
+            }
+        }
+    }
     private val escapeRequired = listOf("\r", "\n", "\"", ",")
 
-    private fun generateCsvData(favorites: List<Manga>, options: ExportOptions): String {
+    private fun generateCsvData(filtered: List<Manga>, options: ExportOptions): String {
         val columnSize = listOf(
             options.includeTitle,
             options.includeAuthor,
@@ -40,8 +65,8 @@ object LibraryExporter {
         )
             .count { it }
 
-        val rows = buildList(favorites.size) {
-            favorites.forEach { manga ->
+        val rows = buildList(filtered.size) {
+            filtered.forEach { manga ->
                 buildList(columnSize) {
                     if (options.includeTitle) add(manga.title)
                     if (options.includeAuthor) add(manga.author)
