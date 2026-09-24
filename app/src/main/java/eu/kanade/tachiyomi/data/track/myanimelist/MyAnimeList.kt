@@ -139,9 +139,14 @@ class MyAnimeList(id: Long) : BaseTracker(id, "MyAnimeList"), DeletableTracker {
             val username = api.getCurrentUser()
             saveDisplayUsername(username)
             saveCredentials(username, oauth.accessToken)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             logout()
         }
+    }
+
+    override suspend fun updateUserConfig() {
+        val username = api.getCurrentUser()
+        saveDisplayUsername(username)
     }
 
     override fun logout() {
@@ -165,7 +170,7 @@ class MyAnimeList(id: Long) : BaseTracker(id, "MyAnimeList"), DeletableTracker {
     fun loadOAuth(): MALOAuth? {
         return try {
             json.decodeFromString<MALOAuth>(trackPreferences.trackToken(this).get())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

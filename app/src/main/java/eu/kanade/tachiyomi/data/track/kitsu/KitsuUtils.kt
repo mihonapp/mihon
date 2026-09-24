@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.track.kitsu
 
 import eu.kanade.tachiyomi.data.database.models.Track
 
-fun Track.toKitsuApiStatus() = when (status) {
+internal fun Track.toKitsuApiStatus() = when (status) {
     Kitsu.READING -> "CURRENT"
     Kitsu.COMPLETED -> "COMPLETED"
     Kitsu.ON_HOLD -> "ON_HOLD"
@@ -11,7 +11,7 @@ fun Track.toKitsuApiStatus() = when (status) {
     else -> throw Exception("Unknown status: $status")
 }
 
-fun String.toKitsuLocalStatus() = when (this) {
+internal fun String.toKitsuLocalStatus() = when (this) {
     "CURRENT" -> Kitsu.READING
     "COMPLETED" -> Kitsu.COMPLETED
     "ON_HOLD" -> Kitsu.ON_HOLD

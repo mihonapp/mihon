@@ -13,10 +13,8 @@ import coil3.decode.Decoder
 import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
-import logcat.LogPriority
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
-import tachiyomi.core.common.util.system.logcat
 
 /**
  * A [Decoder] that uses [ImageDecoder] (libvips-based) to decode image formats not supported
@@ -37,18 +35,9 @@ class ImageDecoder(private val resources: ImageSource, private val options: Opti
     }
 
     override suspend fun decode(): DecodeResult {
-        val decoder = resources.source().use {
-            try {
-                ImageDecoder.new(it.inputStream())
-            } catch (e: ImageDecoder.DecodeException) {
-                logcat(LogPriority.ERROR, e) { "ImageDecoder.new failed: ${e.message}" }
-                null
-            }
+        val res = resources.source().use {
+            ImageDecoder.new(it.inputStream()).use { dec -> dec.decode() }
         }
-
-        check(decoder != null && decoder.pages > 0) { "Failed to initialize decoder" }
-
-        val res = decoder.decode()
 
         val srcWidth = res.width
         val srcHeight = res.height

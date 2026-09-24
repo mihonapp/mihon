@@ -94,7 +94,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
     override fun getCompletionStatus(): Long = COMPLETED
 
     private fun getCurrentRatingSystem(): RatingSystem {
-        val ratingSystem = scorePreference.get()
+        val ratingSystem = scorePreference.get().lowercase()
         return ratingSystems[ratingSystem] ?: throw Exception("Unknown score type $ratingSystem")
     }
 
@@ -194,6 +194,19 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         }
         saveDisplayUsername(currentUser.profile.name)
         saveCredentials(username, currentUser.id)
+    }
+
+    override suspend fun updateUserConfig() {
+        val currentUser = api.getCurrentUser()
+
+        val ratingSystem = currentUser.ratingSystem
+        if (ratingSystem.lowercase() in listOf(RATING_SIMPLE, RATING_REGULAR, RATING_ADVANCED)) {
+            scorePreference.set(ratingSystem.lowercase())
+        } else {
+            logcat(LogPriority.ERROR) { "Unsupported Kitsu score type: $ratingSystem" }
+            scorePreference.set(RATING_ADVANCED)
+        }
+        saveDisplayUsername(currentUser.profile.name)
     }
 
     override fun logout() {

@@ -33,7 +33,6 @@
     <plurals name="relative_time">
         <item quantity="one">אתמול</item>
         <item quantity="two">לפני יומיים</item>
-        <item quantity="many">לפני %1$d ימים</item>
         <item quantity="other">לפני %1$d ימים</item>
     </plurals>
     <plurals name="manga_num_chapters">

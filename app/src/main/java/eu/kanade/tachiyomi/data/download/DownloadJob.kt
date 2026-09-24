@@ -14,7 +14,6 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import dev.zacsweers.metro.Inject
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.NetworkState
 import eu.kanade.tachiyomi.util.system.activeNetworkState
@@ -35,6 +34,7 @@ import kotlinx.coroutines.job
 import mihon.app.di.AppGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.domain.download.service.DownloadPreferences
+import tachiyomi.i18n.R
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration.Companion.seconds
 
@@ -120,12 +120,7 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
             }
 
             coroutineScope {
-                val networkStatusJob = combine(
-                    applicationContext.networkStateFlow()
-                        .onStart { emit(applicationContext.activeNetworkState()) },
-                    downloadPreferences.downloadOnlyOverWifi.changes(),
-                ) { networkState, requireWifi -> networkState.toDownloadNetworkStatus(requireWifi) }
-                    .distinctUntilChanged()
+                val networkStatusJob = applicationContext.downloadNetworkStatusFlow(downloadPreferences)
                     .onEach { handleNetworkStatus(it, allowStart = false) }
                     .launchIn(this)
 
@@ -133,9 +128,15 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
                     while (
                         !isStopped &&
                         session.isActive(workerJob) &&
-                        downloadManager.queueState.value.isNotEmpty() &&
-                        (downloadManager.isRunning || waitingForNetwork.get())
+                        downloadManager.queueState.value.isNotEmpty()
                     ) {
+                        if (!downloadManager.isRunning) {
+                            val networkStatus = applicationContext.activeNetworkState()
+                                .toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get())
+                            if (!waitingForNetwork.get() || networkStatus == DownloadNetworkStatus.Available) {
+                                handleNetworkStatus(networkStatus, allowStart = true)
+                            }
+                        }
                         delay(1.seconds)
                     }
                 } finally {
@@ -219,3 +220,10 @@ internal fun NetworkState.toDownloadNetworkStatus(requireWifi: Boolean): Downloa
         else -> DownloadNetworkStatus.Available
     }
 }
+
+internal fun Context.downloadNetworkStatusFlow(preferences: DownloadPreferences): Flow<DownloadNetworkStatus> =
+    combine(
+        networkStateFlow().onStart { emit(activeNetworkState()) },
+        preferences.downloadOnlyOverWifi.changes(),
+    ) { networkState, requireWifi -> networkState.toDownloadNetworkStatus(requireWifi) }
+        .distinctUntilChanged()

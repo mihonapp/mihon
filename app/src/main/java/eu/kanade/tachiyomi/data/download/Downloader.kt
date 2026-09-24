@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.util.system.activeNetworkState
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.DiskUtil.NOMEDIA_FILE
 import eu.kanade.tachiyomi.util.storage.saveTo
@@ -25,12 +26,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -244,10 +246,10 @@ class Downloader(
                 supervisorScope {
                     val downloadJobs = mutableMapOf<Download, Job>()
 
-                    activeDownloadsFlow.collectLatest { activeDownloads ->
+                    activeDownloadsFlow.collect { activeDownloads ->
                         val downloadJobsToStop = downloadJobs.filter { it.key !in activeDownloads }
                         downloadJobsToStop.forEach { (download, job) ->
-                            job.cancel()
+                            job.cancelAndJoin()
                             downloadJobs.remove(download)
                         }
 
@@ -272,6 +274,7 @@ class Downloader(
                 if (download.status == Download.State.DOWNLOADED) {
                     removeFromQueue(download)
                 }
+                if (pauseIfNetworkUnavailable(download)) return@launchIO
                 if (areAllDownloadsFinished()) {
                     stop()
                 }
@@ -280,11 +283,26 @@ class Downloader(
             if (e is CancellationException) throw e
             synchronized(DownloadJob.session.lock) {
                 if (downloaderJob !== owner || !owner.isActive) return@launchIO
+                if (pauseIfNetworkUnavailable(download)) return@launchIO
                 logcat(LogPriority.ERROR, e)
                 notifier.onError(e.message)
                 stop()
             }
         }
+    }
+
+    private fun pauseIfNetworkUnavailable(download: Download): Boolean {
+        if (queueState.value.isEmpty()) return false
+        val networkStatus = context.activeNetworkState()
+            .toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get())
+        val reason = when (networkStatus) {
+            DownloadNetworkStatus.Available -> return false
+            DownloadNetworkStatus.NoNetwork -> context.stringResource(MR.strings.download_notifier_no_network)
+            DownloadNetworkStatus.NoWifi -> context.stringResource(MR.strings.download_notifier_text_only_wifi)
+        }
+        if (download.status == Download.State.ERROR) download.status = Download.State.QUEUE
+        pauseForNetwork(reason)
+        return true
     }
 
     /**

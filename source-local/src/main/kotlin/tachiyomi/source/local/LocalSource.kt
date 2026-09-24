@@ -17,6 +17,9 @@ import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.supervisorScope
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
@@ -267,6 +270,19 @@ class LocalSource(
         comicInfo.title?.let { chapter.name = it.value }
         comicInfo.number?.value?.toFloatOrNull()?.let { chapter.chapter_number = it }
         comicInfo.translator?.let { chapter.scanlator = it.value }
+
+        // only bother with partial dates if the year is not null, abandon date parsing otherwise
+        val year = comicInfo.year?.value?.takeIf { it > 0 }?.toString()?.padStart(4, '0') ?: return
+        val month = (comicInfo.month?.value?.coerceIn(1, 12) ?: 1).toString().padStart(2, '0')
+        val day = (comicInfo.day?.value?.coerceIn(1, 31) ?: 1).toString().padStart(2, '0')
+
+        val dateInstant = try {
+            LocalDate.parse("$year-$month-$day").atStartOfDayIn(TimeZone.currentSystemDefault())
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            null
+        }
+        dateInstant?.let { chapter.date_upload = it.toEpochMilliseconds() }
     }
 
     // Chapters

@@ -2,36 +2,30 @@ package eu.kanade.tachiyomi.extension.model
 
 import android.graphics.drawable.Drawable
 import eu.kanade.tachiyomi.source.Source
+import mihon.domain.extension.model.ContentWarning
 import mihon.domain.extension.model.ExtensionStore
 import tachiyomi.domain.source.model.StubSource
 
-sealed class Extension {
+sealed interface Extension {
 
-    abstract val name: String
-    abstract val pkgName: String
-    abstract val versionName: String
-    abstract val versionCode: Long
-    abstract val libVersion: Double
-    abstract val lang: String?
-    abstract val isNsfw: Boolean
+    val name: String
+    val pkgName: String
+    val versionName: String
+    val versionCode: Long
+    val libVersion: Double?
+    val lang: String?
+    val contentWarning: ContentWarning
 
-    data class Installed(
-        override val name: String,
-        override val pkgName: String,
-        override val versionName: String,
-        override val versionCode: Long,
-        override val libVersion: Double,
-        override val lang: String,
-        override val isNsfw: Boolean,
-        val pkgFactory: String?,
-        val sources: List<Source>,
-        val icon: Drawable?,
-        val hasUpdate: Boolean = false,
-        val isObsolete: Boolean = false,
-        val isShared: Boolean,
-        val store: ExtensionStore? = null,
-    ) : Extension()
+    /**
+     * An extension whose apk is on the device, whether or not it ended up being loaded.
+     */
+    sealed interface Installed : Extension {
+        val isShared: Boolean
+    }
 
+    /**
+     * An extension that isn't on the device yet, as listed by an [ExtensionStore].
+     */
     data class Available(
         override val name: String,
         override val pkgName: String,
@@ -39,12 +33,12 @@ sealed class Extension {
         override val versionCode: Long,
         override val libVersion: Double,
         override val lang: String,
-        override val isNsfw: Boolean,
+        override val contentWarning: ContentWarning,
         val sources: List<Source>,
         val apkUrl: String,
         val iconUrl: String,
         val store: ExtensionStore,
-    ) : Extension() {
+    ) : Extension {
 
         data class Source(
             val id: Long,
@@ -62,14 +56,60 @@ sealed class Extension {
         }
     }
 
-    data class Untrusted(
+    /**
+     * An installed extension whose sources are registered and usable.
+     */
+    data class Loaded(
         override val name: String,
         override val pkgName: String,
         override val versionName: String,
         override val versionCode: Long,
         override val libVersion: Double,
-        val signatureHash: String,
+        override val lang: String,
+        override val contentWarning: ContentWarning,
+        override val isShared: Boolean,
+        val pkgFactory: String?,
+        val sources: List<Source>,
+        val icon: Drawable?,
+        val hasUpdate: Boolean = false,
+        val isObsolete: Boolean = false,
+        val store: ExtensionStore? = null,
+    ) : Installed
+
+    /**
+     * An installed extension that was never loaded, so it provides no sources. [lang] is derived
+     * from the sources and [libVersion] from metadata, so neither is always known here.
+     */
+    data class NotLoaded(
+        override val name: String,
+        override val pkgName: String,
+        override val versionName: String,
+        override val versionCode: Long,
+        override val isShared: Boolean,
+        override val contentWarning: ContentWarning,
+        override val libVersion: Double? = null,
         override val lang: String? = null,
-        override val isNsfw: Boolean = false,
-    ) : Extension()
+        val reason: Reason,
+    ) : Installed {
+
+        sealed interface Reason {
+            /** Signature isn't trusted yet. Resolvable by the user accepting it. */
+            data class Untrusted(val signatureHash: String) : Reason
+
+            /** Its [contentWarning] isn't one the user chose to load. */
+            data object Filtered : Reason
+
+            /** No signature to check against at all. */
+            data object Unsigned : Reason
+
+            /** Built against an extension lib this app version can't run. */
+            data object UnsupportedLibVersion : Reason
+
+            /** Required package metadata is missing. */
+            data object Malformed : Reason
+
+            /** Threw while its classes or sources were being instantiated. */
+            data class Failed(val message: String, val stackTrace: String) : Reason
+        }
+    }
 }

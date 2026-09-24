@@ -15,16 +15,22 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add `id:` prefix search to remaining trackers (AniList, Bangumi, Kitsu, MangaUpdates, Shikimori, and Hikka) ([@MajorTanya](https://github.com/MajorTanya)) ([#3776](https://github.com/mihonapp/mihon/pull/3776))
   - Allow `id:` to search for slugs on Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3792](https://github.com/mihonapp/mihon/pull/3792))
 - Add support for using the user's chosen rating system for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3818](https://github.com/mihonapp/mihon/pull/3818))
+- Add support for the Year, Month, and Day fields in ComicInfo.xml files for chapter dating ([@MajorTanya](https://github.com/MajorTanya)) ([#3967](https://github.com/mihonapp/mihon/pull/3967))
+- Add refresh buttons to trackers in Settings to update displayed usernames (all trackers) & rating systems (where supported) ([@MajorTanya](https://github.com/MajorTanya)) ([#3828](https://github.com/mihonapp/mihon/pull/3828))
 
 ### Improved
 - Show updates and upcoming filter icon as active for categories ([@Secozzi](https://github.com/Secozzi)) ([#3772](https://github.com/mihonapp/mihon/pull/3772))
 - Show scores in MangaUpdates search results (and authors for `id:` prefix searches) ([@MajorTanya](https://github.com/MajorTanya)) ([#3795](https://github.com/mihonapp/mihon/pull/3795))
 - Remove whitespace from MAL and MB `id:` prefix search inputs before searching ([@MajorTanya](https://github.com/MajorTanya)) ([#3793](https://github.com/mihonapp/mihon/pull/3793))
+- Show a helpful error message for expired AniList credentials ([@MajorTanya](https://github.com/MajorTanya)) ([#3888](https://github.com/mihonapp/mihon/pull/3888))
 
 ### Fixed
 - Fixed app and extension update check running again on configuration change ([@AntsyLich](https://github.com/AntsyLich)) ([#3708](https://github.com/mihonapp/mihon/pull/3708))
 - Fixed MangaBaka user start/finish dates drifting in negative offset timezones ([@MajorTanya](https://github.com/MajorTanya)) ([#3711](https://github.com/mihonapp/mihon/pull/3711))
 - Fixed MangaBaka scores being wrong when score step size was set to > 1 ([@MajorTanya](https://github.com/MajorTanya)) ([#3740](https://github.com/mihonapp/mihon/pull/3740))
+- Fixed default category and manga sometimes not getting their category set when restoring a backup ([@Secozzi](https://github.com/Secozzi)) ([#3891](https://github.com/mihonapp/mihon/pull/3891))
+- Fixed AniList rate limit ([@MajorTanya](https://github.com/MajorTanya)) ([#3942](https://github.com/mihonapp/mihon/pull/3942))
+- Fixed library search when clicking source name in manga info screen ([@choppeh](https://github.com/choppeh)) ([#4002](https://github.com/mihonapp/mihon/pull/4002))
 
 ## [v0.20.4] - 2026-08-05
 ### Fixed
