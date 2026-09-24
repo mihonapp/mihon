@@ -25,6 +25,7 @@ import eu.kanade.presentation.more.MoreScreen
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.download.DownloadQueueScreen
 import eu.kanade.tachiyomi.ui.setting.SettingsScreen
@@ -34,6 +35,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import mihon.feature.support.SupportUsScreen
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
@@ -94,20 +97,22 @@ class MoreViewModel(
     val downloadQueueState: StateFlow<DownloadQueueState> = _downloadQueueState.asStateFlow()
 
     init {
-        // Handle running/paused status change and queue progress updating
         viewModelScope.launchIO {
-            combine(
-                downloadManager.isDownloaderRunning,
-                downloadManager.queueState,
-            ) { isRunning, downloadQueue -> Pair(isRunning, downloadQueue.size) }
-                .collectLatest { (isDownloading, downloadQueueSize) ->
-                    val pendingDownloadExists = downloadQueueSize != 0
-                    _downloadQueueState.value = when {
-                        !pendingDownloadExists -> DownloadQueueState.Stopped
-                        !isDownloading -> DownloadQueueState.Paused(downloadQueueSize)
-                        else -> DownloadQueueState.Downloading(downloadQueueSize)
+            downloadManager.queueState
+                .flatMapLatest { downloads ->
+                    if (downloads.isEmpty()) {
+                        flowOf<DownloadQueueState>(DownloadQueueState.Stopped)
+                    } else {
+                        combine(downloads.map { it.statusFlow }) { statuses ->
+                            if (statuses.any { it == Download.State.DOWNLOADING }) {
+                                DownloadQueueState.Downloading(downloads.size)
+                            } else {
+                                DownloadQueueState.Paused(downloads.size)
+                            }
+                        }
                     }
                 }
+                .collectLatest { _downloadQueueState.value = it }
         }
     }
 }
