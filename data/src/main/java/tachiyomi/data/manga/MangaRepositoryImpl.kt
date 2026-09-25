@@ -14,9 +14,6 @@ import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
-import tachiyomi.data.MemoColumnAdapter
-import tachiyomi.data.StringListColumnAdapter
-import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.data.subscribeToList
 import tachiyomi.data.subscribeToOne
 import tachiyomi.data.subscribeToOneOrNull
@@ -198,7 +195,7 @@ class MangaRepositoryImpl(
                     artist = value.artist,
                     author = value.author,
                     description = value.description,
-                    genre = value.genre?.let(StringListColumnAdapter::encode),
+                    genre = value.genre,
                     title = value.title,
                     status = value.status,
                     thumbnailUrl = value.thumbnailUrl,
@@ -212,11 +209,11 @@ class MangaRepositoryImpl(
                     coverLastModified = value.coverLastModified,
                     dateAdded = value.dateAdded,
                     mangaId = value.id,
-                    updateStrategy = value.updateStrategy?.let(UpdateStrategyColumnAdapter::encode),
+                    updateStrategy = value.updateStrategy,
                     version = value.version,
                     isSyncing = 0,
                     notes = value.notes,
-                    memo = value.memo?.let(MemoColumnAdapter::encode),
+                    memo = value.memo,
                 )
             }
         }

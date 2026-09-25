@@ -24,8 +24,8 @@ data class SMUserListManga(
     val totalChapters: Long, // the title's total chapters
     val userRate: SMUserRate?,
 ) {
-    fun toTrack(trackId: Long): Track {
-        return Track.create(trackId).apply {
+    fun toTrack(trackerId: Long): Track {
+        return Track.create(trackerId).apply {
             title = name
             total_chapters = totalChapters
             tracking_url = url

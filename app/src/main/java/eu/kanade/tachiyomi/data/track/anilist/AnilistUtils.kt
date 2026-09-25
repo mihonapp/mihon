@@ -4,7 +4,7 @@ import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.Track
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-fun Track.toApiStatus() = when (status) {
+internal fun Track.toApiStatus() = when (status) {
     Anilist.READING -> "CURRENT"
     Anilist.COMPLETED -> "COMPLETED"
     Anilist.ON_HOLD -> "PAUSED"
@@ -14,7 +14,7 @@ fun Track.toApiStatus() = when (status) {
     else -> throw NotImplementedError("Unknown status: $status")
 }
 
-fun DomainTrack.toApiScore(preferences: TrackPreferences): String = when (preferences.anilistScoreType.get()) {
+internal fun DomainTrack.toApiScore(preferences: TrackPreferences): String = when (preferences.anilistScoreType.get()) {
     // 10 point
     "POINT_10" -> (score.toInt() / 10).toString()
     // 100 point

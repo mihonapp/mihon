@@ -31,13 +31,17 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
+class AnilistApi(
+    val trackerId: Long,
+    val client: OkHttpClient,
+    interceptor: AnilistInterceptor,
+) {
 
     private val json: Json by injectLazy()
 
     private val authClient = client.newBuilder()
         .addInterceptor(interceptor)
-        .rateLimit(permits = 85, period = 1.minutes)
+        .rateLimit(permits = 25, period = 1.minutes)
         .build()
 
     suspend fun addLibManga(track: Track): Track {
@@ -192,7 +196,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     .awaitSuccess()
                     .parseAs<ALSearchResult>()
                     .data.page.media
-                    .map { it.toALManga().toTrack() }
+                    .map { it.toALManga().toTrack(trackerId) }
             }
         }
     }
@@ -273,7 +277,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     .data.page.mediaList
                     .map { it.toALUserManga() }
                     .firstOrNull()
-                    ?.toTrack()
+                    ?.toTrack(trackerId)
             }
         }
     }
@@ -375,7 +379,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     .data.page.media
                     .firstOrNull()
                     ?.toALManga()
-                    ?.toTrack()
+                    ?.toTrack(trackerId)
             }
         }
     }

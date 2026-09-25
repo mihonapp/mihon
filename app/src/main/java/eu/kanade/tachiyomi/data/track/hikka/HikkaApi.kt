@@ -32,7 +32,7 @@ import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class HikkaApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val client: OkHttpClient,
     interceptor: HikkaInterceptor,
 ) {
@@ -95,7 +95,7 @@ class HikkaApi(
                     .awaitSuccess()
                     .parseAs<HKMangaPagination>()
                     .list
-                    .map { it.toTrack(trackId) }
+                    .map { it.toTrack(trackerId) }
             }
         }
     }
@@ -113,7 +113,7 @@ class HikkaApi(
                 } else {
                     response
                         .parseAs<HKManga>()
-                        .toTrack(trackId)
+                        .toTrack(trackerId)
                 }
             }
         }
@@ -149,7 +149,7 @@ class HikkaApi(
                 authClient.newCall(GET(url.toString()))
                     .awaitSuccess()
                     .parseAs<HKManga>()
-                    .toTrack(trackId)
+                    .toTrack(trackerId)
             }
         }
     }
@@ -193,7 +193,7 @@ class HikkaApi(
                 authClient.newCall(PUT(url.toString(), body = payload.toString().toRequestBody(jsonMime)))
                     .awaitSuccess()
                     .parseAs<HKRead>()
-                    .toTrack(trackId)
+                    .toTrack(trackerId)
             }
         }
     }

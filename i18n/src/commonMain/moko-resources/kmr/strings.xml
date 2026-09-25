@@ -238,8 +238,6 @@
     <string name="tapping_inverted_vertical">Stûnî</string>
     <string name="tapping_inverted_both">Herdu</string>
     <string name="theme_strawberrydaiquiri">Daiquiriya Çîlekan</string>
-    <string name="pref_category_nsfw_content">Çavkaniyên NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Di lîsteyên çavkanî û pêvekan de nîşan bide</string>
     <string name="pref_category_display">Ekran</string>
     <string name="pref_library_columns">Babetên di her rêzê de</string>
     <string name="pref_category_library_update">Nûkirina giştî</string>
@@ -270,6 +268,4 @@
     <string name="pref_chapter_swipe_end">Kişandina beşê ber bi rastê</string>
     <string name="pref_chapter_swipe_start">Kişandina beşê ber bi çepê</string>
     <string name="pref_mark_duplicate_read_chapter_read">Beşên dubare yên xwendî wekî xwendî nîşan bide</string>
-    <string name="ext_info_age_rating">Nirxandina temenî</string>
-    <string name="ext_nsfw_short">18+</string>
 </resources>

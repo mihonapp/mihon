@@ -31,7 +31,7 @@ import java.util.Locale
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MyAnimeListApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val client: OkHttpClient,
     interceptor: MyAnimeListInterceptor,
 ) {
@@ -223,7 +223,7 @@ class MyAnimeListApi(
     }
 
     private fun parseSearchItem(searchItem: MALManga): TrackSearch {
-        return TrackSearch.create(trackId).apply {
+        return TrackSearch.create(trackerId).apply {
             remote_id = searchItem.id
             title = searchItem.title
             summary = searchItem.synopsis

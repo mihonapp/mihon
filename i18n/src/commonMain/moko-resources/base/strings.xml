@@ -267,9 +267,11 @@
     <string name="secure_screen_summary">Secure screen hides app contents when switching apps and block screenshots</string>
     <string name="firebase_summary">Sending crash logs and analytics will allow us to identify and fix issues, improve performance, and make future updates more relevant to your needs</string>
 
-    <string name="pref_category_nsfw_content">NSFW (18+) sources</string>
-    <string name="pref_show_nsfw_source">Show in sources and extensions lists</string>
-    <string name="parental_controls_info">This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing NSFW (18+) content within the app.</string>
+    <string name="pref_category_extensions">Extensions</string>
+    <string name="pref_allowed_content_warnings">Allowed content warnings</string>
+    <string name="pref_apply_content_warnings_to_installed">Also apply to installed extensions</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">When off, extensions you already installed keep loading and updating regardless of their warning</string>
+    <string name="content_warnings_info">Installed extensions that aren\'t loaded stay listed without their sources; ones you haven\'t installed are hidden. This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing 18+ content within the app.</string>
 
     <string name="relative_time_today">Today</string>
 
@@ -339,6 +341,15 @@
     <string name="ext_installed">Installed</string>
     <string name="ext_trust">Trust</string>
     <string name="ext_untrusted">Untrusted</string>
+    <string name="ext_filtered">Filtered</string>
+    <string name="ext_not_loaded">Not loaded</string>
+    <string name="ext_not_loaded_dialog">Couldn\'t load</string>
+    <string name="ext_copy_stacktrace">Copy stack trace</string>
+    <string name="ext_filtered_message">This extension\'s content warning isn\'t one you chose to load, so its sources aren\'t available.</string>
+    <string name="ext_unsigned_message">This extension isn\'t signed, so there\'s no signature to check it against.</string>
+    <string name="ext_unsupported_message">This extension was built for a version of the extension library this app version can\'t load. Updating the app or the extension may help.</string>
+    <string name="ext_malformed_message">This extension is missing information the app needs to load it.</string>
+    <string name="ext_load_failed_message">This extension threw an error while loading, so none of its sources are available.</string>
     <string name="ext_uninstall">Uninstall</string>
     <string name="ext_remove">Remove</string>
     <string name="ext_confirm_remove">Remove Extension?</string>
@@ -350,9 +361,12 @@
     <string name="extension_api_error">Failed to fetch available extensions</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Language</string>
-    <string name="ext_info_age_rating">Age rating</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="ext_nsfw_warning">Sources from this extension may contain NSFW (18+) content</string>
+    <string name="ext_info_warning">Warning</string>
+    <string name="ext_content_warning_safe">Safe</string>
+    <string name="ext_content_warning_mixed">Mixed</string>
+    <string name="ext_content_warning_nsfw">18+</string>
+    <string name="ext_content_warning_mixed_description">Sources from this extension might contain both safe and 18+ content.</string>
+    <string name="ext_content_warning_nsfw_description">Sources from this extension are primarily focused on 18+ content.</string>
     <string name="ext_permission_install_apps_warning">Permissions are needed to install extensions. Tap here to grant.</string>
     <string name="ext_install_service_notif">Installing extension…</string>
     <string name="ext_installer_pref">Installer</string>
@@ -525,6 +539,7 @@
     <string name="dual_page_view_always">Always</string>
     <string name="dual_page_view_wide">When wide</string>
     <string name="pref_continuous_minwidth">Min width</string>
+    <string name="pref_continuous_gap">Gap</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
@@ -566,6 +581,9 @@
     <string name="enhanced_services_not_installed">Available but source not installed: %s</string>
     <string name="enhanced_tracking_info">Provides enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
     <string name="track_activity_name">Tracker login</string>
+    <string name="refresh_tracker_profile">Refresh tracker profile</string>
+    <string name="refresh_tracker_success">%s profile refreshed</string>
+    <string name="refresh_tracker_error">%1$s refresh error: %2$s</string>
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
