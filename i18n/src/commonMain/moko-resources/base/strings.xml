@@ -586,6 +586,8 @@
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
+    <string name="pref_volume_keys_navigation">Volume keys navigation</string>
+    <string name="pref_volume_keys_navigation_summary">Page through lists outside the reader</string>
 
       <!-- Data and storage section -->
     <string name="pref_storage_location">Storage location</string>
