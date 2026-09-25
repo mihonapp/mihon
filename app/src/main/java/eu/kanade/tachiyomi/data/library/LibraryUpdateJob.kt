@@ -67,7 +67,6 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
-import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
 import tachiyomi.i18n.MR
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
@@ -99,8 +98,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     @Inject private lateinit var filterChaptersForDownload: FilterChaptersForDownload
 
     @Inject private lateinit var updateMangaFromRemote: UpdateMangaFromRemote
-
-    @Inject private lateinit var insertMangaUpdateError: InsertMangaUpdateError
 
     @Inject private lateinit var notifier: LibraryUpdateNotifier
 
@@ -309,19 +306,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             else -> e.message
                                         }
                                         failedUpdates.add(manga to errorMessage)
-                                        try {
-                                            insertMangaUpdateError.await(
-                                                manga.id,
-                                                errorMessage,
-                                                Clock.System.now().toEpochMilliseconds(),
-                                            )
-                                        } catch (e: CancellationException) {
-                                            throw e
-                                        } catch (e: Exception) {
-                                            logcat(LogPriority.ERROR, e) {
-                                                "Failed to insert update error for manga ${manga.title}"
-                                            }
-                                        }
                                     }
                                 }
                             }

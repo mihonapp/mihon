@@ -16,6 +16,4 @@ interface MangaUpdateErrorRepository {
     suspend fun deleteByMangaIds(mangaIds: List<Long>)
 
     suspend fun deleteAll()
-
-    suspend fun deleteNonFavorites()
 }

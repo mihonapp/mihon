@@ -42,15 +42,6 @@ class FailedUpdatesViewModel(
 
     init {
         viewModelScope.launchIO {
-            try {
-                deleteMangaUpdateError.awaitNonFavorites()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e)
-                _events.send(Unit)
-            }
-
             getMangaUpdateErrors.subscribeWithManga()
                 .catch {
                     logcat(LogPriority.ERROR, it)

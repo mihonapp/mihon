@@ -8,6 +8,13 @@ CREATE TABLE manga_update_errors(
 
 CREATE INDEX manga_update_errors_timestamp_index ON manga_update_errors(timestamp);
 
+CREATE TRIGGER delete_manga_update_errors_on_unfavorite
+AFTER UPDATE OF favorite ON mangas
+WHEN new.favorite = 0
+BEGIN
+    DELETE FROM manga_update_errors WHERE manga_id = new._id;
+END;
+
 getAllWithManga:
 SELECT
     manga_update_errors.manga_id,
@@ -44,7 +51,3 @@ WHERE manga_id IN :mangaIds;
 
 deleteAll:
 DELETE FROM manga_update_errors;
-
-deleteNonFavorites:
-DELETE FROM manga_update_errors
-WHERE manga_id NOT IN (SELECT _id FROM mangas WHERE favorite = 1);

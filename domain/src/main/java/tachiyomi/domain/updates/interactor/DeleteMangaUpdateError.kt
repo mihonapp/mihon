@@ -20,8 +20,4 @@ class DeleteMangaUpdateError(
     suspend fun awaitAll() {
         repository.deleteAll()
     }
-
-    suspend fun awaitNonFavorites() {
-        repository.deleteNonFavorites()
-    }
 }

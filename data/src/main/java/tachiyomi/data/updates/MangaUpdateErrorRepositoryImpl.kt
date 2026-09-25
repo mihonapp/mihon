@@ -54,10 +54,6 @@ class MangaUpdateErrorRepositoryImpl(
         database.manga_update_errorsQueries.deleteAll()
     }
 
-    override suspend fun deleteNonFavorites() {
-        database.manga_update_errorsQueries.deleteNonFavorites()
-    }
-
     private fun mapMangaUpdateError(
         mangaId: Long,
         errorMessage: String?,

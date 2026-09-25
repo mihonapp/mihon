@@ -29,7 +29,6 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.source.service.SourceManager
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -40,8 +39,6 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
     CoroutineWorker(context, workerParams) {
 
     private val graph: AppGraph = context.metroGraph()
-
-    @Inject private lateinit var sourceManager: SourceManager
 
     @Inject private lateinit var getLibraryManga: GetLibraryManga
 
@@ -116,13 +113,13 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
                                     progressCount,
                                     manga,
                                 ) {
-                                    val source = sourceManager.get(manga.source) ?: return@withUpdateNotification
                                     try {
                                         updateMangaFromRemote(
-                                            source = source,
                                             manga = manga,
                                             fetchDetails = true,
                                         ).getOrThrow()
+                                    } catch (e: CancellationException) {
+                                        throw e
                                     } catch (e: Throwable) {
                                         // Ignore errors and continue
                                         logcat(LogPriority.ERROR, e)
