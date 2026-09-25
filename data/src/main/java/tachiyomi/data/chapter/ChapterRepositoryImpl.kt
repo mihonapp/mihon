@@ -45,25 +45,29 @@ class ChapterRepositoryImpl(
                 .distinct()
                 .flatMap { mangaId ->
                     database.chaptersQueries
-                        .getChaptersByMangaId(mangaId, applyScanlatorFilter = false.toLong(), ::mapChapter)
+                        .getChaptersByMangaId(
+                            mangaId = mangaId,
+                            applyScanlatorFilter = false.toLong(),
+                            mapper = ::mapChapter,
+                        )
                         .awaitAsList()
                         .map { mangaId to it.url }
                 }
                 .toMutableSet()
             val stored = added.filter { existing.add(it.mangaId to it.url) }.map { chapter ->
                 val chapterId = database.chaptersQueries.insertReturningId(
-                    chapter.mangaId,
-                    chapter.url,
-                    chapter.name,
-                    chapter.scanlator,
-                    chapter.read,
-                    chapter.bookmark,
-                    chapter.lastPageRead,
-                    chapter.chapterNumber,
-                    chapter.sourceOrder,
-                    chapter.dateFetch,
-                    chapter.dateUpload,
-                    chapter.memo,
+                    mangaId = chapter.mangaId,
+                    url = chapter.url,
+                    name = chapter.name,
+                    scanlator = chapter.scanlator,
+                    read = chapter.read,
+                    bookmark = chapter.bookmark,
+                    lastPageRead = chapter.lastPageRead,
+                    chapterNumber = chapter.chapterNumber,
+                    sourceOrder = chapter.sourceOrder,
+                    dateFetch = chapter.dateFetch,
+                    dateUpload = chapter.dateUpload,
+                    memo = chapter.memo,
                 )
                     .awaitAsOne()
                 chapter.copy(id = chapterId)
@@ -99,7 +103,11 @@ class ChapterRepositoryImpl(
 
     override suspend fun getChapterByMangaId(mangaId: Long, applyScanlatorFilter: Boolean): List<Chapter> {
         return database.chaptersQueries
-            .getChaptersByMangaId(mangaId, applyScanlatorFilter.toLong(), ::mapChapter)
+            .getChaptersByMangaId(
+                mangaId = mangaId,
+                applyScanlatorFilter = applyScanlatorFilter.toLong(),
+                mapper = ::mapChapter,
+            )
             .awaitAsList()
     }
 
@@ -129,7 +137,11 @@ class ChapterRepositoryImpl(
 
     override suspend fun getChapterByMangaIdAsFlow(mangaId: Long, applyScanlatorFilter: Boolean): Flow<List<Chapter>> {
         return database.chaptersQueries
-            .getChaptersByMangaId(mangaId, applyScanlatorFilter.toLong(), ::mapChapter)
+            .getChaptersByMangaId(
+                mangaId = mangaId,
+                applyScanlatorFilter = applyScanlatorFilter.toLong(),
+                mapper = ::mapChapter,
+            )
             .subscribeToList()
     }
 

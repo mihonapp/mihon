@@ -15,7 +15,9 @@ contains:
 SELECT EXISTS(SELECT 0 FROM extension_store WHERE index_url = :indexUrl);
 
 getAll:
-SELECT *
+SELECT
+    index_url, name, badge_label, signing_key,
+    contact_website, contact_discord, is_legacy, extension_list_url
 FROM extension_store;
 
 getCount:

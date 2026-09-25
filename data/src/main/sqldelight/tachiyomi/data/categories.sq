@@ -17,7 +17,7 @@ BEGIN SELECT CASE
 END;
 
 getCategory:
-SELECT *
+SELECT _id, name, sort, flags
 FROM categories
 WHERE _id = :id
 LIMIT 1;

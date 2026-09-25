@@ -33,25 +33,41 @@ CREATE INDEX mangas_url_index ON mangas(url);
 CREATE INDEX idx_mangas_source ON mangas(source);
 
 getMangaById:
-SELECT *
+SELECT
+    _id, source, url, artist, author, description, genre, title,
+    status, thumbnail_url, last_update, next_update, initialized,
+    viewer, chapter_flags, cover_last_modified, update_strategy,
+    calculate_interval, notes, memo, favorite_at
 FROM mangas
 WHERE _id = :id;
 
 -- TODO: this should ideally never really have more than 1 result
 getMangaByUrlAndSource:
-SELECT *
+SELECT
+    _id, source, url, artist, author, description, genre, title,
+    status, thumbnail_url, last_update, next_update, initialized,
+    viewer, chapter_flags, cover_last_modified, update_strategy,
+    calculate_interval, notes, memo, favorite_at
 FROM mangas
 WHERE url = :url
 AND source = :source
 LIMIT 1;
 
 getFavorites:
-SELECT *
+SELECT
+    _id, source, url, artist, author, description, genre, title,
+    status, thumbnail_url, last_update, next_update, initialized,
+    viewer, chapter_flags, cover_last_modified, update_strategy,
+    calculate_interval, notes, memo, favorite_at
 FROM mangas
 WHERE favorite_at IS NOT NULL;
 
 getReadMangaNotInLibrary:
-SELECT *
+SELECT
+    _id, source, url, artist, author, description, genre, title,
+    status, thumbnail_url, last_update, next_update, initialized,
+    viewer, chapter_flags, cover_last_modified, update_strategy,
+    calculate_interval, notes, memo, favorite_at
 FROM mangas
 WHERE favorite_at IS NULL AND _id IN (
     SELECT DISTINCT chapters.manga_id
@@ -60,7 +76,11 @@ WHERE favorite_at IS NULL AND _id IN (
 );
 
 getAllManga:
-SELECT *
+SELECT
+    _id, source, url, artist, author, description, genre, title,
+    status, thumbnail_url, last_update, next_update, initialized,
+    viewer, chapter_flags, cover_last_modified, update_strategy,
+    calculate_interval, notes, memo, favorite_at
 FROM mangas;
 
 getAllMangaSourceAndUrl:
@@ -76,7 +96,11 @@ WHERE favorite_at IS NOT NULL
 GROUP BY source;
 
 getFavoriteBySourceId:
-SELECT *
+SELECT
+    _id, source, url, artist, author, description, genre, title,
+    status, thumbnail_url, last_update, next_update, initialized,
+    viewer, chapter_flags, cover_last_modified, update_strategy,
+    calculate_interval, notes, memo, favorite_at
 FROM mangas
 WHERE favorite_at IS NOT NULL
 AND source = :sourceId;
@@ -94,7 +118,11 @@ track_dupes AS (
     WHERE S1.manga_id = :id
 ),
 duplicates AS (
-    SELECT M.*
+    SELECT
+        M._id, M.source, M.url, M.artist, M.author, M.description, M.genre, M.title,
+        M.status, M.thumbnail_url, M.last_update, M.next_update, M.initialized,
+        M.viewer, M.chapter_flags, M.cover_last_modified, M.update_strategy,
+        M.calculate_interval, M.notes, M.memo, M.favorite_at
     FROM mangas M
     LEFT JOIN track_dupes D
     ON D.manga_id = _id
@@ -116,14 +144,21 @@ chapter_counts AS (
     GROUP BY M._id
 )
 SELECT
-    M.*,
+    M._id, M.source, M.url, M.artist, M.author, M.description, M.genre, M.title,
+    M.status, M.thumbnail_url, M.last_update, M.next_update, M.initialized,
+    M.viewer, M.chapter_flags, M.cover_last_modified, M.update_strategy,
+    M.calculate_interval, M.notes, M.memo, M.favorite_at,
     coalesce(CC.chapter_count, 0) AS chapter_count
 FROM duplicates M
 LEFT JOIN chapter_counts CC
 ON M._id = CC.manga_id;
 
 getUpcomingManga:
-SELECT *
+SELECT
+    _id, source, url, artist, author, description, genre, title,
+    status, thumbnail_url, last_update, next_update, initialized,
+    viewer, chapter_flags, cover_last_modified, update_strategy,
+    calculate_interval, notes, memo, favorite_at
 FROM mangas
 WHERE next_update >= :startOfDay
 AND favorite_at IS NOT NULL
@@ -265,7 +300,11 @@ insertNetworkManga {
     AND favorite_at IS NULL;
 
     -- Finally return the manga
-    SELECT *
+    SELECT
+        _id, source, url, artist, author, description, genre, title,
+        status, thumbnail_url, last_update, next_update, initialized,
+        viewer, chapter_flags, cover_last_modified, update_strategy,
+        calculate_interval, notes, memo, favorite_at
     FROM mangas
     WHERE source = :source
     AND url = :url

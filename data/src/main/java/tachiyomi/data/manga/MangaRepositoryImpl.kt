@@ -133,7 +133,7 @@ class MangaRepositoryImpl(
         database.transaction {
             database.mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
             categoryIds.forEach { categoryId ->
-                database.mangas_categoriesQueries.insert(mangaId, categoryId)
+                database.mangas_categoriesQueries.insert(mangaId = mangaId, categoryId = categoryId)
             }
         }
     }

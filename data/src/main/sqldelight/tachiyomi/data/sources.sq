@@ -5,11 +5,11 @@ CREATE TABLE sources(
 );
 
 findAll:
-SELECT *
+SELECT _id, lang, name
 FROM sources;
 
 findOne:
-SELECT *
+SELECT _id, lang, name
 FROM sources
 WHERE _id = :id;
 

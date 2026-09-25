@@ -62,12 +62,12 @@ WHERE last_read = 0;
 
 upsert:
 INSERT INTO history(chapter_id, last_read, time_read)
-VALUES (:chapterId, :readAt, :time_read)
+VALUES (:chapterId, :readAt, :readDuration)
 ON CONFLICT(chapter_id)
 DO UPDATE
 SET
     last_read = :readAt,
-    time_read = time_read + :time_read
+    time_read = time_read + :readDuration
 WHERE chapter_id = :chapterId;
 
 getReadDuration:

@@ -25,12 +25,20 @@ CREATE INDEX idx_chapters_url ON chapters(url);
 
 
 getChapterById:
-SELECT *
+SELECT
+    _id, manga_id, url, name, scanlator,
+    read, bookmark, last_page_read, chapter_number, source_order,
+    date_fetch, date_upload,
+    memo
 FROM chapters
 WHERE _id = :id;
 
 getChaptersByMangaId:
-SELECT C.*
+SELECT
+    C._id, C.manga_id, C.url, C.name, C.scanlator,
+    C.read, C.bookmark, C.last_page_read, C.chapter_number, C.source_order,
+    C.date_fetch, C.date_upload,
+    C.memo
 FROM chapters C
 LEFT JOIN excluded_scanlators ES
 ON C.manga_id = ES.manga_id
@@ -47,18 +55,30 @@ FROM chapters
 WHERE manga_id = :mangaId;
 
 getBookmarkedChaptersByMangaId:
-SELECT *
+SELECT
+    _id, manga_id, url, name, scanlator,
+    read, bookmark, last_page_read, chapter_number, source_order,
+    date_fetch, date_upload,
+    memo
 FROM chapters
 WHERE bookmark
 AND manga_id = :mangaId;
 
 getChapterByUrl:
-SELECT *
+SELECT
+    _id, manga_id, url, name, scanlator,
+    read, bookmark, last_page_read, chapter_number, source_order,
+    date_fetch, date_upload,
+    memo
 FROM chapters
 WHERE url = :chapterUrl;
 
 getChapterByUrlAndMangaId:
-SELECT *
+SELECT
+    _id, manga_id, url, name, scanlator,
+    read, bookmark, last_page_read, chapter_number, source_order,
+    date_fetch, date_upload,
+    memo
 FROM chapters
 WHERE url = :chapterUrl
 AND manga_id = :mangaId

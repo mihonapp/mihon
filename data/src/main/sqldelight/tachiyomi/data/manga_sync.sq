@@ -27,16 +27,25 @@ DELETE FROM manga_sync
 WHERE manga_id = :mangaId AND sync_id = :syncId;
 
 getTracks:
-SELECT *
+SELECT
+    _id, manga_id, sync_id, remote_id, library_id,
+    title, last_chapter_read, total_chapters, status, score,
+    remote_url, start_date, finish_date, private
 FROM manga_sync;
 
 getTrackById:
-SELECT *
+SELECT
+    _id, manga_id, sync_id, remote_id, library_id,
+    title, last_chapter_read, total_chapters, status, score,
+    remote_url, start_date, finish_date, private
 FROM manga_sync
 WHERE _id = :id;
 
 getTracksByMangaId:
-SELECT *
+SELECT
+    _id, manga_id, sync_id, remote_id, library_id,
+    title, last_chapter_read, total_chapters, status, score,
+    remote_url, start_date, finish_date, private
 FROM manga_sync
 WHERE manga_id = :mangaId;
 

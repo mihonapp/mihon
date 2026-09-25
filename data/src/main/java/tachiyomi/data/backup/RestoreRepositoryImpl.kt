@@ -184,18 +184,18 @@ class RestoreRepositoryImpl(
 
         newChapters.forEach { chapter ->
             database.chaptersQueries.insert(
-                chapter.mangaId,
-                chapter.url,
-                chapter.name,
-                chapter.scanlator,
-                chapter.read,
-                chapter.bookmark,
-                chapter.lastPageRead,
-                chapter.chapterNumber,
-                chapter.sourceOrder,
-                chapter.dateFetch,
-                chapter.dateUpload,
-                chapter.memo,
+                mangaId = chapter.mangaId,
+                url = chapter.url,
+                name = chapter.name,
+                scanlator = chapter.scanlator,
+                read = chapter.read,
+                bookmark = chapter.bookmark,
+                lastPageRead = chapter.lastPageRead,
+                chapterNumber = chapter.chapterNumber,
+                sourceOrder = chapter.sourceOrder,
+                dateFetch = chapter.dateFetch,
+                dateUpload = chapter.dateUpload,
+                memo = chapter.memo,
             )
         }
         existingChapters.forEach { chapter ->
@@ -241,7 +241,7 @@ class RestoreRepositoryImpl(
             }
 
         toUpdate.forEach { (chapterId, readAt, readDuration) ->
-            database.historyQueries.upsert(chapterId, readAt, readDuration)
+            database.historyQueries.upsert(chapterId = chapterId, readAt = readAt, readDuration = readDuration)
         }
     }
 
@@ -270,20 +270,20 @@ class RestoreRepositoryImpl(
 
         existingTracks.forEach { track ->
             database.manga_syncQueries.update(
-                track.mangaId,
-                track.trackerId,
-                track.remoteId,
-                track.libraryId,
-                track.title,
-                track.lastChapterRead,
-                track.totalChapters,
-                track.status,
-                track.score,
-                track.remoteUrl,
-                track.startDate,
-                track.finishDate,
-                track.private,
-                track.id,
+                mangaId = track.mangaId,
+                syncId = track.trackerId,
+                mediaId = track.remoteId,
+                libraryId = track.libraryId,
+                title = track.title,
+                lastChapterRead = track.lastChapterRead,
+                totalChapter = track.totalChapters,
+                status = track.status,
+                score = track.score,
+                trackingUrl = track.remoteUrl,
+                startDate = track.startDate,
+                finishDate = track.finishDate,
+                `private` = track.private,
+                id = track.id,
             )
         }
     }

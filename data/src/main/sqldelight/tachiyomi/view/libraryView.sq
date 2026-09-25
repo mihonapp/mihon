@@ -37,5 +37,12 @@ ON MC.manga_id = M._id
 WHERE M.favorite_at IS NOT NULL;
 
 library:
-SELECT *
+SELECT
+    _id, source, url, artist, author,
+    description, genre, title, status, thumbnail_url,
+    last_update, next_update, initialized, viewer,
+    chapter_flags, cover_last_modified, update_strategy, calculate_interval,
+    notes, memo,
+    favorite_at, totalCount, readCount, latestUpload, chapterFetchedAt,
+    lastRead, bookmarkCount, categories
 FROM libraryView;
