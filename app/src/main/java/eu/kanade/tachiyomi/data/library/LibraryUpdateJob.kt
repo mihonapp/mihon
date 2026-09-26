@@ -291,6 +291,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             newUpdates.add(manga to newChapters.toTypedArray())
                                         }
                                     } catch (e: Throwable) {
+                                        if (e is CancellationException) {
+                                            throw e
+                                        }
+
                                         val errorMessage = when (e) {
                                             is NoChaptersException -> context.stringResource(
                                                 MR.strings.no_chapters_error,

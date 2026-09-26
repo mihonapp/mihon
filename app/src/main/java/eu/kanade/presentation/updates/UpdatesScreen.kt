@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.CalendarMonth
+import mihon.icons.materialsymbols.rounded.Error
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.FlipToBack
 import mihon.icons.materialsymbols.rounded.Refresh
@@ -37,6 +38,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -59,6 +61,7 @@ fun UpdateScreen(
     onMultiDeleteClicked: (List<UpdatesItem>) -> Unit,
     onUpdateSelected: (UpdatesItem, Boolean, Boolean) -> Unit,
     onOpenChapter: (UpdatesItem) -> Unit,
+    onFailedUpdatesClicked: () -> Unit,
     onFilterClicked: () -> Unit,
     hasActiveFilters: Boolean,
 ) {
@@ -71,6 +74,8 @@ fun UpdateScreen(
             UpdatesAppBar(
                 onCalendarClicked = { onCalendarClicked() },
                 onUpdateLibrary = { onUpdateLibrary() },
+                onFailedUpdatesClicked = onFailedUpdatesClicked,
+                failedUpdatesCount = state.failedUpdatesCount,
                 onFilterClicked = { onFilterClicked() },
                 hasFilters = hasActiveFilters,
                 actionModeCounter = state.selected.size,
@@ -140,6 +145,8 @@ fun UpdateScreen(
 private fun UpdatesAppBar(
     onCalendarClicked: () -> Unit,
     onUpdateLibrary: () -> Unit,
+    onFailedUpdatesClicked: () -> Unit,
+    failedUpdatesCount: Long,
     onFilterClicked: () -> Unit,
     hasFilters: Boolean,
     // For action mode
@@ -166,6 +173,15 @@ private fun UpdatesAppBar(
                         title = stringResource(MR.strings.action_view_upcoming),
                         icon = MaterialSymbols.Rounded.CalendarMonth,
                         onClick = onCalendarClicked,
+                    ),
+                    AppBar.Action(
+                        title = pluralStringResource(
+                            MR.plurals.notification_update_error,
+                            count = failedUpdatesCount.toInt(),
+                            failedUpdatesCount.toInt(),
+                        ),
+                        icon = MaterialSymbols.Rounded.Error,
+                        onClick = onFailedUpdatesClicked,
                     ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_update_library),
