@@ -7,19 +7,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
+import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
+import mihon.core.navigation.ExtensionStoresRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.domain.extension.model.ContentWarning
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 
-object SettingsBrowseScreen : SearchableSettings {
+@Serializable
+object SettingsBrowseRoute : SearchableRoute {
 
     @ReadOnlyComposable
     @Composable
@@ -28,7 +29,7 @@ object SettingsBrowseScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+        val backStack = LocalBackStack.current
 
         val sourcePreferences = remember { context.appGraph.sourcePreferences }
         val getExtensionStoreCountAsFlow = remember { context.appGraph.getExtensionStoreCountAsFlow }
@@ -47,7 +48,7 @@ object SettingsBrowseScreen : SearchableSettings {
                         title = stringResource(MR.strings.extensionStores),
                         subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.toInt(), reposCount),
                         onClick = {
-                            navigator.push(ExtensionStoresScreen())
+                            backStack.add(ExtensionStoresRoute())
                         },
                     ),
                 ),

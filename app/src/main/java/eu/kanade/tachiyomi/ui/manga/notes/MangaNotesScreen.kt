@@ -6,8 +6,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -17,57 +15,53 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.manga.MangaNotesScreen
-import eu.kanade.presentation.util.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.domain.manga.interactor.UpdateMangaNotes
 import tachiyomi.domain.manga.model.Manga
 
-class MangaNotesScreen(
-    private val manga: Manga,
-) : Screen() {
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
+@Composable
+fun MangaNotesScreen(manga: Manga) {
+    val backStack = LocalBackStack.current
 
-        val viewModel = assistedMetroViewModel<Model, Model.Factory> { create(manga = manga) }
-        val state by viewModel.state.collectAsState()
+    val viewModel = assistedMetroViewModel<MangaNotesViewModel, MangaNotesViewModel.Factory> { create(manga = manga) }
+    val state by viewModel.state.collectAsState()
 
-        MangaNotesScreen(
-            state = state,
-            navigateUp = navigator::pop,
-            onUpdate = viewModel::updateNotes,
-        )
+    MangaNotesScreen(
+        state = state,
+        navigateUp = backStack::removeLastOrNull,
+        onUpdate = viewModel::updateNotes,
+    )
+}
+
+@AssistedInject
+class MangaNotesViewModel(
+    @Assisted private val manga: Manga,
+    private val updateMangaNotes: UpdateMangaNotes,
+) : ViewModel() {
+
+    val state: StateFlow<State>
+        field = MutableStateFlow<State>(State(manga, manga.notes))
+
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(manga: Manga): MangaNotesViewModel
     }
 
-    @AssistedInject
-    class Model(
-        @Assisted private val manga: Manga,
-        private val updateMangaNotes: UpdateMangaNotes,
-    ) : ViewModel() {
+    fun updateNotes(content: String) {
+        if (content == state.value.notes) return
 
-        val state: StateFlow<State>
-            field = MutableStateFlow<State>(State(manga, manga.notes))
-
-        @AssistedFactory
-        @ManualViewModelAssistedFactoryKey
-        @ContributesIntoMap(AppScope::class)
-        interface Factory : ManualViewModelAssistedFactory {
-            fun create(manga: Manga): Model
+        state.update {
+            it.copy(notes = content)
         }
 
-        fun updateNotes(content: String) {
-            if (content == state.value.notes) return
-
-            state.update {
-                it.copy(notes = content)
-            }
-
-            viewModelScope.launchNonCancellable {
-                updateMangaNotes(manga.id, content)
-            }
+        viewModelScope.launchNonCancellable {
+            updateMangaNotes(manga.id, content)
         }
     }
 

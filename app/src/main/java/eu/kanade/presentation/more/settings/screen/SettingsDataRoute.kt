@@ -36,12 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.core.net.toUri
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
-import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
@@ -55,8 +51,13 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import logcat.LogPriority
 import mihon.app.di.appGraph
+import mihon.core.navigation.CreateBackupRoute
+import mihon.core.navigation.RestoreBackupRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
@@ -72,9 +73,13 @@ import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
-object SettingsDataScreen : SearchableSettings {
+@Serializable
+object SettingsDataRoute : SearchableRoute {
 
+    @Transient
     val restorePreferenceKeyString = MR.strings.label_backup
+
+    @Transient
     const val HELP_URL = "https://mihon.app/docs/faq/storage"
 
     @ReadOnlyComposable
@@ -180,7 +185,7 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun getBackupAndRestoreGroup(backupPreferences: BackupPreferences): Preference.PreferenceGroup {
         val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+        val backStack = LocalBackStack.current
 
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp.collectAsState()
 
@@ -201,7 +206,7 @@ object SettingsDataScreen : SearchableSettings {
                 logcat(LogPriority.ERROR, e)
             }
 
-            navigator.push(RestoreBackupScreen(it.toString()))
+            backStack.add(RestoreBackupRoute(it.toString()))
         }
 
         return Preference.PreferenceGroup(
@@ -222,7 +227,7 @@ object SettingsDataScreen : SearchableSettings {
                                 SegmentedButton(
                                     modifier = Modifier.fillMaxHeight(),
                                     checked = false,
-                                    onCheckedChange = { navigator.push(CreateBackupScreen()) },
+                                    onCheckedChange = { backStack.add(CreateBackupRoute) },
                                     shape = SegmentedButtonDefaults.itemShape(0, 2),
                                 ) {
                                     Text(stringResource(MR.strings.pref_create_backup))

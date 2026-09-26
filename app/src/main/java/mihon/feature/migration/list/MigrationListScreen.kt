@@ -7,102 +7,95 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import androidx.navigation3.runtime.result.ResultEffect
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
-import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
-import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.system.toast
+import mihon.core.navigation.MangaRoute
+import mihon.core.navigation.MigrateSearchRoute
+import mihon.core.navigation.util.LocalBackStack
 import mihon.feature.migration.list.components.MigrationExitDialog
 import mihon.feature.migration.list.components.MigrationMangaDialog
 import mihon.feature.migration.list.components.MigrationProgressDialog
 import tachiyomi.i18n.MR
 
-class MigrationListScreen(private val mangaIds: Collection<Long>, private val extraSearchQuery: String?) : Screen() {
+@Composable
+fun MigrationListScreen(
+    mangaIds: Collection<Long>,
+    extraSearchQuery: String?,
+) {
+    val backStack = LocalBackStack.current
+    val viewModel =
+        assistedMetroViewModel<MigrationListViewModel, MigrationListViewModel.Factory> {
+            create(mangaIds = mangaIds, extraSearchQuery = extraSearchQuery)
+        }
+    val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
 
-    private var matchOverride: Pair<Long, Long>? = null
-
-    fun addMatchOverride(current: Long, target: Long) {
-        matchOverride = current to target
+    ResultEffect<MatchOverrideEvent> {
+        viewModel.useMangaForMigration(
+            current = it.current,
+            target = it.target,
+            onMissingChapters = {
+                context.toast(MR.strings.migrationListScreen_matchWithoutChapterToast, Toast.LENGTH_LONG)
+            },
+        )
     }
 
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val viewModel =
-            assistedMetroViewModel<MigrationListViewModel, MigrationListViewModel.Factory> {
-                create(mangaIds = mangaIds, extraSearchQuery = extraSearchQuery)
-            }
-        val state by viewModel.state.collectAsState()
-        val context = LocalContext.current
+    LaunchedEffect(viewModel) {
+        viewModel.navigateBackEvent.collect {
+            backStack.removeLastOrNull()
+        }
+    }
+    MigrationListScreenContent(
+        items = state.items,
+        migrationComplete = state.migrationComplete,
+        finishedCount = state.finishedCount,
+        onItemClick = {
+            backStack.add(MangaRoute(it.id, true))
+        },
+        onSearchManually = { migrationItem ->
+            backStack.add(MigrateSearchRoute(migrationItem.manga.id))
+        },
+        onSkip = { viewModel.removeManga(it) },
+        onMigrate = { viewModel.migrateNow(mangaId = it, replace = true) },
+        onCopy = { viewModel.migrateNow(mangaId = it, replace = false) },
+        openMigrationDialog = viewModel::showMigrateDialog,
+    )
 
-        LaunchedEffect(matchOverride) {
-            val (current, target) = matchOverride ?: return@LaunchedEffect
-            viewModel.useMangaForMigration(
-                current = current,
-                target = target,
-                onMissingChapters = {
-                    context.toast(MR.strings.migrationListScreen_matchWithoutChapterToast, Toast.LENGTH_LONG)
+    when (val dialog = state.dialog) {
+        is MigrationListViewModel.Dialog.Migrate -> {
+            MigrationMangaDialog(
+                onDismissRequest = viewModel::dismissDialog,
+                copy = dialog.copy,
+                totalCount = dialog.totalCount,
+                skippedCount = dialog.skippedCount,
+                onMigrate = {
+                    if (dialog.copy) {
+                        viewModel.copyMangas()
+                    } else {
+                        viewModel.migrateMangas()
+                    }
                 },
             )
-            matchOverride = null
         }
+        is MigrationListViewModel.Dialog.Progress -> {
+            MigrationProgressDialog(
+                progress = dialog.progress,
+                exitMigration = viewModel::cancelMigrate,
+            )
+        }
+        MigrationListViewModel.Dialog.Exit -> {
+            MigrationExitDialog(
+                onDismissRequest = viewModel::dismissDialog,
+                exitMigration = backStack::removeLastOrNull,
+            )
+        }
+        null -> Unit
+    }
 
-        LaunchedEffect(viewModel) {
-            viewModel.navigateBackEvent.collect {
-                navigator.pop()
-            }
-        }
-        MigrationListScreenContent(
-            items = state.items,
-            migrationComplete = state.migrationComplete,
-            finishedCount = state.finishedCount,
-            onItemClick = {
-                navigator.push(MangaScreen(it.id, true))
-            },
-            onSearchManually = { migrationItem ->
-                navigator push MigrateSearchScreen(migrationItem.manga.id)
-            },
-            onSkip = { viewModel.removeManga(it) },
-            onMigrate = { viewModel.migrateNow(mangaId = it, replace = true) },
-            onCopy = { viewModel.migrateNow(mangaId = it, replace = false) },
-            openMigrationDialog = viewModel::showMigrateDialog,
-        )
-
-        when (val dialog = state.dialog) {
-            is MigrationListViewModel.Dialog.Migrate -> {
-                MigrationMangaDialog(
-                    onDismissRequest = viewModel::dismissDialog,
-                    copy = dialog.copy,
-                    totalCount = dialog.totalCount,
-                    skippedCount = dialog.skippedCount,
-                    onMigrate = {
-                        if (dialog.copy) {
-                            viewModel.copyMangas()
-                        } else {
-                            viewModel.migrateMangas()
-                        }
-                    },
-                )
-            }
-            is MigrationListViewModel.Dialog.Progress -> {
-                MigrationProgressDialog(
-                    progress = dialog.progress,
-                    exitMigration = viewModel::cancelMigrate,
-                )
-            }
-            MigrationListViewModel.Dialog.Exit -> {
-                MigrationExitDialog(
-                    onDismissRequest = viewModel::dismissDialog,
-                    exitMigration = navigator::pop,
-                )
-            }
-            null -> Unit
-        }
-
-        BackHandler(true) {
-            viewModel.showExitDialog()
-        }
+    BackHandler(true) {
+        viewModel.showExitDialog()
     }
 }
+
+data class MatchOverrideEvent(val current: Long, val target: Long)

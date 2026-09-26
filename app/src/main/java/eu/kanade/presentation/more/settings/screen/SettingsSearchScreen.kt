@@ -43,11 +43,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import androidx.navigation3.runtime.NavKey
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.util.Screen
+import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.replace
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
 import tachiyomi.i18n.MR
@@ -55,99 +55,95 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.util.runOnEnterKeyPressed
-import cafe.adriel.voyager.core.screen.Screen as VoyagerScreen
 
-class SettingsSearchScreen : Screen() {
+@Composable
+fun SettingsSearchScreen() {
+    val backStack = LocalBackStack.current
+    val softKeyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+    val listState = rememberLazyListState()
 
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val softKeyboardController = LocalSoftwareKeyboardController.current
-        val focusManager = LocalFocusManager.current
-        val focusRequester = remember { FocusRequester() }
-        val listState = rememberLazyListState()
-
-        // Hide keyboard on change screen
-        DisposableEffect(Unit) {
-            onDispose {
-                softKeyboardController?.hide()
-            }
+    // Hide keyboard on change screen
+    DisposableEffect(Unit) {
+        onDispose {
+            softKeyboardController?.hide()
         }
+    }
 
-        // Hide keyboard on outside text field is touched
-        LaunchedEffect(listState.isScrollInProgress) {
-            if (listState.isScrollInProgress) {
-                focusManager.clearFocus()
-            }
+    // Hide keyboard on outside text field is touched
+    LaunchedEffect(listState.isScrollInProgress) {
+        if (listState.isScrollInProgress) {
+            focusManager.clearFocus()
         }
+    }
 
-        // Request text field focus on launch
-        LaunchedEffect(focusRequester) {
-            focusRequester.requestFocus()
-        }
+    // Request text field focus on launch
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+    }
 
-        val textFieldState = rememberTextFieldState()
-        Scaffold(
-            topBar = {
-                Column {
-                    TopAppBar(
-                        navigationIcon = {
-                            val canPop = remember { navigator.canPop }
-                            if (canPop) {
-                                IconButton(onClick = navigator::pop) {
-                                    UpIcon()
-                                }
+    val textFieldState = rememberTextFieldState()
+    Scaffold(
+        topBar = {
+            Column {
+                TopAppBar(
+                    navigationIcon = {
+                        val canPop = remember { backStack.isNotEmpty() }
+                        if (canPop) {
+                            IconButton(onClick = backStack::removeLastOrNull) {
+                                UpIcon()
                             }
-                        },
-                        title = {
-                            BasicTextField(
-                                state = textFieldState,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .focusRequester(focusRequester)
-                                    .runOnEnterKeyPressed(action = focusManager::clearFocus),
-                                textStyle = MaterialTheme.typography.bodyLarge
-                                    .copy(color = MaterialTheme.colorScheme.onSurface),
-                                lineLimits = TextFieldLineLimits.SingleLine,
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                                onKeyboardAction = { focusManager.clearFocus() },
-                                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-                                decorator = {
-                                    if (textFieldState.text.isEmpty()) {
-                                        Text(
-                                            text = stringResource(MR.strings.action_search_settings),
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                        )
-                                    }
-                                    it()
-                                },
-                            )
-                        },
-                        actions = {
-                            if (textFieldState.text.isNotEmpty()) {
-                                IconButton(onClick = { textFieldState.clearText() }) {
-                                    Icon(
-                                        imageVector = MaterialSymbols.Rounded.Close,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        }
+                    },
+                    title = {
+                        BasicTextField(
+                            state = textFieldState,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .focusRequester(focusRequester)
+                                .runOnEnterKeyPressed(action = focusManager::clearFocus),
+                            textStyle = MaterialTheme.typography.bodyLarge
+                                .copy(color = MaterialTheme.colorScheme.onSurface),
+                            lineLimits = TextFieldLineLimits.SingleLine,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            onKeyboardAction = { focusManager.clearFocus() },
+                            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                            decorator = {
+                                if (textFieldState.text.isEmpty()) {
+                                    Text(
+                                        text = stringResource(MR.strings.action_search_settings),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        style = MaterialTheme.typography.bodyLarge,
                                     )
                                 }
+                                it()
+                            },
+                        )
+                    },
+                    actions = {
+                        if (textFieldState.text.isNotEmpty()) {
+                            IconButton(onClick = { textFieldState.clearText() }) {
+                                Icon(
+                                    imageVector = MaterialSymbols.Rounded.Close,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
                             }
-                        },
-                    )
-                    HorizontalDivider()
-                }
-            },
-        ) { contentPadding ->
-            SearchResult(
-                searchKey = textFieldState.text.toString(),
-                listState = listState,
-                contentPadding = contentPadding,
-            ) { result ->
-                SearchableSettings.highlightKey = result.highlightKey
-                navigator.replace(result.route)
+                        }
+                    },
+                )
+                HorizontalDivider()
             }
+        },
+    ) { contentPadding ->
+        SearchResult(
+            searchKey = textFieldState.text.toString(),
+            listState = listState,
+            contentPadding = contentPadding,
+        ) { result ->
+            SearchableSettings.highlightKey = result.highlightKey
+            backStack.replace(result.route)
         }
     }
 }
@@ -263,11 +259,11 @@ private fun SearchResult(
 @Composable
 @NonRestartableComposable
 private fun getIndex() = settingScreens
-    .map { screen ->
+    .map { route ->
         SettingsData(
-            title = stringResource(screen.getTitleRes()),
-            route = screen,
-            contents = screen.getPreferences(),
+            title = stringResource(route.getTitleRes()),
+            route = route,
+            contents = route.getPreferences(),
         )
     }
 
@@ -285,26 +281,26 @@ private fun getLocalizedBreadcrumb(path: String, node: String?, isLtr: Boolean):
     }
 }
 
-private val settingScreens = listOf(
-    SettingsAppearanceScreen,
-    SettingsLibraryScreen,
-    SettingsReaderScreen,
-    SettingsDownloadScreen,
-    SettingsTrackingScreen,
-    SettingsBrowseScreen,
-    SettingsDataScreen,
-    SettingsSecurityScreen,
-    SettingsAdvancedScreen,
+private val settingScreens: List<SearchableRoute> = listOf(
+    SettingsAppearanceRoute,
+    SettingsLibraryRoute,
+    SettingsReaderRoute,
+    SettingsDownloadRoute,
+    SettingsTrackingRoute,
+    SettingsBrowseRoute,
+    SettingsDataRoute,
+    SettingsSecurityRoute,
+    SettingsAdvancedRoute,
 )
 
 private data class SettingsData(
     val title: String,
-    val route: VoyagerScreen,
+    val route: NavKey,
     val contents: List<Preference>,
 )
 
 private data class SearchResultItem(
-    val route: VoyagerScreen,
+    val route: NavKey,
     val title: String,
     val breadcrumbs: String,
     val highlightKey: String,

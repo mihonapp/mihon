@@ -17,20 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.relativeDateText
-import eu.kanade.presentation.util.isTabletUi
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
+import mihon.core.navigation.util.LocalBackStack
 import mihon.feature.upcoming.components.UpcomingItem
 import mihon.feature.upcoming.components.calendar.Calendar
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import mihon.icons.materialsymbols.rounded.FilterList
+import mihon.presentation.core.util.isTabletUi
 import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
@@ -99,12 +98,12 @@ private fun UpcomingToolbar(
     hasFilters: Boolean,
     onClickFilter: () -> Unit,
 ) {
-    val navigator = LocalNavigator.currentOrThrow
+    val backStack = LocalBackStack.current
     val uriHandler = LocalUriHandler.current
 
     AppBar(
         title = stringResource(MR.strings.label_upcoming),
-        navigateUp = navigator::pop,
+        navigateUp = backStack::removeLastOrNull,
         actions = {
             AppBarActions(
                 listOf(
