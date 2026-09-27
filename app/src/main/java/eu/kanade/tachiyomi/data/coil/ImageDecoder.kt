@@ -18,7 +18,7 @@ import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 
 /**
- * A [Decoder] that uses [ImageDecoder] (libvips-based) to decode image formats not supported
+ * A [Decoder] that uses [ImageDecoder] to decode image formats not supported
  * by the Android system decoder (AVIF, JXL, HEIF, etc.).
  */
 class ImageDecoder(private val resources: ImageSource, private val options: Options) : Decoder {
