@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.extension.util
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import dev.zacsweers.metro.Inject
@@ -49,13 +50,11 @@ class ExtensionInstaller(
      * Adds the given extension to the downloads queue and returns an observable containing its
      * step in the installation process.
      *
-     * @param url The url of the apk.
-     * @param extension The extension to install.
+     * @param extension The listing to install, whose apk must be signed with its store's key.
      * @param isUpdateForPrivatelyInstalled If this is an update for a privately installed extension
      */
     fun downloadAndInstall(
-        url: String,
-        extension: Extension,
+        extension: Extension.Available,
         isUpdateForPrivatelyInstalled: Boolean = false,
     ): Flow<InstallStep> {
         val downloadId = extension.pkgName.hashCode().toLong()
@@ -68,7 +67,7 @@ class ExtensionInstaller(
             val tmpFile = File(context.cacheDir, "extension_${extension.pkgName}.apk")
             try {
                 step.value = InstallStep.Downloading
-                val request = Request.Builder().url(url).build()
+                val request = Request.Builder().url(extension.apkUrl).build()
                 val response = httpClient.newCall(request).execute()
 
                 if (!response.isSuccessful) {
@@ -80,8 +79,16 @@ class ExtensionInstaller(
                     }
                 }
 
+                // The store's index names the apk, but nothing ties what's served there to the store's key
+                val packageInfo = ExtensionLoader.getArchivePackageInfo(context, tmpFile)
+                    ?.takeIf { extension.store.signingKey in ExtensionLoader.getSignatures(it).orEmpty() }
+                if (packageInfo == null) {
+                    tmpFile.delete()
+                    throw Exception("Extension isn't signed with the key of ${extension.store.name}")
+                }
+
                 step.value = InstallStep.Installing
-                installApk(downloadId, tmpFile, isUpdateForPrivatelyInstalled)
+                installApk(downloadId, tmpFile, packageInfo, isUpdateForPrivatelyInstalled)
             } catch (e: Exception) {
                 if (e is InterruptedException) {
                     // Canceled
@@ -106,11 +113,17 @@ class ExtensionInstaller(
      * Starts an intent to install the extension at the given uri.
      *
      * @param tempFile The file of the extension to install. Delete after use.
+     * @param packageInfo The package info already read from [tempFile].
      * @param isUpdateForPrivatelyInstalled If this install is an update for a privately installed extension
      */
-    private fun installApk(downloadId: Long, tempFile: File, isUpdateForPrivatelyInstalled: Boolean = false) {
+    private fun installApk(
+        downloadId: Long,
+        tempFile: File,
+        packageInfo: PackageInfo,
+        isUpdateForPrivatelyInstalled: Boolean = false,
+    ) {
         if (isUpdateForPrivatelyInstalled) {
-            installApkPrivately(downloadId, tempFile)
+            installApkPrivately(downloadId, tempFile, packageInfo)
             return
         }
 
@@ -125,7 +138,7 @@ class ExtensionInstaller(
             }
 
             BasePreferences.ExtensionInstaller.PRIVATE -> {
-                installApkPrivately(downloadId, tempFile)
+                installApkPrivately(downloadId, tempFile, packageInfo)
             }
 
             else -> {
@@ -140,9 +153,9 @@ class ExtensionInstaller(
         }
     }
 
-    private fun installApkPrivately(downloadId: Long, tempFile: File) {
+    private fun installApkPrivately(downloadId: Long, tempFile: File, packageInfo: PackageInfo) {
         try {
-            if (ExtensionLoader.installPrivateExtensionFile(context, tempFile)) {
+            if (ExtensionLoader.installPrivateExtensionFile(context, tempFile, packageInfo)) {
                 updateInstallStep(downloadId, InstallStep.Installed)
             } else {
                 updateInstallStep(downloadId, InstallStep.Error)

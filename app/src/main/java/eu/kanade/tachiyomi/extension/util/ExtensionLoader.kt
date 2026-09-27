@@ -59,9 +59,8 @@ internal object ExtensionLoader {
 
     private fun getPrivateExtensionDir(context: Context) = File(context.filesDir, "exts")
 
-    fun installPrivateExtensionFile(context: Context, file: File): Boolean {
-        val extension = context.packageManager.getPackageArchiveInfo(file.absolutePath, PACKAGE_FLAGS)
-            ?.takeIf { isPackageAnExtension(it) } ?: return false
+    fun installPrivateExtensionFile(context: Context, file: File, extension: PackageInfo): Boolean {
+        if (!isPackageAnExtension(extension)) return false
         val currentExtension = getExtensionPackageInfoFromPkgName(context, extension.packageName)
 
         if (currentExtension != null) {
@@ -103,6 +102,10 @@ internal object ExtensionLoader {
 
     fun uninstallPrivateExtension(context: Context, pkgName: String) {
         File(getPrivateExtensionDir(context), "$pkgName.$PRIVATE_EXTENSION_EXTENSION").delete()
+    }
+
+    fun getArchivePackageInfo(context: Context, file: File): PackageInfo? {
+        return context.packageManager.getPackageArchiveInfo(file.absolutePath, PACKAGE_FLAGS)
     }
 
     /**
@@ -274,6 +277,7 @@ internal object ExtensionLoader {
                 versionCode = PackageInfoCompat.getLongVersionCode(pkgInfo),
                 isShared = extensionInfo.isShared,
                 contentWarning = ContentWarning.SAFE,
+                signatures = getSignatures(pkgInfo).orEmpty(),
                 reason = Extension.NotLoaded.Reason.Failed(e.rootMessage, e.stackTraceToString()),
             )
         }
@@ -304,6 +308,7 @@ internal object ExtensionLoader {
             ?: pkgName
         val versionName = pkgInfo.versionName
         val versionCode = PackageInfoCompat.getLongVersionCode(pkgInfo)
+        val signatures = getSignatures(pkgInfo).orEmpty()
         val contentWarning = when {
             metaData == null -> ContentWarning.SAFE
             metaData.containsKey(METADATA_CONTENT_WARNING) -> {
@@ -327,6 +332,7 @@ internal object ExtensionLoader {
             versionCode = versionCode,
             isShared = extensionInfo.isShared,
             contentWarning = contentWarning,
+            signatures = signatures,
             libVersion = libVersion,
             reason = reason,
         )
@@ -354,8 +360,7 @@ internal object ExtensionLoader {
             return notLoaded(Extension.NotLoaded.Reason.UnsupportedLibVersion, libVersion)
         }
 
-        val signatures = getSignatures(pkgInfo)
-        if (signatures.isNullOrEmpty()) {
+        if (signatures.isEmpty()) {
             logcat(LogPriority.WARN) { "Package $pkgName isn't signed" }
             return notLoaded(Extension.NotLoaded.Reason.Unsigned, libVersion)
         } else if (!trustExtension.isTrusted(pkgInfo, signatures)) {
@@ -435,6 +440,7 @@ internal object ExtensionLoader {
             pkgFactory = metaData.getString(METADATA_SOURCE_FACTORY),
             icon = runCatching { appInfo.loadIcon(pkgManager) }.getOrNull(),
             isShared = extensionInfo.isShared,
+            signatures = signatures,
         )
     }
 
@@ -475,7 +481,7 @@ internal object ExtensionLoader {
      * @param pkgInfo The package info of the application.
      * @return List SHA256 digest of the signatures
      */
-    private fun getSignatures(pkgInfo: PackageInfo): List<String>? {
+    fun getSignatures(pkgInfo: PackageInfo): List<String>? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val signingInfo = pkgInfo.signingInfo
             when {
