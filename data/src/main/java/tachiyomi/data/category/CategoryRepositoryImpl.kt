@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.category.model.NewCategory
 import tachiyomi.domain.category.repository.CategoryRepository
 
 @Inject
@@ -49,15 +50,11 @@ class CategoryRepositoryImpl(
             .subscribeToList()
     }
 
-    override suspend fun insert(category: Category) {
-        database.categoriesQueries.insert(
-            name = category.name,
-            order = category.order,
-            flags = category.flags,
-        )
+    override suspend fun insert(category: NewCategory) {
+        database.categoriesQueries.insert(name = category.name, flags = category.flags)
     }
 
-    override suspend fun insertAll(categories: List<Category>) {
+    override suspend fun insertAll(categories: List<NewCategory>) {
         database.transaction {
             categories.forEach { insert(it) }
         }
@@ -77,10 +74,12 @@ class CategoryRepositoryImpl(
 
     override suspend fun updateAllOrders(orderedIds: List<Long>) {
         database.transaction {
-            orderedIds.forEachIndexed { index, categoryId ->
+            val current = database.categoriesQueries.getUserCategoryIds().awaitAsList()
+            val ids = orderedIds.filter { it in current } + current.filterNot { it in orderedIds }
+            ids.forEachIndexed { index, categoryId ->
                 database.categoriesQueries.updateOrder(order = -index - 2L, categoryId = categoryId)
             }
-            orderedIds.forEachIndexed { index, categoryId ->
+            ids.forEachIndexed { index, categoryId ->
                 database.categoriesQueries.updateOrder(order = index.toLong(), categoryId = categoryId)
             }
         }

@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.backup.restore.restorers
 import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.NewCategory
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.library.service.LibraryPreferences
 
@@ -14,22 +15,20 @@ class CategoriesRestorer(
 ) {
 
     suspend operator fun invoke(backupCategories: List<BackupCategory>) {
-        if (backupCategories.isNotEmpty()) {
-            val dbCategories = getCategories.await()
-            val dbCategoriesByName = dbCategories.associateBy { it.name }
-            var nextOrder = dbCategories.maxOfOrNull { it.order }?.plus(1) ?: 0
+        if (backupCategories.isEmpty()) return
 
-            val categories = backupCategories
-                .sortedBy { it.order }
-                .filter { it.name !in dbCategoriesByName }
-                .map { it.toCategory(id = 0).copy(order = nextOrder++) }
-            categoryRepository.insertAll(categories)
+        val dbCategories = getCategories.await()
+        val dbCategoryNames = dbCategories.mapTo(HashSet()) { it.name }
 
-            libraryPreferences.categorizedDisplaySettings.set(
-                (dbCategories + categories)
-                    .distinctBy { it.flags }
-                    .size > 1,
-            )
+        val newCategories = backupCategories
+            .filter { it.name !in dbCategoryNames }
+            .sortedBy { it.order }
+        categoryRepository.insertAll(newCategories.map { NewCategory(name = it.name, flags = it.flags) })
+
+        val flags = buildSet {
+            dbCategories.mapTo(this) { it.flags }
+            newCategories.mapTo(this) { it.flags }
         }
+        libraryPreferences.categorizedDisplaySettings.set(flags.size > 1)
     }
 }
