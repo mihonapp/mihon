@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.json.JsonObject
 import tachiyomi.data.Database
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
@@ -49,10 +50,7 @@ class MangaRestorer(
             .groupBy({ it.source }, { it.url })
 
         return backupMangas
-            .sortedWith(
-                compareBy<BackupManga> { it.url in urlsBySource[it.source].orEmpty() }
-                    .then(compareByDescending { it.lastModifiedAt }),
-            )
+            .sortedBy { it.url in urlsBySource[it.source].orEmpty() }
     }
 
     suspend fun restore(
@@ -85,24 +83,26 @@ class MangaRestorer(
     }
 
     private suspend fun restoreExistingManga(manga: Manga, dbManga: Manga): Manga {
-        return if (manga.version > dbManga.version) {
-            updateManga(dbManga.copyFrom(manga).copy(id = dbManga.id))
-        } else {
-            updateManga(manga.copyFrom(dbManga).copy(id = dbManga.id))
-        }
-    }
-
-    private fun Manga.copyFrom(newer: Manga): Manga {
-        return this.copy(
-            favorite = this.favorite || newer.favorite,
-            author = newer.author,
-            artist = newer.artist,
-            description = newer.description,
-            genre = newer.genre,
-            thumbnailUrl = newer.thumbnailUrl,
-            status = newer.status,
-            initialized = this.initialized || newer.initialized,
-            version = newer.version,
+        val details = if (dbManga.initialized || !manga.initialized) dbManga else manga
+        return updateManga(
+            dbManga.copy(
+                favorite = dbManga.favorite || manga.favorite,
+                dateAdded = listOfNotNull(
+                    dbManga.dateAdded.takeIf { it > 0 },
+                    manga.dateAdded.takeIf { it > 0 },
+                ).minOrNull() ?: 0L,
+                title = details.title,
+                artist = details.artist,
+                author = details.author,
+                description = details.description,
+                genre = details.genre,
+                status = details.status,
+                thumbnailUrl = details.thumbnailUrl,
+                updateStrategy = details.updateStrategy,
+                initialized = dbManga.initialized || manga.initialized,
+                // Merge both backup and local data with local winning
+                memo = JsonObject(manga.memo + dbManga.memo),
+            ),
         )
     }
 
@@ -128,8 +128,6 @@ class MangaRestorer(
             dateAdded = manga.dateAdded,
             mangaId = manga.id,
             updateStrategy = manga.updateStrategy,
-            version = manga.version,
-            isSyncing = 1,
             notes = manga.notes,
             memo = manga.memo,
         )
@@ -161,24 +159,18 @@ class MangaRestorer(
                     return@mapNotNull null
                 }
 
-                // Update to an existing chapter
-                var updatedChapter = chapter
+                chapter
                     .copyFrom(dbChapter)
                     .copy(
                         id = dbChapter.id,
+                        read = chapter.read || dbChapter.read,
                         bookmark = chapter.bookmark || dbChapter.bookmark,
+                        lastPageRead = max(chapter.lastPageRead, dbChapter.lastPageRead),
+                        dateFetch = dbChapter.dateFetch,
+                        sourceOrder = dbChapter.sourceOrder,
+                        // Merge both backup and local data with local winning
+                        memo = JsonObject(chapter.memo + dbChapter.memo),
                     )
-                if (dbChapter.read && !updatedChapter.read) {
-                    updatedChapter = updatedChapter.copy(
-                        read = true,
-                        lastPageRead = dbChapter.lastPageRead,
-                    )
-                } else if (updatedChapter.lastPageRead == 0L && dbChapter.lastPageRead != 0L) {
-                    updatedChapter = updatedChapter.copy(
-                        lastPageRead = dbChapter.lastPageRead,
-                    )
-                }
-                updatedChapter
             }
             .partition { it.id > 0 }
 
@@ -187,7 +179,7 @@ class MangaRestorer(
     }
 
     private fun Chapter.forComparison() =
-        this.copy(id = 0L, mangaId = 0L, dateFetch = 0L, dateUpload = 0L, lastModifiedAt = 0L, version = 0L)
+        this.copy(id = 0L, mangaId = 0L, dateFetch = 0L, dateUpload = 0L)
 
     private suspend fun insertNewChapters(chapters: List<Chapter>) {
         database.transaction {
@@ -204,7 +196,6 @@ class MangaRestorer(
                     chapter.sourceOrder,
                     chapter.dateFetch,
                     chapter.dateUpload,
-                    chapter.version,
                     chapter.memo,
                 )
             }
@@ -227,8 +218,6 @@ class MangaRestorer(
                     dateFetch = null,
                     dateUpload = null,
                     chapterId = chapter.id,
-                    version = chapter.version,
-                    isSyncing = 0,
                     memo = chapter.memo,
                 )
             }
@@ -261,7 +250,6 @@ class MangaRestorer(
             coverLastModified = manga.coverLastModified,
             dateAdded = manga.dateAdded,
             updateStrategy = manga.updateStrategy,
-            version = manga.version,
             notes = manga.notes,
             memo = manga.memo,
         )

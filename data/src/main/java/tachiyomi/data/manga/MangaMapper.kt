@@ -7,7 +7,6 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 
 object MangaMapper {
-    @Suppress("UNUSED_PARAMETER")
     fun mapManga(
         id: Long,
         source: Long,
@@ -29,10 +28,7 @@ object MangaMapper {
         dateAdded: Long,
         updateStrategy: UpdateStrategy,
         calculateInterval: Long,
-        lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
-        version: Long,
-        isSyncing: Long,
         notes: String,
         memo: JsonObject,
     ): Manga = Manga(
@@ -56,9 +52,7 @@ object MangaMapper {
         thumbnailUrl = thumbnailUrl,
         updateStrategy = updateStrategy,
         initialized = initialized,
-        lastModifiedAt = lastModifiedAt,
         favoriteModifiedAt = favoriteModifiedAt,
-        version = version,
         notes = notes,
         memo = memo,
     )
@@ -84,10 +78,7 @@ object MangaMapper {
         dateAdded: Long,
         updateStrategy: UpdateStrategy,
         calculateInterval: Long,
-        lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
-        version: Long,
-        isSyncing: Long,
         notes: String,
         memo: JsonObject,
         totalCount: Long,
@@ -119,10 +110,7 @@ object MangaMapper {
             dateAdded,
             updateStrategy,
             calculateInterval,
-            lastModifiedAt,
             favoriteModifiedAt,
-            version,
-            isSyncing,
             notes,
             memo,
         ),
@@ -156,10 +144,7 @@ object MangaMapper {
         dateAdded: Long,
         updateStrategy: UpdateStrategy,
         calculateInterval: Long,
-        lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
-        version: Long,
-        isSyncing: Long,
         notes: String,
         memo: JsonObject,
         totalCount: Long,
@@ -185,10 +170,7 @@ object MangaMapper {
             dateAdded,
             updateStrategy,
             calculateInterval,
-            lastModifiedAt,
             favoriteModifiedAt,
-            version,
-            isSyncing,
             notes,
             memo,
         ),

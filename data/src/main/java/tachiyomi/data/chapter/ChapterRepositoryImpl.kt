@@ -41,7 +41,6 @@ class ChapterRepositoryImpl(
                         chapter.sourceOrder,
                         chapter.dateFetch,
                         chapter.dateUpload,
-                        chapter.version,
                         chapter.memo,
                     )
                         .awaitAsOne()
@@ -78,8 +77,6 @@ class ChapterRepositoryImpl(
                     dateFetch = chapterUpdate.dateFetch,
                     dateUpload = chapterUpdate.dateUpload,
                     chapterId = chapterUpdate.id,
-                    version = chapterUpdate.version,
-                    isSyncing = 0,
                     memo = chapterUpdate.memo,
                 )
             }
@@ -150,9 +147,6 @@ class ChapterRepositoryImpl(
         sourceOrder: Long,
         dateFetch: Long,
         dateUpload: Long,
-        lastModifiedAt: Long,
-        version: Long,
-        isSyncing: Long,
         memo: JsonObject,
     ): Chapter = Chapter(
         id = id,
@@ -167,8 +161,6 @@ class ChapterRepositoryImpl(
         dateUpload = dateUpload,
         chapterNumber = chapterNumber,
         scanlator = scanlator,
-        lastModifiedAt = lastModifiedAt,
-        version = version,
         memo = memo,
     )
 }

@@ -14,9 +14,6 @@ CREATE TABLE chapters(
     source_order INTEGER NOT NULL,
     date_fetch INTEGER NOT NULL,
     date_upload INTEGER NOT NULL,
-    last_modified_at INTEGER NOT NULL DEFAULT 0,
-    version INTEGER NOT NULL DEFAULT 0,
-    is_syncing INTEGER NOT NULL DEFAULT 0,
     memo BLOB AS JsonObject NOT NULL DEFAULT '{}',
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
@@ -26,30 +23,6 @@ CREATE INDEX chapters_manga_id_index ON chapters(manga_id);
 CREATE INDEX chapters_unread_by_manga_index ON chapters(manga_id, read) WHERE read = 0;
 CREATE INDEX idx_chapters_url ON chapters(url);
 
-CREATE TRIGGER update_last_modified_at_chapters
-AFTER UPDATE ON chapters
-FOR EACH ROW
-BEGIN
-  UPDATE chapters
-  SET last_modified_at = strftime('%s', 'now')
-  WHERE _id = new._id;
-END;
-
-CREATE TRIGGER update_chapter_and_manga_version AFTER UPDATE ON chapters
-WHEN new.is_syncing = 0 AND (
-    new.read != old.read OR
-    new.bookmark != old.bookmark OR
-    new.last_page_read != old.last_page_read
-)
-BEGIN
-    -- Update the chapter version
-    UPDATE chapters SET version = version + 1
-    WHERE _id = new._id;
-
-    -- Update the manga version
-    UPDATE mangas SET version = version + 1
-    WHERE _id = new.manga_id AND (SELECT is_syncing FROM mangas WHERE _id = new.manga_id) = 0;
-END;
 
 getChapterById:
 SELECT *
@@ -95,18 +68,13 @@ removeChaptersWithIds:
 DELETE FROM chapters
 WHERE _id IN :chapterIds;
 
-resetIsSyncing:
-UPDATE chapters
-SET is_syncing = 0
-WHERE is_syncing = 1;
-
 insert:
-INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, last_modified_at, version, is_syncing, memo)
-VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :version, 0, :memo);
+INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, memo)
+VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, :memo);
 
 insertReturningId:
-INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, last_modified_at, version, is_syncing, memo)
-VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, 0, :version, 0, :memo)
+INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, memo)
+VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, :memo)
 RETURNING _id;
 
 update:
@@ -122,7 +90,5 @@ SET manga_id = coalesce(:mangaId, manga_id),
     source_order = coalesce(:sourceOrder, source_order),
     date_fetch = coalesce(:dateFetch, date_fetch),
     date_upload = coalesce(:dateUpload, date_upload),
-    version = coalesce(:version, version),
-    is_syncing = coalesce(:isSyncing, is_syncing),
     memo = coalesce(:memo, memo)
 WHERE _id = :chapterId;
