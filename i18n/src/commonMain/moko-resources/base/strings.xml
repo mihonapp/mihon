@@ -872,6 +872,7 @@
     <string name="error_saving_picture">Error saving picture</string>
 
     <!-- Reader activity -->
+    <string name="jump_to_page">Jump to page</string>
     <string name="custom_filter">Custom filter</string>
     <string name="set_as_cover">Set as cover</string>
     <string name="cover_updated">Cover updated</string>

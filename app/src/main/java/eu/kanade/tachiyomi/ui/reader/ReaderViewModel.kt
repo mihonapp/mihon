@@ -814,6 +814,17 @@ class ReaderViewModel(
         mutableState.update { it.copy(dialog = Dialog.PageActions(page)) }
     }
 
+    fun openPageJumpDialog() {
+        mutableState.update { state ->
+            val chapter = state.currentChapter ?: return@update state
+            val totalPages = state.totalPages
+            val currentPage = state.currentPage
+            if (totalPages <= 1 || currentPage !in 1..totalPages) return@update state
+
+            state.copy(dialog = Dialog.PageJump(chapter, currentPage, totalPages))
+        }
+    }
+
     fun openSettingsDialog() {
         mutableState.update { it.copy(dialog = Dialog.Settings) }
     }
@@ -1007,6 +1018,7 @@ class ReaderViewModel(
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
+        data class PageJump(val chapter: ReaderChapter, val currentPage: Int, val totalPages: Int) : Dialog
     }
 
     sealed interface Event {
