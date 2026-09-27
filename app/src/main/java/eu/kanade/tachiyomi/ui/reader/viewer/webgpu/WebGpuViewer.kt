@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
 import android.graphics.Color
 import android.graphics.PointF
+import android.graphics.Rect
+import android.os.SystemClock
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -38,6 +40,8 @@ import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuousState
 import com.google.android.material.color.MaterialColors
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import eu.kanade.tachiyomi.ui.reader.loader.HttpPageLoader
+import eu.kanade.tachiyomi.ui.reader.model.DownloadStream
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
@@ -49,6 +53,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -60,11 +65,21 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import tachiyomi.core.common.util.system.logcat
+import java.io.FilterInputStream
+import java.lang.ref.WeakReference
 import java.util.TreeSet
 import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
+
+private const val STREAM_CHUNK = 1 shl 18
+
+/** Longest a streaming feed waits before rechecking that the page is still wanted. */
+private const val STREAM_WAIT_MS = 1000L
+
+/** Least time between feeds, so a trickle of small reads decodes and uploads in batches. */
+private const val STREAM_BATCH_MS = 33L
 
 open class WebGpuViewer(
     val activity: ReaderActivity,
@@ -102,6 +117,12 @@ open class WebGpuViewer(
     }
     private val decodeDispatcher = decodeExecutor.asCoroutineDispatcher()
 
+    // Streaming decodes block on the network.
+    private val streamExecutor = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "WebGpuViewer-Stream").apply { isDaemon = true }
+    }
+    private val streamDispatcher = streamExecutor.asCoroutineDispatcher()
+
     // Guards pageCache, decodeQueue, deferredCleanup and chapterPreloadsInFlight.
     private val lock = Object()
 
@@ -113,6 +134,13 @@ open class WebGpuViewer(
 
     // Processed LIFO - last added is highest priority.
     private val decodeQueue = ArrayDeque<ViewerReaderPage>()
+
+    // Each page's loader.loadPage call, which suspends until cancelled; cancelling drops its
+    // still-queued downloads from the loader. Under [lock].
+    private val loadJobs = HashMap<PageKey, Job>()
+
+    // Each page's status watcher, from startPageLoad. Under [lock].
+    private val watchJobs = HashMap<PageKey, Job>()
 
     /**
      * Indices of the pages that take a spread to themselves, by chapter - see [spreadStartIndex].
@@ -209,13 +237,15 @@ open class WebGpuViewer(
                     } catch (e: CancellationException) {
                         // Caught below, the loop would park in wait() on a dead scope.
                         throw e
-                    } catch (e: Exception) {
+                    } catch (e: Throwable) {
+                        if (e !is Exception && e !is OutOfMemoryError) throw e
                         logcat(LogPriority.ERROR, e) { "decodeReaderPage: ${e.message}" }
                         synchronized(lock) {
                             if (pageInCache(page) && !page.isDecoded && !page.imagePage.destroyed) {
                                 val oldImagePage = page.imagePage
                                 val errorMessage = e.message ?: "Failed to decode image"
                                 page.imagePage = ErrorPage(errorMessage, page.spreadPosition)
+                                page.preview = null
                                 page.state = PageState.IDLE
                                 cleanupImage(oldImagePage)
                                 page.imagePage.invalidate()
@@ -695,8 +725,18 @@ open class WebGpuViewer(
 
         override var imagePage: ImagePage = ProgressPage()
 
+        /** So a download streams once; weak, as it holds the whole download. Under [lock]. */
+        internal var streamedFrom: WeakReference<DownloadStream>? = null
+
+        /** A streaming decode owns the page. Under [lock]. */
+        internal var streaming = false
+
+        /** Not counted by [isDecoded]. */
+        @Volatile
+        internal var preview: ImagePage? = null
+
         override val isDecoded
-            get() = (imagePage as? ImagePage.ImageSingle)?.isDecoded == true
+            get() = imagePage.let { it !== preview && (it as? ImagePage.ImageSingle)?.isDecoded == true }
 
         override val prevChapter: ReaderChapter?
             get() = when (page.chapter) {
@@ -978,6 +1018,10 @@ open class WebGpuViewer(
 
             synchronized(lock) {
                 decodeQueue.clear()
+                loadJobs.values.forEach { it.cancel() }
+                loadJobs.clear()
+                watchJobs.values.forEach { it.cancel() }
+                watchJobs.clear()
                 pageCache.values.forEach {
                     it.state = PageState.IDLE
                     (it as? ViewerReaderPage)?.spreadPage?.let(::cleanupImage)
@@ -1010,6 +1054,8 @@ open class WebGpuViewer(
         // shutdownNow interrupts the worker out of lock.wait().
         decodeExecutor.shutdownNow()
         decodeDispatcher.close()
+        streamExecutor.shutdownNow()
+        streamDispatcher.close()
 
         synchronized(lock) {
             decodeQueue.clear()
@@ -1031,6 +1077,24 @@ open class WebGpuViewer(
 
     override fun getView(): View = pager
 
+    /**
+     * Asks the loader for [page], after whatever it was asked for before; a request replaces
+     * the page's last one. Cancelling it drops the download unless it has started.
+     */
+    private fun requestDownload(page: ViewerReaderPage) {
+        val loader = page.page.chapter.pageLoader ?: return
+        if (page.page.downloadStream == null) page.page.downloadStream = DownloadStream()
+        synchronized(lock) {
+            loadJobs.remove(pageKey(page))?.cancel()
+            // Undispatched for the HTTP loader, which queues before suspending, so requests queue in
+            // order. Other loaders may work first, which mustn't happen here under the lock.
+            val start = if (loader is HttpPageLoader) CoroutineStart.UNDISPATCHED else CoroutineStart.DEFAULT
+            loadJobs[pageKey(page)] = scope.launch(Dispatchers.IO, start = start) {
+                loader.loadPage(page.page)
+            }
+        }
+    }
+
     /** Downloads [page] if needed, then re-queues it for decode once ready. */
     private fun startPageLoad(page: ViewerReaderPage) {
         val loader = page.page.chapter.pageLoader ?: run {
@@ -1040,7 +1104,7 @@ open class WebGpuViewer(
 
         if (page.page.status == Page.State.Ready) {
             synchronized(lock) {
-                if (pageInCache(page) && !page.isDecoded) {
+                if (pageInCache(page) && !page.isDecoded && !page.streaming) {
                     page.state = PageState.IDLE
                     queueForDecode(page, prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false)
                 } else if (pageInCache(page)) {
@@ -1056,12 +1120,10 @@ open class WebGpuViewer(
         }
 
         if (page.page.status == Page.State.Queue) {
-            scope.launch(Dispatchers.IO) {
-                loader.loadPage(page.page)
-            }
+            requestDownload(page)
         }
 
-        scope.launch {
+        val watch = scope.launch(start = CoroutineStart.LAZY) {
             try {
                 val downloadProgressJob = launch {
                     page.page.progressFlow.collect { value ->
@@ -1078,7 +1140,11 @@ open class WebGpuViewer(
                     if (!synchronized(lock) { pageInCache(page) }) return@takeWhile false
 
                     when (state) {
-                        Page.State.Queue, Page.State.LoadPage, Page.State.DownloadImage -> true
+                        Page.State.Queue, Page.State.LoadPage -> true
+                        Page.State.DownloadImage -> {
+                            page.page.downloadStream?.let { startStreamDecode(page, it) }
+                            true
+                        }
                         is Page.State.Error -> {
                             logcat(LogPriority.ERROR) { "Page load error: ${state.error}" }
                             false
@@ -1093,7 +1159,7 @@ open class WebGpuViewer(
                 synchronized(lock) {
                     if (pageInCache(page) && page.state == PageState.LOADING) {
                         page.state = PageState.IDLE
-                        if (page.page.status == Page.State.Ready && !page.isDecoded) {
+                        if (page.page.status == Page.State.Ready && !page.isDecoded && !page.streaming) {
                             queueForDecode(
                                 page,
                                 prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false,
@@ -1101,11 +1167,24 @@ open class WebGpuViewer(
                         }
                     }
                 }
+            } catch (e: CancellationException) {
+                // Reset or destroy; whoever cancelled has already put the state right.
+                throw e
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e) { "startPageLoad error" }
                 synchronized(lock) { if (pageInCache(page)) page.state = PageState.IDLE }
+            } finally {
+                val self = coroutineContext[Job]
+                synchronized(lock) {
+                    if (watchJobs[pageKey(page)] === self) watchJobs.remove(pageKey(page))
+                }
             }
         }
+        synchronized(lock) {
+            watchJobs.remove(pageKey(page))?.cancel()
+            watchJobs[pageKey(page)] = watch
+        }
+        watch.start()
     }
 
     private suspend fun decodeReaderPage(page: ViewerReaderPage) {
@@ -1120,157 +1199,379 @@ open class WebGpuViewer(
         }
 
         stream.use { input ->
-            // Not evicted, and not already decoded by a concurrent call.
             synchronized(lock) {
-                if (!pageInCache(page) || page.isDecoded) {
+                if (!pageInCache(page) || page.isDecoded || page.streaming) {
                     if (pageInCache(page)) page.state = PageState.IDLE
                     return
                 }
             }
 
-            // The decoder hands the map over unapplied - see ImageDecoder.Gainmap - because how
-            // much of it to use depends on the display, so the viewer applies it.
-            fun ImageDecoder.DecodeResult.gainmapInput(): GainmapInput? = gainmap?.let {
-                GainmapInput(
-                    pixels = it.pixels,
-                    width = it.width,
-                    height = it.height,
-                    channels = it.channels,
-                    gamma = it.gamma,
-                    minContentBoost = it.minContentBoost,
-                    maxContentBoost = it.maxContentBoost,
-                    offsetSdr = it.offsetSdr,
-                    offsetHdr = it.offsetHdr,
-                )
+            logcat(LogPriority.INFO) { "Decoding ${pageName(page)}" }
+            ImageDecoder.open(input).use { dec -> buildPage(page, dec, streaming = false) { false } }
+        }
+    }
+
+    private fun pageName(page: ViewerReaderPage): String {
+        val p = page.page
+        return p.imageUrl?.takeIf { it.isNotEmpty() }
+            ?: p.url.takeIf { it.isNotEmpty() }
+            ?: "${p.chapter.chapter.name} page ${p.index + 1}"
+    }
+
+    /** Decodes [page] while it downloads; on failure the whole-file decode takes over. */
+    private fun startStreamDecode(page: ViewerReaderPage, live: DownloadStream) {
+        synchronized(lock) {
+            if (!pageInCache(page) || page.isDecoded || page.streamedFrom?.get() === live) return
+            page.streamedFrom = WeakReference(live)
+        }
+        scope.launch(streamDispatcher) {
+            val claimed = synchronized(lock) {
+                val ok = pageInCache(page) && !page.isDecoded && page.page.status == Page.State.DownloadImage
+                if (ok) page.streaming = true
+                ok
             }
-
-            ImageDecoder.new(input).use { dec ->
-                if (isDualPageMode()) {
-                    page.taggedSpreadPosition = when (dec.getTag("PageName")) {
-                        "Left" -> SpreadPosition.LEFT
-                        "Right" -> SpreadPosition.RIGHT
-                        null -> null
-                        else -> SpreadPosition.SINGLE
+            if (!claimed) return@launch
+            try {
+                live.reader().use { reader ->
+                    // available() 0 stops the read after the header.
+                    val headerOnly = object : FilterInputStream(reader) {
+                        override fun available() = 0
                     }
-                }
-
-                val pageCount = dec.pages
-
-                if (pageCount == 0) throw Exception("No frames decoded")
-
-                val backgroundColor = if (config.automaticBackground) null else readerBackgroundColor()
-
-                val firstFrame = dec.decodeNext()
-
-                val imagePage = if (pageCount == 1) {
-                    // Only trim when not animated and not in dual page mode
-                    val trimColors = if (config.imageCropBorders && !isDualPageMode()) {
-                        listOf(
-                            floatArrayOf(1f, 1f, 1f),
-                            floatArrayOf(0f, 0f, 0f),
-                        )
-                    } else {
-                        null
-                    }
-
-                    val firstImage = Image(
-                        firstFrame.image,
-                        firstFrame.width,
-                        firstFrame.height,
-                        createMipMaps = true,
-                        trimColors = trimColors,
-                        trimThreshold = 0.15f,
-                        backgroundColor = backgroundColor,
-                        hdr = firstFrame.isHdr,
-                        hdrHeadroom = firstFrame.hdrHeadroom,
-                        gainmap = firstFrame.gainmapInput(),
-                    )
-
-                    ImagePage.ImageSingle(firstImage)
-                } else {
-                    val frames = ArrayList<Pair<Image, Int>>(pageCount)
-
-                    // Built frames hold uploaded textures, and ImageSingle owns the only teardown.
-                    fun discardFrames() {
-                        if (frames.isNotEmpty()) ImagePage.ImageSingle(frames).cleanup()
-                    }
-
-                    val firstImage = Image(
-                        firstFrame.image,
-                        firstFrame.width,
-                        firstFrame.height,
-                        createMipMaps = false,
-                        backgroundColor = backgroundColor,
-                        hdr = firstFrame.isHdr,
-                        hdrHeadroom = firstFrame.hdrHeadroom,
-                        gainmap = firstFrame.gainmapInput(),
-                    )
-
-                    frames.add(Pair(firstImage, firstFrame.duration))
-
-                    try {
-                        for (i in 1 until pageCount) {
-                            // Under lock: a decode this long gives an eviction's cleanup() time to land.
-                            val stillWanted = synchronized(lock) {
-                                pageInCache(page).also { inCache ->
-                                    if (inCache) {
-                                        (page.imagePage as? ProgressPage)?.progress = i.toFloat() / pageCount
-                                    }
-                                }
+                    logcat(LogPriority.INFO) { "Decoding while downloading ${pageName(page)}" }
+                    ImageDecoder.open(headerOnly, complete = false).use { dec ->
+                        val chunk = ByteArray(STREAM_CHUNK)
+                        var fed = false
+                        var fedAt = 0L
+                        // Blocks for new bytes: decoding again on none only repeats work.
+                        buildPage(page, dec, streaming = true) {
+                            if (fed) return@buildPage false
+                            while (reader.available() == 0 && !reader.ended) {
+                                if (!synchronized(lock) { pageInCache(page) }) return@buildPage false
+                                reader.await(1, STREAM_WAIT_MS)
                             }
-
-                            // Scrolled past: the frames left are work nothing will draw.
-                            if (!stillWanted) {
-                                discardFrames()
-                                return
+                            val gap = fedAt + STREAM_BATCH_MS - SystemClock.uptimeMillis()
+                            if (gap > 0) reader.await(Int.MAX_VALUE, gap)
+                            while (reader.available() > 0) dec.pushData(chunk, 0, reader.read(chunk))
+                            fedAt = SystemClock.uptimeMillis()
+                            if (reader.ended) {
+                                dec.markComplete()
+                                fed = true
                             }
-
-                            val frame = dec.decodeNext()
-                            val image = Image(
-                                frame.image,
-                                frame.width,
-                                frame.height,
-                                createMipMaps = false,
-                                backgroundColor = firstImage.backgroundColor,
-                                hdr = frame.isHdr,
-                                hdrHeadroom = frame.hdrHeadroom,
-                                gainmap = frame.gainmapInput(),
-                            )
-                            frames.add(Pair(image, frame.duration))
+                            true
                         }
-                    } catch (e: Throwable) {
-                        discardFrames()
-                        throw e
                     }
-
-                    ImagePage.ImageSingle(frames)
                 }
-
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logcat(LogPriority.DEBUG) { "Streaming decode gave up: ${e.message}" }
+            } catch (e: OutOfMemoryError) {
+                logcat(LogPriority.WARN) { "Streaming decode ran out of memory" }
+            } finally {
                 synchronized(lock) {
-                    if (pageInCache(page) && !page.isDecoded && !page.imagePage.destroyed) {
-                        val oldImagePage = page.imagePage
-                        page.imagePage = imagePage
-                        noteIfLone(page)
-                        page.state = PageState.IDLE
-                        cleanupImage(oldImagePage)
-                        // Fade up from the placeholder's colour, if that placeholder was on screen -
-                        // one that decoded out of view has nothing left to fade from.
-                        if (oldImagePage.isOnScreen) imagePage.fadeIn()
-                        if (!isDualPageMode()) {
-                            (page.imagePage as? ImagePage.ImageSingle)?.let {
-                                if (!applyWideZoomIfNeeded(it)) {
-                                    applyFitModeAnchor(it)
-                                }
-                            }
-                        }
+                    page.streaming = false
+                    // Failed download: back to the ring for a retry.
+                    val preview = page.preview
+                    if (pageInCache(page) && page.imagePage === preview && page.page.status is Page.State.Error) {
+                        page.preview = null
+                        page.imagePage = ProgressPage()
+                        cleanupImage(preview)
                         pager.state.invalidate()
-                    } else {
-                        if (pageInCache(page)) page.state = PageState.IDLE
-                        imagePage.cleanup()
+                    }
+                    if (pageInCache(page) && !page.isDecoded && page.state == PageState.IDLE &&
+                        page.page.status == Page.State.Ready
+                    ) {
+                        queueForDecode(page, prioritize = currentPage?.let { pageKey(it) == pageKey(page) } ?: false)
                     }
                 }
             }
         }
+    }
+
+    /** Decodes [dec] into [page]. [feed] pushes more bytes, false once all are in. */
+    private suspend fun buildPage(
+        page: ViewerReaderPage,
+        dec: ImageDecoder,
+        streaming: Boolean,
+        feed: () -> Boolean,
+    ) {
+        // The decoder hands the map over unapplied - see ImageDecoder.Gainmap - because how
+        // much of it to use depends on the display, so the viewer applies it.
+        fun ImageDecoder.Gainmap.toInput() = let {
+            GainmapInput(
+                pixels = it.pixels,
+                width = it.width,
+                height = it.height,
+                channels = it.channels,
+                gamma = it.gamma,
+                minContentBoost = it.minContentBoost,
+                maxContentBoost = it.maxContentBoost,
+                offsetSdr = it.offsetSdr,
+                offsetHdr = it.offsetHdr,
+            )
+        }
+
+        if (isDualPageMode()) {
+            page.taggedSpreadPosition = when (dec.getTag("PageName")) {
+                "Left" -> SpreadPosition.LEFT
+                "Right" -> SpreadPosition.RIGHT
+                null -> null
+                else -> SpreadPosition.SINGLE
+            }
+        }
+
+        val backgroundColor = if (config.automaticBackground) null else readerBackgroundColor()
+
+        // SDR only: HDR skips Image's tone mapping; a gain map may need float textures.
+        var previewing = streaming && !dec.isHdr && dec.hdrKind != ImageDecoder.HdrKind.GAINMAP
+
+        // Null once the page is unwanted.
+        suspend fun nextWhole(onPartial: (suspend (ImageDecoder.Frame) -> Unit)? = null): ImageDecoder.Frame? {
+            while (true) {
+                if (!synchronized(lock) { pageInCache(page) }) return null
+                val f = try {
+                    dec.decodeNext()
+                } catch (e: ImageDecoder.NeedMoreDataException) {
+                    if (!feed()) throw e
+                    continue
+                }
+                if (!f.partial) return f
+                // A partial views the decoder's canvas, valid only until the next step.
+                f.use { if (onPartial != null && previewing) onPartial(it) }
+                feed()
+            }
+        }
+
+        var preview: ImagePage.ImageSingle? = null
+
+        // Replaces the placeholder, then updates its texture in place.
+        suspend fun showPartial(f: ImageDecoder.Frame) {
+            if (!previewing || !f.changed) return
+            val shown = preview
+            if (shown == null) {
+                val single = ImagePage.ImageSingle(
+                    Image(
+                        f.image,
+                        f.width,
+                        f.height,
+                        createMipMaps = false,
+                        backgroundColor = backgroundColor ?: readerBackgroundColor(),
+                    ),
+                ).apply {
+                    // The tile cache would go stale.
+                    highQuality = false
+                }
+                val installed = synchronized(lock) {
+                    val old = page.imagePage
+                    (pageInCache(page) && old is ProgressPage && !old.destroyed).also { ok ->
+                        if (!ok) return@also
+                        page.preview = single
+                        page.imagePage = single
+                        cleanupImage(old)
+                        if (old.isOnScreen) single.fadeIn()
+                        if (!isDualPageMode() && !applyWideZoomIfNeeded(single)) applyFitModeAnchor(single)
+                        pager.state.invalidate()
+                    }
+                }
+                if (installed) preview = single else single.cleanup()
+                previewing = installed
+            } else {
+                // Replaced, as by an error page.
+                if (synchronized(lock) { page.imagePage !== shown } || shown.destroyed) {
+                    previewing = false
+                    return
+                }
+                val rect = Rect(f.dirtyX, f.dirtyY, f.dirtyX + f.dirtyWidth, f.dirtyY + f.dirtyHeight)
+                shown.image?.update(f.image, rect)
+                shown.invalidate()
+                // A spread's page isn't on screen itself.
+                pager.state.invalidate()
+            }
+        }
+
+        // Nothing to preview: the whole-file decode after the download does as well,
+        // without holding the one streaming thread through it.
+        if (streaming && !previewing) return
+        val firstFrame = nextWhole(onPartial = { showPartial(it) }) ?: return
+        var secondFrame: ImageDecoder.Frame? = null
+        // Whole frames hold native pixels until closed, on every exit.
+        try {
+            // Streamed, a still's end and gain map are only known once all is in.
+            if (streaming) {
+                while (feed()) {
+                    if (!synchronized(lock) { pageInCache(page) }) return
+                }
+                if (dec.hasNext) {
+                    secondFrame = try {
+                        nextWhole() ?: return
+                    } catch (e: ImageDecoder.DecodeException) {
+                        logcat(LogPriority.DEBUG) { "Treating as a still: ${e.message}" }
+                        null
+                    }
+                }
+            }
+            val animated = if (streaming) secondFrame != null else dec.hasNext
+
+            // A gain map belongs to a still; its headroom is the map's, not the decoder's.
+            val gainmap = if (!animated && dec.hdrKind == ImageDecoder.HdrKind.GAINMAP) {
+                dec.getGainmap()
+            } else {
+                null
+            }
+            val hdrHeadroom = gainmap?.headroomStops ?: dec.hdrHeadroom
+
+            // Only trim when not animated and not in dual page mode
+            val trimColors = if (!animated && config.imageCropBorders && !isDualPageMode()) {
+                listOf(
+                    floatArrayOf(1f, 1f, 1f),
+                    floatArrayOf(0f, 0f, 0f),
+                )
+            } else {
+                null
+            }
+
+            // The preview's textures become the image, or frame 0; one since replaced or freed
+            // (a settings reset) leaves a fresh image to install instead.
+            val shown = preview?.takeIf { synchronized(lock) { page.imagePage === it && !it.destroyed } }
+            // Only a page the reader hasn't moved re-homes for its trim.
+            val wasHome = shown?.atHome == true
+            val firstImage = shown?.image?.also {
+                it.update(firstFrame.image)
+                if (!animated) it.createMipMaps(firstFrame.image)
+                it.measure(firstFrame.image, trimColors, trimThreshold = 0.15f, backgroundColor = backgroundColor)
+            } ?: Image(
+                firstFrame.image,
+                firstFrame.width,
+                firstFrame.height,
+                createMipMaps = !animated,
+                trimColors = trimColors,
+                trimThreshold = 0.15f,
+                backgroundColor = backgroundColor,
+                hdr = dec.isHdr,
+                hdrHeadroom = hdrHeadroom,
+                gainmap = gainmap?.toInput(),
+            )
+            firstFrame.close()
+
+            // A still is one frame of duration 0.
+            val frames = ArrayList<Pair<Image, Int>>(if (animated) dec.pages else 1)
+            frames.add(firstImage to if (animated) firstFrame.duration else 0)
+
+            // The preview's image belongs to its page.
+            fun discardFrames() {
+                val owned = if (shown != null) frames.drop(1) else frames
+                if (owned.isNotEmpty()) ImagePage.ImageSingle(owned).cleanup()
+            }
+
+            if (animated) {
+                var pending = secondFrame
+                try {
+                    while (pending != null || dec.hasNext) {
+                        // Under lock: a decode this long gives an eviction's cleanup() time to land.
+                        val stillWanted = synchronized(lock) {
+                            pageInCache(page).also { inCache ->
+                                if (inCache) {
+                                    (page.imagePage as? ProgressPage)?.progress =
+                                        (dec.page + 1).toFloat() / dec.pages
+                                }
+                            }
+                        }
+
+                        // Scrolled past: the frames left are work nothing will draw.
+                        if (!stillWanted) {
+                            discardFrames()
+                            return
+                        }
+
+                        val frame = pending ?: dec.decodeNext()
+                        pending = null
+                        val image = frame.use {
+                            Image(
+                                it.image,
+                                it.width,
+                                it.height,
+                                createMipMaps = false,
+                                backgroundColor = firstImage.backgroundColor,
+                                hdr = dec.isHdr,
+                                hdrHeadroom = hdrHeadroom,
+                            )
+                        }
+                        frames.add(Pair(image, frame.duration))
+                    }
+                } catch (e: Throwable) {
+                    discardFrames()
+                    throw e
+                }
+            }
+
+            synchronized(lock) {
+                if (shown != null) {
+                    if (pageInCache(page) && page.imagePage === shown && !shown.destroyed) {
+                        // Keeps pan and zoom.
+                        page.preview = null
+                        shown.highQuality = true
+                        if (animated) shown.startAnimationLoop(frames)
+                        if (wasHome && firstImage.trim != null && !isDualPageMode()) rehome(shown)
+                        noteIfLone(page)
+                        // Bumps frameVersion, so a transition's cached render of the preview is stale.
+                        shown.invalidate()
+                        pager.state.invalidate()
+                    } else {
+                        discardFrames()
+                    }
+                    if (pageInCache(page)) page.state = PageState.IDLE
+                } else if (pageInCache(page) && !page.isDecoded && !page.imagePage.destroyed) {
+                    val imagePage = if (animated) ImagePage.ImageSingle(frames) else ImagePage.ImageSingle(firstImage)
+                    val oldImagePage = page.imagePage
+                    // A failed stream's preview is already showing.
+                    val fromPreview = oldImagePage === page.preview
+                    page.imagePage = imagePage
+                    page.preview = null
+                    noteIfLone(page)
+                    page.state = PageState.IDLE
+                    cleanupImage(oldImagePage)
+                    // Fade up from the placeholder's colour, if that placeholder was on screen -
+                    // one that decoded out of view has nothing left to fade from.
+                    if (oldImagePage.isOnScreen && !fromPreview) imagePage.fadeIn()
+                    if (!isDualPageMode()) {
+                        if (!applyWideZoomIfNeeded(imagePage)) {
+                            applyFitModeAnchor(imagePage)
+                        }
+                    }
+                    pager.state.invalidate()
+                } else {
+                    if (pageInCache(page)) page.state = PageState.IDLE
+                    discardFrames()
+                }
+            }
+        } finally {
+            firstFrame.close()
+            secondFrame?.close()
+        }
+    }
+
+    /** Animates [page] to where a fresh install would place it, e.g. once its trim is known. */
+    private fun rehome(page: ImagePage.ImageSingle) {
+        val fromX = page.x
+        val fromY = page.y
+        val fromScale = page.scale
+        // Cached from the old size.
+        page.homeScale = -1f
+        page.homeX = 0f
+        page.homeY = 0f
+        page.minScale = 0f
+        // The placement a fresh install gets, read back and undone so it can animate there.
+        page.x = page.homeX
+        page.y = page.homeY
+        page.scale = page.homeScale
+        if (!applyWideZoomIfNeeded(page)) applyFitModeAnchor(page)
+        val toX = page.x
+        val toY = page.y
+        val toScale = page.scale
+        page.x = fromX
+        page.y = fromY
+        page.scale = fromScale
+        page.animateTo(targetX = toX, targetY = toY, targetScale = toScale)
     }
 
     private fun applyWideZoomIfNeeded(page: ImagePage.ImageSingle): Boolean {
@@ -1366,6 +1667,60 @@ open class WebGpuViewer(
         }
     }
 
+    /**
+     * Drops decodes outside [window], and every download not yet started so that [preloadPages]
+     * asks again in order. A download already running finishes; its page decodes if it's back
+     * in the window by then.
+     */
+    private fun resetQueues(window: Set<PageKey>) {
+        synchronized(lock) {
+            val stale = decodeQueue.filter { pageKey(it) !in window }
+            decodeQueue.removeAll(stale.toSet())
+            stale.forEach { if (it.state == PageState.QUEUED) it.state = PageState.IDLE }
+
+            // All of them: what stays wanted is asked again, in this window's order.
+            val iterator = loadJobs.entries.iterator()
+            while (iterator.hasNext()) {
+                val (key, job) = iterator.next()
+                job.cancel()
+                iterator.remove()
+                if (key in window) continue
+                // Never started: its watcher goes too. One downloading keeps it, to decode when done.
+                (pageCache[key] as? ViewerReaderPage)?.let {
+                    if (it.state == PageState.LOADING && it.page.status == Page.State.Queue) {
+                        watchJobs.remove(key)?.cancel()
+                        it.state = PageState.IDLE
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Starts [page]'s download now, rather than when the one decode worker reaches it - which a
+     * slow decode ahead of it holds up, and which left pages past the loader's own preload
+     * waiting. Ready then queues the decode.
+     */
+    private fun startDownload(page: ViewerPage) {
+        synchronized(lock) {
+            val cachedPage = findInCache(pageKey(page)) as? ViewerReaderPage ?: return
+            if (cachedPage.page.status == Page.State.Ready || cachedPage.isDecoded) return
+            when (cachedPage.state) {
+                // Watched already: only re-request, in this order.
+                PageState.LOADING -> {
+                    if (cachedPage.page.status == Page.State.Queue) requestDownload(cachedPage)
+                    return
+                }
+                PageState.DECODING -> return
+                // Ready requeues it, once downloaded.
+                PageState.QUEUED -> decodeQueue.remove(cachedPage)
+                PageState.IDLE -> {}
+            }
+            cachedPage.state = PageState.IDLE
+            startPageLoad(cachedPage)
+        }
+    }
+
     protected fun preloadPages(page: ViewerPage) {
         // page may be a stale copy - resolve the live cache entry.
         val key = pageKey(page)
@@ -1386,6 +1741,13 @@ open class WebGpuViewer(
             p = p?.next ?: break
             nextPages.add(p)
         }
+        resetQueues((prevPages + cachedPage + nextPages).mapTo(HashSet()) { pageKey(it) })
+
+        // Downloads in reading order, as the loader serves requests of equal priority.
+        startDownload(cachedPage)
+        nextPages.forEach { startDownload(it) }
+        prevPages.forEach { startDownload(it) }
+
         nextPages.asReversed().forEach { preloadPage(it) }
 
         cachedPage.next?.let { preloadPage(it, prioritize = true) }

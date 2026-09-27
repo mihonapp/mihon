@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.coil
 
+import android.graphics.Bitmap
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import ca.mpreg.imagedecoder.ImageDecoder
@@ -23,20 +24,35 @@ import tachiyomi.core.common.util.system.ImageUtil
 class ImageDecoder(private val resources: ImageSource, private val options: Options) : Decoder {
 
     /**
-     * Wraps a raw [ImageDecoder.DecodeResult] as a Coil [Image] for callers that want
+     * Wraps a raw [ImageDecoder.Frame] as a Coil [Image] for callers that want
      * direct access to the RGBA [java.nio.ByteBuffer] (e.g. the new-decoder path).
      */
-    class DecodeResultImage(val res: ImageDecoder.DecodeResult) : Image {
-        override val size: Long get() = res.image.capacity().toLong()
-        override val width: Int get() = res.width
-        override val height: Int get() = res.height
+    class DecodeResultImage(
+        val frame: ImageDecoder.Frame,
+        val isHdr: Boolean,
+        val hdrHeadroom: Float,
+        val gainmap: ImageDecoder.Gainmap?,
+    ) : Image {
+        val image: java.nio.ByteBuffer get() = frame.image
+
+        // Taken now: a caller may close the frame once it has the pixels.
+        override val size: Long = frame.image.capacity().toLong()
+        override val width: Int get() = frame.width
+        override val height: Int get() = frame.height
         override val shareable: Boolean get() = true
         override fun draw(canvas: Canvas) {}
     }
 
     override suspend fun decode(): DecodeResult {
         val res = resources.source().use {
-            ImageDecoder.new(it.inputStream()).use { dec -> dec.decode() }
+            ImageDecoder.open(it.inputStream()).use { dec ->
+                DecodeResultImage(
+                    dec.decodeNext(),
+                    dec.isHdr,
+                    dec.hdrHeadroom,
+                    if (dec.hdrKind == ImageDecoder.HdrKind.GAINMAP) dec.getGainmap() else null,
+                )
+            }
         }
 
         val srcWidth = res.width
@@ -46,7 +62,7 @@ class ImageDecoder(private val resources: ImageSource, private val options: Opti
         // Hand it back as-is; sampling is the caller's responsibility.
         if (options.newDecoder) {
             return DecodeResult(
-                image = DecodeResultImage(res),
+                image = res,
                 isSampled = false,
             )
         }
@@ -64,9 +80,12 @@ class ImageDecoder(private val resources: ImageSource, private val options: Opti
 
         // Copy RGBA pixels from the native buffer into a full-resolution bitmap.
         // We must do this while `res` (and its native memory) is still alive.
-        val fullBitmap = createBitmap(srcWidth, srcHeight)
+        // HDR frames are half-float RGBA.
+        val config = if (res.isHdr) Bitmap.Config.RGBA_F16 else Bitmap.Config.ARGB_8888
+        val fullBitmap = createBitmap(srcWidth, srcHeight, config)
         res.image.rewind()
         fullBitmap.copyPixelsFromBuffer(res.image)
+        res.frame.close()
 
         // Downsample if needed. sampleSize is a power-of-two factor; the target
         // dimensions are src / sampleSize, matching BitmapFactory inSampleSize behaviour.
