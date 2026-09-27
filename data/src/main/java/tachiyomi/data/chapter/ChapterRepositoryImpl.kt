@@ -9,9 +9,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.JsonObject
-import logcat.LogPriority
 import tachiyomi.core.common.util.lang.toLong
-import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
 import tachiyomi.domain.chapter.model.Chapter
@@ -26,34 +24,6 @@ class ChapterRepositoryImpl(
     private val database: Database,
 ) : ChapterRepository {
 
-    override suspend fun addAll(chapters: List<Chapter>): List<Chapter> {
-        return try {
-            database.transactionWithResult {
-                chapters.map { chapter ->
-                    val chapterId = database.chaptersQueries.insertReturningId(
-                        chapter.mangaId,
-                        chapter.url,
-                        chapter.name,
-                        chapter.scanlator,
-                        chapter.read,
-                        chapter.bookmark,
-                        chapter.lastPageRead,
-                        chapter.chapterNumber,
-                        chapter.sourceOrder,
-                        chapter.dateFetch,
-                        chapter.dateUpload,
-                        chapter.memo,
-                    )
-                        .awaitAsOne()
-                    chapter.copy(id = chapterId)
-                }
-            }
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            emptyList()
-        }
-    }
-
     override suspend fun update(chapterUpdate: ChapterUpdate) {
         partialUpdate(chapterUpdate)
     }
@@ -62,9 +32,43 @@ class ChapterRepositoryImpl(
         partialUpdate(*chapterUpdates.toTypedArray())
     }
 
-    override suspend fun updateAllRemote(chapterUpdates: List<ChapterRemoteUpdate>) {
-        database.transaction {
-            chapterUpdates.forEach { chapterUpdate ->
+    override suspend fun updateFromRemote(
+        removedIds: List<Long>,
+        added: List<Chapter>,
+        updated: List<ChapterRemoteUpdate>,
+    ): List<Chapter> {
+        return database.transactionWithResult {
+            if (removedIds.isNotEmpty()) {
+                database.chaptersQueries.removeChaptersWithIds(removedIds)
+            }
+            val existing = added.map { it.mangaId }
+                .distinct()
+                .flatMap { mangaId ->
+                    database.chaptersQueries
+                        .getChaptersByMangaId(mangaId, applyScanlatorFilter = false.toLong(), ::mapChapter)
+                        .awaitAsList()
+                        .map { mangaId to it.url }
+                }
+                .toMutableSet()
+            val stored = added.filter { existing.add(it.mangaId to it.url) }.map { chapter ->
+                val chapterId = database.chaptersQueries.insertReturningId(
+                    chapter.mangaId,
+                    chapter.url,
+                    chapter.name,
+                    chapter.scanlator,
+                    chapter.read,
+                    chapter.bookmark,
+                    chapter.lastPageRead,
+                    chapter.chapterNumber,
+                    chapter.sourceOrder,
+                    chapter.dateFetch,
+                    chapter.dateUpload,
+                    chapter.memo,
+                )
+                    .awaitAsOne()
+                chapter.copy(id = chapterId)
+            }
+            updated.forEach { chapterUpdate ->
                 database.chaptersQueries.updateRemote(
                     name = chapterUpdate.name,
                     scanlator = chapterUpdate.scanlator,
@@ -75,6 +79,7 @@ class ChapterRepositoryImpl(
                     memo = chapterUpdate.memo,
                 )
             }
+            stored
         }
     }
 
@@ -89,14 +94,6 @@ class ChapterRepositoryImpl(
                     chapterId = chapterUpdate.id,
                 )
             }
-        }
-    }
-
-    override suspend fun removeChaptersWithIds(chapterIds: List<Long>) {
-        try {
-            database.chaptersQueries.removeChaptersWithIds(chapterIds)
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
         }
     }
 

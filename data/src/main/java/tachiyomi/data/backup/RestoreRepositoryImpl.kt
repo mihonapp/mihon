@@ -145,6 +145,16 @@ class RestoreRepositoryImpl(
             .associateBy { it.url }
 
         val (existingChapters, newChapters) = restoredChapters
+            .groupBy { it.url }
+            .map { (_, copies) ->
+                copies.reduce { kept, other ->
+                    kept.copy(
+                        read = kept.read || other.read,
+                        bookmark = kept.bookmark || other.bookmark,
+                        lastPageRead = max(kept.lastPageRead, other.lastPageRead),
+                    )
+                }
+            }
             .mapNotNull {
                 val chapter = it.copy(mangaId = manga.id)
 
