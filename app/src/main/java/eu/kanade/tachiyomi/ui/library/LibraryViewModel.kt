@@ -281,7 +281,7 @@ class LibraryViewModel(
                 groupCache.getOrPut(categoryId) { mutableListOf() }.add(item.id)
             }
         }
-        return categories.filter { showSystemCategory || !it.isSystemCategory }
+        return categories.filter { (showSystemCategory || !it.isSystemCategory) && !it.hidden }
             .associateWith { groupCache[it.id]?.toList().orEmpty() }
     }
 

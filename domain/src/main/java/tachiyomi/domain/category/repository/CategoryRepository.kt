@@ -23,6 +23,8 @@ interface CategoryRepository {
 
     suspend fun updateAllFlags(flags: Long?)
 
+    suspend fun updateHidden(categoryId: Long, hidden: Boolean)
+
     suspend fun updateAllOrders(orderedIds: List<Long>)
 
     suspend fun delete(categoryId: Long)

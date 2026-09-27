@@ -1,0 +1,3 @@
+import kotlin.Boolean;
+
+ALTER TABLE categories ADD COLUMN hidden INTEGER AS Boolean DEFAULT 0 NOT NULL;

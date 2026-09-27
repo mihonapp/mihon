@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import tachiyomi.domain.category.interactor.CreateCategoryWithName
 import tachiyomi.domain.category.interactor.DeleteCategory
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.interactor.HideCategory
 import tachiyomi.domain.category.interactor.RenameCategory
 import tachiyomi.domain.category.interactor.ReorderCategory
 import tachiyomi.domain.category.model.Category
@@ -37,6 +38,7 @@ class CategoryViewModel(
     private val deleteCategory: DeleteCategory,
     private val reorderCategory: ReorderCategory,
     private val renameCategory: RenameCategory,
+    private val hideCategory: HideCategory,
 ) : ViewModel() {
 
     private val _events: Channel<CategoryEvent> = Channel()
@@ -86,6 +88,15 @@ class CategoryViewModel(
         viewModelScope.launch {
             when (renameCategory.await(category, name)) {
                 is RenameCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
+                else -> {}
+            }
+        }
+    }
+
+    fun hideCategory(category: Category) {
+        viewModelScope.launch {
+            when (hideCategory.await(category)) {
+                is HideCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }
         }

@@ -16,6 +16,8 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Delete
 import mihon.icons.materialsymbols.rounded.DragHandle
 import mihon.icons.materialsymbols.rounded.Edit
+import mihon.icons.materialsymbols.rounded.Visibility
+import mihon.icons.materialsymbols.rounded.VisibilityOff
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
@@ -26,6 +28,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun ReorderableCollectionItemScope.CategoryListItem(
     category: Category,
     onRename: () -> Unit,
+    onHide: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -56,6 +59,20 @@ fun ReorderableCollectionItemScope.CategoryListItem(
                 Icon(
                     imageVector = MaterialSymbols.Rounded.Edit,
                     contentDescription = stringResource(MR.strings.action_rename_category),
+                )
+            }
+            IconButton(onClick = onHide) {
+                Icon(
+                    imageVector = if (category.hidden) {
+                        MaterialSymbols.Rounded.Visibility
+                    } else {
+                        MaterialSymbols.Rounded.VisibilityOff
+                    },
+                    contentDescription = if (category.hidden) {
+                        stringResource(MR.strings.action_show_category)
+                    } else {
+                        stringResource(MR.strings.action_hide_category)
+                    },
                 )
             }
             IconButton(onClick = onDelete) {

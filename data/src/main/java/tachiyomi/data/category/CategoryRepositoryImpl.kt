@@ -54,6 +54,7 @@ class CategoryRepositoryImpl(
             name = category.name,
             order = category.order,
             flags = category.flags,
+            hidden = category.hidden,
         )
     }
 
@@ -67,6 +68,10 @@ class CategoryRepositoryImpl(
 
     override suspend fun updateAllFlags(flags: Long?) {
         database.categoriesQueries.updateAllFlags(flags = flags)
+    }
+
+    override suspend fun updateHidden(categoryId: Long, hidden: Boolean) {
+        database.categoriesQueries.updateHidden(hidden = hidden, categoryId = categoryId)
     }
 
     override suspend fun updateAllOrders(orderedIds: List<Long>) {
@@ -86,12 +91,14 @@ class CategoryRepositoryImpl(
         name: String,
         order: Long,
         flags: Long,
+        hidden: Boolean,
     ): Category {
         return Category(
             id = id,
             name = name,
             order = order,
             flags = flags,
+            hidden = hidden,
         )
     }
 }
