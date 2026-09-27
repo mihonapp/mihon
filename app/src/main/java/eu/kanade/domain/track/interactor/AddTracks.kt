@@ -57,9 +57,8 @@ class AddTracks(
 
                 if (track.startDate <= 0) {
                     val firstReadChapterDate = getHistory.await(mangaId)
-                        .sortedBy { it.readAt }
-                        .firstOrNull()
-                        ?.readAt
+                        .mapNotNull { it.readAt?.takeIf { readAt -> readAt.time > 0 } }
+                        .minOrNull()
 
                     firstReadChapterDate?.let {
                         val startDate = firstReadChapterDate.time.convertEpochMillisZone(

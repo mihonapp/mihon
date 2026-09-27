@@ -213,30 +213,32 @@ class RestoreRepositoryImpl(
         this.copy(id = 0L, mangaId = 0L, dateFetch = 0L, dateUpload = 0L)
 
     private suspend fun restoreHistory(manga: Manga, restoredHistory: List<RestoredHistory>) {
-        val toUpdate = restoredHistory.mapNotNull { history ->
-            val dbHistory = database.historyQueries
-                .getHistoryByChapterUrlAndMangaId(history.chapterUrl, manga.id)
-                .awaitAsOneOrNull()
-
-            if (dbHistory == null) {
-                val chapter = database.chaptersQueries
-                    .getChapterByUrlAndMangaId(history.chapterUrl, manga.id)
+        val toUpdate = restoredHistory
+            .groupBy { it.chapterUrl }
+            .mapNotNull { (chapterUrl, copies) ->
+                val readAt = copies.maxOf { it.readAt?.time ?: 0L }
+                val readDuration = copies.sumOf { it.readDuration }
+                val dbHistory = database.historyQueries
+                    .getHistoryByChapterUrlAndMangaId(chapterUrl, manga.id)
                     .awaitAsOneOrNull()
-                    // Chapter doesn't exist; skip
-                    ?: return@mapNotNull null
-                // New history entry
-                return@mapNotNull Triple(chapter._id, history.readAt, history.readDuration)
-            }
 
-            // Update history entry
-            Triple(
-                dbHistory.chapter_id,
-                max(history.readAt?.time ?: 0L, dbHistory.last_read?.time ?: 0L)
-                    .takeIf { it > 0L }
-                    ?.let { Date(it) },
-                max(history.readDuration, dbHistory.time_read) - dbHistory.time_read,
-            )
-        }
+                if (dbHistory == null) {
+                    val chapter = database.chaptersQueries
+                        .getChapterByUrlAndMangaId(chapterUrl, manga.id)
+                        .awaitAsOneOrNull()
+                        // Chapter doesn't exist; skip
+                        ?: return@mapNotNull null
+                    // New history entry
+                    return@mapNotNull Triple(chapter._id, Date(readAt), readDuration)
+                }
+
+                // Update history entry
+                Triple(
+                    dbHistory.chapter_id,
+                    Date(max(readAt, dbHistory.last_read?.time ?: 0L)),
+                    max(readDuration, dbHistory.time_read) - dbHistory.time_read,
+                )
+            }
 
         toUpdate.forEach { (chapterId, readAt, readDuration) ->
             database.historyQueries.upsert(chapterId, readAt, readDuration)
