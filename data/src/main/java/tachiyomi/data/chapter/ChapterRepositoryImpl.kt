@@ -82,7 +82,6 @@ class ChapterRepositoryImpl(
         database.transaction {
             chapterUpdates.forEach { chapterUpdate ->
                 database.chaptersQueries.update(
-                    mangaId = chapterUpdate.mangaId,
                     read = chapterUpdate.read,
                     bookmark = chapterUpdate.bookmark,
                     lastPageRead = chapterUpdate.lastPageRead,

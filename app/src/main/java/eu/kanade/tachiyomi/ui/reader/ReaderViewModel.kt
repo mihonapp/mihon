@@ -583,11 +583,10 @@ class ReaderViewModel(
             }
 
             updateChapter.await(
-                ChapterUpdate(
-                    id = readerChapter.chapter.id!!,
-                    read = readerChapter.chapter.read,
-                    lastPageRead = readerChapter.chapter.last_page_read.toLong(),
-                ),
+                ChapterUpdate(readerChapter.chapter.id!!) {
+                    read = readerChapter.chapter.read
+                    lastPageRead = readerChapter.chapter.last_page_read.toLong()
+                },
             )
         }
     }
@@ -608,7 +607,7 @@ class ReaderViewModel(
                     chapter.isRecognizedNumber &&
                     chapter.chapterNumber.toFloat() == readerChapter.chapter.chapter_number
                 ) {
-                    ChapterUpdate(id = chapter.id, read = true)
+                    ChapterUpdate(chapter.id) { read = true }
                 } else {
                     null
                 }
@@ -683,10 +682,9 @@ class ReaderViewModel(
 
         viewModelScope.launchNonCancellable {
             updateChapter.await(
-                ChapterUpdate(
-                    id = chapter.id!!,
-                    bookmark = bookmarked,
-                ),
+                ChapterUpdate(chapter.id!!) {
+                    bookmark = bookmarked
+                },
             )
         }
 

@@ -812,7 +812,7 @@ class MangaViewModel(
         viewModelScope.launchIO {
             chapters
                 .filterNot { it.bookmark == bookmarked }
-                .map { ChapterUpdate(id = it.id, bookmark = bookmarked) }
+                .map { ChapterUpdate(it.id) { bookmark = bookmarked } }
                 .let { updateChapter.awaitAll(it) }
         }
         toggleAllSelection(false)

@@ -59,7 +59,7 @@ class MangaRestorer(
         }
 
         restoreRepository.restoreManga(entries) {
-            fetchInterval.toMangaUpdate(it, now, timeZone, currentFetchWindow)
+            fetchInterval.withFetchInterval(it, now, timeZone, currentFetchWindow)
         }
     }
 }

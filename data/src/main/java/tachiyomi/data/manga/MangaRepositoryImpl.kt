@@ -245,18 +245,20 @@ class MangaRepositoryImpl(
     private suspend fun partialUpdate(vararg mangaUpdates: MangaUpdate) {
         database.transaction {
             mangaUpdates.forEach { value ->
-                database.mangasQueries.update(
-                    favorite = value.favorite,
-                    lastUpdate = value.lastUpdate,
-                    nextUpdate = value.nextUpdate,
-                    calculateInterval = value.fetchInterval?.toLong(),
-                    viewer = value.viewerFlags,
-                    chapterFlags = value.chapterFlags,
-                    coverLastModified = value.coverLastModified,
-                    dateAdded = value.dateAdded,
-                    mangaId = value.id,
-                    notes = value.notes,
-                )
+                with(value) {
+                    database.mangasQueries.update(
+                        favorite = favorite,
+                        lastUpdate = lastUpdate,
+                        nextUpdate = nextUpdate,
+                        calculateInterval = fetchInterval?.toLong(),
+                        viewer = viewerFlags,
+                        chapterFlags = chapterFlags,
+                        coverLastModified = coverLastModified,
+                        dateAdded = dateAdded,
+                        mangaId = id,
+                        notes = notes,
+                    )
+                }
             }
         }
     }
