@@ -49,6 +49,7 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.NoChaptersException
@@ -88,6 +89,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     @Inject private lateinit var libraryPreferences: LibraryPreferences
 
     @Inject private lateinit var downloadManager: DownloadManager
+
+    @Inject private lateinit var getCategories: GetCategories
 
     @Inject private lateinit var getLibraryManga: GetLibraryManga
 
@@ -170,10 +173,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         } else {
             val includedCategories = libraryPreferences.updateCategories.get().map { it.toLong() }
             val excludedCategories = libraryPreferences.updateCategoriesExclude.get().map { it.toLong() }
+            val hiddenCategories = getCategories.await().filter { it.hidden }.map { it.id }
 
             libraryManga.filter {
                 val included = includedCategories.isEmpty() || it.categories.intersect(includedCategories).isNotEmpty()
-                val excluded = it.categories.intersect(excludedCategories).isNotEmpty()
+                val excluded = it.categories.intersect(excludedCategories + hiddenCategories).isNotEmpty()
                 included && !excluded
             }
         }
