@@ -11,10 +11,8 @@ CREATE TABLE extension_store(
     extension_list_url TEXT
 );
 
-get:
-SELECT *
-FROM extension_store
-WHERE index_url = :indexUrl;
+contains:
+SELECT EXISTS(SELECT 0 FROM extension_store WHERE index_url = :indexUrl);
 
 getAll:
 SELECT *
