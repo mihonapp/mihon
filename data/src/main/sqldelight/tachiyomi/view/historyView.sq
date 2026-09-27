@@ -46,18 +46,22 @@ ORDER BY readAt DESC;
 
 getLatestHistory:
 SELECT
-id,
-mangaId,
-chapterId,
-title,
-thumbnailUrl,
-sourceId,
-favorite,
-coverLastModified,
-chapterNumber,
-readAt,
-readDuration
-FROM historyView
-WHERE historyView.readAt > 0
-ORDER BY readAt DESC
+history.id AS id,
+manga.id AS mangaId,
+chapter.id AS chapterId,
+manga.remote_title AS title,
+manga.remote_cover AS thumbnailUrl,
+manga.source_id AS sourceId,
+manga.user_favorite_at IS NOT NULL AS favorite,
+manga.state_cover_last_modified AS coverLastModified,
+chapter.remote_chapter_number AS chapterNumber,
+history.read_at AS readAt,
+history.read_duration AS readDuration
+FROM history
+JOIN manga
+ON manga.id = history.manga_id
+JOIN chapter
+ON chapter.id = history.chapter_id
+WHERE history.read_at > 0
+ORDER BY history.read_at DESC
 LIMIT 1;
