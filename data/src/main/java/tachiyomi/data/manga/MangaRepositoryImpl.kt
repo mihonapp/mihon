@@ -8,10 +8,12 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
+import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
@@ -123,12 +125,43 @@ class MangaRepositoryImpl(
         }
     }
 
+    override suspend fun deleteNonLibraryManga(sourceIds: List<Long>, keepReadManga: Boolean) {
+        database.mangasQueries.deleteNonLibraryManga(sourceIds, keepReadManga.toLong())
+    }
+
     override suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>) {
         database.transaction {
             database.mangas_categoriesQueries.deleteMangaCategoryByMangaId(mangaId)
             categoryIds.forEach { categoryId ->
                 database.mangas_categoriesQueries.insert(mangaId, categoryId)
             }
+        }
+    }
+
+    override suspend fun getExcludedScanlators(mangaId: Long): Set<String> {
+        return database.excluded_scanlatorsQueries
+            .getExcludedScanlatorsByMangaId(mangaId)
+            .awaitAsList()
+            .toSet()
+    }
+
+    override fun getExcludedScanlatorsAsFlow(mangaId: Long): Flow<Set<String>> {
+        return database.excluded_scanlatorsQueries
+            .getExcludedScanlatorsByMangaId(mangaId)
+            .subscribeToList()
+            .map { it.toSet() }
+    }
+
+    override suspend fun setExcludedScanlators(mangaId: Long, excludedScanlators: Set<String>) {
+        database.transaction {
+            val current = database.excluded_scanlatorsQueries
+                .getExcludedScanlatorsByMangaId(mangaId)
+                .awaitAsList()
+                .toSet()
+            excludedScanlators.minus(current).forEach { scanlator ->
+                database.excluded_scanlatorsQueries.insert(mangaId, scanlator)
+            }
+            database.excluded_scanlatorsQueries.remove(mangaId, current.minus(excludedScanlators))
         }
     }
 

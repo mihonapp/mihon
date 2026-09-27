@@ -57,6 +57,12 @@ class CategoryRepositoryImpl(
         )
     }
 
+    override suspend fun insertAll(categories: List<Category>) {
+        database.transaction {
+            categories.forEach { insert(it) }
+        }
+    }
+
     override suspend fun updateName(categoryId: Long, name: String) {
         database.categoriesQueries.updateName(name = name, categoryId = categoryId)
     }

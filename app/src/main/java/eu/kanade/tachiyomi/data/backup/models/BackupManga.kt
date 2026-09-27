@@ -4,7 +4,7 @@ import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.core.common.extensions.JsonObjectEmptyBytes
-import tachiyomi.data.MemoColumnAdapter
+import mihon.core.common.extensions.toJsonObject
 import tachiyomi.domain.manga.model.Manga
 
 @Suppress("DEPRECATION")
@@ -66,7 +66,7 @@ class BackupManga(
             favoriteModifiedAt = this@BackupManga.favoriteModifiedAt,
             notes = this@BackupManga.notes,
             initialized = this@BackupManga.initialized,
-            memo = MemoColumnAdapter.decode(this@BackupManga.memo),
+            memo = this@BackupManga.memo.toJsonObject(),
         )
     }
 }

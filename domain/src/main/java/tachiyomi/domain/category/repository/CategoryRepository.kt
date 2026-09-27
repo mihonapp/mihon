@@ -17,6 +17,8 @@ interface CategoryRepository {
 
     suspend fun insert(category: Category)
 
+    suspend fun insertAll(categories: List<Category>)
+
     suspend fun updateName(categoryId: Long, name: String)
 
     suspend fun updateFlags(categoryId: Long, flags: Long)
