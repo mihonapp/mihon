@@ -17,11 +17,11 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.track.interactor.InsertTrack
+import tachiyomi.domain.track.interactor.UpsertTrack
 
 @Inject
 class AddTracks(
-    private val insertTrack: InsertTrack,
+    private val upsertTrack: UpsertTrack,
     private val syncChapterProgressWithTrack: SyncChapterProgressWithTrack,
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val trackerManager: TrackerManager,
@@ -37,7 +37,7 @@ class AddTracks(
 
             var track = item.toDomainTrack(idRequired = false) ?: return@withIOContext
 
-            insertTrack.await(track)
+            upsertTrack.await(track)
 
             // TODO: merge into [SyncChapterProgressWithTrack]?
             // Update chapter progress if newer chapters marked read locally
@@ -87,7 +87,7 @@ class AddTracks(
                         service.match(manga)?.let { track ->
                             track.manga_id = manga.id
                             (service as Tracker).bind(track)
-                            insertTrack.await(track.toDomainTrack(idRequired = false)!!)
+                            upsertTrack.await(track.toDomainTrack(idRequired = false)!!)
 
                             syncChapterProgressWithTrack.await(
                                 manga.id,

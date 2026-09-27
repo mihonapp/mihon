@@ -272,7 +272,7 @@ class RestoreRepositoryImpl(
             .partition { it.id > 0 }
 
         if (newTracks.isNotEmpty()) {
-            trackRepository.insertAll(newTracks)
+            trackRepository.upsertAll(newTracks)
         }
 
         existingTracks.forEach { track ->

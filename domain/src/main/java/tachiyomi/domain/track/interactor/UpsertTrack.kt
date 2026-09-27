@@ -7,13 +7,13 @@ import tachiyomi.domain.track.model.Track
 import tachiyomi.domain.track.repository.TrackRepository
 
 @Inject
-class InsertTrack(
+class UpsertTrack(
     private val trackRepository: TrackRepository,
 ) {
 
     suspend fun await(track: Track) {
         try {
-            trackRepository.insert(track)
+            trackRepository.upsert(track)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
         }
@@ -21,7 +21,7 @@ class InsertTrack(
 
     suspend fun awaitAll(tracks: List<Track>) {
         try {
-            trackRepository.insertAll(tracks)
+            trackRepository.upsertAll(tracks)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
         }

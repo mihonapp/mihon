@@ -54,7 +54,7 @@ import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.storage.service.StoragePreferences
-import tachiyomi.domain.track.interactor.InsertTrack
+import tachiyomi.domain.track.interactor.UpsertTrack
 
 @DependencyGraph(
     scope = AppScope::class,
@@ -119,7 +119,7 @@ interface AppGraph : ViewModelGraph {
     val resetViewerFlags: ResetViewerFlags
     val resetCategoryFlags: ResetCategoryFlags
     val addTracks: AddTracks
-    val insertTrack: InsertTrack
+    val upsertTrack: UpsertTrack
 
     val getExtensionStoreCountAsFlow: GetExtensionStoreCountAsFlow
 
