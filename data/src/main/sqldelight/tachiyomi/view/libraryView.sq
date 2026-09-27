@@ -44,6 +44,6 @@ SELECT
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
     user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-    state_cover_last_modified, state_initialized,
-    totalCount, readCount, latestUpload, chapterFetchedAt, lastRead, bookmarkCount, categories
+    state_cover_last_modified, state_initialized, totalCount, readCount, latestUpload,
+    chapterFetchedAt, lastRead, bookmarkCount, categories
 FROM libraryView;
