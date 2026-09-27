@@ -202,6 +202,13 @@ class ReaderViewModel(
     private val chapterList by lazy {
         val manga = manga!!
         val chapters = runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true) }
+            .let { filtered ->
+                if (filtered.any { it.id == chapterId }) {
+                    filtered
+                } else {
+                    filtered + unfilteredChapterList.filter { it.id == chapterId }
+                }
+            }
 
         val selectedChapter = chapters.find { it.id == chapterId }
             ?: error("Requested chapter of id $chapterId not found in chapter list")
