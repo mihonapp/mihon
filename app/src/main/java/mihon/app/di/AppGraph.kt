@@ -44,6 +44,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import mihon.core.metro.IsDebugBuild
 import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
+import mihon.domain.extension.repository.ExtensionStoreRepository
 import nl.adaptivity.xmlutil.serialization.XML
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.category.interactor.GetCategories
@@ -100,6 +101,7 @@ interface AppGraph : ViewModelGraph {
     val updateChecker: AppUpdateChecker
 
     val trustExtension: TrustExtension
+    val extensionStoreRepository: ExtensionStoreRepository
 
     val sourceManager: SourceManager
     val trackerManager: TrackerManager

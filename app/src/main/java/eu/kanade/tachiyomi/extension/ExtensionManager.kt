@@ -215,7 +215,7 @@ class ExtensionManager(
     }
 
     /**
-     * Sets the update field of the installed extensions with the given [availableExtensions].
+     * Sets the update fields of the installed extensions, loaded or not, with the given [availableExtensions].
      *
      * @param availableExtensions The list of extensions given by the [api].
      */
@@ -226,6 +226,9 @@ class ExtensionManager(
         }
 
         loadedExtensionMapFlow.value = loadedExtensionMapFlow.value.mapValues { (_, extension) ->
+            extension.withStatus(availableExtensions)
+        }
+        notLoadedExtensionMapFlow.value = notLoadedExtensionMapFlow.value.mapValues { (_, extension) ->
             extension.withStatus(availableExtensions)
         }
         updatePendingUpdatesCount()
@@ -249,7 +252,7 @@ class ExtensionManager(
      *
      * @param extension The extension to be updated.
      */
-    fun updateExtension(extension: Extension.Loaded): Flow<InstallStep> {
+    fun updateExtension(extension: Extension.Installed): Flow<InstallStep> {
         val update = extension.findUpdate(availableExtensionListFlow.value) ?: return emptyFlow()
         val isUpdateForPrivatelyInstalled = !extension.isShared
         return installer.downloadAndInstall(update, isUpdateForPrivatelyInstalled)
@@ -328,7 +331,7 @@ class ExtensionManager(
 
         override fun onExtensionNotLoaded(extension: Extension.NotLoaded) {
             loadedExtensionMapFlow.value -= extension.pkgName
-            notLoadedExtensionMapFlow.value += extension
+            notLoadedExtensionMapFlow.value += extension.withStatus(availableExtensionListFlow.value)
             updatePendingUpdatesCount()
         }
 
@@ -349,12 +352,20 @@ class ExtensionManager(
         return copy(
             hasUpdate = findUpdate(availableExtensions) != null,
             isObsolete = listing == null,
-            store = listing?.store ?: store,
         )
     }
 
+    /**
+     * An extension that isn't loaded can still be updated, which is often what gets it loaded again.
+     */
+    private fun Extension.NotLoaded.withStatus(availableExtensions: List<Extension.Available>): Extension.NotLoaded {
+        if (availableExtensions.isEmpty()) return this
+        return copy(hasUpdate = findUpdate(availableExtensions) != null)
+    }
+
     private fun updatePendingUpdatesCount() {
-        val pendingUpdateCount = loadedExtensionMapFlow.value.values.count { it.hasUpdate }
+        val pendingUpdateCount = loadedExtensionMapFlow.value.values.count { it.hasUpdate } +
+            notLoadedExtensionMapFlow.value.values.count { it.hasUpdate }
         preferences.extensionUpdatesCount.set(pendingUpdateCount)
         if (pendingUpdateCount == 0) {
             extensionUpdateNotifier.dismiss()
