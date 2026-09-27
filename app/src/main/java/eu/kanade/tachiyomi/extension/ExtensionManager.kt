@@ -7,7 +7,6 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
-import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.extension.api.ExtensionUpdateNotifier
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
@@ -31,8 +30,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
+import mihon.domain.extension.interactor.UpdateExtensionStores
+import mihon.domain.extension.model.ExtensionStore
+import mihon.domain.extension.repository.ExtensionStoreRepository
+import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
@@ -52,7 +56,8 @@ class ExtensionManager(
     private val context: Context,
     private val preferences: SourcePreferences,
     private val trustExtension: TrustExtension,
-    private val api: ExtensionApi,
+    private val extensionStoreRepository: ExtensionStoreRepository,
+    private val updateExtensionStores: UpdateExtensionStores,
     private val installer: ExtensionInstaller,
     private val extensionUpdateNotifier: ExtensionUpdateNotifier,
 ) {
@@ -66,8 +71,11 @@ class ExtensionManager(
     private val loadedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.Loaded>())
     val loadedExtensionsFlow = loadedExtensionMapFlow.mapExtensionsWhenInitialized()
 
-    private val availableExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.Available>())
-    val availableExtensionsFlow = availableExtensionMapFlow.mapExtensions(scope)
+    // Every store's listing, since more than one store can list the same extension
+    private val availableExtensionListFlow = MutableStateFlow(emptyList<Extension.Available>())
+    val availableExtensionsFlow = availableExtensionListFlow
+        .map { extensions -> extensions.associateBy { it.pkgName }.values.toList() }
+        .stateIn(scope, SharingStarted.Lazily, emptyList())
 
     private val notLoadedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.NotLoaded>())
     val notLoadedExtensionsFlow = notLoadedExtensionMapFlow.mapExtensionsWhenInitialized()
@@ -84,6 +92,13 @@ class ExtensionManager(
                 preferences.applyContentWarningsToInstalled.changes().distinctUntilChanged().drop(1).map {},
             )
                 .collectLatest { loadExtensions() }
+        }
+
+        // Extensions are only reloaded when the set of signing keys changes, which misses a store being
+        // removed while another with the same key stays, or a store being renamed
+        scope.launch(Dispatchers.IO) {
+            initialized.await()
+            extensionStoreRepository.getAllAsFlow().collect(::assignStores)
         }
     }
 
@@ -153,7 +168,7 @@ class ExtensionManager(
                 .associateBy { it.pkgName }
 
             // Newly loaded extensions have no status derived from the store index yet
-            updatedInstalledExtensionsStatuses(availableExtensionMapFlow.value.values.toList())
+            refreshStatuses()
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e) { "Failed to load extensions" }
         } finally {
@@ -163,21 +178,53 @@ class ExtensionManager(
     }
 
     /**
-     * Finds the available extensions in the [api] and updates [availableExtensionMapFlow].
+     * Finds the available extensions in the stores and updates [availableExtensionListFlow].
      */
     suspend fun findAvailableExtensions() {
         val extensions: List<Extension.Available> = try {
-            api.findExtensions()
+            fetchExtensions()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             withUIContext { context.toast(MR.strings.extension_api_error) }
             return
         }
 
+        setAvailableExtensions(extensions)
+    }
+
+    /**
+     * Refreshes the stores and their listings like [findAvailableExtensions], then notifies about the
+     * installed extensions that have an update. Stays silent when the stores can't be reached.
+     */
+    suspend fun checkForUpdates() {
+        val extensions = try {
+            updateExtensionStores()
+            fetchExtensions()
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            return
+        }
+
+        initialized.await()
+        setAvailableExtensions(extensions)
+
+        val names = (loadedExtensionMapFlow.value.values + notLoadedExtensionMapFlow.value.values)
+            .filter { it.hasUpdate }
+            .map { it.name }
+        if (names.isNotEmpty()) {
+            extensionUpdateNotifier.promptUpdates(names)
+        }
+    }
+
+    private suspend fun fetchExtensions(): List<Extension.Available> {
+        return withIOContext { extensionStoreRepository.fetchExtensions() }
+    }
+
+    private fun setAvailableExtensions(extensions: List<Extension.Available>) {
         enableAdditionalSubLanguages(extensions)
 
-        availableExtensionMapFlow.value = extensions.associateBy { it.pkgName }
-        updatedInstalledExtensionsStatuses(extensions)
+        availableExtensionListFlow.value = extensions
+        refreshStatuses()
         setupAvailableExtensionsSourcesDataMap(extensions)
     }
 
@@ -212,46 +259,6 @@ class ExtensionManager(
     }
 
     /**
-     * Sets the update field of the installed extensions with the given [availableExtensions].
-     *
-     * @param availableExtensions The list of extensions given by the [api].
-     */
-    private fun updatedInstalledExtensionsStatuses(availableExtensions: List<Extension.Available>) {
-        if (availableExtensions.isEmpty()) {
-            preferences.extensionUpdatesCount.set(0)
-            return
-        }
-
-        val loadedExtensionsMap = loadedExtensionMapFlow.value.toMutableMap()
-        var changed = false
-        for ((pkgName, extension) in loadedExtensionsMap) {
-            val availableExt = availableExtensions.find { it.pkgName == pkgName }
-
-            if (availableExt == null && !extension.isObsolete) {
-                loadedExtensionsMap[pkgName] = extension.copy(isObsolete = true)
-                changed = true
-            } else if (availableExt != null) {
-                val hasUpdate = extension.updateExists(availableExt)
-                if (extension.hasUpdate != hasUpdate) {
-                    loadedExtensionsMap[pkgName] = extension.copy(
-                        hasUpdate = hasUpdate,
-                        store = availableExt.store,
-                    )
-                } else {
-                    loadedExtensionsMap[pkgName] = extension.copy(
-                        store = availableExt.store,
-                    )
-                }
-                changed = true
-            }
-        }
-        if (changed) {
-            loadedExtensionMapFlow.value = loadedExtensionsMap
-        }
-        updatePendingUpdatesCount()
-    }
-
-    /**
      * Returns a flow of the installation process for the given extension. It will complete
      * once the extension is installed or throws an error. The process will be canceled if
      * unsubscribed before its completion.
@@ -259,7 +266,7 @@ class ExtensionManager(
      * @param extension The extension to be installed.
      */
     fun installExtension(extension: Extension.Available): Flow<InstallStep> {
-        return installer.downloadAndInstall(extension.apkUrl, extension)
+        return installer.downloadAndInstall(extension)
     }
 
     /**
@@ -269,10 +276,10 @@ class ExtensionManager(
      *
      * @param extension The extension to be updated.
      */
-    fun updateExtension(extension: Extension.Loaded): Flow<InstallStep> {
-        val availableExt = availableExtensionMapFlow.value[extension.pkgName] ?: return emptyFlow()
+    fun updateExtension(extension: Extension.Installed): Flow<InstallStep> {
+        val update = extension.findUpdate(availableExtensionListFlow.value) ?: return emptyFlow()
         val isUpdateForPrivatelyInstalled = !extension.isShared
-        return installer.downloadAndInstall(availableExt.apkUrl, availableExt, isUpdateForPrivatelyInstalled)
+        return installer.downloadAndInstall(update, isUpdateForPrivatelyInstalled)
     }
 
     fun cancelInstallUpdateExtension(extension: Extension) {
@@ -341,15 +348,15 @@ class ExtensionManager(
     private inner class InstallationListener : ExtensionInstallReceiver.Listener {
 
         override fun onExtensionLoaded(extension: Extension.Loaded) {
-            registerExtension(extension.withUpdateCheck())
+            registerExtension(extension)
             notLoadedExtensionMapFlow.value -= extension.pkgName
-            updatePendingUpdatesCount()
+            refreshStatuses()
         }
 
         override fun onExtensionNotLoaded(extension: Extension.NotLoaded) {
             loadedExtensionMapFlow.value -= extension.pkgName
             notLoadedExtensionMapFlow.value += extension
-            updatePendingUpdatesCount()
+            refreshStatuses()
         }
 
         override fun onPackageUninstalled(pkgName: String) {
@@ -360,26 +367,40 @@ class ExtensionManager(
     }
 
     /**
-     * Extension method to set the update field of an installed extension.
+     * Derives what the store listings say about every installed extension, loaded or not. Without any
+     * listing there's nothing to derive from, so they're left as they are rather than marked obsolete.
      */
-    private fun Extension.Loaded.withUpdateCheck(): Extension.Loaded {
-        return if (updateExists()) {
-            copy(hasUpdate = true)
-        } else {
-            this
+    private fun refreshStatuses() {
+        val available = availableExtensionListFlow.value
+        if (available.isNotEmpty()) {
+            loadedExtensionMapFlow.value = loadedExtensionMapFlow.value.mapValues { (_, extension) ->
+                val listing = extension.findListing(available)
+                extension.copy(
+                    hasUpdate = extension.findUpdate(available) != null,
+                    isObsolete = listing == null,
+                )
+            }
+            notLoadedExtensionMapFlow.value = notLoadedExtensionMapFlow.value.mapValues { (_, extension) ->
+                extension.copy(hasUpdate = extension.findUpdate(available) != null)
+            }
+        }
+        updatePendingUpdatesCount()
+    }
+
+    private fun assignStores(stores: List<ExtensionStore>) {
+        fun Extension.Installed.signingStore() = stores.firstOrNull { it.signingKey in signatures }
+
+        loadedExtensionMapFlow.update { extensions ->
+            extensions.mapValues { (_, extension) -> extension.copy(store = extension.signingStore()) }
+        }
+        notLoadedExtensionMapFlow.update { extensions ->
+            extensions.mapValues { (_, extension) -> extension.copy(store = extension.signingStore()) }
         }
     }
 
-    private fun Extension.Loaded.updateExists(availableExtension: Extension.Available? = null): Boolean {
-        val availableExt = availableExtension
-            ?: availableExtensionMapFlow.value[pkgName]
-            ?: return false
-
-        return (availableExt.versionCode > versionCode || availableExt.libVersion > libVersion)
-    }
-
     private fun updatePendingUpdatesCount() {
-        val pendingUpdateCount = loadedExtensionMapFlow.value.values.count { it.hasUpdate }
+        val pendingUpdateCount = (loadedExtensionMapFlow.value.values + notLoadedExtensionMapFlow.value.values)
+            .count { it.hasUpdate }
         preferences.extensionUpdatesCount.set(pendingUpdateCount)
         if (pendingUpdateCount == 0) {
             extensionUpdateNotifier.dismiss()
@@ -387,10 +408,6 @@ class ExtensionManager(
     }
 
     private operator fun <T : Extension> Map<String, T>.plus(extension: T) = plus(extension.pkgName to extension)
-
-    private fun <T : Extension> StateFlow<Map<String, T>>.mapExtensions(scope: CoroutineScope): StateFlow<List<T>> {
-        return map { it.values.toList() }.stateIn(scope, SharingStarted.Lazily, value.values.toList())
-    }
 
     /**
      * Extensions are loaded in the background, so this flow only starts emitting once that finished.

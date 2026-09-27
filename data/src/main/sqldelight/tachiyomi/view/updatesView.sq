@@ -10,7 +10,7 @@ SELECT
     chapters.bookmark,
     chapters.last_page_read,
     mangas.source,
-    mangas.favorite,
+    mangas.favorite_at IS NOT NULL AS favorite,
     mangas.thumbnail_url AS thumbnailUrl,
     mangas.cover_last_modified AS coverLastModified,
     chapters.date_upload AS dateUpload,
@@ -21,14 +21,15 @@ ON mangas._id = chapters.manga_id
 LEFT JOIN excluded_scanlators
 ON mangas._id = excluded_scanlators.manga_id
 AND chapters.scanlator = excluded_scanlators.scanlator
-WHERE favorite = 1
-AND date_fetch > date_added
+WHERE favorite_at IS NOT NULL
+AND date_fetch > favorite_at
 ORDER BY date_fetch DESC;
 
 getRecentUpdates:
 SELECT *
 FROM updatesView
 WHERE dateUpload > :after
+ORDER BY datefetch DESC
 LIMIT :limit;
 
 getRecentUpdatesWithFilters:
@@ -73,6 +74,7 @@ AND (
         )
     )
 )
+ORDER BY datefetch DESC
 LIMIT :limit;
 
 getUpdatesByReadStatus:
@@ -80,4 +82,5 @@ SELECT *
 FROM updatesView
 WHERE read = :read
 AND dateUpload > :after
+ORDER BY datefetch DESC
 LIMIT :limit;

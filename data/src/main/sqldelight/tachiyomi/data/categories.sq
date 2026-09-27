@@ -40,11 +40,13 @@ C.flags
 FROM categories C
 JOIN mangas_categories MC
 ON C._id = MC.category_id
-WHERE MC.manga_id = :mangaId;
+WHERE MC.manga_id = :mangaId
+ORDER BY C.sort;
 
 insert:
 INSERT INTO categories(name, sort, flags)
-VALUES (:name, :order, :flags);
+SELECT :name, coalesce(max(sort), -1) + 1, :flags
+FROM categories;
 
 delete:
 DELETE FROM categories
@@ -54,6 +56,12 @@ updateName:
 UPDATE categories
 SET name = :name
 WHERE _id = :categoryId;
+
+getUserCategoryIds:
+SELECT _id
+FROM categories
+WHERE _id > 0
+ORDER BY sort;
 
 updateOrder:
 UPDATE categories

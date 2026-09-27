@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 30
+        versionCode = 32
         versionName = "0.20.4"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
@@ -234,13 +234,9 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
-    implementation(libs.androidx.sqlite.bundled)
-
     implementation(libs.kotlin.reflect)
 
     implementation(libs.bundles.kotlinx.coroutines)
-
-    implementation(libs.sqldelight.async)
 
     implementation(libs.kotlinx.datetime)
 
