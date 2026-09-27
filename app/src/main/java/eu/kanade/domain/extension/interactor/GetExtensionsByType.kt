@@ -23,19 +23,12 @@ class GetExtensionsByType(
             extensionManager.notLoadedExtensionsFlow,
             extensionManager.availableExtensionsFlow,
         ) { enabledLanguages, _loaded, _notLoaded, _available ->
-            val (loadedUpdates, loaded) = _loaded
-                .sortedWith(
-                    compareBy<Extension.Loaded> { !it.isObsolete }
-                        .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name },
-                )
-                .partition { it.hasUpdate }
+            val byName = compareBy<Extension, String>(String.CASE_INSENSITIVE_ORDER) { it.name }
 
-            val (notLoadedUpdates, notLoaded) = _notLoaded
-                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-                .partition { it.hasUpdate }
+            val (loadedUpdates, loaded) = _loaded.partition { it.hasUpdate }
+            val (notLoadedUpdates, notLoaded) = _notLoaded.partition { it.hasUpdate }
 
-            val updates = (loadedUpdates + notLoadedUpdates)
-                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+            val updates = (loadedUpdates + notLoadedUpdates).sortedWith(byName)
 
             val available = _available
                 .filter { extension ->
@@ -54,9 +47,14 @@ class GetExtensionsByType(
                             )
                         }
                 }
-                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                .sortedWith(byName)
 
-            Extensions(updates, loaded, available, notLoaded)
+            Extensions(
+                updates = updates,
+                loaded = loaded.sortedWith(compareBy<Extension.Loaded> { !it.isObsolete }.then(byName)),
+                available = available,
+                notLoaded = notLoaded.sortedWith(byName),
+            )
         }
     }
 }

@@ -80,7 +80,6 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.extension.ExtensionManager
-import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
@@ -140,8 +139,6 @@ class MainActivity : BaseActivity() {
     @Inject private lateinit var chapterCache: ChapterCache
 
     @Inject private lateinit var getIncognitoState: GetIncognitoState
-
-    @Inject private lateinit var extensionApi: ExtensionApi
 
     @Inject private lateinit var extensionManager: ExtensionManager
 
@@ -342,9 +339,7 @@ class MainActivity : BaseActivity() {
         // Extensions updates
         LaunchedEffect(Unit) {
             try {
-                extensionApi.checkForUpdates(
-                    extensionManager.getLoadedExtensions() + extensionManager.getNotLoadedExtensions(),
-                )
+                extensionManager.checkForUpdates()
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
             }
