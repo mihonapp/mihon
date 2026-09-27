@@ -3,6 +3,7 @@ package tachiyomi.domain.manga.repository
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaRemoteUpdate
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 
@@ -39,6 +40,8 @@ interface MangaRepository {
     suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>)
 
     suspend fun update(update: MangaUpdate): Boolean
+
+    suspend fun updateRemote(update: MangaRemoteUpdate): Boolean
 
     suspend fun updateAll(mangaUpdates: List<MangaUpdate>): Boolean
 

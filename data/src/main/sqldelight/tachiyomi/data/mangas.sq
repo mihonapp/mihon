@@ -203,8 +203,19 @@ RETURNING _id;
 
 update:
 UPDATE mangas SET
-    source = coalesce(:source, source),
-    url = coalesce(:url, url),
+    favorite = coalesce(:favorite, favorite),
+    last_update = coalesce(:lastUpdate, last_update),
+    next_update = coalesce(:nextUpdate, next_update),
+    viewer = coalesce(:viewer, viewer),
+    chapter_flags = coalesce(:chapterFlags, chapter_flags),
+    cover_last_modified = coalesce(:coverLastModified, cover_last_modified),
+    date_added = coalesce(:dateAdded, date_added),
+    calculate_interval = coalesce(:calculateInterval, calculate_interval),
+    notes = coalesce(:notes, notes)
+WHERE _id = :mangaId;
+
+updateFromBackup:
+UPDATE mangas SET
     artist = coalesce(:artist, artist),
     author = coalesce(:author, author),
     description = coalesce(:description, description),
@@ -214,16 +225,29 @@ UPDATE mangas SET
     thumbnail_url = coalesce(:thumbnailUrl, thumbnail_url),
     favorite = coalesce(:favorite, favorite),
     last_update = coalesce(:lastUpdate, last_update),
-    next_update = coalesce(:nextUpdate, next_update),
     initialized = coalesce(:initialized, initialized),
     viewer = coalesce(:viewer, viewer),
     chapter_flags = coalesce(:chapterFlags, chapter_flags),
     cover_last_modified = coalesce(:coverLastModified, cover_last_modified),
     date_added = coalesce(:dateAdded, date_added),
     update_strategy = coalesce(:updateStrategy, update_strategy),
-    calculate_interval = coalesce(:calculateInterval, calculate_interval),
     notes = coalesce(:notes, notes),
     memo = coalesce(:memo, memo)
+WHERE _id = :mangaId;
+
+updateRemote:
+UPDATE mangas SET
+    artist = coalesce(:artist, artist),
+    author = coalesce(:author, author),
+    description = coalesce(:description, description),
+    genre = coalesce(:genre, genre),
+    title = coalesce(:title, title),
+    status = :status,
+    thumbnail_url = coalesce(:thumbnailUrl, thumbnail_url),
+    initialized = :initialized,
+    cover_last_modified = coalesce(:coverLastModified, cover_last_modified),
+    update_strategy = :updateStrategy,
+    memo = :memo
 WHERE _id = :mangaId;
 
 insertNetworkManga {

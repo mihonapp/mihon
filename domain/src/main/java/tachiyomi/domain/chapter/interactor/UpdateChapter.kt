@@ -3,6 +3,7 @@ package tachiyomi.domain.chapter.interactor
 import dev.zacsweers.metro.Inject
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.chapter.model.ChapterRemoteUpdate
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.repository.ChapterRepository
 
@@ -22,6 +23,14 @@ class UpdateChapter(
     suspend fun awaitAll(chapterUpdates: List<ChapterUpdate>) {
         try {
             chapterRepository.updateAll(chapterUpdates)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+        }
+    }
+
+    suspend fun awaitAllRemote(chapterUpdates: List<ChapterRemoteUpdate>) {
+        try {
+            chapterRepository.updateAllRemote(chapterUpdates)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
         }
