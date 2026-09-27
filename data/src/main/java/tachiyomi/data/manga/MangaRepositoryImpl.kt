@@ -198,7 +198,7 @@ class MangaRepositoryImpl(
                     title = it.title,
                     status = it.status,
                     thumbnailUrl = it.thumbnailUrl,
-                    favorite = it.favorite,
+                    favoriteAt = it.favoriteAt,
                     lastUpdate = it.lastUpdate,
                     nextUpdate = it.nextUpdate,
                     calculateInterval = it.fetchInterval.toLong(),
@@ -206,7 +206,6 @@ class MangaRepositoryImpl(
                     viewerFlags = it.viewerFlags,
                     chapterFlags = it.chapterFlags,
                     coverLastModified = it.coverLastModified,
-                    dateAdded = it.dateAdded,
                     updateStrategy = it.updateStrategy,
                     memo = it.memo,
                     updateTitle = it.title.isNotBlank(),
@@ -247,14 +246,14 @@ class MangaRepositoryImpl(
             mangaUpdates.forEach { value ->
                 with(value) {
                     database.mangasQueries.update(
-                        favorite = favorite,
+                        favoriteAtSet = isSet(::favoriteAt),
+                        favoriteAt = favoriteAt,
                         lastUpdate = lastUpdate,
                         nextUpdate = nextUpdate,
                         calculateInterval = fetchInterval?.toLong(),
                         viewer = viewerFlags,
                         chapterFlags = chapterFlags,
                         coverLastModified = coverLastModified,
-                        dateAdded = dateAdded,
                         mangaId = id,
                         notes = notes,
                     )

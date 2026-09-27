@@ -48,15 +48,10 @@ class UpdateManga(
     }
 
     suspend fun awaitUpdateFavorite(mangaId: Long, favorite: Boolean): Boolean {
-        val dateAdded = when (favorite) {
-            true -> Clock.System.now().toEpochMilliseconds()
-            false -> 0
+        val update = when (favorite) {
+            true -> MangaUpdate(mangaId) { favoriteAt = Clock.System.now().toEpochMilliseconds() }
+            false -> MangaUpdate(mangaId) { favoriteAt = null }
         }
-        return mangaRepository.update(
-            MangaUpdate(mangaId) {
-                this.favorite = favorite
-                this.dateAdded = dateAdded
-            },
-        )
+        return mangaRepository.update(update)
     }
 }

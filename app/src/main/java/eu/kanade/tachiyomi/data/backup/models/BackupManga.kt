@@ -57,13 +57,19 @@ class BackupManga(
             genre = this@BackupManga.genre,
             status = this@BackupManga.status.toLong(),
             thumbnailUrl = this@BackupManga.thumbnailUrl,
-            favorite = this@BackupManga.favorite,
             source = this@BackupManga.source,
-            dateAdded = this@BackupManga.dateAdded,
+            // For libraries older than dateAdded, the favorite timestamp is the only record of when
+            // an entry was added. It was written by a trigger in seconds, unlike dateAdded.
+            favoriteAt = if (this@BackupManga.favorite) {
+                this@BackupManga.dateAdded.takeIf { it != 0L }
+                    ?: this@BackupManga.favoriteModifiedAt?.times(1000)
+                    ?: 0L
+            } else {
+                null
+            },
             viewerFlags = (this@BackupManga.viewer_flags ?: this@BackupManga.viewer).toLong(),
             chapterFlags = this@BackupManga.chapterFlags.toLong(),
             updateStrategy = this@BackupManga.updateStrategy,
-            favoriteModifiedAt = this@BackupManga.favoriteModifiedAt,
             notes = this@BackupManga.notes,
             initialized = this@BackupManga.initialized,
             memo = this@BackupManga.memo.toJsonObject(),

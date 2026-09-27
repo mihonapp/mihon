@@ -236,17 +236,13 @@ class BrowseSourceViewModel(
             val update = if (manga.favorite) {
                 val coverLastModified = manga.removeCovers(coverCache).coverLastModified
                 MangaUpdate(manga.id) {
-                    favorite = false
-                    dateAdded = 0
+                    favoriteAt = null
                     if (coverLastModified != manga.coverLastModified) this.coverLastModified = coverLastModified
                 }
             } else {
                 setMangaDefaultChapterFlags.await(manga)
                 addTracks.bindEnhancedTrackers(manga, sourceManager.getOrStub(manga.source))
-                MangaUpdate(manga.id) {
-                    favorite = true
-                    dateAdded = Clock.System.now().toEpochMilliseconds()
-                }
+                MangaUpdate(manga.id) { favoriteAt = Clock.System.now().toEpochMilliseconds() }
             }
 
             updateManga.await(update)

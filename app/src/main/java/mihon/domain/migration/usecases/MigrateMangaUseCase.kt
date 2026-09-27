@@ -111,15 +111,13 @@ class MigrateMangaUseCase(
             }
 
             val currentMangaUpdate = MangaUpdate(current.id) {
-                favorite = false
-                dateAdded = 0
+                favoriteAt = null
             }
                 .takeIf { replace }
             val targetMangaUpdate = MangaUpdate(target.id) {
-                favorite = true
+                favoriteAt = current.favoriteAt?.takeIf { replace } ?: Clock.System.now().toEpochMilliseconds()
                 chapterFlags = current.chapterFlags
                 viewerFlags = current.viewerFlags
-                dateAdded = if (replace) current.dateAdded else Clock.System.now().toEpochMilliseconds()
                 if (MigrationFlag.NOTES in flags) notes = current.notes
             }
 

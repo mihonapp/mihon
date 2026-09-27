@@ -6,7 +6,7 @@ SELECT
     mangas.title,
     mangas.thumbnail_url AS thumbnailUrl,
     mangas.source,
-    mangas.favorite,
+    mangas.favorite_at IS NOT NULL AS favorite,
     mangas.cover_last_modified,
     chapters.chapter_number AS chapterNumber,
     history.last_read AS readAt,
