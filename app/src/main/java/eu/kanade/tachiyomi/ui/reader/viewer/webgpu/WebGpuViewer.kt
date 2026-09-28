@@ -1006,6 +1006,7 @@ open class WebGpuViewer(
                     backgroundColor = readerBackgroundColor()
                     homeScale = config.continuousMinWidth / 100f
                     scale = homeScale
+                    cropBorders = this@WebGpuViewer.cropBorders
                     minScale = if (config.zoomOutDisabled) 0f else 0.1f
 
                     (this@WebGpuViewer as? WebGpuViewerContinuous)?.let {
@@ -1076,6 +1077,9 @@ open class WebGpuViewer(
     }
 
     override fun getView(): View = pager
+
+    private val cropBorders: Boolean
+        get() = if (isContinuous) config.imageCropBordersWebtoon else config.imageCropBorders
 
     /**
      * Asks the loader for [page], after whatever it was asked for before; a request replaces
@@ -1421,7 +1425,7 @@ open class WebGpuViewer(
             val hdrHeadroom = gainmap?.headroomStops ?: dec.hdrHeadroom
 
             // Only trim when not animated and not in dual page mode
-            val trimColors = if (!animated && config.imageCropBorders && !isDualPageMode()) {
+            val trimColors = if (!animated && cropBorders && !isDualPageMode()) {
                 listOf(
                     floatArrayOf(1f, 1f, 1f),
                     floatArrayOf(0f, 0f, 0f),
