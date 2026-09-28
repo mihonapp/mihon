@@ -35,10 +35,10 @@ class RestoreRepositoryImpl(
 ) : RestoreRepository {
 
     override suspend fun getMangaUrlsBySourceId(): Map<Long, List<String>> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getAllMangaSourceAndUrl()
             .awaitAsList()
-            .groupBy({ it.source }, { it.url })
+            .groupBy({ it.source_id }, { it.remote_url })
     }
 
     override suspend fun restoreManga(entries: List<RestoredManga>, update: suspend (Manga) -> MangaUpdate) {
@@ -92,7 +92,7 @@ class RestoreRepositoryImpl(
     }
 
     private suspend fun updateManga(manga: Manga): Manga {
-        database.mangasQueries.updateFromBackup(
+        database.mangaQueries.updateFromBackup(
             favoriteAt = manga.favoriteAt,
             artist = manga.artist,
             author = manga.author,
@@ -115,7 +115,7 @@ class RestoreRepositoryImpl(
     }
 
     private suspend fun insertManga(manga: Manga): Long {
-        return database.mangasQueries.insertReturningId(
+        return database.mangaQueries.insertReturningId(
             favoriteAt = manga.favoriteAt,
             source = manga.source,
             url = manga.url,
@@ -183,23 +183,23 @@ class RestoreRepositoryImpl(
             .partition { it.id > 0 }
 
         newChapters.forEach { chapter ->
-            database.chaptersQueries.insert(
-                chapter.mangaId,
-                chapter.url,
-                chapter.name,
-                chapter.scanlator,
-                chapter.read,
-                chapter.bookmark,
-                chapter.lastPageRead,
-                chapter.chapterNumber,
-                chapter.sourceOrder,
-                chapter.dateFetch,
-                chapter.dateUpload,
-                chapter.memo,
+            database.chapterQueries.insert(
+                mangaId = chapter.mangaId,
+                url = chapter.url,
+                name = chapter.name,
+                scanlator = chapter.scanlator,
+                read = chapter.read,
+                bookmark = chapter.bookmark,
+                lastPageRead = chapter.lastPageRead,
+                chapterNumber = chapter.chapterNumber,
+                sourceOrder = chapter.sourceOrder,
+                dateFetch = chapter.dateFetch,
+                dateUpload = chapter.dateUpload,
+                memo = chapter.memo,
             )
         }
         existingChapters.forEach { chapter ->
-            database.chaptersQueries.updateFromBackup(
+            database.chapterQueries.updateFromBackup(
                 read = chapter.read,
                 bookmark = chapter.bookmark,
                 lastPageRead = chapter.lastPageRead,
@@ -223,25 +223,25 @@ class RestoreRepositoryImpl(
                     .awaitAsOneOrNull()
 
                 if (dbHistory == null) {
-                    val chapter = database.chaptersQueries
+                    val chapter = database.chapterQueries
                         .getChapterByUrlAndMangaId(chapterUrl, manga.id)
                         .awaitAsOneOrNull()
                         // Chapter doesn't exist; skip
                         ?: return@mapNotNull null
                     // New history entry
-                    return@mapNotNull Triple(chapter._id, Date(readAt), readDuration)
+                    return@mapNotNull Triple(chapter.id, Date(readAt), readDuration)
                 }
 
                 // Update history entry
                 Triple(
                     dbHistory.chapter_id,
-                    Date(max(readAt, dbHistory.last_read?.time ?: 0L)),
-                    max(readDuration, dbHistory.time_read) - dbHistory.time_read,
+                    Date(max(readAt, dbHistory.read_at?.time ?: 0L)),
+                    max(readDuration, dbHistory.read_duration) - dbHistory.read_duration,
                 )
             }
 
         toUpdate.forEach { (chapterId, readAt, readDuration) ->
-            database.historyQueries.upsert(chapterId, readAt, readDuration)
+            database.historyQueries.upsert(chapterId = chapterId, readAt = readAt, readDuration = readDuration)
         }
     }
 
@@ -269,31 +269,31 @@ class RestoreRepositoryImpl(
         }
 
         existingTracks.forEach { track ->
-            database.manga_syncQueries.update(
-                track.mangaId,
-                track.trackerId,
-                track.remoteId,
-                track.libraryId,
-                track.title,
-                track.lastChapterRead,
-                track.totalChapters,
-                track.status,
-                track.score,
-                track.remoteUrl,
-                track.startDate,
-                track.finishDate,
-                track.private,
-                track.id,
+            database.manga_trackQueries.update(
+                mangaId = track.mangaId,
+                syncId = track.trackerId,
+                mediaId = track.remoteId,
+                libraryId = track.libraryId,
+                title = track.title,
+                lastChapterRead = track.lastChapterRead,
+                totalChapter = track.totalChapters,
+                status = track.status,
+                score = track.score,
+                trackingUrl = track.remoteUrl,
+                startDate = track.startDate,
+                finishDate = track.finishDate,
+                `private` = track.private,
+                id = track.id,
             )
         }
     }
 
     private suspend fun restoreExcludedScanlators(manga: Manga, excludedScanlators: List<String>) {
         if (excludedScanlators.isEmpty()) return
-        val existingExcludedScanlators = database.excluded_scanlatorsQueries
+        val existingExcludedScanlators = database.excluded_scanlatorQueries
             .getExcludedScanlatorsByMangaId(manga.id)
             .awaitAsList()
         val toInsert = excludedScanlators.filter { it !in existingExcludedScanlators }
-        toInsert.forEach { database.excluded_scanlatorsQueries.insert(manga.id, it) }
+        toInsert.forEach { database.excluded_scanlatorQueries.insert(manga.id, it) }
     }
 }

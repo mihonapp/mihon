@@ -8,34 +8,43 @@ SELECT
     coalesce(C.lastRead, 0) AS lastRead,
     coalesce(C.bookmarkCount, 0) AS bookmarkCount,
     coalesce(MC.categories, '0') AS categories
-FROM mangas M
+FROM manga M
 LEFT JOIN (
     SELECT
-        chapters.manga_id,
+        chapter.manga_id,
         count(*) AS total,
-        sum(read) AS readCount,
-        coalesce(max(chapters.date_upload), 0) AS latestUpload,
-        coalesce(max(history.last_read), 0) AS lastRead,
-        coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
-        sum(chapters.bookmark) AS bookmarkCount
-    FROM chapters
-    LEFT JOIN excluded_scanlators
-    ON chapters.manga_id = excluded_scanlators.manga_id
-    AND chapters.scanlator = excluded_scanlators.scanlator
+        sum(user_read) AS readCount,
+        coalesce(max(chapter.remote_date_upload), 0) AS latestUpload,
+        coalesce(max(history.read_at), 0) AS lastRead,
+        coalesce(max(chapter.state_date_fetch), 0) AS fetchedAt,
+        sum(chapter.user_bookmark) AS bookmarkCount
+    FROM chapter
+    LEFT JOIN excluded_scanlator
+    ON chapter.manga_id = excluded_scanlator.manga_id
+    AND chapter.remote_scanlator = excluded_scanlator.scanlator
     LEFT JOIN history
-    ON chapters._id = history.chapter_id
-    WHERE excluded_scanlators.scanlator IS NULL
-    GROUP BY chapters.manga_id
+    ON chapter.id = history.chapter_id
+    WHERE excluded_scanlator.scanlator IS NULL
+    AND chapter.manga_id IN (SELECT id FROM manga WHERE user_favorite_at IS NOT NULL)
+    GROUP BY chapter.manga_id
 ) AS C
-ON M._id = C.manga_id
+ON M.id = C.manga_id
 LEFT JOIN (
     SELECT manga_id, group_concat(category_id) AS categories
-    FROM mangas_categories
+    FROM manga_category
+    WHERE manga_id IN (SELECT id FROM manga WHERE user_favorite_at IS NOT NULL)
     GROUP BY manga_id
 ) AS MC
-ON MC.manga_id = M._id
-WHERE M.favorite_at IS NOT NULL;
+ON MC.manga_id = M.id
+WHERE M.user_favorite_at IS NOT NULL;
 
 library:
-SELECT *
+SELECT
+    id, source_id, remote_url, remote_artist, remote_author,
+    remote_description, remote_genre, remote_title, remote_status, remote_cover,
+    state_chapter_last_update, state_chapter_next_update, state_initialized, user_reader_flags,
+    user_chapter_flags, state_cover_last_modified, remote_update_strategy, state_chapter_fetch_interval,
+    user_notes, remote_memo,
+    user_favorite_at, totalCount, readCount, latestUpload, chapterFetchedAt,
+    lastRead, bookmarkCount, categories
 FROM libraryView;

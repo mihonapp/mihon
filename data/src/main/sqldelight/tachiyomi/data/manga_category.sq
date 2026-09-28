@@ -1,0 +1,19 @@
+CREATE TABLE manga_category(
+    manga_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    UNIQUE(manga_id, category_id),
+    FOREIGN KEY(category_id) REFERENCES category (id)
+    ON DELETE CASCADE,
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX manga_category_category_id_index ON manga_category(category_id);
+
+insert:
+INSERT INTO manga_category(manga_id, category_id)
+VALUES (:mangaId, :categoryId);
+
+deleteMangaCategoryByMangaId:
+DELETE FROM manga_category
+WHERE manga_id = :mangaId;
