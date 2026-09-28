@@ -32,8 +32,9 @@ class GetExtensionsByType(
 
             val available = _available
                 .filter { extension ->
-                    _loaded.none { it.pkgName == extension.pkgName } &&
-                        _notLoaded.none { it.pkgName == extension.pkgName } &&
+                    (_loaded + _notLoaded).none {
+                        it.pkgName == extension.pkgName && extension.store.signingKey in it.signatures
+                    } &&
                         extension.contentWarning in enabledContentWarnings
                 }
                 .flatMap { ext ->
@@ -47,7 +48,10 @@ class GetExtensionsByType(
                             )
                         }
                 }
-                .sortedWith(byName)
+                .sortedWith(
+                    compareBy<Extension.Available, String>(String.CASE_INSENSITIVE_ORDER) { it.name }
+                        .thenBy { it.store.signingKey },
+                )
 
             Extensions(
                 updates = updates,
