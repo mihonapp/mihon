@@ -16,30 +16,14 @@ CREATE INDEX history_manga_id_index ON history(manga_id);
 CREATE INDEX history_read_at_index ON history(read_at);
 
 getHistoryByMangaId:
-SELECT
-H.id,
-H.chapter_id,
-H.read_at,
-H.read_duration
-FROM history H
-WHERE H.manga_id = :mangaId;
-
-getHistoryByChapterUrlAndMangaId:
-SELECT
-H.id,
-H.chapter_id,
-H.read_at,
-H.read_duration
-FROM history H
-JOIN chapter C
-ON H.chapter_id = C.id
-WHERE C.remote_url = :chapterUrl AND C.manga_id = :mangaId
-LIMIT 1;
+SELECT id, chapter_id, read_at, read_duration
+FROM history
+WHERE manga_id = :mangaId;
 
 resetHistoryById:
 UPDATE history
 SET read_at = 0
-WHERE id = :historyId;
+WHERE id = :id;
 
 resetHistoryByMangaId:
 UPDATE history
@@ -55,15 +39,12 @@ WHERE read_at = 0;
 
 upsert:
 INSERT INTO history(manga_id, chapter_id, read_at, read_duration)
-SELECT C.manga_id, :chapterId, :readAt, :readDuration
-FROM chapter C
-WHERE C.id = :chapterId
-ON CONFLICT(chapter_id)
-DO UPDATE
-SET
-    read_at = :readAt,
-    read_duration = read_duration + :readDuration
-WHERE chapter_id = :chapterId;
+SELECT manga_id, id, :readAt, :readDuration
+FROM chapter
+WHERE id = :chapterId
+ON CONFLICT(chapter_id) DO UPDATE SET
+    read_at = excluded.read_at,
+    read_duration = read_duration + excluded.read_duration;
 
 getReadDuration:
 SELECT coalesce(sum(read_duration), 0)

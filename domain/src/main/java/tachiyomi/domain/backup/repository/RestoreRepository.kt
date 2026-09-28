@@ -6,7 +6,7 @@ import tachiyomi.domain.manga.model.MangaUpdate
 
 interface RestoreRepository {
 
-    suspend fun getMangaUrlsBySourceId(): Map<Long, List<String>>
+    suspend fun getMangaUrlsBySourceId(): Map<Long, Set<String>>
 
     /**
      * Restores [entries] all together: either every one of them is restored or none is. [update] is what to change on each

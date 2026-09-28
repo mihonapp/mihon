@@ -25,19 +25,17 @@ CREATE INDEX chapter_unread_state_date_fetch_index ON chapter(state_date_fetch) 
 
 getChapterById:
 SELECT
-    id, manga_id, remote_url, remote_name, remote_scanlator,
-    user_read, user_bookmark, user_last_page_read, remote_chapter_number, remote_order,
-    state_date_fetch, remote_date_upload,
-    remote_memo
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
 FROM chapter
 WHERE id = :id;
 
 getChaptersByMangaId:
 SELECT
-    C.id, C.manga_id, C.remote_url, C.remote_name, C.remote_scanlator,
-    C.user_read, C.user_bookmark, C.user_last_page_read, C.remote_chapter_number, C.remote_order,
-    C.state_date_fetch, C.remote_date_upload,
-    C.remote_memo
+    C.id, C.manga_id, C.remote_url, C.remote_name, C.remote_scanlator, C.remote_chapter_number,
+    C.remote_date_upload, C.remote_order, C.remote_memo, C.user_read, C.user_bookmark,
+    C.user_last_page_read, C.state_date_fetch
 FROM chapter C
 LEFT JOIN excluded_scanlator ES
 ON C.manga_id = ES.manga_id
@@ -49,75 +47,70 @@ AND (
 );
 
 getScanlatorsByMangaId:
-SELECT remote_scanlator
+SELECT DISTINCT remote_scanlator
 FROM chapter
 WHERE manga_id = :mangaId;
 
 getBookmarkedChaptersByMangaId:
 SELECT
-    id, manga_id, remote_url, remote_name, remote_scanlator,
-    user_read, user_bookmark, user_last_page_read, remote_chapter_number, remote_order,
-    state_date_fetch, remote_date_upload,
-    remote_memo
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
 FROM chapter
-WHERE user_bookmark
-AND manga_id = :mangaId;
-
-getChapterByUrl:
-SELECT
-    id, manga_id, remote_url, remote_name, remote_scanlator,
-    user_read, user_bookmark, user_last_page_read, remote_chapter_number, remote_order,
-    state_date_fetch, remote_date_upload,
-    remote_memo
-FROM chapter
-WHERE remote_url = :chapterUrl;
+WHERE manga_id = :mangaId
+AND user_bookmark;
 
 getChapterByUrlAndMangaId:
 SELECT
-    id, manga_id, remote_url, remote_name, remote_scanlator,
-    user_read, user_bookmark, user_last_page_read, remote_chapter_number, remote_order,
-    state_date_fetch, remote_date_upload,
-    remote_memo
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
 FROM chapter
-WHERE remote_url = :chapterUrl
-AND manga_id = :mangaId
-LIMIT 1;
+WHERE manga_id = :mangaId
+AND remote_url = :remoteUrl;
 
 removeChaptersWithIds:
 DELETE FROM chapter
 WHERE id IN :chapterIds;
 
-insert:
-INSERT INTO chapter(manga_id, remote_url, remote_name, remote_scanlator, user_read, user_bookmark, user_last_page_read, remote_chapter_number, remote_order, state_date_fetch, remote_date_upload, remote_memo)
-VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, :memo);
-
 insertReturningId:
-INSERT INTO chapter(manga_id, remote_url, remote_name, remote_scanlator, user_read, user_bookmark, user_last_page_read, remote_chapter_number, remote_order, state_date_fetch, remote_date_upload, remote_memo)
-VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, :memo)
+INSERT INTO chapter(
+    manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
+)
+VALUES (
+    :mangaId, :remoteUrl, :remoteName, :remoteScanlator, :remoteChapterNumber,
+    :remoteDateUpload, :remoteOrder, :remoteMemo, :userRead, :userBookmark,
+    :userLastPageRead, :stateDateFetch
+)
+-- Two syncs of the same entry can race; the chapter the other one already stored is skipped rather
+-- than failing the whole batch
+ON CONFLICT(manga_id, remote_url) DO NOTHING
 RETURNING id;
 
 update:
 UPDATE chapter
-SET user_read = coalesce(:read, user_read),
-    user_bookmark = coalesce(:bookmark, user_bookmark),
-    user_last_page_read = coalesce(:lastPageRead, user_last_page_read),
-    state_date_fetch = coalesce(:dateFetch, state_date_fetch)
-WHERE id = :chapterId;
+SET user_read = coalesce(:userRead, user_read),
+    user_bookmark = coalesce(:userBookmark, user_bookmark),
+    user_last_page_read = coalesce(:userLastPageRead, user_last_page_read),
+    state_date_fetch = coalesce(:stateDateFetch, state_date_fetch)
+WHERE id = :id;
 
 updateFromBackup:
 UPDATE chapter
-SET user_read = coalesce(:read, user_read),
-    user_bookmark = coalesce(:bookmark, user_bookmark),
-    user_last_page_read = coalesce(:lastPageRead, user_last_page_read),
-    remote_memo = coalesce(:memo, remote_memo)
-WHERE id = :chapterId;
+SET user_read = coalesce(:userRead, user_read),
+    user_bookmark = coalesce(:userBookmark, user_bookmark),
+    user_last_page_read = coalesce(:userLastPageRead, user_last_page_read),
+    remote_memo = coalesce(:remoteMemo, remote_memo)
+WHERE id = :id;
 
 updateRemote:
 UPDATE chapter
-SET remote_name = :name,
-    remote_scanlator = coalesce(:scanlator, remote_scanlator),
-    remote_chapter_number = :chapterNumber,
-    remote_order = :sourceOrder,
-    remote_date_upload = coalesce(:dateUpload, remote_date_upload),
-    remote_memo = :memo
-WHERE id = :chapterId;
+SET remote_name = :remoteName,
+    remote_scanlator = coalesce(:remoteScanlator, remote_scanlator),
+    remote_chapter_number = :remoteChapterNumber,
+    remote_order = :remoteOrder,
+    remote_date_upload = coalesce(:remoteDateUpload, remote_date_upload),
+    remote_memo = :remoteMemo
+WHERE id = :id;

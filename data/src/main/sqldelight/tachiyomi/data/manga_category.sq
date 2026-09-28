@@ -12,7 +12,8 @@ CREATE INDEX manga_category_category_id_index ON manga_category(category_id);
 
 insert:
 INSERT INTO manga_category(manga_id, category_id)
-VALUES (:mangaId, :categoryId);
+VALUES (:mangaId, :categoryId)
+ON CONFLICT(manga_id, category_id) DO NOTHING;
 
 deleteMangaCategoryByMangaId:
 DELETE FROM manga_category

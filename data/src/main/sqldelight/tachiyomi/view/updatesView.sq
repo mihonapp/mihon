@@ -25,23 +25,11 @@ WHERE user_favorite_at IS NOT NULL
 AND state_date_fetch > user_favorite_at
 ORDER BY state_date_fetch DESC;
 
-getRecentUpdates:
-SELECT
-    mangaId, mangaTitle, chapterId, chapterName,
-    scanlator, chapterUrl, read, bookmark,
-    lastPageRead, sourceId, favorite, thumbnailUrl,
-    coverLastModified, dateUpload, dateFetch, excludedScanlator
-FROM updatesView
-WHERE dateUpload > :after
-ORDER BY dateFetch DESC
-LIMIT :limit;
-
 getRecentUpdatesWithFilters:
 SELECT
-    mangaId, mangaTitle, chapterId, chapterName,
-    scanlator, chapterUrl, read, bookmark,
-    lastPageRead, sourceId, favorite, thumbnailUrl,
-    coverLastModified, dateUpload, dateFetch, excludedScanlator
+    mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
+    lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
+    excludedScanlator
 FROM updatesView
 WHERE dateUpload > :after
 AND (:read IS NULL OR read = :read)
@@ -52,19 +40,17 @@ AND (
     OR (:started = 0 AND lastPageRead = 0 AND read = 0)
 )
 AND (:bookmarked IS NULL OR bookmark = :bookmarked)
-AND (
-    (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
-)
+AND (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
 AND (
     -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
     :includedEmpty
     OR EXISTS (
         SELECT 1 FROM manga_category
         WHERE manga_category.manga_id = mangaId
-        AND COALESCE(manga_category.category_id, 0) IN :includedCategories
+        AND manga_category.category_id IN :includedCategories
     )
     OR (0 IN :includedCategories AND NOT EXISTS (
-        SELECT 1 FROM manga_category mc WHERE mc.manga_id = mangaId)
+        SELECT 1 FROM manga_category WHERE manga_category.manga_id = mangaId)
     )
 )
 AND (
@@ -74,7 +60,7 @@ AND (
         NOT EXISTS (
             SELECT 1 FROM manga_category
             WHERE manga_category.manga_id = mangaId
-            AND COALESCE(manga_category.category_id, 0) IN :excludedCategories
+            AND manga_category.category_id IN :excludedCategories
         )
         AND (
             0 NOT IN :excludedCategories
@@ -85,14 +71,24 @@ AND (
 ORDER BY dateFetch DESC
 LIMIT :limit;
 
-getUpdatesByReadStatus:
+getReadUpdates:
 SELECT
-    mangaId, mangaTitle, chapterId, chapterName,
-    scanlator, chapterUrl, read, bookmark,
-    lastPageRead, sourceId, favorite, thumbnailUrl,
-    coverLastModified, dateUpload, dateFetch, excludedScanlator
+    mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
+    lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
+    excludedScanlator
 FROM updatesView
-WHERE read = :read
+WHERE read = 1
+AND dateUpload > :after
+ORDER BY dateFetch DESC
+LIMIT :limit;
+
+getUnreadUpdates:
+SELECT
+    mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
+    lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
+    excludedScanlator
+FROM updatesView
+WHERE read = 0
 AND dateUpload > :after
 ORDER BY dateFetch DESC
 LIMIT :limit;

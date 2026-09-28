@@ -31,12 +31,12 @@ class StubSourceRepositoryImpl(
     }
 
     override suspend fun upsertStubSource(id: Long, lang: String, name: String) {
-        database.sourceQueries.upsert(id = id, lang = lang, name = name)
+        database.sourceQueries.upsert(id = id, name = name, language = lang)
     }
 
     private fun mapStubSource(
         id: Long,
-        lang: String,
         name: String,
+        lang: String,
     ): StubSource = StubSource(id = id, lang = lang, name = name)
 }

@@ -46,7 +46,7 @@ class TrackRepositoryImpl(
     override suspend fun delete(mangaId: Long, trackerId: Long) {
         database.manga_trackQueries.delete(
             mangaId = mangaId,
-            syncId = trackerId,
+            trackerId = trackerId,
         )
     }
 
@@ -63,7 +63,7 @@ class TrackRepositoryImpl(
             tracks.forEach { mangaTrack ->
                 database.manga_trackQueries.upsert(
                     mangaId = mangaTrack.mangaId,
-                    syncId = mangaTrack.trackerId,
+                    trackerId = mangaTrack.trackerId,
                     remoteId = mangaTrack.remoteId,
                     libraryId = mangaTrack.libraryId,
                     title = mangaTrack.title,
