@@ -343,6 +343,9 @@
     <string name="ext_filtered">Filtered</string>
     <string name="ext_not_loaded">Not loaded</string>
     <string name="ext_not_loaded_dialog">Couldn\'t load</string>
+    <string name="ext_install_error">Couldn\'t install</string>
+    <string name="ext_install_error_details">Why it failed</string>
+    <string name="ext_not_loaded_details">Why it isn\'t loaded</string>
     <string name="ext_copy_stacktrace">Copy stack trace</string>
     <string name="ext_filtered_message">This extension\'s content warning isn\'t one you chose to load, so its sources aren\'t available.</string>
     <string name="ext_unsigned_message">This extension isn\'t signed, so there\'s no signature to check it against.</string>
@@ -379,7 +382,6 @@
     <string name="downloading_with_progress">Downloading… (%d%%)</string>
 
     <!-- Extension repos -->
-    <string name="action_open_repo">Open source repo</string>
 
     <!-- Extension store -->
     <string name="extensionStores">Extension stores</string>

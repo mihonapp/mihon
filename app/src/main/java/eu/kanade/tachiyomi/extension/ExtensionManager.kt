@@ -68,13 +68,26 @@ class ExtensionManager(
 
     private val iconMap = mutableMapOf<String, Drawable>()
 
+    @Volatile
+    private var stores = emptyList<ExtensionStore>()
+
     private val loadedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.Loaded>())
     val loadedExtensionsFlow = loadedExtensionMapFlow.mapExtensionsWhenInitialized()
 
     // Every store's listing, since more than one store can list the same extension
     private val availableExtensionListFlow = MutableStateFlow(emptyList<Extension.Available>())
+
+    // Stores sharing a signing key serve the same apks, so only the newest of their listings is shown. Stores
+    // with different keys offer different apks, each installable, so each keeps its own.
     val availableExtensionsFlow = availableExtensionListFlow
-        .map { extensions -> extensions.associateBy { it.pkgName }.values.toList() }
+        .map { extensions ->
+            extensions
+                .groupBy { it.pkgName to it.store.signingKey }
+                .values
+                .map { listings ->
+                    listings.maxWith(compareBy<Extension.Available> { it.versionCode }.thenBy { it.libVersion })
+                }
+        }
         .stateIn(scope, SharingStarted.Lazily, emptyList())
 
     private val notLoadedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.NotLoaded>())
@@ -378,23 +391,38 @@ class ExtensionManager(
                 extension.copy(
                     hasUpdate = extension.findUpdate(available) != null,
                     isObsolete = listing == null,
+                    store = if (stores.isEmpty()) extension.store else extension.pickStore(),
                 )
             }
             notLoadedExtensionMapFlow.value = notLoadedExtensionMapFlow.value.mapValues { (_, extension) ->
-                extension.copy(hasUpdate = extension.findUpdate(available) != null)
+                extension.copy(
+                    hasUpdate = extension.findUpdate(available) != null,
+                    store = if (stores.isEmpty()) extension.store else extension.pickStore(),
+                )
             }
         }
         updatePendingUpdatesCount()
     }
 
-    private fun assignStores(stores: List<ExtensionStore>) {
-        fun Extension.Installed.signingStore() = stores.firstOrNull { it.signingKey in signatures }
+    /**
+     * Several stores can share a signing key, so one that lists the extension names where it comes from better
+     * than whichever of them was added first.
+     */
+    private fun Extension.Installed.pickStore(): ExtensionStore? {
+        val signingStores = stores.filter { it.signingKey in signatures }
+        val listedBy = availableExtensionListFlow.value
+            .filter { it.pkgName == pkgName }
+            .mapTo(HashSet()) { it.store.indexUrl }
+        return signingStores.firstOrNull { it.indexUrl in listedBy } ?: signingStores.firstOrNull()
+    }
 
+    private fun assignStores(stores: List<ExtensionStore>) {
+        this.stores = stores
         loadedExtensionMapFlow.update { extensions ->
-            extensions.mapValues { (_, extension) -> extension.copy(store = extension.signingStore()) }
+            extensions.mapValues { (_, extension) -> extension.copy(store = extension.pickStore()) }
         }
         notLoadedExtensionMapFlow.update { extensions ->
-            extensions.mapValues { (_, extension) -> extension.copy(store = extension.signingStore()) }
+            extensions.mapValues { (_, extension) -> extension.copy(store = extension.pickStore()) }
         }
     }
 
