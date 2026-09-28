@@ -60,7 +60,7 @@ class ExtensionInstaller(
         val downloadId = extension.pkgName.hashCode().toLong()
         cancelInstall(extension.pkgName)
 
-        val step = MutableStateFlow(InstallStep.Pending)
+        val step = MutableStateFlow<InstallStep>(InstallStep.Pending)
         activeSteps[downloadId] = step
 
         val job = scope.launch {
@@ -94,7 +94,7 @@ class ExtensionInstaller(
                     // Canceled
                 } else {
                     logcat(LogPriority.ERROR, e)
-                    step.value = InstallStep.Error
+                    step.value = InstallStep.Error.from(e)
                 }
             }
         }
@@ -155,14 +155,11 @@ class ExtensionInstaller(
 
     private fun installApkPrivately(downloadId: Long, tempFile: File, packageInfo: PackageInfo) {
         try {
-            if (ExtensionLoader.installPrivateExtensionFile(context, tempFile, packageInfo)) {
-                updateInstallStep(downloadId, InstallStep.Installed)
-            } else {
-                updateInstallStep(downloadId, InstallStep.Error)
-            }
+            ExtensionLoader.installPrivateExtensionFile(context, tempFile, packageInfo)
+            updateInstallStep(downloadId, InstallStep.Installed)
         } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e) { "Failed to read downloaded extension file." }
-            updateInstallStep(downloadId, InstallStep.Error)
+            logcat(LogPriority.ERROR, e) { "Failed to install extension privately" }
+            updateInstallStep(downloadId, InstallStep.Error.from(e))
         }
 
         tempFile.delete()

@@ -60,44 +60,35 @@ internal object ExtensionLoader {
 
     private fun getPrivateExtensionDir(context: Context) = File(context.filesDir, "exts")
 
-    fun installPrivateExtensionFile(context: Context, file: File, extension: PackageInfo): Boolean {
-        if (!isPackageAnExtension(extension)) return false
+    fun installPrivateExtensionFile(context: Context, file: File, extension: PackageInfo) {
+        check(isPackageAnExtension(extension)) { "${extension.packageName} isn't an extension" }
         val currentExtension = getExtensionPackageInfoFromPkgName(context, extension.packageName)
 
         if (currentExtension != null) {
-            if (PackageInfoCompat.getLongVersionCode(extension) <
-                PackageInfoCompat.getLongVersionCode(currentExtension)
-            ) {
-                logcat(LogPriority.ERROR) { "Installed extension version is higher. Downgrading is not allowed." }
-                return false
-            }
+            check(
+                PackageInfoCompat.getLongVersionCode(extension) >=
+                    PackageInfoCompat.getLongVersionCode(currentExtension),
+            ) { "The installed version is newer, and downgrading isn't allowed" }
 
             val extensionSignatures = getSignatures(extension)
-            if (extensionSignatures.isNullOrEmpty()) {
-                logcat(LogPriority.ERROR) { "Extension to be installed is not signed." }
-                return false
-            }
-
-            if (!extensionSignatures.containsAll(getSignatures(currentExtension)!!)) {
-                logcat(LogPriority.ERROR) { "Installed extension signature is not matched." }
-                return false
+            check(!extensionSignatures.isNullOrEmpty()) { "The extension isn't signed" }
+            check(extensionSignatures.containsAll(getSignatures(currentExtension)!!)) {
+                "It isn't signed with the same key as the installed extension"
             }
         }
 
         val target = File(getPrivateExtensionDir(context), "${extension.packageName}.$PRIVATE_EXTENSION_EXTENSION")
-        return try {
+        try {
             target.delete()
             file.copyAndSetReadOnlyTo(target, overwrite = true)
-            if (currentExtension != null) {
-                ExtensionInstallReceiver.notifyReplaced(context, extension.packageName)
-            } else {
-                ExtensionInstallReceiver.notifyAdded(context, extension.packageName)
-            }
-            true
         } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e) { "Failed to copy extension file." }
             target.delete()
-            false
+            throw e
+        }
+        if (currentExtension != null) {
+            ExtensionInstallReceiver.notifyReplaced(context, extension.packageName)
+        } else {
+            ExtensionInstallReceiver.notifyAdded(context, extension.packageName)
         }
     }
 
