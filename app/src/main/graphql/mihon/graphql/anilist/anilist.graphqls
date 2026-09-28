@@ -1,0 +1,6319 @@
+type Query {
+  Page("The page number" page: Int, "The amount of entries per page, max 50" perPage: Int): Page
+
+  """
+  Media query
+  """
+  Media("Filter by the media id" id: Int, "Filter by the media's MyAnimeList id" idMal: Int, "Filter by the start date of the media" startDate: FuzzyDateInt, "Filter by the end date of the media" endDate: FuzzyDateInt, "Filter by the season the media was released in" season: MediaSeason, "The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument" seasonYear: Int, "Filter by the media's type" type: MediaType, "Filter by the media's format" format: MediaFormat, "Filter by the media's current release status" status: MediaStatus, "Filter by amount of episodes the media has" episodes: Int, "Filter by the media's episode length" duration: Int, "Filter by the media's chapter count" chapters: Int, "Filter by the media's volume count" volumes: Int, "Filter by if the media's intended for 18+ adult audiences" isAdult: Boolean, "Filter by the media's genres" genre: String, "Filter by the media's tags" tag: String, "Only apply the tags filter argument to tags above this rank. Default: 18" minimumTagRank: Int, "Filter by the media's tags with in a tag category" tagCategory: String, "Filter by the media on the authenticated user's lists" onList: Boolean, "Filter media by sites name with a online streaming or reading license" licensedBy: String, "Filter media by sites id with a online streaming or reading license" licensedById: Int, "Filter by the media's average score" averageScore: Int, "Filter by the number of users with this media on their list" popularity: Int, "Filter by the source type of the media" source: MediaSource, "Filter by the media's country of origin" countryOfOrigin: CountryCode, "If the media is officially licensed or a self-published doujin release" isLicensed: Boolean, "Filter by search query" search: String, "Filter by the media id" id_not: Int, "Filter by the media id (max 10,000 items)" id_in: [Int], "Filter by the media id (max 10,000 items)" id_not_in: [Int], "Filter by the media's MyAnimeList id" idMal_not: Int, "Filter by the media's MyAnimeList id (max 10,000 items)" idMal_in: [Int], "Filter by the media's MyAnimeList id (max 10,000 items)" idMal_not_in: [Int], "Filter by the start date of the media" startDate_greater: FuzzyDateInt, "Filter by the start date of the media" startDate_lesser: FuzzyDateInt, "Filter by the start date of the media" startDate_like: String, "Filter by the end date of the media" endDate_greater: FuzzyDateInt, "Filter by the end date of the media" endDate_lesser: FuzzyDateInt, "Filter by the end date of the media" endDate_like: String, "Filter by the media's format (max 10,000 items)" format_in: [MediaFormat], "Filter by the media's format" format_not: MediaFormat, "Filter by the media's format (max 10,000 items)" format_not_in: [MediaFormat], "Filter by the media's current release status (max 10,000 items)" status_in: [MediaStatus], "Filter by the media's current release status" status_not: MediaStatus, "Filter by the media's current release status (max 10,000 items)" status_not_in: [MediaStatus], "Filter by amount of episodes the media has" episodes_greater: Int, "Filter by amount of episodes the media has" episodes_lesser: Int, "Filter by the media's episode length" duration_greater: Int, "Filter by the media's episode length" duration_lesser: Int, "Filter by the media's chapter count" chapters_greater: Int, "Filter by the media's chapter count" chapters_lesser: Int, "Filter by the media's volume count" volumes_greater: Int, "Filter by the media's volume count" volumes_lesser: Int, "Filter by the media's genres (max 10,000 items)" genre_in: [String], "Filter by the media's genres (max 10,000 items)" genre_not_in: [String], "Filter by the media's tags (max 10,000 items)" tag_in: [String], "Filter by the media's tags (max 10,000 items)" tag_not_in: [String], "Filter by the media's tags with in a tag category (max 10,000 items)" tagCategory_in: [String], "Filter by the media's tags with in a tag category (max 10,000 items)" tagCategory_not_in: [String], "Filter media by sites name with a online streaming or reading license (max 10,000 items)" licensedBy_in: [String], "Filter media by sites id with a online streaming or reading license (max 10,000 items)" licensedById_in: [Int], "Filter by the media's average score" averageScore_not: Int, "Filter by the media's average score" averageScore_greater: Int, "Filter by the media's average score" averageScore_lesser: Int, "Filter by the number of users with this media on their list" popularity_not: Int, "Filter by the number of users with this media on their list" popularity_greater: Int, "Filter by the number of users with this media on their list" popularity_lesser: Int, "Filter by the source type of the media (max 10,000 items)" source_in: [MediaSource], "Filter by the media's country of origin (max 10,000 items)" countryOfOrigin_in: [CountryCode], "Filter by the media's country of origin (max 10,000 items)" countryOfOrigin_not_in: [CountryCode], "The order the results will be returned in" sort: [MediaSort]): Media
+
+  """
+  Media Trend query
+  """
+  MediaTrend("Filter by the media id" mediaId: Int, "Filter by date" date: Int, "Filter by trending amount" trending: Int, "Filter by score" averageScore: Int, "Filter by popularity" popularity: Int, "Filter by episode number" episode: Int, "Filter to stats recorded while the media was releasing" releasing: Boolean, "Filter by the media id" mediaId_not: Int, "Filter by the media id (max 10,000 items)" mediaId_in: [Int], "Filter by the media id (max 10,000 items)" mediaId_not_in: [Int], "Filter by date" date_greater: Int, "Filter by date" date_lesser: Int, "Filter by trending amount" trending_greater: Int, "Filter by trending amount" trending_lesser: Int, "Filter by trending amount" trending_not: Int, "Filter by score" averageScore_greater: Int, "Filter by score" averageScore_lesser: Int, "Filter by score" averageScore_not: Int, "Filter by popularity" popularity_greater: Int, "Filter by popularity" popularity_lesser: Int, "Filter by popularity" popularity_not: Int, "Filter by episode number" episode_greater: Int, "Filter by episode number" episode_lesser: Int, "Filter by episode number" episode_not: Int, "The order the results will be returned in" sort: [MediaTrendSort]): MediaTrend
+
+  """
+  Airing schedule query
+  """
+  AiringSchedule("Filter by the id of the airing schedule item" id: Int, "Filter by the id of associated media" mediaId: Int, "Filter by the airing episode number" episode: Int, "Filter by the time of airing" airingAt: Int, "Filter to episodes that haven't yet aired" notYetAired: Boolean, "Filter by the id of the airing schedule item" id_not: Int, "Filter by the id of the airing schedule item (max 10,000 items)" id_in: [Int], "Filter by the id of the airing schedule item (max 10,000 items)" id_not_in: [Int], "Filter by the id of associated media" mediaId_not: Int, "Filter by the id of associated media (max 10,000 items)" mediaId_in: [Int], "Filter by the id of associated media (max 10,000 items)" mediaId_not_in: [Int], "Filter by the airing episode number" episode_not: Int, "Filter by the airing episode number (max 10,000 items)" episode_in: [Int], "Filter by the airing episode number (max 10,000 items)" episode_not_in: [Int], "Filter by the airing episode number" episode_greater: Int, "Filter by the airing episode number" episode_lesser: Int, "Filter by the time of airing" airingAt_greater: Int, "Filter by the time of airing" airingAt_lesser: Int, "The order the results will be returned in" sort: [AiringSort]): AiringSchedule
+
+  """
+  Character query
+  """
+  Character("Filter by character id" id: Int, "Filter by character by if its their birthday today" isBirthday: Boolean, "Filter by search query" search: String, "Filter by character id" id_not: Int, "Filter by character id (max 10,000 items)" id_in: [Int], "Filter by character id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [CharacterSort]): Character
+
+  """
+  Staff query
+  """
+  Staff("Filter by the staff id" id: Int, "Filter by staff by if its their birthday today" isBirthday: Boolean, "Filter by search query" search: String, "Filter by the staff id" id_not: Int, "Filter by the staff id (max 10,000 items)" id_in: [Int], "Filter by the staff id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [StaffSort]): Staff
+
+  """
+  Media list query
+  """
+  MediaList("Filter by a list entry's id" id: Int, "Filter by a user's id" userId: Int, "Filter by a user's name" userName: String, "Filter by the list entries media type" type: MediaType, "Filter by the watching/reading status" status: MediaListStatus, "Filter by the media id of the list entry" mediaId: Int, "Filter list entries to users who are being followed by the authenticated user" isFollowing: Boolean, "Filter by note words and #tags" notes: String, "Filter by the date the user started the media" startedAt: FuzzyDateInt, "Filter by the date the user completed the media" completedAt: FuzzyDateInt, "Limit to only entries also on the auth user's list. Requires user id or name arguments." compareWithAuthList: Boolean, "Filter by a user's id (max 10,000 items)" userId_in: [Int], "Filter by the watching/reading status (max 10,000 items)" status_in: [MediaListStatus], "Filter by the watching/reading status (max 10,000 items)" status_not_in: [MediaListStatus], "Filter by the watching/reading status" status_not: MediaListStatus, "Filter by the media id of the list entry (max 10,000 items)" mediaId_in: [Int], "Filter by the media id of the list entry (max 10,000 items)" mediaId_not_in: [Int], "Filter by note words and #tags" notes_like: String, "Filter by the date the user started the media" startedAt_greater: FuzzyDateInt, "Filter by the date the user started the media" startedAt_lesser: FuzzyDateInt, "Filter by the date the user started the media" startedAt_like: String, "Filter by the date the user completed the media" completedAt_greater: FuzzyDateInt, "Filter by the date the user completed the media" completedAt_lesser: FuzzyDateInt, "Filter by the date the user completed the media" completedAt_like: String, "The order the results will be returned in" sort: [MediaListSort]): MediaList
+
+  """
+  Media list collection query, provides list pre-grouped by status & custom lists. User ID and Media Type arguments required.
+  """
+  MediaListCollection("Filter by a user's id" userId: Int, "Filter by a user's name" userName: String, "Filter by the list entries media type" type: MediaType, "Filter by the watching/reading status" status: MediaListStatus, "Filter by note words and #tags" notes: String, "Filter by the date the user started the media" startedAt: FuzzyDateInt, "Filter by the date the user completed the media" completedAt: FuzzyDateInt, "Always return completed list entries in one group, overriding the user's split completed option." forceSingleCompletedList: Boolean, "Which chunk of list entries to load" chunk: Int, "The amount of entries per chunk, max 500" perChunk: Int, "Filter by the watching/reading status (max 10,000 items)" status_in: [MediaListStatus], "Filter by the watching/reading status (max 10,000 items)" status_not_in: [MediaListStatus], "Filter by the watching/reading status" status_not: MediaListStatus, "Filter by note words and #tags" notes_like: String, "Filter by the date the user started the media" startedAt_greater: FuzzyDateInt, "Filter by the date the user started the media" startedAt_lesser: FuzzyDateInt, "Filter by the date the user started the media" startedAt_like: String, "Filter by the date the user completed the media" completedAt_greater: FuzzyDateInt, "Filter by the date the user completed the media" completedAt_lesser: FuzzyDateInt, "Filter by the date the user completed the media" completedAt_like: String, "The order the results will be returned in" sort: [MediaListSort]): MediaListCollection
+
+  """
+  Collection of all the possible media genres
+  """
+  GenreCollection: [String]
+
+  """
+  Collection of all the possible media tags
+  """
+  MediaTagCollection("Mod Only" status: Int): [MediaTag]
+
+  """
+  User query
+  """
+  User("Filter by the user id" id: Int, "Filter by the name of the user" name: String, "Filter to moderators only if true" isModerator: Boolean, "Filter by search query" search: String, "The order the results will be returned in" sort: [UserSort]): User
+
+  """
+  Get the currently authenticated user
+  """
+  Viewer: User
+
+  """
+  Notification query
+  """
+  Notification("Filter by the type of notifications" type: NotificationType, "Reset the unread notification count to 0 on load" resetNotificationCount: Boolean, "Filter by the type of notifications (max 10,000 items)" type_in: [NotificationType]): NotificationUnion
+
+  """
+  Studio query
+  """
+  Studio("Filter by the studio id" id: Int, "Filter by search query" search: String, "Filter by the studio id" id_not: Int, "Filter by the studio id (max 10,000 items)" id_in: [Int], "Filter by the studio id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [StudioSort]): Studio
+
+  """
+  Review query
+  """
+  Review("Filter by Review id" id: Int, "Filter by media id" mediaId: Int, "Filter by user id" userId: Int, "Filter by media type" mediaType: MediaType, "The order the results will be returned in" sort: [ReviewSort]): Review
+
+  """
+  Activity query
+  """
+  Activity("Filter by the activity id" id: Int, "Filter by the owner user id" userId: Int, "Filter by the id of the user who sent a message" messengerId: Int, "Filter by the associated media id of the activity" mediaId: Int, "Filter by the type of activity" type: ActivityType, "Filter activity to users who are being followed by the authenticated user" isFollowing: Boolean, "Filter activity to only activity with replies" hasReplies: Boolean, "Filter activity to only activity with replies or is of type text" hasRepliesOrTypeText: Boolean, "Filter by the time the activity was created" createdAt: Int, "Filter by the activity id" id_not: Int, "Filter by the activity id (max 10,000 items)" id_in: [Int], "Filter by the activity id (max 10,000 items)" id_not_in: [Int], "Filter by the owner user id" userId_not: Int, "Filter by the owner user id (max 10,000 items)" userId_in: [Int], "Filter by the owner user id (max 10,000 items)" userId_not_in: [Int], "Filter by the id of the user who sent a message" messengerId_not: Int, "Filter by the id of the user who sent a message (max 10,000 items)" messengerId_in: [Int], "Filter by the id of the user who sent a message (max 10,000 items)" messengerId_not_in: [Int], "Filter by the associated media id of the activity" mediaId_not: Int, "Filter by the associated media id of the activity (max 10,000 items)" mediaId_in: [Int], "Filter by the associated media id of the activity (max 10,000 items)" mediaId_not_in: [Int], "Filter by the type of activity" type_not: ActivityType, "Filter by the type of activity (max 10,000 items)" type_in: [ActivityType], "Filter by the type of activity (max 10,000 items)" type_not_in: [ActivityType], "Filter by the time the activity was created" createdAt_greater: Int, "Filter by the time the activity was created" createdAt_lesser: Int, "The order the results will be returned in" sort: [ActivitySort]): ActivityUnion
+
+  """
+  Activity reply query
+  """
+  ActivityReply("Filter by the reply id" id: Int, "Filter by the parent id" activityId: Int): ActivityReply
+
+  """
+  Following query
+  """
+  Following("User id of the follower/followed" userId: Int!, "The order the results will be returned in" sort: [UserSort]): User
+
+  """
+  Follower query
+  """
+  Follower("User id of the follower/followed" userId: Int!, "The order the results will be returned in" sort: [UserSort]): User
+
+  """
+  Thread query
+  """
+  Thread("Filter by the thread id" id: Int, "Filter by the user id of the thread's creator" userId: Int, "Filter by the user id of the last user to comment on the thread" replyUserId: Int, "Filter by if the currently authenticated user's subscribed threads" subscribed: Boolean, "Filter by thread category id" categoryId: Int, "Filter by thread media id category" mediaCategoryId: Int, "Filter by search query" search: String, "Filter by the thread id (max 10,000 items)" id_in: [Int], "The order the results will be returned in" sort: [ThreadSort]): Thread
+
+  """
+  Comment query
+  """
+  ThreadComment("Filter by the comment id" id: Int, "Filter by the thread id" threadId: Int, "Filter by the user id of the comment's creator" userId: Int, "The order the results will be returned in" sort: [ThreadCommentSort]): [ThreadComment]
+
+  """
+  Recommendation query
+  """
+  Recommendation("Filter by recommendation id" id: Int, "Filter by media id" mediaId: Int, "Filter by media recommendation id" mediaRecommendationId: Int, "Filter by user who created the recommendation" userId: Int, "Filter by total rating of the recommendation" rating: Int, "Filter by the media on the authenticated user's lists" onList: Boolean, "Filter by total rating of the recommendation" rating_greater: Int, "Filter by total rating of the recommendation" rating_lesser: Int, "The order the results will be returned in" sort: [RecommendationSort]): Recommendation
+
+  """
+  Like query
+  """
+  Like("The id of the likeable type" likeableId: Int, "The type of model the id applies to" type: LikeableType): User
+
+  """
+  Provide AniList markdown to be converted to html (Requires auth)
+  """
+  Markdown("The markdown to be parsed to html" markdown: String!): ParsedMarkdown
+
+  AniChartUser: AniChartUser
+
+  """
+  Site statistics query
+  """
+  SiteStatistics: SiteStatistics
+
+  """
+  ExternalLinkSource collection query
+  """
+  ExternalLinkSourceCollection("Filter by the link id" id: Int, type: ExternalLinkType, mediaType: ExternalLinkMediaType): [MediaExternalLink]
+}
+
+"""
+The `Int` scalar type represents non-fractional signed whole numeric
+values. Int can represent values between -(2^31) and 2^31 - 1. 
+"""
+scalar Int
+
+"""
+Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter.
+"""
+type Page {
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+
+  users("Filter by the user id" id: Int, "Filter by the name of the user" name: String, "Filter to moderators only if true" isModerator: Boolean, "Filter by search query" search: String, "The order the results will be returned in" sort: [UserSort]): [User]
+
+  media("Filter by the media id" id: Int, "Filter by the media's MyAnimeList id" idMal: Int, "Filter by the start date of the media" startDate: FuzzyDateInt, "Filter by the end date of the media" endDate: FuzzyDateInt, "Filter by the season the media was released in" season: MediaSeason, "The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument" seasonYear: Int, "Filter by the media's type" type: MediaType, "Filter by the media's format" format: MediaFormat, "Filter by the media's current release status" status: MediaStatus, "Filter by amount of episodes the media has" episodes: Int, "Filter by the media's episode length" duration: Int, "Filter by the media's chapter count" chapters: Int, "Filter by the media's volume count" volumes: Int, "Filter by if the media's intended for 18+ adult audiences" isAdult: Boolean, "Filter by the media's genres" genre: String, "Filter by the media's tags" tag: String, "Only apply the tags filter argument to tags above this rank. Default: 18" minimumTagRank: Int, "Filter by the media's tags with in a tag category" tagCategory: String, "Filter by the media on the authenticated user's lists" onList: Boolean, "Filter media by sites name with a online streaming or reading license" licensedBy: String, "Filter media by sites id with a online streaming or reading license" licensedById: Int, "Filter by the media's average score" averageScore: Int, "Filter by the number of users with this media on their list" popularity: Int, "Filter by the source type of the media" source: MediaSource, "Filter by the media's country of origin" countryOfOrigin: CountryCode, "If the media is officially licensed or a self-published doujin release" isLicensed: Boolean, "Filter by search query" search: String, "Filter by the media id" id_not: Int, "Filter by the media id (max 10,000 items)" id_in: [Int], "Filter by the media id (max 10,000 items)" id_not_in: [Int], "Filter by the media's MyAnimeList id" idMal_not: Int, "Filter by the media's MyAnimeList id (max 10,000 items)" idMal_in: [Int], "Filter by the media's MyAnimeList id (max 10,000 items)" idMal_not_in: [Int], "Filter by the start date of the media" startDate_greater: FuzzyDateInt, "Filter by the start date of the media" startDate_lesser: FuzzyDateInt, "Filter by the start date of the media" startDate_like: String, "Filter by the end date of the media" endDate_greater: FuzzyDateInt, "Filter by the end date of the media" endDate_lesser: FuzzyDateInt, "Filter by the end date of the media" endDate_like: String, "Filter by the media's format (max 10,000 items)" format_in: [MediaFormat], "Filter by the media's format" format_not: MediaFormat, "Filter by the media's format (max 10,000 items)" format_not_in: [MediaFormat], "Filter by the media's current release status (max 10,000 items)" status_in: [MediaStatus], "Filter by the media's current release status" status_not: MediaStatus, "Filter by the media's current release status (max 10,000 items)" status_not_in: [MediaStatus], "Filter by amount of episodes the media has" episodes_greater: Int, "Filter by amount of episodes the media has" episodes_lesser: Int, "Filter by the media's episode length" duration_greater: Int, "Filter by the media's episode length" duration_lesser: Int, "Filter by the media's chapter count" chapters_greater: Int, "Filter by the media's chapter count" chapters_lesser: Int, "Filter by the media's volume count" volumes_greater: Int, "Filter by the media's volume count" volumes_lesser: Int, "Filter by the media's genres (max 10,000 items)" genre_in: [String], "Filter by the media's genres (max 10,000 items)" genre_not_in: [String], "Filter by the media's tags (max 10,000 items)" tag_in: [String], "Filter by the media's tags (max 10,000 items)" tag_not_in: [String], "Filter by the media's tags with in a tag category (max 10,000 items)" tagCategory_in: [String], "Filter by the media's tags with in a tag category (max 10,000 items)" tagCategory_not_in: [String], "Filter media by sites name with a online streaming or reading license (max 10,000 items)" licensedBy_in: [String], "Filter media by sites id with a online streaming or reading license (max 10,000 items)" licensedById_in: [Int], "Filter by the media's average score" averageScore_not: Int, "Filter by the media's average score" averageScore_greater: Int, "Filter by the media's average score" averageScore_lesser: Int, "Filter by the number of users with this media on their list" popularity_not: Int, "Filter by the number of users with this media on their list" popularity_greater: Int, "Filter by the number of users with this media on their list" popularity_lesser: Int, "Filter by the source type of the media (max 10,000 items)" source_in: [MediaSource], "Filter by the media's country of origin (max 10,000 items)" countryOfOrigin_in: [CountryCode], "Filter by the media's country of origin (max 10,000 items)" countryOfOrigin_not_in: [CountryCode], "The order the results will be returned in" sort: [MediaSort]): [Media]
+
+  characters("Filter by character id" id: Int, "Filter by character by if its their birthday today" isBirthday: Boolean, "Filter by search query" search: String, "Filter by character id" id_not: Int, "Filter by character id (max 10,000 items)" id_in: [Int], "Filter by character id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [CharacterSort]): [Character]
+
+  staff("Filter by the staff id" id: Int, "Filter by staff by if its their birthday today" isBirthday: Boolean, "Filter by search query" search: String, "Filter by the staff id" id_not: Int, "Filter by the staff id (max 10,000 items)" id_in: [Int], "Filter by the staff id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [StaffSort]): [Staff]
+
+  studios("Filter by the studio id" id: Int, "Filter by search query" search: String, "Filter by the studio id" id_not: Int, "Filter by the studio id (max 10,000 items)" id_in: [Int], "Filter by the studio id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [StudioSort]): [Studio]
+
+  mediaList("Filter by a list entry's id" id: Int, "Filter by a user's id" userId: Int, "Filter by a user's name" userName: String, "Filter by the list entries media type" type: MediaType, "Filter by the watching/reading status" status: MediaListStatus, "Filter by the media id of the list entry" mediaId: Int, "Filter list entries to users who are being followed by the authenticated user" isFollowing: Boolean, "Filter by note words and #tags" notes: String, "Filter by the date the user started the media" startedAt: FuzzyDateInt, "Filter by the date the user completed the media" completedAt: FuzzyDateInt, "Limit to only entries also on the auth user's list. Requires user id or name arguments." compareWithAuthList: Boolean, "Filter by a user's id (max 10,000 items)" userId_in: [Int], "Filter by the watching/reading status (max 10,000 items)" status_in: [MediaListStatus], "Filter by the watching/reading status (max 10,000 items)" status_not_in: [MediaListStatus], "Filter by the watching/reading status" status_not: MediaListStatus, "Filter by the media id of the list entry (max 10,000 items)" mediaId_in: [Int], "Filter by the media id of the list entry (max 10,000 items)" mediaId_not_in: [Int], "Filter by note words and #tags" notes_like: String, "Filter by the date the user started the media" startedAt_greater: FuzzyDateInt, "Filter by the date the user started the media" startedAt_lesser: FuzzyDateInt, "Filter by the date the user started the media" startedAt_like: String, "Filter by the date the user completed the media" completedAt_greater: FuzzyDateInt, "Filter by the date the user completed the media" completedAt_lesser: FuzzyDateInt, "Filter by the date the user completed the media" completedAt_like: String, "The order the results will be returned in" sort: [MediaListSort]): [MediaList]
+
+  airingSchedules("Filter by the id of the airing schedule item" id: Int, "Filter by the id of associated media" mediaId: Int, "Filter by the airing episode number" episode: Int, "Filter by the time of airing" airingAt: Int, "Filter to episodes that haven't yet aired" notYetAired: Boolean, "Filter by the id of the airing schedule item" id_not: Int, "Filter by the id of the airing schedule item (max 10,000 items)" id_in: [Int], "Filter by the id of the airing schedule item (max 10,000 items)" id_not_in: [Int], "Filter by the id of associated media" mediaId_not: Int, "Filter by the id of associated media (max 10,000 items)" mediaId_in: [Int], "Filter by the id of associated media (max 10,000 items)" mediaId_not_in: [Int], "Filter by the airing episode number" episode_not: Int, "Filter by the airing episode number (max 10,000 items)" episode_in: [Int], "Filter by the airing episode number (max 10,000 items)" episode_not_in: [Int], "Filter by the airing episode number" episode_greater: Int, "Filter by the airing episode number" episode_lesser: Int, "Filter by the time of airing" airingAt_greater: Int, "Filter by the time of airing" airingAt_lesser: Int, "The order the results will be returned in" sort: [AiringSort]): [AiringSchedule]
+
+  mediaTrends("Filter by the media id" mediaId: Int, "Filter by date" date: Int, "Filter by trending amount" trending: Int, "Filter by score" averageScore: Int, "Filter by popularity" popularity: Int, "Filter by episode number" episode: Int, "Filter to stats recorded while the media was releasing" releasing: Boolean, "Filter by the media id" mediaId_not: Int, "Filter by the media id (max 10,000 items)" mediaId_in: [Int], "Filter by the media id (max 10,000 items)" mediaId_not_in: [Int], "Filter by date" date_greater: Int, "Filter by date" date_lesser: Int, "Filter by trending amount" trending_greater: Int, "Filter by trending amount" trending_lesser: Int, "Filter by trending amount" trending_not: Int, "Filter by score" averageScore_greater: Int, "Filter by score" averageScore_lesser: Int, "Filter by score" averageScore_not: Int, "Filter by popularity" popularity_greater: Int, "Filter by popularity" popularity_lesser: Int, "Filter by popularity" popularity_not: Int, "Filter by episode number" episode_greater: Int, "Filter by episode number" episode_lesser: Int, "Filter by episode number" episode_not: Int, "The order the results will be returned in" sort: [MediaTrendSort]): [MediaTrend]
+
+  notifications("Filter by the type of notifications" type: NotificationType, "Reset the unread notification count to 0 on load" resetNotificationCount: Boolean, "Filter by the type of notifications (max 10,000 items)" type_in: [NotificationType]): [NotificationUnion]
+
+  followers("User id of the follower/followed" userId: Int!, "The order the results will be returned in" sort: [UserSort]): [User]
+
+  following("User id of the follower/followed" userId: Int!, "The order the results will be returned in" sort: [UserSort]): [User]
+
+  activities("Filter by the activity id" id: Int, "Filter by the owner user id" userId: Int, "Filter by the id of the user who sent a message" messengerId: Int, "Filter by the associated media id of the activity" mediaId: Int, "Filter by the type of activity" type: ActivityType, "Filter activity to users who are being followed by the authenticated user" isFollowing: Boolean, "Filter activity to only activity with replies" hasReplies: Boolean, "Filter activity to only activity with replies or is of type text" hasRepliesOrTypeText: Boolean, "Filter by the time the activity was created" createdAt: Int, "Filter by the activity id" id_not: Int, "Filter by the activity id (max 10,000 items)" id_in: [Int], "Filter by the activity id (max 10,000 items)" id_not_in: [Int], "Filter by the owner user id" userId_not: Int, "Filter by the owner user id (max 10,000 items)" userId_in: [Int], "Filter by the owner user id (max 10,000 items)" userId_not_in: [Int], "Filter by the id of the user who sent a message" messengerId_not: Int, "Filter by the id of the user who sent a message (max 10,000 items)" messengerId_in: [Int], "Filter by the id of the user who sent a message (max 10,000 items)" messengerId_not_in: [Int], "Filter by the associated media id of the activity" mediaId_not: Int, "Filter by the associated media id of the activity (max 10,000 items)" mediaId_in: [Int], "Filter by the associated media id of the activity (max 10,000 items)" mediaId_not_in: [Int], "Filter by the type of activity" type_not: ActivityType, "Filter by the type of activity (max 10,000 items)" type_in: [ActivityType], "Filter by the type of activity (max 10,000 items)" type_not_in: [ActivityType], "Filter by the time the activity was created" createdAt_greater: Int, "Filter by the time the activity was created" createdAt_lesser: Int, "The order the results will be returned in" sort: [ActivitySort]): [ActivityUnion]
+
+  activityReplies("Filter by the reply id" id: Int, "Filter by the parent id" activityId: Int): [ActivityReply]
+
+  threads("Filter by the thread id" id: Int, "Filter by the user id of the thread's creator" userId: Int, "Filter by the user id of the last user to comment on the thread" replyUserId: Int, "Filter by if the currently authenticated user's subscribed threads" subscribed: Boolean, "Filter by thread category id" categoryId: Int, "Filter by thread media id category" mediaCategoryId: Int, "Filter by search query" search: String, "Filter by the thread id (max 10,000 items)" id_in: [Int], "The order the results will be returned in" sort: [ThreadSort]): [Thread]
+
+  threadComments("Filter by the comment id" id: Int, "Filter by the thread id" threadId: Int, "Filter by the user id of the comment's creator" userId: Int, "The order the results will be returned in" sort: [ThreadCommentSort]): [ThreadComment]
+
+  reviews("Filter by Review id" id: Int, "Filter by media id" mediaId: Int, "Filter by user id" userId: Int, "Filter by media type" mediaType: MediaType, "The order the results will be returned in" sort: [ReviewSort]): [Review]
+
+  recommendations("Filter by recommendation id" id: Int, "Filter by media id" mediaId: Int, "Filter by media recommendation id" mediaRecommendationId: Int, "Filter by user who created the recommendation" userId: Int, "Filter by total rating of the recommendation" rating: Int, "Filter by the media on the authenticated user's lists" onList: Boolean, "Filter by total rating of the recommendation" rating_greater: Int, "Filter by total rating of the recommendation" rating_lesser: Int, "The order the results will be returned in" sort: [RecommendationSort]): [Recommendation]
+
+  likes("The id of the likeable type" likeableId: Int, "The type of model the id applies to" type: LikeableType): [User]
+}
+
+type PageInfo {
+  """
+  The total number of items. Note: This value is not guaranteed to be accurate, do not rely on this for logic
+  """
+  total: Int
+
+  """
+  The count on a page
+  """
+  perPage: Int
+
+  """
+  The current page
+  """
+  currentPage: Int
+
+  """
+  The last page
+  """
+  lastPage: Int
+
+  """
+  If there is another page
+  """
+  hasNextPage: Boolean
+}
+
+"""
+The `Boolean` scalar type represents `true` or `false`.
+"""
+scalar Boolean
+
+"""
+The `String` scalar type represents textual data, represented as UTF-8
+character sequences. The String type is most often used by GraphQL to
+represent free-form human-readable text.
+"""
+scalar String
+
+"""
+User sort enums
+"""
+enum UserSort {
+  ID
+
+  ID_DESC
+
+  USERNAME
+
+  USERNAME_DESC
+
+  WATCHED_TIME
+
+  WATCHED_TIME_DESC
+
+  CHAPTERS_READ
+
+  CHAPTERS_READ_DESC
+
+  SEARCH_MATCH
+}
+
+"""
+A user
+"""
+type User {
+  """
+  The id of the user
+  """
+  id: Int!
+
+  """
+  The name of the user
+  """
+  name: String!
+
+  """
+  The bio written by user (Markdown)
+  """
+  about("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The user's avatar images
+  """
+  avatar: UserAvatar
+
+  """
+  The user's banner images
+  """
+  bannerImage: String
+
+  """
+  If the authenticated user if following this user
+  """
+  isFollowing: Boolean
+
+  """
+  If this user if following the authenticated user
+  """
+  isFollower: Boolean
+
+  """
+  If the user is blocked by the authenticated user
+  """
+  isBlocked: Boolean
+
+  """
+  List of active bans. Mod-only
+  """
+  bans: Json
+
+  """
+  The user's general options
+  """
+  options: UserOptions
+
+  """
+  The user's media list options
+  """
+  mediaListOptions: MediaListOptions
+
+  """
+  The users favourites
+  """
+  favourites("Deprecated. Use page arguments on each favourite field instead." page: Int): Favourites
+
+  """
+  The users anime & manga list statistics
+  """
+  statistics: UserStatisticTypes
+
+  """
+  The number of unread notifications the user has
+  """
+  unreadNotificationCount: Int
+
+  """
+  The url for the user page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  The donation tier of the user
+  """
+  donatorTier: Int
+
+  """
+  Custom donation badge text
+  """
+  donatorBadge: String
+
+  """
+  The user's moderator roles if they are a site moderator
+  """
+  moderatorRoles: [ModRole]
+
+  """
+  When the user's account was created. (Does not exist for accounts created before 2020)
+  """
+  createdAt: Int
+
+  """
+  When the user's data was last updated
+  """
+  updatedAt: Int
+
+  """
+  The user's statistics
+  """
+  stats: UserStats @deprecated(reason: "Deprecated. Replaced with statistics field.")
+
+  """
+  If the user is a moderator or data moderator
+  """
+  moderatorStatus: String @deprecated(reason: "Deprecated. Replaced with moderatorRoles field.")
+
+  """
+  The user's previously used names.
+  """
+  previousNames: [UserPreviousName]
+}
+
+"""
+A user's avatars
+"""
+type UserAvatar {
+  """
+  The avatar of user at its largest size
+  """
+  large: String
+
+  """
+  The avatar of user at medium size
+  """
+  medium: String
+}
+
+""""""
+scalar Json
+
+"""
+A user's general options
+"""
+type UserOptions {
+  """
+  The language the user wants to see media titles in
+  """
+  titleLanguage: UserTitleLanguage
+
+  """
+  Whether the user has enabled viewing of 18+ content
+  """
+  displayAdultContent: Boolean
+
+  """
+  Whether the user receives notifications when a show they are watching aires
+  """
+  airingNotifications: Boolean
+
+  """
+  Profile highlight color (blue, purple, pink, orange, red, green, gray)
+  """
+  profileColor: String
+
+  """
+  Notification options
+  """
+  notificationOptions: [NotificationOption]
+
+  """
+  The user's timezone offset (Auth user only)
+  """
+  timezone: String
+
+  """
+  Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always.
+  """
+  activityMergeTime: Int
+
+  """
+  The language the user wants to see staff and character names in
+  """
+  staffNameLanguage: UserStaffNameLanguage
+
+  """
+  Whether the user only allow messages from users they follow
+  """
+  restrictMessagesToFollowing: Boolean
+
+  """
+  The list activity types the user has disabled from being created from list updates
+  """
+  disabledListActivity: [ListActivityOption]
+}
+
+"""
+The language the user wants to see media titles in
+"""
+enum UserTitleLanguage {
+  """
+  The romanization of the native language title
+  """
+  ROMAJI
+
+  """
+  The official english title
+  """
+  ENGLISH
+
+  """
+  Official title in it's native language
+  """
+  NATIVE
+
+  """
+  The romanization of the native language title, stylised by media creator
+  """
+  ROMAJI_STYLISED
+
+  """
+  The official english title, stylised by media creator
+  """
+  ENGLISH_STYLISED
+
+  """
+  Official title in it's native language, stylised by media creator
+  """
+  NATIVE_STYLISED
+}
+
+"""
+Notification option
+"""
+type NotificationOption {
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  Whether this type of notification is enabled
+  """
+  enabled: Boolean
+}
+
+"""
+Notification type enum
+"""
+enum NotificationType {
+  """
+  A user has sent you message
+  """
+  ACTIVITY_MESSAGE
+
+  """
+  A user has replied to your activity
+  """
+  ACTIVITY_REPLY
+
+  """
+  A user has followed you
+  """
+  FOLLOWING
+
+  """
+  A user has mentioned you in their activity
+  """
+  ACTIVITY_MENTION
+
+  """
+  A user has mentioned you in a forum comment
+  """
+  THREAD_COMMENT_MENTION
+
+  """
+  A user has commented in one of your subscribed forum threads
+  """
+  THREAD_SUBSCRIBED
+
+  """
+  A user has replied to your forum comment
+  """
+  THREAD_COMMENT_REPLY
+
+  """
+  An anime you are currently watching has aired
+  """
+  AIRING
+
+  """
+  A user has liked your activity
+  """
+  ACTIVITY_LIKE
+
+  """
+  A user has liked your activity reply
+  """
+  ACTIVITY_REPLY_LIKE
+
+  """
+  A user has liked your forum thread
+  """
+  THREAD_LIKE
+
+  """
+  A user has liked your forum comment
+  """
+  THREAD_COMMENT_LIKE
+
+  """
+  A user has replied to activity you have also replied to
+  """
+  ACTIVITY_REPLY_SUBSCRIBED
+
+  """
+  A new anime or manga has been added to the site where its related media is on the user's list
+  """
+  RELATED_MEDIA_ADDITION
+
+  """
+  An anime or manga has had a data change that affects how a user may track it in their lists
+  """
+  MEDIA_DATA_CHANGE
+
+  """
+  Anime or manga entries on the user's list have been merged into a single entry
+  """
+  MEDIA_MERGE
+
+  """
+  An anime or manga on the user's list has been deleted from the site
+  """
+  MEDIA_DELETION
+
+  """
+  A user's submission has been accepted, partially accepted, or rejected
+  """
+  MEDIA_SUBMISSION_UPDATE
+
+  """
+  A user's staff submission has been accepted, partially accepted, or rejected
+  """
+  STAFF_SUBMISSION_UPDATE
+
+  """
+  A user's character submission has been accepted, partially accepted, or rejected
+  """
+  CHARACTER_SUBMISSION_UPDATE
+}
+
+"""
+The language the user wants to see staff and character names in
+"""
+enum UserStaffNameLanguage {
+  """
+  The romanization of the staff or character's native name, with western name ordering
+  """
+  ROMAJI_WESTERN
+
+  """
+  The romanization of the staff or character's native name
+  """
+  ROMAJI
+
+  """
+  The staff or character's name in their native language
+  """
+  NATIVE
+}
+
+type ListActivityOption {
+  disabled: Boolean
+
+  type: MediaListStatus
+}
+
+"""
+Media list watching/reading status enum.
+"""
+enum MediaListStatus {
+  """
+  Currently watching/reading
+  """
+  CURRENT
+
+  """
+  Planning to watch/read
+  """
+  PLANNING
+
+  """
+  Finished watching/reading
+  """
+  COMPLETED
+
+  """
+  Stopped watching/reading before completing
+  """
+  DROPPED
+
+  """
+  Paused watching/reading
+  """
+  PAUSED
+
+  """
+  Re-watching/reading
+  """
+  REPEATING
+}
+
+"""
+A user's list options
+"""
+type MediaListOptions {
+  """
+  The score format the user is using for media lists
+  """
+  scoreFormat: ScoreFormat
+
+  """
+  The default order list rows should be displayed in
+  """
+  rowOrder: String
+
+  useLegacyLists: Boolean @deprecated(reason: "No longer used")
+
+  """
+  The user's anime list options
+  """
+  animeList: MediaListTypeOptions
+
+  """
+  The user's manga list options
+  """
+  mangaList: MediaListTypeOptions
+
+  """
+  The list theme options for both lists
+  """
+  sharedTheme: Json @deprecated(reason: "No longer used")
+
+  """
+  If the shared theme should be used instead of the individual list themes
+  """
+  sharedThemeEnabled: Boolean @deprecated(reason: "No longer used")
+}
+
+"""
+Media list scoring type
+"""
+enum ScoreFormat {
+  """
+  An integer from 0-100
+  """
+  POINT_100
+
+  """
+  A float from 0-10 with 1 decimal place
+  """
+  POINT_10_DECIMAL
+
+  """
+  An integer from 0-10
+  """
+  POINT_10
+
+  """
+  An integer from 0-5. Should be represented in Stars
+  """
+  POINT_5
+
+  """
+  An integer from 0-3. Should be represented in Smileys. 0 => No Score, 1 => :(, 2 => :|, 3 => :)
+  """
+  POINT_3
+}
+
+"""
+A user's list options for anime or manga lists
+"""
+type MediaListTypeOptions {
+  """
+  The order each list should be displayed in
+  """
+  sectionOrder: [String]
+
+  """
+  If the completed sections of the list should be separated by format
+  """
+  splitCompletedSectionByFormat: Boolean
+
+  """
+  The list theme options
+  """
+  theme: Json @deprecated(reason: "This field has not yet been fully implemented and may change without warning")
+
+  """
+  The names of the user's custom lists
+  """
+  customLists: [String]
+
+  """
+  The names of the user's advanced scoring sections
+  """
+  advancedScoring: [String]
+
+  """
+  If advanced scoring is enabled
+  """
+  advancedScoringEnabled: Boolean
+}
+
+"""
+User's favourite anime, manga, characters, staff & studios
+"""
+type Favourites {
+  """
+  Favourite anime
+  """
+  anime("The page number" page: Int, "The amount of entries per page, max 25" perPage: Int): MediaConnection
+
+  """
+  Favourite manga
+  """
+  manga("The page number" page: Int, "The amount of entries per page, max 25" perPage: Int): MediaConnection
+
+  """
+  Favourite characters
+  """
+  characters("The page number" page: Int, "The amount of entries per page, max 25" perPage: Int): CharacterConnection
+
+  """
+  Favourite staff
+  """
+  staff("The page number" page: Int, "The amount of entries per page, max 25" perPage: Int): StaffConnection
+
+  """
+  Favourite studios
+  """
+  studios("The page number" page: Int, "The amount of entries per page, max 25" perPage: Int): StudioConnection
+}
+
+type MediaConnection {
+  edges: [MediaEdge]
+
+  nodes: [Media]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+Media connection edge
+"""
+type MediaEdge {
+  node: Media
+
+  """
+  The id of the connection
+  """
+  id: Int
+
+  """
+  The type of relation to the parent model
+  """
+  relationType("Provide 3 to use new version 3 of relation enum" version: Int): MediaRelation
+
+  """
+  If the studio is the main animation studio of the media (For Studio->MediaConnection field only)
+  """
+  isMainStudio: Boolean!
+
+  """
+  The characters in the media voiced by the parent actor
+  """
+  characters: [Character]
+
+  """
+  The characters role in the media
+  """
+  characterRole: CharacterRole
+
+  """
+  Media specific character name
+  """
+  characterName: String
+
+  """
+  Notes regarding the VA's role for the character
+  """
+  roleNotes: String
+
+  """
+  Used for grouping roles where multiple dubs exist for the same language. Either dubbing company name or language variant.
+  """
+  dubGroup: String
+
+  """
+  The role of the staff member in the production of the media
+  """
+  staffRole: String
+
+  """
+  The voice actors of the character
+  """
+  voiceActors(language: StaffLanguage, sort: [StaffSort]): [Staff]
+
+  """
+  The voice actors of the character with role date
+  """
+  voiceActorRoles(language: StaffLanguage, sort: [StaffSort]): [StaffRoleType]
+
+  """
+  The order the media should be displayed from the users favourites
+  """
+  favouriteOrder: Int
+}
+
+"""
+Anime or Manga
+"""
+type Media {
+  """
+  The id of the media
+  """
+  id: Int!
+
+  """
+  The mal id of the media
+  """
+  idMal: Int
+
+  """
+  The official titles of the media in various languages
+  """
+  title: MediaTitle
+
+  """
+  The type of the media; anime or manga
+  """
+  type: MediaType
+
+  """
+  The format the media was released in
+  """
+  format: MediaFormat
+
+  """
+  The current releasing status of the media
+  """
+  status("Provide 2 to use new version 2 of sources enum" version: Int): MediaStatus
+
+  """
+  Short description of the media's story and characters
+  """
+  description("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The first official release date of the media
+  """
+  startDate: FuzzyDate
+
+  """
+  The last official release date of the media
+  """
+  endDate: FuzzyDate
+
+  """
+  The season the media was initially released in
+  """
+  season: MediaSeason
+
+  """
+  The season year the media was initially released in
+  """
+  seasonYear: Int
+
+  """
+  The year & season the media was initially released in
+  """
+  seasonInt: Int @deprecated(reason: "")
+
+  """
+  The amount of episodes the anime has when complete
+  """
+  episodes: Int
+
+  """
+  The general length of each anime episode in minutes
+  """
+  duration: Int
+
+  """
+  The amount of chapters the manga has when complete
+  """
+  chapters: Int
+
+  """
+  The amount of volumes the manga has when complete
+  """
+  volumes: Int
+
+  """
+  Where the media was created. (ISO 3166-1 alpha-2)
+  """
+  countryOfOrigin: CountryCode
+
+  """
+  If the media is officially licensed or a self-published doujin release
+  """
+  isLicensed: Boolean
+
+  """
+  Source type the media was adapted from.
+  """
+  source("Provide 2 or 3 to use new version 2 or 3 of sources enum" version: Int): MediaSource
+
+  """
+  Official Twitter hashtags for the media
+  """
+  hashtag: String
+
+  """
+  Media trailer or advertisement
+  """
+  trailer: MediaTrailer
+
+  """
+  When the media's data was last updated
+  """
+  updatedAt: Int
+
+  """
+  The cover images of the media
+  """
+  coverImage: MediaCoverImage
+
+  """
+  The banner image of the media
+  """
+  bannerImage: String
+
+  """
+  The genres of the media
+  """
+  genres: [String]
+
+  """
+  Alternative titles of the media
+  """
+  synonyms: [String]
+
+  """
+  A weighted average score of all the user's scores of the media
+  """
+  averageScore: Int
+
+  """
+  Mean score of all the user's scores of the media
+  """
+  meanScore: Int
+
+  """
+  The number of users with the media on their list
+  """
+  popularity: Int
+
+  """
+  Locked media may not be added to lists our favorited. This may be due to the entry pending for deletion or other reasons.
+  """
+  isLocked: Boolean
+
+  """
+  The amount of related activity in the past hour
+  """
+  trending: Int
+
+  """
+  The amount of user's who have favourited the media
+  """
+  favourites: Int
+
+  """
+  List of tags that describes elements and themes of the media
+  """
+  tags: [MediaTag]
+
+  """
+  Other media in the same or connecting franchise
+  """
+  relations: MediaConnection
+
+  """
+  The characters in the media
+  """
+  characters(sort: [CharacterSort], role: CharacterRole, "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): CharacterConnection
+
+  """
+  The staff who produced the media
+  """
+  staff(sort: [StaffSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): StaffConnection
+
+  """
+  The companies who produced the media
+  """
+  studios(sort: [StudioSort], isMain: Boolean): StudioConnection
+
+  """
+  If the media is marked as favourite by the current authenticated user
+  """
+  isFavourite: Boolean!
+
+  """
+  If the media is blocked from being added to favourites
+  """
+  isFavouriteBlocked: Boolean!
+
+  """
+  If the media is intended only for 18+ adult audiences
+  """
+  isAdult: Boolean
+
+  """
+  The media's next episode airing schedule
+  """
+  nextAiringEpisode: AiringSchedule
+
+  """
+  The media's entire airing schedule
+  """
+  airingSchedule("Filter to episodes that have not yet aired" notYetAired: Boolean, "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): AiringScheduleConnection
+
+  """
+  The media's daily trend stats
+  """
+  trends(sort: [MediaTrendSort], "Filter to stats recorded while the media was releasing" releasing: Boolean, "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): MediaTrendConnection
+
+  """
+  External links to another site related to the media
+  """
+  externalLinks: [MediaExternalLink]
+
+  """
+  Data and links to legal streaming episodes on external sites
+  """
+  streamingEpisodes: [MediaStreamingEpisode]
+
+  """
+  The ranking of the media in a particular time span and format compared to other media
+  """
+  rankings: [MediaRank]
+
+  """
+  The authenticated user's media list entry for the media
+  """
+  mediaListEntry: MediaList
+
+  """
+  User reviews of the media
+  """
+  reviews(limit: Int, sort: [ReviewSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): ReviewConnection
+
+  """
+  User recommendations for similar media
+  """
+  recommendations(sort: [RecommendationSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): RecommendationConnection
+
+  stats: MediaStats
+
+  """
+  The url for the media page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  If the media should have forum thread automatically created for it on airing episode release
+  """
+  autoCreateForumThread: Boolean
+
+  """
+  If the media is blocked from being recommended to/from
+  """
+  isRecommendationBlocked: Boolean
+
+  """
+  If the media is blocked from being reviewed
+  """
+  isReviewBlocked: Boolean
+
+  """
+  Notes for site moderators
+  """
+  modNotes: String
+}
+
+"""
+The official titles of the media in various languages
+"""
+type MediaTitle {
+  """
+  The romanization of the native language title
+  """
+  romaji(stylised: Boolean): String
+
+  """
+  The official english title
+  """
+  english(stylised: Boolean): String
+
+  """
+  Official title in it's native language
+  """
+  native(stylised: Boolean): String
+
+  """
+  The currently authenticated users preferred title language. Default romaji for non-authenticated
+  """
+  userPreferred: String
+}
+
+"""
+Media type enum, anime or manga.
+"""
+enum MediaType {
+  """
+  Japanese Anime
+  """
+  ANIME
+
+  """
+  Asian comic
+  """
+  MANGA
+}
+
+"""
+The format the media was released in
+"""
+enum MediaFormat {
+  """
+  Anime broadcast on television
+  """
+  TV
+
+  """
+  Anime which are under 15 minutes in length and broadcast on television
+  """
+  TV_SHORT
+
+  """
+  Anime movies with a theatrical release
+  """
+  MOVIE
+
+  """
+  Special episodes that have been included in DVD/Blu-ray releases, picture dramas, pilots, etc
+  """
+  SPECIAL
+
+  """
+  (Original Video Animation) Anime that have been released directly on DVD/Blu-ray without originally going through a theatrical release or television broadcast
+  """
+  OVA
+
+  """
+  (Original Net Animation) Anime that have been originally released online or are only available through streaming services.
+  """
+  ONA
+
+  """
+  Short anime released as a music video
+  """
+  MUSIC
+
+  """
+  Professionally published manga with more than one chapter
+  """
+  MANGA
+
+  """
+  Written books released as a series of light novels
+  """
+  NOVEL
+
+  """
+  Manga with just one chapter
+  """
+  ONE_SHOT
+}
+
+"""
+The current releasing status of the media
+"""
+enum MediaStatus {
+  """
+  Has completed and is no longer being released
+  """
+  FINISHED
+
+  """
+  Currently releasing
+  """
+  RELEASING
+
+  """
+  To be released at a later date
+  """
+  NOT_YET_RELEASED
+
+  """
+  Ended before the work could be finished
+  """
+  CANCELLED
+
+  """
+  Version 2 only. Is currently paused from releasing and will resume at a later date
+  """
+  HIATUS
+}
+
+"""
+Date object that allows for incomplete date values (fuzzy)
+"""
+type FuzzyDate {
+  """
+  Numeric Year (2017)
+  """
+  year: Int
+
+  """
+  Numeric Month (3)
+  """
+  month: Int
+
+  """
+  Numeric Day (24)
+  """
+  day: Int
+}
+
+enum MediaSeason {
+  """
+  Predominantly started airing between January and March
+  """
+  WINTER
+
+  """
+  Predominantly started airing between April and June
+  """
+  SPRING
+
+  """
+  Predominantly started airing between July and September
+  """
+  SUMMER
+
+  """
+  Predominantly started airing between October and November
+  """
+  FALL
+}
+
+"""
+ISO 3166-1 alpha-2 country code
+"""
+scalar CountryCode
+
+"""
+Source type the media was adapted from
+"""
+enum MediaSource {
+  """
+  An original production not based of another work
+  """
+  ORIGINAL
+
+  """
+  Asian comic book
+  """
+  MANGA
+
+  """
+  Written work published in volumes
+  """
+  LIGHT_NOVEL
+
+  """
+  Video game driven primary by text and narrative
+  """
+  VISUAL_NOVEL
+
+  """
+  Video game
+  """
+  VIDEO_GAME
+
+  """
+  Other
+  """
+  OTHER
+
+  """
+  Version 2+ only. Written works not published in volumes
+  """
+  NOVEL
+
+  """
+  Version 2+ only. Self-published works
+  """
+  DOUJINSHI
+
+  """
+  Version 2+ only. Japanese Anime
+  """
+  ANIME
+
+  """
+  Version 3 only. Written works published online
+  """
+  WEB_NOVEL
+
+  """
+  Version 3 only. Live action media such as movies or TV show
+  """
+  LIVE_ACTION
+
+  """
+  Version 3 only. Games excluding video games
+  """
+  GAME
+
+  """
+  Version 3 only. Comics excluding manga
+  """
+  COMIC
+
+  """
+  Version 3 only. Multimedia project
+  """
+  MULTIMEDIA_PROJECT
+
+  """
+  Version 3 only. Picture book
+  """
+  PICTURE_BOOK
+}
+
+"""
+Media trailer or advertisement
+"""
+type MediaTrailer {
+  """
+  The trailer video id
+  """
+  id: String
+
+  """
+  The site the video is hosted by (Currently either youtube or dailymotion)
+  """
+  site: String
+
+  """
+  The url for the thumbnail image of the video
+  """
+  thumbnail: String
+}
+
+type MediaCoverImage {
+  """
+  The cover image url of the media at its largest size. If this size isn't available, large will be provided instead.
+  """
+  extraLarge: String
+
+  """
+  The cover image url of the media at a large size
+  """
+  large: String
+
+  """
+  The cover image url of the media at medium size
+  """
+  medium: String
+
+  """
+  Average #hex color of cover image
+  """
+  color: String
+}
+
+"""
+A tag that describes a theme or element of the media
+"""
+type MediaTag {
+  """
+  The id of the tag
+  """
+  id: Int!
+
+  """
+  The name of the tag
+  """
+  name: String!
+
+  """
+  A general description of the tag
+  """
+  description: String
+
+  """
+  The categories of tags this tag belongs to
+  """
+  category: String
+
+  """
+  The relevance ranking of the tag out of the 100 for this media
+  """
+  rank: Int
+
+  """
+  If the tag could be a spoiler for any media
+  """
+  isGeneralSpoiler: Boolean
+
+  """
+  If the tag is a spoiler for this media
+  """
+  isMediaSpoiler: Boolean
+
+  """
+  If the tag is only for adult 18+ media
+  """
+  isAdult: Boolean
+
+  """
+  The user who submitted the tag
+  """
+  userId: Int
+}
+
+"""
+Character sort enums
+"""
+enum CharacterSort {
+  ID
+
+  ID_DESC
+
+  ROLE
+
+  ROLE_DESC
+
+  SEARCH_MATCH
+
+  FAVOURITES
+
+  FAVOURITES_DESC
+
+  """
+  Order manually decided by moderators
+  """
+  RELEVANCE
+}
+
+"""
+The role the character plays in the media
+"""
+enum CharacterRole {
+  """
+  A primary character role in the media
+  """
+  MAIN
+
+  """
+  A supporting character role in the media
+  """
+  SUPPORTING
+
+  """
+  A background character in the media
+  """
+  BACKGROUND
+}
+
+type CharacterConnection {
+  edges: [CharacterEdge]
+
+  nodes: [Character]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+Character connection edge
+"""
+type CharacterEdge {
+  node: Character
+
+  """
+  The id of the connection
+  """
+  id: Int
+
+  """
+  The characters role in the media
+  """
+  role: CharacterRole
+
+  """
+  Media specific character name
+  """
+  name: String
+
+  """
+  The voice actors of the character
+  """
+  voiceActors(language: StaffLanguage, sort: [StaffSort]): [Staff]
+
+  """
+  The voice actors of the character with role date
+  """
+  voiceActorRoles(language: StaffLanguage, sort: [StaffSort]): [StaffRoleType]
+
+  """
+  The media the character is in
+  """
+  media: [Media]
+
+  """
+  The order the character should be displayed from the users favourites
+  """
+  favouriteOrder: Int
+}
+
+"""
+A character that features in an anime or manga
+"""
+type Character {
+  """
+  The id of the character
+  """
+  id: Int!
+
+  """
+  The names of the character
+  """
+  name: CharacterName
+
+  """
+  Character images
+  """
+  image: CharacterImage
+
+  """
+  A general description of the character
+  """
+  description("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The character's gender. Usually Male, Female, or Non-binary but can be any string.
+  """
+  gender: String
+
+  """
+  The character's birth date
+  """
+  dateOfBirth: FuzzyDate
+
+  """
+  The character's age. Note this is a string, not an int, it may contain further text and additional ages.
+  """
+  age: String
+
+  """
+  The characters blood type
+  """
+  bloodType: String
+
+  """
+  If the character is marked as favourite by the currently authenticated user
+  """
+  isFavourite: Boolean!
+
+  """
+  If the character is blocked from being added to favourites
+  """
+  isFavouriteBlocked: Boolean!
+
+  """
+  The url for the character page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  Media that includes the character
+  """
+  media(sort: [MediaSort], type: MediaType, onList: Boolean, "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): MediaConnection
+
+  updatedAt: Int @deprecated(reason: "No data available")
+
+  """
+  The amount of user's who have favourited the character
+  """
+  favourites: Int
+
+  """
+  Notes for site moderators
+  """
+  modNotes: String
+}
+
+"""
+The names of the character
+"""
+type CharacterName {
+  """
+  The character's given name
+  """
+  first: String
+
+  """
+  The character's middle name
+  """
+  middle: String
+
+  """
+  The character's surname
+  """
+  last: String
+
+  """
+  The character's first and last name
+  """
+  full: String
+
+  """
+  The character's full name in their native language
+  """
+  native: String
+
+  """
+  Other names the character might be referred to as
+  """
+  alternative: [String]
+
+  """
+  Other names the character might be referred to as but are spoilers
+  """
+  alternativeSpoiler: [String]
+
+  """
+  The currently authenticated users preferred name language. Default romaji for non-authenticated
+  """
+  userPreferred: String
+}
+
+type CharacterImage {
+  """
+  The character's image of media at its largest size
+  """
+  large: String
+
+  """
+  The character's image of media at medium size
+  """
+  medium: String
+}
+
+"""
+Media sort enums
+"""
+enum MediaSort {
+  ID
+
+  ID_DESC
+
+  TITLE_ROMAJI
+
+  TITLE_ROMAJI_DESC
+
+  TITLE_ENGLISH
+
+  TITLE_ENGLISH_DESC
+
+  TITLE_NATIVE
+
+  TITLE_NATIVE_DESC
+
+  TYPE
+
+  TYPE_DESC
+
+  FORMAT
+
+  FORMAT_DESC
+
+  START_DATE
+
+  START_DATE_DESC
+
+  END_DATE
+
+  END_DATE_DESC
+
+  SCORE
+
+  SCORE_DESC
+
+  POPULARITY
+
+  POPULARITY_DESC
+
+  TRENDING
+
+  TRENDING_DESC
+
+  EPISODES
+
+  EPISODES_DESC
+
+  DURATION
+
+  DURATION_DESC
+
+  STATUS
+
+  STATUS_DESC
+
+  CHAPTERS
+
+  CHAPTERS_DESC
+
+  VOLUMES
+
+  VOLUMES_DESC
+
+  UPDATED_AT
+
+  UPDATED_AT_DESC
+
+  SEARCH_MATCH
+
+  FAVOURITES
+
+  FAVOURITES_DESC
+}
+
+"""
+The primary language of the voice actor
+"""
+enum StaffLanguage {
+  """
+  Japanese
+  """
+  JAPANESE
+
+  """
+  English
+  """
+  ENGLISH
+
+  """
+  Korean
+  """
+  KOREAN
+
+  """
+  Italian
+  """
+  ITALIAN
+
+  """
+  Spanish
+  """
+  SPANISH
+
+  """
+  Portuguese
+  """
+  PORTUGUESE
+
+  """
+  French
+  """
+  FRENCH
+
+  """
+  German
+  """
+  GERMAN
+
+  """
+  Hebrew
+  """
+  HEBREW
+
+  """
+  Hungarian
+  """
+  HUNGARIAN
+}
+
+"""
+Staff sort enums
+"""
+enum StaffSort {
+  ID
+
+  ID_DESC
+
+  ROLE
+
+  ROLE_DESC
+
+  LANGUAGE
+
+  LANGUAGE_DESC
+
+  SEARCH_MATCH
+
+  FAVOURITES
+
+  FAVOURITES_DESC
+
+  """
+  Order manually decided by moderators
+  """
+  RELEVANCE
+}
+
+"""
+Voice actors or production staff
+"""
+type Staff {
+  """
+  The id of the staff member
+  """
+  id: Int!
+
+  """
+  The names of the staff member
+  """
+  name: StaffName
+
+  """
+  The primary language the staff member dub's in
+  """
+  language: StaffLanguage @deprecated(reason: "Replaced with languageV2")
+
+  """
+  The primary language of the staff member. Current values: Japanese, English, Korean, Italian, Spanish, Portuguese, French, German, Hebrew, Hungarian, Chinese, Arabic, Filipino, Catalan, Finnish, Turkish, Dutch, Swedish, Thai, Tagalog, Malaysian, Indonesian, Vietnamese, Nepali, Hindi, Urdu
+  """
+  languageV2: String
+
+  """
+  The staff images
+  """
+  image: StaffImage
+
+  """
+  A general description of the staff member
+  """
+  description("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The person's primary occupations
+  """
+  primaryOccupations: [String]
+
+  """
+  The staff's gender. Usually Male, Female, or Non-binary but can be any string.
+  """
+  gender: String
+
+  dateOfBirth: FuzzyDate
+
+  dateOfDeath: FuzzyDate
+
+  """
+  The person's age in years
+  """
+  age: Int
+
+  """
+  [startYear, endYear] (If the 2nd value is not present staff is still active)
+  """
+  yearsActive: [Int]
+
+  """
+  The persons birthplace or hometown
+  """
+  homeTown: String
+
+  """
+  The persons blood type
+  """
+  bloodType: String
+
+  """
+  If the staff member is marked as favourite by the currently authenticated user
+  """
+  isFavourite: Boolean!
+
+  """
+  If the staff member is blocked from being added to favourites
+  """
+  isFavouriteBlocked: Boolean!
+
+  """
+  The url for the staff page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  Media where the staff member has a production role
+  """
+  staffMedia(sort: [MediaSort], type: MediaType, onList: Boolean, "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): MediaConnection
+
+  """
+  Characters voiced by the actor
+  """
+  characters(sort: [CharacterSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): CharacterConnection
+
+  """
+  Media the actor voiced characters in. (Same data as characters with media as node instead of characters)
+  """
+  characterMedia(sort: [MediaSort], onList: Boolean, "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): MediaConnection
+
+  updatedAt: Int @deprecated(reason: "No data available")
+
+  """
+  Staff member that the submission is referencing
+  """
+  staff: Staff
+
+  """
+  Submitter for the submission
+  """
+  submitter: User
+
+  """
+  Status of the submission
+  """
+  submissionStatus: Int
+
+  """
+  Inner details of submission status
+  """
+  submissionNotes: String
+
+  """
+  The amount of user's who have favourited the staff member
+  """
+  favourites: Int
+
+  """
+  Notes for site moderators
+  """
+  modNotes: String
+}
+
+"""
+The names of the staff member
+"""
+type StaffName {
+  """
+  The person's given name
+  """
+  first: String
+
+  """
+  The person's middle name
+  """
+  middle: String
+
+  """
+  The person's surname
+  """
+  last: String
+
+  """
+  The person's first and last name
+  """
+  full: String
+
+  """
+  The person's full name in their native language
+  """
+  native: String
+
+  """
+  Other names the staff member might be referred to as (pen names)
+  """
+  alternative: [String]
+
+  """
+  The currently authenticated users preferred name language. Default romaji for non-authenticated
+  """
+  userPreferred: String
+}
+
+type StaffImage {
+  """
+  The person's image of media at its largest size
+  """
+  large: String
+
+  """
+  The person's image of media at medium size
+  """
+  medium: String
+}
+
+"""
+Voice actor role for a character
+"""
+type StaffRoleType {
+  """
+  The voice actors of the character
+  """
+  voiceActor: Staff
+
+  """
+  Notes regarding the VA's role for the character
+  """
+  roleNotes: String
+
+  """
+  Used for grouping roles where multiple dubs exist for the same language. Either dubbing company name or language variant.
+  """
+  dubGroup: String
+}
+
+type StaffConnection {
+  edges: [StaffEdge]
+
+  nodes: [Staff]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+Staff connection edge
+"""
+type StaffEdge {
+  node: Staff
+
+  """
+  The id of the connection
+  """
+  id: Int
+
+  """
+  The role of the staff member in the production of the media
+  """
+  role: String
+
+  """
+  The order the staff should be displayed from the users favourites
+  """
+  favouriteOrder: Int
+}
+
+"""
+Studio sort enums
+"""
+enum StudioSort {
+  ID
+
+  ID_DESC
+
+  NAME
+
+  NAME_DESC
+
+  SEARCH_MATCH
+
+  FAVOURITES
+
+  FAVOURITES_DESC
+}
+
+type StudioConnection {
+  edges: [StudioEdge]
+
+  nodes: [Studio]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+Studio connection edge
+"""
+type StudioEdge {
+  node: Studio
+
+  """
+  The id of the connection
+  """
+  id: Int
+
+  """
+  If the studio is the main animation studio of the anime
+  """
+  isMain: Boolean!
+
+  """
+  The order the character should be displayed from the users favourites
+  """
+  favouriteOrder: Int
+}
+
+"""
+Animation or production company
+"""
+type Studio {
+  """
+  The id of the studio
+  """
+  id: Int!
+
+  """
+  The name of the studio
+  """
+  name: String!
+
+  """
+  If the studio is an animation studio or a different kind of company
+  """
+  isAnimationStudio: Boolean!
+
+  """
+  The media the studio has worked on
+  """
+  media("The order the results will be returned in" sort: [MediaSort], "If the studio was the primary animation studio of the media" isMain: Boolean, onList: Boolean, "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): MediaConnection
+
+  """
+  The url for the studio page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  If the studio is marked as favourite by the currently authenticated user
+  """
+  isFavourite: Boolean!
+
+  """
+  The amount of user's who have favourited the studio
+  """
+  favourites: Int
+}
+
+"""
+Media Airing Schedule. NOTE: We only aim to guarantee that FUTURE airing data is present and accurate.
+"""
+type AiringSchedule {
+  """
+  The id of the airing schedule item
+  """
+  id: Int!
+
+  """
+  The time the episode airs at
+  """
+  airingAt: Int!
+
+  """
+  Seconds until episode starts airing
+  """
+  timeUntilAiring: Int!
+
+  """
+  The airing episode number
+  """
+  episode: Int!
+
+  """
+  The associate media id of the airing episode
+  """
+  mediaId: Int!
+
+  """
+  The associate media of the airing episode
+  """
+  media: Media
+}
+
+type AiringScheduleConnection {
+  edges: [AiringScheduleEdge]
+
+  nodes: [AiringSchedule]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+AiringSchedule connection edge
+"""
+type AiringScheduleEdge {
+  node: AiringSchedule
+
+  """
+  The id of the connection
+  """
+  id: Int
+}
+
+"""
+Media trend sort enums
+"""
+enum MediaTrendSort {
+  ID
+
+  ID_DESC
+
+  MEDIA_ID
+
+  MEDIA_ID_DESC
+
+  DATE
+
+  DATE_DESC
+
+  SCORE
+
+  SCORE_DESC
+
+  POPULARITY
+
+  POPULARITY_DESC
+
+  TRENDING
+
+  TRENDING_DESC
+
+  EPISODE
+
+  EPISODE_DESC
+}
+
+type MediaTrendConnection {
+  edges: [MediaTrendEdge]
+
+  nodes: [MediaTrend]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+Media trend connection edge
+"""
+type MediaTrendEdge {
+  node: MediaTrend
+}
+
+"""
+Daily media statistics
+"""
+type MediaTrend {
+  """
+  The id of the tag
+  """
+  mediaId: Int!
+
+  """
+  The day the data was recorded (timestamp)
+  """
+  date: Int!
+
+  """
+  The amount of media activity on the day
+  """
+  trending: Int!
+
+  """
+  A weighted average score of all the user's scores of the media
+  """
+  averageScore: Int
+
+  """
+  The number of users with the media on their list
+  """
+  popularity: Int
+
+  """
+  The number of users with watching/reading the media
+  """
+  inProgress: Int
+
+  """
+  If the media was being released at this time
+  """
+  releasing: Boolean!
+
+  """
+  The episode number of the anime released on this day
+  """
+  episode: Int
+
+  """
+  The related media
+  """
+  media: Media
+}
+
+"""
+An external link to another site related to the media or staff member
+"""
+type MediaExternalLink {
+  """
+  The id of the external link
+  """
+  id: Int!
+
+  """
+  The url of the external link or base url of link source
+  """
+  url: String
+
+  """
+  The links website site name
+  """
+  site: String!
+
+  """
+  The links website site id
+  """
+  siteId: Int
+
+  type: ExternalLinkType
+
+  """
+  Language the site content is in. See Staff language field for values.
+  """
+  language: String
+
+  color: String
+
+  """
+  The icon image url of the site. Not available for all links. Transparent PNG 64x64
+  """
+  icon: String
+
+  notes: String
+
+  isDisabled: Boolean
+}
+
+enum ExternalLinkType {
+  INFO
+
+  STREAMING
+
+  SOCIAL
+}
+
+"""
+Data and links to legal streaming episodes on external sites
+"""
+type MediaStreamingEpisode {
+  """
+  Title of the episode
+  """
+  title: String
+
+  """
+  Url of episode image thumbnail
+  """
+  thumbnail: String
+
+  """
+  The url of the episode
+  """
+  url: String
+
+  """
+  The site location of the streaming episodes
+  """
+  site: String
+}
+
+"""
+The ranking of a media in a particular time span and format compared to other media
+"""
+type MediaRank {
+  """
+  The id of the rank
+  """
+  id: Int!
+
+  """
+  The numerical rank of the media
+  """
+  rank: Int!
+
+  """
+  The type of ranking
+  """
+  type: MediaRankType!
+
+  """
+  The format the media is ranked within
+  """
+  format: MediaFormat!
+
+  """
+  The year the media is ranked within
+  """
+  year: Int
+
+  """
+  The season the media is ranked within
+  """
+  season: MediaSeason
+
+  """
+  If the ranking is based on all time instead of a season/year
+  """
+  allTime: Boolean
+
+  """
+  String that gives context to the ranking type and time span
+  """
+  context: String!
+}
+
+"""
+The type of ranking
+"""
+enum MediaRankType {
+  """
+  Ranking is based on the media's ratings/score
+  """
+  RATED
+
+  """
+  Ranking is based on the media's popularity
+  """
+  POPULAR
+}
+
+"""
+List of anime or manga
+"""
+type MediaList {
+  """
+  The id of the list entry
+  """
+  id: Int!
+
+  """
+  The id of the user owner of the list entry
+  """
+  userId: Int!
+
+  """
+  The id of the media
+  """
+  mediaId: Int!
+
+  """
+  The watching/reading status
+  """
+  status: MediaListStatus
+
+  """
+  The score of the entry
+  """
+  score("Force the score to be returned in the provided format type." format: ScoreFormat): Float
+
+  """
+  The amount of episodes/chapters consumed by the user
+  """
+  progress: Int
+
+  """
+  The amount of volumes read by the user
+  """
+  progressVolumes: Int
+
+  """
+  The amount of times the user has rewatched/read the media
+  """
+  repeat: Int
+
+  """
+  Priority of planning
+  """
+  priority: Int
+
+  """
+  If the entry should only be visible to authenticated user
+  """
+  private: Boolean
+
+  """
+  Text notes
+  """
+  notes: String
+
+  """
+  If the entry shown be hidden from non-custom lists
+  """
+  hiddenFromStatusLists: Boolean
+
+  """
+  Map of booleans for which custom lists the entry are in
+  """
+  customLists("Change return structure to an array of objects" asArray: Boolean): Json
+
+  """
+  Map of advanced scores with name keys
+  """
+  advancedScores: Json
+
+  """
+  When the entry was started by the user
+  """
+  startedAt: FuzzyDate
+
+  """
+  When the entry was completed by the user
+  """
+  completedAt: FuzzyDate
+
+  """
+  When the entry data was last updated
+  """
+  updatedAt: Int
+
+  """
+  When the entry data was created
+  """
+  createdAt: Int
+
+  media: Media
+
+  user: User
+}
+
+"""
+The `Float` scalar type represents signed double-precision fractional
+values as specified by
+[IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
+"""
+scalar Float
+
+"""
+Review sort enums
+"""
+enum ReviewSort {
+  ID
+
+  ID_DESC
+
+  SCORE
+
+  SCORE_DESC
+
+  RATING
+
+  RATING_DESC
+
+  CREATED_AT @deprecated(reason: "Use ID instead")
+
+  CREATED_AT_DESC @deprecated(reason: "Use ID_DESC instead")
+
+  UPDATED_AT
+
+  UPDATED_AT_DESC
+}
+
+type ReviewConnection {
+  edges: [ReviewEdge]
+
+  nodes: [Review]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+Review connection edge
+"""
+type ReviewEdge {
+  node: Review
+}
+
+"""
+A Review that features in an anime or manga
+"""
+type Review {
+  """
+  The id of the review
+  """
+  id: Int!
+
+  """
+  The id of the review's creator
+  """
+  userId: Int!
+
+  """
+  The id of the review's media
+  """
+  mediaId: Int!
+
+  """
+  For which type of media the review is for
+  """
+  mediaType: MediaType
+
+  """
+  A short summary of the review
+  """
+  summary: String
+
+  """
+  The main review body text
+  """
+  body("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The total user rating of the review
+  """
+  rating: Int
+
+  """
+  The amount of user ratings of the review
+  """
+  ratingAmount: Int
+
+  """
+  The rating of the review by currently authenticated user
+  """
+  userRating: ReviewRating
+
+  """
+  The review score of the media
+  """
+  score: Int
+
+  """
+  If the review is not yet publicly published and is only viewable by creator
+  """
+  private: Boolean
+
+  """
+  The url for the review page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  The time of the thread creation
+  """
+  createdAt: Int!
+
+  """
+  The time of the thread last update
+  """
+  updatedAt: Int!
+
+  """
+  The creator of the review
+  """
+  user: User
+
+  """
+  The media the review is of
+  """
+  media: Media
+}
+
+"""
+Review rating enums
+"""
+enum ReviewRating {
+  NO_VOTE
+
+  UP_VOTE
+
+  DOWN_VOTE
+}
+
+"""
+Recommendation sort enums
+"""
+enum RecommendationSort {
+  ID
+
+  ID_DESC
+
+  RATING
+
+  RATING_DESC
+}
+
+type RecommendationConnection {
+  edges: [RecommendationEdge]
+
+  nodes: [Recommendation]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+Recommendation connection edge
+"""
+type RecommendationEdge {
+  node: Recommendation
+}
+
+"""
+Media recommendation
+"""
+type Recommendation {
+  """
+  The id of the recommendation
+  """
+  id: Int!
+
+  """
+  Users rating of the recommendation
+  """
+  rating: Int
+
+  """
+  The rating of the recommendation by currently authenticated user
+  """
+  userRating: RecommendationRating
+
+  """
+  The media the recommendation is from
+  """
+  media: Media
+
+  """
+  The recommended media
+  """
+  mediaRecommendation: Media
+
+  """
+  The user that first created the recommendation
+  """
+  user: User
+}
+
+"""
+Recommendation rating enums
+"""
+enum RecommendationRating {
+  NO_RATING
+
+  RATE_UP
+
+  RATE_DOWN
+}
+
+"""
+A media's statistics
+"""
+type MediaStats {
+  scoreDistribution: [ScoreDistribution]
+
+  statusDistribution: [StatusDistribution]
+
+  airingProgression: [AiringProgression] @deprecated(reason: "Replaced by MediaTrends")
+}
+
+"""
+A user's list score distribution.
+"""
+type ScoreDistribution {
+  score: Int
+
+  """
+  The amount of list entries with this score
+  """
+  amount: Int
+}
+
+"""
+The distribution of the watching/reading status of media or a user's list
+"""
+type StatusDistribution {
+  """
+  The day the activity took place (Unix timestamp)
+  """
+  status: MediaListStatus
+
+  """
+  The amount of entries with this status
+  """
+  amount: Int
+}
+
+"""
+Score & Watcher stats for airing anime by episode and mid-week
+"""
+type AiringProgression {
+  """
+  The episode the stats were recorded at. .5 is the mid point between 2 episodes airing dates.
+  """
+  episode: Float
+
+  """
+  The average score for the media
+  """
+  score: Float
+
+  """
+  The amount of users watching the anime
+  """
+  watching: Int
+}
+
+"""
+Type of relation media has to its parent.
+"""
+enum MediaRelation {
+  """
+  An adaption of this media into a different format
+  """
+  ADAPTATION
+
+  """
+  Released before the relation
+  """
+  PREQUEL
+
+  """
+  Released after the relation
+  """
+  SEQUEL
+
+  """
+  The media a side story is from
+  """
+  PARENT
+
+  """
+  A side story of the parent media
+  """
+  SIDE_STORY
+
+  """
+  Shares at least 1 character
+  """
+  CHARACTER
+
+  """
+  A shortened and summarized version
+  """
+  SUMMARY
+
+  """
+  An alternative version of the same media
+  """
+  ALTERNATIVE
+
+  """
+  An alternative version of the media with a different primary focus
+  """
+  SPIN_OFF
+
+  """
+  Other
+  """
+  OTHER
+
+  """
+  Version 2 only. The source material the media was adapted from
+  """
+  SOURCE
+
+  """
+  Version 2 only.
+  """
+  COMPILATION
+
+  """
+  Version 2 only.
+  """
+  CONTAINS
+
+  """
+  Version 3 only. The media is set in the same universe as another media
+  """
+  SAME_UNIVERSE
+}
+
+type UserStatisticTypes {
+  anime: UserStatistics
+
+  manga: UserStatistics
+}
+
+type UserStatistics {
+  count: Int!
+
+  meanScore: Float!
+
+  standardDeviation: Float!
+
+  minutesWatched: Int!
+
+  episodesWatched: Int!
+
+  chaptersRead: Int!
+
+  volumesRead: Int!
+
+  formats(limit: Int, sort: [UserStatisticsSort]): [UserFormatStatistic]
+
+  statuses(limit: Int, sort: [UserStatisticsSort]): [UserStatusStatistic]
+
+  scores(limit: Int, sort: [UserStatisticsSort]): [UserScoreStatistic]
+
+  lengths(limit: Int, sort: [UserStatisticsSort]): [UserLengthStatistic]
+
+  releaseYears(limit: Int, sort: [UserStatisticsSort]): [UserReleaseYearStatistic]
+
+  startYears(limit: Int, sort: [UserStatisticsSort]): [UserStartYearStatistic]
+
+  genres(limit: Int, sort: [UserStatisticsSort]): [UserGenreStatistic]
+
+  tags(limit: Int, sort: [UserStatisticsSort]): [UserTagStatistic]
+
+  countries(limit: Int, sort: [UserStatisticsSort]): [UserCountryStatistic]
+
+  voiceActors(limit: Int, sort: [UserStatisticsSort]): [UserVoiceActorStatistic]
+
+  staff(limit: Int, sort: [UserStatisticsSort]): [UserStaffStatistic]
+
+  studios(limit: Int, sort: [UserStatisticsSort]): [UserStudioStatistic]
+}
+
+"""
+User statistics sort enum
+"""
+enum UserStatisticsSort {
+  ID
+
+  ID_DESC
+
+  COUNT
+
+  COUNT_DESC
+
+  PROGRESS
+
+  PROGRESS_DESC
+
+  MEAN_SCORE
+
+  MEAN_SCORE_DESC
+}
+
+type UserFormatStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  format: MediaFormat
+}
+
+type UserStatusStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  status: MediaListStatus
+}
+
+type UserScoreStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  score: Int
+}
+
+type UserLengthStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  length: String
+}
+
+type UserReleaseYearStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  releaseYear: Int
+}
+
+type UserStartYearStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  startYear: Int
+}
+
+type UserGenreStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  genre: String
+}
+
+type UserTagStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  tag: MediaTag
+}
+
+type UserCountryStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  country: CountryCode
+}
+
+type UserVoiceActorStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  voiceActor: Staff
+
+  characterIds: [Int]!
+}
+
+type UserStaffStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  staff: Staff
+}
+
+type UserStudioStatistic {
+  count: Int!
+
+  meanScore: Float!
+
+  minutesWatched: Int!
+
+  chaptersRead: Int!
+
+  mediaIds: [Int]!
+
+  studio: Studio
+}
+
+"""
+Mod role enums
+"""
+enum ModRole {
+  """
+  An AniList administrator
+  """
+  ADMIN
+
+  """
+  A head developer of AniList
+  """
+  LEAD_DEVELOPER
+
+  """
+  An AniList developer
+  """
+  DEVELOPER
+
+  """
+  A lead community moderator
+  """
+  LEAD_COMMUNITY
+
+  """
+  A community moderator
+  """
+  COMMUNITY
+
+  """
+  A discord community moderator
+  """
+  DISCORD_COMMUNITY
+
+  """
+  A lead anime data moderator
+  """
+  LEAD_ANIME_DATA
+
+  """
+  An anime data moderator
+  """
+  ANIME_DATA
+
+  """
+  A lead manga data moderator
+  """
+  LEAD_MANGA_DATA
+
+  """
+  A manga data moderator
+  """
+  MANGA_DATA
+
+  """
+  A lead social media moderator
+  """
+  LEAD_SOCIAL_MEDIA
+
+  """
+  A social media moderator
+  """
+  SOCIAL_MEDIA
+
+  """
+  A retired moderator
+  """
+  RETIRED
+
+  """
+  A character data moderator
+  """
+  CHARACTER_DATA
+
+  """
+  A staff data moderator
+  """
+  STAFF_DATA
+}
+
+"""
+A user's statistics
+"""
+type UserStats {
+  """
+  The amount of anime the user has watched in minutes
+  """
+  watchedTime: Int
+
+  """
+  The amount of manga chapters the user has read
+  """
+  chaptersRead: Int
+
+  activityHistory: [UserActivityHistory]
+
+  animeStatusDistribution: [StatusDistribution]
+
+  mangaStatusDistribution: [StatusDistribution]
+
+  animeScoreDistribution: [ScoreDistribution]
+
+  mangaScoreDistribution: [ScoreDistribution]
+
+  animeListScores: ListScoreStats
+
+  mangaListScores: ListScoreStats
+
+  favouredGenresOverview: [GenreStats]
+
+  favouredGenres: [GenreStats]
+
+  favouredTags: [TagStats]
+
+  favouredActors: [StaffStats]
+
+  favouredStaff: [StaffStats]
+
+  favouredStudios: [StudioStats]
+
+  favouredYears: [YearStats]
+
+  favouredFormats: [FormatStats]
+}
+
+"""
+A user's activity history stats for the previous 6 months. Refreshes only periodically
+"""
+type UserActivityHistory {
+  """
+  The day the activity took place (Unix timestamp)
+  """
+  date: Int
+
+  """
+  The amount of activity on the day
+  """
+  amount: Int
+
+  """
+  The level of activity represented on a 1-10 scale
+  """
+  level: Int
+}
+
+"""
+User's list score statistics
+"""
+type ListScoreStats {
+  meanScore: Int
+
+  standardDeviation: Int
+}
+
+"""
+User's genre statistics
+"""
+type GenreStats {
+  genre: String
+
+  amount: Int
+
+  meanScore: Int
+
+  """
+  The amount of time in minutes the genre has been watched by the user
+  """
+  timeWatched: Int
+}
+
+"""
+User's tag statistics
+"""
+type TagStats {
+  tag: MediaTag
+
+  amount: Int
+
+  meanScore: Int
+
+  """
+  The amount of time in minutes the tag has been watched by the user
+  """
+  timeWatched: Int
+}
+
+"""
+User's staff statistics
+"""
+type StaffStats {
+  staff: Staff
+
+  amount: Int
+
+  meanScore: Int
+
+  """
+  The amount of time in minutes the staff member has been watched by the user
+  """
+  timeWatched: Int
+}
+
+"""
+User's studio statistics
+"""
+type StudioStats {
+  studio: Studio
+
+  amount: Int
+
+  meanScore: Int
+
+  """
+  The amount of time in minutes the studio's works have been watched by the user
+  """
+  timeWatched: Int
+}
+
+"""
+User's year statistics
+"""
+type YearStats {
+  year: Int
+
+  amount: Int
+
+  meanScore: Int
+}
+
+"""
+User's format statistics
+"""
+type FormatStats {
+  format: MediaFormat
+
+  amount: Int
+}
+
+"""
+A user's previous name
+"""
+type UserPreviousName {
+  """
+  A previous name of the user.
+  """
+  name: String
+
+  """
+  When the user first changed from this name.
+  """
+  createdAt: Int
+
+  """
+  When the user most recently changed from this name.
+  """
+  updatedAt: Int
+}
+
+"""
+8 digit long date integer (YYYYMMDD). Unknown dates represented by 0. E.g. 2016: 20160000, May 1976: 19760500
+"""
+scalar FuzzyDateInt
+
+"""
+Media list sort enums
+"""
+enum MediaListSort {
+  MEDIA_ID
+
+  MEDIA_ID_DESC
+
+  SCORE
+
+  SCORE_DESC
+
+  STATUS
+
+  STATUS_DESC
+
+  PROGRESS
+
+  PROGRESS_DESC
+
+  PROGRESS_VOLUMES
+
+  PROGRESS_VOLUMES_DESC
+
+  REPEAT
+
+  REPEAT_DESC
+
+  PRIORITY
+
+  PRIORITY_DESC
+
+  STARTED_ON
+
+  STARTED_ON_DESC
+
+  FINISHED_ON
+
+  FINISHED_ON_DESC
+
+  ADDED_TIME
+
+  ADDED_TIME_DESC
+
+  UPDATED_TIME
+
+  UPDATED_TIME_DESC
+
+  MEDIA_TITLE_ROMAJI
+
+  MEDIA_TITLE_ROMAJI_DESC
+
+  MEDIA_TITLE_ENGLISH
+
+  MEDIA_TITLE_ENGLISH_DESC
+
+  MEDIA_TITLE_NATIVE
+
+  MEDIA_TITLE_NATIVE_DESC
+
+  MEDIA_POPULARITY
+
+  MEDIA_POPULARITY_DESC
+}
+
+"""
+Airing schedule sort enums
+"""
+enum AiringSort {
+  ID
+
+  ID_DESC
+
+  MEDIA_ID
+
+  MEDIA_ID_DESC
+
+  TIME
+
+  TIME_DESC
+
+  EPISODE
+
+  EPISODE_DESC
+}
+
+"""
+Notification union type
+"""
+union NotificationUnion = AiringNotification|FollowingNotification|ActivityMessageNotification|ActivityMentionNotification|ActivityReplyNotification|ActivityReplySubscribedNotification|ActivityLikeNotification|ActivityReplyLikeNotification|ThreadCommentMentionNotification|ThreadCommentReplyNotification|ThreadCommentSubscribedNotification|ThreadCommentLikeNotification|ThreadLikeNotification|RelatedMediaAdditionNotification|MediaDataChangeNotification|MediaMergeNotification|MediaDeletionNotification|MediaSubmissionUpdateNotification|StaffSubmissionUpdateNotification|CharacterSubmissionUpdateNotification
+
+"""
+Notification for when an episode of anime airs
+"""
+type AiringNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the aired anime
+  """
+  animeId: Int!
+
+  """
+  The episode number that just aired
+  """
+  episode: Int!
+
+  """
+  The notification context text
+  """
+  contexts: [String]
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The associated media of the airing schedule
+  """
+  media: Media
+}
+
+"""
+Notification for when the authenticated user is followed by another user
+"""
+type FollowingNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who followed the authenticated user
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The liked activity
+  """
+  user: User
+}
+
+"""
+Notification for when a user is send an activity message
+"""
+type ActivityMessageNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The if of the user who send the message
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the activity message
+  """
+  activityId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The message activity
+  """
+  message: MessageActivity
+
+  """
+  The user who sent the message
+  """
+  user: User
+}
+
+"""
+User message activity
+"""
+type MessageActivity {
+  """
+  The id of the activity
+  """
+  id: Int!
+
+  """
+  The user id of the activity's recipient
+  """
+  recipientId: Int
+
+  """
+  The user id of the activity's sender
+  """
+  messengerId: Int
+
+  """
+  The type of the activity
+  """
+  type: ActivityType
+
+  """
+  The number of activity replies
+  """
+  replyCount: Int!
+
+  """
+  The message text (Markdown)
+  """
+  message("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  If the activity is locked and can receive replies
+  """
+  isLocked: Boolean
+
+  """
+  If the currently authenticated user is subscribed to the activity
+  """
+  isSubscribed: Boolean
+
+  """
+  The amount of likes the activity has
+  """
+  likeCount: Int!
+
+  """
+  If the currently authenticated user liked the activity
+  """
+  isLiked: Boolean
+
+  """
+  If the activity is pinned to the top of the users activity feed
+  """
+  isPinned: Boolean
+
+  """
+  If the message is private and only viewable to the sender and recipients
+  """
+  isPrivate: Boolean
+
+  """
+  The url for the activity page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  The time the activity was created at
+  """
+  createdAt: Int!
+
+  """
+  The user who the activity message was sent to
+  """
+  recipient: User
+
+  """
+  The user who sent the activity message
+  """
+  messenger: User
+
+  """
+  The written replies to the activity
+  """
+  replies: [ActivityReply]
+
+  """
+  The users who liked the activity
+  """
+  likes: [User]
+}
+
+"""
+Activity type enum.
+"""
+enum ActivityType {
+  """
+  A text activity
+  """
+  TEXT
+
+  """
+  A anime list update activity
+  """
+  ANIME_LIST
+
+  """
+  A manga list update activity
+  """
+  MANGA_LIST
+
+  """
+  A text message activity sent to another user
+  """
+  MESSAGE
+
+  """
+  Anime & Manga list update, only used in query arguments
+  """
+  MEDIA_LIST
+}
+
+"""
+Replay to an activity item
+"""
+type ActivityReply {
+  """
+  The id of the reply
+  """
+  id: Int!
+
+  """
+  The id of the replies creator
+  """
+  userId: Int
+
+  """
+  The id of the parent activity
+  """
+  activityId: Int
+
+  """
+  The reply text
+  """
+  text("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The amount of likes the reply has
+  """
+  likeCount: Int!
+
+  """
+  If the currently authenticated user liked the reply
+  """
+  isLiked: Boolean
+
+  """
+  The time the reply was created at
+  """
+  createdAt: Int!
+
+  """
+  The user who created reply
+  """
+  user: User
+
+  """
+  The users who liked the reply
+  """
+  likes: [User]
+}
+
+"""
+Notification for when authenticated user is @ mentioned in activity or reply
+"""
+type ActivityMentionNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who mentioned the authenticated user
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the activity where mentioned
+  """
+  activityId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The liked activity
+  """
+  activity: ActivityUnion
+
+  """
+  The user who mentioned the authenticated user
+  """
+  user: User
+}
+
+"""
+Activity union type
+"""
+union ActivityUnion = TextActivity|ListActivity|MessageActivity
+
+"""
+User text activity
+"""
+type TextActivity {
+  """
+  The id of the activity
+  """
+  id: Int!
+
+  """
+  The user id of the activity's creator
+  """
+  userId: Int
+
+  """
+  The type of activity
+  """
+  type: ActivityType
+
+  """
+  The number of activity replies
+  """
+  replyCount: Int!
+
+  """
+  The status text (Markdown)
+  """
+  text("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The url for the activity page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  If the activity is locked and can receive replies
+  """
+  isLocked: Boolean
+
+  """
+  If the currently authenticated user is subscribed to the activity
+  """
+  isSubscribed: Boolean
+
+  """
+  The amount of likes the activity has
+  """
+  likeCount: Int!
+
+  """
+  If the currently authenticated user liked the activity
+  """
+  isLiked: Boolean
+
+  """
+  If the activity is pinned to the top of the users activity feed
+  """
+  isPinned: Boolean
+
+  """
+  The time the activity was created at
+  """
+  createdAt: Int!
+
+  """
+  The user who created the activity
+  """
+  user: User
+
+  """
+  The written replies to the activity
+  """
+  replies: [ActivityReply]
+
+  """
+  The users who liked the activity
+  """
+  likes: [User]
+}
+
+"""
+User list activity (anime & manga updates)
+"""
+type ListActivity {
+  """
+  The id of the activity
+  """
+  id: Int!
+
+  """
+  The user id of the activity's creator
+  """
+  userId: Int
+
+  """
+  The type of activity
+  """
+  type: ActivityType
+
+  """
+  The number of activity replies
+  """
+  replyCount: Int!
+
+  """
+  The list item's textual status
+  """
+  status: String
+
+  """
+  The list progress made
+  """
+  progress: String
+
+  """
+  If the activity is locked and can receive replies
+  """
+  isLocked: Boolean
+
+  """
+  If the currently authenticated user is subscribed to the activity
+  """
+  isSubscribed: Boolean
+
+  """
+  The amount of likes the activity has
+  """
+  likeCount: Int!
+
+  """
+  If the currently authenticated user liked the activity
+  """
+  isLiked: Boolean
+
+  """
+  If the activity is pinned to the top of the users activity feed
+  """
+  isPinned: Boolean
+
+  """
+  The url for the activity page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  The time the activity was created at
+  """
+  createdAt: Int!
+
+  """
+  The owner of the activity
+  """
+  user: User
+
+  """
+  The associated media to the activity update
+  """
+  media: Media
+
+  """
+  The written replies to the activity
+  """
+  replies: [ActivityReply]
+
+  """
+  The users who liked the activity
+  """
+  likes: [User]
+}
+
+"""
+Notification for when a user replies to the authenticated users activity
+"""
+type ActivityReplyNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who replied to the activity
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the activity which was replied too
+  """
+  activityId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The liked activity
+  """
+  activity: ActivityUnion
+
+  """
+  The user who replied to the activity
+  """
+  user: User
+}
+
+"""
+Notification for when a user replies to activity the authenticated user has replied to
+"""
+type ActivityReplySubscribedNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who replied to the activity
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the activity which was replied too
+  """
+  activityId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The liked activity
+  """
+  activity: ActivityUnion
+
+  """
+  The user who replied to the activity
+  """
+  user: User
+}
+
+"""
+Notification for when a activity is liked
+"""
+type ActivityLikeNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who liked to the activity
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the activity which was liked
+  """
+  activityId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The liked activity
+  """
+  activity: ActivityUnion
+
+  """
+  The user who liked the activity
+  """
+  user: User
+}
+
+"""
+Notification for when a activity reply is liked
+"""
+type ActivityReplyLikeNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who liked to the activity reply
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the activity where the reply which was liked
+  """
+  activityId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The liked activity
+  """
+  activity: ActivityUnion
+
+  """
+  The user who liked the activity reply
+  """
+  user: User
+}
+
+"""
+Notification for when authenticated user is @ mentioned in a forum thread comment
+"""
+type ThreadCommentMentionNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who mentioned the authenticated user
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the comment where mentioned
+  """
+  commentId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The thread that the relevant comment belongs to
+  """
+  thread: Thread
+
+  """
+  The thread comment that included the @ mention
+  """
+  comment: ThreadComment
+
+  """
+  The user who mentioned the authenticated user
+  """
+  user: User
+}
+
+"""
+Forum Thread
+"""
+type Thread {
+  """
+  The id of the thread
+  """
+  id: Int!
+
+  """
+  The title of the thread
+  """
+  title: String
+
+  """
+  The text body of the thread (Markdown)
+  """
+  body("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The id of the thread owner user
+  """
+  userId: Int!
+
+  """
+  The id of the user who most recently commented on the thread
+  """
+  replyUserId: Int
+
+  """
+  The id of the most recent comment on the thread
+  """
+  replyCommentId: Int
+
+  """
+  The number of comments on the thread
+  """
+  replyCount: Int
+
+  """
+  The number of times users have viewed the thread
+  """
+  viewCount: Int
+
+  """
+  If the thread is locked and can receive comments
+  """
+  isLocked: Boolean
+
+  """
+  If the thread is stickied and should be displayed at the top of the page
+  """
+  isSticky: Boolean
+
+  """
+  If the currently authenticated user is subscribed to the thread
+  """
+  isSubscribed: Boolean
+
+  """
+  The amount of likes the thread has
+  """
+  likeCount: Int!
+
+  """
+  If the currently authenticated user liked the thread
+  """
+  isLiked: Boolean
+
+  """
+  The time of the last reply
+  """
+  repliedAt: Int
+
+  """
+  The time of the thread creation
+  """
+  createdAt: Int!
+
+  """
+  The time of the thread last update
+  """
+  updatedAt: Int!
+
+  """
+  The owner of the thread
+  """
+  user: User
+
+  """
+  The user to last reply to the thread
+  """
+  replyUser: User
+
+  """
+  The users who liked the thread
+  """
+  likes: [User]
+
+  """
+  The url for the thread page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  The categories of the thread
+  """
+  categories: [ThreadCategory]
+
+  """
+  The media categories of the thread
+  """
+  mediaCategories: [Media]
+}
+
+"""
+A forum thread category
+"""
+type ThreadCategory {
+  """
+  The id of the category
+  """
+  id: Int!
+
+  """
+  The name of the category
+  """
+  name: String!
+}
+
+"""
+Forum Thread Comment
+"""
+type ThreadComment {
+  """
+  The id of the comment
+  """
+  id: Int!
+
+  """
+  The user id of the comment's owner
+  """
+  userId: Int
+
+  """
+  The id of thread the comment belongs to
+  """
+  threadId: Int
+
+  """
+  The text content of the comment (Markdown)
+  """
+  comment("Return the string in pre-parsed html instead of markdown" asHtml: Boolean): String
+
+  """
+  The amount of likes the comment has
+  """
+  likeCount: Int!
+
+  """
+  If the currently authenticated user liked the comment
+  """
+  isLiked: Boolean
+
+  """
+  The url for the comment page on the AniList website
+  """
+  siteUrl: String
+
+  """
+  The time of the comments creation
+  """
+  createdAt: Int!
+
+  """
+  The time of the comments last update
+  """
+  updatedAt: Int!
+
+  """
+  The thread the comment belongs to
+  """
+  thread: Thread
+
+  """
+  The user who created the comment
+  """
+  user: User
+
+  """
+  The users who liked the comment
+  """
+  likes: [User]
+
+  """
+  The comment's child reply comments
+  """
+  childComments: Json
+
+  """
+  If the comment tree is locked and may not receive replies or edits
+  """
+  isLocked: Boolean
+}
+
+"""
+Notification for when a user replies to your forum thread comment
+"""
+type ThreadCommentReplyNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who create the comment reply
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the reply comment
+  """
+  commentId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The thread that the relevant comment belongs to
+  """
+  thread: Thread
+
+  """
+  The reply thread comment
+  """
+  comment: ThreadComment
+
+  """
+  The user who replied to the activity
+  """
+  user: User
+}
+
+"""
+Notification for when a user replies to a subscribed forum thread
+"""
+type ThreadCommentSubscribedNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who commented on the thread
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the new comment in the subscribed thread
+  """
+  commentId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The thread that the relevant comment belongs to
+  """
+  thread: Thread
+
+  """
+  The reply thread comment
+  """
+  comment: ThreadComment
+
+  """
+  The user who replied to the subscribed thread
+  """
+  user: User
+}
+
+"""
+Notification for when a thread comment is liked
+"""
+type ThreadCommentLikeNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who liked to the activity
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the activity which was liked
+  """
+  commentId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The thread that the relevant comment belongs to
+  """
+  thread: Thread
+
+  """
+  The thread comment that was liked
+  """
+  comment: ThreadComment
+
+  """
+  The user who liked the activity
+  """
+  user: User
+}
+
+"""
+Notification for when a thread is liked
+"""
+type ThreadLikeNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The id of the user who liked to the activity
+  """
+  userId: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the thread which was liked
+  """
+  threadId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The thread that the relevant comment belongs to
+  """
+  thread: Thread
+
+  """
+  The liked thread comment
+  """
+  comment: ThreadComment
+
+  """
+  The user who liked the activity
+  """
+  user: User
+}
+
+"""
+Notification for when new media is added to the site
+"""
+type RelatedMediaAdditionNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the new media
+  """
+  mediaId: Int!
+
+  """
+  The notification context text
+  """
+  context: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The associated media of the airing schedule
+  """
+  media: Media
+}
+
+"""
+Notification for when a media entry's data was changed in a significant way impacting users' list tracking
+"""
+type MediaDataChangeNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the media that received data changes
+  """
+  mediaId: Int!
+
+  """
+  The reason for the media data change
+  """
+  context: String
+
+  """
+  The reason for the media data change
+  """
+  reason: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The media that received data changes
+  """
+  media: Media
+}
+
+"""
+Notification for when a media entry is merged into another for a user who had it on their list
+"""
+type MediaMergeNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The id of the media that was merged into
+  """
+  mediaId: Int!
+
+  """
+  The title of the deleted media
+  """
+  deletedMediaTitles: [String]
+
+  """
+  The reason for the media data change
+  """
+  context: String
+
+  """
+  The reason for the media merge
+  """
+  reason: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The media that was merged into
+  """
+  media: Media
+}
+
+"""
+Notification for when a media tracked in a user's list is deleted from the site
+"""
+type MediaDeletionNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The title of the deleted media
+  """
+  deletedMediaTitle: String
+
+  """
+  The reason for the media deletion
+  """
+  context: String
+
+  """
+  The reason for the media deletion
+  """
+  reason: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+}
+
+"""
+Notification for when a media submission is accepted, partially accepted, or rejected
+"""
+type MediaSubmissionUpdateNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The notification context text
+  """
+  contexts: [String]
+
+  """
+  The status of the submission
+  """
+  status: String
+
+  """
+  The notes of the submission
+  """
+  notes: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The media that was created or modified. If this submission was to create a new media and it was rejected, this will be null.
+  """
+  media: Media
+
+  """
+  The title of the media that was submitted. If this submission was to edit an existing media, this will be null.
+  """
+  submittedTitle: String
+}
+
+"""
+Notification for when a staff submission is accepted, partially accepted, or rejected
+"""
+type StaffSubmissionUpdateNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The notification context text
+  """
+  contexts: [String]
+
+  """
+  The status of the submission
+  """
+  status: String
+
+  """
+  The notes of the submission
+  """
+  notes: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The staff that was modified.
+  """
+  staff: Staff
+}
+
+"""
+Notification for when a character submission is accepted, partially accepted, or rejected
+"""
+type CharacterSubmissionUpdateNotification {
+  """
+  The id of the Notification
+  """
+  id: Int!
+
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  The notification context text
+  """
+  contexts: [String]
+
+  """
+  The status of the submission
+  """
+  status: String
+
+  """
+  The notes of the submission
+  """
+  notes: String
+
+  """
+  The time the notification was created at
+  """
+  createdAt: Int
+
+  """
+  The character that was modified.
+  """
+  character: Character
+}
+
+"""
+Activity sort enums
+"""
+enum ActivitySort {
+  ID
+
+  ID_DESC
+
+  PINNED
+}
+
+"""
+Thread sort enums
+"""
+enum ThreadSort {
+  ID
+
+  ID_DESC
+
+  TITLE
+
+  TITLE_DESC
+
+  CREATED_AT @deprecated(reason: "Use ID instead")
+
+  CREATED_AT_DESC @deprecated(reason: "Use ID_DESC instead")
+
+  UPDATED_AT
+
+  UPDATED_AT_DESC
+
+  REPLIED_AT
+
+  REPLIED_AT_DESC
+
+  REPLY_COUNT
+
+  REPLY_COUNT_DESC
+
+  VIEW_COUNT
+
+  VIEW_COUNT_DESC
+
+  IS_STICKY
+
+  SEARCH_MATCH
+}
+
+"""
+Thread comments sort enums
+"""
+enum ThreadCommentSort {
+  ID
+
+  ID_DESC
+}
+
+"""
+Types that can be liked
+"""
+enum LikeableType {
+  THREAD
+
+  THREAD_COMMENT
+
+  ACTIVITY
+
+  ACTIVITY_REPLY
+}
+
+"""
+List of anime or manga
+"""
+type MediaListCollection {
+  """
+  Grouped media list entries
+  """
+  lists: [MediaListGroup]
+
+  """
+  The owner of the list
+  """
+  user: User
+
+  """
+  If there is another chunk
+  """
+  hasNextChunk: Boolean
+
+  """
+  A map of media list entry arrays grouped by status
+  """
+  statusLists(asArray: Boolean): [[MediaList]] @deprecated(reason: "Not GraphQL spec compliant, use lists field instead.")
+
+  """
+  A map of media list entry arrays grouped by custom lists
+  """
+  customLists(asArray: Boolean): [[MediaList]] @deprecated(reason: "Not GraphQL spec compliant, use lists field instead.")
+}
+
+"""
+List group of anime or manga entries
+"""
+type MediaListGroup {
+  """
+  Media list entries
+  """
+  entries: [MediaList]
+
+  name: String
+
+  isCustomList: Boolean
+
+  isSplitCompletedList: Boolean
+
+  status: MediaListStatus
+}
+
+"""
+Provides the parsed markdown as html
+"""
+type ParsedMarkdown {
+  """
+  The parsed markdown as html
+  """
+  html: String
+}
+
+type AniChartUser {
+  user: User
+
+  settings: Json
+
+  highlights: Json
+}
+
+type SiteStatistics {
+  users(sort: [SiteTrendSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): SiteTrendConnection
+
+  anime(sort: [SiteTrendSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): SiteTrendConnection
+
+  manga(sort: [SiteTrendSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): SiteTrendConnection
+
+  characters(sort: [SiteTrendSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): SiteTrendConnection
+
+  staff(sort: [SiteTrendSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): SiteTrendConnection
+
+  studios(sort: [SiteTrendSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): SiteTrendConnection
+
+  reviews(sort: [SiteTrendSort], "The page" page: Int, "The amount of entries per page, max 25" perPage: Int): SiteTrendConnection
+}
+
+"""
+Site trend sort enums
+"""
+enum SiteTrendSort {
+  DATE
+
+  DATE_DESC
+
+  COUNT
+
+  COUNT_DESC
+
+  CHANGE
+
+  CHANGE_DESC
+}
+
+type SiteTrendConnection {
+  edges: [SiteTrendEdge]
+
+  nodes: [SiteTrend]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+Site trend connection edge
+"""
+type SiteTrendEdge {
+  node: SiteTrend
+}
+
+"""
+Daily site statistics
+"""
+type SiteTrend {
+  """
+  The day the data was recorded (timestamp)
+  """
+  date: Int!
+
+  count: Int!
+
+  """
+  The change from yesterday
+  """
+  change: Int!
+}
+
+enum ExternalLinkMediaType {
+  ANIME
+
+  MANGA
+
+  STAFF
+}
+
+type Mutation {
+  UpdateUser("User's about/bio text" about: String, "User's title language" titleLanguage: UserTitleLanguage, "If the user should see media marked as adult-only" displayAdultContent: Boolean, "If the user should get notifications when a show they are watching aires" airingNotifications: Boolean, "The user's list scoring system" scoreFormat: ScoreFormat, "The user's default list order" rowOrder: String, "Profile highlight color" profileColor: String, "Profile highlight color (Max: 24)" donatorBadge: String, "Notification options" notificationOptions: [NotificationOptionInput], "Timezone offset format: -?HH:MM" timezone: String, "Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always. (Min: 0)" activityMergeTime: Int, "The user's anime list options" animeListOptions: MediaListOptionsInput, "The user's anime list options" mangaListOptions: MediaListOptionsInput, "The language the user wants to see staff and character names in" staffNameLanguage: UserStaffNameLanguage, "Only allow messages from other users the user follows" restrictMessagesToFollowing: Boolean, disabledListActivity: [ListActivityOptionInput]): User
+
+  """
+  Create or update a media list entry
+  """
+  SaveMediaListEntry("The list entry id, required for updating" id: Int, "The id of the media the entry is of" mediaId: Int, "The watching/reading status" status: MediaListStatus, "The score of the media in the user's chosen scoring method (Min: 0, Max: 100)" score: Float, "The score of the media in 100 point (Min: 0, Max: 100)" scoreRaw: Int, "The amount of episodes/chapters consumed by the user (Min: 0)" progress: Int, "The amount of volumes read by the user (Min: 0)" progressVolumes: Int, "The amount of times the user has rewatched/read the media (Min: 0, Max: 1000)" repeat: Int, "Priority of planning (Min: 0, Max: 255)" priority: Int, "If the entry should only be visible to authenticated user" private: Boolean, "Text notes (Min: 0, Max: 6000)" notes: String, "If the entry shown be hidden from non-custom lists" hiddenFromStatusLists: Boolean, "Array of custom list names which should be enabled for this entry" customLists: [String], "Array of advanced scores (Min: 0, Max: 100)" advancedScores: [Float], "When the entry was started by the user" startedAt: FuzzyDateInput, "When the entry was completed by the user" completedAt: FuzzyDateInput): MediaList
+
+  """
+  Update multiple media list entries to the same values
+  """
+  UpdateMediaListEntries("The watching/reading status" status: MediaListStatus, "The score of the media in the user's chosen scoring method (Min: 0, Max: 100)" score: Float, "The score of the media in 100 point (Min: 0, Max: 100)" scoreRaw: Int, "The amount of episodes/chapters consumed by the user (Min: 0)" progress: Int, "The amount of volumes read by the user (Min: 0)" progressVolumes: Int, "The amount of times the user has rewatched/read the media (Min: 0, Max: 1000)" repeat: Int, "Priority of planning (Min: 0, Max: 255)" priority: Int, "If the entry should only be visible to authenticated user" private: Boolean, "Text notes (Min: 0, Max: 6000)" notes: String, "If the entry shown be hidden from non-custom lists" hiddenFromStatusLists: Boolean, "Array of advanced scores (Min: 0, Max: 100)" advancedScores: [Float], "When the entry was started by the user" startedAt: FuzzyDateInput, "When the entry was completed by the user" completedAt: FuzzyDateInput, "The list entries ids to update" ids: [Int]): [MediaList]
+
+  """
+  Delete a media list entry
+  """
+  DeleteMediaListEntry("The id of the media list entry to delete" id: Int): Deleted
+
+  """
+  Delete a custom list and remove the list entries from it
+  """
+  DeleteCustomList("The name of the custom list to delete" customList: String, "The media list type of the custom list" type: MediaType): Deleted
+
+  """
+  Create or update text activity for the currently authenticated user
+  """
+  SaveTextActivity("The activity's id, required for updating" id: Int, "The activity text (Min: 5, Max: 10000)" text: String, "If the activity should be locked. (Mod Only)" locked: Boolean): TextActivity
+
+  """
+  Create or update message activity for the currently authenticated user
+  """
+  SaveMessageActivity("The activity id, required for updating" id: Int, "The activity message text (Min: 2, Max: 10000)" message: String, "The id of the user the message is being sent to" recipientId: Int, "If the activity should be private" private: Boolean, "If the activity should be locked. (Mod Only)" locked: Boolean, "If the message should be sent from the Moderator account (Mod Only)" asMod: Boolean): MessageActivity
+
+  """
+  Update list activity (Mod Only)
+  """
+  SaveListActivity("The activity's id, required for updating" id: Int, "If the activity should be locked. (Mod Only)" locked: Boolean): ListActivity
+
+  """
+  Delete an activity item of the authenticated users
+  """
+  DeleteActivity("The id of the activity to delete" id: Int): Deleted
+
+  """
+  Toggle activity to be pinned to the top of the user's activity feed
+  """
+  ToggleActivityPin("Toggle activity id to be pinned" id: Int, "If the activity should be pinned or unpinned" pinned: Boolean): ActivityUnion
+
+  """
+  Toggle the subscription of an activity item
+  """
+  ToggleActivitySubscription("The id of the activity to un/subscribe" activityId: Int, "Whether to subscribe or unsubscribe from the activity" subscribe: Boolean): ActivityUnion
+
+  """
+  Create or update an activity reply
+  """
+  SaveActivityReply("The activity reply id, required for updating" id: Int, "The id of the parent activity being replied to" activityId: Int, "The reply text (Min: 2, Max: 8000)" text: String, "If the reply should be sent from the Moderator account (Mod Only)" asMod: Boolean): ActivityReply
+
+  """
+  Delete an activity reply of the authenticated users
+  """
+  DeleteActivityReply("The id of the reply to delete" id: Int): Deleted
+
+  """
+  Add or remove a like from a likeable type.
+                            Returns all the users who liked the same model
+  """
+  ToggleLike("The id of the likeable type" id: Int, "The type of model to be un/liked" type: LikeableType): [User]
+
+  """
+  Add or remove a like from a likeable type.
+  """
+  ToggleLikeV2("The id of the likeable type" id: Int, "The type of model to be un/liked" type: LikeableType): LikeableUnion
+
+  """
+  Toggle the un/following of a user
+  """
+  ToggleFollow("The id of the user to un/follow" userId: Int): User
+
+  """
+  Favourite or unfavourite an anime, manga, character, staff member, or studio
+  """
+  ToggleFavourite("The id of the anime to un/favourite" animeId: Int, "The id of the manga to un/favourite" mangaId: Int, "The id of the character to un/favourite" characterId: Int, "The id of the staff to un/favourite" staffId: Int, "The id of the studio to un/favourite" studioId: Int): Favourites
+
+  """
+  Update the order favourites are displayed in
+  """
+  UpdateFavouriteOrder("The id of the anime to un/favourite" animeIds: [Int], "The id of the manga to un/favourite" mangaIds: [Int], "The id of the character to un/favourite" characterIds: [Int], "The id of the staff to un/favourite" staffIds: [Int], "The id of the studio to un/favourite" studioIds: [Int], "List of integers which the anime should be ordered by (Asc)" animeOrder: [Int], "List of integers which the manga should be ordered by (Asc)" mangaOrder: [Int], "List of integers which the character should be ordered by (Asc)" characterOrder: [Int], "List of integers which the staff should be ordered by (Asc)" staffOrder: [Int], "List of integers which the studio should be ordered by (Asc)" studioOrder: [Int]): Favourites
+
+  """
+  Create or update a review
+  """
+  SaveReview("The review id, required for updating" id: Int, "The id of the media the review is of" mediaId: Int, "The main review text (Min: 2600)" body: String, "A short summary/preview of the review (Min: 20, Max: 120)" summary: String, "The score of the review (Min: 0, Max: 100)" score: Int, "If the review should only be visible to its creator" private: Boolean): Review
+
+  """
+  Delete a review
+  """
+  DeleteReview("The id of the review to delete" id: Int): Deleted
+
+  """
+  Rate a review
+  """
+  RateReview("The id of the review to rate" reviewId: Int, "The rating to apply to the review" rating: ReviewRating): Review
+
+  """
+  Recommendation a media
+  """
+  SaveRecommendation("The id of the base media" mediaId: Int, "The id of the media to recommend" mediaRecommendationId: Int, "The rating to give the recommendation" rating: RecommendationRating): Recommendation
+
+  """
+  Create or update a forum thread
+  """
+  SaveThread("The thread id, required for updating" id: Int, "The title of the thread (Min: 6, Max: 120)" title: String, "The main text body of the thread (Max: 30000)" body: String, "Forum categories the thread should be within" categories: [Int], "Media related to the contents of the thread" mediaCategories: [Int], "If the thread should be stickied. (Mod Only)" sticky: Boolean, "If the thread should be locked. (Mod Only)" locked: Boolean): Thread
+
+  """
+  Delete a thread
+  """
+  DeleteThread("The id of the thread to delete" id: Int): Deleted
+
+  """
+  Toggle the subscription of a forum thread
+  """
+  ToggleThreadSubscription("The id of the forum thread to un/subscribe" threadId: Int, "Whether to subscribe or unsubscribe from the forum thread" subscribe: Boolean): Thread
+
+  """
+  Create or update a thread comment
+  """
+  SaveThreadComment("The comment id, required for updating" id: Int, "The id of thread the comment belongs to" threadId: Int, "The id of thread comment to reply to" parentCommentId: Int, "The comment markdown text (Min: 1, Max: 12000)" comment: String, "If the comment tree should be locked. (Mod Only)" locked: Boolean): ThreadComment
+
+  """
+  Delete a thread comment
+  """
+  DeleteThreadComment("The id of the thread comment to delete" id: Int): Deleted
+
+  UpdateAniChartSettings(titleLanguage: String, outgoingLinkProvider: String, theme: String, sort: String): Json
+
+  UpdateAniChartHighlights(highlights: [AniChartHighlightInput]): Json
+}
+
+"""
+Notification option input
+"""
+input NotificationOptionInput {
+  """
+  The type of notification
+  """
+  type: NotificationType
+
+  """
+  Whether this type of notification is enabled
+  """
+  enabled: Boolean
+}
+
+"""
+A user's list options for anime or manga lists
+"""
+input MediaListOptionsInput {
+  """
+  The order each list should be displayed in
+  """
+  sectionOrder: [String]
+
+  """
+  If the completed sections of the list should be separated by format
+  """
+  splitCompletedSectionByFormat: Boolean
+
+  """
+  The names of the user's custom lists
+  """
+  customLists: [String]
+
+  """
+  The names of the user's advanced scoring sections
+  """
+  advancedScoring: [String]
+
+  """
+  If advanced scoring is enabled
+  """
+  advancedScoringEnabled: Boolean
+
+  """
+  list theme
+  """
+  theme: String
+}
+
+input ListActivityOptionInput {
+  disabled: Boolean
+
+  type: MediaListStatus
+}
+
+"""
+Date object that allows for incomplete date values (fuzzy)
+"""
+input FuzzyDateInput {
+  """
+  Numeric Year (2017)
+  """
+  year: Int
+
+  """
+  Numeric Month (3)
+  """
+  month: Int
+
+  """
+  Numeric Day (24)
+  """
+  day: Int
+}
+
+"""
+Deleted data type
+"""
+type Deleted {
+  """
+  If an item has been successfully deleted
+  """
+  deleted: Boolean
+}
+
+"""
+Likeable union type
+"""
+union LikeableUnion = ListActivity|TextActivity|MessageActivity|ActivityReply|Thread|ThreadComment
+
+input AniChartHighlightInput {
+  mediaId: Int
+
+  highlight: String
+}
+
+"""
+Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter.
+"""
+type InternalPage {
+  mediaSubmissions(mediaId: Int, submissionId: Int, userId: Int, assigneeId: Int, status: SubmissionStatus, "Filter by the media's type" type: MediaType, "The order the results will be returned in" sort: [SubmissionSort]): [MediaSubmission]
+
+  characterSubmissions(characterId: Int, "Filter by the submitter of the submission" userId: Int, assigneeId: Int, "Filter by the status of the submission" status: SubmissionStatus, "The order the results will be returned in" sort: [SubmissionSort]): [CharacterSubmission]
+
+  staffSubmissions(staffId: Int, "Filter by the submitter of the submission" userId: Int, assigneeId: Int, "Filter by the status of the submission" status: SubmissionStatus, "The order the results will be returned in" sort: [SubmissionSort]): [StaffSubmission]
+
+  revisionHistory("Filter by the user id" userId: Int, "Filter by the media id" mediaId: Int, "Filter by the character id" characterId: Int, "Filter by the staff id" staffId: Int, "Filter by the studio id" studioId: Int): [RevisionHistory]
+
+  reports(reporterId: Int, reportedId: Int): [Report]
+
+  modActions(userId: Int, modId: Int, modId_not: Int, "(max 10,000 items)" modId_in: [Int], "(max 10,000 items)" modId_not_in: [Int]): [ModAction]
+
+  userBlockSearch("Filter by search query" search: String): [User]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+
+  users("Filter by the user id" id: Int, "Filter by the name of the user" name: String, "Filter to moderators only if true" isModerator: Boolean, "Filter by search query" search: String, "The order the results will be returned in" sort: [UserSort]): [User]
+
+  media("Filter by the media id" id: Int, "Filter by the media's MyAnimeList id" idMal: Int, "Filter by the start date of the media" startDate: FuzzyDateInt, "Filter by the end date of the media" endDate: FuzzyDateInt, "Filter by the season the media was released in" season: MediaSeason, "The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument" seasonYear: Int, "Filter by the media's type" type: MediaType, "Filter by the media's format" format: MediaFormat, "Filter by the media's current release status" status: MediaStatus, "Filter by amount of episodes the media has" episodes: Int, "Filter by the media's episode length" duration: Int, "Filter by the media's chapter count" chapters: Int, "Filter by the media's volume count" volumes: Int, "Filter by if the media's intended for 18+ adult audiences" isAdult: Boolean, "Filter by the media's genres" genre: String, "Filter by the media's tags" tag: String, "Only apply the tags filter argument to tags above this rank. Default: 18" minimumTagRank: Int, "Filter by the media's tags with in a tag category" tagCategory: String, "Filter by the media on the authenticated user's lists" onList: Boolean, "Filter media by sites name with a online streaming or reading license" licensedBy: String, "Filter media by sites id with a online streaming or reading license" licensedById: Int, "Filter by the media's average score" averageScore: Int, "Filter by the number of users with this media on their list" popularity: Int, "Filter by the source type of the media" source: MediaSource, "Filter by the media's country of origin" countryOfOrigin: CountryCode, "If the media is officially licensed or a self-published doujin release" isLicensed: Boolean, "Filter by search query" search: String, "Filter by the media id" id_not: Int, "Filter by the media id (max 10,000 items)" id_in: [Int], "Filter by the media id (max 10,000 items)" id_not_in: [Int], "Filter by the media's MyAnimeList id" idMal_not: Int, "Filter by the media's MyAnimeList id (max 10,000 items)" idMal_in: [Int], "Filter by the media's MyAnimeList id (max 10,000 items)" idMal_not_in: [Int], "Filter by the start date of the media" startDate_greater: FuzzyDateInt, "Filter by the start date of the media" startDate_lesser: FuzzyDateInt, "Filter by the start date of the media" startDate_like: String, "Filter by the end date of the media" endDate_greater: FuzzyDateInt, "Filter by the end date of the media" endDate_lesser: FuzzyDateInt, "Filter by the end date of the media" endDate_like: String, "Filter by the media's format (max 10,000 items)" format_in: [MediaFormat], "Filter by the media's format" format_not: MediaFormat, "Filter by the media's format (max 10,000 items)" format_not_in: [MediaFormat], "Filter by the media's current release status (max 10,000 items)" status_in: [MediaStatus], "Filter by the media's current release status" status_not: MediaStatus, "Filter by the media's current release status (max 10,000 items)" status_not_in: [MediaStatus], "Filter by amount of episodes the media has" episodes_greater: Int, "Filter by amount of episodes the media has" episodes_lesser: Int, "Filter by the media's episode length" duration_greater: Int, "Filter by the media's episode length" duration_lesser: Int, "Filter by the media's chapter count" chapters_greater: Int, "Filter by the media's chapter count" chapters_lesser: Int, "Filter by the media's volume count" volumes_greater: Int, "Filter by the media's volume count" volumes_lesser: Int, "Filter by the media's genres (max 10,000 items)" genre_in: [String], "Filter by the media's genres (max 10,000 items)" genre_not_in: [String], "Filter by the media's tags (max 10,000 items)" tag_in: [String], "Filter by the media's tags (max 10,000 items)" tag_not_in: [String], "Filter by the media's tags with in a tag category (max 10,000 items)" tagCategory_in: [String], "Filter by the media's tags with in a tag category (max 10,000 items)" tagCategory_not_in: [String], "Filter media by sites name with a online streaming or reading license (max 10,000 items)" licensedBy_in: [String], "Filter media by sites id with a online streaming or reading license (max 10,000 items)" licensedById_in: [Int], "Filter by the media's average score" averageScore_not: Int, "Filter by the media's average score" averageScore_greater: Int, "Filter by the media's average score" averageScore_lesser: Int, "Filter by the number of users with this media on their list" popularity_not: Int, "Filter by the number of users with this media on their list" popularity_greater: Int, "Filter by the number of users with this media on their list" popularity_lesser: Int, "Filter by the source type of the media (max 10,000 items)" source_in: [MediaSource], "Filter by the media's country of origin (max 10,000 items)" countryOfOrigin_in: [CountryCode], "Filter by the media's country of origin (max 10,000 items)" countryOfOrigin_not_in: [CountryCode], "The order the results will be returned in" sort: [MediaSort]): [Media]
+
+  characters("Filter by character id" id: Int, "Filter by character by if its their birthday today" isBirthday: Boolean, "Filter by search query" search: String, "Filter by character id" id_not: Int, "Filter by character id (max 10,000 items)" id_in: [Int], "Filter by character id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [CharacterSort]): [Character]
+
+  staff("Filter by the staff id" id: Int, "Filter by staff by if its their birthday today" isBirthday: Boolean, "Filter by search query" search: String, "Filter by the staff id" id_not: Int, "Filter by the staff id (max 10,000 items)" id_in: [Int], "Filter by the staff id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [StaffSort]): [Staff]
+
+  studios("Filter by the studio id" id: Int, "Filter by search query" search: String, "Filter by the studio id" id_not: Int, "Filter by the studio id (max 10,000 items)" id_in: [Int], "Filter by the studio id (max 10,000 items)" id_not_in: [Int], "The order the results will be returned in" sort: [StudioSort]): [Studio]
+
+  mediaList("Filter by a list entry's id" id: Int, "Filter by a user's id" userId: Int, "Filter by a user's name" userName: String, "Filter by the list entries media type" type: MediaType, "Filter by the watching/reading status" status: MediaListStatus, "Filter by the media id of the list entry" mediaId: Int, "Filter list entries to users who are being followed by the authenticated user" isFollowing: Boolean, "Filter by note words and #tags" notes: String, "Filter by the date the user started the media" startedAt: FuzzyDateInt, "Filter by the date the user completed the media" completedAt: FuzzyDateInt, "Limit to only entries also on the auth user's list. Requires user id or name arguments." compareWithAuthList: Boolean, "Filter by a user's id (max 10,000 items)" userId_in: [Int], "Filter by the watching/reading status (max 10,000 items)" status_in: [MediaListStatus], "Filter by the watching/reading status (max 10,000 items)" status_not_in: [MediaListStatus], "Filter by the watching/reading status" status_not: MediaListStatus, "Filter by the media id of the list entry (max 10,000 items)" mediaId_in: [Int], "Filter by the media id of the list entry (max 10,000 items)" mediaId_not_in: [Int], "Filter by note words and #tags" notes_like: String, "Filter by the date the user started the media" startedAt_greater: FuzzyDateInt, "Filter by the date the user started the media" startedAt_lesser: FuzzyDateInt, "Filter by the date the user started the media" startedAt_like: String, "Filter by the date the user completed the media" completedAt_greater: FuzzyDateInt, "Filter by the date the user completed the media" completedAt_lesser: FuzzyDateInt, "Filter by the date the user completed the media" completedAt_like: String, "The order the results will be returned in" sort: [MediaListSort]): [MediaList]
+
+  airingSchedules("Filter by the id of the airing schedule item" id: Int, "Filter by the id of associated media" mediaId: Int, "Filter by the airing episode number" episode: Int, "Filter by the time of airing" airingAt: Int, "Filter to episodes that haven't yet aired" notYetAired: Boolean, "Filter by the id of the airing schedule item" id_not: Int, "Filter by the id of the airing schedule item (max 10,000 items)" id_in: [Int], "Filter by the id of the airing schedule item (max 10,000 items)" id_not_in: [Int], "Filter by the id of associated media" mediaId_not: Int, "Filter by the id of associated media (max 10,000 items)" mediaId_in: [Int], "Filter by the id of associated media (max 10,000 items)" mediaId_not_in: [Int], "Filter by the airing episode number" episode_not: Int, "Filter by the airing episode number (max 10,000 items)" episode_in: [Int], "Filter by the airing episode number (max 10,000 items)" episode_not_in: [Int], "Filter by the airing episode number" episode_greater: Int, "Filter by the airing episode number" episode_lesser: Int, "Filter by the time of airing" airingAt_greater: Int, "Filter by the time of airing" airingAt_lesser: Int, "The order the results will be returned in" sort: [AiringSort]): [AiringSchedule]
+
+  mediaTrends("Filter by the media id" mediaId: Int, "Filter by date" date: Int, "Filter by trending amount" trending: Int, "Filter by score" averageScore: Int, "Filter by popularity" popularity: Int, "Filter by episode number" episode: Int, "Filter to stats recorded while the media was releasing" releasing: Boolean, "Filter by the media id" mediaId_not: Int, "Filter by the media id (max 10,000 items)" mediaId_in: [Int], "Filter by the media id (max 10,000 items)" mediaId_not_in: [Int], "Filter by date" date_greater: Int, "Filter by date" date_lesser: Int, "Filter by trending amount" trending_greater: Int, "Filter by trending amount" trending_lesser: Int, "Filter by trending amount" trending_not: Int, "Filter by score" averageScore_greater: Int, "Filter by score" averageScore_lesser: Int, "Filter by score" averageScore_not: Int, "Filter by popularity" popularity_greater: Int, "Filter by popularity" popularity_lesser: Int, "Filter by popularity" popularity_not: Int, "Filter by episode number" episode_greater: Int, "Filter by episode number" episode_lesser: Int, "Filter by episode number" episode_not: Int, "The order the results will be returned in" sort: [MediaTrendSort]): [MediaTrend]
+
+  notifications("Filter by the type of notifications" type: NotificationType, "Reset the unread notification count to 0 on load" resetNotificationCount: Boolean, "Filter by the type of notifications (max 10,000 items)" type_in: [NotificationType]): [NotificationUnion]
+
+  followers("User id of the follower/followed" userId: Int!, "The order the results will be returned in" sort: [UserSort]): [User]
+
+  following("User id of the follower/followed" userId: Int!, "The order the results will be returned in" sort: [UserSort]): [User]
+
+  activities("Filter by the activity id" id: Int, "Filter by the owner user id" userId: Int, "Filter by the id of the user who sent a message" messengerId: Int, "Filter by the associated media id of the activity" mediaId: Int, "Filter by the type of activity" type: ActivityType, "Filter activity to users who are being followed by the authenticated user" isFollowing: Boolean, "Filter activity to only activity with replies" hasReplies: Boolean, "Filter activity to only activity with replies or is of type text" hasRepliesOrTypeText: Boolean, "Filter by the time the activity was created" createdAt: Int, "Filter by the activity id" id_not: Int, "Filter by the activity id (max 10,000 items)" id_in: [Int], "Filter by the activity id (max 10,000 items)" id_not_in: [Int], "Filter by the owner user id" userId_not: Int, "Filter by the owner user id (max 10,000 items)" userId_in: [Int], "Filter by the owner user id (max 10,000 items)" userId_not_in: [Int], "Filter by the id of the user who sent a message" messengerId_not: Int, "Filter by the id of the user who sent a message (max 10,000 items)" messengerId_in: [Int], "Filter by the id of the user who sent a message (max 10,000 items)" messengerId_not_in: [Int], "Filter by the associated media id of the activity" mediaId_not: Int, "Filter by the associated media id of the activity (max 10,000 items)" mediaId_in: [Int], "Filter by the associated media id of the activity (max 10,000 items)" mediaId_not_in: [Int], "Filter by the type of activity" type_not: ActivityType, "Filter by the type of activity (max 10,000 items)" type_in: [ActivityType], "Filter by the type of activity (max 10,000 items)" type_not_in: [ActivityType], "Filter by the time the activity was created" createdAt_greater: Int, "Filter by the time the activity was created" createdAt_lesser: Int, "The order the results will be returned in" sort: [ActivitySort]): [ActivityUnion]
+
+  activityReplies("Filter by the reply id" id: Int, "Filter by the parent id" activityId: Int): [ActivityReply]
+
+  threads("Filter by the thread id" id: Int, "Filter by the user id of the thread's creator" userId: Int, "Filter by the user id of the last user to comment on the thread" replyUserId: Int, "Filter by if the currently authenticated user's subscribed threads" subscribed: Boolean, "Filter by thread category id" categoryId: Int, "Filter by thread media id category" mediaCategoryId: Int, "Filter by search query" search: String, "Filter by the thread id (max 10,000 items)" id_in: [Int], "The order the results will be returned in" sort: [ThreadSort]): [Thread]
+
+  threadComments("Filter by the comment id" id: Int, "Filter by the thread id" threadId: Int, "Filter by the user id of the comment's creator" userId: Int, "The order the results will be returned in" sort: [ThreadCommentSort]): [ThreadComment]
+
+  reviews("Filter by Review id" id: Int, "Filter by media id" mediaId: Int, "Filter by user id" userId: Int, "Filter by media type" mediaType: MediaType, "The order the results will be returned in" sort: [ReviewSort]): [Review]
+
+  recommendations("Filter by recommendation id" id: Int, "Filter by media id" mediaId: Int, "Filter by media recommendation id" mediaRecommendationId: Int, "Filter by user who created the recommendation" userId: Int, "Filter by total rating of the recommendation" rating: Int, "Filter by the media on the authenticated user's lists" onList: Boolean, "Filter by total rating of the recommendation" rating_greater: Int, "Filter by total rating of the recommendation" rating_lesser: Int, "The order the results will be returned in" sort: [RecommendationSort]): [Recommendation]
+
+  likes("The id of the likeable type" likeableId: Int, "The type of model the id applies to" type: LikeableType): [User]
+}
+
+"""
+Submission status
+"""
+enum SubmissionStatus {
+  PENDING
+
+  REJECTED
+
+  PARTIALLY_ACCEPTED
+
+  ACCEPTED
+}
+
+"""
+Submission sort enums
+"""
+enum SubmissionSort {
+  ID
+
+  ID_DESC
+}
+
+"""
+Media submission
+"""
+type MediaSubmission {
+  """
+  The id of the submission
+  """
+  id: Int!
+
+  """
+  User submitter of the submission
+  """
+  submitter: User
+
+  """
+  Data Mod assigned to handle the submission
+  """
+  assignee: User
+
+  """
+  Status of the submission
+  """
+  status: SubmissionStatus
+
+  submitterStats: Json
+
+  notes: String
+
+  source: String
+
+  changes: [String]
+
+  """
+  Whether the submission is locked
+  """
+  locked: Boolean
+
+  media: Media
+
+  submission: Media
+
+  characters: [MediaSubmissionComparison]
+
+  staff: [MediaSubmissionComparison]
+
+  studios: [MediaSubmissionComparison]
+
+  relations: [MediaEdge]
+
+  externalLinks: [MediaSubmissionComparison]
+
+  createdAt: Int
+}
+
+"""
+Media submission with comparison to current data
+"""
+type MediaSubmissionComparison {
+  submission: MediaSubmissionEdge
+
+  character: MediaCharacter
+
+  staff: StaffEdge
+
+  studio: StudioEdge
+
+  externalLink: MediaExternalLink
+}
+
+type MediaSubmissionEdge {
+  """
+  The id of the direct submission
+  """
+  id: Int
+
+  characterRole: CharacterRole
+
+  staffRole: String
+
+  roleNotes: String
+
+  dubGroup: String
+
+  characterName: String
+
+  isMain: Boolean
+
+  character: Character
+
+  characterSubmission: Character
+
+  voiceActor: Staff
+
+  voiceActorSubmission: Staff
+
+  staff: Staff
+
+  staffSubmission: Staff
+
+  studio: Studio
+
+  externalLink: MediaExternalLink
+
+  media: Media
+}
+
+"""
+Internal - Media characters separated
+"""
+type MediaCharacter {
+  """
+  The id of the connection
+  """
+  id: Int
+
+  """
+  The characters role in the media
+  """
+  role: CharacterRole
+
+  roleNotes: String
+
+  dubGroup: String
+
+  """
+  Media specific character name
+  """
+  characterName: String
+
+  """
+  The characters in the media voiced by the parent actor
+  """
+  character: Character
+
+  """
+  The voice actor of the character
+  """
+  voiceActor: Staff
+}
+
+"""
+A submission for a character that features in an anime or manga
+"""
+type CharacterSubmission {
+  """
+  The id of the submission
+  """
+  id: Int!
+
+  """
+  Character that the submission is referencing
+  """
+  character: Character
+
+  """
+  The character submission changes
+  """
+  submission: Character
+
+  """
+  Submitter for the submission
+  """
+  submitter: User
+
+  """
+  Data Mod assigned to handle the submission
+  """
+  assignee: User
+
+  """
+  Status of the submission
+  """
+  status: SubmissionStatus
+
+  """
+  Inner details of submission status
+  """
+  notes: String
+
+  source: String
+
+  """
+  Whether the submission is locked
+  """
+  locked: Boolean
+
+  createdAt: Int
+}
+
+"""
+A submission for a staff that features in an anime or manga
+"""
+type StaffSubmission {
+  """
+  The id of the submission
+  """
+  id: Int!
+
+  """
+  Staff that the submission is referencing
+  """
+  staff: Staff
+
+  """
+  The staff submission changes
+  """
+  submission: Staff
+
+  """
+  Submitter for the submission
+  """
+  submitter: User
+
+  """
+  Data Mod assigned to handle the submission
+  """
+  assignee: User
+
+  """
+  Status of the submission
+  """
+  status: SubmissionStatus
+
+  """
+  Inner details of submission status
+  """
+  notes: String
+
+  source: String
+
+  """
+  Whether the submission is locked
+  """
+  locked: Boolean
+
+  createdAt: Int
+}
+
+"""
+Feed of mod edit activity
+"""
+type RevisionHistory {
+  """
+  The id of the media
+  """
+  id: Int!
+
+  """
+  The action taken on the objects
+  """
+  action: RevisionHistoryAction
+
+  """
+  A JSON object of the fields that changed
+  """
+  changes: Json
+
+  """
+  The user who made the edit to the object
+  """
+  user: User
+
+  """
+  The media the mod feed entry references
+  """
+  media: Media
+
+  """
+  The character the mod feed entry references
+  """
+  character: Character
+
+  """
+  The staff member the mod feed entry references
+  """
+  staff: Staff
+
+  """
+  The studio the mod feed entry references
+  """
+  studio: Studio
+
+  """
+  The external link source the mod feed entry references
+  """
+  externalLink: MediaExternalLink
+
+  """
+  When the mod feed entry was created
+  """
+  createdAt: Int
+}
+
+"""
+Revision history actions
+"""
+enum RevisionHistoryAction {
+  CREATE
+
+  EDIT
+}
+
+type Report {
+  id: Int!
+
+  reporter: User
+
+  reported: User
+
+  reason: String
+
+  """
+  When the entry data was created
+  """
+  createdAt: Int
+
+  cleared: Boolean
+}
+
+type ModAction {
+  """
+  The id of the action
+  """
+  id: Int!
+
+  user: User
+
+  mod: User
+
+  type: ModActionType
+
+  objectId: Int
+
+  objectType: String
+
+  data: String
+
+  createdAt: Int!
+}
+
+enum ModActionType {
+  NOTE
+
+  BAN
+
+  DELETE
+
+  EDIT
+
+  EXPIRE
+
+  REPORT
+
+  RESET
+
+  ANON
+}
+
+"""
+The official titles of the media in various languages
+"""
+input MediaTitleInput {
+  """
+  The romanization of the native language title
+  """
+  romaji: String
+
+  """
+  The official english title
+  """
+  english: String
+
+  """
+  Official title in it's native language
+  """
+  native: String
+}
+
+input AiringScheduleInput {
+  airingAt: Int
+
+  episode: Int
+
+  timeUntilAiring: Int
+}
+
+"""
+An external link to another site related to the media
+"""
+input MediaExternalLinkInput {
+  """
+  The id of the external link
+  """
+  id: Int!
+
+  """
+  The url of the external link
+  """
+  url: String!
+
+  """
+  The site location of the external link
+  """
+  site: String!
+}
+
+"""
+The names of the character
+"""
+input CharacterNameInput {
+  """
+  The character's given name
+  """
+  first: String
+
+  """
+  The character's middle name
+  """
+  middle: String
+
+  """
+  The character's surname
+  """
+  last: String
+
+  """
+  The character's full name in their native language
+  """
+  native: String
+
+  """
+  Other names the character might be referred by
+  """
+  alternative: [String]
+
+  """
+  Other names the character might be referred to as but are spoilers
+  """
+  alternativeSpoiler: [String]
+}
+
+type CharacterSubmissionConnection {
+  edges: [CharacterSubmissionEdge]
+
+  nodes: [CharacterSubmission]
+
+  """
+  The pagination information
+  """
+  pageInfo: PageInfo
+}
+
+"""
+CharacterSubmission connection edge
+"""
+type CharacterSubmissionEdge {
+  node: CharacterSubmission
+
+  """
+  The characters role in the media
+  """
+  role: CharacterRole
+
+  """
+  The voice actors of the character
+  """
+  voiceActors: [Staff]
+
+  """
+  The submitted voice actors of the character
+  """
+  submittedVoiceActors: [StaffSubmission]
+}
+
+"""
+The names of the staff member
+"""
+input StaffNameInput {
+  """
+  The person's given name
+  """
+  first: String
+
+  """
+  The person's middle name
+  """
+  middle: String
+
+  """
+  The person's surname
+  """
+  last: String
+
+  """
+  The person's full name in their native language
+  """
+  native: String
+
+  """
+  Other names the character might be referred by
+  """
+  alternative: [String]
+}
+
+"""
+User data for moderators
+"""
+type UserModData {
+  alts: [User]
+
+  bans: Json
+
+  ip: Json
+
+  counts: Json
+
+  privacy: Int
+
+  email: String
+}
+
+"""
+The `ID` scalar type represents a unique identifier, often used to
+refetch an object or as key for a cache. The ID type appears in a JSON
+response as a String; however, it is not intended to be human-readable.
+When expected as an input type, any string (such as `"4"`) or integer
+(such as `4`) input value will be accepted as an ID.
+"""
+scalar ID
+
+"""
+A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.
+"""
+type __Schema {
+  """
+  A list of all types supported by this server.
+  """
+  types: [__Type!]!
+
+  """
+  The type that query operations will be rooted at.
+  """
+  queryType: __Type!
+
+  """
+  If this server supports mutation, the type that mutation operations will be rooted at.
+  """
+  mutationType: __Type
+
+  """
+  If this server support subscription, the type that subscription operations will be rooted at.
+  """
+  subscriptionType: __Type
+
+  """
+  A list of all directives supported by this server.
+  """
+  directives: [__Directive!]!
+}
+
+"""
+The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.
+
+Depending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name and description, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.
+"""
+type __Type {
+  kind: __TypeKind!
+
+  name: String
+
+  description: String
+
+  fields(includeDeprecated: Boolean = false): [__Field!]
+
+  interfaces: [__Type!]
+
+  possibleTypes: [__Type!]
+
+  enumValues(includeDeprecated: Boolean = false): [__EnumValue!]
+
+  inputFields: [__InputValue!]
+
+  ofType: __Type
+}
+
+"""
+An enum describing what kind of type a given `__Type` is.
+"""
+enum __TypeKind {
+  """
+  Indicates this type is a scalar.
+  """
+  SCALAR
+
+  """
+  Indicates this type is an object. `fields` and `interfaces` are valid fields.
+  """
+  OBJECT
+
+  """
+  Indicates this type is an interface. `fields` and `possibleTypes` are valid fields.
+  """
+  INTERFACE
+
+  """
+  Indicates this type is a union. `possibleTypes` is a valid field.
+  """
+  UNION
+
+  """
+  Indicates this type is an enum. `enumValues` is a valid field.
+  """
+  ENUM
+
+  """
+  Indicates this type is an input object. `inputFields` is a valid field.
+  """
+  INPUT_OBJECT
+
+  """
+  Indicates this type is a list. `ofType` is a valid field.
+  """
+  LIST
+
+  """
+  Indicates this type is a non-null. `ofType` is a valid field.
+  """
+  NON_NULL
+}
+
+"""
+Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.
+"""
+type __Field {
+  name: String!
+
+  description: String
+
+  args: [__InputValue!]!
+
+  type: __Type!
+
+  isDeprecated: Boolean!
+
+  deprecationReason: String
+}
+
+"""
+Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.
+"""
+type __InputValue {
+  name: String!
+
+  description: String
+
+  type: __Type!
+
+  """
+  A GraphQL-formatted string representing the default value for this input value.
+  """
+  defaultValue: String
+}
+
+"""
+One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.
+"""
+type __EnumValue {
+  name: String!
+
+  description: String
+
+  isDeprecated: Boolean!
+
+  deprecationReason: String
+}
+
+"""
+A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.
+
+In some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.
+"""
+type __Directive {
+  name: String!
+
+  description: String
+
+  locations: [__DirectiveLocation!]!
+
+  args: [__InputValue!]!
+
+  onOperation: Boolean! @deprecated(reason: "Use `locations`.")
+
+  onFragment: Boolean! @deprecated(reason: "Use `locations`.")
+
+  onField: Boolean! @deprecated(reason: "Use `locations`.")
+}
+
+"""
+A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.
+"""
+enum __DirectiveLocation {
+  """
+  Location adjacent to a query operation.
+  """
+  QUERY
+
+  """
+  Location adjacent to a mutation operation.
+  """
+  MUTATION
+
+  """
+  Location adjacent to a subscription operation.
+  """
+  SUBSCRIPTION
+
+  """
+  Location adjacent to a field.
+  """
+  FIELD
+
+  """
+  Location adjacent to a fragment definition.
+  """
+  FRAGMENT_DEFINITION
+
+  """
+  Location adjacent to a fragment spread.
+  """
+  FRAGMENT_SPREAD
+
+  """
+  Location adjacent to an inline fragment.
+  """
+  INLINE_FRAGMENT
+
+  """
+  Location adjacent to a schema definition.
+  """
+  SCHEMA
+
+  """
+  Location adjacent to a scalar definition.
+  """
+  SCALAR
+
+  """
+  Location adjacent to an object type definition.
+  """
+  OBJECT
+
+  """
+  Location adjacent to a field definition.
+  """
+  FIELD_DEFINITION
+
+  """
+  Location adjacent to an argument definition.
+  """
+  ARGUMENT_DEFINITION
+
+  """
+  Location adjacent to an interface definition.
+  """
+  INTERFACE
+
+  """
+  Location adjacent to a union definition.
+  """
+  UNION
+
+  """
+  Location adjacent to an enum definition.
+  """
+  ENUM
+
+  """
+  Location adjacent to an enum value definition.
+  """
+  ENUM_VALUE
+
+  """
+  Location adjacent to an input object type definition.
+  """
+  INPUT_OBJECT
+
+  """
+  Location adjacent to an input object field definition.
+  """
+  INPUT_FIELD_DEFINITION
+}
+
+"""
+Directs the executor to include this field or fragment only when the `if` argument is true.
+"""
+directive @include("Included when true." if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+Directs the executor to skip this field or fragment when the `if` argument is true.
+"""
+directive @skip("Skipped when true." if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+Marks an element of a GraphQL schema as no longer supported.
+"""
+directive @deprecated("Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted in [Markdown](https://daringfireball.net/projects/markdown/)." reason: String = "No longer supported") on FIELD_DEFINITION | ENUM_VALUE
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
