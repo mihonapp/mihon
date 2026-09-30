@@ -15,11 +15,8 @@ class ChapterNameSuffixMigration(
     override val version: Float = 30f
 
     override suspend fun invoke(migrationContext: MigrationContext): Boolean {
-        if (version > migrationContext.previousVersion) {
-            val enableChapterNameHash = preferenceStore.getBoolean("pref_enable_chapter_name_hash", false)
-            if (!enableChapterNameHash.isSet()) {
-                enableChapterNameHash.set(true)
-            }
+        if (migrationContext.previousVersion in 13..33) {
+            preferences.enableChapterNameHash.set(true)
         }
         return true
     }
