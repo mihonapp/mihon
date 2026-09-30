@@ -1,8 +1,10 @@
 package eu.kanade.tachiyomi.data.coil
 
 import android.graphics.Bitmap
+import android.graphics.Canvas as AndroidCanvas
+import android.graphics.Paint
+import android.graphics.Rect
 import androidx.core.graphics.createBitmap
-import androidx.core.graphics.scale
 import ca.mpreg.imagedecoder.ImageDecoder
 import coil3.Canvas
 import coil3.Image
@@ -14,6 +16,7 @@ import coil3.decode.Decoder
 import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
+import coil3.size.Dimension
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 
@@ -89,20 +92,45 @@ class ImageDecoder(private val resources: ImageSource, private val options: Opti
 
         // Downsample if needed. sampleSize is a power-of-two factor; the target
         // dimensions are src / sampleSize, matching BitmapFactory inSampleSize behaviour.
-        val bitmap = if (sampleSize > 1) {
+        val sampledBitmap = if (sampleSize > 1) {
             val scaledWidth = (srcWidth / sampleSize).coerceAtLeast(1)
             val scaledHeight = (srcHeight / sampleSize).coerceAtLeast(1)
-            val scaled = fullBitmap.scale(scaledWidth, scaledHeight)
+            val scaled = fullBitmap.scaleWithCanvas(scaledWidth, scaledHeight)
             fullBitmap.recycle()
             scaled
         } else {
             fullBitmap
         }
 
+        // Webtoon: the sample size only ever shrinks by powers of two, so a page slightly wider than
+        // the screen stays at full width. Scale it down to the exact view width to save GPU memory.
+        val targetWidth = if (options.customDecoder) (options.size.width as? Dimension.Pixels)?.px else null
+        val bitmap = if (targetWidth != null && targetWidth in 1 until sampledBitmap.width) {
+            val targetHeight = (sampledBitmap.height.toLong() * targetWidth / sampledBitmap.width)
+                .toInt()
+                .coerceAtLeast(1)
+            val scaled = sampledBitmap.scaleWithCanvas(targetWidth, targetHeight)
+            sampledBitmap.recycle()
+            scaled
+        } else {
+            sampledBitmap
+        }
+
         return DecodeResult(
             image = bitmap.asImage(),
-            isSampled = sampleSize > 1,
+            isSampled = bitmap.width != srcWidth,
         )
+    }
+
+    /**
+     * Same as [Bitmap.createScaledBitmap], but drawn manually. `createScaledBitmap` calls
+     * `prepareToDraw()` on the result, which makes the RenderThread upload the whole (huge) webtoon
+     * page as one GPU texture, stalling rendering and evicting the strips that are actually visible.
+     */
+    private fun Bitmap.scaleWithCanvas(width: Int, height: Int): Bitmap {
+        val dst = createBitmap(width, height, config ?: Bitmap.Config.ARGB_8888)
+        AndroidCanvas(dst).drawBitmap(this, null, Rect(0, 0, width, height), Paint(Paint.FILTER_BITMAP_FLAG))
+        return dst
     }
 
     class Factory : Decoder.Factory {
@@ -123,7 +151,7 @@ class ImageDecoder(private val resources: ImageSource, private val options: Opti
                 ImageUtil.ImageType.JXL,
                 ImageUtil.ImageType.HEIF,
                 ImageUtil.ImageType.JP2,
-                -> true
+                    -> true
 
                 else -> false
             }
