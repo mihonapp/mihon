@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.coil
 
 import android.graphics.Bitmap
-import android.graphics.Canvas as AndroidCanvas
 import android.graphics.Paint
 import android.graphics.Rect
 import androidx.core.graphics.createBitmap
@@ -19,6 +18,7 @@ import coil3.request.Options
 import coil3.size.Dimension
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
+import android.graphics.Canvas as AndroidCanvas
 
 /**
  * A [Decoder] that uses [ImageDecoder] to decode image formats not supported
@@ -151,7 +151,7 @@ class ImageDecoder(private val resources: ImageSource, private val options: Opti
                 ImageUtil.ImageType.JXL,
                 ImageUtil.ImageType.HEIF,
                 ImageUtil.ImageType.JP2,
-                    -> true
+                -> true
 
                 else -> false
             }
