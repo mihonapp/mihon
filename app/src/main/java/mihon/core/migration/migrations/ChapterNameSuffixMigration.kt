@@ -10,7 +10,7 @@ import tachiyomi.core.common.preference.PreferenceStore
 @Inject
 @ContributesIntoSet(AppScope::class)
 class ChapterNameSuffixMigration(
-    private val preferenceStore: PreferenceStore,
+    private val preference: LibraryPreferences,
 ) : Migration {
     override val version: Float = 34f
 
