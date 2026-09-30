@@ -5,7 +5,7 @@ import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.Inject
 import mihon.core.migration.Migration
 import mihon.core.migration.MigrationContext
-import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.domain.library.service.LibraryPreferences
 
 @Inject
 @ContributesIntoSet(AppScope::class)
@@ -16,7 +16,7 @@ class ChapterNameSuffixMigration(
 
     override suspend fun invoke(migrationContext: MigrationContext): Boolean {
         if (migrationContext.previousVersion in 13..33) {
-            preferences.enableChapterNameHash.set(true)
+            preference.enableChapterNameHash.set(true)
         }
         return true
     }
