@@ -214,8 +214,8 @@ class DownloadProvider(
         // different states of non-ASCII filenames and chapter name hash settings.
         // This ensures that chapters downloaded under any past configuration
         // combination can still be successfully found.
-        val othersChapterDirNames = listOf(true, false)
-            .let { it.flatMap { a -> it.map { b -> a to b } } }
+        val booleanPairPermutation = listOf(false to false, false to true, true to false, true to true)
+        val othersChapterDirNames = booleanPairPermutation
             .map { (disallowNonAsciiFilenames, enableChapterNameHash) ->
                 getChapterDirName(
                     chapterName,
