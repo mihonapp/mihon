@@ -12,7 +12,7 @@ import tachiyomi.core.common.preference.PreferenceStore
 class ChapterNameSuffixMigration(
     private val preferenceStore: PreferenceStore,
 ) : Migration {
-    override val version: Float = 30f
+    override val version: Float = 34f
 
     override suspend fun invoke(migrationContext: MigrationContext): Boolean {
         if (migrationContext.previousVersion in 13..33) {
