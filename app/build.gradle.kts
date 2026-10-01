@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 33
+        versionCode = 34
         versionName = "0.20.4"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
