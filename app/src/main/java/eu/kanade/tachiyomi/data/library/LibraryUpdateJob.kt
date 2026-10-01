@@ -278,7 +278,18 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             .sortedByDescending { it.sourceOrder }
 
                                         if (newChapters.isNotEmpty()) {
-                                            val chaptersToDownload = filterChaptersForDownload.await(manga, newChapters)
+                                            val chaptersToDownload = filterChaptersForDownload.await(
+                                                manga,
+                                                newChapters,
+                                            ) { chapter ->
+                                                downloadManager.isChapterDownloaded(
+                                                    chapter.name,
+                                                    chapter.scanlator,
+                                                    chapter.url,
+                                                    manga.title,
+                                                    manga.source,
+                                                )
+                                            }
 
                                             if (chaptersToDownload.isNotEmpty()) {
                                                 downloadChapters(manga, chaptersToDownload)

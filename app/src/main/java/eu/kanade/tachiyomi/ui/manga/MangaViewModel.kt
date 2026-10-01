@@ -842,7 +842,15 @@ class MangaViewModel(
     private fun downloadNewChapters(chapters: List<Chapter>) {
         viewModelScope.launchNonCancellable {
             val manga = successState?.manga ?: return@launchNonCancellable
-            val chaptersToDownload = filterChaptersForDownload.await(manga, chapters)
+            val chaptersToDownload = filterChaptersForDownload.await(manga, chapters) { chapter ->
+                downloadManager.isChapterDownloaded(
+                    chapter.name,
+                    chapter.scanlator,
+                    chapter.url,
+                    manga.title,
+                    manga.source,
+                )
+            }
 
             if (chaptersToDownload.isNotEmpty()) {
                 downloadChapters(chaptersToDownload)

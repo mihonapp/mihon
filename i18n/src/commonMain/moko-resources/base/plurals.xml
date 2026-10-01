@@ -25,6 +25,11 @@
         <item quantity="other">Next %d unread chapters</item>
     </plurals>
 
+    <plurals name="unread_chapters">
+        <item quantity="one">%d unread chapter</item>
+        <item quantity="other">%d unread chapters</item>
+    </plurals>
+
     <plurals name="restore_completed_message">
         <item quantity="one">Done in %1$s with %2$s error</item>
         <item quantity="other">Done in %1$s with %2$s errors</item>
