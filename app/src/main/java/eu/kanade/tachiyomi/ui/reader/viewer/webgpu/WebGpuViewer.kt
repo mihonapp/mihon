@@ -958,8 +958,8 @@ open class WebGpuViewer(
             onTap = { offset ->
                 when (config.navigator.getAction(PointF(offset.x, offset.y))) {
                     NavigationRegion.MENU -> activity.toggleMenu()
-                    NavigationRegion.NEXT -> if (isReversed) moveToPrevious() else moveToNext()
-                    NavigationRegion.PREV -> if (isReversed) moveToNext() else moveToPrevious()
+                    NavigationRegion.NEXT -> moveToNext()
+                    NavigationRegion.PREV -> moveToPrevious()
                     NavigationRegion.RIGHT -> moveRight()
                     NavigationRegion.LEFT -> moveLeft()
                 }
@@ -1920,12 +1920,13 @@ open class WebGpuViewer(
         pager.state.animatePageTurn(if (isReversed) direction else -direction)
     }
 
+    // moveRight/moveLeft are screen directions, so a right-to-left book's next is to the left.
     fun moveToNext() {
-        moveRight()
+        if (isReversed) moveLeft() else moveRight()
     }
 
     fun moveToPrevious() {
-        moveLeft()
+        if (isReversed) moveRight() else moveLeft()
     }
 
     protected open fun moveRight() {
@@ -2011,7 +2012,7 @@ open class WebGpuViewer(
                 if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
-                    if (!config.volumeKeysInverted.xor(isReversed)) moveDown() else moveUp()
+                    if (!config.volumeKeysInverted) moveDown() else moveUp()
                 }
             }
 
@@ -2019,7 +2020,7 @@ open class WebGpuViewer(
                 if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
-                    if (!config.volumeKeysInverted.xor(isReversed)) moveUp() else moveDown()
+                    if (!config.volumeKeysInverted) moveUp() else moveDown()
                 }
             }
 
