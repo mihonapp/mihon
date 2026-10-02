@@ -18,7 +18,7 @@ import androidx.work.workDataOf
 import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
-import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreWorker
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
@@ -32,7 +32,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.storage.service.StorageManager
 import java.util.concurrent.TimeUnit
 
-class BackupCreateJob(private val context: Context, workerParams: WorkerParameters) :
+class BackupCreateWorker(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
     private val graph: AppGraph = context.metroGraph()
@@ -50,7 +50,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
         val isAutoBackup = inputData.getBoolean(IS_AUTO_BACKUP_KEY, true)
 
-        if (isAutoBackup && BackupRestoreJob.isRunning(context.workManager)) return Result.retry()
+        if (isAutoBackup && BackupRestoreWorker.isRunning(context.workManager)) return Result.retry()
 
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: getAutomaticBackupLocation()
@@ -105,7 +105,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
                     requiresBatteryNotLow = true,
                 )
 
-                val request = PeriodicWorkRequestBuilder<BackupCreateJob>(
+                val request = PeriodicWorkRequestBuilder<BackupCreateWorker>(
                     interval.toLong(),
                     TimeUnit.HOURS,
                     10,
@@ -129,7 +129,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
                 LOCATION_URI_KEY to uri.toString(),
                 OPTIONS_KEY to options.asBooleanArray(),
             )
-            val request = OneTimeWorkRequestBuilder<BackupCreateJob>()
+            val request = OneTimeWorkRequestBuilder<BackupCreateWorker>()
                 .addTag(TAG_MANUAL)
                 .setInputData(inputData)
                 .build()

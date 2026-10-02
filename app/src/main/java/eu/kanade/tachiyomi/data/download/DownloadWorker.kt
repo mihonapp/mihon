@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
  * This worker owns the lifecycle of the downloader: it starts the downloader and stops it when the
  * worker is stopped by the system or there's no suitable network available.
  */
-class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineWorker(context, workerParams) {
+class DownloadWorker(context: Context, workerParams: WorkerParameters) : CoroutineWorker(context, workerParams) {
 
     private val graph: AppGraph = context.metroGraph()
 
@@ -94,7 +94,7 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
         private const val TAG = "Downloader"
 
         fun start(context: Context) {
-            val request = OneTimeWorkRequestBuilder<DownloadJob>()
+            val request = OneTimeWorkRequestBuilder<DownloadWorker>()
                 .addTag(TAG)
                 .build()
             WorkManager.getInstance(context)

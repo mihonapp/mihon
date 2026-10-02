@@ -20,7 +20,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.interactor.GetTracks
 import java.util.concurrent.TimeUnit
 
-class DelayedTrackingUpdateJob(private val context: Context, workerParams: WorkerParameters) :
+class DelayedTrackingUpdateWorker(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
     private val graph: AppGraph = context.metroGraph()
@@ -66,7 +66,7 @@ class DelayedTrackingUpdateJob(private val context: Context, workerParams: Worke
                 requiredNetworkType = NetworkType.CONNECTED,
             )
 
-            val request = OneTimeWorkRequestBuilder<DelayedTrackingUpdateJob>()
+            val request = OneTimeWorkRequestBuilder<DelayedTrackingUpdateWorker>()
                 .setConstraints(constraints)
                 .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 5, TimeUnit.MINUTES)
                 .addTag(TAG)
