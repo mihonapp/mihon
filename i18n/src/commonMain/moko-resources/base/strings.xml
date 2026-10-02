@@ -167,6 +167,7 @@
     <string name="action_webview_close_tab">Close tab</string>
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
+    <string name="action_skip_update">Skip this version</string>
     <string name="action_add_anyway">Add anyway</string>
 
     <!-- Operations -->

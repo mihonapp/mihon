@@ -10,6 +10,7 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.more.NewUpdateScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import mihon.app.di.appGraph
 
 class NewUpdateScreen(
     private val versionName: String,
@@ -43,6 +44,10 @@ class NewUpdateScreen(
                 }
             },
             onRejectUpdate = navigator::pop,
+            onSkipUpdate = {
+                context.appGraph.basePreferences.skippedUpdateVersion.set(versionName)
+                navigator.pop()
+            },
         )
     }
 }
