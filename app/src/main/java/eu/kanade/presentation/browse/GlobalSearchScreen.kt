@@ -10,6 +10,7 @@ import eu.kanade.presentation.browse.components.GlobalSearchErrorResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchLoadingResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
+import eu.kanade.presentation.browse.components.SmartGlobalSearchContent
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
@@ -49,17 +50,21 @@ fun GlobalSearchScreen(
             )
         },
     ) { paddingValues ->
-        GlobalSearchContent(
-            items = state.filteredItems,
+        SmartGlobalSearchContent(
+            results = state.filteredResults,
+            suggestions = state.suggestions,
             contentPadding = paddingValues,
             getManga = getManga,
-            onClickSource = onClickSource,
             onClickItem = onClickItem,
             onLongClickItem = onLongClickItem,
         )
     }
 }
 
+/**
+ * Per-source search results layout (one row/section per source). Used by the migration
+ * search, which needs to compare the same series across sources individually.
+ */
 @Composable
 internal fun GlobalSearchContent(
     items: Map<Source, SearchItemResult>,
