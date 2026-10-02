@@ -98,7 +98,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.drawUnderCutout,
                     title = stringResource(MR.strings.pref_cutout_short),
-                    enabled = LocalView.current.hasDisplayCutout() && fullscreen,
+                    visible = LocalView.current.hasDisplayCutout() && fullscreen,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.keepScreenOn,
@@ -131,14 +131,14 @@ object SettingsReaderScreen : SearchableSettings {
                     valueRange = ReaderPreferences.MILLI_CONVERSION.let { it..it * 15 step it },
                     title = stringResource(MR.strings.pref_flash_duration),
                     valueText = { stringResource(MR.strings.pref_flash_duration_summary, it) },
-                    enabled = flashPageState,
+                    visible = flashPageState,
                 ),
                 Preference.PreferenceItem.SliderPreference(
                     preference = readerPreferences.flashPageInterval,
                     valueRange = 1..10,
                     title = stringResource(MR.strings.pref_flash_page_interval),
                     valueText = { pluralStringResource(MR.plurals.pref_pages, it, it) },
-                    enabled = flashPageState,
+                    visible = flashPageState,
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = flashColorPref,
@@ -149,7 +149,7 @@ object SettingsReaderScreen : SearchableSettings {
                             to stringResource(MR.strings.pref_flash_style_white_black),
                     ),
                     title = stringResource(MR.strings.pref_flash_with),
-                    enabled = flashPageState,
+                    visible = flashPageState,
                 ),
             ),
         )
@@ -212,7 +212,7 @@ object SettingsReaderScreen : SearchableSettings {
                     )
                         .associateWith { stringResource(it.titleRes) },
                     title = stringResource(MR.strings.pref_read_with_tapping_inverted),
-                    enabled = navMode != 5,
+                    visible = navMode != 5,
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = imageScaleTypePref,
@@ -235,12 +235,12 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.landscapeZoom,
                     title = stringResource(MR.strings.pref_landscape_zoom),
-                    enabled = imageScaleType == 1,
+                    visible = imageScaleType == 1,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.navigateToPan,
                     title = stringResource(MR.strings.pref_navigate_pan),
-                    enabled = navMode != 5,
+                    visible = navMode != 5,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = dualPageSplitPref,
@@ -254,7 +254,7 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.dualPageInvertPaged,
                     title = stringResource(MR.strings.pref_dual_page_invert),
                     subtitle = stringResource(MR.strings.pref_dual_page_invert_summary),
-                    enabled = dualPageSplit,
+                    visible = dualPageSplit,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = rotateToFitPref,
@@ -267,7 +267,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.dualPageRotateToFitInvert,
                     title = stringResource(MR.strings.pref_page_rotate_invert),
-                    enabled = rotateToFit,
+                    visible = rotateToFit,
                 ),
             ),
         )
@@ -305,7 +305,7 @@ object SettingsReaderScreen : SearchableSettings {
                     )
                         .associateWith { stringResource(it.titleRes) },
                     title = stringResource(MR.strings.pref_read_with_tapping_inverted),
-                    enabled = navMode != 5,
+                    visible = navMode != 5,
                 ),
                 Preference.PreferenceItem.SliderPreference(
                     preference = readerPreferences.webtoonSidePadding,
@@ -341,7 +341,7 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.dualPageInvertWebtoon,
                     title = stringResource(MR.strings.pref_dual_page_invert),
                     subtitle = stringResource(MR.strings.pref_dual_page_invert_summary),
-                    enabled = dualPageSplit,
+                    visible = dualPageSplit,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = rotateToFitPref,
@@ -354,7 +354,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.dualPageRotateToFitInvertWebtoon,
                     title = stringResource(MR.strings.pref_page_rotate_invert),
-                    enabled = rotateToFit,
+                    visible = rotateToFit,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.webtoonDoubleTapZoomEnabled,
@@ -385,7 +385,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.readWithVolumeKeysInverted,
                     title = stringResource(MR.strings.pref_read_with_volume_keys_inverted),
-                    enabled = readWithVolumeKeys,
+                    visible = readWithVolumeKeys,
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
                     preference = readerPreferences.verticalNavigator,
@@ -396,14 +396,14 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.verticalNavigatorOnLeft,
                     title = stringResource(MR.strings.pref_webtoon_vertical_navigator_on_left),
-                    enabled = verticalNavigator.isNotEmpty(),
+                    visible = verticalNavigator.isNotEmpty(),
                 ),
                 Preference.PreferenceItem.SliderPreference(
                     preference = readerPreferences.verticalNavigatorHeight,
                     valueRange = 65..100,
                     steps = 6,
                     title = stringResource(MR.strings.pref_vertical_navigator_height),
-                    enabled = verticalNavigator.isNotEmpty(),
+                    visible = verticalNavigator.isNotEmpty(),
                 ),
             ),
         )
