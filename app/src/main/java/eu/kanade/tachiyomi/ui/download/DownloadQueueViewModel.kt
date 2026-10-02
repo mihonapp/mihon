@@ -116,6 +116,9 @@ class DownloadQueueViewModel(
                     R.id.cancel_download -> {
                         cancel(listOf(item.download))
                     }
+                    R.id.delete_tmp -> {
+                        deleteTemporaryFiles(listOf(item.download))
+                    }
                     R.id.cancel_series -> {
                         val allDownloadsForSeries = adapter?.currentItems
                             ?.filterIsInstance<DownloadItem>()
@@ -162,6 +165,10 @@ class DownloadQueueViewModel(
 
     fun cancel(downloads: List<Download>) {
         downloadManager.cancelQueuedDownloads(downloads)
+    }
+
+    fun deleteTemporaryFiles(downloads: List<Download>) {
+        downloadManager.deleteTemporaryFiles(downloads)
     }
 
     fun <R : Comparable<R>> reorderQueue(selector: (DownloadItem) -> R, reverse: Boolean = false) {
