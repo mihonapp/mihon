@@ -115,6 +115,7 @@ class LocalSource(
                         mangaDirs.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
                     }
                 }
+
                 is OrderBy.Latest -> {
                     mangaDirs = if (filter.state!!.ascending) {
                         mangaDirs.sortedBy(UniFile::lastModified)
@@ -122,6 +123,7 @@ class LocalSource(
                         mangaDirs.sortedByDescending(UniFile::lastModified)
                     }
                 }
+
                 else -> {
                     /* Do nothing */
                 }
@@ -291,29 +293,33 @@ class LocalSource(
             // Only keep supported formats
             .filterNot { it.name.orEmpty().startsWith('.') }
             .filter { it.isDirectory || Archive.isSupported(it) || it.extension.equals("epub", true) }
-            .map { chapterFile ->
-                SChapter.create().apply {
-                    url = "${manga.url}/${chapterFile.name}"
-                    name = if (chapterFile.isDirectory) {
-                        chapterFile.name
-                    } else {
-                        chapterFile.nameWithoutExtension
-                    }.orEmpty()
-                    date_upload = chapterFile.lastModified()
-                    chapter_number = ChapterRecognition
-                        .parseChapterNumber(manga.title, this.name, this.chapter_number.toDouble())
-                        .toFloat()
+            .mapNotNull { chapterFile ->
+                try {
+                    SChapter.create().apply {
+                        url = "${manga.url}/${chapterFile.name}"
+                        name = if (chapterFile.isDirectory) {
+                            chapterFile.name
+                        } else {
+                            chapterFile.nameWithoutExtension
+                        }.orEmpty()
+                        date_upload = chapterFile.lastModified()
+                        chapter_number = ChapterRecognition
+                            .parseChapterNumber(manga.title, this.name, this.chapter_number.toDouble())
+                            .toFloat()
 
-                    val format = Format.valueOf(chapterFile)
-                    if (format is Format.Epub) {
-                        format.file.epubReader(context).use { epub ->
-                            epub.fillMetadata(manga, this)
-                        }
-                    } else {
-                        getComicInfoForChapter(chapterFile) { stream ->
-                            setChapterDetailsFromComicInfoFile(stream, this)
+                        val format = Format.valueOf(chapterFile)
+                        if (format is Format.Epub) {
+                            format.file.epubReader(context).use { epub ->
+                                epub.fillMetadata(manga, this)
+                            }
+                        } else {
+                            getComicInfoForChapter(chapterFile) { stream ->
+                                setChapterDetailsFromComicInfoFile(stream, this)
+                            }
                         }
                     }
+                } catch (e: Exception) {
+                    null
                 }
             }
             .sortedWith { c1, c2 ->
@@ -367,6 +373,7 @@ class LocalSource(
 
                     entry?.let { coverManager.update(manga, it.openInputStream()) }
                 }
+
                 is Format.Archive -> {
                     format.file.archiveReader(context).use { reader ->
                         val entry = reader.useEntries { entries ->
@@ -378,6 +385,7 @@ class LocalSource(
                         entry?.let { coverManager.update(manga, reader.getInputStream(it.name)!!) }
                     }
                 }
+
                 is Format.Epub -> {
                     format.file.epubReader(context).use { epub ->
                         val entry = epub.getImagesFromPages().firstOrNull()
