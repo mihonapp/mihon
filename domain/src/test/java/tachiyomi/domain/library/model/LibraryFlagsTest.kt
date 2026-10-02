@@ -12,8 +12,18 @@ class LibraryFlagsTest {
     @Test
     fun `Check the amount of flags`() {
         LibraryDisplayMode.values.size shouldBe 4
-        LibrarySort.types.size shouldBe 10
+        LibrarySort.types.size shouldBe 11
         LibrarySort.directions.size shouldBe 2
+    }
+
+    @Test
+    fun `Download count sort persists and serializes`() {
+        val sort = LibrarySort(LibrarySort.Type.DownloadCount, LibrarySort.Direction.Descending)
+
+        sort.flag shouldBe 0b00100100
+        LibrarySort.valueOf(sort.flag) shouldBe sort
+        LibrarySort.Serializer.serialize(sort) shouldBe "DOWNLOAD_COUNT,DESCENDING"
+        LibrarySort.Serializer.deserialize("DOWNLOAD_COUNT,DESCENDING") shouldBe sort
     }
 
     @Test
