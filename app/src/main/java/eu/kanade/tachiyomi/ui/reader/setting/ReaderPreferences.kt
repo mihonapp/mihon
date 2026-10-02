@@ -108,6 +108,7 @@ class ReaderPreferences(
 
     val webtoonDisableZoomOut: Preference<Boolean> = preferenceStore.getBoolean("webtoon_disable_zoom_out", false)
 
+    val bookmarkOnTopBar: Preference<Boolean> = preferenceStore.getBoolean("bookmark_on_top_bar", true)
     // endregion
 
     // region Split two-page spread

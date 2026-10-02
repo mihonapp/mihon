@@ -462,6 +462,8 @@ class ReaderActivity : BaseActivity() {
         val verticalNavigatorOnLeft by readerPreferences.verticalNavigatorOnLeft.collectAsState()
         val verticalNavigatorHeight by readerPreferences.verticalNavigatorHeight.collectAsState()
 
+        val bookmarkOnTopBar by readerPreferences.bookmarkOnTopBar.collectAsState()
+
         ReaderAppBars(
             visible = state.menuVisible,
 
@@ -469,6 +471,7 @@ class ReaderActivity : BaseActivity() {
             chapterTitle = state.currentChapter?.chapter?.name,
             navigateUp = onBackPressedDispatcher::onBackPressed,
             onClickTopAppBar = ::openMangaScreen,
+            bookmarkOnTopBar = bookmarkOnTopBar,
             bookmarked = state.bookmarked,
             onToggleBookmarked = viewModel::toggleChapterBookmark,
             onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
