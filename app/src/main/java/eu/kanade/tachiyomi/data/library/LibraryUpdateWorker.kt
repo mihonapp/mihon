@@ -31,12 +31,15 @@ import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
@@ -47,7 +50,6 @@ import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.model.Chapter
@@ -128,7 +130,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
         val categoryId = inputData.getLong(KEY_CATEGORY, -1L)
         addMangaToQueue(categoryId)
 
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             try {
                 updateChapterList()
                 Result.success()
@@ -290,7 +292,10 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                                                 hasDownloads.store(true)
                                             }
 
-                                            libraryPreferences.newUpdatesCount.getAndSet { it + newChapters.size }
+                                            // Sources update concurrently, and getAndSet is a separate read and write
+                                            synchronized(libraryPreferences.newUpdatesCount) {
+                                                libraryPreferences.newUpdatesCount.getAndSet { it + newChapters.size }
+                                            }
 
                                             // Convert to the manga that contains new chapters
                                             newUpdates.add(manga to newChapters.toTypedArray())
@@ -485,7 +490,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
             }
         }
 
-        fun startNow(
+        suspend fun startNow(
             workManager: WorkManager,
             category: Category? = null,
         ): Boolean {
@@ -507,12 +512,12 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
             return true
         }
 
-        fun stop(context: Context) {
+        suspend fun stop(context: Context) {
             val workManager = context.workManager
             val workQuery = WorkQuery.Builder.fromTags(listOf(TAG))
                 .addStates(listOf(WorkInfo.State.RUNNING))
                 .build()
-            workManager.getWorkInfos(workQuery).get()
+            workManager.getWorkInfosFlow(workQuery).first()
                 // Should only return one work but just in case
                 .forEach {
                     workManager.cancelWorkById(it.id)

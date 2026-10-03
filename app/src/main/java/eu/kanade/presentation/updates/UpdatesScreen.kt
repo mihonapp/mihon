@@ -54,7 +54,7 @@ fun UpdateScreen(
     onSelectAll: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
     onCalendarClicked: () -> Unit,
-    onUpdateLibrary: () -> Boolean,
+    onUpdateLibrary: suspend () -> Boolean,
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
     onMultiBookmarkClicked: (List<UpdatesItem>, bookmark: Boolean) -> Unit,
     onMultiMarkAsReadClicked: (List<UpdatesItem>, read: Boolean) -> Unit,
@@ -68,11 +68,13 @@ fun UpdateScreen(
         onSelectAll(false)
     }
 
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         topBar = { scrollBehavior ->
             UpdatesAppBar(
                 onCalendarClicked = { onCalendarClicked() },
-                onUpdateLibrary = { onUpdateLibrary() },
+                onUpdateLibrary = { scope.launch { onUpdateLibrary() } },
                 onFilterClicked = { onFilterClicked() },
                 hasFilters = hasActiveFilters,
                 actionModeCounter = state.selected.size,
@@ -96,15 +98,13 @@ fun UpdateScreen(
         when {
             state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
             else -> {
-                val scope = rememberCoroutineScope()
                 var isRefreshing by remember { mutableStateOf(false) }
 
                 PullRefresh(
                     refreshing = isRefreshing,
                     onRefresh = {
-                        val started = onUpdateLibrary()
-                        if (!started) return@PullRefresh
                         scope.launch {
+                            if (!onUpdateLibrary()) return@launch
                             // Fake refresh status but hide it after a second as it's a long running task
                             isRefreshing = true
                             delay(1.seconds)

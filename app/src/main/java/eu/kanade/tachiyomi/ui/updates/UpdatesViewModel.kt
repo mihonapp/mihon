@@ -242,11 +242,9 @@ class UpdatesViewModel(
             }
     }
 
-    fun updateLibrary(): Boolean {
+    suspend fun updateLibrary(): Boolean {
         val started = LibraryUpdateWorker.startNow(context.workManager)
-        viewModelScope.launch {
-            _events.send(Event.LibraryUpdateTriggered(started))
-        }
+        _events.send(Event.LibraryUpdateTriggered(started))
         return started
     }
 

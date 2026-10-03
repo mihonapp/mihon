@@ -181,6 +181,7 @@ object SettingsDataScreen : SearchableSettings {
     private fun getBackupAndRestoreGroup(backupPreferences: BackupPreferences): Preference.PreferenceGroup {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+        val scope = rememberCoroutineScope()
 
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp.collectAsState()
 
@@ -231,13 +232,15 @@ object SettingsDataScreen : SearchableSettings {
                                     modifier = Modifier.fillMaxHeight(),
                                     checked = false,
                                     onCheckedChange = {
-                                        if (!BackupRestoreWorker.isRunning(context.workManager)) {
-                                            if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                                                context.toast(MR.strings.restore_miui_warning)
+                                        scope.launch {
+                                            if (!BackupRestoreWorker.isRunning(context.workManager)) {
+                                                if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
+                                                    context.toast(MR.strings.restore_miui_warning)
+                                                }
+                                                chooseBackup.launch(arrayOf("*/*"))
+                                            } else {
+                                                context.toast(MR.strings.restore_in_progress)
                                             }
-                                            chooseBackup.launch(arrayOf("*/*"))
-                                        } else {
-                                            context.toast(MR.strings.restore_in_progress)
                                         }
                                     },
                                     shape = SegmentedButtonDefaults.itemShape(1, 2),
