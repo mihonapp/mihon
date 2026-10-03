@@ -59,6 +59,8 @@ import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -67,6 +69,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
@@ -74,9 +77,6 @@ import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.roundedfilled.Delete
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.launchNonCancellable
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.source.service.SourceManager
@@ -235,14 +235,16 @@ data class TrackInfoDialogHomeScreen(
 
         fun registerEnhancedTracking(item: TrackItem) {
             item.tracker as EnhancedTracker
-            viewModelScope.launchNonCancellable {
-                val manga = getManga.await(mangaId) ?: return@launchNonCancellable
-                try {
-                    val matchResult = item.tracker.match(manga) ?: throw Exception()
-                    item.tracker.register(matchResult, mangaId)
-                } catch (_: Exception) {
-                    withUIContext {
-                        context.toast(MR.strings.error_no_match)
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    val manga = getManga.await(mangaId) ?: return@withContext
+                    try {
+                        val matchResult = item.tracker.match(manga) ?: throw Exception()
+                        item.tracker.register(matchResult, mangaId)
+                    } catch (_: Exception) {
+                        withContext(Dispatchers.Main) {
+                            context.toast(MR.strings.error_no_match)
+                        }
                     }
                 }
             }
@@ -255,7 +257,7 @@ data class TrackInfoDialogHomeScreen(
                     logcat(LogPriority.ERROR, e) {
                         "Failed to refresh track data mangaId=$mangaId for service ${track!!.id}"
                     }
-                    withUIContext {
+                    withContext(Dispatchers.Main) {
                         context.toast(
                             context.stringResource(
                                 MR.strings.track_error,
@@ -268,8 +270,10 @@ data class TrackInfoDialogHomeScreen(
         }
 
         fun togglePrivate(item: TrackItem) {
-            viewModelScope.launchNonCancellable {
-                item.tracker.setRemotePrivate(item.track!!.toDbTrack(), !item.track.private)
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    item.tracker.setRemotePrivate(item.track!!.toDbTrack(), !item.track.private)
+                }
             }
         }
 
@@ -340,8 +344,10 @@ data class TrackStatusSelectorScreen(
         }
 
         fun setStatus() {
-            viewModelScope.launchNonCancellable {
-                tracker.setRemoteStatus(track.toDbTrack(), state.value.selection)
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    tracker.setRemoteStatus(track.toDbTrack(), state.value.selection)
+                }
             }
         }
 
@@ -408,8 +414,10 @@ data class TrackChapterSelectorScreen(
         }
 
         fun setChapter() {
-            viewModelScope.launchNonCancellable {
-                tracker.setRemoteLastChapterRead(track.toDbTrack(), state.value.selection)
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    tracker.setRemoteLastChapterRead(track.toDbTrack(), state.value.selection)
+                }
             }
         }
 
@@ -475,8 +483,10 @@ data class TrackScoreSelectorScreen(
         }
 
         fun setScore() {
-            viewModelScope.launchNonCancellable {
-                tracker.setRemoteScore(track.toDbTrack(), state.value.selection)
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    tracker.setRemoteScore(track.toDbTrack(), state.value.selection)
+                }
             }
         }
 
@@ -597,11 +607,13 @@ data class TrackDateSelectorScreen(
         fun setDate(millis: Long) {
             // Convert to local time
             val localMillis = millis.convertEpochMillisZone(TimeZone.UTC, TimeZone.currentSystemDefault())
-            viewModelScope.launchNonCancellable {
-                if (start) {
-                    tracker.setRemoteStartDate(track.toDbTrack(), localMillis)
-                } else {
-                    tracker.setRemoteFinishDate(track.toDbTrack(), localMillis)
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    if (start) {
+                        tracker.setRemoteStartDate(track.toDbTrack(), localMillis)
+                    } else {
+                        tracker.setRemoteFinishDate(track.toDbTrack(), localMillis)
+                    }
                 }
             }
         }
@@ -693,11 +705,13 @@ data class TrackDateRemoverScreen(
         fun getServiceName() = tracker.name
 
         fun removeDate() {
-            viewModelScope.launchNonCancellable {
-                if (start) {
-                    tracker.setRemoteStartDate(track.toDbTrack(), 0)
-                } else {
-                    tracker.setRemoteFinishDate(track.toDbTrack(), 0)
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    if (start) {
+                        tracker.setRemoteStartDate(track.toDbTrack(), 0)
+                    } else {
+                        tracker.setRemoteFinishDate(track.toDbTrack(), 0)
+                    }
                 }
             }
         }
@@ -783,7 +797,7 @@ data class TrackerSearchScreen(
                 // To show loading state
                 state.update { it.copy(queryResult = null, selected = null) }
 
-                val result = withIOContext {
+                val result = withContext(Dispatchers.IO) {
                     try {
                         val results = tracker.search(query)
                         Result.success(results)
@@ -801,7 +815,9 @@ data class TrackerSearchScreen(
         }
 
         fun registerTracking(item: TrackSearch) {
-            viewModelScope.launchNonCancellable { tracker.register(item, mangaId) }
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) { tracker.register(item, mangaId) }
+            }
         }
 
         fun updateSelection(selected: TrackSearch) {
@@ -913,17 +929,21 @@ data class TrackerRemoveScreen(
         fun isDeletable() = tracker is DeletableTracker
 
         fun deleteMangaFromService() {
-            viewModelScope.launchNonCancellable {
-                try {
-                    (tracker as DeletableTracker).delete(track)
-                } catch (e: Exception) {
-                    logcat(LogPriority.ERROR, e) { "Failed to delete entry from service" }
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) {
+                    try {
+                        (tracker as DeletableTracker).delete(track)
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR, e) { "Failed to delete entry from service" }
+                    }
                 }
             }
         }
 
         fun unregisterTracking(serviceId: Long) {
-            viewModelScope.launchNonCancellable { deleteTrack.await(mangaId, serviceId) }
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(NonCancellable) { deleteTrack.await(mangaId, serviceId) }
+            }
         }
     }
 }

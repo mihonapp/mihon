@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.dataOrElse
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import mihon.graphql.kitsu.KitsuAddLibMangaMutation
 import mihon.graphql.kitsu.KitsuDeleteLibEntryMutation
@@ -25,7 +26,6 @@ import mihon.graphql.kitsu.KitsuUpdateLibMangaMutation
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import kotlin.time.Instant
@@ -181,7 +181,7 @@ class KitsuApi(
     }
 
     suspend fun login(username: String, password: String): KitsuOAuth {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val formBody: RequestBody = FormBody.Builder()
                 .add("username", username)
                 .add("password", password)

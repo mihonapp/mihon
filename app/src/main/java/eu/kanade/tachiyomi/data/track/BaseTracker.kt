@@ -9,17 +9,17 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import okhttp3.OkHttpClient
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.interactor.UpsertTrack
 import uy.kohesive.injekt.Injekt
@@ -115,7 +115,7 @@ abstract class BaseTracker(
         try {
             addTracks.bind(this, item, mangaId)
         } catch (e: Throwable) {
-            withUIContext {
+            withContext(Dispatchers.Main) {
                 context.toast(e.message)
             }
         }
@@ -165,7 +165,7 @@ abstract class BaseTracker(
         updateRemote(track)
     }
 
-    private suspend fun updateRemote(track: Track): Unit = withIOContext {
+    private suspend fun updateRemote(track: Track): Unit = withContext(Dispatchers.IO) {
         try {
             update(track)
             track.toDomainTrack(idRequired = false)?.let {
@@ -173,7 +173,7 @@ abstract class BaseTracker(
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to update remote track data id=$id" }
-            withUIContext {
+            withContext(Dispatchers.Main) {
                 context.toast(e.message)
             }
         }

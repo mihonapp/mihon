@@ -52,14 +52,15 @@ import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeListApi
 import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import mihon.icons.materialsymbols.rounded.Close
 import mihon.icons.materialsymbols.roundedfilled.Visibility
 import mihon.icons.materialsymbols.roundedfilled.VisibilityOff
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -276,7 +277,7 @@ object SettingsTrackingScreen : SearchableSettings {
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !processing && username.text.isNotBlank() && password.text.isNotBlank(),
                     onClick = {
-                        scope.launchIO {
+                        scope.launch(Dispatchers.IO) {
                             processing = true
                             val result = checkLogin(
                                 context = context,
@@ -305,11 +306,11 @@ object SettingsTrackingScreen : SearchableSettings {
     ): Boolean {
         return try {
             tracker.login(username, password)
-            withUIContext { context.toast(MR.strings.login_success) }
+            withContext(Dispatchers.Main) { context.toast(MR.strings.login_success) }
             true
         } catch (e: Throwable) {
             tracker.logout()
-            withUIContext { context.toast(e.message.toString()) }
+            withContext(Dispatchers.Main) { context.toast(e.message.toString()) }
             false
         }
     }

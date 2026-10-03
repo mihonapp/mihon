@@ -7,17 +7,14 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.dataOrElse
 import eu.kanade.tachiyomi.source.ConfigurableSource
-import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.sourcePreferences
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import mihon.graphql.suwayomi.SuwayomiGetMangaQuery
 import mihon.graphql.suwayomi.SuwayomiGetMangaUnreadChaptersQuery
 import mihon.graphql.suwayomi.SuwayomiMarkAndDeleteChaptersMutation
 import mihon.graphql.suwayomi.SuwayomiMarkChaptersReadMutation
 import mihon.graphql.suwayomi.SuwayomiUpdateMangaProgressMutation
-import okhttp3.OkHttpClient
 import tachiyomi.domain.source.service.SourceManager
 import java.security.MessageDigest
 
@@ -25,28 +22,30 @@ class SuwayomiApi(
     private val trackerId: Long,
     private val sourceManager: SourceManager,
 ) {
-    // Blocking is fine here: these are only touched from OkHttp and tracker threads.
-    private val source: Source by lazy { runBlocking { sourceManager.get(sourceId)!! } }
-    private val httpSource: HttpSource by lazy { source as HttpSource }
-    private val configurableSource: ConfigurableSource by lazy { source as ConfigurableSource }
-    private val client: OkHttpClient by lazy { httpSource.client }
-    private val baseUrl: String by lazy { httpSource.baseUrl.trimEnd('/') }
-    private val apiUrl: String by lazy { "$baseUrl/api/graphql" }
+    @Volatile
+    private var connection: Connection? = null
 
-    private val graphQlClient by lazy {
-        ApolloClient.Builder()
-            .serverUrl(apiUrl)
-            .okHttpClient(client)
+    private suspend fun connection(): Connection {
+        connection?.let { return it }
+        val source = sourceManager.get(sourceId) as HttpSource
+        val baseUrl = source.baseUrl.trimEnd('/')
+        val graphQlClient = ApolloClient.Builder()
+            .serverUrl("$baseUrl/api/graphql")
+            .okHttpClient(source.client)
             .dispatcher(Dispatchers.IO)
             // required to log the error body in dataOrElse, which also properly closes it
             .httpExposeErrorBody(true)
             .build()
+        return Connection(source, baseUrl, graphQlClient).also { connection = it }
     }
 
-    fun sourcePreferences(): SharedPreferences = configurableSource.sourcePreferences()
+    suspend fun sourcePreferences(): SharedPreferences {
+        return (connection().source as ConfigurableSource).sourcePreferences()
+    }
 
     suspend fun getTrackSearch(mangaId: Long): TrackSearch? {
-        return graphQlClient
+        val connection = connection()
+        return connection.graphQlClient
             .query(
                 SuwayomiGetMangaQuery(mangaId = mangaId.toInt()),
             )
@@ -55,11 +54,12 @@ class SuwayomiApi(
                 errorLog = "Suwayomi: Failed to find manga in library",
                 default = { null },
             ) {
-                it.manga.mangaFragment.toTrackSearch(trackerId, baseUrl)
+                it.manga.mangaFragment.toTrackSearch(trackerId, connection.baseUrl)
             }
     }
 
     suspend fun updateProgress(track: Track, deleteDownloadsOnServer: Boolean = false): Track? {
+        val graphQlClient = connection().graphQlClient
         val mangaId = track.remote_id
 
         val chaptersToMark = graphQlClient
@@ -114,4 +114,10 @@ class SuwayomiApi(
         val bytes = MessageDigest.getInstance("MD5").digest(key.toByteArray())
         (0..7).map { bytes[it].toLong() and 0xff shl 8 * (7 - it) }.reduce(Long::or) and Long.MAX_VALUE
     }
+
+    private class Connection(
+        val source: HttpSource,
+        val baseUrl: String,
+        val graphQlClient: ApolloClient,
+    )
 }
