@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -63,6 +64,7 @@ import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.service.UpdatesPreferences
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
@@ -109,7 +111,8 @@ class UpdatesViewModel(
 
     init {
         viewModelScope.launch {
-            merge(downloadManager.statusFlow(), downloadManager.progressFlow())
+            // Each progress tick rebuilds every row of the list, so cap how often that happens
+            merge(downloadManager.statusFlow(), downloadManager.progressFlow().sample(200.milliseconds))
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(this@UpdatesViewModel::updateDownloadState)
         }

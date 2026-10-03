@@ -64,6 +64,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -102,6 +103,7 @@ import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import kotlin.math.floor
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @AssistedInject
@@ -290,7 +292,11 @@ class MangaViewModel(
     init {
         // Progress ticks often, and each one copies the map of download states
         viewModelScope.launch(Dispatchers.Default) {
-            merge(downloadManager.statusFlow(), downloadManager.progressFlow())
+            merge(
+                downloadManager.statusFlow(),
+                // Each tick rebuilds the shown chapter items, so cap how often that happens
+                downloadManager.progressFlow().sample(200.milliseconds),
+            )
                 .filter { it.manga.id == mangaId }
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(::updateDownloadState)
