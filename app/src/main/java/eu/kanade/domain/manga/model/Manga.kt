@@ -76,7 +76,7 @@ fun Manga.copyFrom(other: SManga): Manga {
 }
 
 fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get<Context>().appGraph.coverCache): Boolean {
-    return coverCache.getCustomCoverFile(id).exists()
+    return coverCache.hasCustomCover(id)
 }
 
 /**
