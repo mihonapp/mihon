@@ -48,6 +48,7 @@ class MigrateSearchViewModel(
         compareBy<Source>(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
             { migrationSources.indexOf(it.id) },
+            { it.id },
         )
     }
 
