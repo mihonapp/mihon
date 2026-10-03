@@ -6,13 +6,14 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.RefreshableProfileTracker
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
+class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker, RefreshableProfileTracker {
 
     companion object {
         const val READING = 1L

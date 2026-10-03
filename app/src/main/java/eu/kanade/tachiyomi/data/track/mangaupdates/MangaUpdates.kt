@@ -5,13 +5,14 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.RefreshableProfileTracker
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUListItem
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MURating
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker {
+class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker, RefreshableProfileTracker {
 
     companion object {
         const val READING_LIST = 0L
