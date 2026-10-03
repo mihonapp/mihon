@@ -35,7 +35,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     private val interceptor by lazy { AnilistInterceptor(this, getPassword()) }
 
-    private val api by lazy { AnilistApi(client, interceptor) }
+    private val api by lazy { AnilistApi(id, client, interceptor) }
 
     override val supportsReadingDates: Boolean = true
 
@@ -47,7 +47,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         // If the preference is an int from APIv1, logout user to force using APIv2
         try {
             scorePreference.get()
-        } catch (e: ClassCastException) {
+        } catch (_: ClassCastException) {
             logout()
             scorePreference.delete()
         }
@@ -207,24 +207,30 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.getLibManga(track, getUsername().toInt())
+        val remoteTrack = api.findLibManga(track, getUsername().toInt()) ?: throw Exception("Could not find manga")
         track.copyPersonalFrom(remoteTrack)
         track.title = remoteTrack.title
         track.total_chapters = remoteTrack.total_chapters
         return track
     }
 
+    override suspend fun updateUserConfig() {
+        val currentUser = api.getCurrentUser()
+        scorePreference.set(currentUser.scoreFormat)
+        saveDisplayUsername(currentUser.name)
+    }
+
     override suspend fun login(username: String, password: String) = login(password)
 
     suspend fun login(token: String) {
         try {
-            val oauth = api.createOAuth(token)
+            val oauth = ALOAuth(token)
             interceptor.setAuth(oauth)
             val currentUser = api.getCurrentUser()
-            scorePreference.set(currentUser.mediaListOptions.scoreFormat)
+            scorePreference.set(currentUser.scoreFormat)
             saveDisplayUsername(currentUser.name)
             saveCredentials(currentUser.id.toString(), oauth.accessToken)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             logout()
         }
     }
@@ -242,7 +248,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     fun loadOAuth(): ALOAuth? {
         return try {
             json.decodeFromString<ALOAuth>(trackPreferences.trackToken(this).get())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

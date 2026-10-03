@@ -54,35 +54,18 @@ data class BackupTracking(
     }
 }
 
-val backupTrackMapper = {
-        _: Long,
-        _: Long,
-        syncId: Long,
-        mediaId: Long,
-        libraryId: Long?,
-        title: String,
-        lastChapterRead: Double,
-        totalChapters: Long,
-        status: Long,
-        score: Double,
-        remoteUrl: String,
-        startDate: Long,
-        finishDate: Long,
-        private: Boolean,
-    ->
-    BackupTracking(
-        syncId = syncId.toInt(),
-        mediaId = mediaId,
-        // forced not null so its compatible with 1.x backup system
-        libraryId = libraryId ?: 0,
-        title = title,
-        lastChapterRead = lastChapterRead.toFloat(),
-        totalChapters = totalChapters.toInt(),
-        score = score.toFloat(),
-        status = status.toInt(),
-        startedReadingDate = startDate,
-        finishedReadingDate = finishDate,
-        trackingUrl = remoteUrl,
-        private = private,
-    )
-}
+fun Track.toBackupTracking() = BackupTracking(
+    syncId = trackerId.toInt(),
+    mediaId = remoteId,
+    // forced not null so its compatible with 1.x backup system
+    libraryId = libraryId ?: 0,
+    title = title,
+    lastChapterRead = lastChapterRead.toFloat(),
+    totalChapters = totalChapters.toInt(),
+    score = score.toFloat(),
+    status = status.toInt(),
+    startedReadingDate = startDate,
+    finishedReadingDate = finishDate,
+    trackingUrl = remoteUrl,
+    private = private,
+)

@@ -20,7 +20,7 @@ import uy.kohesive.injekt.injectLazy
 private const val READLIST_API = "/api/v1/readlists"
 
 class KomgaApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val client: OkHttpClient,
 ) {
 
@@ -97,13 +97,13 @@ class KomgaApi(
         return getTrackSearch(track.tracking_url)
     }
 
-    private fun SeriesDto.toTrack(): TrackSearch = TrackSearch.create(trackId).also {
+    private fun SeriesDto.toTrack(): TrackSearch = TrackSearch.create(trackerId).also {
         it.title = metadata.title
         it.summary = metadata.summary
         it.publishing_status = metadata.status
     }
 
-    private fun ReadListDto.toTrack(): TrackSearch = TrackSearch.create(trackId).also {
+    private fun ReadListDto.toTrack(): TrackSearch = TrackSearch.create(trackerId).also {
         it.title = name
     }
 }

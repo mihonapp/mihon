@@ -1,7 +1,6 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -49,8 +48,8 @@ import eu.kanade.presentation.more.settings.screen.data.StorageInfo
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
-import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateWorker
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreWorker
 import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -194,16 +193,20 @@ object SettingsDataScreen : SearchableSettings {
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp.collectAsState()
 
         val chooseBackup = rememberLauncherForActivityResult(
-            object : ActivityResultContracts.GetContent() {
-                override fun createIntent(context: Context, input: String): Intent {
-                    val intent = super.createIntent(context, input)
-                    return Intent.createChooser(intent, context.stringResource(MR.strings.file_select_backup))
-                }
-            },
+            ActivityResultContracts.OpenDocument(),
         ) {
             if (it == null) {
                 context.toast(MR.strings.file_null_uri_error)
                 return@rememberLauncherForActivityResult
+            }
+
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    it,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                )
+            } catch (e: SecurityException) {
+                logcat(LogPriority.ERROR, e)
             }
 
             navigator.push(RestoreBackupScreen(it.toString()))
@@ -236,13 +239,11 @@ object SettingsDataScreen : SearchableSettings {
                                     modifier = Modifier.fillMaxHeight(),
                                     checked = false,
                                     onCheckedChange = {
-                                        if (!BackupRestoreJob.isRunning(context.workManager)) {
+                                        if (!BackupRestoreWorker.isRunning(context.workManager)) {
                                             if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
                                                 context.toast(MR.strings.restore_miui_warning)
                                             }
-
-                                            // no need to catch because it's wrapped with a chooser
-                                            chooseBackup.launch("*/*")
+                                            chooseBackup.launch(arrayOf("*/*"))
                                         } else {
                                             context.toast(MR.strings.restore_in_progress)
                                         }
@@ -269,7 +270,7 @@ object SettingsDataScreen : SearchableSettings {
                     ),
                     title = stringResource(MR.strings.pref_backup_interval),
                     onValueChanged = {
-                        BackupCreateJob.setupTask(context, it)
+                        BackupCreateWorker.setupTask(context, it)
                         true
                     },
                 ),

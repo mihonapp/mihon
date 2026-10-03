@@ -32,7 +32,6 @@
     <string name="default_category">ডিফল্ট শ্ৰেণী</string>
     <string name="all">সকলো</string>
     <string name="ext_obsolete">অচল</string>
-    <string name="ext_info_age_rating">বয়স মূল্যায়ন</string>
     <string name="ext_installer_pref">ইন্সটলাৰ</string>
     <string name="ext_installer_legacy">লিগাচি</string>
     <string name="action_open_repo">উৎস ৰেপ\' খোলক</string>
@@ -262,9 +261,6 @@
     <string name="hide_notification_content">অধিসূচনাৰ বিষয়বস্তু লুকুৱাওক</string>
     <string name="secure_screen">সুৰক্ষিত স্ক্ৰীন</string>
     <string name="secure_screen_summary">সুৰক্ষিত স্ক্ৰীনে এপ সলনি কৰোঁতে এপৰ বিষয়বস্তু লুকুৱায় আৰু স্ক্ৰীনশ্বট ব্লক কৰে</string>
-    <string name="pref_category_nsfw_content">NSFW (১৮+) উৎস</string>
-    <string name="pref_show_nsfw_source">উৎস আৰু এক্সটেনশ্বন তালিকাত দেখুৱাওক</string>
-    <string name="parental_controls_info">এইটোৱে অনানুষ্ঠানিক বা সম্ভাৱ্যভাৱে ভুল পতাকা লগোৱা এক্সটেনশ্বনসমূহক এপৰ ভিতৰত NSFW (১৮+) বিষয়বস্তু দেখুওৱাত বাধা নিদিয়ে।</string>
     <string name="relative_time_today">আজি</string>
     <string name="pref_category_display">প্ৰদৰ্শন</string>
     <string name="pref_library_columns">প্ৰতি শাৰীত আইটেম</string>
@@ -308,9 +304,7 @@
     <string name="extension_api_error">উপলব্ধ এক্সটেনশ্বন অনাত বিফল</string>
     <string name="untrusted_extension_message">দুৰ্ভাৱপূৰ্ণ এক্সটেনশ্বনে সংৰক্ষিত যিকোনো লগইন প্ৰমাণপত্ৰ পঢ়িব পাৰে বা ইচ্ছামত কোড কাৰ্যকৰী কৰিব পাৰে।\n\nএই এক্সটেনশ্বন বিশ্বাস কৰি, আপুনি এই বিপদসমূহ গ্ৰহণ কৰে।</string>
     <string name="ext_info_version">সংস্কৰণ</string>
-    <string name="ext_nsfw_warning">এই এক্সটেনশ্বনৰ উৎসসমূহত NSFW (১৮+) বিষয়বস্তু থাকিব পাৰে</string>
     <string name="ext_info_language">ভাষা</string>
-    <string name="ext_nsfw_short">১৮+</string>
     <string name="ext_permission_install_apps_warning">এক্সটেনশ্বন ইন্সটল কৰিবলৈ অনুমতিৰ প্ৰয়োজন। অনুমতি দিবলৈ ইয়াত টাপ কৰক।</string>
     <string name="ext_install_service_notif">এক্সটেনশ্বন ইন্সটল কৰি আছে…</string>
     <string name="ext_installer_shizuku_stopped">Shizuku চলি থকা নাই</string>

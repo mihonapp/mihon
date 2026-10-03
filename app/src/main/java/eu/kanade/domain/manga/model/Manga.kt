@@ -5,6 +5,9 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
 import mihon.app.di.appGraph
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.metadata.comicinfo.ComicInfo
@@ -13,6 +16,7 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import kotlin.time.Instant
 
 // TODO: move these into the domain model
 val Manga.readingMode: Long
@@ -72,7 +76,7 @@ fun Manga.copyFrom(other: SManga): Manga {
     )
 }
 
-fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
+fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get<Context>().appGraph.coverCache): Boolean {
     return coverCache.getCustomCoverFile(id).exists()
 }
 
@@ -85,30 +89,41 @@ fun getComicInfo(
     urls: List<String>,
     categories: List<String>?,
     sourceName: String,
-) = ComicInfo(
-    title = ComicInfo.Title(chapter.name),
-    series = ComicInfo.Series(manga.title),
-    number = chapter.chapterNumber.takeIf { it >= 0 }?.let {
-        if ((it.rem(1) == 0.0)) {
-            ComicInfo.Number(it.toInt().toString())
-        } else {
-            ComicInfo.Number(it.toString())
+): ComicInfo {
+    val date = chapter.dateUpload
+        .takeIf { it != 0L }
+        ?.let {
+            Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault())
         }
-    },
-    web = ComicInfo.Web(urls.joinToString(" ")),
-    summary = manga.description?.let { ComicInfo.Summary(it) },
-    writer = manga.author?.let { ComicInfo.Writer(it) },
-    penciller = manga.artist?.let { ComicInfo.Penciller(it) },
-    translator = chapter.scanlator?.let { ComicInfo.Translator(it) },
-    genre = manga.genre?.let { ComicInfo.Genre(it.joinToString()) },
-    publishingStatus = ComicInfo.PublishingStatusTachiyomi(
-        ComicInfoPublishingStatus.toComicInfoValue(manga.status),
-    ),
-    categories = categories?.let { ComicInfo.CategoriesTachiyomi(it.joinToString()) },
-    source = ComicInfo.SourceMihon(sourceName),
-    inker = null,
-    colorist = null,
-    letterer = null,
-    coverArtist = null,
-    tags = null,
-)
+
+    return ComicInfo(
+        title = ComicInfo.Title(chapter.name),
+        series = ComicInfo.Series(manga.title),
+        number = chapter.chapterNumber.takeIf { it >= 0 }?.let {
+            if ((it.rem(1) == 0.0)) {
+                ComicInfo.Number(it.toInt().toString())
+            } else {
+                ComicInfo.Number(it.toString())
+            }
+        },
+        web = ComicInfo.Web(urls.joinToString(" ")),
+        summary = manga.description?.let { ComicInfo.Summary(it) },
+        writer = manga.author?.let { ComicInfo.Writer(it) },
+        penciller = manga.artist?.let { ComicInfo.Penciller(it) },
+        translator = chapter.scanlator?.let { ComicInfo.Translator(it) },
+        genre = manga.genre?.let { ComicInfo.Genre(it.joinToString()) },
+        publishingStatus = ComicInfo.PublishingStatusTachiyomi(
+            ComicInfoPublishingStatus.toComicInfoValue(manga.status),
+        ),
+        categories = categories?.let { ComicInfo.CategoriesTachiyomi(it.joinToString()) },
+        source = ComicInfo.SourceMihon(sourceName),
+        inker = null,
+        colorist = null,
+        letterer = null,
+        coverArtist = null,
+        tags = null,
+        year = date?.year?.let { ComicInfo.Year(it) },
+        month = date?.month?.number?.let { ComicInfo.Month(it) },
+        day = date?.day?.let { ComicInfo.Day(it) },
+    )
+}
