@@ -482,7 +482,7 @@ open class WebGpuViewer(
             if (!chapterPreloadsInFlight.add(chapterId)) return
         }
 
-        scope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.IO) {
             try {
                 activity.viewModel.preload(chapter)
                 repeat(25) {

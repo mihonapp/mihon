@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.drop
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import tachiyomi.core.common.i18n.stringResource
@@ -218,14 +220,14 @@ class DownloadManager(
      * @param mangaTitle the title of the manga to query.
      * @param source the source of the chapter.
      */
-    fun isChapterDownloadedOnDisk(
+    suspend fun isChapterDownloadedOnDisk(
         chapterName: String,
         chapterScanlator: String?,
         chapterUrl: String,
         mangaTitle: String,
         source: Source,
-    ): Boolean {
-        return provider.findChapterDir(chapterName, chapterScanlator, chapterUrl, mangaTitle, source) != null
+    ): Boolean = withContext(Dispatchers.IO) {
+        provider.findChapterDir(chapterName, chapterScanlator, chapterUrl, mangaTitle, source) != null
     }
 
     /**

@@ -56,6 +56,9 @@ import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -67,14 +70,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import tachiyomi.core.common.util.lang.withUIContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import tachiyomi.core.common.preference.toggle
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.launchNonCancellable
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
@@ -193,23 +193,27 @@ class ReaderViewModel(
 
     private var chapterToDownload: Download? = null
 
-    private val unfilteredChapterList by lazy {
-        val manga = manga!!
-        runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = false) }
+    private var unfilteredChapterList: List<Chapter>? = null
+
+    private suspend fun getUnfilteredChapterList(): List<Chapter> {
+        return unfilteredChapterList
+            ?: getChaptersByMangaId.await(manga!!.id, applyScanlatorFilter = false)
+                .also { unfilteredChapterList = it }
     }
 
     /**
-     * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
-     * time in a background thread to avoid blocking the UI.
+     * Chapter list for the active manga. Loaded by [init].
      */
-    private val chapterList by lazy {
+    private lateinit var chapterList: List<ReaderChapter>
+
+    private suspend fun loadChapterList(): List<ReaderChapter> {
         val manga = manga!!
-        val chapters = runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true) }
+        val chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true)
             .let { filtered ->
                 if (filtered.any { it.id == chapterId }) {
                     filtered
                 } else {
-                    filtered + unfilteredChapterList.filter { it.id == chapterId }
+                    filtered + getUnfilteredChapterList().filter { it.id == chapterId }
                 }
             }
 
@@ -260,7 +264,7 @@ class ReaderViewModel(
             else -> chapters
         }
 
-        chaptersForReader
+        return chaptersForReader
             .sortedWith(getChapterSort(manga, sortDescending = false))
             .run {
                 if (readerPreferences.skipDupe.get()) {
@@ -327,7 +331,7 @@ class ReaderViewModel(
      * Failures are reported through [State.initError].
      */
     private suspend fun init() {
-        withIOContext {
+        withContext(Dispatchers.IO) {
             try {
                 val manga = getManga.await(mangaId) ?: error("Requested manga of id $mangaId not found")
                 val source = sourceManager.getOrStub(manga.source)
@@ -345,6 +349,7 @@ class ReaderViewModel(
                     source,
                 )
 
+                chapterList = loadChapterList()
                 loadChapter(loader!!, chapterList.first { chapterId == it.chapter.id })
             } catch (e: Throwable) {
                 if (e is CancellationException) {
@@ -395,7 +400,7 @@ class ReaderViewModel(
     private fun loadNewChapter(chapter: ReaderChapter) {
         val loader = loader ?: return
 
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             logcat { "Loading ${chapter.chapter.url}" }
 
             updateHistory()
@@ -422,7 +427,7 @@ class ReaderViewModel(
 
         mutableState.update { it.copy(isLoadingAdjacentChapter = true) }
         try {
-            withIOContext {
+            withContext(Dispatchers.IO) {
                 loadChapter(loader, chapter)
             }
         } catch (e: Throwable) {
@@ -497,9 +502,12 @@ class ReaderViewModel(
         val selectedChapter = page.chapter
         val pages = selectedChapter.pages ?: return
 
-        // Save last page read and mark as read if needed
-        viewModelScope.launchNonCancellable {
-            updateChapterProgress(selectedChapter, page)
+        // Save last page read and mark as read if needed. Launched on Main so page changes are saved in the
+        // order they happen; the database calls are main-safe.
+        viewModelScope.launch {
+            withContext(NonCancellable) {
+                updateChapterProgress(selectedChapter, page)
+            }
         }
 
         if (selectedChapter != getCurrentChapter()) {
@@ -523,7 +531,7 @@ class ReaderViewModel(
         if (getCurrentChapter()?.pageLoader !is DownloadPageLoader) return
         val nextChapter = state.value.viewerChapters?.nextChapter?.chapter ?: return
 
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             val isNextChapterDownloaded = downloadManager.isChapterDownloaded(
                 nextChapter.name,
                 nextChapter.scanlator,
@@ -531,7 +539,7 @@ class ReaderViewModel(
                 manga.title,
                 manga.source,
             )
-            if (!isNextChapterDownloaded) return@launchIO
+            if (!isNextChapterDownloaded) return@launch
 
             val chaptersToDownload = getNextChapters.await(manga.id, nextChapter.id).run {
                 if (readerPreferences.skipDupe.get()) {
@@ -563,7 +571,7 @@ class ReaderViewModel(
      * If both conditions are satisfied enqueues chapter for delete
      * @param currentChapter current chapter, which is going to be marked as read.
      */
-    private fun deleteChapterIfNeeded(currentChapter: ReaderChapter) {
+    private suspend fun deleteChapterIfNeeded(currentChapter: ReaderChapter) {
         val removeAfterReadSlots = downloadPreferences.removeAfterReadSlots.get()
         if (removeAfterReadSlots == -1) return
 
@@ -579,7 +587,7 @@ class ReaderViewModel(
         val markDuplicateAsRead = libraryPreferences.markDuplicateReadChapterAsRead.get()
             .contains(LibraryPreferences.MARK_DUPLICATE_CHAPTER_READ_EXISTING)
         val duplicateChapters = if (markDuplicateAsRead) {
-            unfilteredChapterList
+            getUnfilteredChapterList()
                 .filter {
                     it.id != chapterToDelete.chapter.id &&
                         it.isRecognizedNumber &&
@@ -631,7 +639,7 @@ class ReaderViewModel(
             .contains(LibraryPreferences.MARK_DUPLICATE_CHAPTER_READ_EXISTING)
         if (!markDuplicateAsRead) return
 
-        val duplicateUnreadChapters = unfilteredChapterList
+        val duplicateUnreadChapters = getUnfilteredChapterList()
             .mapNotNull { chapter ->
                 if (
                     !chapter.read &&
@@ -711,7 +719,8 @@ class ReaderViewModel(
         val bookmarked = !readerChapter.chapter.bookmark
         readerChapter.update { it.copy(bookmark = bookmarked) }
 
-        viewModelScope.launchNonCancellable {
+        // On Main so quick toggles are saved in order
+        viewModelScope.launch {
             updateChapter.await(
                 ChapterUpdate(readerChapter.chapter.id) {
                     bookmark = bookmarked
@@ -738,25 +747,25 @@ class ReaderViewModel(
         }
     }
 
+    private var readingModeJob: Job? = null
+
     /**
      * Updates the viewer position for the open manga.
      */
     fun setMangaReadingMode(readingMode: ReadingMode) {
         val manga = manga ?: return
-        runBlocking(Dispatchers.IO) {
+        // Only the latest pick matters, and letting an older one finish last would restore its choice
+        readingModeJob?.cancel()
+        readingModeJob = viewModelScope.launch(Dispatchers.IO) {
             setMangaViewerFlags.awaitSetReadingMode(manga.id, readingMode.flagValue.toLong())
+            val updatedManga = getManga.await(manga.id)
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
                 // Save current page
                 val currChapter = currChapters.currChapter
                 currChapter.requestedPage = currChapter.chapter.lastPageRead
 
-                mutableState.update {
-                    it.copy(
-                        manga = getManga.await(manga.id),
-                        viewerChapters = currChapters,
-                    )
-                }
+                mutableState.update { it.copy(manga = updatedManga) }
                 eventChannel.send(Event.ReloadViewerChapters)
             }
         }
@@ -774,25 +783,25 @@ class ReaderViewModel(
         }
     }
 
+    private var orientationJob: Job? = null
+
     /**
      * Updates the orientation type for the open manga.
      */
     fun setMangaOrientationType(orientation: ReaderOrientation) {
         val manga = manga ?: return
-        viewModelScope.launchIO {
+        // Only the latest pick matters, and letting an older one finish last would restore its choice
+        orientationJob?.cancel()
+        orientationJob = viewModelScope.launch(Dispatchers.IO) {
             setMangaViewerFlags.awaitSetOrientation(manga.id, orientation.flagValue.toLong())
+            val updatedManga = getManga.await(manga.id)
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
                 // Save current page
                 val currChapter = currChapters.currChapter
                 currChapter.requestedPage = currChapter.chapter.lastPageRead
 
-                mutableState.update {
-                    it.copy(
-                        manga = getManga.await(manga.id),
-                        viewerChapters = currChapters,
-                    )
-                }
+                mutableState.update { it.copy(manga = updatedManga) }
                 eventChannel.send(Event.SetOrientation(getMangaOrientation()))
                 eventChannel.send(Event.ReloadViewerChapters)
             }
@@ -879,22 +888,24 @@ class ReaderViewModel(
         }
 
         // Copy file in background.
-        viewModelScope.launchNonCancellable {
-            try {
-                val uri = imageSaver.save(
-                    image = Image.Page(
-                        inputStream = page.stream!!,
-                        name = filename,
-                        location = Location.Pictures.create(relativePath),
-                    ),
-                )
-                withUIContext {
-                    notifier.onComplete(uri)
-                    eventChannel.send(Event.SavedImage(SaveImageResult.Success(uri)))
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                try {
+                    val uri = imageSaver.save(
+                        image = Image.Page(
+                            inputStream = page.stream!!,
+                            name = filename,
+                            location = Location.Pictures.create(relativePath),
+                        ),
+                    )
+                    withContext(Dispatchers.Main) {
+                        notifier.onComplete(uri)
+                        eventChannel.send(Event.SavedImage(SaveImageResult.Success(uri)))
+                    }
+                } catch (e: Throwable) {
+                    notifier.onError(e.message)
+                    eventChannel.send(Event.SavedImage(SaveImageResult.Error(e)))
                 }
-            } catch (e: Throwable) {
-                notifier.onError(e.message)
-                eventChannel.send(Event.SavedImage(SaveImageResult.Error(e)))
             }
         }
     }
@@ -915,8 +926,8 @@ class ReaderViewModel(
 
         val filename = generateFilename(manga, page)
 
-        try {
-            viewModelScope.launchNonCancellable {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
                 destDir.deleteRecursively()
                 val uri = imageSaver.save(
                     image = Image.Page(
@@ -926,9 +937,10 @@ class ReaderViewModel(
                     ),
                 )
                 eventChannel.send(if (copyToClipboard) Event.CopyImage(uri) else Event.ShareImage(uri, page))
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                logcat(LogPriority.ERROR, e)
             }
-        } catch (e: Throwable) {
-            logcat(LogPriority.ERROR, e)
         }
     }
 
@@ -941,18 +953,20 @@ class ReaderViewModel(
         val manga = manga ?: return
         val stream = page.stream ?: return
 
-        viewModelScope.launchNonCancellable {
-            val result = try {
-                manga.editCover(coverManager, stream(), updateManga, coverCache)
-                if (manga.isLocal() || manga.favorite) {
-                    SetAsCoverResult.Success
-                } else {
-                    SetAsCoverResult.AddToLibraryFirst
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                val result = try {
+                    manga.editCover(coverManager, stream(), updateManga, coverCache)
+                    if (manga.isLocal() || manga.favorite) {
+                        SetAsCoverResult.Success
+                    } else {
+                        SetAsCoverResult.AddToLibraryFirst
+                    }
+                } catch (e: Exception) {
+                    SetAsCoverResult.Error
                 }
-            } catch (e: Exception) {
-                SetAsCoverResult.Error
+                eventChannel.send(Event.SetCoverResult(result))
             }
-            eventChannel.send(Event.SetCoverResult(result))
         }
     }
 
@@ -977,7 +991,8 @@ class ReaderViewModel(
 
         val manga = manga ?: return
 
-        viewModelScope.launchNonCancellable {
+        // A cancelled update is queued for DelayedTrackingUpdateWorker by TrackChapter
+        viewModelScope.launch(Dispatchers.IO) {
             trackChapter.await(context, manga.id, readerChapter.chapter.chapterNumber)
         }
     }
@@ -989,8 +1004,10 @@ class ReaderViewModel(
     private fun enqueueDeleteChapters(chapters: List<Chapter>) {
         val manga = manga ?: return
 
-        viewModelScope.launchNonCancellable {
-            downloadManager.enqueueChaptersToDelete(chapters, manga)
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                downloadManager.enqueueChaptersToDelete(chapters, manga)
+            }
         }
     }
 
@@ -999,8 +1016,10 @@ class ReaderViewModel(
      * are ignored.
      */
     private fun deletePendingChapters() {
-        viewModelScope.launchNonCancellable {
-            downloadManager.deletePendingChapters()
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                downloadManager.deletePendingChapters()
+            }
         }
     }
 

@@ -9,10 +9,11 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import mihon.core.archive.archiveReader
 import mihon.core.archive.epubReader
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
@@ -43,7 +44,7 @@ class ChapterLoader(
         }
 
         chapter.state = ReaderChapter.State.Loading
-        withIOContext {
+        withContext(Dispatchers.IO) {
             logcat { "Loading pages for ${chapter.chapter.name}" }
             try {
                 val loader = getPageLoader(chapter)
@@ -80,7 +81,7 @@ class ChapterLoader(
     /**
      * Returns the page loader to use for this [chapter].
      */
-    private fun getPageLoader(chapter: ReaderChapter): PageLoader {
+    private suspend fun getPageLoader(chapter: ReaderChapter): PageLoader {
         val dbChapter = chapter.chapter
         val isDownloaded = downloadManager.isChapterDownloadedOnDisk(
             dbChapter.name,
