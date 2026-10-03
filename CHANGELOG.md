@@ -33,6 +33,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed AniList rate limit ([@MajorTanya](https://github.com/MajorTanya)) ([#3942](https://github.com/mihonapp/mihon/pull/3942))
 - Fixed library search when clicking source name in manga info screen ([@choppeh](https://github.com/choppeh)) ([#4002](https://github.com/mihonapp/mihon/pull/4002))
 - Fixed entries being incorrectly marked as duplicates when tracked with some trackers ([@Secozzi](https://github.com/Secozzi)) ([#4008](https://github.com/mihonapp/mihon/pull/4008))
+- Fixed chapter headers ignoring the hide missing chapter indicators setting ([@kaosjammo](https://github.com/kaosjammo)) ([#4039](https://github.com/mihonapp/mihon/pull/4039))
 
 ## [v0.20.4] - 2026-08-05
 ### Fixed
