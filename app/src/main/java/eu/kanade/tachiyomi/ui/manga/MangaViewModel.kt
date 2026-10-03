@@ -46,8 +46,8 @@ import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -70,6 +70,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.core.metro.AppCoroutineScope
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.i18n.stringResource
@@ -105,6 +106,7 @@ import kotlin.time.Duration.Companion.seconds
 class MangaViewModel(
     @Assisted private val mangaId: Long,
     @Assisted private val isFromSource: Boolean,
+    @AppCoroutineScope private val appScope: CoroutineScope,
     private val context: Context,
     private val libraryPreferences: LibraryPreferences,
     trackPreferences: TrackPreferences,
@@ -435,7 +437,7 @@ class MangaViewModel(
                 }
 
                 // Finally match with enhanced tracking when available
-                addTracks.bindEnhancedTrackers(manga, state.source)
+                appScope.launch { addTracks.bindEnhancedTrackers(manga, state.source) }
             }
         }
     }
@@ -477,11 +479,9 @@ class MangaViewModel(
     /**
      * Deletes all the downloads for the manga.
      */
-    private suspend fun deleteDownloads() {
+    private fun deleteDownloads() {
         val state = successState ?: return
-        withContext(NonCancellable) {
-            downloadManager.deleteManga(state.manga, state.source)
-        }
+        appScope.launch { downloadManager.deleteManga(state.manga, state.source) }
     }
 
     /**
@@ -652,27 +652,28 @@ class MangaViewModel(
         startNow: Boolean,
     ) {
         if (successState == null) return
+        val startNowId = if (startNow) chapters.singleOrNull()?.id ?: return else null
 
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(NonCancellable) {
-                if (startNow) {
-                    val chapterId = chapters.singleOrNull()?.id ?: return@withContext
-                    downloadManager.startDownloadNow(chapterId)
+        viewModelScope.launch {
+            // The queueing outlives the screen, the add to library prompt doesn't
+            appScope.launch {
+                if (startNowId != null) {
+                    downloadManager.startDownloadNow(startNowId)
                 } else {
                     downloadChapters(chapters)
-                    toggleAllSelection(false)
                 }
+            }.join()
+            if (startNowId == null) toggleAllSelection(false)
 
-                if (!isFavorited && !hasPromptedToAddBefore) {
-                    hasPromptedToAddBefore = true
-                    val result = snackbarHostState.showSnackbar(
-                        message = context.stringResource(MR.strings.snack_add_to_library),
-                        actionLabel = context.stringResource(MR.strings.action_add),
-                        withDismissAction = true,
-                    )
-                    if (result == SnackbarResult.ActionPerformed && !isFavorited) {
-                        toggleFavorite()
-                    }
+            if (!isFavorited && !hasPromptedToAddBefore) {
+                hasPromptedToAddBefore = true
+                val result = snackbarHostState.showSnackbar(
+                    message = context.stringResource(MR.strings.snack_add_to_library),
+                    actionLabel = context.stringResource(MR.strings.action_add),
+                    withDismissAction = true,
+                )
+                if (result == SnackbarResult.ActionPerformed && !isFavorited) {
+                    toggleFavorite()
                 }
             }
         }
@@ -741,11 +742,14 @@ class MangaViewModel(
     fun markChaptersRead(chapters: List<Chapter>, read: Boolean) {
         toggleAllSelection(false)
         if (chapters.isEmpty()) return
-        viewModelScope.launch(Dispatchers.IO) {
-            setReadStatus.await(
-                read = read,
-                chapters = chapters.toTypedArray(),
-            )
+        viewModelScope.launch {
+            // The read state is written even if the screen closes, the tracking prompt isn't
+            appScope.launch {
+                setReadStatus.await(
+                    read = read,
+                    chapters = chapters.toTypedArray(),
+                )
+            }.join()
 
             if (!read || successState?.hasLoggedInTrackers == false || autoTrackState == AutoTrackState.NEVER) {
                 return@launch
@@ -760,9 +764,7 @@ class MangaViewModel(
             if (!shouldPromptTrackingUpdate) return@launch
             if (autoTrackState == AutoTrackState.ALWAYS) {
                 trackChapter.await(context, mangaId, maxChapterNumber)
-                withContext(Dispatchers.Main) {
-                    context.toast(context.stringResource(MR.strings.trackers_updated_summary, maxChapterNumber.toInt()))
-                }
+                context.toast(context.stringResource(MR.strings.trackers_updated_summary, maxChapterNumber.toInt()))
                 return@launch
             }
 
@@ -829,26 +831,22 @@ class MangaViewModel(
     fun deleteChapters(chapters: List<Chapter>) {
         val state = successState ?: return
         // Outlives the screen, which the delete dialog usually closes along with
-        viewModelScope.launch {
-            withContext(NonCancellable) {
-                try {
-                    downloadManager.deleteChapters(chapters, state.manga, state.source)
-                } catch (e: Exception) {
-                    logcat(LogPriority.ERROR, e)
-                }
+        appScope.launch {
+            try {
+                downloadManager.deleteChapters(chapters, state.manga, state.source)
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
             }
         }
     }
 
     private fun downloadNewChapters(chapters: List<Chapter>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(NonCancellable) {
-                val manga = successState?.manga ?: return@withContext
-                val chaptersToDownload = filterChaptersForDownload.await(manga, chapters)
+        appScope.launch {
+            val manga = successState?.manga ?: return@launch
+            val chaptersToDownload = filterChaptersForDownload.await(manga, chapters)
 
-                if (chaptersToDownload.isNotEmpty()) {
-                    downloadChapters(chaptersToDownload)
-                }
+            if (chaptersToDownload.isNotEmpty()) {
+                downloadChapters(chaptersToDownload)
             }
         }
     }
@@ -865,7 +863,7 @@ class MangaViewModel(
             TriState.ENABLED_IS -> Manga.CHAPTER_SHOW_UNREAD
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_READ
         }
-        viewModelScope.launch {
+        appScope.launch {
             setMangaChapterFlags.awaitSetUnreadFilter(manga, flag)
         }
     }
@@ -883,7 +881,7 @@ class MangaViewModel(
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_NOT_DOWNLOADED
         }
 
-        viewModelScope.launch {
+        appScope.launch {
             setMangaChapterFlags.awaitSetDownloadedFilter(manga, flag)
         }
     }
@@ -901,7 +899,7 @@ class MangaViewModel(
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_NOT_BOOKMARKED
         }
 
-        viewModelScope.launch {
+        appScope.launch {
             setMangaChapterFlags.awaitSetBookmarkFilter(manga, flag)
         }
     }
@@ -913,7 +911,7 @@ class MangaViewModel(
     fun setDisplayMode(mode: Long) {
         val manga = successState?.manga ?: return
 
-        viewModelScope.launch {
+        appScope.launch {
             setMangaChapterFlags.awaitSetDisplayMode(manga, mode)
         }
     }
@@ -925,21 +923,21 @@ class MangaViewModel(
     fun setSorting(sort: Long) {
         val manga = successState?.manga ?: return
 
-        viewModelScope.launch {
+        appScope.launch {
             setMangaChapterFlags.awaitSetSortingModeOrFlipOrder(manga, sort)
         }
     }
 
     fun setCurrentSettingsAsDefault(applyToExisting: Boolean) {
         val manga = successState?.manga ?: return
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(NonCancellable) {
+        viewModelScope.launch {
+            appScope.launch {
                 libraryPreferences.setChapterSettingsDefault(manga)
                 if (applyToExisting) {
                     setMangaDefaultChapterFlags.awaitAll()
                 }
-                snackbarHostState.showSnackbar(message = context.stringResource(MR.strings.chapter_settings_updated))
-            }
+            }.join()
+            snackbarHostState.showSnackbar(message = context.stringResource(MR.strings.chapter_settings_updated))
         }
     }
 

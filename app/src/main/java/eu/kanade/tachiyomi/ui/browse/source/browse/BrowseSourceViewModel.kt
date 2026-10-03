@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,7 +43,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import mihon.core.metro.AppCoroutineScope
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.domain.category.interactor.GetCategories
@@ -65,6 +66,7 @@ import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 class BrowseSourceViewModel(
     @Assisted private val sourceId: Long,
     @Assisted listingQuery: String?,
+    @AppCoroutineScope private val appScope: CoroutineScope,
     private val sourceManager: SourceManager,
     sourcePreferences: SourcePreferences,
     private val libraryPreferences: LibraryPreferences,
@@ -235,9 +237,9 @@ class BrowseSourceViewModel(
      * @param manga the manga to update.
      */
     fun changeMangaFavorite(manga: Manga) {
-        viewModelScope.launch {
+        appScope.launch {
             val update = if (manga.favorite) {
-                val coverLastModified = withContext(Dispatchers.IO) { manga.removeCovers(coverCache) }.coverLastModified
+                val coverLastModified = manga.removeCovers(coverCache).coverLastModified
                 MangaUpdate(manga.id) {
                     favoriteAt = null
                     if (coverLastModified != manga.coverLastModified) this.coverLastModified = coverLastModified

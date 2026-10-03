@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.TimeZone
 import logcat.LogPriority
@@ -31,7 +30,7 @@ class AddTracks(
 ) {
 
     // TODO: update all trackers based on common data
-    suspend fun bind(tracker: Tracker, item: Track, mangaId: Long) = withContext(NonCancellable + Dispatchers.IO) {
+    suspend fun bind(tracker: Tracker, item: Track, mangaId: Long) = withContext(Dispatchers.IO) {
         val allChapters = getChaptersByMangaId.await(mangaId)
         val hasReadChapters = allChapters.any { it.read }
         tracker.bind(item, hasReadChapters)
@@ -77,7 +76,7 @@ class AddTracks(
         syncChapterProgressWithTrack.await(mangaId, track, tracker)
     }
 
-    suspend fun bindEnhancedTrackers(manga: Manga, source: Source) = withContext(NonCancellable + Dispatchers.IO) {
+    suspend fun bindEnhancedTrackers(manga: Manga, source: Source) = withContext(Dispatchers.IO) {
         trackerManager.loggedInTrackers()
             .filterIsInstance<EnhancedTracker>()
             .filter { it.accept(source) }

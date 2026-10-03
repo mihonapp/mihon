@@ -5,10 +5,9 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.util.storage.DiskUtil
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import mihon.core.metro.AppCoroutineScope
 import tachiyomi.domain.manga.model.Manga
 import java.io.File
 import java.io.IOException
@@ -22,10 +21,12 @@ import java.io.InputStream
  * @param context the application context.
  * @constructor creates an instance of the cover cache.
  */
-@OptIn(DelicateCoroutinesApi::class)
 @Inject
 @SingleIn(AppScope::class)
-class CoverCache(private val context: Context) {
+class CoverCache(
+    @AppCoroutineScope private val scope: CoroutineScope,
+    private val context: Context,
+) {
 
     companion object {
         private const val COVERS_DIR = "covers"
@@ -48,7 +49,7 @@ class CoverCache(private val context: Context) {
     private var customCoversIndexed = false
 
     init {
-        GlobalScope.launch(Dispatchers.IO) {
+        scope.launch {
             val names = customCoverCacheDir.list().orEmpty()
             synchronized(customCoverNames) {
                 names.filterNotTo(customCoverNames) { it in deletedWhileIndexing }

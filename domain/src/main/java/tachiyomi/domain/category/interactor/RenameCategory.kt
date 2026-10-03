@@ -2,7 +2,6 @@ package tachiyomi.domain.category.interactor
 
 import dev.zacsweers.metro.Inject
 import logcat.LogPriority
-import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.category.repository.CategoryRepository
@@ -12,8 +11,8 @@ class RenameCategory(
     private val categoryRepository: CategoryRepository,
 ) {
 
-    suspend fun await(categoryId: Long, name: String) = withNonCancellableContext {
-        try {
+    suspend fun await(categoryId: Long, name: String): Result {
+        return try {
             categoryRepository.updateName(categoryId = categoryId, name = name)
             Result.Success
         } catch (e: Exception) {

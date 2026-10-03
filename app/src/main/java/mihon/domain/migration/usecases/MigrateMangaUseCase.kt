@@ -9,8 +9,9 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import mihon.core.metro.AppCoroutineScope
 import mihon.domain.migration.models.MigrationFlag
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.domain.category.interactor.GetCategories
@@ -27,6 +28,7 @@ import kotlin.time.Clock
 
 @Inject
 class MigrateMangaUseCase(
+    @AppCoroutineScope private val scope: CoroutineScope,
     private val sourcePreferences: SourcePreferences,
     private val trackerManager: TrackerManager,
     private val sourceManager: SourceManager,
@@ -105,7 +107,7 @@ class MigrateMangaUseCase(
             // Delete downloaded
             if (MigrationFlag.REMOVE_DOWNLOAD in flags && currentSource != null) {
                 // Not awaited, so a slow storage delete doesn't hold up the migration
-                GlobalScope.launch { downloadManager.deleteManga(current, currentSource) }
+                scope.launch { downloadManager.deleteManga(current, currentSource) }
             }
 
             // Update custom cover (recheck if custom cover exists)

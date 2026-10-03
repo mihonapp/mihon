@@ -18,10 +18,13 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.manga.MangaNotesScreen
 import eu.kanade.presentation.util.Screen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import tachiyomi.core.common.util.lang.launchNonCancellable
+import kotlinx.coroutines.launch
+import mihon.core.metro.AppCoroutineScope
 import tachiyomi.domain.manga.interactor.UpdateMangaNotes
 import tachiyomi.domain.manga.model.Manga
 
@@ -45,6 +48,7 @@ class MangaNotesScreen(
     @AssistedInject
     class Model(
         @Assisted private val manga: Manga,
+        @AppCoroutineScope private val appScope: CoroutineScope,
         private val updateMangaNotes: UpdateMangaNotes,
     ) : ViewModel() {
 
@@ -65,7 +69,8 @@ class MangaNotesScreen(
                 it.copy(notes = content)
             }
 
-            viewModelScope.launchNonCancellable {
+            // On Main so the debounced saves and the one on leaving are written in order
+            appScope.launch(Dispatchers.Main.immediate) {
                 updateMangaNotes(manga.id, content)
             }
         }

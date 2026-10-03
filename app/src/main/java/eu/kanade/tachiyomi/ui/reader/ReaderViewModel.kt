@@ -56,9 +56,8 @@ import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -70,6 +69,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
@@ -189,6 +190,9 @@ class ReaderViewModel(
      * The time the chapter was started reading
      */
     private var chapterReadStartTime: Instant? = null
+
+    // Serializes the progress writes, which outlive the reader, so they are applied in order
+    private val progressWrites = Mutex()
 
     private var chapterToDownload: Download? = null
 
@@ -312,7 +316,7 @@ class ReaderViewModel(
             currentChapters.unref()
             chapterToDownload?.let {
                 // viewModelScope is already cancelled here
-                GlobalScope.launch { downloadManager.addDownloadsToStartOfQueue(listOf(it)) }
+                appScope.launch { downloadManager.addDownloadsToStartOfQueue(listOf(it)) }
             }
         }
     }
@@ -503,12 +507,9 @@ class ReaderViewModel(
         val selectedChapter = page.chapter
         val pages = selectedChapter.pages ?: return
 
-        // Save last page read and mark as read if needed. Launched on Main so page changes are saved in the
-        // order they happen; the database calls are main-safe.
-        viewModelScope.launch {
-            withContext(NonCancellable) {
-                updateChapterProgress(selectedChapter, page)
-            }
+        // Save last page read and mark as read if needed. The database calls are main-safe.
+        appScope.launch(Dispatchers.Main.immediate) {
+            updateChapterProgress(selectedChapter, page)
         }
 
         if (selectedChapter != getCurrentChapter()) {
@@ -618,17 +619,22 @@ class ReaderViewModel(
         if (!incognitoMode && page.status !is Page.State.Error) {
             val read = readerChapter.chapter.read || readerChapter.pages?.lastIndex == pageIndex
             readerChapter.update { it.copy(lastPageRead = pageIndex, read = read) }
+            val isLastPage = readerChapter.pages?.lastIndex == pageIndex
 
-            if (readerChapter.pages?.lastIndex == pageIndex) {
-                updateChapterProgressOnComplete(readerChapter)
+            // Taken before the first suspension, and the mutex is fair, so the writes land in the order the pages
+            // were selected even when one of them suspends longer
+            progressWrites.withLock {
+                if (isLastPage) {
+                    updateChapterProgressOnComplete(readerChapter)
+                }
+
+                updateChapter.await(
+                    ChapterUpdate(readerChapter.chapter.id) {
+                        this.read = read
+                        lastPageRead = pageIndex
+                    },
+                )
             }
-
-            updateChapter.await(
-                ChapterUpdate(readerChapter.chapter.id) {
-                    this.read = read
-                    lastPageRead = pageIndex
-                },
-            )
         }
     }
 
@@ -660,9 +666,17 @@ class ReaderViewModel(
     }
 
     /**
+     * Saves the chapter last read history on the app scope, so it's written even when the reader is closing.
+     */
+    fun saveHistory() {
+        // Immediate so the read time is taken when the reader pauses
+        appScope.launch(Dispatchers.Main.immediate) { updateHistory() }
+    }
+
+    /**
      * Saves the chapter last read history if incognito mode isn't on.
      */
-    suspend fun updateHistory() {
+    private suspend fun updateHistory() {
         getCurrentChapter()?.let { readerChapter ->
             if (incognitoMode) return@let
 
@@ -888,9 +902,9 @@ class ReaderViewModel(
             ""
         }
 
-        // Copy file in background.
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(NonCancellable) {
+        // The save and its notification outlive the reader, the result event doesn't
+        viewModelScope.launch {
+            val result = appScope.async {
                 try {
                     val uri = imageSaver.save(
                         image = Image.Page(
@@ -899,15 +913,14 @@ class ReaderViewModel(
                             location = Location.Pictures.create(relativePath),
                         ),
                     )
-                    withContext(Dispatchers.Main) {
-                        notifier.onComplete(uri)
-                        eventChannel.send(Event.SavedImage(SaveImageResult.Success(uri)))
-                    }
+                    withContext(Dispatchers.Main) { notifier.onComplete(uri) }
+                    SaveImageResult.Success(uri)
                 } catch (e: Throwable) {
                     notifier.onError(e.message)
-                    eventChannel.send(Event.SavedImage(SaveImageResult.Error(e)))
+                    SaveImageResult.Error(e)
                 }
-            }
+            }.await()
+            eventChannel.send(Event.SavedImage(result))
         }
     }
 
@@ -954,9 +967,9 @@ class ReaderViewModel(
         val manga = manga ?: return
         val stream = page.stream ?: return
 
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(NonCancellable) {
-                val result = try {
+        viewModelScope.launch {
+            val result = appScope.async {
+                try {
                     manga.editCover(coverManager, stream(), updateManga, coverCache)
                     if (manga.isLocal() || manga.favorite) {
                         SetAsCoverResult.Success
@@ -966,8 +979,8 @@ class ReaderViewModel(
                 } catch (e: Exception) {
                     SetAsCoverResult.Error
                 }
-                eventChannel.send(Event.SetCoverResult(result))
-            }
+            }.await()
+            eventChannel.send(Event.SetCoverResult(result))
         }
     }
 
@@ -992,8 +1005,8 @@ class ReaderViewModel(
 
         val manga = manga ?: return
 
-        // A cancelled update is queued for DelayedTrackingUpdateWorker by TrackChapter
-        viewModelScope.launch(Dispatchers.IO) {
+        // Reading the last page and leaving right away is common, so it outlives the reader
+        appScope.launch {
             trackChapter.await(context, manga.id, readerChapter.chapter.chapterNumber)
         }
     }
@@ -1002,14 +1015,9 @@ class ReaderViewModel(
      * Enqueues these [chapters] to be deleted when [deletePendingChapters] is called. The download
      * manager handles persisting them across process deaths.
      */
-    private fun enqueueDeleteChapters(chapters: List<Chapter>) {
+    private suspend fun enqueueDeleteChapters(chapters: List<Chapter>) {
         val manga = manga ?: return
-
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(NonCancellable) {
-                downloadManager.enqueueChaptersToDelete(chapters, manga)
-            }
-        }
+        downloadManager.enqueueChaptersToDelete(chapters, manga)
     }
 
     /**
@@ -1017,10 +1025,10 @@ class ReaderViewModel(
      * are ignored.
      */
     private fun deletePendingChapters() {
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(NonCancellable) {
-                downloadManager.deletePendingChapters()
-            }
+        appScope.launch {
+            // Progress writes started before leaving may still enqueue the chapter just finished
+            progressWrites.withLock {}
+            downloadManager.deletePendingChapters()
         }
     }
 
