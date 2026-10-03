@@ -25,6 +25,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,13 +43,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import logcat.LogPriority
 import tachiyomi.core.common.preference.TriState
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
@@ -103,7 +103,7 @@ class UpdatesViewModel(
     }
 
     init {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             merge(downloadManager.statusFlow(), downloadManager.progressFlow())
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(this@UpdatesViewModel::updateDownloadState)
@@ -167,7 +167,7 @@ class UpdatesViewModel(
             .toUpdateItems()
             .applyFilters(itemPreferences)
     }
-        .flowOn(Dispatchers.IO)
+        .flowOn(Dispatchers.Default)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), null)
 
     val state: StateFlow<State> = combine(
@@ -199,6 +199,7 @@ class UpdatesViewModel(
             dialog = dialog,
         )
     }
+        .flowOn(Dispatchers.Default)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
 
     private fun List<UpdatesItem>.applyFilters(
@@ -290,7 +291,7 @@ class UpdatesViewModel(
      * @param read whether to mark chapters as read or unread.
      */
     fun markUpdatesRead(updates: List<UpdatesItem>, read: Boolean) {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             setReadStatus.await(
                 read = read,
                 chapters = updates
@@ -306,7 +307,7 @@ class UpdatesViewModel(
      * @param updates the list of chapters to bookmark.
      */
     fun bookmarkUpdates(updates: List<UpdatesItem>, bookmark: Boolean) {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             updates
                 .filterNot { it.update.bookmark == bookmark }
                 .map { ChapterUpdate(it.update.chapterId) { this.bookmark = bookmark } }
@@ -320,15 +321,17 @@ class UpdatesViewModel(
      * @param updatesItem the list of chapters to download.
      */
     private fun downloadChapters(updatesItem: List<UpdatesItem>) {
-        viewModelScope.launchNonCancellable {
-            val groupedUpdates = updatesItem.groupBy { it.update.mangaId }.values
-            for (updates in groupedUpdates) {
-                val mangaId = updates.first().update.mangaId
-                val manga = getManga.await(mangaId) ?: continue
-                // Don't download if source isn't available
-                sourceManager.get(manga.source) ?: continue
-                val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
-                downloadManager.downloadChapters(manga, chapters)
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                val groupedUpdates = updatesItem.groupBy { it.update.mangaId }.values
+                for (updates in groupedUpdates) {
+                    val mangaId = updates.first().update.mangaId
+                    val manga = getManga.await(mangaId) ?: continue
+                    // Don't download if source isn't available
+                    sourceManager.get(manga.source) ?: continue
+                    val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
+                    downloadManager.downloadChapters(manga, chapters)
+                }
             }
         }
     }
@@ -339,16 +342,18 @@ class UpdatesViewModel(
      * @param updatesItem list of chapters
      */
     fun deleteChapters(updatesItem: List<UpdatesItem>) {
-        viewModelScope.launchNonCancellable {
-            updatesItem
-                .groupBy { it.update.mangaId }
-                .entries
-                .forEach { (mangaId, updates) ->
-                    val manga = getManga.await(mangaId) ?: return@forEach
-                    val source = sourceManager.get(manga.source) ?: return@forEach
-                    val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
-                    downloadManager.deleteChapters(chapters, manga, source)
-                }
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                updatesItem
+                    .groupBy { it.update.mangaId }
+                    .entries
+                    .forEach { (mangaId, updates) ->
+                        val manga = getManga.await(mangaId) ?: return@forEach
+                        val source = sourceManager.get(manga.source) ?: return@forEach
+                        val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
+                        downloadManager.deleteChapters(chapters, manga, source)
+                    }
+            }
         }
         toggleAllSelection(false)
     }
@@ -370,8 +375,8 @@ class UpdatesViewModel(
         val currentSelection = selectedChapterIds.value
         if ((item.update.chapterId in currentSelection) == selected) return
 
-        // Off the visible items, not the id set, which can retain ids filtered out of the list
-        val firstSelection = items.none { it.selected }
+        // Only visible items count, since the id set can retain ids filtered out of the list
+        val firstSelection = items.none { it.update.chapterId in currentSelection }
         val newSelection = currentSelection.toHashSet()
         newSelection.addOrRemove(item.update.chapterId, selected)
 

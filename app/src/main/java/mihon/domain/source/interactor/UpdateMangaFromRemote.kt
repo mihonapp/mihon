@@ -9,9 +9,10 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.domain.source.models.RemoteMangaUpdate
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.repository.ChapterRepository
@@ -58,18 +59,16 @@ class UpdateMangaFromRemote(
         fetchChapters: Boolean = false,
         manualFetch: Boolean = false,
         fetchWindow: ClosedRange<Instant>? = null,
-    ): Result<RemoteMangaUpdate> {
-        return try {
+    ): Result<RemoteMangaUpdate> = withContext(Dispatchers.IO) {
+        try {
             val chapters = chapterRepository.getChapterByMangaId(manga.id)
                 .sortedBy { it.sourceOrder }
-            val update = withIOContext {
-                source.getMangaUpdate(
-                    manga = manga.toSManga(),
-                    chapters = chapters.map(Chapter::toSChapter),
-                    fetchDetails = fetchDetails,
-                    fetchChapters = fetchChapters,
-                )
-            }
+            val update = source.getMangaUpdate(
+                manga = manga.toSManga(),
+                chapters = chapters.map(Chapter::toSChapter),
+                fetchDetails = fetchDetails,
+                fetchChapters = fetchChapters,
+            )
             awaitUpdateFromSource(manga, update.manga, fetchDetails, manualFetch)
             val newChapters = syncChaptersWithSource.await(
                 rawSourceChapters = update.chapters,

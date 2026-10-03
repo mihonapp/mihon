@@ -28,6 +28,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,14 +43,14 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mihon.core.common.utils.mutate
 import mihon.domain.library.model.search.QueryNode
 import mihon.feature.library.matches
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.util.lang.compareToWithCollator
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
@@ -175,7 +176,7 @@ class LibraryViewModel(
                     .applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds),
             )
         }
-        .flowOn(Dispatchers.IO)
+        .flowOn(Dispatchers.Default)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), null)
 
     val state: StateFlow<State> = combine(
@@ -482,7 +483,8 @@ class LibraryViewModel(
     }
 
     suspend fun getNextUnreadChapter(manga: Manga): Chapter? {
-        return getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true).getNextUnread(manga, downloadManager)
+        val chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true)
+        return withContext(Dispatchers.Default) { chapters.getNextUnread(manga, downloadManager) }
     }
 
     /**
@@ -502,42 +504,46 @@ class LibraryViewModel(
 
     private fun downloadNextChapters(amount: Int?) {
         val mangas = selectedManga
-        viewModelScope.launchNonCancellable {
-            mangas.forEach { manga ->
-                val chapters = getNextChapters.await(manga.id)
-                    .fastFilterNot { chapter ->
-                        downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
-                            downloadManager.isChapterDownloaded(
-                                chapter.name,
-                                chapter.scanlator,
-                                chapter.url,
-                                manga.title,
-                                manga.source,
-                            )
-                    }
-                    .let { if (amount != null) it.take(amount) else it }
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                mangas.forEach { manga ->
+                    val chapters = getNextChapters.await(manga.id)
+                        .fastFilterNot { chapter ->
+                            downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
+                                downloadManager.isChapterDownloaded(
+                                    chapter.name,
+                                    chapter.scanlator,
+                                    chapter.url,
+                                    manga.title,
+                                    manga.source,
+                                )
+                        }
+                        .let { if (amount != null) it.take(amount) else it }
 
-                downloadManager.downloadChapters(manga, chapters)
+                    downloadManager.downloadChapters(manga, chapters)
+                }
             }
         }
     }
 
     private fun downloadBookmarkedChapters() {
         val mangas = selectedManga
-        viewModelScope.launchNonCancellable {
-            mangas.forEach { manga ->
-                val chapters = getBookmarkedChaptersByMangaId.await(manga.id)
-                    .fastFilterNot { chapter ->
-                        downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
-                            downloadManager.isChapterDownloaded(
-                                chapter.name,
-                                chapter.scanlator,
-                                chapter.url,
-                                manga.title,
-                                manga.source,
-                            )
-                    }
-                downloadManager.downloadChapters(manga, chapters)
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                mangas.forEach { manga ->
+                    val chapters = getBookmarkedChaptersByMangaId.await(manga.id)
+                        .fastFilterNot { chapter ->
+                            downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
+                                downloadManager.isChapterDownloaded(
+                                    chapter.name,
+                                    chapter.scanlator,
+                                    chapter.url,
+                                    manga.title,
+                                    manga.source,
+                                )
+                        }
+                    downloadManager.downloadChapters(manga, chapters)
+                }
             }
         }
     }
@@ -547,12 +553,14 @@ class LibraryViewModel(
      */
     fun markReadSelection(read: Boolean) {
         val selection = selectedManga
-        viewModelScope.launchNonCancellable {
-            selection.forEach { manga ->
-                setReadStatus.await(
-                    manga = manga,
-                    read = read,
-                )
+        viewModelScope.launch {
+            withContext(NonCancellable) {
+                selection.forEach { manga ->
+                    setReadStatus.await(
+                        manga = manga,
+                        read = read,
+                    )
+                }
             }
         }
         clearSelection()
@@ -566,22 +574,24 @@ class LibraryViewModel(
      * @param deleteChapters whether to delete downloaded chapters.
      */
     fun removeMangas(mangas: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
-        viewModelScope.launchNonCancellable {
-            if (deleteFromLibrary) {
-                val toDelete = mangas.map {
-                    it.removeCovers(coverCache)
-                    MangaUpdate(it.id) {
-                        favoriteAt = null
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(NonCancellable) {
+                if (deleteFromLibrary) {
+                    val toDelete = mangas.map {
+                        it.removeCovers(coverCache)
+                        MangaUpdate(it.id) {
+                            favoriteAt = null
+                        }
                     }
+                    updateManga.awaitAll(toDelete)
                 }
-                updateManga.awaitAll(toDelete)
-            }
 
-            if (deleteChapters) {
-                mangas.forEach { manga ->
-                    val source = sourceManager.get(manga.source) as? HttpSource
-                    if (source != null) {
-                        downloadManager.deleteManga(manga, source)
+                if (deleteChapters) {
+                    mangas.forEach { manga ->
+                        val source = sourceManager.get(manga.source) as? HttpSource
+                        if (source != null) {
+                            downloadManager.deleteManga(manga, source)
+                        }
                     }
                 }
             }
@@ -596,14 +606,16 @@ class LibraryViewModel(
      * @param removeCategories the categories to remove in all mangas.
      */
     fun setMangaCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
-        viewModelScope.launchNonCancellable {
-            mangaList.forEach { manga ->
-                val categoryIds = getCategoryIds(manga)
-                    .subtract(removeCategories.toSet())
-                    .plus(addCategories)
-                    .toList()
+        viewModelScope.launch {
+            withContext(NonCancellable) {
+                mangaList.forEach { manga ->
+                    val categoryIds = getCategoryIds(manga)
+                        .subtract(removeCategories.toSet())
+                        .plus(addCategories)
+                        .toList()
 
-                setMangaCategories.await(manga.id, categoryIds)
+                    setMangaCategories.await(manga.id, categoryIds)
+                }
             }
         }
     }
@@ -721,7 +733,7 @@ class LibraryViewModel(
     }
 
     fun openChangeCategoryDialog() {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             // Create a copy of selected manga
             val mangaList = selectedManga
 

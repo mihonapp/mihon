@@ -11,11 +11,12 @@ import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.setUserAgent
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import java.util.Locale
 import java.util.concurrent.CountDownLatch
@@ -59,7 +60,7 @@ abstract class WebViewInterceptor(
         }
 
         if (!WebViewUtil.supportsWebView(context)) {
-            scope.launchUI {
+            scope.launch(Dispatchers.Main) {
                 context.toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
             }
             return response

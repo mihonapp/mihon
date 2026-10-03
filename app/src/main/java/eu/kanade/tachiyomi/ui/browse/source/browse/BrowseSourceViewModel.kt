@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -41,9 +42,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
@@ -94,7 +95,7 @@ class BrowseSourceViewModel(
     private val source: Source? get() = state.value.source
 
     init {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             val source = sourceManager.getOrStub(sourceId)
 
             state.update {
@@ -236,7 +237,7 @@ class BrowseSourceViewModel(
     fun changeMangaFavorite(manga: Manga) {
         viewModelScope.launch {
             val update = if (manga.favorite) {
-                val coverLastModified = manga.removeCovers(coverCache).coverLastModified
+                val coverLastModified = withContext(Dispatchers.IO) { manga.removeCovers(coverCache) }.coverLastModified
                 MangaUpdate(manga.id) {
                     favoriteAt = null
                     if (coverLastModified != manga.coverLastModified) this.coverLastModified = coverLastModified
@@ -307,7 +308,7 @@ class BrowseSourceViewModel(
     }
 
     fun moveMangaToCategories(manga: Manga, categoryIds: List<Long>) {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             setMangaCategories.await(
                 mangaId = manga.id,
                 categoryIds = categoryIds.toList(),
