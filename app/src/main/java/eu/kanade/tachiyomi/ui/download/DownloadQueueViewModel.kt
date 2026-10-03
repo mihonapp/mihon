@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import eu.kanade.tachiyomi.source.model.Page
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -44,6 +46,7 @@ class DownloadQueueViewModel(
                     }
                 }
         }
+        .flowOn(Dispatchers.Default)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), emptyList())
 
     lateinit var controllerBinding: DownloadListBinding
@@ -149,19 +152,19 @@ class DownloadQueueViewModel(
     }
 
     fun pauseDownloads() {
-        downloadManager.pauseDownloads()
+        viewModelScope.launch { downloadManager.pauseDownloads() }
     }
 
     fun clearQueue() {
-        downloadManager.clearQueue()
+        viewModelScope.launch { downloadManager.clearQueue() }
     }
 
     fun reorder(downloads: List<Download>) {
-        downloadManager.reorderQueue(downloads)
+        viewModelScope.launch { downloadManager.reorderQueue(downloads) }
     }
 
     fun cancel(downloads: List<Download>) {
-        downloadManager.cancelQueuedDownloads(downloads)
+        viewModelScope.launch { downloadManager.cancelQueuedDownloads(downloads) }
     }
 
     fun <R : Comparable<R>> reorderQueue(selector: (DownloadItem) -> R?, reverse: Boolean = false) {

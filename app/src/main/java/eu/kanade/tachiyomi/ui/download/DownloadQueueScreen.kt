@@ -47,11 +47,12 @@ import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Sort
 import mihon.icons.materialsymbols.roundedfilled.Pause
 import mihon.icons.materialsymbols.roundedfilled.PlayArrow
-import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -258,11 +259,11 @@ object DownloadQueueScreen : Screen() {
 
                         ViewCompat.setNestedScrollingEnabled(viewModel.controllerBinding.root, true)
 
-                        scope.launchUI {
+                        scope.launch(Dispatchers.Main) {
                             viewModel.getDownloadStatusFlow()
                                 .collect(viewModel::onStatusChange)
                         }
-                        scope.launchUI {
+                        scope.launch(Dispatchers.Main) {
                             viewModel.getDownloadProgressFlow()
                                 .collect(viewModel::onUpdateDownloadedPages)
                         }

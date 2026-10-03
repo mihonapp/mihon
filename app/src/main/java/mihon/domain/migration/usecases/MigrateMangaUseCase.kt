@@ -9,6 +9,8 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import mihon.domain.migration.models.MigrationFlag
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.domain.category.interactor.GetCategories
@@ -102,7 +104,8 @@ class MigrateMangaUseCase(
 
             // Delete downloaded
             if (MigrationFlag.REMOVE_DOWNLOAD in flags && currentSource != null) {
-                downloadManager.deleteManga(current, currentSource)
+                // Not awaited, so a slow storage delete doesn't hold up the migration
+                GlobalScope.launch { downloadManager.deleteManga(current, currentSource) }
             }
 
             // Update custom cover (recheck if custom cover exists)

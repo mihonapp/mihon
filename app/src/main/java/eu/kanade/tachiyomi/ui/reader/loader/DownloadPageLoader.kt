@@ -56,7 +56,7 @@ internal class DownloadPageLoader(
         return loader.getPages()
     }
 
-    private fun getPagesFromDirectory(): List<ReaderPage> {
+    private suspend fun getPagesFromDirectory(): List<ReaderPage> {
         val pages = downloadManager.buildPageList(source, manga, chapter.chapter)
         return pages.map { page ->
             ReaderPage(page.index, page.url, page.imageUrl) {
