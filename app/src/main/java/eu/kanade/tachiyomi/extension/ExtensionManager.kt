@@ -31,17 +31,19 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.model.ExtensionStore
 import mihon.domain.extension.repository.ExtensionStoreRepository
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import java.util.Locale
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * The manager of extensions installed as another apk which extend the available sources. It handles
@@ -65,7 +67,10 @@ class ExtensionManager(
 
     private val initialized = CompletableDeferred<Unit>()
 
-    private val iconMap = mutableMapOf<String, Drawable>()
+    // A full load replaces both maps, so install events wait for it and apply on top instead of being overwritten
+    private val loadMutex = Mutex()
+
+    private val iconMap = ConcurrentHashMap<String, Drawable>()
 
     @Volatile
     private var stores = emptyList<ExtensionStore>()
@@ -167,7 +172,7 @@ class ExtensionManager(
      * again, so one can move between loaded and not loaded in either direction, while extensions
      * that still pass keep the instances they already had.
      */
-    private suspend fun loadExtensions() {
+    private suspend fun loadExtensions() = loadMutex.withLock {
         try {
             val extensions = ExtensionLoader.loadExtensions(context, loadedExtensionMapFlow.value)
 
@@ -197,7 +202,7 @@ class ExtensionManager(
             fetchExtensions()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-            withUIContext { context.toast(MR.strings.extension_api_error) }
+            withContext(Dispatchers.Main) { context.toast(MR.strings.extension_api_error) }
             return
         }
 
@@ -229,7 +234,7 @@ class ExtensionManager(
     }
 
     private suspend fun fetchExtensions(): List<Extension.Available> {
-        return withIOContext { extensionStoreRepository.fetchExtensions() }
+        return extensionStoreRepository.fetchExtensions()
     }
 
     private fun setAvailableExtensions(extensions: List<Extension.Available>) {
@@ -340,7 +345,7 @@ class ExtensionManager(
      * @param extension The extension to be registered.
      */
     private fun registerExtension(extension: Extension.Loaded) {
-        loadedExtensionMapFlow.value += extension
+        loadedExtensionMapFlow.update { it + extension }
     }
 
     /**
@@ -350,8 +355,8 @@ class ExtensionManager(
      * @param pkgName The package name of the uninstalled application.
      */
     private fun unregisterExtension(pkgName: String) {
-        loadedExtensionMapFlow.value -= pkgName
-        notLoadedExtensionMapFlow.value -= pkgName
+        loadedExtensionMapFlow.update { it - pkgName }
+        notLoadedExtensionMapFlow.update { it - pkgName }
     }
 
     /**
@@ -359,19 +364,19 @@ class ExtensionManager(
      */
     private inner class InstallationListener : ExtensionInstallReceiver.Listener {
 
-        override fun onExtensionLoaded(extension: Extension.Loaded) {
+        override suspend fun onExtensionLoaded(extension: Extension.Loaded) = loadMutex.withLock {
             registerExtension(extension)
-            notLoadedExtensionMapFlow.value -= extension.pkgName
+            notLoadedExtensionMapFlow.update { it - extension.pkgName }
             refreshStatuses()
         }
 
-        override fun onExtensionNotLoaded(extension: Extension.NotLoaded) {
-            loadedExtensionMapFlow.value -= extension.pkgName
-            notLoadedExtensionMapFlow.value += extension
+        override suspend fun onExtensionNotLoaded(extension: Extension.NotLoaded) = loadMutex.withLock {
+            loadedExtensionMapFlow.update { it - extension.pkgName }
+            notLoadedExtensionMapFlow.update { it + extension }
             refreshStatuses()
         }
 
-        override fun onPackageUninstalled(pkgName: String) {
+        override suspend fun onPackageUninstalled(pkgName: String) = loadMutex.withLock {
             ExtensionLoader.uninstallPrivateExtension(context, pkgName)
             unregisterExtension(pkgName)
             updatePendingUpdatesCount()
@@ -385,19 +390,23 @@ class ExtensionManager(
     private fun refreshStatuses() {
         val available = availableExtensionListFlow.value
         if (available.isNotEmpty()) {
-            loadedExtensionMapFlow.value = loadedExtensionMapFlow.value.mapValues { (_, extension) ->
-                val listing = extension.findListing(available)
-                extension.copy(
-                    hasUpdate = extension.findUpdate(available) != null,
-                    isObsolete = listing == null,
-                    store = if (stores.isEmpty()) extension.store else extension.pickStore(),
-                )
+            loadedExtensionMapFlow.update { current ->
+                current.mapValues { (_, extension) ->
+                    val listing = extension.findListing(available)
+                    extension.copy(
+                        hasUpdate = extension.findUpdate(available) != null,
+                        isObsolete = listing == null,
+                        store = if (stores.isEmpty()) extension.store else extension.pickStore(),
+                    )
+                }
             }
-            notLoadedExtensionMapFlow.value = notLoadedExtensionMapFlow.value.mapValues { (_, extension) ->
-                extension.copy(
-                    hasUpdate = extension.findUpdate(available) != null,
-                    store = if (stores.isEmpty()) extension.store else extension.pickStore(),
-                )
+            notLoadedExtensionMapFlow.update { current ->
+                current.mapValues { (_, extension) ->
+                    extension.copy(
+                        hasUpdate = extension.findUpdate(available) != null,
+                        store = if (stores.isEmpty()) extension.store else extension.pickStore(),
+                    )
+                }
             }
         }
         updatePendingUpdatesCount()

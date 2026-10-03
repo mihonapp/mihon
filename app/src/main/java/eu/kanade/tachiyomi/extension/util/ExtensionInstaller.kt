@@ -11,21 +11,26 @@ import eu.kanade.tachiyomi.extension.installer.Installer
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runInterruptible
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import tachiyomi.core.common.util.system.logcat
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * The installer which installs, updates and uninstalls the extensions.
@@ -40,11 +45,11 @@ class ExtensionInstaller(
     networkHelper: NetworkHelper,
 ) {
 
-    private val activeJobs = mutableMapOf<String, Job>()
-    private val activeSteps = mutableMapOf<Long, MutableStateFlow<InstallStep>>()
+    private val activeJobs = ConcurrentHashMap<String, Job>()
+    private val activeSteps = ConcurrentHashMap<Long, MutableStateFlow<InstallStep>>()
     private val extensionInstaller = basePreferences.extensionInstaller
 
-    private val httpClient: OkHttpClient = networkHelper.client
+    private val httpClient: OkHttpClient by lazy { networkHelper.client }
 
     /**
      * Adds the given extension to the downloads queue and returns an observable containing its
@@ -68,14 +73,17 @@ class ExtensionInstaller(
             try {
                 step.value = InstallStep.Downloading
                 val request = Request.Builder().url(extension.apkUrl).build()
-                val response = httpClient.newCall(request).execute()
-
-                if (!response.isSuccessful) {
-                    throw Exception("Failed to download extension")
-                }
-                response.body.byteStream().use { input ->
-                    tmpFile.outputStream().use { output ->
-                        input.copyTo(output)
+                httpClient.newCall(request).await().use { response ->
+                    if (!response.isSuccessful) {
+                        throw Exception("Failed to download extension")
+                    }
+                    // Interruptible so cancelInstall stops the body read too
+                    runInterruptible {
+                        response.body.byteStream().use { input ->
+                            tmpFile.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
+                        }
                     }
                 }
 
@@ -87,15 +95,13 @@ class ExtensionInstaller(
                     throw Exception("Extension isn't signed with the key of ${extension.store.name}")
                 }
 
+                ensureActive()
                 step.value = InstallStep.Installing
                 installApk(downloadId, tmpFile, packageInfo, isUpdateForPrivatelyInstalled)
             } catch (e: Exception) {
-                if (e is InterruptedException) {
-                    // Canceled
-                } else {
-                    logcat(LogPriority.INFO, e)
-                    step.value = InstallStep.Error
-                }
+                if (e is CancellationException) throw e
+                logcat(LogPriority.INFO, e)
+                step.value = InstallStep.Error
             }
         }
 
