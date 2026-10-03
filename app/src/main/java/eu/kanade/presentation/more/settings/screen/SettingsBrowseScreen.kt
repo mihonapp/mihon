@@ -16,6 +16,7 @@ import mihon.app.di.appGraph
 import mihon.domain.extension.model.ContentWarning
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -31,9 +32,13 @@ object SettingsBrowseScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
 
         val sourcePreferences = remember { context.appGraph.sourcePreferences }
+        val uiPreferences = remember { context.appGraph.uiPreferences }
         val getExtensionStoreCountAsFlow = remember { context.appGraph.getExtensionStoreCountAsFlow }
 
         val reposCount by getExtensionStoreCountAsFlow().collectAsState(0)
+
+        val volumeKeysNavigationPref = uiPreferences.volumeKeysNavigation
+        val volumeKeysNavigation by volumeKeysNavigationPref.collectAsState()
 
         return listOf(
             Preference.PreferenceGroup(
@@ -49,6 +54,21 @@ object SettingsBrowseScreen : SearchableSettings {
                         onClick = {
                             navigator.push(ExtensionStoresScreen())
                         },
+                    ),
+                ),
+            ),
+            Preference.PreferenceGroup(
+                title = stringResource(MR.strings.pref_volume_keys_navigation),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = volumeKeysNavigationPref,
+                        title = stringResource(MR.strings.pref_volume_keys_navigation),
+                        subtitle = stringResource(MR.strings.pref_volume_keys_navigation_summary),
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = uiPreferences.volumeKeysNavigationInverted,
+                        title = stringResource(MR.strings.pref_read_with_volume_keys_inverted),
+                        enabled = volumeKeysNavigation,
                     ),
                 ),
             ),
