@@ -4,6 +4,7 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
+import eu.kanade.tachiyomi.data.track.RefreshableProfileTracker
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.json.Json
@@ -11,7 +12,7 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
+class Bangumi(id: Long) : BaseTracker(id, "Bangumi"), RefreshableProfileTracker {
 
     private val json: Json by injectLazy()
 
