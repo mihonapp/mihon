@@ -26,7 +26,10 @@ class StorageManager(
     storagePreferences: StoragePreferences,
 ) {
 
-    private var baseDir: UniFile? = getBaseDir(storagePreferences.baseStorageDirectory.get())
+    @Volatile
+    private var baseDirLazy: Lazy<UniFile?> = lazy { getBaseDir(storagePreferences.baseStorageDirectory.get()) }
+    private val baseDir: UniFile?
+        get() = baseDirLazy.value
 
     private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
     val changes = _changes.receiveAsFlow()
@@ -37,7 +40,7 @@ class StorageManager(
             .drop(1)
             .distinctUntilChanged()
             .onEach { uri ->
-                baseDir = getBaseDir(uri)
+                baseDirLazy = lazyOf(getBaseDir(uri))
                 baseDir?.let { parent ->
                     parent.createDirectory(AUTOMATIC_BACKUPS_PATH)
                     parent.createDirectory(LOCAL_SOURCE_PATH)
