@@ -10,6 +10,7 @@ import tachiyomi.core.common.preference.getEnum
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.manga.model.Manga
+import kotlin.time.Duration.Companion.hours
 
 @Inject
 @SingleIn(AppScope::class)
@@ -42,6 +43,11 @@ class LibraryPreferences(
         0L,
     )
     val autoUpdateInterval: Preference<Int> = preferenceStore.getInt("pref_library_update_interval_key", 0)
+
+    val invalidateDownloadCacheInterval: Preference<Long> = preferenceStore.getLong(
+        "pref_invalidate_download_cache_interval",
+        1.hours.inWholeMilliseconds,
+    )
 
     val autoUpdateDeviceRestrictions: Preference<Set<String>> = preferenceStore.getStringSet(
         "library_update_restriction",
