@@ -19,29 +19,31 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.DiskUtil.NOMEDIA_FILE
 import eu.kanade.tachiyomi.util.storage.saveTo
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.archive.ZipWriter
@@ -50,7 +52,6 @@ import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchNow
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
@@ -64,6 +65,7 @@ import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
 import java.io.File
 import java.util.Locale
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -220,27 +222,70 @@ class Downloader(
 
             // Use supervisorScope to cancel child jobs when the downloader job is cancelled
             supervisorScope {
-                val downloadJobs = mutableMapOf<Download, Job>()
+                val sourceJobs = mutableMapOf<HttpSource, Job>()
+                val downloadJobs = ConcurrentHashMap<Download, Job>()
+
+                // A source runs several of its chapters at once, so a removed one is stopped by itself
+                launch {
+                    queueState.collect { queue ->
+                        downloadJobs.keys.filter { it !in queue }.forEach { downloadJobs.remove(it)?.cancel() }
+                    }
+                }
 
                 activeDownloadsFlow.collectLatest { activeDownloads ->
-                    val downloadJobsToStop = downloadJobs.filter { it.key !in activeDownloads }
-                    downloadJobsToStop.forEach { (download, job) ->
+                    val activeSources = activeDownloads.map { it.source }
+                    val sourceJobsToStop = sourceJobs.filter { it.key !in activeSources }
+                    sourceJobsToStop.forEach { (source, job) ->
                         job.cancel()
-                        downloadJobs.remove(download)
+                        sourceJobs.remove(source)
                     }
 
-                    val downloadsToStart = activeDownloads.filter { it !in downloadJobs }
-                    downloadsToStart.forEach { download ->
-                        downloadJobs[download] = launchDownloadJob(download)
+                    val sourcesToStart = activeSources.filter { it !in sourceJobs }
+                    sourcesToStart.forEach { source ->
+                        sourceJobs[source] = launchSourceJob(source, downloadJobs)
                     }
                 }
             }
         }
     }
 
-    private fun CoroutineScope.launchDownloadJob(download: Download) = launchIO {
+    /**
+     * Downloads the queued chapters of [source] in queue order. They share the source's page slots, and the next
+     * chapter starts once every page of the current one has a slot, so slots don't sit idle while a chapter's last
+     * pages finish and it's archived.
+     */
+    private fun CoroutineScope.launchSourceJob(
+        source: HttpSource,
+        downloadJobs: MutableMap<Download, Job>,
+    ) = launchIO {
+        val slots = Semaphore(downloadPreferences.parallelPageLimit.get())
+        while (true) {
+            // A canceled job can mark a chapter as downloading after it's been reset, so that counts as waiting too
+            val download = queueState
+                .map { queue ->
+                    queue.firstOrNull {
+                        it.source == source &&
+                            (it.status == Download.State.QUEUE || it.status == Download.State.DOWNLOADING) &&
+                            it !in downloadJobs
+                    }
+                }
+                .filterNotNull()
+                .first()
+            val pagesStarted = CompletableDeferred<Unit>()
+            val job = launchDownloadJob(download, slots, pagesStarted)
+            downloadJobs[download] = job
+            job.invokeOnCompletion { downloadJobs.remove(download, job) }
+            pagesStarted.await()
+        }
+    }
+
+    private fun CoroutineScope.launchDownloadJob(
+        download: Download,
+        slots: Semaphore,
+        pagesStarted: CompletableDeferred<Unit>,
+    ) = launchIO {
         try {
-            downloadChapter(download)
+            downloadChapter(download, slots, pagesStarted)
 
             // Remove successful download from queue
             if (download.status == Download.State.DOWNLOADED) {
@@ -254,6 +299,9 @@ class Downloader(
             logcat(LogPriority.ERROR, e)
             notifier.onError(e.message)
             stop()
+        } finally {
+            // Also when the chapter fails before its pages, so the source moves on to the next one
+            pagesStarted.complete(Unit)
         }
     }
 
@@ -322,8 +370,10 @@ class Downloader(
      * Downloads a chapter.
      *
      * @param download the chapter to be downloaded.
+     * @param slots the page download slots of the chapter's source.
+     * @param pagesStarted completed once every page has a slot.
      */
-    private suspend fun downloadChapter(download: Download) {
+    private suspend fun downloadChapter(download: Download, slots: Semaphore, pagesStarted: CompletableDeferred<Unit>) {
         val mangaDir = provider.getMangaDir(download.manga.title, download.source).getOrElse { e ->
             download.status = Download.State.ERROR
             notifier.onError(e.message, download.chapter.name, download.manga.title, download.manga.id)
@@ -367,27 +417,27 @@ class Downloader(
             download.status = Download.State.DOWNLOADING
 
             // Start downloading images, consider we can have downloaded images already
-            pageList.asFlow().flatMapMerge(concurrency = downloadPreferences.parallelPageLimit.get()) { page ->
-                flow {
-                    // Fetch image URL if necessary
-                    if (page.imageUrl.isNullOrEmpty()) {
-                        page.status = Page.State.LoadPage
-                        try {
-                            page.imageUrl = download.source.getImageUrl(page)
-                        } catch (e: Throwable) {
-                            page.status = Page.State.Error(e)
+            coroutineScope {
+                pageList.forEach { page ->
+                    slots.acquire()
+                    // Released on completion, since a page canceled before it starts never runs its body
+                    launch(Dispatchers.IO) {
+                        // Fetch image URL if necessary
+                        if (page.imageUrl.isNullOrEmpty()) {
+                            page.status = Page.State.LoadPage
+                            try {
+                                page.imageUrl = download.source.getImageUrl(page)
+                            } catch (e: Throwable) {
+                                page.status = Page.State.Error(e)
+                            }
                         }
-                    }
 
-                    withIOContext { getOrDownloadImage(page, download, tmpDir) }
-                    emit(page)
+                        getOrDownloadImage(page, download, tmpDir)
+                        notifier.onProgressChange(download)
+                    }.invokeOnCompletion { slots.release() }
                 }
-                    .flowOn(Dispatchers.IO)
+                pagesStarted.complete(Unit)
             }
-                .collect {
-                    // Do when page is downloaded.
-                    notifier.onProgressChange(download)
-                }
 
             // Do after download completes
 
