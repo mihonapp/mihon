@@ -68,7 +68,7 @@ fun TabbedScreen(
                     Tab(
                         selected = state.currentPage == index,
                         onClick = { scope.launch { state.animateScrollToPage(index) } },
-                        text = { TabText(text = stringResource(tab.titleRes), badgeCount = tab.badgeNumber) },
+                        text = { TabText(text = stringResource(tab.titleRes), badgeCount = tab.badgeNumber, spaceConstrained = true) },
                         unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                     )
                 }
