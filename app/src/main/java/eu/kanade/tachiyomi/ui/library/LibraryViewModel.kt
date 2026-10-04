@@ -127,13 +127,22 @@ class LibraryViewModel(
     }
         .distinctUntilChanged()
 
+    // Tracks are only used by tracker filters and the tracker score sort, and loading every track is slow on
+    // large libraries
+    private val tracks = combine(getCategories.subscribe(), getTrackingFiltersFlow()) { categories, trackingFilters ->
+        trackingFilters.values.any { it != TriState.DISABLED } ||
+            categories.any { it.sort.type == LibrarySort.Type.TrackerMean }
+    }
+        .distinctUntilChanged()
+        .flatMapLatest { needsTracks -> if (needsTracks) getTracksPerManga.subscribe() else flowOf(emptyMap()) }
+
     // Shared separately so search, selection and dialog changes still reach [state] before the
     // first query result, and so returning to the tab doesn't flash empty while it restarts.
     private val library = combine(
         searchQuery.debounce(0.25.seconds),
         getCategories.subscribe(),
         getFavoritesFlow(),
-        combine(getTracksPerManga.subscribe(), getTrackingFiltersFlow(), ::Pair),
+        combine(tracks, getTrackingFiltersFlow(), ::Pair),
         getLibraryItemPreferencesFlow(),
     ) { searchQuery, categories, favorites, (tracksMap, trackingFilters), itemPreferences ->
         val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
