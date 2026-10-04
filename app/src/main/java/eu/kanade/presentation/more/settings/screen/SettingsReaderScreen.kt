@@ -269,6 +269,10 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_page_rotate_invert),
                     visible = rotateToFit,
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.disablePageSwipe,
+                    title = stringResource(MR.strings.pref_disable_page_swipe),
+                ),
             ),
         )
     }
