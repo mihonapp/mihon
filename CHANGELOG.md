@@ -20,6 +20,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add setting to toggle chapter name hash suffix ([@choppeh](https://github.com/choppeh)) ([#3966](https://github.com/mihonapp/mihon/pull/3966))
 
 ### Improved
+- Include preference-group headings in settings search ([@kaosjammo](https://github.com/kaosjammo)) ([#4044](https://github.com/mihonapp/mihon/pull/4044))
 - Show updates and upcoming filter icon as active for categories ([@Secozzi](https://github.com/Secozzi)) ([#3772](https://github.com/mihonapp/mihon/pull/3772))
 - Show scores in MangaUpdates search results (and authors for `id:` prefix searches) ([@MajorTanya](https://github.com/MajorTanya)) ([#3795](https://github.com/mihonapp/mihon/pull/3795))
 - Remove whitespace from MAL and MB `id:` prefix search inputs before searching ([@MajorTanya](https://github.com/MajorTanya)) ([#3793](https://github.com/mihonapp/mihon/pull/3793))
