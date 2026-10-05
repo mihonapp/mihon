@@ -14,6 +14,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.annotation.AttrRes
 import androidx.annotation.CallSuper
+import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.os.postDelayed
@@ -39,6 +40,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
+import tachiyomi.core.common.util.system.panel.PanelRect
 
 /**
  * A wrapper view for showing page image.
@@ -57,6 +59,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttrs, defStyleRes) {
 
     private var pageView: View? = null
+
+    /** Overlay hiding everything outside the current panel. Only present above a pager SSIV. */
+    private var panelMask: PanelMaskView? = null
 
     private var config: Config? = null
 
@@ -114,10 +119,17 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
     }
 
-    private fun SubsamplingScaleImageView.landscapeZoom(forward: Boolean) {
+    /**
+     * Runs the landscape zoom regardless of the [Config.landscapeZoom] setting. All other guards still apply.
+     */
+    fun applyLandscapeZoom(forward: Boolean = true) {
+        (pageView as? SubsamplingScaleImageView)?.landscapeZoom(forward, ignoreConfigFlag = true)
+    }
+
+    private fun SubsamplingScaleImageView.landscapeZoom(forward: Boolean, ignoreConfigFlag: Boolean = false) {
         if (
             config != null &&
-            config!!.landscapeZoom &&
+            (ignoreConfigFlag || config!!.landscapeZoom) &&
             config!!.minimumScaleType == SCALE_TYPE_CENTER_INSIDE &&
             sWidth > sHeight &&
             scale == minScale
@@ -167,6 +179,57 @@ open class ReaderPageImageView @JvmOverloads constructor(
             is AppCompatImageView -> it.dispose()
         }
         it.isVisible = false
+    }
+
+    /** True when the page is a ready SSIV image (not animated/PhotoView). */
+    val isZoomable: Boolean
+        get() = (pageView as? SubsamplingScaleImageView)?.isReady == true
+
+    /**
+     * Fit a normalised region (0..1 of SSIV's source space). Returns false (no-op) unless SSIV is ready.
+     * Animates with the double-tap animation speed; jumps when that is "No animation".
+     */
+    fun zoomToRegion(rect: PanelRect, animate: Boolean = true): Boolean {
+        val view = (pageView as? SubsamplingScaleImageView)?.takeIf { it.isReady } ?: return false
+        val sW = view.sWidth.toFloat()
+        val sH = view.sHeight.toFloat()
+        val padX = rect.width * 0.03f
+        val padY = rect.height * 0.03f
+        val left = (rect.left - padX).coerceIn(0f, 1f)
+        val right = (rect.right + padX).coerceIn(0f, 1f)
+        val top = (rect.top - padY).coerceIn(0f, 1f)
+        val bottom = (rect.bottom + padY).coerceIn(0f, 1f)
+        val regionW = (right - left) * sW
+        val regionH = (bottom - top) * sH
+        if (regionW <= 0f || regionH <= 0f) return false
+        val fit = minOf(view.width / regionW, view.height / regionH)
+        val scale = fit.coerceIn(view.minScale, view.minScale * 3f)
+        view.moveTo(scale, PointF(rect.centerX * sW, rect.centerY * sH), animate)
+        return true
+    }
+
+    /**
+     * Back to full-page fit (minScale, image centre). Returns false unless SSIV is ready.
+     * Animates with the double-tap animation speed; jumps when that is "No animation".
+     */
+    fun zoomToFullPage(animate: Boolean = true): Boolean {
+        val view = (pageView as? SubsamplingScaleImageView)?.takeIf { it.isReady } ?: return false
+        view.moveTo(view.minScale, PointF(view.sWidth / 2f, view.sHeight / 2f), animate)
+        return true
+    }
+
+    private fun SubsamplingScaleImageView.moveTo(scale: Float, center: PointF, animate: Boolean) {
+        val configured = config?.zoomDuration ?: 1
+        val duration = configured.getSystemScaledDuration()
+        if (animate && configured > 1 && duration > 1) {
+            animateScaleAndCenter(scale, center)!!
+                .withDuration(duration.toLong())
+                .withEasing(EASE_IN_OUT_QUAD)
+                .withInterruptible(true)
+                .start()
+        } else {
+            setScaleAndCenter(scale, center)
+        }
     }
 
     /**
@@ -238,17 +301,44 @@ open class ReaderPageImageView @JvmOverloads constructor(
             setOnStateChangedListener(
                 object : SubsamplingScaleImageView.OnStateChangedListener {
                     override fun onScaleChanged(newScale: Float, origin: Int) {
+                        panelMask?.invalidate()
                         this@ReaderPageImageView.onScaleChanged(newScale)
                     }
 
                     override fun onCenterChanged(newCenter: PointF?, origin: Int) {
-                        // Not used
+                        panelMask?.invalidate()
                     }
                 },
             )
             setOnClickListener { this@ReaderPageImageView.onViewClicked() }
         }
         addView(pageView, MATCH_PARENT, MATCH_PARENT)
+
+        removePanelMask()
+        if (!isWebtoon) {
+            panelMask = PanelMaskView(context).also {
+                it.ssiv = pageView as SubsamplingScaleImageView
+                addView(it, MATCH_PARENT, MATCH_PARENT)
+            }
+        }
+    }
+
+    private fun removePanelMask() {
+        panelMask?.let {
+            it.ssiv = null
+            removeView(it)
+        }
+        panelMask = null
+    }
+
+    /**
+     * Hides everything outside [region] (normalised to SSIV's source space) with [color], or shows
+     * the whole image when [region] is null. No-op for animated and webtoon pages.
+     */
+    fun setPanelMask(region: PanelRect?, @ColorInt color: Int) {
+        val mask = panelMask ?: return
+        mask.color = color
+        mask.region = region
     }
 
     private fun SubsamplingScaleImageView.setupZoom(config: Config?) {
@@ -331,6 +421,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     private fun prepareAnimatedImageView() {
         if (pageView is AppCompatImageView) return
         removeView(pageView)
+        removePanelMask()
 
         pageView = if (isWebtoon) {
             AppCompatImageView(context)

@@ -64,6 +64,17 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private var awaitingIdleViewerChapters: ViewerChapters? = null
 
     /**
+     * Page whose panel cursor should be reset once the pager settles, so it doesn't visibly snap
+     * back to full view while sliding out.
+     */
+    private var pendingPanelReset: ReaderPage? = null
+
+    /**
+     * Page to open on its last panel when it becomes active, set when moving backwards turns the page.
+     */
+    private var pendingEnterLastPanel: ReaderPage? = null
+
+    /**
      * Whether the view pager is currently in idle mode. It sets the awaiting chapters if setting
      * this field to true.
      */
@@ -91,6 +102,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
         override fun onPageScrollStateChanged(state: Int) {
             isIdle = state == ViewPager.SCROLL_STATE_IDLE
+            if (isIdle) resetPendingPanelCursor()
         }
     }
 
@@ -192,6 +204,9 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
                     false
                 else -> true
             }
+            (currentPage as? ReaderPage)?.let { pendingPanelReset = it }
+            // Without a page transition the pager never leaves idle, so reset straight away
+            if (isIdle) resetPendingPanelCursor()
             currentPage = page
             when (page) {
                 is ReaderPage -> onReaderPageSelected(page, allowPreload, forward)
@@ -230,6 +245,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
         // Notify holder of page change
         getPageHolder(page)?.onPageSelected(forward)
+
+        if (pendingEnterLastPanel == page) {
+            getPageHolder(page)?.enterAtLastPanel()
+        }
+        pendingEnterLastPanel = null
 
         // Skip preload on inserts it causes unwanted page jumping
         if (page is InsertPage) {
@@ -331,12 +351,13 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Moves to the page at the right.
      */
     protected open fun moveRight() {
+        val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
+        if (stepPanel(holder, isForward(right = true))) return
         if (pager.currentItem != adapter.count - 1) {
-            val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
-            if (holder != null && config.navigateToPan && holder.canPanRight()) {
+            if (holder != null && canNavigateToPan(holder) && holder.canPanRight()) {
                 holder.panRight()
             } else {
-                pager.setCurrentItem(pager.currentItem + 1, config.usePageTransitions)
+                turnPage(pager.currentItem + 1, isForward(right = true))
             }
         }
     }
@@ -345,14 +366,48 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Moves to the page at the left.
      */
     protected open fun moveLeft() {
+        val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
+        if (stepPanel(holder, isForward(right = false))) return
         if (pager.currentItem != 0) {
-            val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
-            if (holder != null && config.navigateToPan && holder.canPanLeft()) {
+            if (holder != null && canNavigateToPan(holder) && holder.canPanLeft()) {
                 holder.panLeft()
             } else {
-                pager.setCurrentItem(pager.currentItem - 1, config.usePageTransitions)
+                turnPage(pager.currentItem - 1, isForward(right = false))
             }
         }
+    }
+
+    /**
+     * Whether moving towards the right is moving forward in reading order. Only the R2L pager
+     * reads towards the left.
+     */
+    private fun isForward(right: Boolean): Boolean = right != (this is R2LPagerViewer)
+
+    /**
+     * Steps the panel cursor of [holder] when panel navigation is enabled. Returns true if the
+     * move was consumed and the page must not turn.
+     */
+    private fun stepPanel(holder: PagerPageHolder?, forward: Boolean): Boolean {
+        if (holder == null || !config.panelNavigation) return false
+        return if (forward) holder.stepPanelForward() else holder.stepPanelBackward()
+    }
+
+    /**
+     * Panning would otherwise take over the page turn after the last panel.
+     */
+    private fun canNavigateToPan(holder: PagerPageHolder): Boolean =
+        config.navigateToPan && !(config.panelNavigation && holder.hasPanels)
+
+    private fun turnPage(position: Int, forward: Boolean) {
+        if (config.panelNavigation && !forward) {
+            pendingEnterLastPanel = adapter.items.getOrNull(position) as? ReaderPage
+        }
+        pager.setCurrentItem(position, config.usePageTransitions)
+    }
+
+    private fun resetPendingPanelCursor() {
+        pendingPanelReset?.let { getPageHolder(it)?.resetPanelCursor() }
+        pendingPanelReset = null
     }
 
     /**

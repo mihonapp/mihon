@@ -2,8 +2,10 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
+import com.davemorrissey.labs.subscaleview.CropBorders
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
@@ -12,7 +14,11 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
+import eu.kanade.tachiyomi.util.system.readerBackgroundColor
+import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
@@ -27,6 +33,9 @@ import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.core.common.util.system.panel.ContourPanelDetector
+import tachiyomi.core.common.util.system.panel.PanelOrder
+import tachiyomi.core.common.util.system.panel.PanelRect
 import tachiyomi.i18n.MR
 
 /**
@@ -62,6 +71,38 @@ class PagerPageHolder(
      */
     private var loadJob: Job? = null
 
+    /**
+     * Detected panels of the displayed image in reading order, normalised to 0..1 of the image as
+     * shown (after split and crop). Empty when panel navigation is off, detection hasn't finished,
+     * failed, or found fewer than 2 panels.
+     */
+    private var panels: List<PanelRect> = emptyList()
+
+    /** Whether panel navigation has at least two panels to step through on this page. */
+    val hasPanels: Boolean
+        get() = panels.size >= 2
+
+    /**
+     * Index into [panels] of the panel currently zoomed to, or -1 for the full page.
+     */
+    private var panelIndex = -1
+
+    /**
+     * Job running panel detection for the current image, off the main thread.
+     */
+    private var detectJob: Job? = null
+
+    /**
+     * Set by [process] when [rotateDualPage] actually rotated the image. Rotated pages skip
+     * panel detection.
+     */
+    private var rotated = false
+
+    /**
+     * True once detection has completed for the current image (with or without panels found).
+     */
+    private var detectionFinished = false
+
     init {
         loadJob = scope.launch { loadPageAndProcessStatus() }
     }
@@ -74,6 +115,8 @@ class PagerPageHolder(
         super.onDetachedFromWindow()
         loadJob?.cancel()
         loadJob = null
+        detectJob?.cancel()
+        detectJob = null
     }
 
     private fun initProgressIndicator() {
@@ -146,11 +189,17 @@ class PagerPageHolder(
      */
     private suspend fun setImage() {
         progressIndicator?.setProgress(0)
+        detectJob?.cancel()
+        detectJob = null
+        panels = emptyList()
+        panelIndex = -1
+        detectionFinished = false
+        updatePanelMask()
 
         val streamFn = page.stream ?: return
 
         try {
-            val (source, isAnimated, background) = withIOContext {
+            val (source, isAnimated, background, analysisSource) = withIOContext {
                 val source = streamFn().use { process(item, Buffer().readFrom(it)) }
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 val background = if (!isAnimated && viewer.config.automaticBackground) {
@@ -158,7 +207,13 @@ class PagerPageHolder(
                 } else {
                     null
                 }
-                Triple(source, isAnimated, background)
+                // Independent in-memory copy for panel detection; decoding happens later off the IO path.
+                val analysisSource = if (viewer.config.panelNavigation && !isAnimated && !rotated) {
+                    Buffer().also { source.peek().readAll(it) }
+                } else {
+                    null
+                }
+                LoadedImage(source, isAnimated, background, analysisSource)
             }
             withUIContext {
                 setImage(
@@ -169,13 +224,16 @@ class PagerPageHolder(
                         minimumScaleType = viewer.config.imageScaleType,
                         cropBorders = viewer.config.imageCropBorders,
                         zoomStartPosition = viewer.config.imageZoomType,
-                        landscapeZoom = viewer.config.landscapeZoom,
+                        landscapeZoom = viewer.config.landscapeZoom && !viewer.config.panelNavigation,
                     ),
                 )
                 if (!isAnimated) {
                     pageBackground = background
                 }
                 removeErrorLayout()
+            }
+            if (analysisSource != null) {
+                detectJob = scope.launch(Dispatchers.Default) { detectPanels(analysisSource) }
             }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
@@ -185,7 +243,105 @@ class PagerPageHolder(
         }
     }
 
+    /**
+     * Runs panel detection on [analysisSource] (the processed image) and publishes the result to
+     * [panels]. Falls back to landscape zoom when fewer than 2 panels are found.
+     */
+    private suspend fun detectPanels(analysisSource: BufferedSource) {
+        try {
+            val gray = ImageUtil.decodeGrayForAnalysis(
+                analysisSource,
+                findCrop = if (viewer.config.imageCropBorders) {
+                    { px, w, h -> CropBorders.findCropBorders(px, w, h) }
+                } else {
+                    null
+                },
+            )
+            val start = System.currentTimeMillis()
+            val ordered = if (gray != null) {
+                val found = ContourPanelDetector().detect(gray)
+                PanelOrder.sort(found, rightToLeft = viewer is R2LPagerViewer, isSpread = gray.width > gray.height)
+            } else {
+                emptyList()
+            }
+            logcat {
+                "Panel detection: page ${page.number}, image ${gray?.width}x${gray?.height}, " +
+                    "${ordered.size} panels in ${System.currentTimeMillis() - start}ms"
+            }
+            withUIContext {
+                panels = if (ordered.size >= 2) ordered else emptyList()
+                detectionFinished = true
+                if (panels.isEmpty() && viewer.config.landscapeZoom && isVisibleOnScreen()) {
+                    applyLandscapeZoom()
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            // panels stays empty (reset in setImage), so navigation falls back to page turns.
+            logcat(LogPriority.ERROR, e) { "Panel detection failed" }
+        }
+    }
+
+    override fun onPageSelected(forward: Boolean) {
+        super.onPageSelected(forward)
+        if (viewer.config.panelNavigation && viewer.config.landscapeZoom && detectionFinished && panels.isEmpty()) {
+            applyLandscapeZoom(forward)
+        }
+    }
+
+    /**
+     * Panel cursor API: [panelIndex] -1 means the full page. Each function returns true only if it
+     * consumed the navigation and the zoom was applied; the index never moves unless the zoom
+     * succeeded, so callers fall through to a normal page turn on false.
+     */
+    fun stepPanelForward(): Boolean {
+        if (panels.size < 2 || panelIndex == panels.lastIndex) return false
+        if (!zoomToRegion(panels[panelIndex + 1])) return false
+        panelIndex++
+        updatePanelMask()
+        return true
+    }
+
+    fun stepPanelBackward(): Boolean {
+        if (panelIndex > 0) {
+            if (!zoomToRegion(panels[panelIndex - 1])) return false
+            panelIndex--
+            updatePanelMask()
+            return true
+        }
+        if (panelIndex == 0) {
+            if (!zoomToFullPage()) return false
+            panelIndex = -1
+            updatePanelMask()
+            return true
+        }
+        return false
+    }
+
+    fun enterAtLastPanel(): Boolean {
+        if (panels.size < 2 || !zoomToRegion(panels.last(), animate = false)) return false
+        panelIndex = panels.lastIndex
+        updatePanelMask()
+        return true
+    }
+
+    fun resetPanelCursor() {
+        if (panelIndex != -1) {
+            panelIndex = -1
+            zoomToFullPage(animate = false)
+            updatePanelMask()
+        }
+    }
+
+    /** Masks everything outside the current panel when panel isolation is on; clears it otherwise. */
+    private fun updatePanelMask() {
+        val region = if (viewer.config.panelIsolation && panelIndex >= 0) panels.getOrNull(panelIndex) else null
+        setPanelMask(region, context.readerBackgroundColor(viewer.config.theme))
+    }
+
     private fun process(page: ReaderPage, imageSource: BufferedSource): BufferedSource {
+        rotated = false
         if (viewer.config.dualPageRotateToFit) {
             return rotateDualPage(imageSource)
         }
@@ -212,6 +368,7 @@ class PagerPageHolder(
         val isDoublePage = ImageUtil.isWideImage(imageSource)
         return if (isDoublePage) {
             val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
+            rotated = true
             ImageUtil.rotateImage(imageSource, rotation)
         } else {
             imageSource
@@ -236,6 +393,13 @@ class PagerPageHolder(
 
         return ImageUtil.splitInHalf(imageSource, side)
     }
+
+    private data class LoadedImage(
+        val source: BufferedSource,
+        val isAnimated: Boolean,
+        val background: Drawable?,
+        val analysisSource: Buffer?,
+    )
 
     private fun onPageSplit(page: ReaderPage) {
         val newPage = InsertPage(page)
