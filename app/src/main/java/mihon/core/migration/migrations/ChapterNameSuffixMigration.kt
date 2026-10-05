@@ -1,22 +1,23 @@
 package mihon.core.migration.migrations
 
-import android.content.Context
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.Inject
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateWorker
 import mihon.core.migration.Migration
 import mihon.core.migration.MigrationContext
+import tachiyomi.domain.library.service.LibraryPreferences
 
 @Inject
 @ContributesIntoSet(AppScope::class)
-class SetupBackupCreateMigration(
-    private val context: Context,
+class ChapterNameSuffixMigration(
+    private val preference: LibraryPreferences,
 ) : Migration {
-    override val version: Float = Migration.ALWAYS
+    override val version: Float = 34f
 
     override suspend fun invoke(migrationContext: MigrationContext): Boolean {
-        BackupCreateWorker.setupTask(context)
+        if (migrationContext.previousVersion in 13..33) {
+            preference.enableChapterNameHash.set(true)
+        }
         return true
     }
 }

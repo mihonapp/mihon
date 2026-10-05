@@ -26,7 +26,7 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 
-class BackupRestoreJob(private val context: Context, workerParams: WorkerParameters) :
+class BackupRestoreWorker(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
     private val graph: AppGraph = context.metroGraph()
@@ -94,7 +94,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
                 SYNC_KEY to sync,
                 OPTIONS_KEY to options.asBooleanArray(),
             )
-            val request = OneTimeWorkRequestBuilder<BackupRestoreJob>()
+            val request = OneTimeWorkRequestBuilder<BackupRestoreWorker>()
                 .addTag(TAG)
                 .setInputData(inputData)
                 .build()
