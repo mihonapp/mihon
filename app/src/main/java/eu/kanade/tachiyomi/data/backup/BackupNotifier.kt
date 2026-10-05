@@ -122,6 +122,42 @@ class BackupNotifier(
         return builder
     }
 
+    /**
+     * The notification a Google Drive sync round runs under, if it runs long enough to need one.
+     *
+     * Not the restore one: a round has no progress worth counting, and its cancel action has to stop
+     * the sync job rather than a restore that is not running. Nor is it posted here: most rounds end
+     * within a second, and one runs on every launch, so the system is left to show it only once a
+     * round has gone on for a while.
+     */
+    fun syncProgress(): NotificationCompat.Builder = with(progressNotificationBuilder) {
+        setContentTitle(context.stringResource(MR.strings.syncing_library))
+        setContentText(null)
+        setProgress(0, 0, true)
+        setOnlyAlertOnce(true)
+        // An action normally makes the system show a foreground notification straight away.
+        setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_DEFERRED)
+
+        clearActions()
+        addAction(
+            R.drawable.ic_close_24dp,
+            context.stringResource(MR.strings.action_cancel),
+            NotificationReceiver.cancelSyncPendingBroadcast(context),
+        )
+    }
+
+    fun showSyncError(error: String?) {
+        context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
+
+        with(completeNotificationBuilder) {
+            setContentTitle(context.stringResource(MR.strings.sync_error))
+            setContentText(error)
+
+            clearActions()
+            show(Notifications.ID_RESTORE_COMPLETE)
+        }
+    }
+
     fun showRestoreError(error: String?) {
         context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
 

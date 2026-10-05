@@ -56,6 +56,7 @@ import mihon.app.di.injekt.MetroInjektRegistrar
 import mihon.core.metro.GraphProvider
 import mihon.core.migration.Migration
 import mihon.core.migration.Migrator
+import mihon.sync.job.SyncJob
 import mihon.telemetry.TelemetryConfig
 import org.conscrypt.Conscrypt
 import tachiyomi.core.common.i18n.stringResource
@@ -235,10 +236,17 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     override fun onStart(owner: LifecycleOwner) {
         SecureActivityDelegate.onApplicationStart(this)
+        // Pull in whatever the other devices published before the user starts reading.
+        SyncJob.startIfStale(this)
     }
 
     override fun onStop(owner: LifecycleOwner) {
         SecureActivityDelegate.onApplicationStopped(this)
+        // A countdown still running when the app goes away would silently drop what the user just
+        // did, so send it now instead of waiting for it to expire.
+        graph.syncScheduler.flushPending()
+        // Publish this session's progress so the next device picks it up.
+        SyncJob.startIfStale(this)
     }
 
     override fun getPackageName(): String {

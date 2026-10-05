@@ -108,6 +108,7 @@ import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.core.migration.Migrator
 import mihon.feature.support.SupportUsScreen
+import mihon.feature.sync.SyncIndicator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.materialsymbols.rounded.VolunteerActivism
@@ -233,6 +234,15 @@ class MainActivity : BaseActivity() {
                             modifier = Modifier
                                 .padding(contentPadding)
                                 .consumeWindowInsets(contentPadding),
+                        )
+
+                        // Countdown to the next sync, and the way to skip or cancel it. Sits above
+                        // everything so it stays reachable whatever screen the user is on.
+                        SyncIndicator(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(contentPadding)
+                                .padding(bottom = SyncIndicatorBottomPadding),
                         )
 
                         // Draw navigation bar scrim when needed
@@ -611,6 +621,8 @@ class MainActivity : BaseActivity() {
 }
 
 // Splash screen
+private val SyncIndicatorBottomPadding = 16.dp
+
 private const val SPLASH_MIN_DURATION = 500 // ms
 private const val SPLASH_MAX_DURATION = 5000 // ms
 private const val SPLASH_EXIT_ANIM_DURATION = 400L // ms

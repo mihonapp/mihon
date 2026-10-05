@@ -12,6 +12,7 @@ build
 # Configuration files
 keystore.properties
 local.properties
+sync.properties
 
 # macOS specific files
 .DS_Store

@@ -53,12 +53,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import logcat.LogPriority
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
+import mihon.sync.job.SyncJob
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -258,6 +262,27 @@ class MangaViewModel(
             }
 
             // Initial loading finished
+            updateSuccessState { it.copy(isRefreshingData = false) }
+        }
+    }
+
+    /**
+     * Picks up the source of an extension that was installed while this screen was open.
+     *
+     * The apk lands before its sources are registered, so wait for the id to show up rather than
+     * reading the map straight away and finding the same stub still there.
+     */
+    fun onSourceInstalled() {
+        viewModelScope.launchIO {
+            val sourceId = successState?.manga?.source ?: return@launchIO
+            val source = withTimeoutOrNull(SOURCE_REGISTRATION_TIMEOUT_MS) {
+                sourceManager.sources
+                    .mapNotNull { sources -> sources.firstOrNull { it.id == sourceId } }
+                    .first()
+            } ?: return@launchIO
+
+            updateSuccessState { it.copy(source = source, isRefreshingData = true) }
+            fetchAllFromSource(manualFetch = false, fetchDetails = true, fetchChapters = true)
             updateSuccessState { it.copy(isRefreshingData = false) }
         }
     }
@@ -487,6 +512,7 @@ class MangaViewModel(
     private fun moveMangaToCategory(categoryIds: List<Long>) {
         viewModelScope.launchIO {
             setMangaCategories.await(mangaId, categoryIds)
+            SyncJob.onUserAction(context)
         }
     }
 
@@ -1191,6 +1217,11 @@ class MangaViewModel(
         }
     }
 }
+
+/**
+ * How long to wait for a freshly installed extension to register its sources before giving up.
+ */
+private const val SOURCE_REGISTRATION_TIMEOUT_MS = 15_000L
 
 @Immutable
 sealed class ChapterList {

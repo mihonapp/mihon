@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import mihon.sync.SyncScheduler
 import tachiyomi.domain.category.interactor.CreateCategoryWithName
 import tachiyomi.domain.category.interactor.DeleteCategory
 import tachiyomi.domain.category.interactor.GetCategories
@@ -37,6 +38,7 @@ class CategoryViewModel(
     private val deleteCategory: DeleteCategory,
     private val reorderCategory: ReorderCategory,
     private val renameCategory: RenameCategory,
+    private val syncScheduler: SyncScheduler,
 ) : ViewModel() {
 
     private val _events: Channel<CategoryEvent> = Channel()
@@ -59,7 +61,7 @@ class CategoryViewModel(
         viewModelScope.launch {
             when (createCategoryWithName.await(name)) {
                 is CreateCategoryWithName.Result.InternalError -> _events.send(CategoryEvent.InternalError)
-                else -> {}
+                CreateCategoryWithName.Result.Success -> syncScheduler.schedule()
             }
         }
     }
@@ -68,7 +70,7 @@ class CategoryViewModel(
         viewModelScope.launch {
             when (deleteCategory.await(categoryId = categoryId)) {
                 is DeleteCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
-                else -> {}
+                DeleteCategory.Result.Success -> syncScheduler.schedule()
             }
         }
     }
@@ -77,6 +79,7 @@ class CategoryViewModel(
         viewModelScope.launch {
             when (reorderCategory.await(category, newIndex)) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
+                ReorderCategory.Result.Success -> syncScheduler.schedule()
                 else -> {}
             }
         }
@@ -86,7 +89,7 @@ class CategoryViewModel(
         viewModelScope.launch {
             when (renameCategory.await(category, name)) {
                 is RenameCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
-                else -> {}
+                RenameCategory.Result.Success -> syncScheduler.schedule()
             }
         }
     }

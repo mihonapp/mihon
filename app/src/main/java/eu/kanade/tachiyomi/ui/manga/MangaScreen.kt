@@ -53,12 +53,14 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
 import logcat.LogPriority
+import mihon.feature.extension.missing.MissingExtensionDialog
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.model.StubSource
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class MangaScreen(
@@ -90,6 +92,8 @@ class MangaScreen(
 
         val successState = state as MangaViewModel.State.Success
         val isHttpSource = remember { successState.source is HttpSource }
+        val isStubSource = successState.source is StubSource
+        var showMissingExtensionDialog by remember { mutableStateOf(false) }
 
         LaunchedEffect(successState.manga, viewModel.source) {
             if (isHttpSource) {
@@ -111,7 +115,9 @@ class MangaScreen(
             chapterSwipeStartAction = viewModel.chapterSwipeStartAction,
             chapterSwipeEndAction = viewModel.chapterSwipeEndAction,
             navigateUp = navigator::pop,
-            onChapterClicked = { openChapter(context, it) },
+            onChapterClicked = {
+                if (isStubSource) showMissingExtensionDialog = true else openChapter(context, it)
+            },
             onDownloadChapter = viewModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
             onAddToLibraryClicked = {
                 viewModel.toggleFavorite()
@@ -141,7 +147,13 @@ class MangaScreen(
             onTagSearch = { scope.launch { performGenreSearch(navigator, it, viewModel.source!!) } },
             onFilterButtonClicked = viewModel::showSettingsDialog,
             onRefresh = viewModel::fetchAllFromSource,
-            onContinueReading = { continueReading(context, viewModel.getNextUnreadChapter()) },
+            onContinueReading = {
+                if (isStubSource) {
+                    showMissingExtensionDialog = true
+                } else {
+                    continueReading(context, viewModel.getNextUnreadChapter())
+                }
+            },
             onSearch = { query, global -> scope.launch { performSearch(navigator, query, global) } },
             onCoverClicked = viewModel::showCoverDialog,
             onShareClicked = { shareManga(context, viewModel.manga, viewModel.source) }.takeIf { isHttpSource },
@@ -163,6 +175,15 @@ class MangaScreen(
             onAllChapterSelected = viewModel::toggleAllSelection,
             onInvertSelection = viewModel::invertSelection,
         )
+
+        if (showMissingExtensionDialog) {
+            MissingExtensionDialog(
+                sourceId = successState.manga.source,
+                sourceName = successState.source.name.ifBlank { successState.manga.source.toString() },
+                onDismissRequest = { showMissingExtensionDialog = false },
+                onInstalled = viewModel::onSourceInstalled,
+            )
+        }
 
         var showScanlatorsDialog by remember { mutableStateOf(false) }
 

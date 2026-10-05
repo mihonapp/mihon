@@ -45,6 +45,8 @@ import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
+import mihon.sync.SyncPreferences
+import mihon.sync.job.SyncJob
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.withIOContext
@@ -101,6 +103,8 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
 
     @Inject private lateinit var notifier: LibraryUpdateNotifier
 
+    @Inject private lateinit var syncPreferences: SyncPreferences
+
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()
 
     override suspend fun doWork(): Result {
@@ -141,6 +145,18 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                 }
             } finally {
                 notifier.cancelProgressNotification()
+                // Refreshing the library is also when the user most expects their other devices to
+                // be taken into account, so chain a sync onto it. It runs as its own job, so a sync
+                // failure never marks the library update as failed. Appended rather than dropped when
+                // a round is already running, since that one may predate the chapters just fetched;
+                // and shown when the user asked for the refresh.
+                if (syncPreferences.syncOnLibraryUpdate().get()) {
+                    SyncJob.startNow(
+                        context,
+                        policy = ExistingWorkPolicy.APPEND_OR_REPLACE,
+                        visible = !tags.contains(WORK_NAME_AUTO),
+                    )
+                }
             }
         }
     }

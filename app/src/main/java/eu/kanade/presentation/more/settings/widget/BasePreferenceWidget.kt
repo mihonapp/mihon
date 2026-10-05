@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
+import eu.kanade.presentation.more.settings.LocalPreferenceIndent
 import eu.kanade.presentation.more.settings.LocalPreferenceMinHeight
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
@@ -50,7 +51,9 @@ internal fun BasePreferenceWidget(
             .highlightBackground(highlighted)
             .sizeIn(minHeight = minHeight)
             .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            // Last, so the touch target and the highlight still span the full width.
+            .padding(start = LocalPreferenceIndent.current),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (icon != null) {

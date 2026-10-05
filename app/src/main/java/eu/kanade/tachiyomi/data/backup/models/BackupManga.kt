@@ -46,6 +46,12 @@ class BackupManga(
     @ProtoNumber(110) var notes: String = "",
     @ProtoNumber(111) var initialized: Boolean = false,
     @ProtoNumber(112) var memo: ByteArray = JsonObjectEmptyBytes,
+    /**
+     * When the chapter list last changed from the source on the device that wrote this, so the sync
+     * can tell which device saw the current list. Numbered far from the upstream fields so it can
+     * never collide with one added there.
+     */
+    @ProtoNumber(500) var chapterListAt: Long = 0,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(

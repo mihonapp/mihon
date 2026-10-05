@@ -48,6 +48,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.Screen
+import mihon.feature.sync.SyncSettingsScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
 import tachiyomi.i18n.MR
@@ -293,6 +294,7 @@ private val settingScreens = listOf(
     SettingsTrackingScreen,
     SettingsBrowseScreen,
     SettingsDataScreen,
+    SyncSettingsScreen,
     SettingsSecurityScreen,
     SettingsAdvancedScreen,
 )

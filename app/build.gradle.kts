@@ -31,6 +31,24 @@ if (Config.includeTelemetry) {
 
 val keystorePropertiesFile = layout.settingsDirectory.file("keystore.properties").asFile
 
+// OAuth client ID used by the Google Drive sync. Android OAuth clients have no secret, but the ID is
+// per-developer, so it's read from an untracked file rather than committed. See sync.properties.example.
+val googleDriveClientId: String = layout.settingsDirectory.file("sync.properties").asFile
+    .takeIf { it.exists() }
+    ?.let { file -> FileInputStream(file).use { Properties().apply { load(it) } } }
+    ?.getProperty("googleDriveClientId")
+    .orEmpty()
+    .trim()
+
+// Google only accepts a redirect whose scheme is the reversed client ID, e.g.
+// "123-abc.apps.googleusercontent.com" -> "com.googleusercontent.apps.123-abc". The fallback keeps the
+// manifest buildable when sync isn't configured; the sync UI stays disabled in that case.
+val googleDriveRedirectScheme: String = googleDriveClientId
+    .removeSuffix(".apps.googleusercontent.com")
+    .takeIf(String::isNotEmpty)
+    ?.let { "com.googleusercontent.apps.$it" }
+    ?: "app.mihon.drive-sync-unconfigured"
+
 android {
     namespace = "eu.kanade.tachiyomi"
 
@@ -42,6 +60,8 @@ android {
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
+        buildConfigField("String", "GOOGLE_DRIVE_CLIENT_ID", "\"$googleDriveClientId\"")
+        manifestPlaceholders["googleDriveRedirectScheme"] = googleDriveRedirectScheme
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
