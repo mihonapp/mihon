@@ -60,9 +60,11 @@ import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.repeatOnLifecycle
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
@@ -96,6 +98,8 @@ import eu.kanade.tachiyomi.ui.reader.viewer.LocalPageColorFilter
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.Action
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
+import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewerContinuous
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
@@ -104,6 +108,9 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
@@ -126,6 +133,10 @@ class ReaderActivity : BaseActivity() {
     private val graph: AppGraph by lazy { metroGraph() }
 
     companion object {
+        private const val AUTOSCROLL_FRAME_DELAY = 16L
+        private const val AUTOSCROLL_PAGE_INTERVAL_BASE = 11
+        private const val MENU_POLL_DELAY = 100L
+
         fun newIntent(context: Context, mangaId: Long?, chapterId: Long?): Intent {
             return Intent(context, ReaderActivity::class.java).apply {
                 putExtra("manga", mangaId)
@@ -335,6 +346,7 @@ class ReaderActivity : BaseActivity() {
         )
 
         setMenuVisibility(viewModel.state.value.menuVisible)
+        enableAutoScroll()
 
         // Finish when incognito mode is disabled
         preferences.incognitoMode.changes()
@@ -553,6 +565,8 @@ class ReaderActivity : BaseActivity() {
         val verticalNavigator = verticalNavigatorModes.contains(readingMode)
         val verticalNavigatorOnLeft by readerPreferences.verticalNavigatorOnLeft.collectAsState()
         val verticalNavigatorHeight by readerPreferences.verticalNavigatorHeight.collectAsState()
+        val autoScrollSpeed by readerPreferences.autoscrollSpeed.collectAsState()
+        val autoScrollSmooth by readerPreferences.autoscrollSmoothScrolling.collectAsState()
 
         ReaderAppBars(
             visible = state.menuVisible,
@@ -609,8 +623,62 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast?.cancel()
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
+            autoScrollEnabled = state.autoScroll,
+            onClickAutoScroll = {
+                val enabled = viewModel.toggleAutoScroll()
+                menuToggleToast?.cancel()
+                menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
+            },
+            autoScrollSpeed = autoScrollSpeed,
+            onAutoScrollSpeedChange = readerPreferences.autoscrollSpeed::set,
+            autoScrollSmooth = autoScrollSmooth,
+            onAutoScrollSmoothChange = readerPreferences.autoscrollSmoothScrolling::set,
             onClickSettings = viewModel::openSettingsDialog,
         )
+    }
+
+    private fun enableAutoScroll() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(
+                    viewModel.state.map { it.autoScroll }.distinctUntilChanged(),
+                    readerPreferences.autoscrollSpeed.changes(),
+                    readerPreferences.autoscrollSmoothScrolling.changes(),
+                ) { enabled, speed, smooth -> Triple(enabled, speed, smooth) }
+                    .collectLatest { (enabled, speed, smooth) ->
+                        while (enabled) {
+                            val currentViewer = viewer
+                            val pageInterval = (AUTOSCROLL_PAGE_INTERVAL_BASE - speed) * 1_000L
+                            when {
+                                viewModel.state.value.menuVisible -> delay(MENU_POLL_DELAY)
+                                currentViewer is WebtoonViewer -> {
+                                    if (smooth) {
+                                        currentViewer.autoScrollStep(speed)
+                                        delay(AUTOSCROLL_FRAME_DELAY)
+                                    } else {
+                                        currentViewer.autoScrollPage()
+                                        delay(pageInterval)
+                                    }
+                                }
+                                currentViewer is WebGpuViewerContinuous -> {
+                                    if (smooth) {
+                                        currentViewer.autoScrollStep(speed.toFloat())
+                                        delay(AUTOSCROLL_FRAME_DELAY)
+                                    } else {
+                                        currentViewer.autoScrollPage()
+                                        delay(pageInterval)
+                                    }
+                                }
+                                currentViewer != null -> {
+                                    currentViewer.moveForward()
+                                    delay(pageInterval)
+                                }
+                                else -> delay(AUTOSCROLL_FRAME_DELAY)
+                            }
+                        }
+                    }
+            }
+        }
     }
 
     /**
