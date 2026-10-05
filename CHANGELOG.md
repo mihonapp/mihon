@@ -18,9 +18,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add support for the Year, Month, and Day fields in ComicInfo.xml files for chapter dating ([@MajorTanya](https://github.com/MajorTanya)) ([#3967](https://github.com/mihonapp/mihon/pull/3967))
 - Add refresh buttons to trackers in Settings to update displayed usernames (all trackers) & rating systems (where supported) ([@MajorTanya](https://github.com/MajorTanya)) ([#3828](https://github.com/mihonapp/mihon/pull/3828))
 - Add setting to toggle chapter name hash suffix ([@choppeh](https://github.com/choppeh)) ([#3966](https://github.com/mihonapp/mihon/pull/3966))
-- Add Google Drive sync to keep the library, reading progress, categories, extension repos and pinned sources in step across devices ([@FurTorie](https://github.com/FurTorie))
-  - Add a list of the extensions the library uses but this device lacks, also offered when opening an entry whose source is missing ([@FurTorie](https://github.com/FurTorie))
-  - Offer to link the Google account from the first-launch guide ([@FurTorie](https://github.com/FurTorie))
+- Add Google Drive sync to keep the library, reading progress, categories, extension repos and pinned sources in step across devices ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
+  - Add a list of the extensions the library uses but this device lacks, also offered when opening an entry whose source is missing ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
+  - Offer to link the Google account from the first-launch guide ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
 
 ### Improved
 - Show updates and upcoming filter icon as active for categories ([@Secozzi](https://github.com/Secozzi)) ([#3772](https://github.com/mihonapp/mihon/pull/3772))
