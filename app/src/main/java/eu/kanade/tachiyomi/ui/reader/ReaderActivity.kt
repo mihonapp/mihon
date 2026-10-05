@@ -42,7 +42,9 @@ import androidx.core.transition.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
@@ -73,14 +75,19 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewerContinuous
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -107,6 +114,10 @@ class ReaderActivity : BaseActivity() {
     private val graph: AppGraph by lazy { metroGraph() }
 
     companion object {
+        private const val AUTOSCROLL_FRAME_DELAY = 16L
+        private const val AUTOSCROLL_PAGE_INTERVAL_BASE = 11
+        private const val MENU_POLL_DELAY = 100L
+
         fun newIntent(context: Context, mangaId: Long?, chapterId: Long?): Intent {
             return Intent(context, ReaderActivity::class.java).apply {
                 putExtra("manga", mangaId)
@@ -183,6 +194,7 @@ class ReaderActivity : BaseActivity() {
 
         config = ReaderConfig()
         setMenuVisibility(viewModel.state.value.menuVisible)
+        enableAutoScroll()
 
         // Finish when incognito mode is disabled
         preferences.incognitoMode.changes()
@@ -461,6 +473,8 @@ class ReaderActivity : BaseActivity() {
         )
         val verticalNavigatorOnLeft by readerPreferences.verticalNavigatorOnLeft.collectAsState()
         val verticalNavigatorHeight by readerPreferences.verticalNavigatorHeight.collectAsState()
+        val autoScrollSpeed by readerPreferences.autoscrollSpeed.collectAsState()
+        val autoScrollSmooth by readerPreferences.autoscrollSmoothScrolling.collectAsState()
 
         ReaderAppBars(
             visible = state.menuVisible,
@@ -517,8 +531,66 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast?.cancel()
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
+            autoScrollEnabled = state.autoScroll,
+            onClickAutoScroll = {
+                val enabled = viewModel.toggleAutoScroll()
+                menuToggleToast?.cancel()
+                menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
+            },
+            autoScrollSpeed = autoScrollSpeed,
+            onAutoScrollSpeedChange = readerPreferences.autoscrollSpeed::set,
+            autoScrollSmooth = autoScrollSmooth,
+            onAutoScrollSmoothChange = readerPreferences.autoscrollSmoothScrolling::set,
             onClickSettings = viewModel::openSettingsDialog,
         )
+    }
+
+    private fun enableAutoScroll() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(
+                    viewModel.state.map { it.autoScroll }.distinctUntilChanged(),
+                    readerPreferences.autoscrollSpeed.changes(),
+                    readerPreferences.autoscrollSmoothScrolling.changes(),
+                ) { enabled, speed, smooth -> Triple(enabled, speed, smooth) }
+                    .collectLatest { (enabled, speed, smooth) ->
+                        while (enabled) {
+                            val viewer = viewModel.state.value.viewer
+                            val pageInterval = (AUTOSCROLL_PAGE_INTERVAL_BASE - speed) * 1_000L
+                            when {
+                                viewModel.state.value.menuVisible -> delay(MENU_POLL_DELAY)
+                                viewer is WebtoonViewer -> {
+                                    if (smooth) {
+                                        viewer.autoScrollStep(speed)
+                                        delay(AUTOSCROLL_FRAME_DELAY)
+                                    } else {
+                                        viewer.autoScrollPage()
+                                        delay(pageInterval)
+                                    }
+                                }
+                                viewer is WebGpuViewerContinuous -> {
+                                    if (smooth) {
+                                        viewer.autoScrollStep(speed.toFloat())
+                                        delay(AUTOSCROLL_FRAME_DELAY)
+                                    } else {
+                                        viewer.autoScrollPage()
+                                        delay(pageInterval)
+                                    }
+                                }
+                                viewer is PagerViewer -> {
+                                    viewer.moveToNext()
+                                    delay(pageInterval)
+                                }
+                                viewer is WebGpuViewer -> {
+                                    viewer.moveToNext()
+                                    delay(pageInterval)
+                                }
+                                else -> delay(AUTOSCROLL_FRAME_DELAY)
+                            }
+                        }
+                    }
+            }
+        }
     }
 
     /**
