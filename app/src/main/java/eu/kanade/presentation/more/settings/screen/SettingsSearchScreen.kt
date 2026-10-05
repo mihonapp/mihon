@@ -189,10 +189,10 @@ private fun SearchResult(
                     // Don't show info preference
                     .filterNot { it.second is Preference.PreferenceItem.InfoPreference }
                     // Filter by search query
-                    .filter { (_, p) ->
+                    .filter { (categoryTitle, p) ->
                         val inTitle = p.title.contains(searchKey, true)
                         val inSummary = p.subtitle?.contains(searchKey, true) ?: false
-                        inTitle || inSummary
+                        inTitle || inSummary || (categoryTitle?.contains(searchKey, true) ?: false)
                     }
                     // Map result data
                     .map { (categoryTitle, p) ->
