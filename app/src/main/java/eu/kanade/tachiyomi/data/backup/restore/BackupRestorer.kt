@@ -21,6 +21,7 @@ import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.chunked
@@ -171,11 +172,11 @@ class BackupRestorer(
             .chunked(100)
             .collect { chunk ->
                 val restoredAsBatch = try {
-                    ensureActive()
+                    currentCoroutineContext().ensureActive()
                     mangaRestorer.restore(chunk, backupCategories)
                     true
                 } catch (e: Exception) {
-                    ensureActive()
+                    currentCoroutineContext().ensureActive()
                     logcat(LogPriority.WARN, e) { "Batch restore failed, retrying entry by entry" }
                     false
                 }
@@ -184,12 +185,12 @@ class BackupRestorer(
                     restoreProgress.addAndFetch(chunk.size)
                 } else {
                     chunk.forEach {
-                        ensureActive()
+                        currentCoroutineContext().ensureActive()
 
                         try {
                             mangaRestorer.restore(listOf(it), backupCategories)
                         } catch (e: Exception) {
-                            ensureActive()
+                            currentCoroutineContext().ensureActive()
                             val sourceName = sourceMapping[it.source] ?: it.source.toString()
                             errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
                         }
