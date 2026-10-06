@@ -41,7 +41,7 @@ class MangaBackupCreator(
 
         val excludedScanlatorsMap = mangaRepository.getExcludedScanlators(mangaIds)
 
-        val chaptersMap = if (options.chapters) {
+        val chaptersMap = if (options.chapters || options.history) {
             getChaptersByMangaId.await(mangaIds, applyScanlatorFilter = false)
         } else {
             emptyMap()
@@ -65,7 +65,11 @@ class MangaBackupCreator(
             emptyMap()
         }
 
-        val chaptersByIdMap = chaptersMap.values.flatten().associateBy { it.id }
+        val chaptersByIdMap = if (options.history) {
+            chaptersMap.values.flatten().associateBy { it.id }
+        } else {
+            emptyMap()
+        }
 
         return mangas.map { manga ->
             val mangaObject = manga.toBackupManga()
