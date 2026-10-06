@@ -19,13 +19,4 @@ class GetChaptersByMangaId(
             emptyList()
         }
     }
-
-    suspend fun await(mangaIds: List<Long>, applyScanlatorFilter: Boolean = false): Map<Long, List<Chapter>> {
-        return try {
-            chapterRepository.getChaptersMapByMangaIds(mangaIds, applyScanlatorFilter)
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            emptyMap()
-        }
-    }
 }

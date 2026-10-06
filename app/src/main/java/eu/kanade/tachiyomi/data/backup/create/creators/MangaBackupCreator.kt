@@ -12,20 +12,20 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.chunked
 import kotlinx.coroutines.flow.flow
 import mihon.core.common.extensions.toByteArray
-import tachiyomi.domain.category.interactor.GetCategories
-import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
-import tachiyomi.domain.history.interactor.GetHistory
+import tachiyomi.domain.category.repository.CategoryRepository
+import tachiyomi.domain.chapter.repository.ChapterRepository
+import tachiyomi.domain.history.repository.HistoryRepository
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.repository.MangaRepository
-import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.track.repository.TrackRepository
 
 @Inject
 class MangaBackupCreator(
     private val mangaRepository: MangaRepository,
-    private val getCategories: GetCategories,
-    private val getHistory: GetHistory,
-    private val getChaptersByMangaId: GetChaptersByMangaId,
-    private val getTracks: GetTracks,
+    private val categoryRepository: CategoryRepository,
+    private val historyRepository: HistoryRepository,
+    private val chapterRepository: ChapterRepository,
+    private val trackRepository: TrackRepository,
 ) {
 
     operator fun invoke(mangas: List<Manga>, options: BackupOptions, chunkSize: Int): Flow<BackupManga> = flow {
@@ -42,25 +42,25 @@ class MangaBackupCreator(
         val excludedScanlatorsMap = mangaRepository.getExcludedScanlators(mangaIds)
 
         val chaptersMap = if (options.chapters || options.history) {
-            getChaptersByMangaId.await(mangaIds, applyScanlatorFilter = false)
+            chapterRepository.getChaptersMapByMangaIds(mangaIds, applyScanlatorFilter = false)
         } else {
             emptyMap()
         }
 
         val categoriesMap = if (options.categories) {
-            getCategories.await(mangaIds)
+            categoryRepository.getCategoriesMapByMangaIds(mangaIds)
         } else {
             emptyMap()
         }
 
         val tracksMap = if (options.tracking) {
-            getTracks.await(mangaIds)
+            trackRepository.getTracksMapByMangaIds(mangaIds)
         } else {
             emptyMap()
         }
 
         val historyMap = if (options.history) {
-            getHistory.await(mangaIds)
+            historyRepository.getHistoryMapByMangaIds(mangaIds)
         } else {
             emptyMap()
         }
