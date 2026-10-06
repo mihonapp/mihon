@@ -38,7 +38,7 @@ class PanelMaskView(context: Context) : View(context) {
     private val topLeft = PointF()
     private val bottomRight = PointF()
     private val corner = PointF()
-    private val outside = Path().apply { fillType = Path.FillType.EVEN_ODD }
+    private val outside = Path()
 
     init {
         isClickable = false
@@ -58,7 +58,10 @@ class PanelMaskView(context: Context) : View(context) {
         val corners = rect.corners
         if (corners.size == 8) {
             // The whole view with the frame punched out of it.
+            // Set on every draw: before Android 14, rewind() also resets the fill type, and the
+            // default one would fill the frame as well as everything around it.
             outside.rewind()
+            outside.fillType = Path.FillType.EVEN_ODD
             outside.addRect(0f, 0f, w, h, Path.Direction.CW)
             for (i in 0 until 4) {
                 view.sourceToViewCoord(corners[2 * i] * sW, corners[2 * i + 1] * sH, corner) ?: return
