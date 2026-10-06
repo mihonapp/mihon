@@ -164,6 +164,107 @@ class ContourPanelDetectorTest {
     }
 
     @Test
+    fun `lettering of an unframed bubble across a gutter extends the panel it mostly covers`() {
+        val canvas = Canvas(640, 860, WHITE)
+        canvas.fill(PixelRect(20, 20, 310, 400), GREY)
+        canvas.fill(PixelRect(330, 20, 620, 400), GREY)
+        canvas.border(PixelRect(20, 420, 620, 840), BLACK)
+        // A white bubble with no outline: it starts in the left panel, crosses the gutter and ends in the right one.
+        canvas.fill(PixelRect(220, 40, 370, 100), WHITE)
+        // Three lines of lettering, one small mark per letter.
+        for (y in listOf(50, 65, 80)) {
+            for (x in 230 until 360 step 8) canvas.fill(PixelRect(x, y, x + 5, y + 8), BLACK)
+        }
+
+        val rects = detector.detect(canvas.toImage())
+
+        assertEquals(3, rects.size)
+        assertHasRect(rects, PixelRect(20, 20, 359, 400).normalised(640, 860))
+        assertHasRect(rects, PixelRect(330, 20, 620, 400).normalised(640, 860))
+    }
+
+    @Test
+    fun `panels on either side of a slanted gutter stay separate`() {
+        val canvas = Canvas(640, 860, WHITE)
+        // The gutter rises from left to right, so the two bounding boxes overlap by a band.
+        for (x in 20 until 620) {
+            val gutterTop = 300 - (x - 20) * 100 / 600
+            canvas.fill(PixelRect(x, 20, x + 1, gutterTop), GREY)
+            canvas.fill(PixelRect(x, gutterTop + 12, x + 1, 840), GREY)
+        }
+
+        val rects = detector.detect(canvas.toImage())
+
+        assertEquals(2, rects.size)
+        assertHasRect(rects, PixelRect(20, 20, 620, 300).normalised(640, 860))
+        assertHasRect(rects, PixelRect(20, 213, 620, 840).normalised(640, 860))
+
+        // Each panel carries its slanted frame, clockwise from the top left.
+        val upper = rects.minBy { it.top }
+        val expected = listOf(20, 20, 620, 20, 620, 201, 20, 300)
+        assertEquals(8, upper.corners.size)
+        expected.forEachIndexed { i, pixel ->
+            val normalised = pixel.toFloat() / if (i % 2 == 0) 640 else 860
+            assertTrue(abs(upper.corners[i] - normalised) <= TOLERANCE, "corner value $i of ${upper.corners}")
+        }
+    }
+
+    @Test
+    fun `plain rectangular panels carry no frame corners`() {
+        val canvas = Canvas(600, 900, WHITE)
+        canvas.border(PixelRect(20, 20, 580, 440), BLACK)
+        canvas.border(PixelRect(20, 460, 580, 880), BLACK)
+
+        val rects = detector.detect(canvas.toImage())
+
+        assertEquals(2, rects.size)
+        assertTrue(rects.all { it.corners.isEmpty() })
+    }
+
+    @Test
+    fun `panels joined by art crossing the gutter are cut apart`() {
+        val canvas = Canvas(640, 860, WHITE)
+        canvas.fill(PixelRect(20, 20, 315, 840), GREY)
+        canvas.fill(PixelRect(325, 20, 620, 840), GREY)
+        // A sound effect drawn across the gutter joins the two panels into one shape.
+        canvas.fill(PixelRect(280, 300, 360, 420), BLACK)
+
+        val rects = detector.detect(canvas.toImage())
+
+        assertEquals(2, rects.size)
+        assertTrue(rects.any { abs(it.left - 20f / 640) <= TOLERANCE && it.right < 0.6f }, "left panel in $rects")
+        assertTrue(rects.any { abs(it.right - 620f / 640) <= TOLERANCE && it.left > 0.4f }, "right panel in $rects")
+    }
+
+    @Test
+    fun `a bubble over the gutter stays whole in the panel that holds most of it`() {
+        val canvas = Canvas(640, 860, WHITE)
+        canvas.fill(PixelRect(20, 20, 620, 400), GREY)
+        canvas.fill(PixelRect(20, 420, 620, 840), GREY)
+        // An outlined bubble hanging from the upper panel across the gutter into the lower one.
+        canvas.fill(PixelRect(250, 300, 390, 470), WHITE)
+        canvas.border(PixelRect(250, 300, 390, 470), BLACK)
+
+        val rects = detector.detect(canvas.toImage())
+
+        assertEquals(2, rects.size)
+        assertHasRect(rects, PixelRect(20, 20, 620, 470).normalised(640, 860))
+        assertHasRect(rects, PixelRect(20, 411, 620, 840).normalised(640, 860))
+    }
+
+    @Test
+    fun `a light band inside one panel is not a gutter`() {
+        val canvas = Canvas(640, 860, WHITE)
+        canvas.border(PixelRect(20, 20, 620, 840), BLACK)
+        // Sparse art in a mostly white panel: no frame lines run along any band of paper.
+        canvas.fill(PixelRect(60, 100, 200, 300), GREY)
+        canvas.fill(PixelRect(420, 500, 580, 760), GREY)
+        canvas.border(PixelRect(20, 850, 620, 858), BLACK)
+
+        assertEquals(2, detector.detect(canvas.toImage()).size)
+    }
+
+    @Test
     fun `large all-ink images do not overflow and yield nothing`() {
         // Uniform black: the frame median is black, so nothing is ink.
         assertTrue(detector.detect(Canvas(1024, 1024, BLACK).toImage()).isEmpty())
