@@ -28,7 +28,7 @@ class MangaBackupCreator(
     private val getTracks: GetTracks,
 ) {
 
-    operator fun invoke(mangas: List<Manga>, options: BackupOptions, chunkSize: Int = 100): Flow<BackupManga> = flow {
+    operator fun invoke(mangas: List<Manga>, options: BackupOptions, chunkSize: Int): Flow<BackupManga> = flow {
         mangas.asFlow().chunked(chunkSize).collect { chunk ->
             for (manga in backupManga(chunk, options)) {
                 emit(manga)

@@ -136,7 +136,7 @@ class BackupCreator(
     private fun backupMangas(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> {
         if (!options.libraryEntries) return flowOf()
 
-        return mangaBackupCreator(mangas, options)
+        return mangaBackupCreator(mangas, options, MANGA_CHUNK_SIZE)
     }
 
     private suspend fun backupSources(mangas: List<Manga>): List<BackupSource> {
@@ -174,7 +174,7 @@ class BackupCreator(
 
         val tempBuffer = okio.Buffer()
 
-        mangaFlow.chunked(100).collect { chunk ->
+        mangaFlow.chunked(MANGA_CHUNK_SIZE).collect { chunk ->
             emptyMangas = false
             for (manga in chunk) {
                 val mangaBytes = parser.encodeToByteArray(BackupManga.serializer(), manga)
@@ -215,6 +215,7 @@ class BackupCreator(
     companion object {
         private const val MAX_AUTO_BACKUPS: Int = 4
         private val FILENAME_REGEX = """${BuildConfig.APPLICATION_ID}_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}.tachibk""".toRegex()
+        private const val MANGA_CHUNK_SIZE: Int = 100
 
         fun getFilename(): String {
             val date = SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.ENGLISH).format(Date())
