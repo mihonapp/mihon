@@ -5,8 +5,8 @@ import kotlin.math.abs
 /**
  * Contour/blob panel detector. Stages: background luminance from the median of the image frame
  * (falling back to white, then black, for full-bleed pages), ink mask by luminance distance, 8-connected components (iterative flood fill), small-component
- * noise removal, merging of overlapping or nearly touching boxes to a fixed point, and rejection
- * of a single near-full-page box. Output rects are normalised to 0..1 and not ordered.
+ * noise removal, merging of overlapping or nearly touching boxes to a fixed point, rejection
+ * of a single near-full-page box, and grouping of the art left outside the panels into borderless regions. Output rects are normalised to 0..1 and not ordered.
  */
 class ContourPanelDetector : PanelDetector {
 
@@ -32,11 +32,24 @@ class ContourPanelDetector : PanelDetector {
         val boxes = components(ink, width, height)
 
         val minArea = imageArea * MIN_COMPONENT_AREA_FRACTION
-        val kept = boxes.filterTo(ArrayList()) { it.area >= minArea }
+        val (large, small) = boxes.partition { it.area >= minArea }
+        val kept = ArrayList(large)
         mergeToFixedPoint(kept, minOf(width, height) * MERGE_GAP_FRACTION)
 
         if (kept.isEmpty()) return emptyList()
         if (kept.size == 1 && kept[0].area >= imageArea * DEGENERATE_AREA_FRACTION) return emptyList()
+
+        // Borderless panels are drawn straight on the paper, so they come out as several small
+        // components (a bubble, a figure) instead of one frame. Group what lies outside every
+        // panel so that stepping through the page doesn't skip that art.
+        val loose = small.filterTo(ArrayList()) { box ->
+            maxOf(box.right - box.left, box.bottom - box.top) >= MIN_LOOSE_SIDE && kept.none { it.intersects(box) }
+        }
+        if (loose.size <= MAX_LOOSE_COMPONENTS) {
+            mergeLoose(loose, kept, minOf(width, height) * LOOSE_GAP_FRACTION)
+            val minLooseArea = imageArea * MIN_LOOSE_AREA_FRACTION
+            loose.filterTo(kept) { it.area >= minLooseArea }
+        }
 
         return kept.map { box ->
             PanelRect(
@@ -148,6 +161,29 @@ class ContourPanelDetector : PanelDetector {
         }
     }
 
+    /** Merges [loose] boxes within [maxGap] of each other, unless the merged box would run into a [panels] box. */
+    private fun mergeLoose(loose: MutableList<Box>, panels: List<Box>, maxGap: Double) {
+        var changed = true
+        while (changed) {
+            changed = false
+            var i = 0
+            while (i < loose.size) {
+                var j = i + 1
+                while (j < loose.size) {
+                    val union = loose[i].copy().apply { absorb(loose[j]) }
+                    if (loose[i].isNear(loose[j], maxGap) && panels.none { it.intersects(union) }) {
+                        loose[i] = union
+                        loose.removeAt(j)
+                        changed = true
+                    } else {
+                        j++
+                    }
+                }
+                i++
+            }
+        }
+    }
+
     /** Pixel bounding box, all edges inclusive. */
     private class Box(var left: Int, var top: Int, var right: Int, var bottom: Int) {
         val area: Double get() = (right - left + 1).toDouble() * (bottom - top + 1)
@@ -158,6 +194,12 @@ class ContourPanelDetector : PanelDetector {
             val gapY = maxOf(0, maxOf(top, other.top) - minOf(bottom, other.bottom) - 1)
             return gapX <= maxGap && gapY <= maxGap
         }
+
+        fun intersects(other: Box): Boolean {
+            return left <= other.right && other.left <= right && top <= other.bottom && other.top <= bottom
+        }
+
+        fun copy() = Box(left, top, right, bottom)
 
         fun absorb(other: Box) {
             left = minOf(left, other.left)
@@ -178,6 +220,20 @@ class ContourPanelDetector : PanelDetector {
         // touching/overlapping boxes: real gutters are often under 1% of the page once downsampled,
         // and art bleeding across a gutter is already joined by pixel connectivity.
         private const val MERGE_GAP_FRACTION = 0.0
+
+        // Components outside every panel that lie within this fraction of the image's shorter side of
+        // each other are grouped into one borderless region.
+        private const val LOOSE_GAP_FRACTION = 0.05
+
+        // Borderless regions covering less than this fraction of the image are dropped (page numbers,
+        // signatures).
+        private const val MIN_LOOSE_AREA_FRACTION = 0.005
+
+        // Components under this many pixels on their longer side are scan specks, not art.
+        private const val MIN_LOOSE_SIDE = 3
+
+        // Above this many components outside the panels the page is too noisy to group them.
+        private const val MAX_LOOSE_COMPONENTS = 400
 
         // A single remaining box covering at least this fraction of the image is the whole page, not a panel.
         private const val DEGENERATE_AREA_FRACTION = 0.90

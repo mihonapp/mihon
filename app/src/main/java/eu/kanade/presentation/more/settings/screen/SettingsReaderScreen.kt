@@ -252,7 +252,7 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.panelIsolation,
                     title = stringResource(MR.strings.pref_panel_isolation),
                     subtitle = stringResource(MR.strings.pref_panel_isolation_summary),
-                    enabled = panelNavigation,
+                    visible = panelNavigation,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = dualPageSplitPref,

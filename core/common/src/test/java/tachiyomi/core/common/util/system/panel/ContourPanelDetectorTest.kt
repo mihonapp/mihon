@@ -35,10 +35,12 @@ class ContourPanelDetectorTest {
         val rows = 4
         val cellW = (640 - 2 * 10 - (cols - 1) * gutter) / cols
         val cellH = (860 - 2 * 10 - (rows - 1) * gutter) / rows
-        for (r in 0 until rows) for (c in 0 until cols) {
-            val left = 10 + c * (cellW + gutter)
-            val top = 10 + r * (cellH + gutter)
-            canvas.border(PixelRect(left, top, left + cellW, top + cellH), BLACK)
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                val left = 10 + c * (cellW + gutter)
+                val top = 10 + r * (cellH + gutter)
+                canvas.border(PixelRect(left, top, left + cellW, top + cellH), BLACK)
+            }
         }
 
         assertEquals(rows * cols, detector.detect(canvas.toImage()).size)
@@ -141,6 +143,24 @@ class ContourPanelDetectorTest {
         val bubbleX = 275f / 600
         val bubbleY = 120f / 900
         assertEquals(1, rects.count { bubbleX in it.left..it.right && bubbleY in it.top..it.bottom })
+    }
+
+    @Test
+    fun `borderless art between framed panels becomes a region of its own`() {
+        val canvas = Canvas(640, 860, WHITE)
+        canvas.border(PixelRect(20, 20, 620, 400), BLACK)
+        canvas.border(PixelRect(20, 420, 300, 840), BLACK)
+        canvas.border(PixelRect(420, 420, 620, 840), BLACK)
+        // A bubble above a figure, drawn on the paper with no frame. Neither is big enough alone.
+        canvas.fill(PixelRect(325, 440, 395, 500), BLACK)
+        canvas.fill(PixelRect(315, 520, 405, 600), BLACK)
+        // Page number in the bottom margin.
+        canvas.fill(PixelRect(315, 848, 327, 856), BLACK)
+
+        val rects = detector.detect(canvas.toImage())
+
+        assertEquals(4, rects.size)
+        assertHasRect(rects, PixelRect(315, 440, 405, 600).normalised(640, 860))
     }
 
     @Test

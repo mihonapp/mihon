@@ -52,6 +52,30 @@ class PanelOrderTest {
     }
 
     @Test
+    fun `tall panel next to a grid with misaligned gutters reads the grid row by row`() {
+        // Coordinates from a real album page: a tall panel left of a 2x3 grid, above a row of three.
+        val tallLeft = PanelRect(0.078f, 0.043f, 0.417f, 0.651f)
+        val g1 = PanelRect(0.427f, 0.044f, 0.677f, 0.284f)
+        val g2 = PanelRect(0.683f, 0.044f, 0.931f, 0.282f)
+        val g3 = PanelRect(0.427f, 0.291f, 0.664f, 0.501f)
+        val g4 = PanelRect(0.673f, 0.289f, 0.933f, 0.499f)
+        val g5 = PanelRect(0.428f, 0.508f, 0.692f, 0.651f)
+        val g6 = PanelRect(0.700f, 0.507f, 0.933f, 0.652f)
+        val b1 = PanelRect(0.078f, 0.663f, 0.394f, 0.921f)
+        val b2 = PanelRect(0.403f, 0.663f, 0.602f, 0.921f)
+        val b3 = PanelRect(0.609f, 0.664f, 0.934f, 0.921f)
+        val shuffled = listOf(b2, g5, g1, b3, g4, tallLeft, g6, g3, b1, g2)
+        assertEquals(
+            listOf(tallLeft, g1, g2, g3, g4, g5, g6, b1, b2, b3),
+            PanelOrder.sort(shuffled, rightToLeft = false),
+        )
+        assertEquals(
+            listOf(g2, g1, g4, g3, g6, g5, tallLeft, b3, b2, b1),
+            PanelOrder.sort(shuffled, rightToLeft = true),
+        )
+    }
+
+    @Test
     fun `empty list`() {
         assertTrue(PanelOrder.sort(emptyList(), rightToLeft = false).isEmpty())
         assertTrue(PanelOrder.sort(emptyList(), rightToLeft = true, isSpread = true).isEmpty())

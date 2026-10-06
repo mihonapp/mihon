@@ -2,7 +2,9 @@ package tachiyomi.core.common.util.system.panel
 
 /** Luminance image, row-major, one unsigned byte (0 = black, 255 = white) per pixel. */
 class GrayImage(val width: Int, val height: Int, val pixels: ByteArray) {
-    init { require(width > 0 && height > 0 && pixels.size == width * height) }
+    init {
+        require(width > 0 && height > 0 && pixels.size == width * height)
+    }
     fun lum(x: Int, y: Int): Int = pixels[y * width + x].toInt() and 0xFF
 }
 
