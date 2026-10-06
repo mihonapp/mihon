@@ -3,6 +3,7 @@ package tachiyomi.domain.manga.repository
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaRemoteUpdate
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 
@@ -10,7 +11,7 @@ interface MangaRepository {
 
     suspend fun getMangaById(id: Long): Manga
 
-    suspend fun getMangaByIdAsFlow(id: Long): Flow<Manga>
+    fun getMangaByIdAsFlow(id: Long): Flow<Manga>
 
     suspend fun getMangaByUrlAndSourceId(url: String, sourceId: Long): Manga?
 
@@ -28,13 +29,27 @@ interface MangaRepository {
 
     suspend fun getDuplicateLibraryManga(id: Long, title: String): List<MangaWithChapterCount>
 
-    suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>>
+    suspend fun getUpcomingManga(
+        statuses: Set<Long>,
+        excludedCategories: List<Long>,
+        includedCategories: List<Long>,
+    ): Flow<List<Manga>>
 
     suspend fun resetViewerFlags(): Boolean
 
+    suspend fun deleteNonLibraryManga(sourceIds: List<Long>, keepReadManga: Boolean)
+
     suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>)
 
+    suspend fun getExcludedScanlators(mangaId: Long): Set<String>
+
+    fun getExcludedScanlatorsAsFlow(mangaId: Long): Flow<Set<String>>
+
+    suspend fun setExcludedScanlators(mangaId: Long, excludedScanlators: Set<String>)
+
     suspend fun update(update: MangaUpdate): Boolean
+
+    suspend fun updateRemote(update: MangaRemoteUpdate): Boolean
 
     suspend fun updateAll(mangaUpdates: List<MangaUpdate>): Boolean
 

@@ -1,6 +1,11 @@
 package mihon.data.extension.repository
 
 import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOne
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -15,6 +20,9 @@ import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
 import tachiyomi.data.subscribeToOne
 
+@Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class ExtensionStoreRepositoryImpl(
     private val service: ExtensionStoreService,
     private val database: Database,
@@ -42,6 +50,9 @@ class ExtensionStoreRepositoryImpl(
                 service.fetch(store.index_url)
                     .mapCatching {
                         database.transaction {
+                            if (!database.extension_storeQueries.contains(store.index_url).awaitAsOne()) {
+                                return@transaction
+                            }
                             upsert(it)
                             if (store.index_url != it.indexUrl) {
                                 database.extension_storeQueries.delete(store.index_url)
@@ -59,7 +70,7 @@ class ExtensionStoreRepositoryImpl(
         }
     }
 
-    private suspend fun upsert(store: ExtensionStore) {
+    override suspend fun upsert(store: ExtensionStore) {
         database.extension_storeQueries.upsert(
             indexUrl = store.indexUrl,
             name = store.name,

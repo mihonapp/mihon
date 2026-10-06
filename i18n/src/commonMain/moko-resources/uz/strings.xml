@@ -174,8 +174,6 @@
     <string name="lock_always">Doim</string>
     <string name="hide_notification_content">Bildirishnoma mazmunini yashirish</string>
     <string name="secure_screen">Ilova ekrani himoyasi</string>
-    <string name="pref_show_nsfw_source">Manbaa va kengaytmalar ro\'yhatida ko\'rsatish</string>
-    <string name="parental_controls_info">Bu, ilovada norasmiy yoki noto\'g\'ri belgilangan kengaytmalardan NSFW (18+) kontent paydo bo\'lishini oldini olmaydi.</string>
     <string name="relative_time_today">Bugun</string>
     <string name="pref_category_display">Ko\'rsatish</string>
     <string name="pref_library_columns">Qismlar soni</string>
@@ -189,11 +187,7 @@
     <string name="ext_updates_pending">Yangilanishlar mavjud</string>
     <string name="untrusted_extension">Ishonchsiz kengaytma</string>
     <string name="ext_untrusted">Ishonchsiz</string>
-    <string name="untrusted_extension_message">Bu kengaytma ishonchsiz sertifikat tomonidan imzolangan va faollashtirilmagan.
-\n
-\nZararli kengaytma Mihonda saqlanadigan barcha hisobga kirish ma\'lumotlarini o\'qishi, yoki ixtiyoriy kodni bajarishi mumkin.
-\n
-\nBu sertifikatga ishonish orqali, ushbu xavflarni qabul qilasiz.</string>
+    <string name="untrusted_extension_message">Bu kengaytma ishonchsiz sertifikat tomonidan imzolangan va faollashtirilmagan. \n \nZararli kengaytma Mihonda saqlanadigan barcha hisobga kirish ma\'lumotlarini o\'qishi, yoki ixtiyoriy kodni bajarishi mumkin. \n \nBu sertifikatga ishonish orqali, ushbu xavflarni qabul qilasiz.</string>
     <string name="pref_dual_page_invert_summary">Agar keng sahifalarning bo\'linishi o\'qish yo\'nalishiga mos kelmasa</string>
     <string name="pref_fullscreen">To\'liq ekran rejimi</string>
     <string name="pref_dual_page_split">Keng sahifalarni bo\'lish</string>
@@ -207,11 +201,9 @@
     <string name="ext_installing">O\'rnatilmoqda</string>
     <string name="obsolete_extension_message">Bu kangaytma boshqa mavjud emas. U noto\'g\'ri ishlashi, va ilovada muammolar keltirib chiqarishi mumkin.</string>
     <string name="extension_api_error">Kengaytmalar ro\'yhatini olib bo\'lmadi</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) manbaalari</string>
     <string name="secure_screen_summary">Ilova himoyasi dasturlar orasida almashishda ilova ekranini yashiradi, va skrinshot qilish imkonini cheklaydi</string>
     <string name="pref_update_only_completely_read">O\'qilmagan bob(lar) bor</string>
     <string name="ext_update">Yangilash</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_show_page_number">Sahifa raqamini ko\'rsatish</string>
     <string name="update_6hour">Har 6 soatda</string>
     <string name="pref_reader_navigation">Navigatsiya</string>
@@ -248,7 +240,6 @@
     <string name="ext_install">O\'rnatish</string>
     <string name="ext_app_info">Ilova haqida</string>
     <string name="pref_inverted_colors">Teskari ranglar</string>
-    <string name="ext_nsfw_warning">Ushbu kengaytma manbaalarida NSFW (18+) bo\'lishi mumkin</string>
     <string name="connected_to_wifi">Faqat Wi-Fi orqali</string>
     <string name="ext_info_language">Til</string>
     <string name="portrait">Portret</string>
@@ -262,7 +253,6 @@
     <string name="ext_info_version">Versiya</string>
     <string name="pref_double_tap_anim_speed">Ikki marta bosilganda animatsiya tezligi</string>
     <string name="pref_custom_brightness">Foydalanuvchi tanlagan yoruqlik</string>
-    <string name="ext_info_age_rating">Yosh cheklovi</string>
     <string name="network_not_metered">Faqat cheksiz tarmoq orqali</string>
     <string name="include">O\'z ichiga oladi: %s</string>
     <string name="pref_cutout_short">Kesilgan maydondagi ma\'lumotni ko\'rsatish</string>

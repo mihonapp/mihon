@@ -1,17 +1,15 @@
 package eu.kanade.tachiyomi.data.backup
 
-import android.content.Context
 import android.net.Uri
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
 class BackupFileValidator(
-    private val context: Context,
-
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val trackerManager: TrackerManager = Injekt.get(),
+    private val sourceManager: SourceManager,
+    private val trackerManager: TrackerManager,
+    private val backupDecoder: BackupDecoder,
 ) {
 
     /**
@@ -19,16 +17,16 @@ class BackupFileValidator(
      *
      * @return List of missing sources or missing trackers.
      */
-    fun validate(uri: Uri): Results {
+    suspend fun validate(uri: Uri): Results {
         val backup = try {
-            BackupDecoder(context).decode(uri)
+            backupDecoder.decode(uri)
         } catch (e: Exception) {
             throw IllegalStateException(e)
         }
 
         val sources = backup.backupSources.associate { it.sourceId to it.name }
         val missingSources = sources
-            .filter { sourceManager.get(it.key) == null }
+            .filterKeys { sourceManager.get(it) == null }
             .values.map {
                 val id = it.toLongOrNull()
                 if (id == null) {

@@ -53,7 +53,7 @@
         <item quantity="other">Susunod na %d hindi pa nababasang kabanata</item>
     </plurals>
     <plurals name="download_amount">
-        <item quantity="one">Sunod na kabanata</item>
+        <item quantity="one">Sunod %d na kabanata</item>
         <item quantity="other">Susunod na %d mga kabanata</item>
     </plurals>
     <plurals name="missing_chapters">
@@ -85,7 +85,7 @@
         <item quantity="other">Kopyahin ang %1$d na mga entry?</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.skipText">
-        <item quantity="one">Isang entry ang nilaktawan</item>
+        <item quantity="one">Isang %1$d na entry ang nilaktawan</item>
         <item quantity="other">%1$d na mga entry ang nilaktawan</item>
     </plurals>
     <plurals name="notification_update_error">

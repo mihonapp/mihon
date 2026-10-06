@@ -1,13 +1,14 @@
 package tachiyomi.domain.category.interactor
 
+import dev.zacsweers.metro.Inject
 import tachiyomi.domain.category.model.Category
-import tachiyomi.domain.category.model.CategoryUpdate
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.plus
 import tachiyomi.domain.library.service.LibraryPreferences
 import kotlin.random.Random
 
+@Inject
 class SetSortModeForCategory(
     private val preferences: LibraryPreferences,
     private val categoryRepository: CategoryRepository,
@@ -20,12 +21,7 @@ class SetSortModeForCategory(
             preferences.randomSortSeed.set(Random.nextInt())
         }
         if (category != null && preferences.categorizedDisplaySettings.get()) {
-            categoryRepository.updatePartial(
-                CategoryUpdate(
-                    id = category.id,
-                    flags = flags,
-                ),
-            )
+            categoryRepository.updateFlags(categoryId = category.id, flags = flags)
         } else {
             preferences.sortingMode.set(LibrarySort(type, direction))
             categoryRepository.updateAllFlags(flags)

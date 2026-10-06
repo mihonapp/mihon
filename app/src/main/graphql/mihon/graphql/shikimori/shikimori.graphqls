@@ -1,0 +1,1913 @@
+type Anime {
+  airedOn: IncompleteDate
+
+  characterRoles: [CharacterRole!]
+
+  chronology: [Anime!]
+
+  createdAt: ISO8601DateTime!
+
+  description: String
+
+  descriptionHtml: String
+
+  descriptionSource: String
+
+  """
+  Duration in minutes
+  """
+  duration: Int
+
+  english: String
+
+  episodes: Int!
+
+  episodesAired: Int!
+
+  externalLinks: [ExternalLink!]
+
+  fandubbers: [String!]!
+
+  fansubbers: [String!]!
+
+  """
+  Franchise name
+  """
+  franchise: String
+
+  genres: [Genre!]
+
+  id: ID!
+
+  isCensored: Boolean
+
+  japanese: String
+
+  kind: AnimeKindEnum
+
+  licenseNameRu: String
+
+  licensors: [String!]
+
+  malId: ID
+
+  name: String!
+
+  nextEpisodeAt: ISO8601DateTime
+
+  opengraphImageUrl: String
+
+  origin: AnimeOriginEnum
+
+  personRoles: [PersonRole!]
+
+  poster: Poster
+
+  rating: AnimeRatingEnum
+
+  related: [Related!]
+
+  releasedOn: IncompleteDate
+
+  russian: String
+
+  score: Float
+
+  scoresStats: [ScoreStat!]
+
+  screenshots: [Screenshot!]!
+
+  season: String
+
+  status: AnimeStatusEnum
+
+  statusesStats: [StatusStat!]
+
+  studios: [Studio!]!
+
+  synonyms: [String!]!
+
+  topic: Topic
+
+  updatedAt: ISO8601DateTime!
+
+  url: String!
+
+  userRate: UserRate
+
+  videos: [Video!]!
+}
+
+enum AnimeKindEnum {
+  """
+  TV Series
+  """
+  tv
+
+  """
+  Movie
+  """
+  movie
+
+  """
+  OVA
+  """
+  ova
+
+  """
+  ONA
+  """
+  ona
+
+  """
+  Special
+  """
+  special
+
+  """
+  TV Special
+  """
+  tv_special
+
+  """
+  Music
+  """
+  music
+
+  """
+  PV
+  """
+  pv
+
+  """
+  CM
+  """
+  cm
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+`movie` - Movies
+
+`music` - Music
+
+`ona` - ONA
+
+`ova/ona` - OVA/ONA
+
+`ova` - OVA
+
+`special` - Specials
+
+`tv` - TV Series
+
+`tv_13` - Short TV Series
+
+`tv_24` - Average TV Series
+
+`tv_48` - Long TV Series
+
+`tv_special` - TV Specials
+
+`pv` - Promotional Videos
+
+`cm` - Commercial Messages
+"""
+scalar AnimeKindString
+
+enum AnimeOriginEnum {
+  """
+  Original
+  """
+  original
+
+  """
+  Manga
+  """
+  manga
+
+  """
+  Web manga
+  """
+  web_manga
+
+  """
+  4-koma manga
+  """
+  four_koma_manga
+
+  """
+  Novel
+  """
+  novel
+
+  """
+  Web novel
+  """
+  web_novel
+
+  """
+  Visual novel
+  """
+  visual_novel
+
+  """
+  Light novel
+  """
+  light_novel
+
+  """
+  Game
+  """
+  game
+
+  """
+  Card game
+  """
+  card_game
+
+  """
+  Music
+  """
+  music
+
+  """
+  Radio
+  """
+  radio
+
+  """
+  Book
+  """
+  book
+
+  """
+  Picture book
+  """
+  picture_book
+
+  """
+  Mixed media
+  """
+  mixed_media
+
+  """
+  Other
+  """
+  other
+
+  """
+  Unknown
+  """
+  unknown
+}
+
+enum AnimeRatingEnum {
+  """
+  None
+  """
+  none
+
+  """
+  G
+  """
+  g
+
+  """
+  PG
+  """
+  pg
+
+  """
+  PG-13
+  """
+  pg_13
+
+  """
+  R-17
+  """
+  r
+
+  """
+  R+
+  """
+  r_plus
+
+  """
+  Rx
+  """
+  rx
+}
+
+enum AnimeStatusEnum {
+  """
+  Planned
+  """
+  anons
+
+  """
+  Airing
+  """
+  ongoing
+
+  """
+  Released
+  """
+  released
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+`anons` - Planned
+
+`ongoing` - Airing
+
+`released` - Released
+"""
+scalar AnimeStatusString
+
+"""
+Represents `true` or `false` values.
+"""
+scalar Boolean
+
+type Character {
+  createdAt: ISO8601DateTime!
+
+  description: String
+
+  descriptionHtml: String
+
+  descriptionSource: String
+
+  id: ID!
+
+  isAnime: Boolean!
+
+  isManga: Boolean!
+
+  isRanobe: Boolean!
+
+  japanese: String
+
+  malId: ID
+
+  name: String!
+
+  poster: Poster
+
+  russian: String
+
+  synonyms: [String!]!
+
+  topic: Topic
+
+  updatedAt: ISO8601DateTime!
+
+  url: String!
+}
+
+type CharacterRole {
+  character: Character!
+
+  id: ID!
+
+  rolesEn: [String!]!
+
+  rolesRu: [String!]!
+}
+
+type Contest {
+  description: String
+
+  descriptionHtml: String
+
+  descriptionSource: String
+
+  finishedOn: ISO8601Date
+
+  id: ID!
+
+  matchDuration: Int
+
+  matchesInterval: Int
+
+  matchesPerRound: Int
+
+  memberType: ContestMemberTypeEnum!
+
+  name: String!
+
+  rounds: [ContestRound!]!
+
+  startedOn: ISO8601Date
+
+  state: ContestStateEnum!
+
+  strategyType: ContestStrategyTypeEnum!
+}
+
+type ContestMatch {
+  id: ID!
+
+  leftAnime: Anime
+
+  leftCharacter: Character
+
+  leftId: Int
+
+  leftVotes: Int
+
+  rightAnime: Anime
+
+  rightCharacter: Character
+
+  rightId: Int
+
+  rightVotes: Int
+
+  state: ContestMatchStateEnum!
+
+  winnerId: Int
+}
+
+enum ContestMatchStateEnum {
+  """
+  created
+  """
+  created
+
+  """
+  started
+  """
+  started
+
+  """
+  freezed
+  """
+  freezed
+
+  """
+  finished
+  """
+  finished
+}
+
+enum ContestMemberTypeEnum {
+  """
+  Anime
+  """
+  anime
+
+  """
+  Characters
+  """
+  character
+}
+
+type ContestRound {
+  id: ID!
+
+  isAdditional: Boolean!
+
+  matches: [ContestMatch!]!
+
+  name: String!
+
+  number: Int!
+
+  state: ContestRoundStateEnum!
+}
+
+enum ContestRoundStateEnum {
+  """
+  created
+  """
+  created
+
+  """
+  started
+  """
+  started
+
+  """
+  finished
+  """
+  finished
+}
+
+enum ContestStateEnum {
+  """
+  created
+  """
+  created
+
+  """
+  proposing
+  """
+  proposing
+
+  """
+  started
+  """
+  started
+
+  """
+  finished
+  """
+  finished
+}
+
+enum ContestStrategyTypeEnum {
+  """
+  Double elimination
+  """
+  double_elimination
+
+  """
+  Olympic system
+  """
+  play_off
+
+  """
+  Swiss system
+  """
+  swiss
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+`S` - Less than 10 minutes
+
+`D` - Less than 30 minutes
+
+`F` - More than 30 minutes
+"""
+scalar DurationString
+
+type ExternalLink {
+  createdAt: ISO8601DateTime
+
+  id: ID
+
+  kind: ExternalLinkKindEnum!
+
+  updatedAt: ISO8601DateTime
+
+  url: String!
+}
+
+enum ExternalLinkKindEnum {
+  """
+  Official Site
+  """
+  official_site
+
+  """
+  Wikipedia
+  """
+  wikipedia
+
+  """
+  Anime News Network
+  """
+  anime_news_network
+
+  """
+  MyAnimeList
+  """
+  myanimelist
+
+  """
+  AniDB
+  """
+  anime_db
+
+  """
+  World Art
+  """
+  world_art
+
+  """
+  KinoPoisk
+  """
+  kinopoisk
+
+  """
+  Kage Project
+  """
+  kage_project
+
+  """
+  Twitter/X
+  """
+  twitter
+
+  """
+  Anime 365
+  """
+  smotret_anime
+
+  """
+  Shikimori
+  """
+  shiki
+
+  """
+  Amediateka
+  """
+  amediateka
+
+  """
+  Crunchyroll
+  """
+  crunchyroll
+
+  """
+  Amazon
+  """
+  amazon
+
+  """
+  Hidive
+  """
+  hidive
+
+  """
+  Hulu
+  """
+  hulu
+
+  """
+  Ivi
+  """
+  ivi
+
+  """
+  KinoPoisk HD
+  """
+  kinopoisk_hd
+
+  """
+  Wink
+  """
+  wink
+
+  """
+  Netflix
+  """
+  netflix
+
+  """
+  Okko
+  """
+  okko
+
+  """
+  Youtube
+  """
+  youtube
+
+  """
+  ReManga
+  """
+  remanga
+
+  """
+  Senkuro
+  """
+  senkuro
+
+  """
+  MangaLib
+  """
+  mangalib
+
+  """
+  Baka-Updates
+  """
+  mangaupdates
+
+  """
+  ReadManga
+  """
+  readmanga
+
+  """
+  MangaDex
+  """
+  mangadex
+
+  """
+  MangaFox
+  """
+  mangafox
+
+  """
+  Mangachan
+  """
+  mangachan
+
+  """
+  Mangahub
+  """
+  mangahub
+
+  """
+  Novel.tl
+  """
+  novel_tl
+
+  """
+  RuRanobe
+  """
+  ruranobe
+
+  """
+  RanobeLib
+  """
+  ranobelib
+
+  """
+  Novel Updates
+  """
+  novelupdates
+}
+
+"""
+Represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+"""
+scalar Float
+
+type Genre {
+  entryType: GenreEntryTypeEnum!
+
+  id: ID!
+
+  kind: GenreKindEnum!
+
+  name: String!
+
+  russian: String!
+}
+
+enum GenreEntryTypeEnum {
+  """
+  Anime
+  """
+  Anime
+
+  """
+  Manga
+  """
+  Manga
+}
+
+enum GenreKindEnum {
+  """
+  Demographic
+  """
+  demographic
+
+  """
+  Genre
+  """
+  genre
+
+  """
+  Theme
+  """
+  theme
+}
+
+"""
+Represents a unique identifier that is Base64 obfuscated. It is often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"VXNlci0xMA=="`) or integer (such as `4`) input value will be accepted as an ID.
+"""
+scalar ID
+
+"""
+An ISO 8601-encoded date
+"""
+scalar ISO8601Date
+
+"""
+An ISO 8601-encoded datetime
+"""
+scalar ISO8601DateTime
+
+type IncompleteDate {
+  date: ISO8601Date
+
+  day: Int
+
+  month: Int
+
+  year: Int
+}
+
+"""
+Represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+"""
+scalar Int
+
+type Manga {
+  airedOn: IncompleteDate
+
+  chapters: Int!
+
+  characterRoles: [CharacterRole!]
+
+  chronology: [Manga!]
+
+  createdAt: ISO8601DateTime!
+
+  description: String
+
+  descriptionHtml: String
+
+  descriptionSource: String
+
+  english: String
+
+  externalLinks: [ExternalLink!]
+
+  """
+  Franchise name
+  """
+  franchise: String
+
+  genres: [Genre!]
+
+  id: ID!
+
+  isCensored: Boolean
+
+  japanese: String
+
+  kind: MangaKindEnum
+
+  licenseNameRu: String
+
+  licensors: [String!]
+
+  malId: ID
+
+  name: String!
+
+  opengraphImageUrl: String
+
+  personRoles: [PersonRole!]
+
+  poster: Poster
+
+  publishers: [Publisher!]!
+
+  related: [Related!]
+
+  releasedOn: IncompleteDate
+
+  russian: String
+
+  score: Float
+
+  scoresStats: [ScoreStat!]
+
+  status: MangaStatusEnum
+
+  statusesStats: [StatusStat!]
+
+  synonyms: [String!]!
+
+  topic: Topic
+
+  updatedAt: ISO8601DateTime!
+
+  url: String!
+
+  userRate: UserRate
+
+  volumes: Int!
+}
+
+enum MangaKindEnum {
+  """
+  Manga
+  """
+  manga
+
+  """
+  Manhwa
+  """
+  manhwa
+
+  """
+  Manhua
+  """
+  manhua
+
+  """
+  Light Novel
+  """
+  light_novel
+
+  """
+  Novel
+  """
+  novel
+
+  """
+  One Shot
+  """
+  one_shot
+
+  """
+  Doujin
+  """
+  doujin
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+`doujin` - Doujin
+
+`manga` - Manga
+
+`manhua` - Manhua
+
+`manhwa` - Manhwa
+
+`light_novel` - Light Novels
+
+`novel` - Novels
+
+`one_shot` - One Shots
+"""
+scalar MangaKindString
+
+enum MangaStatusEnum {
+  """
+  Planned
+  """
+  anons
+
+  """
+  Publishing
+  """
+  ongoing
+
+  """
+  Published
+  """
+  released
+
+  """
+  Paused
+  """
+  paused
+
+  """
+  Discontinued
+  """
+  discontinued
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+`anons` - Planned
+
+`ongoing` - Publishing
+
+`released` - Published
+
+`paused` - Paused
+
+`discontinued` - Discontinued
+"""
+scalar MangaStatusString
+
+type Mutation {
+  """
+  An example field added by the generator
+  """
+  testField: String!
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+`planned` - Planned to Watch
+
+`watching` - Watching
+
+`rewatching` - Rewatching
+
+`completed` - Completed
+
+`on_hold` - On Hold
+
+`dropped` - Dropped
+"""
+scalar MylistString
+
+enum OrderEnum {
+  """
+  By ID
+  """
+  id
+
+  """
+  id_desc
+  """
+  id_desc
+
+  """
+  By rank
+  """
+  ranked
+
+  """
+  By type
+  """
+  kind
+
+  """
+  By popularity
+  """
+  popularity
+
+  """
+  In alphabetical order
+  """
+  name
+
+  """
+  By release date
+  """
+  aired_on
+
+  """
+  By number of episodes
+  """
+  episodes
+
+  """
+  By status
+  """
+  status
+
+  """
+  By random
+  """
+  random
+
+  """
+  By random
+  """
+  ranked_random
+
+  """
+  By Shikimori ranking
+  """
+  ranked_shiki
+
+  """
+  created_at
+  """
+  created_at
+
+  """
+  created_at_desc
+  """
+  created_at_desc
+
+  """
+  By field updated_at on entity
+  """
+  updated_at
+
+  """
+  updated_at_desc
+  """
+  updated_at_desc
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+`card_game` - Card game
+
+`novel` - Novel
+
+`radio` - Radio
+
+`game` - Game
+
+`unknown` - Unknown
+
+`book` - Book
+
+`light_novel` - Light novel
+
+`web_novel` - Web novel
+
+`original` - Original
+
+`picture_book` - Picture book
+
+`music` - Music
+
+`manga` - Manga
+
+`visual_novel` - Visual novel
+
+`other` - Other
+
+`web_manga` - Web manga
+
+`four_koma_manga` - 4-koma manga
+
+`mixed_media` - Mixed media
+"""
+scalar OriginString
+
+type Person {
+  birthOn: IncompleteDate
+
+  createdAt: ISO8601DateTime!
+
+  deceasedOn: IncompleteDate
+
+  id: ID!
+
+  isMangaka: Boolean!
+
+  isProducer: Boolean!
+
+  isSeyu: Boolean!
+
+  japanese: String
+
+  malId: ID
+
+  name: String!
+
+  poster: Poster
+
+  russian: String
+
+  synonyms: [String!]!
+
+  topic: Topic
+
+  updatedAt: ISO8601DateTime!
+
+  url: String!
+
+  website: String
+}
+
+type PersonRole {
+  id: ID!
+
+  person: Person!
+
+  rolesEn: [String!]!
+
+  rolesRu: [String!]!
+}
+
+"""
+A positive integer (>= 1)
+"""
+scalar PositiveInt
+
+type Poster {
+  id: ID!
+
+  main2xUrl: String!
+
+  mainAlt2xUrl: String!
+
+  mainAltUrl: String!
+
+  mainUrl: String!
+
+  mini2xUrl: String!
+
+  miniAlt2xUrl: String!
+
+  miniAltUrl: String!
+
+  miniUrl: String!
+
+  originalUrl: String!
+
+  preview2xUrl: String!
+
+  previewAlt2xUrl: String!
+
+  previewAltUrl: String!
+
+  previewUrl: String!
+}
+
+type Publisher {
+  id: ID!
+
+  name: String!
+}
+
+type Query {
+  animes(page: PositiveInt = 1, "Maximum 50" limit: PositiveInt = 2, order: OrderEnum = ranked, kind: AnimeKindString, status: AnimeStatusString, season: SeasonString, "Minimal anime score" score: Int, duration: DurationString, rating: RatingString, origin: OriginString, "List of comma separated genre ids" genre: String, "List of comma separated studio ids" studio: String, "List of comma separated franchises" franchise: String, "Set to `false` to allow hentai, yaoi and yuri" censored: Boolean, mylist: MylistString, "List of comma separated ids" ids: String, "List of comma separated ids" excludeIds: String, search: String): [Anime!]!
+
+  characters(page: PositiveInt = 1, "Maximum 50" limit: PositiveInt = 2, ids: String, search: String): [Character!]!
+
+  contests(page: PositiveInt = 1, "Maximum 10" limit: PositiveInt = 2, ids: [ID!]): [Contest!]!
+
+  currentUser: User
+
+  genres(entryType: GenreEntryTypeEnum!): [Genre!]!
+
+  mangas(page: PositiveInt = 1, "Maximum 50" limit: PositiveInt = 2, order: OrderEnum = ranked, kind: MangaKindString, status: MangaStatusString, season: SeasonString, "Minimal manga score" score: Int, "List of comma separated genre ids" genre: String, "List of comma separated publisher ids" publisher: String, "List of comma separated franchises" franchise: String, "Set to `false` to allow hentai, yaoi and yuri" censored: Boolean, mylist: MylistString, "List of comma separated ids" ids: String, "List of comma separated ids" excludeIds: String, search: String): [Manga!]!
+
+  people(page: PositiveInt = 1, "Maximum 50" limit: PositiveInt = 2, ids: [ID!], search: String, isSeyu: Boolean, isProducer: Boolean, isMangaka: Boolean): [Person!]!
+
+  userRates(page: PositiveInt = 1, "Maximum 50" limit: PositiveInt = 2, "ID of current user is used by default" userId: ID, targetType: UserRateTargetTypeEnum, status: UserRateStatusEnum, order: UserRateOrderInputType): [UserRate!]!
+
+  users(page: PositiveInt = 1, "Maximum 50" limit: PositiveInt = 2, ids: [ID!], search: String): [User!]!
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+`none` - No rating
+
+`g` - G - All ages
+
+`pg` - PG - Children
+
+`pg_13` - PG-13 - Teens 13 or older
+
+`r` - R - 17+ recommended (violence & profanity)
+
+`r_plus` - R+ - Mild Nudity (may also contain violence & profanity)
+
+`rx` - Rx - Hentai (extreme sexual content/nudity)
+"""
+scalar RatingString
+
+type Related {
+  anime: Anime
+
+  id: ID!
+
+  manga: Manga
+
+  relationEn: String! @deprecated(reason: "use relation_kind/relation_text instead. This field will be deleted after 2025-01-01")
+
+  relationKind: RelationKindEnum!
+
+  relationRu: String! @deprecated(reason: "use relation_kind/relation_text instead. This field will be deleted after 2025-01-01")
+
+  relationText: String!
+}
+
+enum RelationKindEnum {
+  """
+  Adaptation
+  """
+  adaptation
+
+  """
+  Alternative Setting
+  """
+  alternative_setting
+
+  """
+  Alternative Version
+  """
+  alternative_version
+
+  """
+  Character
+  """
+  character
+
+  """
+  Full Story
+  """
+  full_story
+
+  """
+  Other
+  """
+  other
+
+  """
+  Parent Story
+  """
+  parent_story
+
+  """
+  Prequel
+  """
+  prequel
+
+  """
+  Sequel
+  """
+  sequel
+
+  """
+  Side Story
+  """
+  side_story
+
+  """
+  Spin-off
+  """
+  spin_off
+
+  """
+  Summary
+  """
+  summary
+}
+
+type ScoreStat {
+  count: Int!
+
+  score: Int!
+}
+
+type Screenshot {
+  id: ID!
+
+  originalUrl: String!
+
+  x166Url: String!
+
+  x332Url: String!
+}
+
+"""
+List of values separated by comma.
+Add `!` before value to apply negative filter.
+
+
+**Examples:**
+
+`summer_2017`
+
+`2016`
+
+`2014_2016`
+
+`199x`
+"""
+scalar SeasonString
+
+enum SortOrderEnum {
+  """
+  Sort in ascending order
+  """
+  asc
+
+  """
+  Sort in descending order
+  """
+  desc
+}
+
+type StatusStat {
+  count: Int!
+
+  status: UserRateStatusEnum!
+}
+
+"""
+Represents textual data as UTF-8 character sequences. This type is most often used by GraphQL to represent free-form human-readable text.
+"""
+scalar String
+
+type Studio {
+  id: ID!
+
+  imageUrl: String
+
+  name: String!
+}
+
+type Topic {
+  body: String!
+
+  commentsCount: Int!
+
+  createdAt: ISO8601DateTime!
+
+  htmlBody: String!
+
+  id: ID
+
+  tags: [String!]!
+
+  title: String!
+
+  type: String!
+
+  updatedAt: ISO8601DateTime!
+
+  url: String!
+}
+
+type User {
+  avatarUrl: String!
+
+  id: ID!
+
+  lastOnlineAt: ISO8601DateTime!
+
+  nickname: String!
+
+  url: String!
+}
+
+type UserRate {
+  anime: Anime
+
+  chapters: Int!
+
+  createdAt: ISO8601DateTime!
+
+  episodes: Int!
+
+  id: ID!
+
+  manga: Manga
+
+  rewatches: Int!
+
+  score: Int!
+
+  status: UserRateStatusEnum!
+
+  text: String
+
+  updatedAt: ISO8601DateTime!
+
+  volumes: Int!
+}
+
+enum UserRateOrderFieldEnum {
+  """
+  By id
+  """
+  id
+
+  """
+  By updated_at
+  """
+  updated_at
+}
+
+input UserRateOrderInputType {
+  field: UserRateOrderFieldEnum!
+
+  order: SortOrderEnum!
+}
+
+enum UserRateStatusEnum {
+  """
+  Planned to Watch
+  """
+  planned
+
+  """
+  Watching
+  """
+  watching
+
+  """
+  Rewatching
+  """
+  rewatching
+
+  """
+  Completed
+  """
+  completed
+
+  """
+  On Hold
+  """
+  on_hold
+
+  """
+  Dropped
+  """
+  dropped
+}
+
+enum UserRateTargetTypeEnum {
+  """
+  Anime
+  """
+  Anime
+
+  """
+  Manga
+  """
+  Manga
+}
+
+type Video {
+  id: ID!
+
+  imageUrl: String!
+
+  kind: VideoKindEnum!
+
+  name: String
+
+  playerUrl: String!
+
+  url: String!
+}
+
+enum VideoKindEnum {
+  """
+  PV
+  """
+  pv
+
+  """
+  Character trailer
+  """
+  character_trailer
+
+  """
+  CM
+  """
+  cm
+
+  """
+  OP
+  """
+  op
+
+  """
+  ED
+  """
+  ed
+
+  """
+  Music
+  """
+  op_ed_clip
+
+  """
+  Clip
+  """
+  clip
+
+  """
+  Other
+  """
+  other
+
+  """
+  Episode preview
+  """
+  episode_preview
+}
+
+"""
+A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.
+
+In some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.
+"""
+type __Directive {
+  args(includeDeprecated: Boolean = false): [__InputValue!]!
+
+  description: String
+
+  isRepeatable: Boolean
+
+  locations: [__DirectiveLocation!]!
+
+  name: String!
+
+  onField: Boolean! @deprecated(reason: "Use `locations`.")
+
+  onFragment: Boolean! @deprecated(reason: "Use `locations`.")
+
+  onOperation: Boolean! @deprecated(reason: "Use `locations`.")
+}
+
+"""
+A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.
+"""
+enum __DirectiveLocation {
+  """
+  Location adjacent to a query operation.
+  """
+  QUERY
+
+  """
+  Location adjacent to a mutation operation.
+  """
+  MUTATION
+
+  """
+  Location adjacent to a subscription operation.
+  """
+  SUBSCRIPTION
+
+  """
+  Location adjacent to a field.
+  """
+  FIELD
+
+  """
+  Location adjacent to a fragment definition.
+  """
+  FRAGMENT_DEFINITION
+
+  """
+  Location adjacent to a fragment spread.
+  """
+  FRAGMENT_SPREAD
+
+  """
+  Location adjacent to an inline fragment.
+  """
+  INLINE_FRAGMENT
+
+  """
+  Location adjacent to a schema definition.
+  """
+  SCHEMA
+
+  """
+  Location adjacent to a scalar definition.
+  """
+  SCALAR
+
+  """
+  Location adjacent to an object type definition.
+  """
+  OBJECT
+
+  """
+  Location adjacent to a field definition.
+  """
+  FIELD_DEFINITION
+
+  """
+  Location adjacent to an argument definition.
+  """
+  ARGUMENT_DEFINITION
+
+  """
+  Location adjacent to an interface definition.
+  """
+  INTERFACE
+
+  """
+  Location adjacent to a union definition.
+  """
+  UNION
+
+  """
+  Location adjacent to an enum definition.
+  """
+  ENUM
+
+  """
+  Location adjacent to an enum value definition.
+  """
+  ENUM_VALUE
+
+  """
+  Location adjacent to an input object type definition.
+  """
+  INPUT_OBJECT
+
+  """
+  Location adjacent to an input object field definition.
+  """
+  INPUT_FIELD_DEFINITION
+
+  """
+  Location adjacent to a variable definition.
+  """
+  VARIABLE_DEFINITION
+}
+
+"""
+One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.
+"""
+type __EnumValue {
+  deprecationReason: String
+
+  description: String
+
+  isDeprecated: Boolean!
+
+  name: String!
+}
+
+"""
+Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.
+"""
+type __Field {
+  args(includeDeprecated: Boolean = false): [__InputValue!]!
+
+  deprecationReason: String
+
+  description: String
+
+  isDeprecated: Boolean!
+
+  name: String!
+
+  type: __Type!
+}
+
+"""
+Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.
+"""
+type __InputValue {
+  """
+  A GraphQL-formatted string representing the default value for this input value.
+  """
+  defaultValue: String
+
+  deprecationReason: String
+
+  description: String
+
+  isDeprecated: Boolean!
+
+  name: String!
+
+  type: __Type!
+}
+
+"""
+A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.
+"""
+type __Schema {
+  description: String
+
+  """
+  A list of all directives supported by this server.
+  """
+  directives: [__Directive!]!
+
+  """
+  If this server supports mutation, the type that mutation operations will be rooted at.
+  """
+  mutationType: __Type
+
+  """
+  The type that query operations will be rooted at.
+  """
+  queryType: __Type!
+
+  """
+  If this server support subscription, the type that subscription operations will be rooted at.
+  """
+  subscriptionType: __Type
+
+  """
+  A list of all types supported by this server.
+  """
+  types: [__Type!]!
+}
+
+"""
+The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.
+
+Depending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name and description, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.
+"""
+type __Type {
+  description: String
+
+  enumValues(includeDeprecated: Boolean = false): [__EnumValue!]
+
+  fields(includeDeprecated: Boolean = false): [__Field!]
+
+  inputFields(includeDeprecated: Boolean = false): [__InputValue!]
+
+  interfaces: [__Type!]
+
+  isOneOf: Boolean!
+
+  kind: __TypeKind!
+
+  name: String
+
+  ofType: __Type
+
+  possibleTypes: [__Type!]
+
+  specifiedByURL: String
+}
+
+"""
+An enum describing what kind of type a given `__Type` is.
+"""
+enum __TypeKind {
+  """
+  Indicates this type is a scalar.
+  """
+  SCALAR
+
+  """
+  Indicates this type is an object. `fields` and `interfaces` are valid fields.
+  """
+  OBJECT
+
+  """
+  Indicates this type is an interface. `fields` and `possibleTypes` are valid fields.
+  """
+  INTERFACE
+
+  """
+  Indicates this type is a union. `possibleTypes` is a valid field.
+  """
+  UNION
+
+  """
+  Indicates this type is an enum. `enumValues` is a valid field.
+  """
+  ENUM
+
+  """
+  Indicates this type is an input object. `inputFields` is a valid field.
+  """
+  INPUT_OBJECT
+
+  """
+  Indicates this type is a list. `ofType` is a valid field.
+  """
+  LIST
+
+  """
+  Indicates this type is a non-null. `ofType` is a valid field.
+  """
+  NON_NULL
+}
+
+"""
+Marks an element of a GraphQL schema as no longer supported.
+"""
+directive @deprecated("Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted in [Markdown](https://daringfireball.net/projects/markdown/)." reason: String = "No longer supported") on FIELD_DEFINITION | ENUM_VALUE | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+"""
+Directs the executor to include this field or fragment only when the `if` argument is true.
+"""
+directive @include("Included when true." if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+Requires that exactly one field must be supplied and that field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
+"""
+Directs the executor to skip this field or fragment when the `if` argument is true.
+"""
+directive @skip("Skipped when true." if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+Exposes a URL that specifies the behavior of this scalar.
+"""
+directive @specifiedBy("The URL that specifies the behavior of this scalar." url: String!) on SCALAR
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+

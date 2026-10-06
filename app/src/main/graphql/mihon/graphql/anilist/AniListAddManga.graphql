@@ -1,0 +1,15 @@
+mutation AniListAddManga(
+  $manga_id: Int!,
+  $progress: Int!,
+  $status: MediaListStatus!,
+  $private: Boolean!,
+) {
+  SaveMediaListEntry (
+    mediaId: $manga_id,
+    progress: $progress,
+    status: $status,
+    private: $private,
+  ) {
+    id
+  }
+}

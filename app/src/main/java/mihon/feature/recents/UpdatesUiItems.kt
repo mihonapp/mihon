@@ -21,9 +21,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Circle
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.roundedfilled.Bookmark
+import mihon.icons.materialsymbols.roundedfilled.Circle
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -124,7 +124,7 @@ fun UpdatesUiItem(
                         var textHeight by remember { mutableIntStateOf(0) }
                         if (!update.read) {
                             Icon(
-                                imageVector = Icons.Filled.Circle,
+                                imageVector = MaterialSymbols.RoundedFilled.Circle,
                                 contentDescription = stringResource(MR.strings.unread),
                                 modifier = Modifier
                                     .height(8.dp)
@@ -134,7 +134,7 @@ fun UpdatesUiItem(
                         }
                         if (update.bookmark) {
                             Icon(
-                                imageVector = Icons.Filled.Bookmark,
+                                imageVector = MaterialSymbols.RoundedFilled.Bookmark,
                                 contentDescription = stringResource(MR.strings.action_filter_bookmarked),
                                 modifier = Modifier.sizeIn(
                                     maxHeight = with(LocalDensity.current) {
@@ -435,7 +435,7 @@ private fun GroupedChapterItem(
                     var textHeight by remember { mutableIntStateOf(0) }
                     if (!update.read) {
                         Icon(
-                            imageVector = Icons.Filled.Circle,
+                            imageVector = MaterialSymbols.RoundedFilled.Circle,
                             contentDescription = stringResource(MR.strings.unread),
                             modifier = Modifier
                                 .height(8.dp)
@@ -445,7 +445,7 @@ private fun GroupedChapterItem(
                     }
                     if (update.bookmark) {
                         Icon(
-                            imageVector = Icons.Filled.Bookmark,
+                            imageVector = MaterialSymbols.RoundedFilled.Bookmark,
                             contentDescription = stringResource(MR.strings.action_filter_bookmarked),
                             modifier = Modifier.sizeIn(
                                 maxHeight = with(LocalDensity.current) {

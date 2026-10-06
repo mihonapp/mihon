@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
 import com.hippo.unifile.UniFile
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.lang.Hash.md5
 import eu.kanade.tachiyomi.util.storage.DiskUtil
@@ -14,8 +17,6 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.IOException
 
 /**
@@ -24,10 +25,12 @@ import java.io.IOException
  *
  * @param context the application context.
  */
+@Inject
+@SingleIn(AppScope::class)
 class DownloadProvider(
     private val context: Context,
-    private val storageManager: StorageManager = Injekt.get(),
-    private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val storageManager: StorageManager,
+    private val libraryPreferences: LibraryPreferences,
 ) {
 
     private val downloadsDir: UniFile?
@@ -164,15 +167,25 @@ class DownloadProvider(
         chapterScanlator: String?,
         chapterUrl: String,
         disallowNonAsciiFilenames: Boolean = libraryPreferences.disallowNonAsciiFilenames.get(),
+        enableChapterNameHash: Boolean = libraryPreferences.enableChapterNameHash.get(),
     ): String {
-        var dirName = sanitizeChapterName(chapterName)
-        if (!chapterScanlator.isNullOrBlank()) {
-            dirName = chapterScanlator + "_" + dirName
+        return buildString {
+            if (!chapterScanlator.isNullOrBlank()) {
+                append(chapterScanlator + "_")
+            }
+
+            // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
+            append(
+                DiskUtil.buildValidFilename(
+                    sanitizeChapterName(chapterName),
+                    DiskUtil.MAX_FILE_NAME_BYTES - 11,
+                    disallowNonAsciiFilenames,
+                ),
+            )
+            if (enableChapterNameHash) {
+                append("_${md5(chapterUrl).take(6)}")
+            }
         }
-        // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
-        dirName = DiskUtil.buildValidFilename(dirName, DiskUtil.MAX_FILE_NAME_BYTES - 11, disallowNonAsciiFilenames)
-        dirName += "_" + md5(chapterUrl).take(6)
-        return dirName
     }
 
     /**
@@ -188,7 +201,7 @@ class DownloadProvider(
         chapterName: String,
         chapterScanlator: String?,
         chapterUrl: String,
-    ): List<String> {
+    ): Set<String> {
         val sanitizedChapterName = sanitizeChapterName(chapterName)
         val chapterNameV1 = DiskUtil.buildValidFilename(
             when {
@@ -197,23 +210,27 @@ class DownloadProvider(
             },
         )
 
-        // Get the filename that would be generated if the user were
-        // using the other value for the disallow non-ASCII
-        // filenames setting. This ensures that chapters downloaded
-        // before the user changed the setting can still be found.
-        val otherChapterDirName =
-            getChapterDirName(
-                chapterName,
-                chapterScanlator,
-                chapterUrl,
-                !libraryPreferences.disallowNonAsciiFilenames.get(),
-            )
+        // Generate all possible legacy directory name variations by combining
+        // different states of non-ASCII filenames and chapter name hash settings.
+        // This ensures that chapters downloaded under any past configuration
+        // combination can still be successfully found.
+        val booleanPairPermutation = listOf(false to false, false to true, true to false, true to true)
+        val othersChapterDirNames = booleanPairPermutation
+            .map { (disallowNonAsciiFilenames, enableChapterNameHash) ->
+                getChapterDirName(
+                    chapterName,
+                    chapterScanlator,
+                    chapterUrl,
+                    disallowNonAsciiFilenames,
+                    enableChapterNameHash,
+                )
+            }
 
-        return buildList(2) {
+        return buildSet {
             // Chapter name without hash (unable to handle duplicate
             // chapter names)
             add(chapterNameV1)
-            add(otherChapterDirName)
+            addAll(othersChapterDirNames)
         }
     }
 

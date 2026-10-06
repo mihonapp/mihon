@@ -1,13 +1,15 @@
 package tachiyomi.domain.category.interactor
 
+import dev.zacsweers.metro.Inject
 import logcat.LogPriority
 import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.system.logcat
-import tachiyomi.domain.category.model.CategoryUpdate
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 
+@Inject
 class DeleteCategory(
     private val categoryRepository: CategoryRepository,
     private val libraryPreferences: LibraryPreferences,
@@ -22,13 +24,9 @@ class DeleteCategory(
             return@withNonCancellableContext Result.InternalError(e)
         }
 
-        val categories = categoryRepository.getAll()
-        val updates = categories.mapIndexed { index, category ->
-            CategoryUpdate(
-                id = category.id,
-                order = index.toLong(),
-            )
-        }
+        val orderedIds = categoryRepository.getAll()
+            .filterNot(Category::isSystemCategory)
+            .map { it.id }
 
         val defaultCategory = libraryPreferences.defaultCategory.get()
         if (defaultCategory == categoryId.toInt()) {
@@ -50,7 +48,7 @@ class DeleteCategory(
         }
 
         try {
-            categoryRepository.updatePartial(updates)
+            categoryRepository.updateAllOrders(orderedIds = orderedIds)
             Result.Success
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)

@@ -1,10 +1,16 @@
 package tachiyomi.domain.updates.service
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.core.common.preference.getLongArray
 
+@Inject
+@SingleIn(AppScope::class)
 class UpdatesPreferences(
     preferenceStore: PreferenceStore,
 ) {
@@ -37,5 +43,15 @@ class UpdatesPreferences(
     val groupChapters: Preference<Boolean> = preferenceStore.getBoolean(
         "pref_display_updates_group_chapters",
         false,
+    )
+
+    val filterIncludedCategories: Preference<List<Long>> = preferenceStore.getLongArray(
+        "pref_filter_updates_included_categories",
+        emptyList(),
+    )
+
+    val filterExcludedCategories: Preference<List<Long>> = preferenceStore.getLongArray(
+        "pref_filter_updates_excluded_categories",
+        emptyList(),
     )
 }

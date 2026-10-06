@@ -2,27 +2,27 @@ package tachiyomi.domain.manga.interactor
 
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import tachiyomi.domain.chapter.model.Chapter
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
-import kotlin.time.toJavaDuration
 
 @Execution(ExecutionMode.CONCURRENT)
 class FetchIntervalTest {
 
-    private val testTime = ZonedDateTime.parse("2020-01-01T00:00:00Z")
-    private val testZoneId = ZoneOffset.UTC
+    private val testTime = LocalDateTime.parse("2020-01-01T00:00:00")
+    private val testTimeZone = TimeZone.UTC
     private var chapter = Chapter.create().copy(
-        dateFetch = testTime.toEpochSecond() * 1000,
-        dateUpload = testTime.toEpochSecond() * 1000,
+        dateFetch = testTime.toInstant(testTimeZone).toEpochMilliseconds(),
+        dateUpload = testTime.toInstant(testTimeZone).toEpochMilliseconds(),
     )
 
     private val fetchInterval = FetchInterval(mockk())
@@ -32,12 +32,12 @@ class FetchIntervalTest {
         val chaptersWithUploadDate = (1..50).map {
             chapterWithTime(chapter, 1.days)
         }
-        fetchInterval.calculateInterval(chaptersWithUploadDate, testZoneId) shouldBe 7
+        fetchInterval.calculateInterval(chaptersWithUploadDate, testTimeZone) shouldBe 7
 
         val chaptersWithoutUploadDate = chaptersWithUploadDate.map {
             it.copy(dateUpload = 0L)
         }
-        fetchInterval.calculateInterval(chaptersWithoutUploadDate, testZoneId) shouldBe 7
+        fetchInterval.calculateInterval(chaptersWithoutUploadDate, testTimeZone) shouldBe 7
     }
 
     @Test
@@ -51,7 +51,7 @@ class FetchIntervalTest {
 
         val chapters = oldChapters + newChapters
 
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 1
+        fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 1
     }
 
     @Test
@@ -66,7 +66,7 @@ class FetchIntervalTest {
 
         val chapters = oldChapters + newChapters
 
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 7
+        fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 7
     }
 
     @Test
@@ -74,7 +74,7 @@ class FetchIntervalTest {
         val chapters = (1..10).map {
             chapterWithTime(chapter, 10.hours)
         }
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 7
+        fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 7
     }
 
     @Test
@@ -84,7 +84,7 @@ class FetchIntervalTest {
         } + (1..5).map {
             chapterWithTime(chapter, 2.days)
         }
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 7
+        fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 7
     }
 
     @Test
@@ -92,7 +92,7 @@ class FetchIntervalTest {
         val chapters = (1..20).map {
             chapterWithTime(chapter, it.days)
         }
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 1
+        fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 1
     }
 
     @Test
@@ -100,7 +100,7 @@ class FetchIntervalTest {
         val chapters = (1..20).map {
             chapterWithTime(chapter, (15 * it).hours)
         }
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 1
+        fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 1
     }
 
     @Test
@@ -108,7 +108,7 @@ class FetchIntervalTest {
         val chapters = (1..20).map {
             chapterWithTime(chapter, (2 * it).days)
         }
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 2
+        fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 2
     }
 
     @Test
@@ -116,12 +116,12 @@ class FetchIntervalTest {
         val chaptersWithUploadDate = (1..5).map {
             chapterWithTime(chapter, (25 * it).hours)
         }
-        fetchInterval.calculateInterval(chaptersWithUploadDate, testZoneId) shouldBe 1
+        fetchInterval.calculateInterval(chaptersWithUploadDate, testTimeZone) shouldBe 1
 
         val chaptersWithoutUploadDate = chaptersWithUploadDate.map {
             it.copy(dateUpload = 0L)
         }
-        fetchInterval.calculateInterval(chaptersWithoutUploadDate, testZoneId) shouldBe 1
+        fetchInterval.calculateInterval(chaptersWithoutUploadDate, testTimeZone) shouldBe 1
     }
 
     @Test
@@ -129,11 +129,11 @@ class FetchIntervalTest {
         val chapters = (1..20).map {
             chapterWithTime(chapter, (43 * it).hours)
         }
-        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 2
+        fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 2
     }
 
     private fun chapterWithTime(chapter: Chapter, duration: Duration): Chapter {
-        val newTime = testTime.plus(duration.toJavaDuration()).toEpochSecond() * 1000
+        val newTime = testTime.toInstant(testTimeZone).plus(duration).toEpochMilliseconds()
         return chapter.copy(dateFetch = newTime, dateUpload = newTime)
     }
 
