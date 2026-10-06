@@ -1156,6 +1156,7 @@ open class WebGpuViewer(
                             page.page.downloadStream?.let { startStreamDecode(page, it) }
                             true
                         }
+
                         is Page.State.Error -> {
                             logcat(LogPriority.ERROR) { "Page load error: ${state.error}" }
                             false
@@ -1626,8 +1627,12 @@ open class WebGpuViewer(
         // not wide enough
         if (aspectRatio < 1.1) return false
 
-        // Wide page: half the image width is wider than the screen aspect ratio
-        if (aspectRatio <= 2f * screenW.toFloat() / screenH) return false
+        // Wide page: half of it is wider than the screen aspect ratio or matches a decoded neighbour's shape
+        val isWide = listOf(viewerPageFor(page)?.prev, viewerPageFor(page)?.next)
+            .mapNotNull { (it as? ViewerReaderPage)?.aspectRatio }
+            .any { abs(aspectRatio / 2f - it) <= pairAspectTolerance } ||
+            (aspectRatio > 2f * screenW.toFloat() / screenH)
+        if (!isWide) return false
 
         page.parent = pager.state
 
@@ -1743,6 +1748,7 @@ open class WebGpuViewer(
                     if (cachedPage.page.status == Page.State.Queue) requestDownload(cachedPage)
                     return
                 }
+
                 PageState.DECODING -> return
                 // Ready requeues it, once downloaded.
                 PageState.QUEUED -> decodeQueue.remove(cachedPage)
