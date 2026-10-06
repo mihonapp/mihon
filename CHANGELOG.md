@@ -12,6 +12,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
+- Add option to group chapters in updates tab ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3617](https://github.com/mihonapp/mihon/pull/3617))
 - Add `id:` prefix search to remaining trackers (AniList, Bangumi, Kitsu, MangaUpdates, Shikimori, and Hikka) ([@MajorTanya](https://github.com/MajorTanya)) ([#3776](https://github.com/mihonapp/mihon/pull/3776))
   - Allow `id:` to search for slugs on Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3792](https://github.com/mihonapp/mihon/pull/3792))
 - Add support for using the user's chosen rating system for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3818](https://github.com/mihonapp/mihon/pull/3818))
@@ -63,6 +64,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add Tokyo Night Theme ([@xMohnad](https://github.com/xMohnad)) ([#3502](https://github.com/mihonapp/mihon/pull/3502))
 
 ### Changed
+- Redesign UI for chapters in updates tab ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3617](https://github.com/mihonapp/mihon/pull/3617))
 - Detect Shizuku with permission check ([@Small-Ku](https://github.com/Small-Ku)) ([#3565](https://github.com/mihonapp/mihon/pull/3565))
 - Check for app and extension update on every cold start ([@AntsyLich](https://github.com/AntsyLich)) ([#3658](https://github.com/mihonapp/mihon/pull/3658))
 

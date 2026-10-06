@@ -13,6 +13,7 @@ data class UpdatesWithRelations(
     val bookmark: Boolean,
     val lastPageRead: Long,
     val sourceId: Long,
+    val dateUpload: Long,
     val dateFetch: Long,
     val coverData: MangaCover,
 )

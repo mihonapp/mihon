@@ -14,6 +14,7 @@ import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
+import eu.kanade.core.util.chunkConsecutive
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
@@ -167,9 +168,8 @@ class UpdatesViewModel(
         updateItems,
         selectedChapterIds,
         downloadStates,
-        dialog,
-        hasActiveFilters,
-    ) { items, selectedIds, downloads, dialog, hasActiveFilters ->
+        combine(dialog, hasActiveFilters, updatesPreferences.groupChapters.changes(), ::Triple),
+    ) { items, selectedIds, downloads, (dialog, hasActiveFilters, groupChapters) ->
         State(
             isLoading = items == null,
             hasActiveFilters = hasActiveFilters,
@@ -190,9 +190,14 @@ class UpdatesViewModel(
                 )
             },
             dialog = dialog,
+            groupChapters = groupChapters,
         )
     }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5.seconds),
+            State(groupChapters = updatesPreferences.groupChapters.get()),
+        )
 
     private fun List<UpdatesItem>.applyFilters(
         preferences: ItemPreferences,
@@ -482,12 +487,13 @@ class UpdatesViewModel(
         val hasActiveFilters: Boolean = false,
         val items: List<UpdatesItem> = listOf(),
         val dialog: Dialog? = null,
+        val groupChapters: Boolean = false,
     ) {
         val selected = items.filter { it.selected }
         val selectionMode = selected.isNotEmpty()
 
         fun getUiModel(): List<UpdatesUiModel> {
-            return items
+            val uiModel = items
                 .map { UpdatesUiModel.Item(it) }
                 .insertSeparators { before, after ->
                     val beforeDate = before?.item?.update?.dateFetch?.toLocalDate()
@@ -498,6 +504,20 @@ class UpdatesViewModel(
                         else -> null
                     }
                 }
+            if (!groupChapters) return uiModel
+            return uiModel.chunkConsecutive { a, b ->
+                a is UpdatesUiModel.Item && b is UpdatesUiModel.Item &&
+                    a.item.update.mangaId == b.item.update.mangaId
+            }.map {
+                val firstItem = it.first()
+                if (firstItem is UpdatesUiModel.Item && it.size != 1) {
+                    val items = it.filterIsInstance<UpdatesUiModel.Item>().reversed()
+                    val groupDate = firstItem.item.update.dateFetch.toLocalDate()
+                    UpdatesUiModel.Group(firstItem.item.update.mangaId, items, groupDate)
+                } else {
+                    firstItem
+                }
+            }
         }
     }
 

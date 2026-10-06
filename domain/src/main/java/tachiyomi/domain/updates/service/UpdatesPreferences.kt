@@ -40,6 +40,11 @@ class UpdatesPreferences(
         false,
     )
 
+    val groupChapters: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_display_updates_group_chapters",
+        false,
+    )
+
     val filterIncludedCategories: Preference<List<Long>> = preferenceStore.getLongArray(
         "pref_filter_updates_included_categories",
         emptyList(),

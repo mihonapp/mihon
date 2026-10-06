@@ -38,7 +38,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
-fun UpdatesFilterDialog(
+fun UpdatesSettingsDialog(
     onDismissRequest: () -> Unit,
     viewModel: UpdatesSettingsViewModel,
 ) {
@@ -47,6 +47,7 @@ fun UpdatesFilterDialog(
         tabTitles = listOf(
             stringResource(MR.strings.action_filter),
             stringResource(MR.strings.categories),
+            stringResource(MR.strings.action_display),
         ),
     ) { page ->
         Column(
@@ -55,15 +56,16 @@ fun UpdatesFilterDialog(
                 .verticalScroll(rememberScrollState()),
         ) {
             when (page) {
-                0 -> FilterSheet(viewModel = viewModel)
-                1 -> CategoryFilterSheet(viewModel = viewModel)
+                0 -> FilterPage(viewModel = viewModel)
+                1 -> CategoryFilterPage(viewModel = viewModel)
+                2 -> DisplayPage(viewModel = viewModel)
             }
         }
     }
 }
 
 @Composable
-private fun ColumnScope.FilterSheet(
+private fun ColumnScope.FilterPage(
     viewModel: UpdatesSettingsViewModel,
 ) {
     val filterDownloaded by viewModel.updatesPreferences.filterDownloaded.collectAsState()
@@ -122,7 +124,7 @@ private fun ColumnScope.FilterSheet(
 }
 
 @Composable
-private fun ColumnScope.CategoryFilterSheet(
+private fun ColumnScope.CategoryFilterPage(
     viewModel: UpdatesSettingsViewModel,
 ) {
     Text(
@@ -170,5 +172,33 @@ private fun ColumnScope.CategoryFilterSheet(
                 },
             )
         }
+    }
+}
+
+@Composable
+private fun ColumnScope.DisplayPage(
+    viewModel: UpdatesSettingsViewModel,
+) {
+    val groupChapters by viewModel.updatesPreferences.groupChapters.collectAsState()
+    fun toggleChapterGrouping() = viewModel.updatesPreferences.groupChapters.getAndSet { !it }
+
+    Row(
+        modifier = Modifier
+            .clickable { toggleChapterGrouping() }
+            .fillMaxWidth()
+            .padding(horizontal = SettingsItemsPaddings.Horizontal),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = stringResource(MR.strings.action_group_chapter_updates),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+
+        Switch(
+            checked = groupChapters,
+            onCheckedChange = { toggleChapterGrouping() },
+        )
     }
 }
