@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.data.track.hikka.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
 
 @Serializable
 data class HKOAuth(
@@ -10,9 +12,5 @@ data class HKOAuth(
     val expiration: Long,
     val created: Long,
 ) {
-    fun isExpired(): Boolean {
-        val currentTime = System.currentTimeMillis() / 1000
-        val buffer = 5 * 60 // safety margin
-        return currentTime >= (expiration - buffer)
-    }
+    fun isExpired() = Clock.System.now().plus(5.minutes).epochSeconds >= expiration
 }

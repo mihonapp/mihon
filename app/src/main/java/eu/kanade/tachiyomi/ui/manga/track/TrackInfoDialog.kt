@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -73,6 +71,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
 import mihon.app.di.appGraph
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Delete
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withIOContext
@@ -273,7 +273,7 @@ data class TrackInfoDialogHomeScreen(
             }
         }
 
-        private fun List<Track>.mapToTrackItem(): List<TrackItem> {
+        private suspend fun List<Track>.mapToTrackItem(): List<TrackItem> {
             val loggedInTrackers = trackerManager.loggedInTrackers()
             val source = sourceManager.getOrStub(sourceId)
             return loggedInTrackers
@@ -630,7 +630,7 @@ data class TrackDateRemoverScreen(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = MaterialSymbols.Rounded.Delete,
                     contentDescription = null,
                 )
             },
@@ -836,7 +836,7 @@ data class TrackerRemoveScreen(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = MaterialSymbols.Rounded.Delete,
                     contentDescription = null,
                 )
             },

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="obsolete_extension_message">ይህ ቅጥያ ከእንግዲህ አይገኝም።</string>
-    <string name="untrusted_extension_message">ይህ ቅጥያ ባልታመነ የእውቅና ማረጋገጫ ተፈርሟል እና አልነቃም።
-\n
-\nተንኮል አዘል ቅጥያ በታቺሚሚ ውስጥ የተከማቸውን ማንኛውንም የመግቢያ ማስረጃዎችን በማንበብ ወይም የዘፈቀደ ኮድን ሊፈጽም ይችላል ፡፡
-\n
-\nበዚህ የምስክር ወረቀት በመተማመን እነዚህን አደጋዎች ይቀበላሉ ፡፡</string>
+    <string name="untrusted_extension_message">ይህ ቅጥያ ባልታመነ የእውቅና ማረጋገጫ ተፈርሟል እና አልነቃም። \n \nተንኮል አዘል ቅጥያ በታቺሚሚ ውስጥ የተከማቸውን ማንኛውንም የመግቢያ ማስረጃዎችን በማንበብ ወይም የዘፈቀደ ኮድን ሊፈጽም ይችላል ፡፡ \n \nበዚህ የምስክር ወረቀት በመተማመን እነዚህን አደጋዎች ይቀበላሉ ፡፡</string>
     <string name="untrusted_extension">የማይታመን ቅጥያ</string>
     <string name="ext_uninstall">ማራገፍ</string>
     <string name="ext_untrusted">የማይታመን</string>
@@ -38,7 +34,6 @@
     <string name="portrait">የቁም ስዕል</string>
     <string name="pref_library_columns">ዕቃዎች በአንድ ረድፍ</string>
     <string name="pref_category_display">ማሳያ</string>
-    <string name="parental_controls_info">ይህ በይፋዊ ወይም በስህተት የተጠቆሙ ሊሆኑ የሚችሉ ቅጥያዎች በመተግበሪያው ውስጥ 18+ ይዘትን እንዳያሳዩ አያግደውም ፡፡</string>
     <string name="hide_notification_content">የማሳወቂያ ይዘትን ደብቅ</string>
     <string name="secure_screen_summary">መተግበሪያዎችን ሲቀይሩ የመተግበሪያ ይዘቶችን ደብቅ እና ቅጽበታዊ ገጽ እይታዎችን ያግዳል</string>
     <string name="secure_screen">ደህንነቱ የተጠበቀ ማያ ገጽ</string>
@@ -216,8 +211,6 @@
     <string name="pref_page_transitions">የገጽ ሽግግሮች</string>
     <string name="pref_cutout_short">በመቁረጥ አካባቢ ውስጥ ይዘትን አሳይ</string>
     <string name="pref_fullscreen">ሙሉ ማያ</string>
-    <string name="ext_nsfw_warning">18+ ይዘትን ይያዝ</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="action_sort_alpha">በፊደል ደርድር</string>
     <string name="information_webview_required">ለታቺዮሚ የድር እይታ ያስፈልጋል</string>
     <string name="information_cloudflare_bypass_failure">ክላዉድ ፍሌር ን ማለፍ አልተሳካም</string>

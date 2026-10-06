@@ -54,9 +54,9 @@ class HistoryRepositoryImpl(
             .awaitAsList()
             .groupBy(
                 keySelector = { it.manga_id },
-                valueTransform = { (_, id, chapterId, lastRead, timeRead) ->
-                    HistoryMapper.mapHistory(id, chapterId, lastRead, timeRead)
-                }
+                valueTransform = { (id, _, chapterId, readAt, readDuration) ->
+                    HistoryMapper.mapHistory(id, chapterId, readAt, readDuration)
+                },
             )
     }
 
@@ -86,12 +86,16 @@ class HistoryRepositoryImpl(
         }
     }
 
+    override suspend fun deleteResetHistory() {
+        database.historyQueries.removeResettedHistory()
+    }
+
     override suspend fun upsertHistory(historyUpdate: HistoryUpdate) {
         try {
             database.historyQueries.upsert(
-                historyUpdate.chapterId,
-                historyUpdate.readAt,
-                historyUpdate.sessionReadDuration,
+                chapterId = historyUpdate.chapterId,
+                readAt = historyUpdate.readAt,
+                readDuration = historyUpdate.sessionReadDuration,
             )
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)

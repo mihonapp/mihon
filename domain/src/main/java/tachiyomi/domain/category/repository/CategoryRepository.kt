@@ -2,6 +2,7 @@ package tachiyomi.domain.category.repository
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.category.model.NewCategory
 
 interface CategoryRepository {
 
@@ -17,13 +18,15 @@ interface CategoryRepository {
 
     suspend fun getCategoriesMapByMangaIds(mangaIds: List<Long>): Map<Long, List<Category>>
 
-    suspend fun insert(category: Category)
+    suspend fun insert(category: NewCategory)
+
+    suspend fun insertAll(categories: List<NewCategory>)
 
     suspend fun updateName(categoryId: Long, name: String)
 
     suspend fun updateFlags(categoryId: Long, flags: Long)
 
-    suspend fun updateAllFlags(flags: Long?)
+    suspend fun updateAllFlags(flags: Long)
 
     suspend fun updateAllOrders(orderedIds: List<Long>)
 

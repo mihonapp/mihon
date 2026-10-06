@@ -263,9 +263,6 @@
     <string name="secure_screen">பாதுகாப்பான திரை</string>
     <string name="secure_screen_summary">பயன்பாடுகளை மாற்றும்போது பயன்பாட்டு உள்ளடக்கத்தை பாதுகாப்பான திரை மறைக்கவும், திரை சாட்களைத் தடுக்கவும்</string>
     <string name="firebase_summary">செயலிழப்பு பதிவுகள் மற்றும் பகுப்பாய்வுகளை அனுப்புவது சிக்கல்களைக் கண்டறிந்து சரிசெய்யவும், செயல்திறனை மேம்படுத்தவும், எதிர்கால புதுப்பிப்புகளை உங்கள் தேவைகளுக்கு மிகவும் பொருத்தமானதாக மாற்றவும் அனுமதிக்கும்</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) ஆதாரங்கள்</string>
-    <string name="pref_show_nsfw_source">ஆதாரங்கள் மற்றும் நீட்டிப்பு பட்டியல்களில் காண்பி</string>
-    <string name="parental_controls_info">இது பயன்பாட்டிற்குள் NSFW (18+) உள்ளடக்கத்தை வெளிவருவதிலிருந்து அதிகாரப்பூர்வமற்ற அல்லது தவறான கொடிய நீட்டிப்புகளைத் தடுக்காது.</string>
     <string name="relative_time_today">இன்று</string>
     <string name="pref_category_display">காட்சி</string>
     <string name="pref_library_columns">ஒரு வரிசையில் உருப்படிகள்</string>
@@ -332,9 +329,6 @@
     <string name="extension_api_error">கிடைக்கக்கூடிய நீட்டிப்புகளைப் பெறத் தவறிவிட்டது</string>
     <string name="ext_info_version">பதிப்பு</string>
     <string name="ext_info_language">மொழி</string>
-    <string name="ext_info_age_rating">அகவை மதிப்பீடு</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="ext_nsfw_warning">இந்த நீட்டிப்பின் ஆதாரங்களில் NSFW (18+) உள்ளடக்கம் இருக்கலாம்</string>
     <string name="ext_permission_install_apps_warning">நீட்டிப்புகளை நிறுவ அனுமதிகள் தேவை. வழங்க இங்கே தட்டவும்.</string>
     <string name="ext_install_service_notif">நீட்டிப்பை நிறுவுதல்…</string>
     <string name="ext_installer_pref">நிறுவி</string>

@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.HelpOutline
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.outlined.Close
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextObfuscationMode
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -19,12 +17,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -37,9 +37,6 @@ import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
@@ -56,6 +53,11 @@ import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import mihon.app.di.appGraph
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.Help
+import mihon.icons.materialsymbols.rounded.Close
+import mihon.icons.materialsymbols.rounded.Visibility
+import mihon.icons.materialsymbols.rounded.VisibilityOff
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.i18n.MR
@@ -73,7 +75,7 @@ object SettingsTrackingScreen : SearchableSettings {
         val uriHandler = LocalUriHandler.current
         IconButton(onClick = { uriHandler.openUri("https://mihon.app/docs/guides/tracking") }) {
             Icon(
-                imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
+                imageVector = MaterialSymbols.AutoMirroredRounded.Help,
                 contentDescription = stringResource(MR.strings.tracking_guide),
             )
         }
@@ -105,11 +107,12 @@ object SettingsTrackingScreen : SearchableSettings {
             }
         }
 
+        val installedSources by produceState(initialValue = emptyList()) { value = sourceManager.getAll() }
         val enhancedTrackers = trackerManager.trackers
             .filter { it is EnhancedTracker }
             .partition { service ->
                 val acceptedSources = (service as EnhancedTracker).getAcceptedSources()
-                sourceManager.getAll().any { it::class.qualifiedName in acceptedSources }
+                installedSources.any { it::class.qualifiedName in acceptedSources }
             }
         var enhancedTrackerInfo = stringResource(MR.strings.enhanced_tracking_info)
         if (enhancedTrackers.second.isNotEmpty()) {
@@ -202,8 +205,8 @@ object SettingsTrackingScreen : SearchableSettings {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
 
-        var username by remember { mutableStateOf(TextFieldValue(tracker.getUsername())) }
-        var password by remember { mutableStateOf(TextFieldValue(tracker.getPassword())) }
+        val username = rememberTextFieldState(tracker.getUsername())
+        val password = rememberTextFieldState(tracker.getPassword())
         var processing by remember { mutableStateOf(false) }
         var inputError by remember { mutableStateOf(false) }
 
@@ -217,7 +220,7 @@ object SettingsTrackingScreen : SearchableSettings {
                     )
                     IconButton(onClick = onDismissRequest) {
                         Icon(
-                            imageVector = Icons.Outlined.Close,
+                            imageVector = MaterialSymbols.Rounded.Close,
                             contentDescription = stringResource(MR.strings.action_close),
                         )
                     }
@@ -229,44 +232,41 @@ object SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier
                             .fillMaxWidth()
                             .semantics { contentType = ContentType.Username + ContentType.EmailAddress },
-                        value = username,
-                        onValueChange = { username = it },
+                        state = username,
                         label = { Text(text = stringResource(uNameStringRes)) },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                        singleLine = true,
+                        lineLimits = TextFieldLineLimits.SingleLine,
                         isError = inputError && !processing,
                     )
 
                     var hidePassword by remember { mutableStateOf(true) }
-                    OutlinedTextField(
+                    OutlinedSecureTextField(
                         modifier = Modifier
                             .fillMaxWidth()
                             .semantics { contentType = ContentType.Password },
-                        value = password,
-                        onValueChange = { password = it },
+                        state = password,
                         label = { Text(text = stringResource(MR.strings.password)) },
                         trailingIcon = {
                             IconButton(onClick = { hidePassword = !hidePassword }) {
                                 Icon(
                                     imageVector = if (hidePassword) {
-                                        Icons.Filled.Visibility
+                                        MaterialSymbols.Rounded.Visibility
                                     } else {
-                                        Icons.Filled.VisibilityOff
+                                        MaterialSymbols.Rounded.VisibilityOff
                                     },
                                     contentDescription = null,
                                 )
                             }
                         },
-                        visualTransformation = if (hidePassword) {
-                            PasswordVisualTransformation()
+                        textObfuscationMode = if (hidePassword) {
+                            TextObfuscationMode.Hidden
                         } else {
-                            VisualTransformation.None
+                            TextObfuscationMode.Visible
                         },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done,
                         ),
-                        singleLine = true,
                         isError = inputError && !processing,
                     )
                 }
@@ -281,8 +281,8 @@ object SettingsTrackingScreen : SearchableSettings {
                             val result = checkLogin(
                                 context = context,
                                 tracker = tracker,
-                                username = username.text,
-                                password = password.text,
+                                username = username.text.toString(),
+                                password = password.text.toString(),
                             )
                             inputError = !result
                             if (result) onDismissRequest()

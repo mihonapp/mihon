@@ -139,7 +139,7 @@ class BackupCreator(
         return mangaBackupCreator(mangas, options)
     }
 
-    private fun backupSources(mangas: List<Manga>): List<BackupSource> {
+    private suspend fun backupSources(mangas: List<Manga>): List<BackupSource> {
         return sourcesBackupCreator(mangas)
     }
 
@@ -155,7 +155,7 @@ class BackupCreator(
         return extensionStoresBackupCreator()
     }
 
-    private fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
+    private suspend fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
         if (!options.sourceSettings) return emptyList()
 
         return preferenceBackupCreator.createSource(includePrivatePreferences = options.privateSettings)

@@ -1,13 +1,9 @@
 package eu.kanade.tachiyomi.ui.browse.source
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -20,6 +16,9 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.FilterList
+import mihon.icons.materialsymbols.rounded.TravelExplore
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -34,12 +33,12 @@ fun Screen.sourcesTab(): TabContent {
         actions = listOf(
             AppBar.Action(
                 title = stringResource(MR.strings.action_global_search),
-                icon = Icons.Outlined.TravelExplore,
+                icon = MaterialSymbols.Rounded.TravelExplore,
                 onClick = { navigator.push(GlobalSearchScreen()) },
             ),
             AppBar.Action(
                 title = stringResource(MR.strings.action_filter),
-                icon = Icons.Outlined.FilterList,
+                icon = MaterialSymbols.Rounded.FilterList,
                 onClick = { navigator.push(SourcesFilterScreen()) },
             ),
         ),

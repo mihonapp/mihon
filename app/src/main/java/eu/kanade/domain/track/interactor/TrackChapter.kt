@@ -4,7 +4,7 @@ import android.content.Context
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
-import eu.kanade.domain.track.service.DelayedTrackingUpdateJob
+import eu.kanade.domain.track.service.DelayedTrackingUpdateWorker
 import eu.kanade.domain.track.store.DelayedTrackingStore
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import kotlinx.coroutines.async
@@ -13,13 +13,13 @@ import logcat.LogPriority
 import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.interactor.GetTracks
-import tachiyomi.domain.track.interactor.InsertTrack
+import tachiyomi.domain.track.interactor.UpsertTrack
 
 @Inject
 class TrackChapter(
     private val getTracks: GetTracks,
     private val trackerManager: TrackerManager,
-    private val insertTrack: InsertTrack,
+    private val upsertTrack: UpsertTrack,
     private val delayedTrackingStore: DelayedTrackingStore,
 ) {
 
@@ -41,12 +41,12 @@ class TrackChapter(
                                 .toDomainTrack(idRequired = true)!!
                                 .copy(lastChapterRead = chapterNumber)
                             service.update(updatedTrack.toDbTrack(), true)
-                            insertTrack.await(updatedTrack)
+                            upsertTrack.await(updatedTrack)
                             delayedTrackingStore.remove(track.id)
                         } catch (e: Exception) {
                             delayedTrackingStore.add(track.id, chapterNumber)
                             if (setupJobOnFailure) {
-                                DelayedTrackingUpdateJob.setupTask(context)
+                                DelayedTrackingUpdateWorker.setupTask(context)
                             }
                             throw e
                         }

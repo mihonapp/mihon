@@ -1,0 +1,95 @@
+import kotlin.Boolean;
+
+CREATE TABLE manga_track(
+    id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    tracker_id INTEGER NOT NULL,
+    remote_id INTEGER NOT NULL,
+    remote_url TEXT NOT NULL,
+    library_id INTEGER,
+    title TEXT NOT NULL,
+    last_chapter_read REAL NOT NULL,
+    total_chapters INTEGER NOT NULL,
+    status INTEGER NOT NULL,
+    score REAL NOT NULL,
+    start_date INTEGER NOT NULL,
+    finish_date INTEGER NOT NULL,
+    private INTEGER AS Boolean NOT NULL DEFAULT 0,
+    UNIQUE (manga_id, tracker_id),
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX manga_track_tracker_id_remote_id_index ON manga_track(tracker_id, remote_id);
+
+delete:
+DELETE FROM manga_track
+WHERE manga_id = :mangaId
+AND tracker_id = :trackerId;
+
+getTracks:
+SELECT
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
+FROM manga_track;
+
+getTrackById:
+SELECT
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
+FROM manga_track
+WHERE id = :id;
+
+getTracksByMangaId:
+SELECT
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
+FROM manga_track
+WHERE manga_id = :mangaId;
+
+getTracksByMangaIds:
+SELECT
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
+FROM manga_track
+WHERE manga_id IN :mangaIds;
+
+upsert:
+INSERT INTO manga_track(
+    manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
+)
+VALUES (
+    :mangaId, :trackerId, :remoteId, :remoteUrl, :libraryId, :title, :lastChapterRead,
+    :totalChapters, :status, :score, :startDate, :finishDate, :private
+)
+ON CONFLICT(manga_id, tracker_id) DO UPDATE SET
+    remote_id = excluded.remote_id,
+    remote_url = excluded.remote_url,
+    library_id = excluded.library_id,
+    title = excluded.title,
+    last_chapter_read = excluded.last_chapter_read,
+    total_chapters = excluded.total_chapters,
+    status = excluded.status,
+    score = excluded.score,
+    start_date = excluded.start_date,
+    finish_date = excluded.finish_date,
+    private = excluded.private;
+
+update:
+UPDATE manga_track
+SET
+    manga_id = coalesce(:mangaId, manga_id),
+    tracker_id = coalesce(:trackerId, tracker_id),
+    remote_id = coalesce(:remoteId, remote_id),
+    remote_url = coalesce(:remoteUrl, remote_url),
+    library_id = coalesce(:libraryId, library_id),
+    title = coalesce(:title, title),
+    last_chapter_read = coalesce(:lastChapterRead, last_chapter_read),
+    total_chapters = coalesce(:totalChapters, total_chapters),
+    status = coalesce(:status, status),
+    score = coalesce(:score, score),
+    start_date = coalesce(:startDate, start_date),
+    finish_date = coalesce(:finishDate, finish_date),
+    private = coalesce(:private, private)
+WHERE id = :id;

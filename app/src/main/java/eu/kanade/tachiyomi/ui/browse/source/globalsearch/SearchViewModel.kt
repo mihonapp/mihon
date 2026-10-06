@@ -8,15 +8,14 @@ import androidx.lifecycle.viewModelScope
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -28,7 +27,6 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
-import java.util.concurrent.Executors
 
 abstract class SearchViewModel(
     initialState: State = State(),
@@ -49,7 +47,7 @@ abstract class SearchViewModel(
         state.update(function)
     }
 
-    private val coroutineDispatcher = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
+    private val coroutineDispatcher = Dispatchers.IO.limitedParallelism(5)
     private var searchJob: Job? = null
 
     private val enabledLanguages = sourcePreferences.enabledLanguages.get()
@@ -88,7 +86,7 @@ abstract class SearchViewModel(
         }
     }
 
-    open fun getEnabledSources(): List<Source> {
+    open suspend fun getEnabledSources(): List<Source> {
         return sourceManager.getAll()
             .filter { it.lang in enabledLanguages && "${it.id}" !in disabledSources }
             .sortedWith(
@@ -107,7 +105,7 @@ abstract class SearchViewModel(
             return enabledSources
         }
 
-        return extensionManager.installedExtensionsFlow.first()
+        return extensionManager.getLoadedExtensions()
             .filter { it.pkgName == filter }
             .flatMap { it.sources }
             .filter { it in enabledSources }
@@ -197,7 +195,12 @@ abstract class SearchViewModel(
     }
 
     private fun updateItem(source: Source, result: SearchItemResult) {
-        updateItems(state.value.items + (source to result))
+        state.update { currentState ->
+            val newItems = currentState.items + (source to result)
+            currentState.copy(
+                items = newItems.toSortedMap(sortComparator(newItems)),
+            )
+        }
     }
 
     fun setMigrateDialog(currentId: Long, target: Manga) {

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.PeopleAlt
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -32,6 +30,8 @@ import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import mihon.app.di.appGraph
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.PeopleAlt
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
@@ -174,7 +174,7 @@ fun ScanlatorFilterItem(
         horizontalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         Icon(
-            imageVector = Icons.Outlined.PeopleAlt,
+            imageVector = MaterialSymbols.Rounded.PeopleAlt,
             contentDescription = null,
             tint = if (active) {
                 MaterialTheme.colorScheme.active

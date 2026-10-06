@@ -52,30 +52,19 @@ class DownloadManager(
     private val pendingDeleter: DownloadPendingDeleter,
 ) {
 
-    val isRunning: Boolean
-        get() = downloader.isRunning
-
     val queueState
         get() = downloader.queueState
 
-    // For use by DownloadService only
-    fun downloaderStart() = downloader.start()
-    fun downloaderStop(reason: String? = null) = downloader.stop(reason)
-
     val isDownloaderRunning
-        get() = DownloadJob.isRunningFlow(context)
+        get() = DownloadWorker.isRunningFlow(context)
 
     /**
-     * Tells the downloader to begin downloads.
+     * Starts the download worker, which runs the downloader.
      */
     fun startDownloads() {
         if (downloader.isRunning) return
 
-        if (DownloadJob.isRunning(context)) {
-            downloader.start()
-        } else {
-            DownloadJob.start(context)
-        }
+        DownloadWorker.start(context)
     }
 
     /**
@@ -140,8 +129,10 @@ class DownloadManager(
      * @param chapters the list of chapters to enqueue.
      * @param autoStart whether to start the downloader after enqueing the chapters.
      */
-    fun downloadChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean = true) {
-        downloader.queueChapters(manga, chapters, autoStart)
+    suspend fun downloadChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean = true) {
+        if (downloader.queueChapters(manga, chapters, autoStart)) {
+            startDownloads()
+        }
     }
 
     /**
@@ -155,7 +146,7 @@ class DownloadManager(
             addAll(0, downloads)
             reorderQueue(this)
         }
-        if (!DownloadJob.isRunning(context)) startDownloads()
+        startDownloads()
     }
 
     /**
@@ -188,7 +179,6 @@ class DownloadManager(
      * @param chapterScanlator scanlator of the chapter to query
      * @param mangaTitle the title of the manga to query.
      * @param sourceId the id of the source of the chapter.
-     * @param skipCache whether to skip the directory cache and check in the filesystem.
      */
     fun isChapterDownloaded(
         chapterName: String,
@@ -196,9 +186,26 @@ class DownloadManager(
         chapterUrl: String,
         mangaTitle: String,
         sourceId: Long,
-        skipCache: Boolean = false,
     ): Boolean {
-        return cache.isChapterDownloaded(chapterName, chapterScanlator, chapterUrl, mangaTitle, sourceId, skipCache)
+        return cache.isChapterDownloaded(chapterName, chapterScanlator, chapterUrl, mangaTitle, sourceId)
+    }
+
+    /**
+     * Returns true if the chapter is present on disk, bypassing the directory cache.
+     *
+     * @param chapterName the name of the chapter to query.
+     * @param chapterScanlator scanlator of the chapter to query
+     * @param mangaTitle the title of the manga to query.
+     * @param source the source of the chapter.
+     */
+    fun isChapterDownloadedOnDisk(
+        chapterName: String,
+        chapterScanlator: String?,
+        chapterUrl: String,
+        mangaTitle: String,
+        source: Source,
+    ): Boolean {
+        return provider.findChapterDir(chapterName, chapterScanlator, chapterUrl, mangaTitle, source) != null
     }
 
     /**
@@ -302,7 +309,7 @@ class DownloadManager(
     /**
      * Triggers the execution of the deletion of pending chapters.
      */
-    fun deletePendingChapters() {
+    suspend fun deletePendingChapters() {
         val pendingChapters = pendingDeleter.getPendingChapters()
         for ((manga, chapters) in pendingChapters) {
             val source = sourceManager.get(manga.source) ?: continue

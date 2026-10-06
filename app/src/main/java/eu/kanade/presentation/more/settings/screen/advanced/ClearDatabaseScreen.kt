@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FlipToBack
-import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
@@ -49,11 +46,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.FlipToBack
+import mihon.icons.materialsymbols.rounded.SelectAll
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.launchUI
-import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.core.common.util.lang.withNonCancellableContext
-import tachiyomi.data.Database
+import tachiyomi.domain.history.repository.HistoryRepository
+import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.interactor.GetSourcesWithNonLibraryManga
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
@@ -147,12 +147,12 @@ class ClearDatabaseScreen : Screen() {
                                         actions = listOf(
                                             AppBar.Action(
                                                 title = stringResource(MR.strings.action_select_all),
-                                                icon = Icons.Outlined.SelectAll,
+                                                icon = MaterialSymbols.Rounded.SelectAll,
                                                 onClick = viewModel::selectAll,
                                             ),
                                             AppBar.Action(
                                                 title = stringResource(MR.strings.action_select_inverse),
-                                                icon = Icons.Outlined.FlipToBack,
+                                                icon = MaterialSymbols.Rounded.FlipToBack,
                                                 onClick = viewModel::invertSelection,
                                             ),
                                         ),
@@ -229,7 +229,8 @@ class ClearDatabaseScreen : Screen() {
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ClearDatabaseViewModel(
-    private val database: Database,
+    private val mangaRepository: MangaRepository,
+    private val historyRepository: HistoryRepository,
     private val getSourcesWithNonLibraryManga: GetSourcesWithNonLibraryManga,
 ) : ViewModel() {
 
@@ -253,8 +254,8 @@ class ClearDatabaseViewModel(
 
     suspend fun removeMangaBySourceId(keepReadManga: Boolean) = withNonCancellableContext {
         val state = state.value as? State.Ready ?: return@withNonCancellableContext
-        database.mangasQueries.deleteNonLibraryManga(state.selection, keepReadManga.toLong())
-        database.historyQueries.removeResettedHistory()
+        mangaRepository.deleteNonLibraryManga(state.selection, keepReadManga)
+        historyRepository.deleteResetHistory()
     }
 
     fun toggleSelection(source: Source) = state.update { state ->

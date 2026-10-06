@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.core.net.toUri
 import dev.zacsweers.metro.Inject
 import eu.kanade.presentation.webview.WebViewScreenContent
@@ -24,6 +26,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.screens.LoadingScreen
 
 class WebViewActivity : BaseActivity() {
 
@@ -60,21 +63,28 @@ class WebViewActivity : BaseActivity() {
         val url = intent.extras?.getString(URL_KEY) ?: return
         assistUrl = url
 
-        var headers = emptyMap<String, String>()
-        (sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource)?.let { source ->
-            try {
-                headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "Failed to build headers" }
-            }
-        }
-
         setComposeContent {
+            // Null until the source it belongs to has been resolved
+            val headers by produceState<Map<String, String>?>(initialValue = null) {
+                val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource
+                value = try {
+                    source?.headers?.toMultimap()?.mapValues { it.value.getOrNull(0) ?: "" }.orEmpty()
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "Failed to build headers" }
+                    emptyMap()
+                }
+            }
+
+            if (headers == null) {
+                LoadingScreen()
+                return@setComposeContent
+            }
+
             WebViewScreenContent(
                 onNavigateUp = { finish() },
                 initialTitle = intent.extras?.getString(TITLE_KEY),
                 url = url,
-                headers = headers,
+                headers = headers.orEmpty(),
                 defaultUserAgentProvider = network::defaultUserAgentProvider,
                 onUrlChange = { assistUrl = it },
                 onShare = this::shareWebpage,

@@ -1,0 +1,131 @@
+import kotlin.Boolean;
+import kotlinx.serialization.json.JsonObject;
+
+CREATE TABLE chapter(
+    id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL,
+    remote_url TEXT NOT NULL,
+    remote_name TEXT NOT NULL,
+    remote_scanlator TEXT,
+    remote_chapter_number REAL NOT NULL,
+    remote_date_upload INTEGER NOT NULL,
+    remote_order INTEGER NOT NULL,
+    remote_memo BLOB AS JsonObject NOT NULL,
+    user_read INTEGER AS Boolean NOT NULL,
+    user_bookmark INTEGER AS Boolean NOT NULL,
+    user_last_page_read INTEGER NOT NULL,
+    state_date_fetch INTEGER NOT NULL,
+    UNIQUE(manga_id, remote_url),
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX chapter_state_date_fetch_index ON chapter(state_date_fetch);
+CREATE INDEX chapter_unread_state_date_fetch_index ON chapter(state_date_fetch) WHERE user_read = 0;
+
+getChapterById:
+SELECT
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
+FROM chapter
+WHERE id = :id;
+
+getChaptersByMangaId:
+SELECT
+    C.id, C.manga_id, C.remote_url, C.remote_name, C.remote_scanlator, C.remote_chapter_number,
+    C.remote_date_upload, C.remote_order, C.remote_memo, C.user_read, C.user_bookmark,
+    C.user_last_page_read, C.state_date_fetch
+FROM chapter C
+LEFT JOIN excluded_scanlator ES
+ON C.manga_id = ES.manga_id
+AND C.remote_scanlator = ES.scanlator
+WHERE C.manga_id = :mangaId
+AND (
+    :applyScanlatorFilter = 0
+    OR ES.scanlator IS NULL
+);
+
+getChaptersByMangaIds:
+SELECT
+    C.id, C.manga_id, C.remote_url, C.remote_name, C.remote_scanlator, C.remote_chapter_number,
+    C.remote_date_upload, C.remote_order, C.remote_memo, C.user_read, C.user_bookmark,
+    C.user_last_page_read, C.state_date_fetch
+FROM chapter C
+LEFT JOIN excluded_scanlator ES
+ON C.manga_id = ES.manga_id
+AND C.remote_scanlator = ES.scanlator
+WHERE C.manga_id IN :mangaIds
+AND (
+    :applyScanlatorFilter = 0
+    OR ES.scanlator IS NULL
+);
+
+getScanlatorsByMangaId:
+SELECT DISTINCT remote_scanlator
+FROM chapter
+WHERE manga_id = :mangaId;
+
+getBookmarkedChaptersByMangaId:
+SELECT
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
+FROM chapter
+WHERE manga_id = :mangaId
+AND user_bookmark;
+
+getChapterByUrlAndMangaId:
+SELECT
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
+FROM chapter
+WHERE manga_id = :mangaId
+AND remote_url = :remoteUrl;
+
+removeChaptersWithIds:
+DELETE FROM chapter
+WHERE id IN :chapterIds;
+
+insertReturningId:
+INSERT INTO chapter(
+    manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
+)
+VALUES (
+    :mangaId, :remoteUrl, :remoteName, :remoteScanlator, :remoteChapterNumber,
+    :remoteDateUpload, :remoteOrder, :remoteMemo, :userRead, :userBookmark,
+    :userLastPageRead, :stateDateFetch
+)
+-- Two syncs of the same entry can race; the chapter the other one already stored is skipped rather
+-- than failing the whole batch
+ON CONFLICT(manga_id, remote_url) DO NOTHING
+RETURNING id;
+
+update:
+UPDATE chapter
+SET user_read = coalesce(:userRead, user_read),
+    user_bookmark = coalesce(:userBookmark, user_bookmark),
+    user_last_page_read = coalesce(:userLastPageRead, user_last_page_read),
+    state_date_fetch = coalesce(:stateDateFetch, state_date_fetch)
+WHERE id = :id;
+
+updateFromBackup:
+UPDATE chapter
+SET user_read = coalesce(:userRead, user_read),
+    user_bookmark = coalesce(:userBookmark, user_bookmark),
+    user_last_page_read = coalesce(:userLastPageRead, user_last_page_read),
+    remote_memo = coalesce(:remoteMemo, remote_memo)
+WHERE id = :id;
+
+updateRemote:
+UPDATE chapter
+SET remote_name = :remoteName,
+    remote_scanlator = coalesce(:remoteScanlator, remote_scanlator),
+    remote_chapter_number = :remoteChapterNumber,
+    remote_order = :remoteOrder,
+    remote_date_upload = coalesce(:remoteDateUpload, remote_date_upload),
+    remote_memo = :remoteMemo
+WHERE id = :id;

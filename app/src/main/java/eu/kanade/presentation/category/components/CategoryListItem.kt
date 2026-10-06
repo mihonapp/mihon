@@ -4,10 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.DragHandle
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,6 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Delete
+import mihon.icons.materialsymbols.rounded.DragHandle
+import mihon.icons.materialsymbols.rounded.Edit
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
@@ -42,7 +42,7 @@ fun ReorderableCollectionItemScope.CategoryListItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = Icons.Outlined.DragHandle,
+                imageVector = MaterialSymbols.Rounded.DragHandle,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(MaterialTheme.padding.medium)
@@ -54,13 +54,13 @@ fun ReorderableCollectionItemScope.CategoryListItem(
             )
             IconButton(onClick = onRename) {
                 Icon(
-                    imageVector = Icons.Outlined.Edit,
+                    imageVector = MaterialSymbols.Rounded.Edit,
                     contentDescription = stringResource(MR.strings.action_rename_category),
                 )
             }
             IconButton(onClick = onDelete) {
                 Icon(
-                    imageVector = Icons.Outlined.Delete,
+                    imageVector = MaterialSymbols.Rounded.Delete,
                     contentDescription = stringResource(MR.strings.action_delete),
                 )
             }

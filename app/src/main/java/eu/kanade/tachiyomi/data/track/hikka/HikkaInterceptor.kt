@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.hikka
 
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKAuthTokenInfo
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKOAuth
+import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -32,7 +33,9 @@ class HikkaInterceptor(private val hikka: Hikka) : Interceptor {
                 throw Exception("Hikka: Auth token info failed")
             }
 
-            val authTokenInfo = json.decodeFromString<HKAuthTokenInfo>(authTokenInfoResponse.body.string())
+            val authTokenInfo = with(json) {
+                authTokenInfoResponse.parseAs<HKAuthTokenInfo>()
+            }
             setAuth(HKOAuth(currAuth.accessToken, authTokenInfo.expiration, authTokenInfo.created))
         }
 

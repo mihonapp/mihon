@@ -7,9 +7,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.net.toUri
 import dev.zacsweers.metro.Inject
-import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreWorker
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.cancelNotification
@@ -25,7 +25,7 @@ import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.chapter.model.toChapterUpdate
+import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
@@ -170,7 +170,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param context context of application
      */
     private fun cancelRestore(context: Context) {
-        BackupRestoreJob.stop(context.workManager)
+        BackupRestoreWorker.stop(context.workManager)
     }
 
     /**
@@ -179,7 +179,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param context context of application
      */
     private fun cancelLibraryUpdate(context: Context) {
-        LibraryUpdateJob.stop(context)
+        LibraryUpdateWorker.stop(context)
     }
 
     /**
@@ -192,7 +192,6 @@ class NotificationReceiver : BroadcastReceiver() {
         launchIO {
             val toUpdate = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
                 .map {
-                    val chapter = it.copy(read = true)
                     if (downloadPreferences.removeAfterMarkedAsRead.get()) {
                         val manga = getManga.await(mangaId)
                         if (manga != null) {
@@ -202,7 +201,7 @@ class NotificationReceiver : BroadcastReceiver() {
                             }
                         }
                     }
-                    chapter.toChapterUpdate()
+                    ChapterUpdate(it.id) { read = true }
                 }
             updateChapter.awaitAll(toUpdate)
         }

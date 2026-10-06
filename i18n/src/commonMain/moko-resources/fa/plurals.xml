@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="update_check_notification_ext_updates">
-        <item quantity="one">آپدیت برای یک افرونه موجود است</item>
-        <item quantity="other">آپدیت برای %d افرونه موجود است</item>
+        <item quantity="one">به‌روزرسانی برای افزونه‌ موجود است</item>
+        <item quantity="other">%d به‌روزرسانی برای افزونه‌ موجود است</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">قسمت های %1$s و 1 قسمت دیگر</item>
@@ -63,5 +63,33 @@
     <plurals name="day">
         <item quantity="one">1 روز</item>
         <item quantity="other">%d روز</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">۱ صفحه</item>
+        <item quantity="other">%1$s صفحه</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">%1$d عنوان منتقل شود؟</item>
+        <item quantity="other">%1$d عنوان منتقل شود؟</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">فردا</item>
+        <item quantity="other">در %1$d روز</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">یک عنوان نادیده گرفته شد</item>
+        <item quantity="other">%1$d عنوان نادیده گرفته شدند</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d فروشگاه</item>
+        <item quantity="other">%d فروشگاه</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">%1$d عنوان رونوشت شود؟</item>
+        <item quantity="other">%1$d عنوان رونوشت شود؟</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d به‌روزرسانی ناموفق بود</item>
+        <item quantity="other">%1$d به‌روزرسانی ناموفق بود</item>
     </plurals>
 </resources>
