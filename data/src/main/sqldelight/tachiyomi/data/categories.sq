@@ -42,6 +42,18 @@ JOIN mangas_categories MC
 ON C._id = MC.category_id
 WHERE MC.manga_id = :mangaId;
 
+getCategoriesByMangaIds:
+SELECT
+MC.manga_id AS manga_id,
+C._id AS id,
+C.name,
+C.sort AS `order`,
+C.flags
+FROM categories C
+JOIN mangas_categories MC
+ON C._id = MC.category_id
+WHERE MC.manga_id IN :mangaIds;
+
 insert:
 INSERT INTO categories(name, sort, flags)
 VALUES (:name, :order, :flags);

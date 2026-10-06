@@ -31,6 +31,13 @@ class TrackRepositoryImpl(
             .awaitAsList()
     }
 
+    override suspend fun getTracksMapByMangaIds(mangaIds: List<Long>): Map<Long, List<Track>> {
+        return database.manga_syncQueries
+            .getTracksByMangaIds(mangaIds, TrackMapper::mapTrack)
+            .awaitAsList()
+            .groupBy { it.mangaId }
+    }
+
     override fun getTracksAsFlow(): Flow<List<Track>> {
         return database.manga_syncQueries
             .getTracks(TrackMapper::mapTrack)

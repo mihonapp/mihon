@@ -68,6 +68,18 @@ AND (
     OR ES.scanlator IS NULL
 );
 
+getChaptersByMangaIds:
+SELECT C.*
+FROM chapters C
+LEFT JOIN excluded_scanlators ES
+ON C.manga_id = ES.manga_id
+AND C.scanlator = ES.scanlator
+WHERE C.manga_id IN :mangaIds
+AND (
+    :applyScanlatorFilter = 0
+    OR ES.scanlator IS NULL
+);
+
 getScanlatorsByMangaId:
 SELECT scanlator
 FROM chapters

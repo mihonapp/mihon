@@ -30,6 +30,15 @@ class GetTracks(
         }
     }
 
+    suspend fun await(mangaIds: List<Long>): Map<Long, List<Track>> {
+        return try {
+            trackRepository.getTracksMapByMangaIds(mangaIds)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            emptyMap()
+        }
+    }
+
     fun subscribe(mangaId: Long): Flow<List<Track>> {
         return trackRepository.getTracksByMangaIdAsFlow(mangaId)
     }

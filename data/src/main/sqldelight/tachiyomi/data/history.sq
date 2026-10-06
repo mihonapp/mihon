@@ -23,6 +23,18 @@ JOIN chapters C
 ON H.chapter_id = C._id
 WHERE C.manga_id = :mangaId AND C._id = H.chapter_id;
 
+getHistoryByMangaIds:
+SELECT
+C.manga_id AS manga_id,
+H._id,
+H.chapter_id,
+H.last_read,
+H.time_read
+FROM history H
+JOIN chapters C
+ON H.chapter_id = C._id
+WHERE C.manga_id IN :mangaIds AND C._id = H.chapter_id;
+
 getHistoryByChapterUrlAndMangaId:
 SELECT
 H._id,

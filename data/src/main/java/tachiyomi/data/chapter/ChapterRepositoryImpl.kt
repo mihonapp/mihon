@@ -101,6 +101,13 @@ class ChapterRepositoryImpl(
             .awaitAsList()
     }
 
+    override suspend fun getChaptersMapByMangaIds(mangaIds: List<Long>, applyScanlatorFilter: Boolean): Map<Long, List<Chapter>> {
+        return database.chaptersQueries
+            .getChaptersByMangaIds(mangaIds, applyScanlatorFilter.toLong(), ::mapChapter)
+            .awaitAsList()
+            .groupBy { it.mangaId }
+    }
+
     override suspend fun getScanlatorsByMangaId(mangaId: Long): List<String> {
         return database.chaptersQueries
             .getScanlatorsByMangaId(mangaId) { it.orEmpty() }

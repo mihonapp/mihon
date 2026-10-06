@@ -15,6 +15,10 @@ class GetHistory(
         return repository.getHistoryByMangaId(mangaId)
     }
 
+    suspend fun await(mangaIds: List<Long>): Map<Long, List<History>> {
+        return repository.getHistoryMapByMangaIds(mangaIds)
+    }
+
     fun subscribe(query: String): Flow<List<HistoryWithRelations>> {
         return repository.getHistory(query)
     }
