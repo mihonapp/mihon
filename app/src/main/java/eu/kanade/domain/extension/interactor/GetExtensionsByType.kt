@@ -23,20 +23,18 @@ class GetExtensionsByType(
             extensionManager.notLoadedExtensionsFlow,
             extensionManager.availableExtensionsFlow,
         ) { enabledLanguages, _loaded, _notLoaded, _available ->
-            val (updates, loaded) = _loaded
-                .sortedWith(
-                    compareBy<Extension.Loaded> { !it.isObsolete }
-                        .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name },
-                )
-                .partition { it.hasUpdate }
+            val byName = compareBy<Extension, String>(String.CASE_INSENSITIVE_ORDER) { it.name }
 
-            val notLoaded = _notLoaded
-                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+            val (loadedUpdates, loaded) = _loaded.partition { it.hasUpdate }
+            val (notLoadedUpdates, notLoaded) = _notLoaded.partition { it.hasUpdate }
+
+            val updates = (loadedUpdates + notLoadedUpdates).sortedWith(byName)
 
             val available = _available
                 .filter { extension ->
-                    _loaded.none { it.pkgName == extension.pkgName } &&
-                        _notLoaded.none { it.pkgName == extension.pkgName } &&
+                    (_loaded + _notLoaded).none {
+                        it.pkgName == extension.pkgName && extension.store.signingKey in it.signatures
+                    } &&
                         extension.contentWarning in enabledContentWarnings
                 }
                 .flatMap { ext ->
@@ -50,9 +48,17 @@ class GetExtensionsByType(
                             )
                         }
                 }
-                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                .sortedWith(
+                    compareBy<Extension.Available, String>(String.CASE_INSENSITIVE_ORDER) { it.name }
+                        .thenBy { it.store.signingKey },
+                )
 
-            Extensions(updates, loaded, available, notLoaded)
+            Extensions(
+                updates = updates,
+                loaded = loaded.sortedWith(compareBy<Extension.Loaded> { !it.isObsolete }.then(byName)),
+                available = available,
+                notLoaded = notLoaded.sortedWith(byName),
+            )
         }
     }
 }

@@ -147,6 +147,14 @@ private fun <T> WheelPicker(
                 TextFieldState(initialText = currentString, initialSelection = TextRange(currentString.length))
             }
 
+            LaunchedEffect(value, items, onSelectionChanged) {
+                snapshotFlow { value.text.toString() }
+                    .collectLatest { text ->
+                        val index = items.indexOfFirst { it.toString() == text }
+                        onSelectionChanged(index.takeIf { it >= 0 } ?: internalIndex)
+                    }
+            }
+
             val scope = rememberCoroutineScope()
             val processManualInput: () -> Unit = {
                 scope.launch {

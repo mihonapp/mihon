@@ -42,5 +42,6 @@ dependencies {
 
     implementation(libs.kotlinx.datetime)
 
-    api(libs.bundles.sqldelight)
+    implementation(libs.androidx.sqlite.bundled)
+    implementation(libs.bundles.sqldelight)
 }

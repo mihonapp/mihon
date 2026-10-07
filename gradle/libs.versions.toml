@@ -3,14 +3,14 @@ aboutLibraries = "15.2.0"
 android-desugar = "2.1.5"
 android-gradle = "9.4.1"
 androidx-activity-compose = "1.13.0"
-androidx-annotation = "1.10.0"
+androidx-annotation = "1.11.0"
 androidx-appCompat = "1.8.0"
 androidx-baselineProfile = "1.5.0"
 androidx-benchmark = "1.5.0"
 androidx-biometric = "1.2.0-alpha05"
-androidx-compose-bom = "2026.09.00"
+androidx-compose-bom = "2026.09.01"
 androidx-constraintLayout = "2.2.2"
-androidx-core = "1.19.0"
+androidx-core = "1.19.1"
 androidx-coreSplashScreen = "1.2.0"
 androidx-glance = "1.2.0"
 androidx-interpolator = "1.0.0"
@@ -24,13 +24,15 @@ androidx-test-espresso = "3.7.0"
 androidx-test-junit = "1.3.0"
 androidx-test-uiautomator = "2.4.0"
 androidx-viewPager = "1.1.0"
-androidx-webkit = "1.17.0"
-androidx-work = "2.11.2"
+androidx-webkit = "1.17.1"
+androidx-work = "2.12.0"
+apollo = "5.2.0"
+apollo-adapters = "0.8.0"
 archive = "1.1.7"
 coil = "3.6.3"
-composeGrid = "2.8.0"
+composeGrid = "2.9.0"
 composeMaterialMotion = "2.0.1"
-composeRichEditor = "1.2.0"
+composeRichEditor = "1.2.1"
 composeWebview = "0.33.6"
 conscrypt = "2.7.0"
 directionalViewPager = "1.0.0"
@@ -39,7 +41,7 @@ firebase-bom = "34.19.0"
 firebase-crashlytics = "3.0.8"
 flexibleAdapter = "5.1.0"
 google-services = "4.5.0"
-image-decoder = "14"
+image-decoder = "16"
 injekt = "1.16.1"
 jsoup = "1.23.2"
 junit = "6.1.3"
@@ -54,7 +56,7 @@ logcat = "0.4"
 markdown = "0.45.0"
 material = "1.14.0"
 materialKolor = "5.0.1"
-metro = "1.4.4"
+metro = "1.4.5"
 mockk = "1.14.11"
 moko-resources = "0.26.4"
 okhttp = "5.5.0"
@@ -64,17 +66,17 @@ quickJs = "547f5b1597"
 reorderable = "3.1.0"
 rxJava = "1.3.8"
 shizuku = "13.1.5"
-spotless = "8.10.2"
+spotless = "8.10.3"
 sqldelight = "2.4.0"
 sqldelight-androidx-driver = "0.2.2"
 stringSimilarity = "0.1.0"
-subsamplingScaleImageView = "94915e6f73"
+subsamplingScaleImageView = "1b283e2bc4"
 swipe = "1.3.0"
 tapmoc = "0.4.2"
 unifile = "08f224c8f9"
 valkyrie = "0.5.2"
 voyager = "2.2.21-1.10.3"
-webgpuviewer = "47"
+webgpuviewer = "51"
 xmlutil = "1.0.2"
 
 [libraries]
@@ -120,6 +122,8 @@ androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", 
 androidx-viewPager = { module = "androidx.viewpager:viewpager", version.ref = "androidx-viewPager" }
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "androidx-webkit" }
 androidx-work = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
+apollo = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
+apollo-adapters = { module = "com.apollographql.adapters:apollo-adapters-core", version.ref = "apollo-adapters" }
 archive = { module = "me.zhanghai.android.libarchive:library", version.ref = "archive" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
@@ -204,6 +208,7 @@ android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 android-test = { id = "com.android.test", version.ref = "android-gradle" }
 androidx-baselineProfile = { id = "androidx.baselineprofile", version.ref = "androidx-baselineProfile" }
+apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-gradle" }

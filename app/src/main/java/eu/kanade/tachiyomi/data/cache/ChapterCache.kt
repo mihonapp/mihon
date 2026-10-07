@@ -7,6 +7,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.source.model.Page
+import eu.kanade.tachiyomi.ui.reader.model.DownloadStream
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.saveTo
 import kotlinx.serialization.json.Json
@@ -147,10 +148,11 @@ class ChapterCache(
      *
      * @param imageUrl url of image.
      * @param response http response from page.
+     * @param live also receives the bytes as they arrive.
      * @throws IOException image error.
      */
     @Throws(IOException::class)
-    fun putImageToCache(imageUrl: String, response: Response) {
+    fun putImageToCache(imageUrl: String, response: Response, live: DownloadStream? = null) {
         // Initialize editor (edits the values for an entry).
         var editor: DiskLruCache.Editor? = null
 
@@ -160,7 +162,22 @@ class ChapterCache(
             editor = diskCache.edit(key) ?: return
 
             // Get OutputStream and write image with Okio.
-            response.body.source().saveTo(editor.newOutputStream(0))
+            if (live == null) {
+                response.body.source().saveTo(editor.newOutputStream(0))
+            } else {
+                live.reserve(response.body.contentLength())
+                response.body.source().use { source ->
+                    editor.newOutputStream(0).use { out ->
+                        val buffer = ByteArray(1 shl 16)
+                        while (true) {
+                            val n = source.read(buffer)
+                            if (n < 0) break
+                            out.write(buffer, 0, n)
+                            live.append(buffer, 0, n)
+                        }
+                    }
+                }
+            }
 
             diskCache.flush()
             editor.commit()

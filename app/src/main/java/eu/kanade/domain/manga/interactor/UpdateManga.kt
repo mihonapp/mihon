@@ -31,30 +31,27 @@ class UpdateManga(
         window: Pair<Long, Long> = fetchInterval.getWindow(dateTime.date, timeZone),
     ): Boolean {
         return mangaRepository.update(
-            fetchInterval.toMangaUpdate(manga, dateTime, timeZone, window),
+            fetchInterval.withFetchInterval(manga, dateTime, timeZone, window),
         )
     }
 
     suspend fun awaitUpdateLastUpdate(mangaId: Long): Boolean {
-        return mangaRepository.update(MangaUpdate(id = mangaId, lastUpdate = Clock.System.now().toEpochMilliseconds()))
+        return mangaRepository.update(MangaUpdate(mangaId) { lastUpdate = Clock.System.now().toEpochMilliseconds() })
     }
 
     suspend fun awaitUpdateCoverLastModified(mangaId: Long): Boolean {
         return mangaRepository.update(
-            MangaUpdate(
-                id = mangaId,
-                coverLastModified = Clock.System.now().toEpochMilliseconds(),
-            ),
+            MangaUpdate(mangaId) {
+                coverLastModified = Clock.System.now().toEpochMilliseconds()
+            },
         )
     }
 
     suspend fun awaitUpdateFavorite(mangaId: Long, favorite: Boolean): Boolean {
-        val dateAdded = when (favorite) {
-            true -> Clock.System.now().toEpochMilliseconds()
-            false -> 0
+        val update = when (favorite) {
+            true -> MangaUpdate(mangaId) { favoriteAt = Clock.System.now().toEpochMilliseconds() }
+            false -> MangaUpdate(mangaId) { favoriteAt = null }
         }
-        return mangaRepository.update(
-            MangaUpdate(id = mangaId, favorite = favorite, dateAdded = dateAdded),
-        )
+        return mangaRepository.update(update)
     }
 }
