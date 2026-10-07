@@ -129,13 +129,22 @@ class LibraryViewModel(
     }
         .distinctUntilChanged()
 
+    // Tracks are only used by tracker filters and the tracker score sort, and loading every track is slow on
+    // large libraries
+    private val tracks = combine(getCategories.subscribe(), getTrackingFiltersFlow()) { categories, trackingFilters ->
+        trackingFilters.values.any { it != TriState.DISABLED } ||
+            categories.any { it.sort.type == LibrarySort.Type.TrackerMean }
+    }
+        .distinctUntilChanged()
+        .flatMapLatest { needsTracks -> if (needsTracks) getTracksPerManga.subscribe() else flowOf(emptyMap()) }
+
     // Shared separately so search, selection and dialog changes still reach [state] before the
     // first query result, and so returning to the tab doesn't flash empty while it restarts.
     private val library = combine(
         searchQuery.debounce(0.25.seconds),
         getCategories.subscribe(),
         getFavoritesFlow(),
-        combine(getTracksPerManga.subscribe(), getTrackingFiltersFlow(), ::Pair),
+        combine(tracks, getTrackingFiltersFlow(), ::Pair),
         getLibraryItemPreferencesFlow(),
     ) { searchQuery, categories, favorites, (tracksMap, trackingFilters), itemPreferences ->
         val showSystemCategory = favorites.any { it.libraryManga.categories.contains(0) }
@@ -407,17 +416,22 @@ class LibraryViewModel(
             getLibraryItemPreferencesFlow(),
             downloadCache.changes,
         ) { libraryManga, preferences, _ ->
+            val sources = libraryManga
+                .mapTo(mutableSetOf()) { it.manga.source }
+                .associateWith { sourceManager.getOrStub(it) }
             libraryManga.map { manga ->
+                val source = sources.getValue(manga.manga.source)
+                val downloadCount = downloadManager.getDownloadCount(manga.manga)
                 LibraryItem(
                     libraryManga = manga,
-                    downloadCount = downloadManager.getDownloadCount(manga.manga),
+                    downloadCount = downloadCount,
                     unreadCount = manga.unreadCount,
                     isLocal = manga.manga.isLocal(),
-                    sourceName = sourceManager.getOrStub(manga.manga.source).name.lowercase(),
-                    sourceLanguage = sourceManager.getOrStub(manga.manga.source).lang,
+                    sourceName = source.name.lowercase(),
+                    sourceLanguage = source.lang,
                     badges = LibraryItem.Badges(
                         downloadCount = if (preferences.downloadBadge) {
-                            downloadManager.getDownloadCount(manga.manga)
+                            downloadCount
                         } else {
                             0
                         },
@@ -432,7 +446,7 @@ class LibraryViewModel(
                             false
                         },
                         sourceLanguage = if (preferences.languageBadge) {
-                            sourceManager.getOrStub(manga.manga.source).lang
+                            source.lang
                         } else {
                             ""
                         },
@@ -615,7 +629,9 @@ class LibraryViewModel(
         dialog.update { Dialog.SettingsSheet }
     }
 
-    private var lastSelectionCategory: Long? = null
+    private data class LastSelection(val categoryId: Long, val mangaId: Long)
+
+    private var lastSelection: LastSelection? = null
 
     /**
      * Reads from [selection] rather than [state], which is derived asynchronously and can still
@@ -628,7 +644,7 @@ class LibraryViewModel(
         }
 
     fun clearSelection() {
-        lastSelectionCategory = null
+        lastSelection = null
         selection.update { setOf() }
     }
 
@@ -637,7 +653,7 @@ class LibraryViewModel(
             val newSelection = selection.mutate { set ->
                 if (!set.remove(manga.id)) set.add(manga.id)
             }
-            lastSelectionCategory = category.id.takeIf { newSelection.isNotEmpty() }
+            lastSelection = LastSelection(category.id, manga.id).takeIf { manga.id in newSelection }
             newSelection
         }
     }
@@ -650,31 +666,30 @@ class LibraryViewModel(
         val state = state.value
         selection.update { selection ->
             val newSelection = selection.mutate { list ->
-                val lastSelected = list.lastOrNull()
-                if (lastSelectionCategory != category.id) {
+                val items = state.getItemsForCategoryId(category.id).fastMap { it.id }
+                val lastMangaIndex = lastSelection
+                    ?.takeIf { it.categoryId == category.id && it.mangaId in list }
+                    ?.let { items.indexOf(it.mangaId) }
+                    ?: -1
+                val curMangaIndex = items.indexOf(manga.id)
+                if (lastMangaIndex == -1 || curMangaIndex == -1) {
                     list.add(manga.id)
                     return@mutate
                 }
 
-                val items = state.getItemsForCategoryId(category.id).fastMap { it.id }
-                val lastMangaIndex = items.indexOf(lastSelected)
-                val curMangaIndex = items.indexOf(manga.id)
-
                 val selectionRange = when {
                     lastMangaIndex < curMangaIndex -> lastMangaIndex..curMangaIndex
-                    curMangaIndex < lastMangaIndex -> curMangaIndex..lastMangaIndex
-                    // We shouldn't reach this point
-                    else -> return@mutate
+                    else -> curMangaIndex..lastMangaIndex
                 }
-                selectionRange.mapNotNull { items[it] }.let(list::addAll)
+                list.addAll(items.subList(selectionRange.first, selectionRange.last + 1))
             }
-            lastSelectionCategory = category.id
+            lastSelection = LastSelection(category.id, manga.id)
             newSelection
         }
     }
 
     fun selectAll() {
-        lastSelectionCategory = null
+        lastSelection = null
         val state = state.value
         selection.update { selection ->
             selection.mutate { list ->
@@ -684,7 +699,7 @@ class LibraryViewModel(
     }
 
     fun invertSelection() {
-        lastSelectionCategory = null
+        lastSelection = null
         val state = state.value
         selection.update { selection ->
             selection.mutate { list ->

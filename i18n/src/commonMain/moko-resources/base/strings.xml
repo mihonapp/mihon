@@ -188,6 +188,8 @@
     <string name="onboarding_storage_selection_required">A folder must be selected</string>
     <string name="onboarding_storage_help_info">Updating from an older version and not sure what to select? Refer to the storage guide for more information.</string>
     <string name="onboarding_storage_help_action">Storage guide</string>
+    <string name="app_migrating_title">Finishing the update</string>
+    <string name="app_migrating_summary">Getting things ready after the update. This can take a few minutes, so keep the app open.</string>
     <string name="onboarding_permission_install_apps">Install apps permission</string>
     <string name="onboarding_permission_install_apps_description">To install source extensions.</string>
     <string name="onboarding_permission_notifications">Notification permission</string>
