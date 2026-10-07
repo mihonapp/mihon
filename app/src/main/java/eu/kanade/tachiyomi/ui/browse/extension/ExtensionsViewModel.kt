@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
@@ -69,7 +70,8 @@ class ExtensionsViewModel(
     @Suppress("LocalVariableName")
     private val items = combine(
         searchQuery
-            .debounce(0.25.seconds)
+            // No query is the common case on every open, so don't delay it
+            .debounce { if (it.isNullOrEmpty()) Duration.ZERO else 0.25.seconds }
             .map { searchQueryPredicate(it ?: "") },
         currentDownloads,
         getExtensions.subscribe(),
