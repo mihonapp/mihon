@@ -7,6 +7,7 @@ import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteConcurrencyModel.MultipleReadersSingleWriter
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteConfiguration
@@ -19,6 +20,7 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
+import mihon.data.database.DatabaseRepositoryImpl
 
 @ContributesTo(AppScope::class)
 @BindingContainer
@@ -30,7 +32,7 @@ object DatabaseBindings {
      */
     @Provides
     @SingleIn(AppScope::class)
-    fun providesSqlDriver(context: Context): SqlDriver {
+    fun providesSqlDriver(context: Context, databaseRepository: DatabaseRepositoryImpl): SqlDriver {
         val isLowRam = context.getSystemService<ActivityManager>()?.isLowRamDevice == true
         return AndroidxSqliteDriver(
             connectionFactory = object : AndroidxSqliteConnectionFactory {
@@ -48,6 +50,14 @@ object DatabaseBindings {
                 isForeignKeyConstraintsEnabled = true,
                 concurrencyModel = MultipleReadersSingleWriter(isWal = true, walCount = if (isLowRam) 1 else 4),
             ),
+            // Runs before the driver compares the schema version, and onOpen once the schema is ready
+            onConfigure = {
+                val version = executePragmaQuery("user_version", { QueryResult.Value(it.apply { next() }.getLong(0)) })
+                databaseRepository.isMigrating.value = version in 1..<Database.Schema.version
+            },
+            onOpen = {
+                databaseRepository.isMigrating.value = false
+            },
         )
     }
 
