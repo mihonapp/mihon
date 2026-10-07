@@ -95,6 +95,13 @@ class UpdatesViewModel(
 
     private val downloadStates = MutableStateFlow(emptyMap<Long, DownloadProgress>())
 
+    // A finished chapter leaves the queue, and its last status change can be lost with it, so its state is left to
+    // the queried item once it's no longer queued
+    private val queuedDownloadStates = combine(downloadStates, downloadManager.queueState) { states, queue ->
+        val queuedChapterIds = queue.mapTo(HashSet()) { it.chapter.id }
+        states.filterKeys { it in queuedChapterIds }
+    }
+
     init {
         viewModelScope.launchIO {
             merge(downloadManager.statusFlow(), downloadManager.progressFlow())
@@ -166,7 +173,7 @@ class UpdatesViewModel(
     val state: StateFlow<State> = combine(
         updateItems,
         selectedChapterIds,
-        downloadStates,
+        queuedDownloadStates,
         dialog,
         hasActiveFilters,
     ) { items, selectedIds, downloads, dialog, hasActiveFilters ->
