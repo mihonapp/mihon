@@ -40,6 +40,9 @@ class WebGpuConfig(
     var imageCropBorders = false
         private set
 
+    var imageCropBordersWebtoon = false
+        private set
+
     var navigateToPan = false
         private set
 
@@ -84,6 +87,11 @@ class WebGpuConfig(
         readerPreferences.zoomStart.register({ zoomTypeFromPreference(it) }, { imagePropertyChangedListener?.invoke() })
 
         readerPreferences.cropBorders.register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.cropBordersWebtoon.register(
+            { imageCropBordersWebtoon = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
 
         readerPreferences.navigateToPan.register({ navigateToPan = it })
 

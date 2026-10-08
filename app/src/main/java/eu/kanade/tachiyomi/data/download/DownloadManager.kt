@@ -52,38 +52,29 @@ class DownloadManager(
     private val pendingDeleter: DownloadPendingDeleter,
 ) {
 
-    val isRunning: Boolean
-        get() = downloader.isRunning
-
     val queueState
         get() = downloader.queueState
 
-    // For use by DownloadJob only
-    fun downloaderStart() = downloader.start()
-    fun downloaderPause() = downloader.pause()
-    fun downloaderStop(reason: String? = null) = downloader.stop(reason)
-    fun downloaderPauseForNetwork(reason: String) = downloader.pauseForNetwork(reason)
-
-    internal suspend fun awaitQueueRestored() = downloader.awaitQueueRestored()
-
     internal val isDownloadRequested
-        get() = DownloadJob.isRequestedFlow(context)
+        get() = DownloadWorker.isRequestedFlow(context)
 
     val isDownloaderRunning
-        get() = DownloadJob.isRunningFlow(context)
+        get() = DownloadWorker.isRunningFlow(context)
 
     /**
-     * Tells the downloader to begin downloads.
+     * Starts the download worker, which runs the downloader.
      */
-    fun startDownloads(): Unit = synchronized(DownloadJob.session.lock) {
+    fun startDownloads(): Unit = synchronized(DownloadWorker.session.lock) {
         if (downloader.isRunning) return
-        DownloadJob.start(context)
+
+        DownloadWorker.start(context)
     }
 
     /**
      * Tells the downloader to pause downloads.
      */
-    fun pauseDownloads(): Unit = synchronized(DownloadJob.session.lock) {
+    fun pauseDownloads(): Unit = synchronized(DownloadWorker.session.lock) {
+        DownloadWorker.stop(context)
         downloader.pause()
         downloader.stop()
     }
@@ -91,7 +82,8 @@ class DownloadManager(
     /**
      * Empties the download queue.
      */
-    fun clearQueue(): Unit = synchronized(DownloadJob.session.lock) {
+    fun clearQueue(): Unit = synchronized(DownloadWorker.session.lock) {
+        DownloadWorker.stop(context)
         downloader.clearQueue()
         downloader.stop()
     }
@@ -104,6 +96,13 @@ class DownloadManager(
      */
     fun getQueuedDownloadOrNull(chapterId: Long): Download? {
         return queueState.value.find { it.chapter.id == chapterId }
+    }
+
+    /**
+     * Returns the queued downloads by chapter id, for looking up many chapters at once.
+     */
+    fun getQueuedDownloadsByChapterId(): Map<Long, Download> {
+        return queueState.value.associateBy { it.chapter.id }
     }
 
     fun startDownloadNow(chapterId: Long) {
@@ -143,7 +142,9 @@ class DownloadManager(
      * @param autoStart whether to start the downloader after enqueing the chapters.
      */
     suspend fun downloadChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean = true) {
-        downloader.queueChapters(manga, chapters, autoStart)
+        if (downloader.queueChapters(manga, chapters, autoStart)) {
+            startDownloads()
+        }
     }
 
     /**
@@ -157,7 +158,7 @@ class DownloadManager(
             addAll(0, downloads)
             reorderQueue(this)
         }
-        if (!DownloadJob.isRunning(context)) startDownloads()
+        startDownloads()
     }
 
     /**
@@ -181,6 +182,16 @@ class DownloadManager(
             .mapIndexed { i, file ->
                 Page(i, uri = file.uri).apply { status = Page.State.Ready }
             }
+    }
+
+    /**
+     * Returns the ids of the downloaded chapters among the given chapters of the manga.
+     *
+     * @param chapters the chapters to query, all of [manga].
+     * @param manga the manga of the chapters.
+     */
+    fun getDownloadedChapterIds(chapters: List<Chapter>, manga: Manga): Set<Long> {
+        return cache.getDownloadedChapterIds(chapters, manga.title, manga.source)
     }
 
     /**
@@ -290,7 +301,7 @@ class DownloadManager(
         }
     }
 
-    private fun removeFromDownloadQueue(chapters: List<Chapter>) {
+    private fun removeFromDownloadQueue(chapters: List<Chapter>): Unit = synchronized(DownloadWorker.session.lock) {
         val wasRunning = downloader.isRunning
         if (wasRunning) {
             downloader.pause()

@@ -170,14 +170,14 @@ private fun SearchResult(
             .flatMap { settingsData ->
                 settingsData.contents.asSequence()
                     // Only search from enabled prefs and one with valid title
-                    .filter { it.enabled && it.title.isNotBlank() }
+                    .filter { it.visible && it.title.isNotBlank() }
                     // Flatten items contained inside *enabled* PreferenceGroup
                     .flatMap { p ->
                         when (p) {
                             is Preference.PreferenceGroup -> {
-                                if (p.enabled) {
+                                if (p.visible) {
                                     p.preferenceItems.asSequence()
-                                        .filter { it.enabled && it.title.isNotBlank() }
+                                        .filter { it.visible && it.title.isNotBlank() }
                                         .map { p.title to it }
                                 } else {
                                     emptySequence()

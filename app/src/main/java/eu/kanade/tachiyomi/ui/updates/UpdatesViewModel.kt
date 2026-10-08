@@ -21,7 +21,7 @@ import eu.kanade.presentation.updates.UpdatesUiModel
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.Dispatchers
@@ -95,6 +95,13 @@ class UpdatesViewModel(
 
     private val downloadStates = MutableStateFlow(emptyMap<Long, DownloadProgress>())
 
+    // A finished chapter leaves the queue, and its last status change can be lost with it, so its state is left to
+    // the queried item once it's no longer queued
+    private val queuedDownloadStates = combine(downloadStates, downloadManager.queueState) { states, queue ->
+        val queuedChapterIds = queue.mapTo(HashSet()) { it.chapter.id }
+        states.filterKeys { it in queuedChapterIds }
+    }
+
     init {
         viewModelScope.launchIO {
             merge(downloadManager.statusFlow(), downloadManager.progressFlow())
@@ -166,7 +173,7 @@ class UpdatesViewModel(
     val state: StateFlow<State> = combine(
         updateItems,
         selectedChapterIds,
-        downloadStates,
+        queuedDownloadStates,
         dialog,
         hasActiveFilters,
     ) { items, selectedIds, downloads, dialog, hasActiveFilters ->
@@ -211,9 +218,10 @@ class UpdatesViewModel(
     }
 
     private fun List<UpdatesWithRelations>.toUpdateItems(): List<UpdatesItem> {
+        val queuedDownloads = downloadManager.getQueuedDownloadsByChapterId()
         return this
             .map { update ->
-                val activeDownload = downloadManager.getQueuedDownloadOrNull(update.chapterId)
+                val activeDownload = queuedDownloads[update.chapterId]
                 val downloaded = downloadManager.isChapterDownloaded(
                     update.chapterName,
                     update.scanlator,
@@ -235,7 +243,7 @@ class UpdatesViewModel(
     }
 
     fun updateLibrary(): Boolean {
-        val started = LibraryUpdateJob.startNow(context.workManager)
+        val started = LibraryUpdateWorker.startNow(context.workManager)
         viewModelScope.launch {
             _events.send(Event.LibraryUpdateTriggered(started))
         }
@@ -303,7 +311,7 @@ class UpdatesViewModel(
         viewModelScope.launchIO {
             updates
                 .filterNot { it.update.bookmark == bookmark }
-                .map { ChapterUpdate(id = it.update.chapterId, bookmark = bookmark) }
+                .map { ChapterUpdate(it.update.chapterId) { this.bookmark = bookmark } }
                 .let { updateChapter.awaitAll(it) }
         }
         toggleAllSelection(false)

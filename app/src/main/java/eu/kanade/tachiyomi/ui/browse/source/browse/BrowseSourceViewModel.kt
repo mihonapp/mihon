@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
@@ -51,11 +52,12 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.MangaWithChapterCount
-import tachiyomi.domain.manga.model.toMangaUpdate
 import tachiyomi.domain.source.interactor.GetRemoteManga
 import tachiyomi.domain.source.service.SourceManager
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 import eu.kanade.tachiyomi.source.model.Filter as SourceModelFilter
 
 @AssistedInject
@@ -133,7 +135,7 @@ class BrowseSourceViewModel(
                 pagingData.map { manga ->
                     getManga.subscribe(manga.url, manga.source)
                         .map { it ?: manga }
-                        .stateIn(viewModelScope)
+                        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), manga)
                 }
                     .filter { !hideInLibraryItems || !it.value.favorite }
             }
@@ -233,22 +235,19 @@ class BrowseSourceViewModel(
      */
     fun changeMangaFavorite(manga: Manga) {
         viewModelScope.launch {
-            var new = manga.copy(
-                favorite = !manga.favorite,
-                dateAdded = when (manga.favorite) {
-                    true -> 0
-                    false -> Clock.System.now().toEpochMilliseconds()
-                },
-            )
-
-            if (!new.favorite) {
-                new = new.removeCovers(coverCache)
+            val update = if (manga.favorite) {
+                val coverLastModified = manga.removeCovers(coverCache).coverLastModified
+                MangaUpdate(manga.id) {
+                    favoriteAt = null
+                    if (coverLastModified != manga.coverLastModified) this.coverLastModified = coverLastModified
+                }
             } else {
                 setMangaDefaultChapterFlags.await(manga)
                 addTracks.bindEnhancedTrackers(manga, sourceManager.getOrStub(manga.source))
+                MangaUpdate(manga.id) { favoriteAt = Clock.System.now().toEpochMilliseconds() }
             }
 
-            updateManga.await(new.toMangaUpdate())
+            updateManga.await(update)
         }
     }
 
