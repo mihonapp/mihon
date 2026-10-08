@@ -95,9 +95,7 @@
     <string name="ext_untrusted">Nesigură</string>
     <string name="ext_uninstall">Dezinstalează</string>
     <string name="untrusted_extension">Extensie nesigură</string>
-    <string name="untrusted_extension_message">Extensiile rău intenționate pot citi orice credențiale de autentificare stocate sau pot executa cod arbitrar.
-\n
-\nAcordând încredere acestei extensii, acceptați aceste riscuri.</string>
+    <string name="untrusted_extension_message">Extensiile rău intenționate pot citi orice credențiale de autentificare stocate sau pot executa cod arbitrar. \n \nAcordând încredere acestei extensii, acceptați aceste riscuri.</string>
     <string name="pref_fullscreen">Ecran complet</string>
     <string name="pref_page_transitions">Animați tranzițiile de pagini</string>
     <string name="action_display_download_badge">Capitole descărcate</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">Adăugat la bibliotecă</string>
     <string name="manga_removed_library">Eliminat din bibliotecă</string>
     <string name="delete_downloads_for_manga">Ștergeți capitolele descărcate?</string>
-    <string name="copied_to_clipboard">Copiat în clipboard:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiat în clipboard: \n%1$s</string>
     <string name="source_not_installed">Sursa nu este instalată:%1$s</string>
     <string name="display_mode_chapter">Capitolul %1$s</string>
     <string name="chapter_downloading_progress">Se descarcă (%1$d/%2$d)</string>
@@ -253,7 +250,6 @@
     <string name="file_select_backup">Selectează fișierul de rezervă</string>
     <string name="update_check_confirm">Descarcă</string>
     <string name="update_check_no_new_updates">Nu sunt exista actualizări noi</string>
-    <string name="update_check_notification_download_in_progress">Se descarcă…</string>
     <string name="update_check_notification_update_available">Versiune nouă disponibilă!</string>
     <string name="information_no_downloads">Fără descărcări</string>
     <string name="information_no_recent">Nu există actualizări recente</string>
@@ -403,9 +399,6 @@
     <string name="backup_restore_missing_trackers">Serviciile de urmărire nu sunt conectate la:</string>
     <string name="pref_remove_bookmarked_chapters">Permite ștergerea capitolelor marcate</string>
     <string name="pref_category_delete_chapters">Ștergeți capitole</string>
-    <string name="ext_nsfw_warning">Sursele din această extensie pot avea conținut NSFW (18+)</string>
-    <string name="ext_nsfw_short">Peste 18</string>
-    <string name="parental_controls_info">Acest lucru nu împiedică extensiile neoficiale sau potențial semnalizate incorect să iasă la suprafață cu conținut 18+ în cadrul aplicației.</string>
     <string name="no_pinned_sources">Nu aveți surse fixate</string>
     <string name="no_chapters_error">Nu a fost găsit niciun capitol</string>
     <string name="chapter_settings_updated">S-au actualizat setările implicite ale capitolului</string>
@@ -425,8 +418,6 @@
     <string name="spen_next_page">Pagina următoare</string>
     <string name="spen_previous_page">Pagina anterioară</string>
     <string name="migration_help_guide">Ghid de migrare a sursei</string>
-    <string name="pref_category_nsfw_content">Conținut NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Afișați în listele de surse și extensii</string>
     <string name="file_picker_error">Nicio aplicație de ales fișiere nu a fost găsite</string>
     <string name="myanimelist_relogin">Te rugăm să te loghezi la MAL din nou</string>
     <string name="pref_dual_page_invert">Inversează plasamentul paginilor duble despărțite</string>
@@ -475,7 +466,6 @@
     <string name="theme_monet">Dinamic</string>
     <string name="label_default">Implicit</string>
     <string name="theme_midnightdusk">Amurg de Miazănoapte</string>
-    <string name="channel_app_updates">Actualizări de aplicație</string>
     <string name="theme_tealturquoise">Teal și turcoaz</string>
     <string name="action_display_local_badge">Sursă locală</string>
     <string name="pref_category_appearance">Aspect</string>
@@ -596,7 +586,6 @@
     <string name="action_sort_count">Total intrări</string>
     <string name="action_search_hint">Caută…</string>
     <string name="theme_tidalwave">Tsunami</string>
-    <string name="ext_info_age_rating">Vârsta minimă</string>
     <string name="ext_installer_legacy">Versiune veche</string>
     <string name="tracking_guide">Ghid de urmărire</string>
     <string name="rotation_reverse_portrait">Format portret întors</string>
@@ -643,8 +632,7 @@
     <string name="download_notifier_cache_renewal">Descărcări de indexare</string>
     <string name="track_remove_date_conf_title">Eliminați data?</string>
     <string name="track_remove_start_date_conf_text">Acest lucru va elimina data de început selectată anterior din %s</string>
-    <string name="fdroid_warning">Versiunile F-Droid nu sunt acceptate oficial.
-\nApăsați pentru a afla mai multe.</string>
+    <string name="fdroid_warning">Versiunile F-Droid nu sunt acceptate oficial. \nApăsați pentru a afla mai multe.</string>
     <string name="action_open_random_manga">Deschideți aleatoriu</string>
     <string name="pref_invalidate_download_cache_summary">Obligați aplicația să refacă verificarea capitolelor descărcate</string>
     <string name="pref_library_update_show_tab_badge">Afiseaza numarul de notificari necitite pe pictorgrama Actualizari</string>
@@ -759,11 +747,7 @@
     <string name="manga_interval_custom_amount">Frecvența personalizată de actualizare:</string>
     <string name="onboarding_description">Să configurăm câteva lucruri mai întâi. Le puteți schimba oricând în setări și mai târziu.</string>
     <string name="onboarding_action_finish">Începe</string>
-    <string name="onboarding_storage_info">Selectează un folder unde %1$s va păstra capitolele descărcate, copiile de rezervă, și altele.
-\n
-\nSe recomanda folosirea unui folder dedicat.
-\n
-\nFolder-ul selectat: %2$s</string>
+    <string name="onboarding_storage_info">Selectează un folder unde %1$s va păstra capitolele descărcate, copiile de rezervă, și altele. \n \nSe recomanda folosirea unui folder dedicat. \n \nFolder-ul selectat: %2$s</string>
     <string name="onboarding_permission_notifications">Permisiune de notificare</string>
     <string name="onboarding_permission_notifications_description">Primiți notificări pentru actualizările bibliotecii și altele.</string>
     <string name="onboarding_guides_new_user">Nou pe %s? Vă recomandăm să consultați ghidul introductiv.</string>
@@ -808,10 +792,6 @@
     <string name="ext_remove">Eliminați</string>
     <string name="ext_confirm_remove">Eliminați extensia?</string>
     <string name="remove_private_extension_message">Chiar doriți să eliminați extensia „%s”?</string>
-    <string name="pref_hardware_bitmap_threshold_default">Implicit (%d)</string>
-    <string name="pref_hardware_bitmap_threshold">Prag bitmap hardware personalizat</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Dacă cititorul încarcă o imagine goală, reduceți treptat pragul.\nSelectat: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afectează performanța. Activați numai dacă reducerea pragului bitmap nu rezolvă problemele legate de imaginile goale</string>
     <string name="label_auto">Automatic</string>
     <string name="pref_incognito_mode_extension_summary">Întrerupeți istoricul de lectură pentru extensie</string>
     <string name="action_display_unread_badge">Capitole necitite</string>
@@ -825,7 +805,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_existing">După citirea unui capoitol</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">După aducerea noilor capitole</string>
     <string name="pref_hide_missing_chapter_indicators">Ascunde indicatoarele pentru capitolele absente</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Utilizați decodurul vechi pentru tipul bandă lungă</string>
     <string name="storage_failed_to_create_download_directory">Directorul pentru descărcări nu a putut fi creat</string>
     <string name="storage_failed_to_create_directory">Directorul: %s nu a putut fi creat</string>
     <string name="export">Exportă</string>

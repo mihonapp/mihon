@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegateImpl
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegateImpl
 import eu.kanade.tachiyomi.util.system.prepareTabletUiContext
+import mihon.app.di.appGraph
 
 open class BaseActivity :
     AppCompatActivity(),
@@ -15,7 +16,8 @@ open class BaseActivity :
     ThemingDelegate by ThemingDelegateImpl() {
 
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(newBase.prepareTabletUiContext())
+        val uiPreferences = newBase.appGraph.uiPreferences
+        super.attachBaseContext(newBase.prepareTabletUiContext(uiPreferences))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

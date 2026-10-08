@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.model.Extension
-import eu.kanade.tachiyomi.extension.model.LoadResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -51,19 +50,19 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
                 if (isReplacing(intent)) return
 
                 scope.launch {
-                    when (val result = getExtensionFromIntent(context, intent)) {
-                        is LoadResult.Success -> listener.onExtensionInstalled(result.extension)
-                        is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
-                        else -> {}
+                    when (val extension = getExtensionFromIntent(context, intent)) {
+                        is Extension.Loaded -> listener.onExtensionLoaded(extension)
+                        is Extension.NotLoaded -> listener.onExtensionNotLoaded(extension)
+                        null -> {}
                     }
                 }
             }
             Intent.ACTION_PACKAGE_REPLACED, ACTION_EXTENSION_REPLACED -> {
                 scope.launch {
-                    when (val result = getExtensionFromIntent(context, intent)) {
-                        is LoadResult.Success -> listener.onExtensionUpdated(result.extension)
-                        is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
-                        else -> {}
+                    when (val extension = getExtensionFromIntent(context, intent)) {
+                        is Extension.Loaded -> listener.onExtensionLoaded(extension)
+                        is Extension.NotLoaded -> listener.onExtensionNotLoaded(extension)
+                        null -> {}
                     }
                 }
             }
@@ -93,11 +92,11 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
      * @param context The application context.
      * @param intent The intent containing the package name of the extension.
      */
-    private suspend fun getExtensionFromIntent(context: Context, intent: Intent?): LoadResult {
+    private suspend fun getExtensionFromIntent(context: Context, intent: Intent?): Extension.Installed? {
         val pkgName = getPackageNameFromIntent(intent)
         if (pkgName == null) {
             logcat(LogPriority.WARN) { "Package name not found" }
-            return LoadResult.Error
+            return null
         }
         return ExtensionLoader.loadExtensionFromPkgName(context, pkgName)
     }
@@ -113,9 +112,8 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
      * Listener that receives extension installation events.
      */
     interface Listener {
-        fun onExtensionInstalled(extension: Extension.Installed)
-        fun onExtensionUpdated(extension: Extension.Installed)
-        fun onExtensionUntrusted(extension: Extension.Untrusted)
+        fun onExtensionLoaded(extension: Extension.Loaded)
+        fun onExtensionNotLoaded(extension: Extension.NotLoaded)
         fun onPackageUninstalled(pkgName: String)
     }
 

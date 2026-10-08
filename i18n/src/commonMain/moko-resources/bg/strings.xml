@@ -181,7 +181,6 @@
     <string name="file_select_backup">Изберете резервно копие</string>
     <string name="update_check_confirm">Изтегли</string>
     <string name="update_check_no_new_updates">Няма налични актуализации</string>
-    <string name="update_check_notification_download_in_progress">Изтегля се…</string>
     <string name="update_check_notification_update_available">Има нова версия!</string>
     <string name="information_no_downloads">Нямате изтегляния</string>
     <string name="information_no_recent">Нямате нови глави</string>
@@ -240,19 +239,14 @@
     <string name="ext_untrusted">Непотвърдени</string>
     <string name="ext_uninstall">Деинсталирай</string>
     <string name="untrusted_extension">Непотвърдено разширение</string>
-    <string name="untrusted_extension_message">Следното разширение имаше непотвърден сертификат и не беше активирано.
-\n
-\nЗлонамереното разширение може да види всичката информация за вход в системата на Mihon или да компилира неблагонадежден код.
-\n
-\nПотвърждавайки този сертификат, вие приемате тези рискове.</string>
+    <string name="untrusted_extension_message">Следното разширение имаше непотвърден сертификат и не беше активирано. \n \nЗлонамереното разширение може да види всичката информация за вход в системата на Mihon или да компилира неблагонадежден код. \n \nПотвърждавайки този сертификат, вие приемате тези рискове.</string>
     <string name="pref_double_tap_anim_speed">Скорост на анимацията</string>
     <string name="double_tap_anim_speed_0">Без анимация</string>
     <string name="double_tap_anim_speed_normal">Нормална</string>
     <string name="double_tap_anim_speed_fast">Бързо</string>
     <string name="manga_added_library">Добавена към библиотеката</string>
     <string name="manga_removed_library">Премахната от библиотеката</string>
-    <string name="copied_to_clipboard">Копирано към клипборда:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Копирано към клипборда: \n%1$s</string>
     <string name="migration_dialog_what_to_include">Изберете кои данни ще мигрирате</string>
     <string name="migrate">Мигрирай</string>
     <string name="copy">Копирай</string>
@@ -403,13 +397,9 @@
     <string name="pref_remove_bookmarked_chapters">Позволи изтриване на отметнати глави</string>
     <string name="pref_category_delete_chapters">Изтрий глави</string>
     <string name="pref_category_reading_mode">Режим на четене</string>
-    <string name="ext_nsfw_warning">Може да съдържа неприлично (18+) съдържание</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Тази настройка няма да спре неофициални или потенциално неправилно маркирани разширения да позволяват достъп до съдържание за възрастни (18+) в апликацията.</string>
     <string name="pref_category_theme">Тема</string>
     <string name="action_sort_date_added">Добавено на</string>
     <string name="no_chapters_error">Не са намерени глави</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) източници</string>
     <string name="action_desc">Низходящ</string>
     <string name="action_asc">Възходящ</string>
     <string name="action_order_by_chapter_number">По брой на главите</string>
@@ -421,9 +411,7 @@
     <string name="date">Дата</string>
     <string name="pref_dark_theme_pure_black">Чисто черен режим</string>
     <string name="label_default">По подразбиране</string>
-    <string name="backup_restore_content_full">Ще бъдат възстановени данните от резервното копие.
-\n
-\nТрябва да инсталирате липсващи разширения, ако има такива, и да се впишете в услугите за тракинг, за да ги ползвате.</string>
+    <string name="backup_restore_content_full">Ще бъдат възстановени данните от резервното копие. \n \nТрябва да инсталирате липсващи разширения, ако има такива, и да се впишете в услугите за тракинг, за да ги ползвате.</string>
     <string name="action_track">Проследи</string>
     <string name="restore_miui_warning">Съхраняването/възстановяването може да не функционира правилно, ако MIUI Optimization е изключено.</string>
     <string name="about_dont_kill_my_app">Някои производители ограничават приложенията, за да убият задноплановите услуги. Следният уебсайт съдържа информация за разрешаването на проблема.</string>
@@ -522,7 +510,6 @@
     <string name="spen_previous_page">Предишна страница</string>
     <string name="spen_next_page">Следваща страница</string>
     <string name="action_display_language_badge">Език</string>
-    <string name="pref_show_nsfw_source">Показвай в списъка с източници и разширения</string>
     <string name="relative_time_today">Днес</string>
     <string name="ext_app_info">Информация</string>
     <string name="pref_show_navigation_mode_summary">Покажи зони за натискане, когато четецът се отвори</string>
@@ -543,7 +530,6 @@
     <string name="pref_tablet_ui_mode">Потребителски интерфейс на таблет</string>
     <string name="clear_database_source_item_count">%1$d небиблиотечна манга в базата данни</string>
     <string name="database_clean">Нищо за почистване</string>
-    <string name="channel_app_updates">Актуализации на приложението</string>
     <string name="pref_auto_clear_chapter_cache">Изчистване на кеша на главата при затваряне на приложението</string>
     <string name="privacy_policy">Политика за поверителност</string>
     <string name="pref_update_only_completely_read">С непрочетени глави</string>
@@ -605,7 +591,6 @@
     <string name="theme_lavender">Лавандула</string>
     <string name="pref_app_language">Език на приложението</string>
     <string name="delete_category">Изтрий категория</string>
-    <string name="ext_info_age_rating">Възрастово ограничение</string>
     <string name="wish_list">Списък с желания</string>
     <string name="save_chapter_as_cbz">Запази като CBZ архив</string>
     <string name="webview_data_deleted">Данните на WebView изчистени</string>
@@ -725,7 +710,6 @@
     <string name="pref_chapter_swipe_end">Глава на дясно плъзгане</string>
     <string name="pref_double_tap_zoom">Натисни два пъти за увеличение</string>
     <string name="pref_flash_style_black">Черно</string>
-    <string name="pref_hardware_bitmap_threshold_default">По подразбиране (%d)</string>
     <string name="invalid_location">Невалидно местоположение: %s</string>
     <string name="exception_unknown_host">Не можа да достигне %s</string>
     <string name="action_display_unread_badge">Непрочетени глави</string>

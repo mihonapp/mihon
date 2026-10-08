@@ -8,10 +8,9 @@ import eu.kanade.tachiyomi.util.lang.toRelativeString
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import mihon.app.di.appGraph
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Instant
 
 @Composable
@@ -32,7 +31,7 @@ fun relativeDateText(
 ): String {
     val context = LocalContext.current
 
-    val preferences = remember { Injekt.get<UiPreferences>() }
+    val preferences = remember { context.appGraph.uiPreferences }
     val relativeTime = remember { preferences.relativeTime.get() }
     val dateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat.get()) }
 

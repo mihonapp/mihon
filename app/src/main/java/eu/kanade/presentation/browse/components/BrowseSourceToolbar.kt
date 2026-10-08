@@ -1,8 +1,5 @@
 package eu.kanade.presentation.browse.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ViewList
-import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -18,6 +15,9 @@ import eu.kanade.presentation.components.RadioMenuItem
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.ViewList
+import mihon.icons.materialsymbols.rounded.ViewModule
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -58,9 +58,9 @@ fun BrowseSourceToolbar(
                         AppBar.Action(
                             title = stringResource(MR.strings.action_display_mode),
                             icon = if (displayMode == LibraryDisplayMode.List) {
-                                Icons.AutoMirrored.Filled.ViewList
+                                MaterialSymbols.AutoMirroredRounded.ViewList
                             } else {
-                                Icons.Filled.ViewModule
+                                MaterialSymbols.Rounded.ViewModule
                             },
                             onClick = { selectingDisplayMode = true },
                         ),

@@ -150,7 +150,6 @@
     <string name="file_select_backup">Selecionar ficheiro de cópia de segurança</string>
     <string name="update_check_confirm">Transferir</string>
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
-    <string name="update_check_notification_download_in_progress">A transferir…</string>
     <string name="update_check_notification_update_available">Nova versão disponível!</string>
     <string name="information_no_downloads">Sem transferências</string>
     <string name="information_no_recent">Sem atualizações recentes</string>
@@ -235,8 +234,7 @@
     <string name="manga_added_library">Adicionado à biblioteca</string>
     <string name="manga_removed_library">Removido da biblioteca</string>
     <string name="delete_downloads_for_manga">Eliminar capítulos descarregados?</string>
-    <string name="copied_to_clipboard">Copiado para área de transferência:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiado para área de transferência: \n%1$s</string>
     <string name="source_not_installed">Fonte não instalada: %1$s</string>
     <string name="chapter_paused">Pausado</string>
     <string name="manga_tracking_tab">Monitorização</string>
@@ -402,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Monitorizadores sem sessão iniciada:</string>
     <string name="pref_remove_bookmarked_chapters">Permitir a eliminação de capítulos marcados</string>
     <string name="pref_category_delete_chapters">Eliminar capítulos</string>
-    <string name="ext_nsfw_warning">Fontes desta extensão poderão conter conteúdo NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Isto não impede extensões não oficiais ou incorretamente marcadas de mostrarem conteúdo NSFW (18+) dentro da app.</string>
     <string name="no_chapters_error">Nenhum capítulo encontrado</string>
     <string name="chapter_settings_updated">Definições padrão de capítulo atualizadas</string>
     <string name="confirm_set_chapter_settings">Tem certeza de que quer guardar estas definições como padrão?</string>
@@ -420,13 +415,11 @@
     <string name="pref_clear_history">Eliminar histórico</string>
     <string name="clear_history_confirmation">Tem a certeza? Todo o histórico será perdido.</string>
     <string name="clear_history_completed">Histórico eliminado</string>
-    <string name="pref_category_nsfw_content">Conteúdo 18+ (NSFW)</string>
     <string name="spen_next_page">Página seguinte</string>
     <string name="spen_previous_page">Página anterior</string>
     <string name="migration_help_guide">Guia de migração de fonte</string>
     <string name="file_picker_error">Não foi encontrada nenhuma app de seleção de ficheiros</string>
     <string name="myanimelist_relogin">Por favor inicie sessão no MAL novamente</string>
-    <string name="pref_show_nsfw_source">Mostrar na lista de fontes e extensões</string>
     <string name="pref_viewer_nav">Zonas de toque</string>
     <string name="kindlish_nav">Estilo Kindle</string>
     <string name="l_nav">Em forma de L</string>
@@ -535,7 +528,6 @@
     <string name="pref_lowest">Mais baixa</string>
     <string name="pref_remove_exclude_categories">Categorias excluídas</string>
     <string name="label_background_activity">Atividade em segundo plano</string>
-    <string name="channel_app_updates">Atualizações da app</string>
     <string name="pref_inverted_colors">Invertido</string>
     <string name="backup_info">Deve manter cópias em outros locais também.</string>
     <string name="pref_tablet_ui_mode">Interface de tablet</string>
@@ -605,7 +597,6 @@
     <string name="network_not_metered">Apenas em redes com tráfego ilimitado</string>
     <string name="download_ahead">Transferência em antecedência</string>
     <string name="on_hold_list">Lista dos Em Espera</string>
-    <string name="ext_info_age_rating">Classificação etária</string>
     <string name="pref_reset_user_agent_string">Redefinir cadeia de agente de utilizador predefinido</string>
     <string name="pref_user_agent_string">Cadeia de agente de utilizador padrão</string>
     <string name="not_installed">Não instalado</string>
@@ -670,8 +661,7 @@
     <string name="information_required_plain">*obrigatório</string>
     <string name="enhanced_services_not_installed">Disponíveis, mas a fonte não está instalada: %s</string>
     <string name="pref_invalidate_download_cache_summary">Força a app a controlar novamente por capítulos disponíveis offline</string>
-    <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente.
-\nToque para saber mais.</string>
+    <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente. \nToque para saber mais.</string>
     <string name="information_no_entries_found">Nenhum item encontrado nesta categoria</string>
     <string name="action_copy_to_clipboard">Copiar para a área de transferência</string>
     <string name="pref_hide_in_library_items">Ocultar entradas existentes na biblioteca</string>
@@ -756,11 +746,7 @@
     <string name="onboarding_description">Vamos definir algumas coisas primeiro. Sempre pode fazer alterações nas configurações depois também.</string>
     <string name="onboarding_action_next">Próximo</string>
     <string name="onboarding_action_finish">Começar</string>
-    <string name="onboarding_storage_info">Escolha uma pasta onde o %1$s irá armazenar as descargas de capítulos, backups e mais.
-\n
-\nUma pasta dedicada é recomendada.
-\n
-\nPasta selecionada: %2$s</string>
+    <string name="onboarding_storage_info">Escolha uma pasta onde o %1$s irá armazenar as descargas de capítulos, backups e mais. \n \nUma pasta dedicada é recomendada. \n \nPasta selecionada: %2$s</string>
     <string name="exclude_scanlators">Apagar scanlators</string>
     <string name="no_scanlators_found">Nenhum scanlator encontrado</string>
     <string name="action_move_to_bottom_all_for_series">Mover série para o fim</string>
@@ -825,11 +811,6 @@
     <string name="pref_flash_duration">Duração do flash</string>
     <string name="pref_flash_page_interval">Flash a cada</string>
     <string name="pref_flash_with">Flash com</string>
-    <string name="pref_hardware_bitmap_threshold">Limite de bitmap de hardware personalizado</string>
-    <string name="pref_hardware_bitmap_threshold_default">Padrão (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Se o leitor carregar uma imagem em branco, reduza o limite incrementalmente.\nSelecionado: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Use o decodificador legado para leitor de tira longa</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afeta o desempenho. Ative somente se a redução do limite de bitmap não corrigir problemas de imagem em branco</string>
     <string name="storage_failed_to_create_download_directory">Falha ao criar diretório de descargas</string>
     <string name="storage_failed_to_create_directory">Falha ao criar diretório: %s</string>
     <string name="pref_download_concurrent_sources">Descarga simultânea de fontes</string>

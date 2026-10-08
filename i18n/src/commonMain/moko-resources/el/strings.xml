@@ -97,9 +97,7 @@
     <string name="ext_untrusted">Μη αξιόπιστο</string>
     <string name="ext_uninstall">Απεγκατάσταση</string>
     <string name="untrusted_extension">Μη αξιόπιστη επέκταση</string>
-    <string name="untrusted_extension_message">Οι κακόβουλες επεκτάσεις μπορούν να διαβάσουν τυχόν αποθηκευμένα διαπιστευτήρια σύνδεσης ή να εκτελέσουν αυθαίρετο κώδικα.
-\n
-\nΜε την εμπιστοσύνη αυτής της επέκτασης, αποδέχεστε αυτούς τους κινδύνους.</string>
+    <string name="untrusted_extension_message">Οι κακόβουλες επεκτάσεις μπορούν να διαβάσουν τυχόν αποθηκευμένα διαπιστευτήρια σύνδεσης ή να εκτελέσουν αυθαίρετο κώδικα. \n \nΜε την εμπιστοσύνη αυτής της επέκτασης, αποδέχεστε αυτούς τους κινδύνους.</string>
     <string name="pref_fullscreen">Πλήρης οθόνη</string>
     <string name="pref_page_transitions">Ζωντανή μετάβαση σελίδας</string>
     <string name="pref_double_tap_anim_speed">Ταχύτητα κίνησης διπλού αγγίγματος</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">Προστέθηκε στη βιβλιοθήκη</string>
     <string name="manga_removed_library">Αφαιρέθηκε από τη βιβλιοθήκη</string>
     <string name="delete_downloads_for_manga">Να διαγραφούν τα κεφάλαια που έχουν ληφθεί;</string>
-    <string name="copied_to_clipboard">Αντιγράφηκε στο πρόχειρο:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Αντιγράφηκε στο πρόχειρο: \n%1$s</string>
     <string name="source_not_installed">Η πηγή δεν είναι εγκατεστημένη: %1$s</string>
     <string name="display_mode_chapter">Κεφάλαιο %1$s</string>
     <string name="chapter_downloading_progress">Λήψη (%1$d/%2$d)</string>
@@ -253,7 +250,6 @@
     <string name="file_select_backup">Επιλέξτε αρχείο αντιγράφου ασφαλείας</string>
     <string name="update_check_confirm">Λήψη</string>
     <string name="update_check_no_new_updates">Δεν υπάρχουν διαθέσιμες νέες ενημερώσεις</string>
-    <string name="update_check_notification_download_in_progress">Γίνεται λήψη…</string>
     <string name="update_check_notification_update_available">Υπάρχει διαθέσιμη ενημέρωση!</string>
     <string name="information_no_downloads">Δεν υπάρχουν λήψεις</string>
     <string name="information_no_recent">Δεν υπάρχουν πρόσφατες ενημερώσεις</string>
@@ -403,10 +399,7 @@
     <string name="channel_errors">Σφάλματα</string>
     <string name="backup_restore_missing_trackers">Trackers που δεν έχουν συνδεθεί:</string>
     <string name="pref_category_delete_chapters">Διαγραφή κεφαλαίων</string>
-    <string name="ext_nsfw_warning">Πηγές από αυτήν την επέκταση ενδέχεται να περιέχουν περιεχόμενο NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">Να επιτρέπεται η διαγραφή κεφαλαίων με σελιδοδείκτη</string>
-    <string name="parental_controls_info">Αυτό δεν εμποδίζει τις ανεπίσημες ή ενδεχομένως εσφαλμένα επισημασμένες επεκτάσεις να εμφανίζουν περιεχόμενο NSFW (18+) μέσα στην εφαρμογή.</string>
     <string name="no_chapters_error">Δεν βρέθηκαν κεφάλαια</string>
     <string name="chapter_settings_updated">Ενημερώθηκαν οι προεπιλεγμένες ρυθμίσεις κεφαλαίου</string>
     <string name="set_chapter_settings_as_default">Ορισμός ως προεπιλογής</string>
@@ -425,8 +418,6 @@
     <string name="spen_next_page">Επόμενη σελίδα</string>
     <string name="spen_previous_page">Προηγούμενη σελίδα</string>
     <string name="migration_help_guide">Οδηγός μεταφοράς πηγής</string>
-    <string name="pref_category_nsfw_content">Πηγές NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Εμφάνιση στις λίστες πηγών και επεκτάσεων</string>
     <string name="file_picker_error">Δεν βρέθηκε εφαρμογή επιλογής αρχείων</string>
     <string name="myanimelist_relogin">Συνδεθείτε ξανά στο MAL</string>
     <string name="pref_viewer_nav">Ζώνες πατήματος</string>
@@ -541,7 +532,6 @@
     <string name="update_72hour">Κάθε 3 ημέρες</string>
     <string name="download_queue_size_warning">Προειδοποίηση: οι μαζικές λήψεις ενδέχεται να οδηγήσουν σε επιβράδυνση των πηγών ή/και αποκλεισμό του %s. Πατήστε για να μάθετε περισσότερα.</string>
     <string name="ext_update_all">Ενημέρωση όλων</string>
-    <string name="channel_app_updates">Ενημερώσεις εφαρμογής</string>
     <string name="pref_auto_clear_chapter_cache">Εκκαθάριση της προσωρινής μνήμης κεφαλαίων κατά την εκκίνηση της εφαρμογής</string>
     <string name="clear_database_source_item_count">%1$d καταχωρήσεις εκτός βιβλιοθήκης στη βάση δεδομένων</string>
     <string name="database_clean">Τίποτα προς εκκαθάριση</string>
@@ -585,7 +575,6 @@
     <string name="empty_screen">Λοιπόν, αυτό είναι άβολο</string>
     <string name="ext_info_version">Έκδοση</string>
     <string name="ext_info_language">Γλώσσα</string>
-    <string name="ext_info_age_rating">Ηλικιακή βαθμολογία</string>
     <string name="unfinished_list">Ημιτελής λίστα</string>
     <string name="complete_list">Πλήρης Λίστα</string>
     <string name="wish_list">Λίστα επιθυμιών</string>
@@ -637,8 +626,7 @@
     <string name="error_user_agent_string_invalid">Μη έγκυρη συμβολοσειρά πράκτορα χρήστη</string>
     <string name="updates_last_update_info_just_now">Μόλις τώρα</string>
     <string name="download_notifier_cache_renewal">Έλεγχος λήψεων</string>
-    <string name="fdroid_warning">Οι εκδόσεις F-Droid δεν υποστηρίζονται επίσημα.
-\nΠατήστε για να μάθετε περισσότερα.</string>
+    <string name="fdroid_warning">Οι εκδόσεις F-Droid δεν υποστηρίζονται επίσημα. \nΠατήστε για να μάθετε περισσότερα.</string>
     <string name="action_open_random_manga">Άνοιγμα τυχαίας καταχώρησης</string>
     <string name="information_no_entries_found">Δε βρέθηκαν καταχωρήσεις σε αυτή την κατηγορία</string>
     <string name="action_display_show_continue_reading_button">Κουμπί συνέχειας ανάγνωσης</string>
@@ -747,11 +735,7 @@
     <string name="onboarding_guides_returning_user">Επανεγκατάσταση %s;</string>
     <string name="onboarding_description">Ας ρυθμίσουμε πρώτα κάποια πράγματα. Μπορείτε πάντα να τα αλλάξετε στις ρυθμίσεις αργότερα.</string>
     <string name="no_location_set">Δεν έχει οριστεί τοποθεσία αποθήκευσης</string>
-    <string name="onboarding_storage_info">Επιλέξτε ένα φάκελο όπου το %1$s θα αποθηκεύει λήψεις κεφαλαίων, αντίγραφα ασφαλείας και άλλα.
-\n
-\nΣυνιστάται ένας αποκλειστικός φάκελος.
-\n
-\nΕπιλεγμένος φάκελος: %2$s</string>
+    <string name="onboarding_storage_info">Επιλέξτε ένα φάκελο όπου το %1$s θα αποθηκεύει λήψεις κεφαλαίων, αντίγραφα ασφαλείας και άλλα. \n \nΣυνιστάται ένας αποκλειστικός φάκελος. \n \nΕπιλεγμένος φάκελος: %2$s</string>
     <string name="onboarding_permission_notifications">Άδεια ειδοποιήσεων</string>
     <string name="onboarding_permission_install_apps">Άδεια εγκατάστασης εφαρμογών</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Αποφύγετε διακοπές σε μακροχρόνιες ενημερώσεις της βιβλιοθήκης, λήψεις και επαναφορές αντιγράφων ασφαλείας.</string>
@@ -809,14 +793,9 @@
     <string name="pref_auto_update_manga_on_mark_read">Ενημέρωση προόδου όταν επισημανθεί ως αναγνωσμένη</string>
     <string name="trackers_updated_summary">Οι trackers ενημερώθηκαν στο κεφάλαιο %d</string>
     <string name="pref_incognito_mode_extension_summary">Παύση ιστορικού ανάγνωσης για επέκταση</string>
-    <string name="pref_hardware_bitmap_threshold_default">Προεπιλογή (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Εάν ο αναγνώστης φορτώσει μια κενή εικόνα, μειώστε σταδιακά το όριο.\nΕπιλεγμένο: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Επηρεάζει την απόδοση. Ενεργοποιήστε το μόνο αν η μείωση του ορίου bitmap δε διορθώνει τα προβλήματα κενών εικόνων</string>
-    <string name="pref_hardware_bitmap_threshold">Προσαρμοσμένο όριο bitmap υλικού</string>
     <string name="label_auto">Αυτόματο</string>
     <string name="export">Εξαγωγή</string>
     <string name="library_list">Κατάλογος Βιβλιοθήκης</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Χρησιμοποιήστε αποκωδικοποιητή παλαιού τύπου για ανάγνωση μακριών ταινιών</string>
     <string name="theme_monochrome">Μονόχρωμο</string>
     <string name="pref_mark_duplicate_read_chapter_read">Επισήμανση διπλότυπου αναγνωσμένου κεφαλαίου ως αναγνωσμένο</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Μετά τη λήψη του νέου κεφαλαίου</string>

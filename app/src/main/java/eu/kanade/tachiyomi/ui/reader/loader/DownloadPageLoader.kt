@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
-import android.app.Application
+import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
@@ -25,7 +25,7 @@ internal class DownloadPageLoader(
     private val downloadProvider: DownloadProvider,
 ) : PageLoader() {
 
-    private val context: Application by injectLazy()
+    private val context: Context by injectLazy()
 
     private var archivePageLoader: ArchivePageLoader? = null
 

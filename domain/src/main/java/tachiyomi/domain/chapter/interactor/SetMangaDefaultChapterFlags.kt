@@ -1,11 +1,13 @@
 package tachiyomi.domain.chapter.interactor
 
+import dev.zacsweers.metro.Inject
 import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
 
+@Inject
 class SetMangaDefaultChapterFlags(
     private val libraryPreferences: LibraryPreferences,
     private val setMangaChapterFlags: SetMangaChapterFlags,
@@ -14,23 +16,27 @@ class SetMangaDefaultChapterFlags(
 
     suspend fun await(manga: Manga) {
         withNonCancellableContext {
-            with(libraryPreferences) {
-                setMangaChapterFlags.awaitSetAllFlags(
-                    mangaId = manga.id,
-                    unreadFilter = filterChapterByRead.get(),
-                    downloadedFilter = filterChapterByDownloaded.get(),
-                    bookmarkedFilter = filterChapterByBookmarked.get(),
-                    sortingMode = sortChapterBySourceOrNumber.get(),
-                    sortingDirection = sortChapterByAscendingOrDescending.get(),
-                    displayMode = displayChapterByNameOrNumber.get(),
-                )
-            }
+            setDefaultFlags(listOf(manga.id))
         }
     }
 
     suspend fun awaitAll() {
         withNonCancellableContext {
-            getFavorites.await().forEach { await(it) }
+            setDefaultFlags(getFavorites.await().map { it.id })
+        }
+    }
+
+    private suspend fun setDefaultFlags(mangaIds: List<Long>) {
+        with(libraryPreferences) {
+            setMangaChapterFlags.awaitSetAllFlags(
+                mangaIds = mangaIds,
+                unreadFilter = filterChapterByRead.get(),
+                downloadedFilter = filterChapterByDownloaded.get(),
+                bookmarkedFilter = filterChapterByBookmarked.get(),
+                sortingMode = sortChapterBySourceOrNumber.get(),
+                sortingDirection = sortChapterByAscendingOrDescending.get(),
+                displayMode = displayChapterByNameOrNumber.get(),
+            )
         }
     }
 }

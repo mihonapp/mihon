@@ -61,9 +61,7 @@
     <string name="ext_untrusted">Nedůvěryhodné</string>
     <string name="ext_uninstall">Odinstalovat</string>
     <string name="untrusted_extension">Nedůvěryhodné rozšíření</string>
-    <string name="untrusted_extension_message">Škodlivé rozšíření může přečíst jakékoliv uložené přihlašovací údaje nebo spustit libovolný kód.
-\n
-\nDůvěřováním tohoto rozšířeni přijímáte tato rizika.</string>
+    <string name="untrusted_extension_message">Škodlivé rozšíření může přečíst jakékoliv uložené přihlašovací údaje nebo spustit libovolný kód. \n \nDůvěřováním tohoto rozšířeni přijímáte tato rizika.</string>
     <string name="pref_fullscreen">Celá obrazovka</string>
     <string name="pref_page_transitions">Animovat přechody stránek</string>
     <string name="pref_show_page_number">Zobrazit číslo stránky</string>
@@ -171,7 +169,7 @@
     <string name="portrait">Na výšku</string>
     <string name="landscape">Na šířku</string>
     <string name="pref_library_update_interval">Automatické aktualizace</string>
-    <string name="update_never">Nikdy</string>
+    <string name="update_never">Vyp.</string>
     <string name="all">Vše</string>
     <string name="charging">Při nabíjení</string>
     <string name="default_category">Výchozí kategorie</string>
@@ -226,8 +224,7 @@
     <string name="browse">Procházet</string>
     <string name="unknown">Neznámý</string>
     <string name="licensed">Licencovaný</string>
-    <string name="copied_to_clipboard">Zkopírováno do schránky:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Zkopírováno do schránky: \n%1$s</string>
     <string name="sort_by_number">Podle čísla kapitoly</string>
     <string name="manga_tracking_tab">Sledování</string>
     <string name="dropped">Již nečtu</string>
@@ -261,7 +258,6 @@
     <string name="notification_cover_update_failed">Chyba při aktualizaci obalu</string>
     <string name="notification_first_add_to_library">Přidejte si prosím položku do knihovny před tím, než toto uděláte</string>
     <string name="file_select_cover">Vybrat obrázek obalu</string>
-    <string name="update_check_notification_download_in_progress">Probíhá stahování…</string>
     <string name="information_no_downloads">Žádné stahování</string>
     <string name="information_empty_library">Vaše knihovna je prázdná</string>
     <string name="information_empty_category">Nemáte žádné kategorie. Klikněte na tlačítko plus a vytvořte nějakou pro zorganizování vaší knihovny.</string>
@@ -369,13 +365,8 @@
     <string name="tapping_inverted_vertical">Vertikální</string>
     <string name="tapping_inverted_horizontal">Horizontální</string>
     <string name="tapping_inverted_none">Žádné</string>
-    <string name="ext_nsfw_warning">Zdroje z tohoto rozšíření mohou obsahovat NSFW (18+) obsah</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_library_update_refresh_metadata_summary">Kontrolovat dostupnost nových přebalů a detailů při aktualizaci knihovny</string>
     <string name="pref_library_update_refresh_metadata">Automaticky obnovovat metadata</string>
-    <string name="parental_controls_info">Toto nastavení nemůže zamezit neoficiálním nebo špatně označeným rozšířením v zobrazování NSFW (18+) obsahu v aplikaci.</string>
-    <string name="pref_show_nsfw_source">Zobrazovat v seznamu zdrojů a rozšíření</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
     <string name="secure_screen_summary">Secure screen skryje obsah aplikace při přepínání aplikací a blokuje tvorbu snímků obrazovky</string>
     <string name="secure_screen">Chráněná obrazovka</string>
     <string name="lock_with_biometrics">Vyžadovat odemknutí</string>
@@ -540,7 +531,6 @@
     <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují %s. Klepnutím se dozvíte více.</string>
     <string name="ext_update_all">Aktualizovat vše</string>
     <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
-    <string name="channel_app_updates">Aktualizace aplikace</string>
     <string name="notification_size_warning">Varování: velké aktualizace poškozují zdroje a můžou vést k pomalejším aktualizacím a zvýšenému využití baterie. Klepnutím se dozvíte více.</string>
     <string name="pref_auto_clear_chapter_cache">Vymazat mezipaměť kapitol při spuštění aplikace</string>
     <string name="extension_api_error">Chyba v získání seznamu rozšíření</string>
@@ -582,7 +572,6 @@
     <string name="on_hold_list">Seznam pozastavených</string>
     <string name="unfinished_list">Seznam nedokončených</string>
     <string name="ext_info_language">Jazyk</string>
-    <string name="ext_info_age_rating">Věkové hodnocení</string>
     <string name="ext_info_version">Verze</string>
     <string name="split_tall_images_summary">Zlepšuje výkon čtečky</string>
     <string name="pref_reset_viewer_flags_error">Nastavení čtečky se nepodařilo resetovat</string>
@@ -639,8 +628,7 @@
     <string name="download_notifier_cache_renewal">Kontrola stahování</string>
     <string name="information_no_entries_found">V této kategorii nebyly nalezeny žádné položky</string>
     <string name="action_open_random_manga">Otevřít náhodnou položku</string>
-    <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány.
-\nKlepnutím zobrazíte další informace.</string>
+    <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány. \nKlepnutím zobrazíte další informace.</string>
     <string name="action_display_show_continue_reading_button">Tlačítko Pokračovat ve čtení</string>
     <string name="track_remove_date_conf_title">Odstranit datum?</string>
     <string name="track_remove_finish_date_conf_text">Tím se odstraní dříve vybrané datum ukončení z %s</string>
@@ -757,11 +745,7 @@
     <string name="ext_permission_install_apps_warning">K instalaci rozšíření je nutné povolení. Klepněte zde pro udělení povolení.</string>
     <string name="private_settings">Zahrnout citlivé nastavení (např. přihlašovací tokeny sledovačů)</string>
     <string name="onboarding_permission_action_grant">Udělit</string>
-    <string name="onboarding_storage_info">Vyberte složku, kde %1$s bude ukládat stahování kapitol, zálohy a další.
-\n
-\nJe doporučena vyhrazená složka.
-\n
-\nVybraná složka: %2$s</string>
+    <string name="onboarding_storage_info">Vyberte složku, kde %1$s bude ukládat stahování kapitol, zálohy a další. \n \nJe doporučena vyhrazená složka. \n \nVybraná složka: %2$s</string>
     <string name="invalid_backup_file_error">Úplná chyba:</string>
     <string name="pref_library_update_smart_update">Chytrá aktualizace</string>
     <string name="manga_interval_expected_update">Předpoklad vydání nových kapitol za zhruba %1$s, kontrola co %2$s.</string>
@@ -795,17 +779,13 @@
     <string name="pref_firebase">Analytika a záznamy o pádech</string>
     <string name="firebase_summary">Odesílání záznamů o pádech a analytických dat nám umožní identifikovat a opravit problémy, zlepšit výkon a přizpůsobit budoucí aktualizace vašim potřebám</string>
     <string name="onboarding_permission_analytics">Povolit analytiku</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Má dopad na výkon. Povolte pouze pokud snížení limitu bitmapy nespraví problémy s prázdnými obrázky</string>
     <string name="ext_remove">Odstranit</string>
     <string name="ext_confirm_remove">Odstranit rozšíření?</string>
     <string name="remove_private_extension_message">Opravdu chcete odstranit rozšíření \"%s\"?</string>
     <string name="pref_download_new_unread_chapters_only">Přeskočit stahování duplicitních přečtených kapitol</string>
     <string name="invalid_backup_file_json">Záloha do JSONu není podporována</string>
     <string name="invalid_backup_file_unknown">Soubor se zálohou je poškozen</string>
-    <string name="pref_hardware_bitmap_threshold">Vlastní limit hardwarových bitmap</string>
-    <string name="pref_hardware_bitmap_threshold_default">Výchozí (%d)</string>
     <string name="onboarding_permission_crashlytics">Posílat chybová hlášení</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Jestliže čtenář načte prázdnou stránku, postupně snižuj prahovou hodnotu.\nVybráno: %s</string>
     <string name="pref_incognito_mode_extension_summary">Pozastavit historii čtení pro rozšíření</string>
     <string name="trackers_updated_summary">Sledovače aktualizovány do kapitoly %d</string>
     <string name="non_library_settings">Všechny přečtené záznamy</string>
@@ -827,7 +807,6 @@
     <string name="pref_behavior">Chování</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Po přečtení kapitoly</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Po získání nové kapitoly</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Použít zastaralý dekodér pro dlouhý pruh</string>
     <string name="pref_update_library_manga_titles">Aktualizovat názvy mangy z knihovny, aby odpovídaly zdroji</string>
     <string name="logging_in">Přihlašování…</string>
     <string name="notes_placeholder">Užil jsem si tu část kde…</string>
@@ -922,4 +901,33 @@
     <string name="downloading_with_progress">Stahování… (%d%%)</string>
     <string name="pref_filter_update_categories_details">Aktualizace v kategoriích, které byly vyloučeny, se nezobrazí, i když se zároveň nacházejí v některé ze zahrnutých kategorií.</string>
     <string name="pref_filter_upcoming_categories_details">Položky ve vyloučených kategoriích se nezobrazují, i když patří také do některé ze zahrnutých kategorií.</string>
+    <string name="transition_animation_flip_right">Otočení stránky (doprava)</string>
+    <string name="webgpu_viewer">WebGPU</string>
+    <string name="transition_animation_cube_inside">Krychle (vnitřek)</string>
+    <string name="transition_animation_cube_outside">Krychle (vnějšek)</string>
+    <string name="cutout_mode_avoid">Vyhnout se</string>
+    <string name="transition_animation_sphere">Koule</string>
+    <string name="transition_animation_stack_down">Balíčky (dolů)</string>
+    <string name="pref_continuous_gap">Mezera</string>
+    <string name="transition_animation_basic">Základní</string>
+    <string name="pref_continuous_minwidth">Minimální šířka</string>
+    <string name="transition_animation_flip_left">Otočení stránky (doleva)</string>
+    <string name="cutout_mode_ignore">Ignorovat</string>
+    <string name="transition_animation_stack_right">Balíčky (vpravo)</string>
+    <string name="transition_animation_fade">Blednutí</string>
+    <string name="transition_animation_none">Žádné</string>
+    <string name="dual_page_view_never">Nikdy</string>
+    <string name="transition_animation_stack_up">Balíčky (nahoru)</string>
+    <string name="dual_page_view_wide">Při širokém</string>
+    <string name="pref_transition_animation_dual">Přechodová animace (dvojitá)</string>
+    <string name="transition_animation_flip">Otočení stránky</string>
+    <string name="dual_page_view_always">Vždy</string>
+    <string name="transition_animation_fade_white">Přechod do bílé</string>
+    <string name="pref_high_quality_renderer">Použít renderer vysoké kvality</string>
+    <string name="pref_dual_page_view">Zobrazení dvou stránek</string>
+    <string name="pref_transition_animation">Přechodová animace</string>
+    <string name="pref_cutout_mode">Režim výřezu displeje</string>
+    <string name="transition_animation_stack_left">Balíčky (vlevo)</string>
+    <string name="pref_cutout_mode_dual">Režim výřezu displeje (duální)</string>
+    <string name="cutout_mode_shift">Posun</string>
 </resources>

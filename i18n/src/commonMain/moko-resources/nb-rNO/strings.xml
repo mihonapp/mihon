@@ -191,8 +191,7 @@
     <string name="manga_added_library">Lagt til i biblioteket</string>
     <string name="manga_removed_library">Fjernet fra bibliotek</string>
     <string name="delete_downloads_for_manga">Slett nedlastede kapitler?</string>
-    <string name="copied_to_clipboard">Kopiert til utklippstavle:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kopiert til utklippstavle: \n%1$s</string>
     <string name="source_not_installed">Kilde ikke installert: %1$s</string>
     <string name="display_mode_chapter">Kapittel %1$s</string>
     <string name="chapter_downloading_progress">Laster ned (%1$d/%2$d)</string>
@@ -248,9 +247,7 @@
     <string name="label_help">Hjelp</string>
     <string name="action_display_download_badge">Last ned kapitler</string>
     <string name="pref_library_columns">Rutenettstørrelse</string>
-    <string name="untrusted_extension_message">Skadelige utvidelser kan lese alle lagrede innloggingsdetaljer eller kjøre vilkårlig kode.
-\n
-\nVed å godta denne utvidelsen, aksepterer du disse risikoene.</string>
+    <string name="untrusted_extension_message">Skadelige utvidelser kan lese alle lagrede innloggingsdetaljer eller kjøre vilkårlig kode. \n \nVed å godta denne utvidelsen, aksepterer du disse risikoene.</string>
     <string name="pref_double_tap_anim_speed">Animasjonshastighet ved dobbelklikk</string>
     <string name="pager_viewer">Sider</string>
     <string name="confirm_set_image_as_cover">Bruk dette bildet som omslag?</string>
@@ -259,7 +256,6 @@
     <string name="file_select_cover">Velg omslagsbilde</string>
     <string name="file_select_backup">Velg sikkerhetskopifil</string>
     <string name="update_check_no_new_updates">Ingen nye oppdateringer tilgjengelige</string>
-    <string name="update_check_notification_download_in_progress">Laster ned…</string>
     <string name="update_check_notification_update_available">Ny versjon tilgjengelig!</string>
     <string name="information_no_downloads">Ingen nedlastinger</string>
     <string name="information_no_recent">Ingen nylige oppdateringer</string>
@@ -391,9 +387,6 @@
     <string name="channel_progress">Framdrift</string>
     <string name="pref_remove_bookmarked_chapters">Tillat sletting av bokmerkede kapitler</string>
     <string name="pref_category_delete_chapters">Slett kapitler</string>
-    <string name="ext_nsfw_warning">Kan inneholde innhold for 18+</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Dette forhindrer ikke uoffisielle eller potensielt feilaktig kategoriserte tillegg fra å vise innhold for 18+ i appen.</string>
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
     <string name="share_page_info">%1$s: %2$s, side %3$d</string>
     <string name="chapter_settings">Kapittelinnstillinger</string>
@@ -435,8 +428,6 @@
     <string name="edge_nav">Kant</string>
     <string name="kindlish_nav">Kindle-basert</string>
     <string name="l_nav">L-formet</string>
-    <string name="pref_show_nsfw_source">Vis i kilde- og utvidelseslister</string>
-    <string name="pref_category_nsfw_content">Aldersgrense 18+ kilder</string>
     <string name="action_desc">Synkende</string>
     <string name="action_asc">Stigende</string>
     <string name="action_order_by_chapter_number">Etter kapittelnummer</string>
@@ -537,7 +528,6 @@
     <string name="label_warning">Advarsel</string>
     <string name="notification_size_warning">Store oppdateringer skader kilder og kan føre til tregere oppdateringer samt økt batteribruk. Trykk for å lære mer.</string>
     <string name="backup_info">Du bør oppbevare ekstra kopier av sikkershetskopier andre steder også. Sikkerhetskopier kan inneholde sensitiv data, inkludert eventuelle lagrede passord. Vær forsiktig ved deling.</string>
-    <string name="channel_app_updates">Appoppdateringer</string>
     <string name="update_72hour">Hver 3. dag</string>
     <string name="connected_to_wifi">Bare på Wi-Fi</string>
     <string name="action_show_manga">Vis oppføring</string>
@@ -593,7 +583,6 @@
     <string name="download_notifier_split_page_not_found">Side %d ble ikke funnet under deling</string>
     <string name="pref_reset_viewer_flags">Tilbakestill leserinnstillinger per serie</string>
     <string name="theme_tidalwave">Tidevannsbølge</string>
-    <string name="ext_info_age_rating">Aldersvurdering</string>
     <string name="error_user_agent_string_blank">Strengen for brukeragent kan ikke være tom</string>
     <string name="complete_list">Komplett liste</string>
     <string name="on_hold_list">På vent liste</string>
@@ -637,8 +626,7 @@
     <string name="not_installed">Ikke installert</string>
     <string name="updates_last_update_info_just_now">Akkurat nå</string>
     <string name="download_notifier_cache_renewal">Sjekker nedlastinger</string>
-    <string name="fdroid_warning">F-Droid-bygg er ikke offisielt støttet.
-\nTrykk for å finne ut mer.</string>
+    <string name="fdroid_warning">F-Droid-bygg er ikke offisielt støttet. \nTrykk for å finne ut mer.</string>
     <string name="information_no_entries_found">Fant ingen oppføringer i denne kategorien</string>
     <string name="action_open_random_manga">Åpne tilfeldig oppføring</string>
     <string name="action_display_show_continue_reading_button">Fortsett å lese-knapp</string>
@@ -747,11 +735,7 @@
     <string name="onboarding_action_next">Neste</string>
     <string name="onboarding_description">La oss sette opp noen ting først. Du kan alltid endre disse i innstillingene senere også.</string>
     <string name="no_location_set">Ingen lagringsplassering angitt</string>
-    <string name="onboarding_storage_info">Velg en mappe der %1$s vil lagre kapittelnedlastinger, sikkerhetskopier og mer.
-\n
-\nEn dedikert mappe anbefales.
-\n
-\nValgt mappe: %2$s</string>
+    <string name="onboarding_storage_info">Velg en mappe der %1$s vil lagre kapittelnedlastinger, sikkerhetskopier og mer. \n \nEn dedikert mappe anbefales. \n \nValgt mappe: %2$s</string>
     <string name="manga_interval_expected_update">Nye kapitler forventes om omtrent %1$s, sjekker omtrent hver %2$s.</string>
     <string name="onboarding_permission_notifications">Tillat varslinger</string>
     <string name="onboarding_permission_install_apps">Tillat å installere apper</string>

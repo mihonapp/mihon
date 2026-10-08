@@ -51,7 +51,6 @@
     <string name="file_select_backup">Valitse varmuuskopio-tiedosto</string>
     <string name="update_check_confirm">Lataa</string>
     <string name="update_check_no_new_updates">Ei päivityksiä saatavilla</string>
-    <string name="update_check_notification_download_in_progress">Ladataan…</string>
     <string name="update_check_notification_update_available">Uusi versio saatavilla!</string>
     <string name="information_no_downloads">Ei latauksia</string>
     <string name="information_no_recent">Ei viimeisimpiä päivityksiä</string>
@@ -139,9 +138,7 @@
     <string name="ext_untrusted">Luottamaton</string>
     <string name="ext_uninstall">Poista asennus</string>
     <string name="untrusted_extension">Luottamattomat laajennokset</string>
-    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Mihonista tai suorittaa luvatonta koodia.
-\n
-\nLuottamalla tähän laajennokseen hyväksyt nämä riskit.</string>
+    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Mihonista tai suorittaa luvatonta koodia. \n \nLuottamalla tähän laajennokseen hyväksyt nämä riskit.</string>
     <string name="pref_fullscreen">Koko näyttö</string>
     <string name="pref_page_transitions">Animoi sivusiirtymät</string>
     <string name="pref_double_tap_anim_speed">Tuplanäpäytyksen animaation nopeus</string>
@@ -227,8 +224,7 @@
     <string name="no_more_results">Ei enempää tuloksia</string>
     <string name="action_global_search_hint">Globaali haku…</string>
     <string name="delete_downloads_for_manga">Poista ladatut luvut?</string>
-    <string name="copied_to_clipboard">Kopioitu leikepöydälle
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kopioitu leikepöydälle \n%1$s</string>
     <string name="source_not_installed">Lähdettä ei ole asennettu: %1$s</string>
     <string name="display_mode_chapter">Luku %1$s</string>
     <string name="chapter_downloading_progress">Ladataan (%1$d/%2$d)</string>
@@ -404,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Seurantapalvelimet joihin et ole kirjautunut sisään:</string>
     <string name="pref_remove_bookmarked_chapters">Poista kirjanmerkityt luvut</string>
     <string name="pref_category_delete_chapters">Poista luvut</string>
-    <string name="ext_nsfw_warning">Tämän laajennoksen lähteet voivat sisältää NSFW (18+) -sisältöä</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Tämä ei estä epävirallisia tai mahdollisesti väärin merkittyjä laajennuksia näyttämästä NSFW 18+ sisältöä sovelluksessa.</string>
     <string name="no_chapters_error">Lukuja ei löytynyt</string>
     <string name="chapter_settings_updated">Päivitetyt luvun oletusasetukset</string>
     <string name="set_chapter_settings_as_default">Aseta oletukseksi</string>
@@ -425,8 +418,6 @@
     <string name="spen_next_page">Seuraava sivu</string>
     <string name="spen_previous_page">Edellinen sivu</string>
     <string name="migration_help_guide">Lähteen siirto-opas</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) lähteet</string>
-    <string name="pref_show_nsfw_source">Näytä lähde- ja lisäosaluettelossa</string>
     <string name="file_picker_error">Tiedostonvalitsinsovellusta ei löytynyt</string>
     <string name="myanimelist_relogin">Kirjaudu uudelleen MAL: iin</string>
     <string name="pref_viewer_nav">Navigointiasettelu</string>
@@ -447,9 +438,7 @@
     <string name="pref_dual_page_split">Jaa leveät sivut</string>
     <string name="pref_dual_page_invert_summary">Jos jaettujen leveiden sivujen sijoittelu ei vastaa lukusuuntaa</string>
     <string name="pref_dual_page_invert">Käännä jaettujen sivujen sijoittelu</string>
-    <string name="backup_restore_content_full">Varmuuskopiotiedoston tiedot palautetaan.
-\n
-\nSinun on asennattava puuttuvat laajennukset ja kirjauduttava seurantapalveluihin jälkeenpäin käyttääksesi niitä.</string>
+    <string name="backup_restore_content_full">Varmuuskopiotiedoston tiedot palautetaan. \n \nSinun on asennattava puuttuvat laajennukset ja kirjauduttava seurantapalveluihin jälkeenpäin käyttääksesi niitä.</string>
     <string name="nav_zone_right">Oikea</string>
     <string name="nav_zone_left">Vasen</string>
     <string name="nav_zone_next">Seuraava</string>
@@ -578,7 +567,6 @@
     <string name="help_translate">Auta kääntämisessä</string>
     <string name="pref_clear_webview_data">Tyhjennä WebView-tiedot</string>
     <string name="privacy_policy">Tietosuojakäytäntö</string>
-    <string name="channel_app_updates">Sovelluspäivitykset</string>
     <string name="clear_database_source_item_count">%1$d sarjaa joita ei olla lisätty kirjastoon tietokanassa</string>
     <string name="database_clean">Ei mitään tyhjennettävää</string>
     <string name="pref_reset_viewer_flags">Poista sarjakohtaiset lukijan asetukset</string>
@@ -591,7 +579,6 @@
     <string name="manga_cover">Kansikuva</string>
     <string name="error_sharing_cover">Virhe jakaessa kansikuvaa</string>
     <string name="learn_more">Napauta saadaksesi lisätietoja</string>
-    <string name="ext_info_age_rating">Ikäluokitus</string>
     <string name="tracking_guide">Seurantaopas</string>
     <string name="pref_reset_viewer_flags_success">Kaikki lukijan asetukset poistettu</string>
     <string name="pref_verbose_logging">Yksityiskohtainen kirjaaminen</string>

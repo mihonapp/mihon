@@ -1,13 +1,13 @@
 package eu.kanade.tachiyomi.data.backup.create.creators
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionStore
 import eu.kanade.tachiyomi.data.backup.models.backupExtensionStoreMapper
 import mihon.domain.extension.interactor.GetExtensionStores
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
 class ExtensionStoresBackupCreator(
-    private val getExtensionStores: GetExtensionStores = Injekt.get(),
+    private val getExtensionStores: GetExtensionStores,
 ) {
 
     suspend operator fun invoke(): List<BackupExtensionStore> {

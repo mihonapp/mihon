@@ -1,12 +1,17 @@
 package eu.kanade.tachiyomi.ui.updates
 
-import android.app.Application
+import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
@@ -16,8 +21,9 @@ import eu.kanade.presentation.updates.UpdatesUiModel
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.util.lang.toLocalDate
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -54,24 +60,27 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.service.UpdatesPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class UpdatesViewModel(
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val downloadManager: DownloadManager = Injekt.get(),
-    private val downloadCache: DownloadCache = Injekt.get(),
-    private val updateChapter: UpdateChapter = Injekt.get(),
-    private val setReadStatus: SetReadStatus = Injekt.get(),
-    private val getUpdates: GetUpdates = Injekt.get(),
-    private val getManga: GetManga = Injekt.get(),
-    private val getChapter: GetChapter = Injekt.get(),
-    private val libraryPreferences: LibraryPreferences = Injekt.get(),
-    private val updatesPreferences: UpdatesPreferences = Injekt.get(),
-    val snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    private val context: Context,
+    private val sourceManager: SourceManager,
+    private val downloadManager: DownloadManager,
+    private val downloadCache: DownloadCache,
+    private val updateChapter: UpdateChapter,
+    private val setReadStatus: SetReadStatus,
+    private val getUpdates: GetUpdates,
+    private val getManga: GetManga,
+    private val getChapter: GetChapter,
+    private val libraryPreferences: LibraryPreferences,
+    private val updatesPreferences: UpdatesPreferences,
 ) : ViewModel() {
+
+    val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
     val events: Flow<Event> = _events.receiveAsFlow()
@@ -85,6 +94,13 @@ class UpdatesViewModel(
     private val dialog = MutableStateFlow<Dialog?>(null)
 
     private val downloadStates = MutableStateFlow(emptyMap<Long, DownloadProgress>())
+
+    // A finished chapter leaves the queue, and its last status change can be lost with it, so its state is left to
+    // the queried item once it's no longer queued
+    private val queuedDownloadStates = combine(downloadStates, downloadManager.queueState) { states, queue ->
+        val queuedChapterIds = queue.mapTo(HashSet()) { it.chapter.id }
+        states.filterKeys { it in queuedChapterIds }
+    }
 
     init {
         viewModelScope.launchIO {
@@ -115,7 +131,13 @@ class UpdatesViewModel(
                 prefs.filterStarted,
                 prefs.filterBookmarked,
             )
-                .any { it != TriState.DISABLED }
+                .any { it != TriState.DISABLED } ||
+                prefs.filterExcludedScanlators ||
+                listOf(
+                    prefs.filterIncludedCategories,
+                    prefs.filterExcludedCategories,
+                )
+                    .any { it.isNotEmpty() }
         }
         .distinctUntilChanged()
 
@@ -151,7 +173,7 @@ class UpdatesViewModel(
     val state: StateFlow<State> = combine(
         updateItems,
         selectedChapterIds,
-        downloadStates,
+        queuedDownloadStates,
         dialog,
         hasActiveFilters,
     ) { items, selectedIds, downloads, dialog, hasActiveFilters ->
@@ -196,9 +218,10 @@ class UpdatesViewModel(
     }
 
     private fun List<UpdatesWithRelations>.toUpdateItems(): List<UpdatesItem> {
+        val queuedDownloads = downloadManager.getQueuedDownloadsByChapterId()
         return this
             .map { update ->
-                val activeDownload = downloadManager.getQueuedDownloadOrNull(update.chapterId)
+                val activeDownload = queuedDownloads[update.chapterId]
                 val downloaded = downloadManager.isChapterDownloaded(
                     update.chapterName,
                     update.scanlator,
@@ -220,7 +243,7 @@ class UpdatesViewModel(
     }
 
     fun updateLibrary(): Boolean {
-        val started = LibraryUpdateJob.startNow(Injekt.get<Application>())
+        val started = LibraryUpdateWorker.startNow(context.workManager)
         viewModelScope.launch {
             _events.send(Event.LibraryUpdateTriggered(started))
         }
@@ -288,7 +311,7 @@ class UpdatesViewModel(
         viewModelScope.launchIO {
             updates
                 .filterNot { it.update.bookmark == bookmark }
-                .map { ChapterUpdate(id = it.update.chapterId, bookmark = bookmark) }
+                .map { ChapterUpdate(it.update.chapterId) { this.bookmark = bookmark } }
                 .let { updateChapter.awaitAll(it) }
         }
         toggleAllSelection(false)

@@ -6,10 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Sort
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,16 +37,20 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.Sort
+import mihon.icons.materialsymbols.roundedfilled.Pause
+import mihon.icons.materialsymbols.roundedfilled.PlayArrow
 import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
@@ -65,7 +65,7 @@ object DownloadQueueScreen : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
-        val viewModel = viewModel<DownloadQueueViewModel>()
+        val viewModel = metroViewModel<DownloadQueueViewModel>()
         val downloadList by viewModel.state.collectAsStateWithLifecycle()
         val downloadCount by remember {
             derivedStateOf { downloadList.sumOf { it.subItems.size } }
@@ -183,7 +183,7 @@ object DownloadQueueScreen : Screen() {
                                 listOf(
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_sort),
-                                        icon = Icons.AutoMirrored.Outlined.Sort,
+                                        icon = MaterialSymbols.AutoMirroredRounded.Sort,
                                         onClick = { sortExpanded = true },
                                     ),
                                     AppBar.OverflowAction(
@@ -210,9 +210,9 @@ object DownloadQueueScreen : Screen() {
                     },
                     icon = {
                         val icon = if (isRunning) {
-                            Icons.Outlined.Pause
+                            MaterialSymbols.RoundedFilled.Pause
                         } else {
-                            Icons.Filled.PlayArrow
+                            MaterialSymbols.RoundedFilled.PlayArrow
                         }
                         Icon(imageVector = icon, contentDescription = null)
                     },

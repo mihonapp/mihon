@@ -3,6 +3,10 @@ package tachiyomi.data.history
 import app.cash.sqldelight.async.coroutines.awaitAsList
 import app.cash.sqldelight.async.coroutines.awaitAsOne
 import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
@@ -13,6 +17,9 @@ import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.domain.history.repository.HistoryRepository
 
+@Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class HistoryRepositoryImpl(
     private val database: Database,
 ) : HistoryRepository {
@@ -67,12 +74,16 @@ class HistoryRepositoryImpl(
         }
     }
 
+    override suspend fun deleteResetHistory() {
+        database.historyQueries.removeResettedHistory()
+    }
+
     override suspend fun upsertHistory(historyUpdate: HistoryUpdate) {
         try {
             database.historyQueries.upsert(
-                historyUpdate.chapterId,
-                historyUpdate.readAt,
-                historyUpdate.sessionReadDuration,
+                chapterId = historyUpdate.chapterId,
+                readAt = historyUpdate.readAt,
+                readDuration = historyUpdate.sessionReadDuration,
             )
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)

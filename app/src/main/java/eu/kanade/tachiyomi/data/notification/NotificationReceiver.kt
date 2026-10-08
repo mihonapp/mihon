@@ -6,9 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.net.toUri
-import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
+import dev.zacsweers.metro.Inject
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreWorker
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.cancelNotification
@@ -16,21 +17,20 @@ import eu.kanade.tachiyomi.util.system.getParcelableExtraCompat
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.runBlocking
+import mihon.app.di.appGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.chapter.model.toChapterUpdate
+import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
 
 /**
@@ -40,12 +40,21 @@ import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
  */
 class NotificationReceiver : BroadcastReceiver() {
 
-    private val getManga: GetManga by injectLazy()
-    private val getChapter: GetChapter by injectLazy()
-    private val updateChapter: UpdateChapter by injectLazy()
-    private val downloadManager: DownloadManager by injectLazy()
+    @Inject private lateinit var getManga: GetManga
+
+    @Inject private lateinit var getChapter: GetChapter
+
+    @Inject private lateinit var updateChapter: UpdateChapter
+
+    @Inject private lateinit var downloadManager: DownloadManager
+
+    @Inject private lateinit var downloadPreferences: DownloadPreferences
+
+    @Inject private lateinit var sourceManager: SourceManager
 
     override fun onReceive(context: Context, intent: Intent) {
+        context.appGraph.inject(this)
+
         when (intent.action) {
             // Dismiss notification
             ACTION_DISMISS_NOTIFICATION -> dismissNotification(context, intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1))
@@ -161,7 +170,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param context context of application
      */
     private fun cancelRestore(context: Context) {
-        BackupRestoreJob.stop(context)
+        BackupRestoreWorker.stop(context.workManager)
     }
 
     /**
@@ -170,7 +179,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param context context of application
      */
     private fun cancelLibraryUpdate(context: Context) {
-        LibraryUpdateJob.stop(context)
+        LibraryUpdateWorker.stop(context)
     }
 
     /**
@@ -180,13 +189,9 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param mangaId id of manga
      */
     private fun markAsRead(chapterUrls: Array<String>, mangaId: Long) {
-        val downloadPreferences: DownloadPreferences = Injekt.get()
-        val sourceManager: SourceManager = Injekt.get()
-
         launchIO {
             val toUpdate = chapterUrls.mapNotNull { getChapter.await(it, mangaId) }
                 .map {
-                    val chapter = it.copy(read = true)
                     if (downloadPreferences.removeAfterMarkedAsRead.get()) {
                         val manga = getManga.await(mangaId)
                         if (manga != null) {
@@ -196,7 +201,7 @@ class NotificationReceiver : BroadcastReceiver() {
                             }
                         }
                     }
-                    chapter.toChapterUpdate()
+                    ChapterUpdate(it.id) { read = true }
                 }
             updateChapter.awaitAll(toUpdate)
         }

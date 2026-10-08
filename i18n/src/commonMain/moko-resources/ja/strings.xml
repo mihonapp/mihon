@@ -192,8 +192,7 @@
     <string name="manga_added_library">ライブラリに追加しました</string>
     <string name="manga_removed_library">ライブラリから削除しました</string>
     <string name="delete_downloads_for_manga">ダウンロードした章を削除してもよろしいですか？</string>
-    <string name="copied_to_clipboard">次をクリップボードにコピーしました:
-\n%1$s</string>
+    <string name="copied_to_clipboard">次をクリップボードにコピーしました: \n%1$s</string>
     <string name="display_mode_chapter">第 %1$s 章</string>
     <string name="chapter_downloading_progress">ダウンロード中 (%1$d/%2$d)</string>
     <string name="chapter_error">エラー</string>
@@ -240,7 +239,6 @@
     <string name="file_select_backup">バックアップファイルを選択</string>
     <string name="update_check_confirm">ダウンロード</string>
     <string name="update_check_no_new_updates">新しいバージョンがありません</string>
-    <string name="update_check_notification_download_in_progress">ダウンロード中…</string>
     <string name="update_check_notification_update_available">新しいバージョンがリリースされました！</string>
     <string name="information_no_downloads">ダウンロードがありません</string>
     <string name="information_no_recent">最近の更新はありません</string>
@@ -402,9 +400,6 @@
     <string name="backup_restore_missing_trackers">ログインしていないトラッカー:</string>
     <string name="pref_remove_bookmarked_chapters">ブックマークした章の削除を許可</string>
     <string name="pref_category_delete_chapters">章を削除</string>
-    <string name="ext_nsfw_warning">この拡張機能のソースには成人向けのコンテンツが含まれる可能性があります</string>
-    <string name="ext_nsfw_short">成人向け</string>
-    <string name="parental_controls_info">これは、非公式の拡張機能や誤ってフラグ付けされた可能性のある拡張機能が、アプリ内で NSFW（18 歳以上向け）コンテンツを表示することを防ぐものではありません。</string>
     <string name="no_chapters_error">章が見つかりません</string>
     <string name="chapter_settings_updated">デフォルトの章設定を更新しました</string>
     <string name="share_page_info">%1$s: %2$s、第 %3$d ページ</string>
@@ -423,8 +418,6 @@
     <string name="spen_next_page">次のページ</string>
     <string name="spen_previous_page">前のページ</string>
     <string name="migration_help_guide">ソース移行ガイド</string>
-    <string name="pref_category_nsfw_content">成人向けのソース</string>
-    <string name="pref_show_nsfw_source">ソース・拡張機能リストに表示</string>
     <string name="file_picker_error">ファイルを選択できるアプリが見つかりません</string>
     <string name="myanimelist_relogin">MAL に再度ログインしてください</string>
     <string name="action_display_show_number_of_items">アイテム数を表示する</string>
@@ -539,7 +532,6 @@
     <string name="update_72hour">3 日ごと</string>
     <string name="connected_to_wifi">Wi-Fi 接続時のみ</string>
     <string name="ext_update_all">すべて更新</string>
-    <string name="channel_app_updates">アプリ更新</string>
     <string name="clear_database_source_item_count">データベース内に %1$d 件のライブラリにない項目があります</string>
     <string name="pref_auto_clear_chapter_cache">アプリ起動時に章のキャッシュを消去</string>
     <string name="database_clean">消去できるものはありませんでした</string>
@@ -583,7 +575,6 @@
     <string name="empty_screen">えっと、こりゃまずいですね</string>
     <string name="ext_info_version">バージョン</string>
     <string name="ext_info_language">言語</string>
-    <string name="ext_info_age_rating">年齢制限</string>
     <string name="network_not_metered">非従量制課金接続でのみ</string>
     <string name="reading_list">読書中リスト</string>
     <string name="wish_list">読みたいリスト</string>
@@ -801,10 +792,6 @@
     <string name="ext_confirm_remove">拡張機能を削除しますか?</string>
     <string name="remove_private_extension_message">拡張機能「%s」を削除してもよろしいですか？</string>
     <string name="confirm_tracker_update">トラッカーを章 %d に更新しますか？</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">パフォーマンスに影響します。ビットマップのしきい値を下げても空白画像の問題が解決しない場合にのみ有効にしてください</string>
-    <string name="pref_hardware_bitmap_threshold_default">デフォルト (%d)</string>
-    <string name="pref_hardware_bitmap_threshold">カスタムハードウェアビットマップのしきい値</string>
-    <string name="pref_hardware_bitmap_threshold_summary">リーダが空の画像を読み込んだ場合は、しきい値を徐々に下げてください。\n選択されました: %s</string>
     <string name="library_exported">ライブラリをエクスポートしました</string>
     <string name="action_notes">ノート</string>
     <string name="action_edit_notes">ノートを編集</string>
@@ -831,7 +818,6 @@
     <string name="theme_monochrome">モノクロ</string>
     <string name="pref_display_images_description">マンガの描写で画像をレンダリングする</string>
     <string name="pref_hide_missing_chapter_indicators">欠落している章のインジケーターを非表示にする</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">レガシーデコーダーを長尺ストリップリーダーに使用する</string>
     <string name="library_list">ライブラリリスト</string>
     <string name="pref_disallow_non_ascii_filenames">非 ASCII ファイル名を許可しない</string>
     <string name="pref_disallow_non_ascii_filenames_details">Unicode をサポートしていない特定のストレージメディアとの互換性を確保します。この機能を有効にすると、ソースフォルダーと漫画フォルダーの名前を手動で変更する必要があります。変更するには、非 ASCII 文字を小文字の UTF-8 16 進数表現に置き換えてください。章ファイルの名前を変更する必要はありません。</string>
