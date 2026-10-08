@@ -55,13 +55,12 @@ getReadDuration:
 SELECT coalesce(sum(read_duration), 0)
 FROM history;
 
-resetLastReadIfNoHistory:
+updateLastReadFromHistory:
 UPDATE manga
-SET user_last_read_at = 0
-WHERE (:mangaId IS NULL OR id = :mangaId)
-AND NOT EXISTS (
-    SELECT 1 FROM history AS H
+SET user_last_read_at = coalesce((
+    SELECT max(H.read_at) FROM history AS H
     JOIN chapter AS C ON C.id = H.chapter_id
     LEFT JOIN excluded_scanlator AS ES ON ES.manga_id = H.manga_id AND ES.scanlator = C.remote_scanlator
-    WHERE H.manga_id = manga.id AND H.read_at != 0 AND ES.scanlator IS NULL
-);
+    WHERE H.manga_id = manga.id AND ES.scanlator IS NULL
+), 0)
+WHERE (:mangaId IS NULL OR id = :mangaId);

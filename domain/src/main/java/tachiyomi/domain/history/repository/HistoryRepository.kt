@@ -21,7 +21,7 @@ interface HistoryRepository {
 
     suspend fun deleteAllHistory(): Boolean
 
-    suspend fun resetLastReadIfNoHistory(mangaId: Long?)
+    suspend fun updateLastReadFromHistory(mangaId: Long?)
 
     suspend fun deleteResetHistory()
 

@@ -74,8 +74,8 @@ class HistoryRepositoryImpl(
         }
     }
 
-    override suspend fun resetLastReadIfNoHistory(mangaId: Long?) {
-        database.historyQueries.resetLastReadIfNoHistory(mangaId)
+    override suspend fun updateLastReadFromHistory(mangaId: Long?) {
+        database.historyQueries.updateLastReadFromHistory(mangaId)
     }
 
     override suspend fun deleteResetHistory() {
