@@ -128,13 +128,26 @@ class StorageManager(
             false
         } finally {
             if (!cleanupSuccessful) {
-                try {
-                    testDir?.delete()
-                } catch (e: Exception) {
-                    if (e is CancellationException) throw e
-                    logcat(LogPriority.ERROR, e)
-                }
+                testDir?.let(::deleteStorageTestFile)
             }
+        }
+    }
+
+    private fun deleteStorageTestFile(file: UniFile) {
+        try {
+            file.listFiles().orEmpty().forEach(::deleteStorageTestFile)
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            logcat(LogPriority.ERROR, e)
+        }
+
+        try {
+            if (!file.delete()) {
+                logcat(LogPriority.ERROR) { "Failed to delete storage test file: ${file.uri}" }
+            }
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            logcat(LogPriority.ERROR, e)
         }
     }
 
