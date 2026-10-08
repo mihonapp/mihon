@@ -70,6 +70,10 @@ class StorageManager(
                 ?.takeIf { it.exists() && it.isDirectory }
                 ?: return false
 
+            for (path in listOf(AUTOMATIC_BACKUPS_PATH, DOWNLOADS_PATH, LOCAL_SOURCE_PATH)) {
+                if (baseDir.findFile(path)?.isDirectory == false) return false
+            }
+
             val createdTestDir = baseDir.createDirectory("$STORAGE_TEST_DIR_PREFIX${UUID.randomUUID()}") ?: return false
             testDir = createdTestDir
 
