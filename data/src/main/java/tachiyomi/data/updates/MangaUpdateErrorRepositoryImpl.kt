@@ -23,19 +23,19 @@ class MangaUpdateErrorRepositoryImpl(
 ) : MangaUpdateErrorRepository {
 
     override fun subscribeCount(): Flow<Long> {
-        return database.manga_update_errorsQueries
+        return database.manga_update_errorQueries
             .getCount()
             .subscribeToOne()
     }
 
     override fun subscribeWithManga(): Flow<List<MangaUpdateErrorWithManga>> {
-        return database.manga_update_errorsQueries
+        return database.manga_update_errorQueries
             .getAllWithManga(::mapMangaUpdateErrorWithManga)
             .subscribeToList()
     }
 
     override suspend fun insert(mangaId: Long, errorMessage: String?, timestamp: Long) {
-        database.manga_update_errorsQueries.insert(
+        database.manga_update_errorQueries.insert(
             errorMessage = errorMessage,
             timestamp = timestamp,
             mangaId = mangaId,
@@ -43,26 +43,16 @@ class MangaUpdateErrorRepositoryImpl(
     }
 
     override suspend fun delete(mangaId: Long) {
-        database.manga_update_errorsQueries.delete(mangaId)
+        database.manga_update_errorQueries.delete(mangaId)
     }
 
     override suspend fun deleteByMangaIds(mangaIds: List<Long>) {
-        database.manga_update_errorsQueries.deleteByMangaIds(mangaIds)
+        database.manga_update_errorQueries.deleteByMangaIds(mangaIds)
     }
 
     override suspend fun deleteAll() {
-        database.manga_update_errorsQueries.deleteAll()
+        database.manga_update_errorQueries.deleteAll()
     }
-
-    private fun mapMangaUpdateError(
-        mangaId: Long,
-        errorMessage: String?,
-        timestamp: Long,
-    ): MangaUpdateError = MangaUpdateError(
-        mangaId = mangaId,
-        errorMessage = errorMessage,
-        timestamp = timestamp,
-    )
 
     @Suppress("LongParameterList")
     private fun mapMangaUpdateErrorWithManga(
@@ -70,60 +60,50 @@ class MangaUpdateErrorRepositoryImpl(
         errorMessage: String?,
         timestamp: Long,
         id: Long,
-        source: Long,
-        url: String,
-        artist: String?,
-        author: String?,
-        description: String?,
-        genre: List<String>?,
-        title: String,
-        status: Long,
-        thumbnailUrl: String?,
-        favorite: Boolean,
-        lastUpdate: Long?,
-        nextUpdate: Long?,
-        initialized: Boolean,
-        viewerFlags: Long,
-        chapterFlags: Long,
-        coverLastModified: Long,
-        dateAdded: Long,
-        updateStrategy: UpdateStrategy,
-        calculateInterval: Long,
-        lastModifiedAt: Long,
-        favoriteModifiedAt: Long?,
-        version: Long,
-        isSyncing: Long,
-        notes: String,
-        memo: JsonObject,
+        sourceId: Long,
+        remoteUrl: String,
+        remoteTitle: String,
+        remoteAuthor: String?,
+        remoteArtist: String?,
+        remoteDescription: String?,
+        remoteGenre: List<String>?,
+        remoteStatus: Long,
+        remoteCover: String?,
+        remoteUpdateStrategy: UpdateStrategy,
+        remoteMemo: JsonObject,
+        userFavoriteAt: Long?,
+        userNotes: String,
+        userReaderFlags: Long,
+        userChapterFlags: Long,
+        stateChapterLastUpdate: Long?,
+        stateChapterNextUpdate: Long?,
+        stateChapterFetchInterval: Long,
+        stateCoverLastModified: Long,
+        stateInitialized: Boolean,
     ): MangaUpdateErrorWithManga = MangaUpdateErrorWithManga(
-        error = mapMangaUpdateError(mangaId, errorMessage, timestamp),
+        error = MangaUpdateError(mangaId, errorMessage, timestamp),
         manga = MangaMapper.mapManga(
             id = id,
-            source = source,
-            url = url,
-            artist = artist,
-            author = author,
-            description = description,
-            genre = genre,
-            title = title,
-            status = status,
-            thumbnailUrl = thumbnailUrl,
-            favorite = favorite,
-            lastUpdate = lastUpdate,
-            nextUpdate = nextUpdate,
-            initialized = initialized,
-            viewerFlags = viewerFlags,
-            chapterFlags = chapterFlags,
-            coverLastModified = coverLastModified,
-            dateAdded = dateAdded,
-            updateStrategy = updateStrategy,
-            calculateInterval = calculateInterval,
-            lastModifiedAt = lastModifiedAt,
-            favoriteModifiedAt = favoriteModifiedAt,
-            version = version,
-            isSyncing = isSyncing,
-            notes = notes,
-            memo = memo,
+            sourceId = sourceId,
+            remoteUrl = remoteUrl,
+            remoteTitle = remoteTitle,
+            remoteAuthor = remoteAuthor,
+            remoteArtist = remoteArtist,
+            remoteDescription = remoteDescription,
+            remoteGenre = remoteGenre,
+            remoteStatus = remoteStatus,
+            remoteCover = remoteCover,
+            remoteUpdateStrategy = remoteUpdateStrategy,
+            remoteMemo = remoteMemo,
+            userFavoriteAt = userFavoriteAt,
+            userNotes = userNotes,
+            userReaderFlags = userReaderFlags,
+            userChapterFlags = userChapterFlags,
+            stateChapterLastUpdate = stateChapterLastUpdate,
+            stateChapterNextUpdate = stateChapterNextUpdate,
+            stateChapterFetchInterval = stateChapterFetchInterval,
+            stateCoverLastModified = stateCoverLastModified,
+            stateInitialized = stateInitialized,
         ),
     )
 }

@@ -102,6 +102,8 @@ class UpdateMangaFromRemote(
             Result.failure(e)
         }
 
+        if (!fetchChapters) return result
+
         try {
             val error = result.exceptionOrNull()
             if (error == null) {
