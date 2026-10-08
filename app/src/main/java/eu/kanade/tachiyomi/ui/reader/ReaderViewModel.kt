@@ -202,6 +202,13 @@ class ReaderViewModel(
     private val chapterList by lazy {
         val manga = manga!!
         val chapters = runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true) }
+            .let { filtered ->
+                if (filtered.any { it.id == chapterId }) {
+                    filtered
+                } else {
+                    filtered + unfilteredChapterList.filter { it.id == chapterId }
+                }
+            }
 
         val selectedChapter = chapters.find { it.id == chapterId }
             ?: error("Requested chapter of id $chapterId not found in chapter list")
@@ -583,11 +590,10 @@ class ReaderViewModel(
             }
 
             updateChapter.await(
-                ChapterUpdate(
-                    id = readerChapter.chapter.id!!,
-                    read = readerChapter.chapter.read,
-                    lastPageRead = readerChapter.chapter.last_page_read.toLong(),
-                ),
+                ChapterUpdate(readerChapter.chapter.id!!) {
+                    read = readerChapter.chapter.read
+                    lastPageRead = readerChapter.chapter.last_page_read.toLong()
+                },
             )
         }
     }
@@ -608,7 +614,7 @@ class ReaderViewModel(
                     chapter.isRecognizedNumber &&
                     chapter.chapterNumber.toFloat() == readerChapter.chapter.chapter_number
                 ) {
-                    ChapterUpdate(id = chapter.id, read = true)
+                    ChapterUpdate(chapter.id) { read = true }
                 } else {
                     null
                 }
@@ -630,9 +636,9 @@ class ReaderViewModel(
             val chapterId = readerChapter.chapter.id!!
             val endTime = Date()
             val sessionReadDuration = chapterReadStartTime?.let { endTime.time - it } ?: 0
+            chapterReadStartTime = null
 
             upsertHistory.await(HistoryUpdate(chapterId, endTime, sessionReadDuration))
-            chapterReadStartTime = null
         }
     }
 
@@ -683,10 +689,9 @@ class ReaderViewModel(
 
         viewModelScope.launchNonCancellable {
             updateChapter.await(
-                ChapterUpdate(
-                    id = chapter.id!!,
-                    bookmark = bookmarked,
-                ),
+                ChapterUpdate(chapter.id!!) {
+                    bookmark = bookmarked
+                },
             )
         }
 

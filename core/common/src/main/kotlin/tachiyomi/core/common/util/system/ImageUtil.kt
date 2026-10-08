@@ -47,15 +47,16 @@ object ImageUtil {
 
     fun findImageType(stream: InputStream): ImageType? {
         return try {
-            val format = ImageDecoder.new(stream).use { dec -> dec.format }
+            val format = ImageDecoder.open(stream).use { dec -> dec.format }
             when (format) {
-                "jpeg" -> ImageType.JPEG
-                "png" -> ImageType.PNG
-                "webp" -> ImageType.WEBP
-                "gif" -> ImageType.GIF
-                "heif" -> ImageType.HEIF
-                "jxl" -> ImageType.JXL
-                "jp2" -> ImageType.JP2
+                ImageDecoder.Format.JPEG -> ImageType.JPEG
+                ImageDecoder.Format.PNG -> ImageType.PNG
+                ImageDecoder.Format.WEBP -> ImageType.WEBP
+                ImageDecoder.Format.GIF -> ImageType.GIF
+                ImageDecoder.Format.AVIF -> ImageType.AVIF
+                ImageDecoder.Format.HEIF -> ImageType.HEIF
+                ImageDecoder.Format.JXL -> ImageType.JXL
+                ImageDecoder.Format.JP2 -> ImageType.JP2
                 else -> null
             }
         } catch (e: Exception) {
@@ -76,7 +77,7 @@ object ImageUtil {
                 ImageType.GIF -> true
                 ImageType.WEBP, ImageType.HEIF -> {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return false
-                    ImageDecoder.new(source.peek().inputStream()).use { dec -> dec.pages > 1 }
+                    ImageDecoder.open(source.peek().inputStream()).use { dec -> dec.pages > 1 }
                 }
 
                 else -> false
@@ -303,10 +304,13 @@ object ImageUtil {
      */
     fun chooseBackground(context: Context, imageStream: InputStream): Drawable {
         val image = try {
-            ImageDecoder.new(imageStream).use { it.decode() }.let { res ->
-                createBitmap(res.width, res.height).also { bitmap ->
-                    res.image.rewind()
-                    bitmap.copyPixelsFromBuffer(res.image)
+            ImageDecoder.open(imageStream).use { it.decodeNext() to it.isHdr }.let { (res, hdr) ->
+                res.use {
+                    val config = if (hdr) Bitmap.Config.RGBA_F16 else Bitmap.Config.ARGB_8888
+                    createBitmap(res.width, res.height, config).also { bitmap ->
+                        res.image.rewind()
+                        bitmap.copyPixelsFromBuffer(res.image)
+                    }
                 }
             }
         } catch (e: Exception) {

@@ -172,32 +172,36 @@ fun MangaCoverDialog(
                     .memoryCachePolicy(CachePolicy.DISABLED)
                     .newDecoder(true)
                     .target { result ->
-                        val res = (result as ImageDecoder.DecodeResultImage).res
-                        val page = runBlocking(Dispatchers.Default) {
-                            ImagePage.ImageSingle(
-                                Image(
-                                    res.image,
-                                    res.width,
-                                    res.height,
-                                    createMipMaps = true,
-                                    backgroundColor = 0,
-                                    hdr = res.isHdr,
-                                    hdrHeadroom = res.hdrHeadroom,
-                                    gainmap = res.gainmap?.let {
-                                        GainmapInput(
-                                            pixels = it.pixels,
-                                            width = it.width,
-                                            height = it.height,
-                                            channels = it.channels,
-                                            gamma = it.gamma,
-                                            minContentBoost = it.minContentBoost,
-                                            maxContentBoost = it.maxContentBoost,
-                                            offsetSdr = it.offsetSdr,
-                                            offsetHdr = it.offsetHdr,
-                                        )
-                                    },
-                                ),
-                            )
+                        val res = (result as ImageDecoder.DecodeResultImage)
+                        // Held, then freed, around the upload: its buffer alone doesn't keep
+                        // the frame's native pixels alive.
+                        val page = res.frame.use {
+                            runBlocking(Dispatchers.Default) {
+                                ImagePage.ImageSingle(
+                                    Image(
+                                        res.image,
+                                        res.width,
+                                        res.height,
+                                        createMipMaps = true,
+                                        backgroundColor = 0,
+                                        hdr = res.isHdr,
+                                        hdrHeadroom = res.hdrHeadroom,
+                                        gainmap = res.gainmap?.let {
+                                            GainmapInput(
+                                                pixels = it.pixels,
+                                                width = it.width,
+                                                height = it.height,
+                                                channels = it.channels,
+                                                gamma = it.gamma,
+                                                minContentBoost = it.minContentBoost,
+                                                maxContentBoost = it.maxContentBoost,
+                                                offsetSdr = it.offsetSdr,
+                                                offsetHdr = it.offsetHdr,
+                                            )
+                                        },
+                                    ),
+                                )
+                            }
                         }
                         state.apply {
                             fetchPage = { index ->

@@ -18,6 +18,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add support for using the user's chosen rating system for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3818](https://github.com/mihonapp/mihon/pull/3818))
 - Add support for the Year, Month, and Day fields in ComicInfo.xml files for chapter dating ([@MajorTanya](https://github.com/MajorTanya)) ([#3967](https://github.com/mihonapp/mihon/pull/3967))
 - Add refresh buttons to trackers in Settings to update displayed usernames (all trackers) & rating systems (where supported) ([@MajorTanya](https://github.com/MajorTanya)) ([#3828](https://github.com/mihonapp/mihon/pull/3828))
+- Add setting to toggle chapter name hash suffix ([@choppeh](https://github.com/choppeh)) ([#3966](https://github.com/mihonapp/mihon/pull/3966))
 
 ### Improved
 - Show happy emotes on the empty Failed Updates screen ([@H1ghSyst3m](https://github.com/H1ghSyst3m)) ([#2714](https://github.com/mihonapp/mihon/pull/2714))
@@ -33,6 +34,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed default category and manga sometimes not getting their category set when restoring a backup ([@Secozzi](https://github.com/Secozzi)) ([#3891](https://github.com/mihonapp/mihon/pull/3891))
 - Fixed AniList rate limit ([@MajorTanya](https://github.com/MajorTanya)) ([#3942](https://github.com/mihonapp/mihon/pull/3942))
 - Fixed library search when clicking source name in manga info screen ([@choppeh](https://github.com/choppeh)) ([#4002](https://github.com/mihonapp/mihon/pull/4002))
+- Fixed entries being incorrectly marked as duplicates when tracked with some trackers ([@Secozzi](https://github.com/Secozzi)) ([#4008](https://github.com/mihonapp/mihon/pull/4008))
 
 ## [v0.20.4] - 2026-08-05
 ### Fixed

@@ -1,16 +1,15 @@
-CREATE TABLE manga_update_errors(
-    manga_id INTEGER NOT NULL,
-    error_message TEXT,
-    timestamp INTEGER NOT NULL,
-    PRIMARY KEY(manga_id),
-    FOREIGN KEY(manga_id) REFERENCES mangas(_id) ON DELETE CASCADE
-);
+-- Remove the sync scaffolding: version, is_syncing and last_modified_at.
 
-CREATE INDEX manga_update_errors_timestamp_index ON manga_update_errors(timestamp);
+DROP TRIGGER update_manga_version;
+DROP TRIGGER update_last_modified_at_mangas;
+DROP TRIGGER update_chapter_and_manga_version;
+DROP TRIGGER update_last_modified_at_chapters;
+DROP TRIGGER insert_manga_category_update_version;
 
-CREATE TRIGGER delete_manga_update_errors_on_unfavorite
-AFTER UPDATE OF favorite ON mangas
-WHEN new.favorite = 0
-BEGIN
-    DELETE FROM manga_update_errors WHERE manga_id = new._id;
-END;
+ALTER TABLE mangas DROP COLUMN version;
+ALTER TABLE mangas DROP COLUMN is_syncing;
+ALTER TABLE mangas DROP COLUMN last_modified_at;
+
+ALTER TABLE chapters DROP COLUMN version;
+ALTER TABLE chapters DROP COLUMN is_syncing;
+ALTER TABLE chapters DROP COLUMN last_modified_at;
