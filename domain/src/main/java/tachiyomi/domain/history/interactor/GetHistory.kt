@@ -15,7 +15,23 @@ class GetHistory(
         return repository.getHistoryByMangaId(mangaId)
     }
 
-    fun subscribe(query: String): Flow<List<HistoryWithRelations>> {
-        return repository.getHistory(query)
+    fun subscribe(
+        query: String,
+        unread: Boolean?,
+        started: Boolean?,
+        bookmarked: Boolean?,
+        hideExcludedScanlators: Boolean,
+        includedCategories: List<Long>,
+        excludedCategories: List<Long>,
+    ): Flow<List<HistoryWithRelations>> {
+        return repository.getHistory(
+            query,
+            unread,
+            started,
+            bookmarked,
+            hideExcludedScanlators,
+            includedCategories,
+            excludedCategories,
+        )
     }
 }

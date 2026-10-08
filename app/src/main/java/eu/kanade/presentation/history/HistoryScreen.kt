@@ -3,6 +3,8 @@ package eu.kanade.presentation.history
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -20,6 +22,7 @@ import eu.kanade.tachiyomi.ui.history.HistoryViewModel
 import kotlinx.datetime.LocalDate
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.DeleteSweep
+import mihon.icons.materialsymbols.rounded.FilterList
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -28,6 +31,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.theme.active
 
 @Composable
 fun HistoryScreen(
@@ -38,6 +42,8 @@ fun HistoryScreen(
     onClickResume: (mangaId: Long, chapterId: Long) -> Unit,
     onClickFavorite: (mangaId: Long) -> Unit,
     onDialogChange: (HistoryViewModel.Dialog?) -> Unit,
+    onFilterClicked: () -> Unit,
+    hasActiveFilters: Boolean,
 ) {
     Scaffold(
         topBar = { scrollBehavior ->
@@ -48,6 +54,16 @@ fun HistoryScreen(
                 actions = {
                     AppBarActions(
                         listOf(
+                            AppBar.Action(
+                                title = stringResource(MR.strings.action_filter),
+                                icon = MaterialSymbols.Rounded.FilterList,
+                                iconTint = if (hasActiveFilters) {
+                                    MaterialTheme.colorScheme.active
+                                } else {
+                                    LocalContentColor.current
+                                },
+                                onClick = onFilterClicked,
+                            ),
                             AppBar.Action(
                                 title = stringResource(MR.strings.pref_clear_history),
                                 icon = MaterialSymbols.Rounded.DeleteSweep,
@@ -69,6 +85,8 @@ fun HistoryScreen(
             } else if (it.isEmpty()) {
                 val msg = if (!state.searchQuery.isNullOrEmpty()) {
                     MR.strings.no_results_found
+                } else if (hasActiveFilters) {
+                    MR.strings.information_no_recent
                 } else {
                     MR.strings.information_no_recent_manga
                 }
@@ -155,6 +173,8 @@ internal fun HistoryScreenPreviews(
             onClickResume = { _, _ -> run {} },
             onDialogChange = {},
             onClickFavorite = {},
+            onFilterClicked = {},
+            hasActiveFilters = historyState.hasActiveFilters,
         )
     }
 }

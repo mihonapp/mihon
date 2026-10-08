@@ -20,6 +20,7 @@ import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
+import eu.kanade.presentation.history.components.HistoryFilterDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
@@ -63,6 +64,7 @@ data object HistoryTab : Tab {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
         val viewModel = metroViewModel<HistoryViewModel>()
+        val settingsViewModel = metroViewModel<HistorySettingsViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
         HistoryScreen(
@@ -73,6 +75,8 @@ data object HistoryTab : Tab {
             onClickResume = viewModel::getNextChapterForManga,
             onDialogChange = viewModel::setDialog,
             onClickFavorite = viewModel::addFavorite,
+            onFilterClicked = viewModel::showFilterDialog,
+            hasActiveFilters = state.hasActiveFilters,
         )
 
         val onDismissRequest = { viewModel.setDialog(null) }
@@ -93,6 +97,12 @@ data object HistoryTab : Tab {
                 HistoryDeleteAllDialog(
                     onDismissRequest = onDismissRequest,
                     onDelete = viewModel::removeAllHistory,
+                )
+            }
+            is HistoryViewModel.Dialog.FilterSheet -> {
+                HistoryFilterDialog(
+                    onDismissRequest = onDismissRequest,
+                    viewModel = settingsViewModel,
                 )
             }
             is HistoryViewModel.Dialog.DuplicateManga -> {

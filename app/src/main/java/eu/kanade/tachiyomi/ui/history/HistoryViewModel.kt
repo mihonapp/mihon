@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.history
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zacsweers.metro.AppScope
@@ -13,6 +14,8 @@ import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.history.HistoryUiModel
+import eu.kanade.tachiyomi.data.download.DownloadCache
+import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -33,6 +36,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.preference.CheckboxState
+import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
@@ -45,11 +49,13 @@ import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.history.interactor.GetNextChapters
 import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.model.HistoryWithRelations
+import tachiyomi.domain.history.service.HistoryPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
+import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
 import kotlin.time.Duration.Companion.seconds
 
@@ -58,11 +64,14 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class HistoryViewModel(
     private val addTracks: AddTracks,
+    private val downloadCache: DownloadCache,
+    private val downloadManager: DownloadManager,
     private val getCategories: GetCategories,
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga,
     private val getHistory: GetHistory,
     private val getManga: GetManga,
     private val getNextChapters: GetNextChapters,
+    private val historyPreferences: HistoryPreferences,
     private val libraryPreferences: LibraryPreferences,
     private val removeHistory: RemoveHistory,
     private val setMangaCategories: SetMangaCategories,
@@ -79,25 +88,73 @@ class HistoryViewModel(
 
     private val dialog = MutableStateFlow<Dialog?>(null)
 
-    private val history = searchQuery
-        .flatMapLatest { query ->
-            getHistory.subscribe(query ?: "")
-                .distinctUntilChanged()
-                .catch { error ->
-                    logcat(LogPriority.ERROR, error)
-                    _events.send(Event.InternalError)
-                }
-                .map { it.toHistoryUiModels() }
-                .flowOn(Dispatchers.IO)
+    private val hasActiveFilters = getHistoryItemPreferenceFlow()
+        .map { prefs ->
+            listOf(
+                prefs.filterUnread,
+                prefs.filterDownloaded,
+                prefs.filterStarted,
+                prefs.filterBookmarked,
+            )
+                .any { it != TriState.DISABLED } ||
+                prefs.filterExcludedScanlators ||
+                listOf(
+                    prefs.filterIncludedCategories,
+                    prefs.filterExcludedCategories,
+                )
+                    .any { it.isNotEmpty() }
         }
+        .distinctUntilChanged()
+
+    private val history = combine(
+        // needed for SQL filters (query, unread, started, bookmarked, etc)
+        combine(
+            searchQuery,
+            getHistoryItemPreferenceFlow().distinctUntilChanged(),
+        ) { query, prefs -> query to prefs }
+            .distinctUntilChanged()
+            .flatMapLatest { (query, prefs) ->
+                getHistory.subscribe(
+                    query ?: "",
+                    unread = prefs.filterUnread.toBooleanOrNull(),
+                    started = prefs.filterStarted.toBooleanOrNull(),
+                    bookmarked = prefs.filterBookmarked.toBooleanOrNull(),
+                    hideExcludedScanlators = prefs.filterExcludedScanlators,
+                    includedCategories = prefs.filterIncludedCategories,
+                    excludedCategories = prefs.filterExcludedCategories,
+                )
+                    .distinctUntilChanged()
+                    .catch { error ->
+                        logcat(LogPriority.ERROR, error)
+                        _events.send(Event.InternalError)
+                    }
+            },
+        downloadCache.changes,
+        downloadManager.queueState,
+        // needed for Kotlin filters (downloaded)
+        getHistoryItemPreferenceFlow().distinctUntilChanged { old, new ->
+            old.filterDownloaded == new.filterDownloaded
+        },
+    ) { history, _, _, itemPreferences ->
+        history
+            .applyFilters(itemPreferences)
+            .toHistoryUiModels()
+    }
+        .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), emptyList())
 
     val state: StateFlow<State> = combine(
         searchQuery,
         history,
         dialog,
-    ) { searchQuery, history, dialog ->
-        State(searchQuery = searchQuery, list = history, dialog = dialog)
+        hasActiveFilters,
+    ) { searchQuery, history, dialog, hasActiveFilters ->
+        State(
+            searchQuery = searchQuery,
+            list = history,
+            dialog = dialog,
+            hasActiveFilters = hasActiveFilters,
+        )
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
 
@@ -112,6 +169,28 @@ class HistoryViewModel(
                     else -> null
                 }
             }
+    }
+
+    private fun List<HistoryWithRelations>.applyFilters(
+        preferences: ItemPreferences,
+    ): List<HistoryWithRelations> {
+        val filterDownloaded = preferences.filterDownloaded
+
+        val filterFnDownloaded: (HistoryWithRelations) -> Boolean = {
+            applyFilter(filterDownloaded) {
+                downloadManager.isChapterDownloaded(
+                    it.chapterName,
+                    it.scanlator,
+                    it.chapterUrl,
+                    it.title,
+                    it.sourceId,
+                )
+            }
+        }
+
+        return fastFilter {
+            filterFnDownloaded(it)
+        }
     }
 
     suspend fun getNextChapter(): Chapter? {
@@ -155,6 +234,33 @@ class HistoryViewModel(
 
     fun setDialog(dialog: Dialog?) {
         this.dialog.update { dialog }
+    }
+
+    fun showFilterDialog() {
+        dialog.update { Dialog.FilterSheet }
+    }
+
+    private fun getHistoryItemPreferenceFlow(): Flow<ItemPreferences> {
+        return combine(
+            historyPreferences.filterDownloaded.changes(),
+            historyPreferences.filterUnread.changes(),
+            historyPreferences.filterStarted.changes(),
+            historyPreferences.filterBookmarked.changes(),
+            historyPreferences.filterExcludedScanlators.changes(),
+            historyPreferences.filterIncludedCategories.changes(),
+            historyPreferences.filterExcludedCategories.changes(),
+        ) {
+            @Suppress("UNCHECKED_CAST")
+            ItemPreferences(
+                filterDownloaded = it[0] as TriState,
+                filterUnread = it[1] as TriState,
+                filterStarted = it[2] as TriState,
+                filterBookmarked = it[3] as TriState,
+                filterExcludedScanlators = it[4] as Boolean,
+                filterIncludedCategories = it[5] as List<Long>,
+                filterExcludedCategories = it[6] as List<Long>,
+            )
+        }
     }
 
     /**
@@ -258,11 +364,24 @@ class HistoryViewModel(
         val searchQuery: String? = null,
         val list: List<HistoryUiModel>? = null,
         val dialog: Dialog? = null,
+        val hasActiveFilters: Boolean = false,
+    )
+
+    @Immutable
+    private data class ItemPreferences(
+        val filterDownloaded: TriState,
+        val filterUnread: TriState,
+        val filterStarted: TriState,
+        val filterBookmarked: TriState,
+        val filterExcludedScanlators: Boolean,
+        val filterIncludedCategories: List<Long>,
+        val filterExcludedCategories: List<Long>,
     )
 
     sealed interface Dialog {
         data object DeleteAll : Dialog
         data class Delete(val history: HistoryWithRelations) : Dialog
+        data object FilterSheet : Dialog
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class ChangeCategory(
             val manga: Manga,
@@ -275,5 +394,13 @@ class HistoryViewModel(
         data class OpenChapter(val chapter: Chapter?) : Event
         data object InternalError : Event
         data object HistoryCleared : Event
+    }
+}
+
+private fun TriState.toBooleanOrNull(): Boolean? {
+    return when (this) {
+        TriState.DISABLED -> null
+        TriState.ENABLED_IS -> true
+        TriState.ENABLED_NOT -> false
     }
 }

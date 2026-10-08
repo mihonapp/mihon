@@ -9,6 +9,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
+import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
@@ -24,9 +25,28 @@ class HistoryRepositoryImpl(
     private val database: Database,
 ) : HistoryRepository {
 
-    override fun getHistory(query: String): Flow<List<HistoryWithRelations>> {
+    override fun getHistory(
+        query: String,
+        unread: Boolean?,
+        started: Boolean?,
+        bookmarked: Boolean?,
+        hideExcludedScanlators: Boolean,
+        includedCategories: List<Long>,
+        excludedCategories: List<Long>,
+    ): Flow<List<HistoryWithRelations>> {
         return database.historyViewQueries
-            .history(query, HistoryMapper::mapHistoryWithRelations)
+            .history(
+                query = query,
+                read = unread?.let { !it },
+                started = started?.toLong(),
+                bookmarked = bookmarked,
+                hideExcludedScanlators = hideExcludedScanlators.toLong(),
+                includedEmpty = includedCategories.isEmpty(),
+                excludedEmpty = excludedCategories.isEmpty(),
+                includedCategories = includedCategories,
+                excludedCategories = excludedCategories,
+                mapper = HistoryMapper::mapHistoryWithRelations,
+            )
             .subscribeToList()
     }
 
