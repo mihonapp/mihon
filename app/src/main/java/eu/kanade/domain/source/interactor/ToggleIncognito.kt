@@ -1,8 +1,10 @@
 package eu.kanade.domain.source.interactor
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.source.service.SourcePreferences
 import tachiyomi.core.common.preference.getAndSet
 
+@Inject
 class ToggleIncognito(
     private val preferences: SourcePreferences,
 ) {

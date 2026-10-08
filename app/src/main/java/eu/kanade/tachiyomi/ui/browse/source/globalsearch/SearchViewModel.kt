@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,18 +27,15 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
-import java.util.concurrent.Executors
 
 abstract class SearchViewModel(
     initialState: State = State(),
-    sourcePreferences: SourcePreferences = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val extensionManager: ExtensionManager = Injekt.get(),
-    private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
-    private val getManga: GetManga = Injekt.get(),
-    private val preferences: SourcePreferences = Injekt.get(),
+    sourcePreferences: SourcePreferences,
+    private val sourceManager: SourceManager,
+    private val extensionManager: ExtensionManager,
+    private val networkToLocalManga: NetworkToLocalManga,
+    private val getManga: GetManga,
+    private val preferences: SourcePreferences,
 ) : ViewModel() {
 
     val state: StateFlow<State>
@@ -50,7 +47,7 @@ abstract class SearchViewModel(
         state.update(function)
     }
 
-    private val coroutineDispatcher = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
+    private val coroutineDispatcher = Dispatchers.IO.limitedParallelism(5)
     private var searchJob: Job? = null
 
     private val enabledLanguages = sourcePreferences.enabledLanguages.get()
@@ -89,7 +86,7 @@ abstract class SearchViewModel(
         }
     }
 
-    open fun getEnabledSources(): List<Source> {
+    open suspend fun getEnabledSources(): List<Source> {
         return sourceManager.getAll()
             .filter { it.lang in enabledLanguages && "${it.id}" !in disabledSources }
             .sortedWith(
@@ -100,7 +97,7 @@ abstract class SearchViewModel(
             )
     }
 
-    private fun getSelectedSources(): List<Source> {
+    private suspend fun getSelectedSources(): List<Source> {
         val enabledSources = getEnabledSources()
 
         val filter = extensionFilter
@@ -108,7 +105,7 @@ abstract class SearchViewModel(
             return enabledSources
         }
 
-        return extensionManager.installedExtensionsFlow.value
+        return extensionManager.getLoadedExtensions()
             .filter { it.pkgName == filter }
             .flatMap { it.sources }
             .filter { it in enabledSources }
@@ -141,23 +138,23 @@ abstract class SearchViewModel(
 
         searchJob?.cancel()
 
-        val sources = getSelectedSources()
-
-        // Reuse previous results if possible
-        if (sameQuery) {
-            val existingResults = state.value.items
-            updateItems(
-                sources
-                    .associateWith { existingResults[it] ?: SearchItemResult.Loading },
-            )
-        } else {
-            updateItems(
-                sources
-                    .associateWith { SearchItemResult.Loading },
-            )
-        }
-
         searchJob = viewModelScope.launchIO {
+            val sources = getSelectedSources()
+
+            // Reuse previous results if possible
+            if (sameQuery) {
+                val existingResults = state.value.items
+                updateItems(
+                    sources
+                        .associateWith { existingResults[it] ?: SearchItemResult.Loading },
+                )
+            } else {
+                updateItems(
+                    sources
+                        .associateWith { SearchItemResult.Loading },
+                )
+            }
+
             sources.map { source ->
                 async {
                     if (state.value.items[source] !is SearchItemResult.Loading) {
@@ -198,7 +195,12 @@ abstract class SearchViewModel(
     }
 
     private fun updateItem(source: Source, result: SearchItemResult) {
-        updateItems(state.value.items + (source to result))
+        state.update { currentState ->
+            val newItems = currentState.items + (source to result)
+            currentState.copy(
+                items = newItems.toSortedMap(sortComparator(newItems)),
+            )
+        }
     }
 
     fun setMigrateDialog(currentId: Long, target: Manga) {

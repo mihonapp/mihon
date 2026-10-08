@@ -5,9 +5,13 @@ import android.content.Intent
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -25,19 +29,25 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.File
 
+@AssistedInject
 class NewUpdateScreenModel(
-    changelogInfo: String,
-    private val downloadLink: String,
-    private val context: Context = Injekt.get(),
-    private val network: NetworkHelper = Injekt.get(),
+    @Assisted changelogInfo: String,
+    @Assisted private val downloadLink: String,
+    private val context: Context,
+    private val network: NetworkHelper,
 ) : ViewModel() {
 
     val state: StateFlow<NewUpdateScreenModel.State>
         field = MutableStateFlow<NewUpdateScreenModel.State>(State(changelogInfo = changelogInfo))
+
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(changelogInfo: String, downloadLink: String): NewUpdateScreenModel
+    }
 
     private val apkFile: File
         get() = File(context.externalCacheDir, "update.apk")
@@ -105,19 +115,5 @@ class NewUpdateScreenModel(
         Downloading,
         Downloaded,
         Failed,
-    }
-
-    companion object {
-        val CHANGELOG_INFO_KEY = CreationExtras.Key<String>()
-        val DOWNLOAD_LINK_KEY = CreationExtras.Key<String>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                NewUpdateScreenModel(
-                    changelogInfo = get(CHANGELOG_INFO_KEY)!!,
-                    downloadLink = get(DOWNLOAD_LINK_KEY)!!,
-                )
-            }
-        }
     }
 }

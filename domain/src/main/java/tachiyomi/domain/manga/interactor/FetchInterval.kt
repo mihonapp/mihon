@@ -1,5 +1,6 @@
 package tachiyomi.domain.manga.interactor
 
+import dev.zacsweers.metro.Inject
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -16,11 +17,12 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
 
+@Inject
 class FetchInterval(
     private val getChaptersByMangaId: GetChaptersByMangaId,
 ) {
 
-    suspend fun toMangaUpdate(
+    suspend fun withFetchInterval(
         manga: Manga,
         dateTime: LocalDateTime,
         timeZone: TimeZone,
@@ -37,7 +39,10 @@ class FetchInterval(
         }
         val nextUpdate = calculateNextUpdate(manga, interval, dateTime, timeZone, currentWindow)
 
-        return MangaUpdate(id = manga.id, nextUpdate = nextUpdate, fetchInterval = interval)
+        return MangaUpdate(manga.id) {
+            this.nextUpdate = nextUpdate
+            fetchInterval = interval
+        }
     }
 
     fun getWindow(localDateTime: LocalDate, timeZone: TimeZone): Pair<Long, Long> {

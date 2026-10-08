@@ -144,8 +144,6 @@
     <string name="pref_date_format">तिथिसंरूपम्</string>
     <string name="lock_when_idle">कार्याभावे अपिदधातु</string>
     <string name="secure_screen_summary">अभिरक्षणपटलम् अनुप्रयोगाणां परिवर्तने अनुप्रयोगवस्तु वृणोति पटलप्रतिकृतीनां च सृष्टिं निवारयति॥</string>
-    <string name="pref_category_nsfw_content">प्रौढानां कृते एव (१८+) वस्तुमूलानि</string>
-    <string name="pref_show_nsfw_source">मूलानां विस्ताराणां च सूचीषु दर्शयतु</string>
     <string name="relative_time_today">अद्य</string>
     <string name="pref_library_columns">प्रतिपङ्क्तौ वस्तूनि</string>
     <string name="landscape">अनुप्रस्थम्</string>
@@ -180,8 +178,6 @@
     <string name="ext_installed">प्रतिष्ठापितम्</string>
     <string name="ext_untrusted">अविश्वस्तम्</string>
     <string name="ext_app_info">अनुप्रयोगविवरणम्</string>
-    <string name="ext_nsfw_short">१८+</string>
-    <string name="ext_nsfw_warning">प्रौढानां कृते एव (१८+) वस्तु अन्तः स्यात्</string>
     <string name="ext_install_service_notif">विस्तारं प्रतिष्ठापयति …</string>
     <string name="ext_installer_legacy">क्रमगतम्</string>
     <string name="pref_fullscreen">पूर्णपटलम्</string>
@@ -204,7 +200,6 @@
     <string name="pref_dual_page_invert">द्विपुटविभाजनस्य स्थापनं व्यत्यासं कुरु</string>
     <string name="pref_dual_page_split">द्विपुटविभाजनम्</string>
     <string name="pref_cutout_short">खण्डितक्षेत्रे वस्तु दर्शयतु</string>
-    <string name="parental_controls_info">एतत् अनधिकारैः उत वस्तुतः अशुद्धचिह्नितैः विस्तारेभ्यः ॰प्रौढानां कृते एव (१८+)॰ इति चिह्नितवस्तूनाम् अनुप्रयोगे दर्शनं न निवारयति।</string>
     <string name="pref_show_navigation_mode_summary">प्रदर्शकस्य उद्घाटने नोदनमण्डलानि दर्शयतु</string>
     <string name="pref_page_transitions">पुटसङ्क्रमान् जीवयतु</string>
     <string name="pref_double_tap_anim_speed">द्विवारनोदनं सञ्जीवनवेगः</string>
@@ -382,7 +377,6 @@
     <string name="migrate">स्थानान्तरगमनम्</string>
     <string name="copy">प्रतिलेखं करोतु</string>
     <string name="update_check_confirm">अवतारयतु</string>
-    <string name="update_check_notification_download_in_progress">अवारोपयामि…</string>
     <string name="local_source_help_guide">स्थानीयमूलमार्गदर्शनम्</string>
     <string name="action_global_search_hint">सार्वत्रिकान्वेषणम्…</string>
     <string name="chapter_not_found">अध्यायः न लभ्यः</string>
@@ -456,7 +450,6 @@
     <string name="notification_chapters_multiple">अध्यायाः %1$s</string>
     <string name="channel_complete">पूर्णम्</string>
     <string name="channel_new_chapters">अध्यायनवीकरणानि</string>
-    <string name="channel_app_updates">अनुप्रयोगनवीकरणानि</string>
     <string name="channel_ext_updates">विस्तारनवीकरणानि</string>
     <string name="pref_dns_over_https">HTTPS उपरि DNS (DoH)</string>
     <string name="getting_started_guide">प्रारम्भिकमार्गदर्शनम्</string>
@@ -514,8 +507,7 @@
     <string name="transition_pages_error">पुटानाम् आरोहणम् अनुत्तीर्णम् - %1$s</string>
     <string name="download_notifier_text_only_wifi">वै-फ़ै सम्पर्कः न उपलभ्यः</string>
     <string name="download_notifier_no_network">जालसम्पर्कः न उपलभ्यः</string>
-    <string name="copied_to_clipboard">प्रतिलेखः अंशफलकान्ते कृतः -
-\n%1$s</string>
+    <string name="copied_to_clipboard">प्रतिलेखः अंशफलकान्ते कृतः - \n%1$s</string>
     <string name="notification_chapters_single_and_more">अध्यायः %1$s च इतोऽपि %2$d च</string>
     <string name="file_picker_error">सञ्चिकाग्राही अनुप्रयोगः न लभ्यः</string>
     <string name="skipped_reason_completed">धारावाहिकः पूर्णः अतः लङ्घितः</string>

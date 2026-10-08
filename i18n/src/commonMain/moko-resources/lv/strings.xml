@@ -165,16 +165,13 @@
     <string name="pref_category_auto_download">Automātiska lejupielāde</string>
     <string name="pref_restore_backup">Atjaunot dublējumu</string>
     <string name="backup_restore_missing_trackers">Sekotāji, kas nav pieteikušies:</string>
-    <string name="backup_restore_content_full">Dublējuma faila dati tiks atjaunoti.
-\n
-\nJums būs jāinstalē visi trūkstošie paplašinājumi un jāpiesakās izsekošanas pakalpojumos, lai tos izmantotu.</string>
+    <string name="backup_restore_content_full">Dublējuma faila dati tiks atjaunoti. \n \nJums būs jāinstalē visi trūkstošie paplašinājumi un jāpiesakās izsekošanas pakalpojumos, lai tos izmantotu.</string>
     <string name="unread">Neizlasītie</string>
     <string name="all">Visi</string>
     <string name="ext_update">Atjauninājums</string>
     <string name="ext_downloading">Lejupielādē</string>
     <string name="ext_installing">Instalē</string>
     <string name="ext_app_info">Aplikācijas informācija</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="confirm_lock_change">Autentificējaties, lai apstriprinātu izmaiņas</string>
     <string name="pref_update_only_non_completed">Ar \'\'Pabeigts\'\' statusu</string>
     <string name="action_start_downloading_now">Sākt lejupielādi tūlīt</string>
@@ -187,11 +184,9 @@
     <string name="charging">Uzlādējot</string>
     <string name="ext_info_version">Versija</string>
     <string name="ext_info_language">Valoda</string>
-    <string name="ext_info_age_rating">Vecuma grupa</string>
     <string name="action_sort_last_manga_update">Pēdējā atjauninājuma pārbaude</string>
     <string name="action_sort_unread_count">Neizlasītais skaits</string>
     <string name="action_show_manga">Rādīt ierakstu</string>
-    <string name="ext_nsfw_warning">Šī paplašinājuma avoti var saturēt NSFW (18+) saturu</string>
     <string name="ext_install_service_notif">Instalē paplašinājumu…</string>
     <string name="ext_installer_pref">Instalētājs</string>
     <string name="ext_installer_shizuku_stopped">Shizuku nedarbojas</string>
@@ -199,14 +194,11 @@
     <string name="action_sort_count">Visi ieraksti</string>
     <string name="cancel_all_for_series">Atcelt visu šai sērijai</string>
     <string name="action_order_by_upload_date">Pēc augšupielādes datuma</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) avoti</string>
-    <string name="pref_show_nsfw_source">Rādīt avotos un paplašinājumu sarakstos</string>
     <string name="update_never">Izslēgts</string>
     <string name="action_display_language_badge">Valoda</string>
     <string name="action_sort_chapter_fetch_date">Nodaļas ieneses datums</string>
     <string name="action_close">Aizvērt</string>
     <string name="pref_category_library_update">Globāls atjauninājums</string>
-    <string name="parental_controls_info">Šis neliedz neoficiāliem vai, iespējams, nepareizi atzīmētiem paplašinājumiem parādīties NSFW (18+) saturu lietotnē.</string>
     <string name="relative_time_today">Šodien</string>
     <string name="pref_library_update_interval">Automātiskie atjauninājumi</string>
     <string name="update_weekly">Katru nedēļu</string>
@@ -217,11 +209,7 @@
     <string name="ext_pending">Gaida</string>
     <string name="ext_uninstall">Atinstalēt</string>
     <string name="untrusted_extension">Neuzticams paplašinājums</string>
-    <string name="untrusted_extension_message">Šis paplašinājums tika parakstīts ar neuzticamu sertifikātu, un tas netika aktivizēts.
-\n
-\nĻaunprātīgs paplašinājums var nolasīt visus saglabātos pieteikšanās akreditācijas datus vai izpildīt patvaļīgu kodu.
-\n
-\nUzticoties šim sertifikātam, jūs piekrītat šiem riskiem.</string>
+    <string name="untrusted_extension_message">Šis paplašinājums tika parakstīts ar neuzticamu sertifikātu, un tas netika aktivizēts. \n \nĻaunprātīgs paplašinājums var nolasīt visus saglabātos pieteikšanās akreditācijas datus vai izpildīt patvaļīgu kodu. \n \nUzticoties šim sertifikātam, jūs piekrītat šiem riskiem.</string>
     <string name="ext_installer_legacy">Mantots</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Instalējiet un startējiet Shizuku, lai izmantotu Shizuku kā paplašinājuma instalētāju.</string>
     <string name="pref_fullscreen">Pilnekrāns</string>
@@ -502,7 +490,6 @@
     <string name="empty_screen">Nu, šis ir neveikli</string>
     <string name="update_check_open">Atvērt vietnē GitHub</string>
     <string name="update_check_eol">Šī Android versija vairs netiek atbalstīta</string>
-    <string name="update_check_notification_download_in_progress">Lejupielādē…</string>
     <string name="channel_progress">Progress</string>
     <string name="decode_image_error">Attēlu nevarēja ielādēt</string>
     <string name="confirm_set_image_as_cover">Vai izmantot šo attēlu kā vāku?</string>
@@ -543,8 +530,7 @@
     <string name="source_not_installed">Avots nav instalēts: %1$s</string>
     <string name="complete_list">Pabeigto saraksts</string>
     <string name="on_hold_list">Aizturēto saraksts</string>
-    <string name="copied_to_clipboard">Kopēts uz starpliktuvi:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Kopēts uz starpliktuvi: \n%1$s</string>
     <string name="error_saving_cover">Kļūda saglabājot vāku</string>
     <string name="reading_list">Lasīšanas saraksts</string>
     <string name="notification_chapters_multiple">Nodaļas %1$s</string>
@@ -556,7 +542,6 @@
     <string name="download_notifier_split_page_not_found">Sadalīšanas laikā netika atrasta lapa %d</string>
     <string name="skipped_reason_not_caught_up">Izlaists, jo ir nelasītas nodaļas</string>
     <string name="learn_more">Pieskarieties, lai uzzinātu vairāk</string>
-    <string name="channel_app_updates">Lietotnes atjauninājumi</string>
     <string name="update_check_notification_update_available">Ir pieejama jauna versija!</string>
     <string name="chapter_settings_updated">Atjaunināti noklusējuma nodaļu iestatījumi</string>
     <string name="pref_landscape_zoom">Automātiski tuvināt ainavas attēlus</string>
@@ -670,8 +655,7 @@
     <string name="remove_manga">Jūs gatavojaties noņemt \"%s\" no savas bibliotēkas</string>
     <string name="action_not_now">Ne tagad</string>
     <string name="action_search_hint">Meklē…</string>
-    <string name="fdroid_warning">F-Droid versijas netiek oficiāli atbalstītas.
-\nPieskarieties, lai uzzinātu vairāk.</string>
+    <string name="fdroid_warning">F-Droid versijas netiek oficiāli atbalstītas. \nPieskarieties, lai uzzinātu vairāk.</string>
     <string name="download_notifier_cache_renewal">Pārbauda lejupielādes</string>
     <string name="error_user_agent_string_blank">Lietotāja agent virknes lauks nedrīkst būt tukšs</string>
     <string name="information_no_entries_found">Šajā kategorijā nav atrasts neviens ieraksts</string>

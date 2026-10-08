@@ -98,11 +98,7 @@
     <string name="ext_untrusted">Неповерљиво</string>
     <string name="ext_uninstall">Обриши</string>
     <string name="untrusted_extension">Неповерљив додатак</string>
-    <string name="untrusted_extension_message">Овај додатак је потписан са непоузданим сертификатом и није активиран.
-\n
-\nЗлонамерни додатак може прочитати све податке за пријаву или извршити произвољни код.
-\n
-\nВерујући овом сертификату прихватате ове ризике.</string>
+    <string name="untrusted_extension_message">Овај додатак је потписан са непоузданим сертификатом и није активиран. \n \nЗлонамерни додатак може прочитати све податке за пријаву или извршити произвољни код. \n \nВерујући овом сертификату прихватате ове ризике.</string>
     <string name="pref_fullscreen">Цео екран</string>
     <string name="pref_page_transitions">Анимације при промени странице</string>
     <string name="pref_double_tap_anim_speed">Брзина анимације двоклика</string>
@@ -198,8 +194,7 @@
     <string name="manga_added_library">Додано у колекцији</string>
     <string name="manga_removed_library">Уклоњено из колекције</string>
     <string name="delete_downloads_for_manga">Обриши преузета поглавља?</string>
-    <string name="copied_to_clipboard">Копирано:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Копирано: \n%1$s</string>
     <string name="source_not_installed">Извор није инсталиран: %1$s</string>
     <string name="display_mode_chapter">Поглавље %1$s</string>
     <string name="chapter_downloading_progress">Преузима се (%1$d/%2$d)</string>
@@ -340,7 +335,6 @@
     <string name="information_webview_required">WebView је потребан како би апликација функционисала</string>
     <string name="information_cloudflare_bypass_failure">Неуспешно заобилажење Cloudflare-а</string>
     <string name="update_check_notification_update_available">Доступно је ново ажурирање!</string>
-    <string name="update_check_notification_download_in_progress">Преузимање…</string>
     <string name="update_check_no_new_updates">Нема нових ажурирања</string>
     <string name="update_check_confirm">Преузми</string>
     <string name="file_select_backup">Изаберите датотеку резервне копије</string>
@@ -358,11 +352,8 @@
     <string name="action_search_settings">Подешавања претраге</string>
     <string name="action_sort_date_added">Датум додавања</string>
     <string name="pref_show_reading_mode">Прикажи начин читања</string>
-    <string name="ext_nsfw_warning">Може садржати садржај за одрасле (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_library_update_refresh_metadata_summary">Провери да ли постоје нови омоти при ажурирању колекције</string>
     <string name="pref_library_update_refresh_metadata">Аутоматски освежи метаподатке</string>
-    <string name="parental_controls_info">Ово не спречава незваничне или потенцијално погрешно означене додатке да прикажу садржај за одрасле (18+) унутар апликације.</string>
     <string name="action_filter_tracked">Запраћено</string>
     <string name="label_warning">Упозорење</string>
     <string name="confirm_lock_change">Оверите да бисте потврдили промене</string>
@@ -390,8 +381,6 @@
     <string name="theme_tealturquoise">Плавозелена и тиркизна</string>
     <string name="theme_yinyang">Јин и јанг</string>
     <string name="pref_dark_theme_pure_black">Потпуно црна тема</string>
-    <string name="pref_category_nsfw_content">NSFW - извори за одрасле (18+)</string>
-    <string name="pref_show_nsfw_source">Покажи у листи за изворе и додатке</string>
     <string name="pref_category_reading_mode">Начин читања</string>
     <string name="ext_installer_pref">Инсталер</string>
     <string name="pref_category_auto_download">Аутоматско преузимање</string>
@@ -423,9 +412,7 @@
     <string name="invalid_backup_file_missing_manga">Резервна копија не садржи ниједан наслов.</string>
     <string name="backup_restore_missing_trackers">Пратиоци у које нисте пријављени:</string>
     <string name="label_network">Мрежа</string>
-    <string name="backup_restore_content_full">Подаци из датотеке резервне копије ће бити враћени.
-\n
-\nМораћете да инсталирате све додатке које недостају и да се после тога пријавите на пратиоце да бисте их користили.</string>
+    <string name="backup_restore_content_full">Подаци из датотеке резервне копије ће бити враћени. \n \nМораћете да инсталирате све додатке које недостају и да се после тога пријавите на пратиоце да бисте их користили.</string>
     <string name="enhanced_tracking_info">Сервиси који пружају побољшане услуге за одређене изворе. Наслов се аутоматски прати када га додате у колекцију.</string>
     <string name="help_translate">Помозите у превођењу</string>
     <string name="pref_dump_crash_logs">Дели извештаје о паду</string>
@@ -546,7 +533,6 @@
     <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања %s-а. Додирни да сазнаш више.</string>
     <string name="notification_size_warning">Велика ажурирања штете изворима и могу довести до споријег ажурирања и повећања потрошње батерије. Кликни да сазнаш више.</string>
     <string name="ext_update_all">Ажурирај све</string>
-    <string name="channel_app_updates">Ажурирања апликације</string>
     <string name="clear_database_source_item_count">Број наслова у бази података које нису у колекцији: %1$d</string>
     <string name="extension_api_error">Преузимање листе додатака није успело</string>
     <string name="pref_auto_clear_chapter_cache">Испразни кеш меморију поглавља током покретања апликације</string>
@@ -592,8 +578,7 @@
     <string name="pref_library_update_show_tab_badge">Прокажи број непрочитаних на икони ажурирања</string>
     <string name="wish_list">Листа жеља</string>
     <string name="enhanced_services_not_installed">Доступно, али извор није преузет: %s</string>
-    <string name="fdroid_warning">F-Droid верзије нису званично подржане.
-\nДодирните да сазнате више.</string>
+    <string name="fdroid_warning">F-Droid верзије нису званично подржане. \nДодирните да сазнате више.</string>
     <string name="track_remove_date_conf_title">Уклони датум?</string>
     <string name="track_remove_start_date_conf_text">Овим уклањате претходно изабран почетни датум од %s</string>
     <string name="track_remove_finish_date_conf_text">Овим уклањате претходно изабран завршени датум од %s</string>
@@ -671,7 +656,6 @@
     <string name="pref_reset_user_agent_string">Ресетуј подразумевани низ корисничког агента</string>
     <string name="label_tracked_titles">Праћени наслови</string>
     <string name="label_tracker_section">Пратиоци</string>
-    <string name="ext_info_age_rating">Рангирање по узрасту</string>
     <string name="custom_cover">Персонализовани омот</string>
     <string name="pref_reset_viewer_flags">Ресетуј подешавања читача по наслову</string>
     <string name="source_empty_screen">Извор није пронађен</string>
@@ -749,11 +733,7 @@
     <string name="onboarding_permission_ignore_battery_opts">Коришћење батерије у позадини</string>
     <string name="onboarding_description">Хајде да обавимо нека подешавања. Ако желиш можеш их касније променити у подешавањима.</string>
     <string name="no_location_set">Није постављена локација за складиштење</string>
-    <string name="onboarding_storage_info">Одабери путању у коју ће %1$s чувати преузимања поглавља, резервне копије и друго.
-\n
-\nПрепоручујемо коришћење засебне путање
-\n
-\nОдабрана путања: %2$s</string>
+    <string name="onboarding_storage_info">Одабери путању у коју ће %1$s чувати преузимања поглавља, резервне копије и друго. \n \nПрепоручујемо коришћење засебне путање \n \nОдабрана путања: %2$s</string>
     <string name="theme_nord">Норд</string>
     <string name="onboarding_storage_help_info">Ажурураш са старије верзије и не знаш шта да изабереш? Потражи информације у водичу складиштења.</string>
     <string name="onboarding_storage_help_action">Водич складиштења</string>

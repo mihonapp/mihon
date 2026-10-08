@@ -75,12 +75,8 @@
     <string name="pref_page_transitions">Animar transición de páxinas</string>
     <string name="pref_cutout_short">Mostrar contido na área recortada</string>
     <string name="pref_fullscreen">Pantalla completa</string>
-    <string name="ext_nsfw_warning">As fontes desta extensión poden ter contido NSFW (+18)</string>
-    <string name="ext_nsfw_short">+18</string>
     <string name="obsolete_extension_message">Esta extensión xa non está dispoñible. Pode que non funcione ben e cause problemas na aplicación. Recoméndase desinstalala.</string>
-    <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardada en Mihon ou executar calquera tipo de código.
-\n
-\nSe confías nesta extensión, aceptas estes riscos.</string>
+    <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardada en Mihon ou executar calquera tipo de código. \n \nSe confías nesta extensión, aceptas estes riscos.</string>
     <string name="untrusted_extension">Extensión non confiable</string>
     <string name="ext_untrusted">Non confiable</string>
     <string name="ext_uninstall">Desinstalar</string>
@@ -113,7 +109,6 @@
     <string name="portrait">Vertical</string>
     <string name="pref_library_columns">Tamaño da reixa</string>
     <string name="pref_category_display">Amosar</string>
-    <string name="parental_controls_info">Isto non evita que as extensións non oficiais ou mal clasificadas mostren contido NSFW (+18) dentro da aplicación.</string>
     <string name="hide_notification_content">Esconder o contido das notificacións</string>
     <string name="secure_screen_summary">O modo discreto esconde o contido da aplicación ao cambiar entre aplicacións e bloquea as capturas de pantalla</string>
     <string name="secure_screen">Modo discreto</string>
@@ -124,8 +119,6 @@
     <string name="file_picker_error">Non se atopou unha aplicación para seleccionar ficheiros</string>
     <string name="myanimelist_relogin">Inicia sesión en MAL de novo</string>
     <string name="requires_app_restart">Require reiniciar a aplicación para que surxa efecto</string>
-    <string name="pref_show_nsfw_source">Amosar na lista de fontes e extensións</string>
-    <string name="pref_category_nsfw_content">Fontes NSFW (+18)</string>
     <string name="pref_category_security">Seguridade e privacidade</string>
     <string name="pref_manage_notifications">Xestionar notificacións</string>
     <string name="pref_date_format">Formato da data</string>
@@ -353,10 +346,8 @@
     <string name="restoring_backup_canceled">Cancelouse a restauración</string>
     <string name="label_network">Rede</string>
     <string name="password">Contrasinal</string>
-    <string name="fdroid_warning">As versións de F-Droid non teñen soporte oficial.
-\nPreme para saber máis.</string>
+    <string name="fdroid_warning">As versións de F-Droid non teñen soporte oficial. \nPreme para saber máis.</string>
     <string name="login_success">Conectado</string>
-    <string name="ext_info_age_rating">Clasificación por idades</string>
     <string name="enhanced_services">Servizos de seguimento mellorados</string>
     <string name="enhanced_tracking_info">Estes servizos proporcionan funcións melloradas para fontes concretas. Faise un seguimento automático dos elementos ao engadilos á biblioteca.</string>
     <string name="backup_in_progress">Xa se está facendo unha copia de seguridade</string>
@@ -550,8 +541,7 @@
     <string name="sort_by_source">Por fonte</string>
     <string name="transition_current">Actual:</string>
     <string name="transition_next">Seguinte:</string>
-    <string name="copied_to_clipboard">Copiado ao portapapeis:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiado ao portapapeis: \n%1$s</string>
     <string name="clipboard_copy_error">Non se puido copiar ao portapapeis</string>
     <string name="complete_list">Lista de rematados</string>
     <string name="score">Puntuación</string>
@@ -604,7 +594,6 @@
     <string name="chapter_progress">Páxina: %1$d</string>
     <string name="error_saving_picture">Produciuse un erro ao gardar a imaxe</string>
     <string name="update_check_confirm">Descargar</string>
-    <string name="channel_app_updates">Actualizacións da aplicación</string>
     <string name="learn_more">Preme para saber máis</string>
     <string name="notification_cover_update_failed">Erro ao actualizar a portada</string>
     <string name="show_chapter_number">Número do capítulo</string>
@@ -638,7 +627,6 @@
     <string name="label_read_duration">Tempo de lectura</string>
     <string name="label_titles_in_global_update">Na actualización global</string>
     <string name="label_total_chapters">Totais</string>
-    <string name="update_check_notification_download_in_progress">Descargando…</string>
     <string name="information_empty_category_dialog">Aínda non tes categorías.</string>
     <string name="information_required_plain">*necesario</string>
     <string name="spen_previous_page">Páxina anterior</string>
@@ -717,11 +705,7 @@
     <string name="onboarding_heading">Dámosche a benvida!</string>
     <string name="onboarding_action_finish">Comecemos</string>
     <string name="onboarding_action_skip">Omitir</string>
-    <string name="onboarding_storage_info">Elixe o cartafol onde %1$s almacenará os capítulos descargados, as copias de seguridade e máis.
-\n
-\nRecoméndase usar un cartafol dedicado.
-\n
-\nElixir cartafol: %2$s</string>
+    <string name="onboarding_storage_info">Elixe o cartafol onde %1$s almacenará os capítulos descargados, as copias de seguridade e máis. \n \nRecoméndase usar un cartafol dedicado. \n \nElixir cartafol: %2$s</string>
     <string name="onboarding_storage_action_select">Elixe un cartafol</string>
     <string name="onboarding_permission_install_apps">Permiso para instalar aplicacións</string>
     <string name="onboarding_permission_install_apps_description">Para instalar as extensións das fontes.</string>
@@ -792,10 +776,6 @@
     <string name="onboarding_permission_crashlytics_description">Envía rexistros de erros anónimos aos desenvolvedores.</string>
     <string name="onboarding_permission_crashlytics">Enviar rexistro de erros</string>
     <string name="non_library_settings">Todas as obras lidas</string>
-    <string name="pref_hardware_bitmap_threshold">Elixir un tamaño máximo co que decodificar imáxenes por hardware</string>
-    <string name="pref_hardware_bitmap_threshold_default">Por defecto (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Se o lector carga unha páxina en branco, recomendámoste reducilo pouco a pouco.\nLímite actual: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afecta ao rendemento. Recomendámosche activalo só se a imaxe segue sen verse ao reducir o tamaño máximo</string>
     <string name="pref_download_new_unread_chapters_only">Omitir a descarga de capítulos duplicados xa lidos</string>
     <string name="ext_confirm_remove">Queres eliminar a extensión?</string>
     <string name="remove_private_extension_message">Seguro que queres eliminar a extensión \"%s\"?</string>
@@ -828,7 +808,6 @@
     <string name="action_edit_notes">Editar notas</string>
     <string name="pref_behavior">Comportamento</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Ao obter capítulos novos</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Cargar imaxes de tira vertical co decodificador antigo</string>
     <string name="logging_in">Iniciando sesión…</string>
     <string name="export">Exportar</string>
     <string name="library_list">Lista da biblioteca</string>

@@ -97,9 +97,7 @@
     <string name="ext_untrusted">未信任</string>
     <string name="ext_uninstall">卸载</string>
     <string name="untrusted_extension">插件未受信任</string>
-    <string name="untrusted_extension_message">恶意插件可能会读取所有登录的账号或执行任意代码。
-\n
-\n信任此插件即代表你愿意承担上述风险。</string>
+    <string name="untrusted_extension_message">恶意插件可能会读取所有登录的账号或执行任意代码。 \n \n信任此插件即代表你愿意承担上述风险。</string>
     <string name="pref_fullscreen">全屏</string>
     <string name="pref_page_transitions">翻页动画</string>
     <string name="pref_double_tap_anim_speed">双击动画速度</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">已添加到书架</string>
     <string name="manga_removed_library">已移出书架</string>
     <string name="delete_downloads_for_manga">要删除已下载的章节吗？</string>
-    <string name="copied_to_clipboard">已复制到剪贴板：
-\n「%1$s」</string>
+    <string name="copied_to_clipboard">已复制到剪贴板： \n「%1$s」</string>
     <string name="source_not_installed">未安装图源：%1$s</string>
     <string name="display_mode_chapter">第 %1$s 章</string>
     <string name="chapter_downloading_progress">正在下载 (%1$d/%2$d)</string>
@@ -253,7 +250,6 @@
     <string name="file_select_backup">选择备份文件</string>
     <string name="update_check_confirm">下载</string>
     <string name="update_check_no_new_updates">没有新版本</string>
-    <string name="update_check_notification_download_in_progress">正在下载…</string>
     <string name="update_check_notification_update_available">有新版本！</string>
     <string name="information_no_downloads">无下载任务</string>
     <string name="information_no_recent">最近没有更新</string>
@@ -404,9 +400,6 @@
     <string name="backup_restore_missing_trackers">尚未登录进度记录平台：</string>
     <string name="pref_remove_bookmarked_chapters">允许删除添加了书签的章节</string>
     <string name="pref_category_delete_chapters">删除章节</string>
-    <string name="ext_nsfw_warning">来自此插件的图源可能包含 NSFW (18+) 内容</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">如果有插件标记错误，这项设置无法阻止它们展示 NSFW (18+) 内容。</string>
     <string name="no_chapters_error">没有章节</string>
     <string name="chapter_settings_updated">已更新默认章节设置</string>
     <string name="set_chapter_settings_as_default">设为默认</string>
@@ -425,10 +418,8 @@
     <string name="spen_next_page">下一页</string>
     <string name="spen_previous_page">上一页</string>
     <string name="migration_help_guide">图源迁移指南</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) 图源</string>
     <string name="file_picker_error">没有文件管理器</string>
     <string name="myanimelist_relogin">请重新登录 MAL</string>
-    <string name="pref_show_nsfw_source">在图源和插件列表中显示</string>
     <string name="pref_viewer_nav">点按区域</string>
     <string name="edge_nav">两侧</string>
     <string name="kindlish_nav">Kindle</string>
@@ -541,7 +532,6 @@
     <string name="update_72hour">每 3 天</string>
     <string name="download_queue_size_warning">警告：批量下载可能导致图源变慢，甚至会使得它们屏蔽 %s 。点击了解详情。</string>
     <string name="ext_update_all">全部更新</string>
-    <string name="channel_app_updates">应用更新</string>
     <string name="pref_auto_clear_chapter_cache">启动时清除章节缓存</string>
     <string name="database_clean">无需清理</string>
     <string name="clear_database_source_item_count">数据库中有 %1$d 部作品未添加到书架</string>
@@ -583,7 +573,6 @@
     <string name="pref_reset_viewer_flags_success">已重置所有阅读器设置</string>
     <string name="pref_reset_viewer_flags_error">重置阅读器设置失败</string>
     <string name="empty_screen">呃…尴尬了</string>
-    <string name="ext_info_age_rating">分级</string>
     <string name="ext_info_version">版本</string>
     <string name="ext_info_language">语言</string>
     <string name="reading_list">在读</string>
@@ -639,8 +628,7 @@
     <string name="download_notifier_cache_renewal">正在扫描已下载章节</string>
     <string name="action_open_random_manga">随机打开作品</string>
     <string name="information_no_entries_found">此分类没有作品</string>
-    <string name="fdroid_warning">F-Droid 渠道不受官方支持。
-\n点击了解详情。</string>
+    <string name="fdroid_warning">F-Droid 渠道不受官方支持。 \n点击了解详情。</string>
     <string name="action_display_show_continue_reading_button">继续阅读按钮</string>
     <string name="pref_invalidate_download_cache">重建下载索引</string>
     <string name="track_remove_date_conf_title">要删除日期吗？</string>
@@ -761,11 +749,7 @@
     <string name="onboarding_storage_help_action">存储指南</string>
     <string name="pref_storage_location">存储位置</string>
     <string name="onboarding_storage_action_select">选择文件夹</string>
-    <string name="onboarding_storage_info">选择一个文件夹供 %1$s 存放下载章节、备份文件等。
-\n
-\n推荐使用一个专门的文件夹。
-\n
-\n已选文件夹：%2$s</string>
+    <string name="onboarding_storage_info">选择一个文件夹供 %1$s 存放下载章节、备份文件等。 \n \n推荐使用一个专门的文件夹。 \n \n已选文件夹：%2$s</string>
     <string name="onboarding_storage_selection_required">必须选择一个文件夹</string>
     <string name="available_disk_space_info">%1$s / %2$s</string>
     <string name="theme_nord">Nord</string>
@@ -795,10 +779,10 @@
     <string name="pref_download_new_unread_chapters_only">跳过下载重复阅读的章节</string>
     <string name="confirm_tracker_update">将进度更新到第 %d 章？</string>
     <string name="onboarding_permission_crashlytics">发送崩溃日志</string>
-    <string name="onboarding_permission_crashlytics_description">向开发者发送匿名的崩溃日志</string>
+    <string name="onboarding_permission_crashlytics_description">向开发者发送匿名的崩溃日志。</string>
     <string name="onboarding_permission_analytics">数据分析</string>
     <string name="pref_security">安全</string>
-    <string name="onboarding_permission_analytics_description">发送匿名的应用数据以提升用户体验</string>
+    <string name="onboarding_permission_analytics_description">发送匿名的应用数据以提升用户体验。</string>
     <string name="pref_firebase">数据分析与崩溃日志</string>
     <string name="firebase_summary">允许发送崩溃日志和数据分析帮助开发者辨别并修复问题，提高应用体验，以期更新符合你需要的功能</string>
     <string name="action_sort_random">随机</string>
@@ -808,14 +792,9 @@
     <string name="non_library_settings">所有已读作品</string>
     <string name="pref_auto_update_manga_on_mark_read">标记为已读时更新章节进度</string>
     <string name="trackers_updated_summary">进度记录平台已更新到 %d 章</string>
-    <string name="pref_hardware_bitmap_threshold_default">默认 (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">如果阅读器加载空白图像，请逐步降低阈值。\n已选择： %s</string>
-    <string name="pref_hardware_bitmap_threshold">自定义硬件位图阈值</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">会影响性能。仅当降低位图阈值无法解决空白图像问题时才启用</string>
     <string name="pref_incognito_mode_extension_summary">暂停记录插件的阅读历史</string>
     <string name="label_auto">自动</string>
     <string name="theme_monochrome">单色</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">在长条阅读模式中使用旧版解码器</string>
     <string name="pref_mark_duplicate_read_chapter_read">将重复的已读章节都标记为已读</string>
     <string name="author">作者</string>
     <string name="action_toggle_private_off">公开记录</string>
@@ -823,7 +802,7 @@
     <string name="export">导出</string>
     <string name="library_list">书架列表</string>
     <string name="library_exported">已导出列表</string>
-    <string name="tracked_privately">私下记录</string>
+    <string name="tracked_privately">已私下记录</string>
     <string name="action_toggle_private_on">私下记录</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">获取新章节后</string>
     <string name="pref_behavior">操作</string>
@@ -922,4 +901,56 @@
     <string name="downloading_with_progress">正在下载… (%d%%)</string>
     <string name="pref_filter_update_categories_details">同时属于包含和排除分类的作品更新将不予显示。</string>
     <string name="pref_filter_upcoming_categories_details">同时属于包含和排除分类的标题将不予显示。</string>
+    <string name="pref_category_extensions">插件</string>
+    <string name="content_warnings_info">已安装但未加载的插件仍会显示在列表中，但不会显示其来源；未安装的插件则会被隐藏。这并不能阻止非官方或可能被错误标记的插件显示 18+ 内容。</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">关闭后，已安装的插件仍会继续加载和更新，无论其是否显示警告</string>
+    <string name="pref_apply_content_warnings_to_installed">还适用于已安装的插件</string>
+    <string name="pref_allowed_content_warnings">已允许内容警告</string>
+    <string name="ext_filtered">已过滤</string>
+    <string name="ext_not_loaded">未加载</string>
+    <string name="ext_not_loaded_dialog">无法加载</string>
+    <string name="ext_copy_stacktrace">复制堆栈跟踪</string>
+    <string name="ext_filtered_message">此插件的内容警告并非您主动加载的，因此无法查看其来源。</string>
+    <string name="ext_unsigned_message">此插件未签名，因此没有签名可供检查。</string>
+    <string name="ext_unsupported_message">此插件是为此应用程序版本无法加载的插件库版本构建的。更新应用程序或插件可能会有所帮助。</string>
+    <string name="ext_malformed_message">此插件缺少加载它所需的信息。</string>
+    <string name="ext_load_failed_message">此插件在加载时引发错误，因此其来源均不可用。</string>
+    <string name="ext_info_warning">警告</string>
+    <string name="ext_content_warning_safe">安全</string>
+    <string name="ext_content_warning_mixed">混合</string>
+    <string name="ext_content_warning_nsfw">18+</string>
+    <string name="ext_content_warning_mixed_description">此插件的来源可能包含安全内容和 18+ 内容。</string>
+    <string name="ext_content_warning_nsfw_description">此扩展的来源主要包含 18+ 内容。</string>
+    <string name="pref_high_quality_renderer">使用高质量渲染器</string>
+    <string name="webgpu_viewer">WebGPU</string>
+    <string name="pref_transition_animation">过渡动画</string>
+    <string name="pref_transition_animation_dual">过渡动画（双页）</string>
+    <string name="transition_animation_basic">默认</string>
+    <string name="transition_animation_flip_left">翻页（左）</string>
+    <string name="transition_animation_flip_right">翻页（右）</string>
+    <string name="transition_animation_stack_left">堆叠（左）</string>
+    <string name="transition_animation_stack_right">堆叠（右）</string>
+    <string name="transition_animation_stack_up">堆叠（上）</string>
+    <string name="transition_animation_stack_down">堆叠（下）</string>
+    <string name="transition_animation_sphere">球体</string>
+    <string name="transition_animation_cube_inside">立方体（内侧）</string>
+    <string name="transition_animation_cube_outside">立方体（外侧）</string>
+    <string name="transition_animation_fade">淡入淡出</string>
+    <string name="transition_animation_fade_white">淡出至白色</string>
+    <string name="transition_animation_none">无</string>
+    <string name="transition_animation_flip">翻页</string>
+    <string name="pref_cutout_mode">显示缺口模式</string>
+    <string name="pref_cutout_mode_dual">显示缺口模式（双页）</string>
+    <string name="cutout_mode_ignore">忽略</string>
+    <string name="cutout_mode_avoid">避开</string>
+    <string name="cutout_mode_shift">偏移</string>
+    <string name="pref_dual_page_view">双页视图</string>
+    <string name="dual_page_view_never">从不</string>
+    <string name="dual_page_view_always">始终</string>
+    <string name="dual_page_view_wide">宽屏时</string>
+    <string name="pref_continuous_minwidth">最小宽度</string>
+    <string name="pref_continuous_gap">距离</string>
+    <string name="refresh_tracker_profile">刷新跟踪器配置</string>
+    <string name="refresh_tracker_success">刷新 %s 配置</string>
+    <string name="refresh_tracker_error">%1$s 刷新错误： %2$s</string>
 </resources>

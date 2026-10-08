@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowRight
-import androidx.compose.material.icons.outlined.RadioButtonChecked
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.ArrowRight
+import mihon.icons.materialsymbols.rounded.RadioButtonChecked
+import mihon.icons.materialsymbols.rounded.RadioButtonUnchecked
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import androidx.compose.material3.DropdownMenu as ComposeDropdownMenu
@@ -63,13 +63,13 @@ fun RadioMenuItem(
         trailingIcon = {
             if (isChecked) {
                 Icon(
-                    imageVector = Icons.Outlined.RadioButtonChecked,
+                    imageVector = MaterialSymbols.Rounded.RadioButtonChecked,
                     contentDescription = stringResource(MR.strings.selected),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             } else {
                 Icon(
-                    imageVector = Icons.Outlined.RadioButtonUnchecked,
+                    imageVector = MaterialSymbols.Rounded.RadioButtonUnchecked,
                     contentDescription = stringResource(MR.strings.not_selected),
                 )
             }
@@ -93,7 +93,7 @@ fun NestedMenuItem(
             onClick = { nestedExpanded = true },
             trailingIcon = {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ArrowRight,
+                    imageVector = MaterialSymbols.AutoMirroredRounded.ArrowRight,
                     contentDescription = null,
                 )
             },

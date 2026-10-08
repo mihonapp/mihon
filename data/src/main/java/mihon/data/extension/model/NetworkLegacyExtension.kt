@@ -3,6 +3,7 @@ package mihon.data.extension.model
 import android.annotation.SuppressLint
 import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.serialization.Serializable
+import mihon.domain.extension.model.ContentWarning
 import mihon.domain.extension.model.ExtensionStore
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -35,7 +36,7 @@ data class NetworkLegacyExtension(
             versionCode = code,
             versionName = version,
             lang = lang,
-            isNsfw = nsfw == 1,
+            contentWarning = if (nsfw == 1) ContentWarning.NSFW else ContentWarning.SAFE,
             sources = if (sources.isNullOrEmpty()) {
                 listOf(
                     Extension.Available.Source(

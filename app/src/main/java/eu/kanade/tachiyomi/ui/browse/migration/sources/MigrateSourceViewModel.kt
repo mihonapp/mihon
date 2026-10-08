@@ -3,6 +3,11 @@ package eu.kanade.tachiyomi.ui.browse.migration.sources
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.domain.source.service.SourcePreferences
@@ -20,13 +25,14 @@ import logcat.LogPriority
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.Source
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Duration.Companion.seconds
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class MigrateSourceViewModel(
-    private val preferences: SourcePreferences = Injekt.get(),
-    private val getSourcesWithFavoriteCount: GetSourcesWithFavoriteCount = Injekt.get(),
+    private val preferences: SourcePreferences,
+    private val getSourcesWithFavoriteCount: GetSourcesWithFavoriteCount,
 ) : ViewModel() {
 
     private val _channel = Channel<Event>(Int.MAX_VALUE)

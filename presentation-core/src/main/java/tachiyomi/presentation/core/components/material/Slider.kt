@@ -6,7 +6,9 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SliderState
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import kotlin.math.roundToInt
@@ -33,13 +35,19 @@ fun Slider(
         SliderDefaults.Track(colors = colors, enabled = enabled, sliderState = sliderState)
     },
 ) {
+    val state = key(steps, valueRange) {
+        rememberSliderState(
+            value = value.toFloat(),
+            steps = steps,
+            trackRange = with(valueRange) { first.toFloat()..last.toFloat() },
+        )
+    }
+    state.value = value.toFloat()
     Slider(
-        value = value.toFloat(),
-        onValueChange = { onValueChange(it.roundToInt()) },
+        state = state,
         modifier = modifier,
         enabled = enabled,
-        valueRange = with(valueRange) { first.toFloat()..last.toFloat() },
-        steps = steps,
+        onValueChange = { onValueChange(it.roundToInt()) },
         onValueChangeFinished = onValueChangeFinished,
         colors = colors,
         interactionSource = interactionSource,

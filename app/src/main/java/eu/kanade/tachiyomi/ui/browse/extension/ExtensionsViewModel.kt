@@ -1,10 +1,15 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
-import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.source.service.SourcePreferences
@@ -33,20 +38,20 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Duration.Companion.seconds
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ExtensionsViewModel(
-    private val preferences: SourcePreferences = Injekt.get(),
-    basePreferences: BasePreferences = Injekt.get(),
-    private val extensionManager: ExtensionManager = Injekt.get(),
-    private val getExtensions: GetExtensionsByType = Injekt.get(),
+    private val preferences: SourcePreferences,
+    basePreferences: BasePreferences,
+    private val extensionManager: ExtensionManager,
+    private val getExtensions: GetExtensionsByType,
+    private val context: Context,
 ) : ViewModel() {
 
     private val currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
-
-    private val context = Injekt.get<Application>()
 
     // Public so BrowseTab's search bar can observe it without subscribing to the whole state.
     val searchQuery: StateFlow<String?>
@@ -69,17 +74,21 @@ class ExtensionsViewModel(
             .map { searchQueryPredicate(it ?: "") },
         currentDownloads,
         getExtensions.subscribe(),
-    ) { predicate, downloads, (_updates, _installed, _available, _untrusted) ->
+    ) { predicate, downloads, (_updates, _loaded, _available, _notLoaded) ->
         buildMap {
             val updates = _updates.filter(predicate).map(extensionMapper(downloads))
             if (updates.isNotEmpty()) {
                 put(ExtensionUiModel.Header.Resource(MR.strings.ext_updates_pending), updates)
             }
 
-            val installed = _installed.filter(predicate).map(extensionMapper(downloads))
-            val untrusted = _untrusted.filter(predicate).map(extensionMapper(downloads))
-            if (installed.isNotEmpty() || untrusted.isNotEmpty()) {
-                put(ExtensionUiModel.Header.Resource(MR.strings.ext_installed), installed + untrusted)
+            val notLoaded = _notLoaded.filter(predicate).map(extensionMapper(downloads))
+            if (notLoaded.isNotEmpty()) {
+                put(ExtensionUiModel.Header.Resource(MR.strings.ext_not_loaded), notLoaded)
+            }
+
+            val loaded = _loaded.filter(predicate).map(extensionMapper(downloads))
+            if (loaded.isNotEmpty()) {
+                put(ExtensionUiModel.Header.Resource(MR.strings.ext_installed), loaded)
             }
 
             val languagesWithExtensions = _available
@@ -117,6 +126,7 @@ class ExtensionsViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
 
     init {
+
         viewModelScope.launchIO { findAvailableExtensions() }
     }
 
@@ -132,7 +142,7 @@ class ExtensionsViewModel(
                 if (extension.name.contains(subquery, ignoreCase = true)) return@any true
 
                 when (extension) {
-                    is Extension.Installed -> extension.sources.any { source ->
+                    is Extension.Loaded -> extension.sources.any { source ->
                         source.name.contains(subquery, ignoreCase = true) ||
                             (source as? HttpSource)?.getHomeUrl()?.contains(subquery, ignoreCase = true) == true ||
                             source.id == subquery.toLongOrNull()
@@ -196,7 +206,7 @@ class ExtensionsViewModel(
             .onCompletion { removeDownloadState(extension) }
             .collect()
 
-    fun uninstallExtension(extension: Extension) {
+    fun uninstallExtension(extension: Extension.Installed) {
         extensionManager.uninstallExtension(extension)
     }
 
@@ -213,10 +223,8 @@ class ExtensionsViewModel(
         }
     }
 
-    fun trustExtension(extension: Extension.Untrusted) {
-        viewModelScope.launch {
-            extensionManager.trust(extension)
-        }
+    fun trustExtension(extension: Extension.NotLoaded) {
+        extensionManager.trust(extension)
     }
 
     @Immutable

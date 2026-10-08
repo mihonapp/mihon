@@ -17,8 +17,6 @@ import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.util.concurrent.PriorityBlockingQueue
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -31,7 +29,7 @@ import kotlin.math.min
 internal class HttpPageLoader(
     private val chapter: ReaderChapter,
     private val source: HttpSource,
-    private val chapterCache: ChapterCache = Injekt.get(),
+    private val chapterCache: ChapterCache,
 ) : PageLoader() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -84,11 +82,14 @@ internal class HttpPageLoader(
     /**
      * Loads a page through the queue. Handles re-enqueueing pages if they were evicted from the cache.
      */
-    override suspend fun loadPage(page: ReaderPage) = withIOContext {
+    override suspend fun loadPage(page: ReaderPage) {
         val imageUrl = page.imageUrl
 
-        // Check if the image has been deleted
-        if (page.status == Page.State.Ready && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
+        // Check if the image has been deleted. Only this touches the disk; the queueing below
+        // stays on the caller's thread, so requests queue in the order they were made.
+        if (page.status == Page.State.Ready && imageUrl != null &&
+            !withIOContext { chapterCache.isImageInCache(imageUrl) }
+        ) {
             page.status = Page.State.Queue
         }
 
@@ -181,14 +182,23 @@ internal class HttpPageLoader(
             val imageUrl = page.imageUrl!!
 
             if (force || !chapterCache.isImageInCache(imageUrl)) {
+                val live = page.downloadStream
                 page.status = Page.State.DownloadImage
-                val imageResponse = source.getImage(page)
-                chapterCache.putImageToCache(imageUrl, imageResponse)
+                try {
+                    val imageResponse = source.getImage(page)
+                    chapterCache.putImageToCache(imageUrl, imageResponse, live)
+                    live?.finish()
+                } catch (e: Throwable) {
+                    live?.finish(e)
+                    throw e
+                }
             }
 
+            page.downloadStream = null
             page.stream = { chapterCache.getImageFile(imageUrl).inputStream() }
             page.status = Page.State.Ready
         } catch (e: Throwable) {
+            page.downloadStream = null
             page.status = Page.State.Error(e)
             if (e is CancellationException) {
                 throw e

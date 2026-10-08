@@ -94,9 +94,9 @@
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
     <string name="pref_viewer_type">Mode baca bawaan</string>
-    <string name="left_to_right_viewer">Halaman (kiri ke kanan)</string>
-    <string name="right_to_left_viewer">Halaman (kanan ke kiri)</string>
-    <string name="vertical_viewer">Halaman (vertikal)</string>
+    <string name="left_to_right_viewer">Berhalaman (kiri ke kanan)</string>
+    <string name="right_to_left_viewer">Berhalaman (kanan ke kiri)</string>
+    <string name="vertical_viewer">Berhalaman (vertikal)</string>
     <string name="webtoon_viewer">Strip panjang</string>
     <string name="pref_image_scale_type">Tipe skala</string>
     <string name="scale_type_fit_screen">Pas layar</string>
@@ -205,7 +205,6 @@
     <string name="file_select_backup">Pilih berkas cadangan</string>
     <string name="update_check_confirm">Unduh</string>
     <string name="update_check_no_new_updates">Pembaruan tidak tersedia</string>
-    <string name="update_check_notification_download_in_progress">Mengunduh…</string>
     <string name="update_check_notification_update_available">Versi baru tersedia!</string>
     <string name="information_no_downloads">Tidak ada unduhan</string>
     <string name="information_no_recent">Tidak ada pembaruan terkini</string>
@@ -238,17 +237,14 @@
     <string name="ext_untrusted">Tidak terpercaya</string>
     <string name="ext_uninstall">Lepas</string>
     <string name="untrusted_extension">Ekstensi tidak terpercaya</string>
-    <string name="untrusted_extension_message">Ekstensi berbahaya dapat membaca semua kredensial login yang disimpan atau menjalankan kode berbahaya.
-\n
-\nDengan mempercayai sertifikat ekstensi ini, Anda menerima risiko ini.</string>
+    <string name="untrusted_extension_message">Ekstensi berbahaya dapat membaca semua kredensial login yang disimpan atau menjalankan kode berbahaya. \n \nDengan mempercayai sertifikat ekstensi ini, Anda menerima risiko ini.</string>
     <string name="pref_double_tap_anim_speed">Kecepatan animasi ketukan dua kali</string>
     <string name="double_tap_anim_speed_0">Tanpa animasi</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Cepat</string>
     <string name="manga_added_library">Ditambahkan ke pustaka</string>
     <string name="manga_removed_library">Dihapus dari pustaka</string>
-    <string name="copied_to_clipboard">Tersalin ke papan klip:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Tersalin ke papan klip: \n%1$s</string>
     <string name="migration_dialog_what_to_include">Pilih data yang ikut dipindah</string>
     <string name="migrate">Pindah</string>
     <string name="copy">Salin</string>
@@ -333,8 +329,8 @@
     <string name="add_tracking">Tambahkan pelacak</string>
     <string name="manga_info_collapse">Lebih sedikit</string>
     <string name="manga_info_expand">Selengkapnya</string>
-    <string name="in_library">Di pustaka</string>
-    <string name="add_to_library">Tambahkan ke pustaka</string>
+    <string name="in_library">Di perpustakaan</string>
+    <string name="add_to_library">Tambahkan ke perpustakaan</string>
     <string name="licenses">Lisensi terbuka</string>
     <string name="restoring_backup_error">Gagal memulihkan data dari cadangan</string>
     <string name="creating_backup_error">Pencadangan data gagal</string>
@@ -400,11 +396,8 @@
     <string name="channel_progress">Kemajuan</string>
     <string name="channel_errors">Masalah</string>
     <string name="backup_restore_missing_trackers">Pelacakan tidak tersinkronisasi di:</string>
-    <string name="ext_nsfw_warning">Sumber dari ekstensi ini mungkin berisi konten DEWASA (NSFW 18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">Hapus bab yang ditandai</string>
     <string name="pref_category_delete_chapters">Hapus chapter</string>
-    <string name="parental_controls_info">Hal ini tidak mencegah ekstensi non-resmi atau konten DEWASA (NSFW 18+) yang tidak ditandai dengan benar muncul di dalam aplikasi.</string>
     <string name="no_chapters_error">Tidak ada bab yang ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan bab bawaan diperbarui</string>
     <string name="set_chapter_settings_as_default">Terapkan sebagai bawaan</string>
@@ -420,13 +413,11 @@
     <string name="pref_clear_history">Hapus riwayat</string>
     <string name="clear_history_confirmation">Apakah anda yakin? Semua riwayat akan terhapus.</string>
     <string name="clear_history_completed">Riwayat telah dihapus</string>
-    <string name="pref_category_nsfw_content">Sumber NSFW (18+)</string>
     <string name="spen_next_page">Halaman selanjutnya</string>
     <string name="spen_previous_page">Halaman sebelumnya</string>
     <string name="migration_help_guide">Petunjuk migrasi</string>
     <string name="file_picker_error">Tidak ada aplikasi pemilih berkas yang ditemukan</string>
     <string name="myanimelist_relogin">Harap login kembali ke MAL</string>
-    <string name="pref_show_nsfw_source">Tampilkan di daftar sumber dan ekstensi</string>
     <string name="edge_nav">Tepi</string>
     <string name="l_nav">Bentuk L</string>
     <string name="action_desc">Urutan turun</string>
@@ -540,7 +531,6 @@
     <string name="action_display_language_badge">Bahasa</string>
     <string name="update_72hour">Tiap 3 hari</string>
     <string name="connected_to_wifi">Hanya pada Wi-FI</string>
-    <string name="channel_app_updates">Pembaruan aplikasi</string>
     <string name="ext_update_all">Perbarui semuanya</string>
     <string name="pref_auto_clear_chapter_cache">Bersihkan cache bab saat aplikasi dibuka</string>
     <string name="database_clean">Tidak ada yang perlu dibersihkan</string>
@@ -585,7 +575,6 @@
     <string name="pref_reset_viewer_flags_error">Tidak bisa mengatur ulang setelan pembaca</string>
     <string name="ext_info_version">Versi</string>
     <string name="ext_info_language">Bahasa</string>
-    <string name="ext_info_age_rating">Rating Umur</string>
     <string name="reading_list">Daftar Bacaan</string>
     <string name="unfinished_list">Daftar Yang Belum Selesai</string>
     <string name="wish_list">Daftar Keinginan</string>
@@ -630,7 +619,7 @@
     <string name="pref_library_summary">Kategori, pembaruan global, geser chapter</string>
     <string name="pref_backup_summary">Pencadangan manual &amp; otomatis, ruang penyimpanan</string>
     <string name="pref_advanced_summary">Buat log kerusakan, pengoptimalan baterai</string>
-    <string name="crash_screen_title">Aduh!</string>
+    <string name="crash_screen_title">Ups!</string>
     <string name="crash_screen_restart_application">Mulai ulang aplikasi</string>
     <string name="invalid_location">Lokasi tidak valid: %s</string>
     <string name="unknown_title">Judul tidak diketahui</string>
@@ -639,8 +628,7 @@
     <string name="action_open_random_manga">Buka entri acak</string>
     <string name="download_notifier_cache_renewal">Memeriksa unduhan</string>
     <string name="information_no_entries_found">Tidak ada entri yang ditemukan dalam kategori ini</string>
-    <string name="fdroid_warning">Build F-Droid tidak didukung secara resmi.
-\n Ketuk untuk mempelajari lebih lanjut.</string>
+    <string name="fdroid_warning">Build F-Droid tidak didukung secara resmi. \n Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="action_display_show_continue_reading_button">Tombol lanjutkan membaca</string>
     <string name="track_remove_date_conf_title">Hapus tanggal?</string>
     <string name="pref_invalidate_download_cache">Mengindeks ulang unduhan</string>
@@ -754,11 +742,7 @@
     <string name="no_location_set">Lokasi penyimpanan belum ditentukan</string>
     <string name="onboarding_permission_notifications_description">Dapatkan notifikasi untuk pembaruan pustaka dan sebagainya.</string>
     <string name="onboarding_permission_action_grant">Izinkan</string>
-    <string name="onboarding_storage_info">Pilih direktori untuk menyimpan konten dari %1$s, termasuk unduhan chapter, data backup, dan lainnya.
-\n
-\nSebaiknya menggunakan direktori terpisah.
-\n
-\nDirektori yang dipilih: %2$s</string>
+    <string name="onboarding_storage_info">Pilih direktori untuk menyimpan konten dari %1$s, termasuk unduhan chapter, data backup, dan lainnya. \n \nSebaiknya menggunakan direktori terpisah. \n \nDirektori yang dipilih: %2$s</string>
     <string name="onboarding_storage_help_action">Panduan penyimpanan</string>
     <string name="pref_library_update_smart_update">Pembauan pintar</string>
     <string name="onboarding_storage_help_info">Memperbarui dari versi lama dan tak yakin harus pilih mana? lihat panduan penyimpanan untuk informasi lebih lanjut.</string>
@@ -800,7 +784,7 @@
     <string name="onboarding_permission_analytics">Izinkan analitik</string>
     <string name="onboarding_permission_analytics_description">Kirim data penggunaan anonim untuk meningkatkan fitur aplikasi.</string>
     <string name="pref_firebase">Analisis dan Log Kerusakan</string>
-    <string name="firebase_summary">Mengirim log kerusakan dan analitik akan memungkinkan kami mengidentifikasi dan memperbaiki masalah, meningkatkan kinerja, dan membuat pembaruan mendatang lebih relevan dengan kebutuhan anda</string>
+    <string name="firebase_summary">Mengirimkan log kerusakan dan analitik akan memungkinkan kami mengidentifikasi serta memperbaiki masalah, meningkatkan kinerja, dan membuat pembaruan mendatang lebih relevan dengan kebutuhan Anda</string>
     <string name="pref_security">Keamanan</string>
     <string name="non_library_settings">Semua entri yang sudah dibaca</string>
     <string name="remove_private_extension_message">Apa anda yakin ingin menghapus ekstensi \"%s\"?</string>
@@ -808,21 +792,16 @@
     <string name="ext_confirm_remove">Hapus Ekstensi?</string>
     <string name="pref_auto_update_manga_on_mark_read">Kemajuan pembaruan saat ditandai sebagai telah dibaca</string>
     <string name="trackers_updated_summary">Pelacak diperbarui ke bab %d</string>
-    <string name="pref_hardware_bitmap_threshold">Batas bitmap perangkat keras kustom</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Jika pembaca memuat gambar kosong, kurangi threshold secara bertahap.\nPilih: %s</string>
-    <string name="pref_hardware_bitmap_threshold_default">Bawaan (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Mempengaruhi performa. Aktifkan hanya jika menurunkan batas bitmap tidak memperbaiki gambar kosong</string>
-    <string name="pref_incognito_mode_extension_summary">Jeda riwayat pembacaan untuk ekstensi</string>
+    <string name="pref_incognito_mode_extension_summary">Jeda riwayat membaca untuk ekstensi</string>
     <string name="label_auto">Otomatis</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Gunakan dekoder lama untuk bacaan strip panjang</string>
-    <string name="pref_mark_duplicate_read_chapter_read">Tandai bab duplikat sebagai sudah dibaca</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Tandai bab duplikat yang telah dibaca sebagai telah dibaca</string>
     <string name="theme_monochrome">Monokrom</string>
     <string name="export">Ekspor</string>
     <string name="library_list">Daftar pustaka</string>
     <string name="library_exported">Pustaka diekspor</string>
     <string name="author">Penulis</string>
     <string name="artist">Seniman</string>
-    <string name="tracked_privately">Dilacak secara pribady</string>
+    <string name="tracked_privately">Dilacak secara pribadi</string>
     <string name="action_toggle_private_on">Lacak secara pribadi</string>
     <string name="action_toggle_private_off">Lacak secara publik</string>
     <string name="action_edit_notes">Ubah catatan</string>
@@ -830,7 +809,7 @@
     <string name="action_display_unread_badge">Chapter belum dibaca</string>
     <string name="theme_catppuccin">Catppuccin</string>
     <string name="pref_behavior">Perilaku</string>
-    <string name="pref_mark_duplicate_read_chapter_read_existing">Setelah membaca satu bab</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Setelah membaca bab</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Setelah mengambil bab baru</string>
     <string name="pref_hide_missing_chapter_indicators">Sembunyikan indikator bab yang hilang</string>
     <string name="storage_failed_to_create_download_directory">Gagal membuat direktori unduhan</string>
@@ -915,4 +894,5 @@
     <string name="donationCampaign.paragraph3">Bagaimanapun juga, Mihon akan terus dipelihara oleh saya dan para sukarelawan, dan akan tetap bersifat open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Tutup</string>
+    <string name="considering">Mempertimbangkan</string>
 </resources>

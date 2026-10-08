@@ -213,7 +213,6 @@
     <string name="file_select_backup">ব্যাকআপ ফাইল নির্বাচন করুন</string>
     <string name="update_check_confirm">ডাউনলোড</string>
     <string name="update_check_no_new_updates">নতুন কোন হালনাগাদ নেই</string>
-    <string name="update_check_notification_download_in_progress">ডাউনলোড হচ্ছে…</string>
     <string name="update_check_notification_update_available">নতুন সংস্করণ উপলভ্য!</string>
     <string name="information_no_downloads">ডাউনলোড নেই</string>
     <string name="information_no_recent">কোন নতুন হালনাগাদ নেই</string>
@@ -247,8 +246,7 @@
     <string name="double_tap_anim_speed_fast">দ্রুত</string>
     <string name="manga_added_library">সংগ্রহশালায় যোগ করা হয়েছে</string>
     <string name="manga_removed_library">সংগ্রহশালা থেকে অপসারণ করা হয়েছে</string>
-    <string name="copied_to_clipboard">ক্লিপবোর্ডে কপি হয়েছে:
-\n%1$s</string>
+    <string name="copied_to_clipboard">ক্লিপবোর্ডে কপি হয়েছে: \n%1$s</string>
     <string name="migration_dialog_what_to_include">যোগ করার জন্য উপাত্ত নির্বাচন করুন</string>
     <string name="migrate">মাইগ্রেট</string>
     <string name="copy">অনুলিপি</string>
@@ -295,7 +293,6 @@
     <string name="label_sources">সোর্স</string>
     <string name="label_more">আরও</string>
     <string name="pref_category_display">প্রদর্শন</string>
-    <string name="parental_controls_info">এটি অ্যাপের মধ্যে প্রাপ্তবয়স্কদের (18+) বিষয়বস্তু সারফেস করা থেকে অনানুষ্ঠানিক বা সম্ভাব্য ভুলভাবে পতাকাঙ্কিত এক্সটেনশানগুলিকে বাধা দেয় না।</string>
     <string name="hide_notification_content">বিজ্ঞপ্তির বিষয়বস্তু লুকান</string>
     <string name="secure_screen">পর্দা নিরাপদ করুন</string>
     <string name="lock_never">কখনই না</string>
@@ -354,8 +351,6 @@
     <string name="gray_background">ধূসর</string>
     <string name="pref_skip_filtered_chapters">ফিলটারড অধ্যায় গুলো এড়িয়ে যান</string>
     <string name="pref_cutout_short">বিষয়বস্তু কাটআউটে দেখুন</string>
-    <string name="ext_nsfw_warning">প্রাপ্তবয়স্কদের (18+) কন্টেন্ট থাকতে পারে</string>
-    <string name="ext_nsfw_short">১৮+</string>
     <string name="ext_updates_pending">অনিষ্পন্ন হালনাগাদ</string>
     <string name="pref_library_update_refresh_metadata_summary">সংগ্রহশালা হালনাগেদের সময় নতুন মোড়ক এবং বর্ণনা খুঁজুন</string>
     <string name="pinned_sources">পিন করা</string>
@@ -420,8 +415,6 @@
     <string name="pref_disable_battery_optimization_summary">পিছেনে লাইব্রেরী হালনাগাদ ও ব্যাকআপে সাহায্য করে</string>
     <string name="pref_disable_battery_optimization">ব্যাটারি অপ্টিমাইজেশন অক্ষম করুন</string>
     <string name="tracking_info">ট্র্যাকিং সার্ভিসে অধ্যায়ের অগ্রগতি হালনাগাদের একমুখী পথ। স্বতন্ত্র মাঙ্গার ট্র্যকিং সেটাপের জন্য তাদের নিজস্ব ট্র্যাকিং বাটন ব্যবহার করুন।</string>
-    <string name="pref_show_nsfw_source">উৎস এবং এক্সটেনশন তালিকায় প্রদর্শন করুন</string>
-    <string name="pref_category_nsfw_content">প্রাপ্তবয়স্কদের জন্য (18+) উৎস</string>
     <string name="action_filter_tracked">ট্র্যাক করা হয়েছে</string>
     <string name="pref_viewer_nav">ন্যাভিগেশন নকশা</string>
     <string name="action_display_show_number_of_items">আইটেমের সংখ্যা প্রদর্শন করুন</string>
@@ -523,7 +516,6 @@
     <string name="ext_update_all">শব উপদাতে কর</string>
     <string name="backup_info">স্বয়ংক্রিয় ব্যাকআপ অত্যন্ত সুপারিশময়. আপনি অন্যান্য জায়গায়ও কপি রাখা উচিত।</string>
     <string name="getting_started_guide">শুরু হওয়ার গাইড</string>
-    <string name="channel_app_updates">অ্যাপ আপডেট</string>
     <string name="ext_installer_pref">ইন্সটলআর</string>
     <string name="ext_installer_legacy">লেগাছি</string>
     <string name="ext_installer_shizuku_stopped">শিজুকু চলছে না</string>
@@ -681,8 +673,6 @@
     <string name="pref_flash_style_black">কালো</string>
     <string name="pref_flash_style_white">সাদা</string>
     <string name="pref_flash_style_white_black">সাদা আর কালো</string>
-    <string name="pref_hardware_bitmap_threshold_summary">যদি রিডার একটি ফাঁকা ছবি লোড করে, ধাপে ধাপে থ্রেশহোল্ড কমিয়ে দিন।\nসিলেক্টেড %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">পারফরম্যান্স অ্যাফেক্ট করবে। ফাঁকা ইমেজ সমস্যা থ্রেশহোল্ড কমিয়ে ঠিক না হলে কেবল এনেবল করবে</string>
     <string name="pref_downloads_summary">অটোমেটিক ডাউনলোড, আগাম ডাউনলোড</string>
     <string name="pref_tracking_summary">ওয়ান-ওয়ে প্রগ্রেস সিঙ্ক, এনহ্যান্সড সিঙ্ক</string>
     <string name="pref_browse_summary">সোর্স, এক্সটেনশন, গ্লোবাল সার্চ</string>
@@ -697,7 +687,6 @@
     <string name="remove_private_extension_message">আপনি কি নিশ্চিত \"%s\" এক্সটেনশন সরাতে চান?</string>
     <string name="ext_info_version">সংস্করণ</string>
     <string name="ext_info_language">ভাষা</string>
-    <string name="ext_info_age_rating">বয়স সীমা</string>
     <string name="ext_permission_install_apps_warning">এক্সটেনশন ইনস্টল করতে অনুমতি লাগবে। অনুমতি দিতে এখানে ট্যাপ করুন।</string>
     <string name="ext_revoke_trust">অজানা এক্সটেনশনের ট্রাস্ট বাতিল</string>
     <string name="action_open_repo">রিপোর সোর্সে যান</string>
@@ -730,9 +719,6 @@
     <string name="crash_screen_title">উফ!</string>
     <string name="not_installed">ইনস্টল করা হয়নি</string>
     <string name="empty_screen">আরে, এখানে তো কিছুই নেই</string>
-    <string name="pref_hardware_bitmap_threshold">কাস্টম হার্ডওয়্যার বিটম্যাপ থ্রাশহোল্ড</string>
-    <string name="pref_hardware_bitmap_threshold_default">ডিফল্ট (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">লিগ্যাসি ডিকোডার ব্যবহার করুন লং স্ট্রিপ রিডারের জন্য</string>
     <string name="pref_display_profile">কাস্টম ডিসপ্লে প্রোফাইল</string>
     <string name="pref_skip_dupe_chapters">ডুপ্লিকেট চ্যাপ্টার বাদ</string>
     <string name="disabled_nav">নিষ্ক্রিয়</string>

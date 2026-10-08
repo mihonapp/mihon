@@ -182,7 +182,6 @@
     <string name="file_select_backup">Chọn file sao lưu</string>
     <string name="update_check_confirm">Tải xuống</string>
     <string name="update_check_no_new_updates">Không có cập nhật mới</string>
-    <string name="update_check_notification_download_in_progress">Đang tải xuống…</string>
     <string name="update_check_notification_update_available">Có cập nhật mới!</string>
     <string name="information_no_downloads">Không có tải xuống</string>
     <string name="information_no_recent">Không có cập nhật mới</string>
@@ -246,8 +245,7 @@
     <string name="manga_added_library">Đã thêm vào thư viện</string>
     <string name="manga_removed_library">Đã xóa khỏi thư viện</string>
     <string name="delete_downloads_for_manga">Muốn xóa các chương đã tải?</string>
-    <string name="copied_to_clipboard">Đã sao chép vào bảng tạm:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Đã sao chép vào bảng tạm: \n%1$s</string>
     <string name="source_not_installed">Nguồn truyện chưa được cài đặt: %1$s</string>
     <string name="repeating">Đang đọc lại</string>
     <string name="track_status">Trạng thái</string>
@@ -344,10 +342,7 @@
     <string name="invalid_backup_file_missing_manga">Bản sao lưu không chứa truyện nào.</string>
     <string name="invalid_backup_file">Tệp sao lưu không hợp lệ:</string>
     <string name="add_to_library">Thêm vào thư viện</string>
-    <string name="ext_nsfw_warning">Nguồn truyền từ tiện ích mở rộng này có thể chứa nội dung NSFW 18+</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_library_update_refresh_metadata">Tự động làm mới chi tiết truyện</string>
-    <string name="parental_controls_info">Điều này không ngăn các tiện ích mở rộng không chính thức hoặc có khả năng bị gắn cờ không chính xác hiển thị nội dung NSFW (18+) trong ứng dụng.</string>
     <string name="label_downloaded_only">Chỉ hiện truyện đã tải</string>
     <string name="migration_help_guide">Hướng dẫn chuyển nguồn</string>
     <string name="action_search_settings">Cài đặt tìm kiếm</string>
@@ -462,8 +457,6 @@
     <string name="include">Bao gồm: %s</string>
     <string name="none">Không cái nào</string>
     <string name="action_display_show_number_of_items">Hiện số truyện</string>
-    <string name="pref_category_nsfw_content">Nguồn NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Hiển thị trong các danh sách nguồn và tiện ích mở rộng</string>
     <string name="action_show_errors">Chạm để xem toàn bộ chi tiết</string>
     <string name="action_desc">Giảm dần</string>
     <string name="action_asc">Tăng dần</string>
@@ -537,7 +530,6 @@
     <string name="update_72hour">Mỗi 3 ngày</string>
     <string name="connected_to_wifi">Chỉ qua Wi-Fi</string>
     <string name="download_queue_size_warning">Cảnh báo: tải xuống hàng loạt cỡ lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn %s. Nhấn vào để tìm hiểu thêm.</string>
-    <string name="channel_app_updates">Cập nhật ứng dụng</string>
     <string name="ext_update_all">Cập nhật tất cả</string>
     <string name="pref_auto_clear_chapter_cache">Xóa bộ nhớ chương đệm khi chạy ứng dụng</string>
     <string name="clear_database_source_item_count">%1$d truyện ngoài thư viện có trong cơ sở dữ liệu</string>
@@ -594,7 +586,6 @@
     <string name="on_hold_list">Danh sách đang chờ</string>
     <string name="wish_list">Danh sách muốn đọc</string>
     <string name="download_notifier_split_page_not_found">Trang %d không thể được tìm thấy khi chia cắt</string>
-    <string name="ext_info_age_rating">Phân loại độ tuổi</string>
     <string name="download_notifier_split_page_path_not_found">Không thể tìm thấy đường dẫn của trang %d</string>
     <string name="pref_reset_user_agent_string">Đặt lại chuỗi đại diện người dùng mặc định</string>
     <string name="description_placeholder">Không có mô tả</string>
@@ -745,11 +736,7 @@
     <string name="track_delete_text">Điều này sẽ loại bỏ bộ theo dõi cục bộ.</string>
     <string name="track_activity_name">Đăng nhập bộ theo dõi</string>
     <string name="onboarding_permission_action_grant">Cho phép</string>
-    <string name="onboarding_storage_info">Chọn thư mục nơi mà %1$s sẽ chứa chương truyện tải xuống, sao lưu, và những thứ khác.
-\n
-\nKhuyến khích sử dụng một thư mục chuyên dụng.
-\n
-\nThư mục được chọn: %2$s</string>
+    <string name="onboarding_storage_info">Chọn thư mục nơi mà %1$s sẽ chứa chương truyện tải xuống, sao lưu, và những thứ khác. \n \nKhuyến khích sử dụng một thư mục chuyên dụng. \n \nThư mục được chọn: %2$s</string>
     <string name="pref_relative_format">Mốc thời gian liên quan</string>
     <string name="exception_http">HTTP %d, kiểm tra trang web trong WebView</string>
     <string name="pref_relative_format_summary">\"%1$s\" thay vì là \"%2$s\"</string>
@@ -804,10 +791,6 @@
     <string name="remove_private_extension_message">Bạn có thật sự muốn gỡ tiện ích mở rộng \"%s\"?</string>
     <string name="pref_auto_update_manga_on_mark_read">Cập nhật tiến trình khi được đánh dấu là đã đọc</string>
     <string name="trackers_updated_summary">Trình theo dõi được cập nhật đến chương %d</string>
-    <string name="pref_hardware_bitmap_threshold">Tùy chỉnh ngưỡng bitmap phần cứng</string>
-    <string name="pref_hardware_bitmap_threshold_default">Mặc định (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Nếu trình đọc tải một hình ảnh trống thì giảm dần ngưỡng\nĐã chọn: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Ảnh hưởng đến hiệu suất. Chỉ bật nếu việc giảm ngưỡng bitmap không khắc phục được sự cố hình ảnh trống</string>
     <string name="pref_incognito_mode_extension_summary">Tạm dừng lịch sử đọc của phần mở rộng</string>
     <string name="pref_behavior">Hành vi</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Sau khi đọc một chương</string>
@@ -834,7 +817,6 @@
     <string name="migrationConfigScreen.selectEnabledLabel">Chọn Nguồn được kích hoạt</string>
     <string name="migrationConfigScreen.selectPinnedLabel">Chọn các nguồn được ghim</string>
     <string name="migrationConfigScreen.continueButtonText">Tiếp tục</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Sử dụng bộ giải mã cũ cho trình đọc cuộc dài</string>
     <string name="export">Xuất</string>
     <string name="tracked_privately">Đang theo dõi riêng tư</string>
     <string name="action_toggle_private_off">Theo dõi công khai</string>

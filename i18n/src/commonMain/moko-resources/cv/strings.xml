@@ -254,7 +254,6 @@
     <string name="download_notifier_unknown_error">Кӗтмен йӑнӑша пула сыпӑксене тийесе илеймест</string>
     <string name="download_notifier_downloader_title">Тийевҫӗ</string>
     <string name="information_webview_required">Mihon валли WebView кирлӗ</string>
-    <string name="update_check_notification_download_in_progress">Тийев…</string>
     <string name="update_check_no_new_updates">Ҫӗнетӳ тупӑнман</string>
     <string name="update_check_confirm">Тиесе ил</string>
     <string name="file_select_cover">Хуплашка суйла</string>
@@ -316,8 +315,7 @@
     <string name="chapter_downloading_progress">Тиенет (%1$d/%2$d)</string>
     <string name="snack_add_to_library">Манкка вулавăша хушмалла-и?</string>
     <string name="source_not_installed">Ҫӑл куҫа лартман: %1$s</string>
-    <string name="copied_to_clipboard">Пайлашу буфере ӑтавланӑ:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Пайлашу буфере ӑтавланӑ: \n%1$s</string>
     <string name="delete_downloads_for_manga">Тиенӗ сыпӑксене катертмелле-и?</string>
     <string name="manga_info_collapse">Сахалрах</string>
     <string name="manga_info_expand">Ытларах</string>
@@ -402,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Кӗмен йӗрлевсем:</string>
     <string name="pref_remove_bookmarked_chapters">Картнӑ сыпӑксене катертмелле</string>
     <string name="pref_category_delete_chapters">Сыпӑксене катерт</string>
-    <string name="ext_nsfw_warning">NSFW (18+) шалаш пулма пултарать</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Ҫакӑ апра чӑнлавлӑ мар йе тӗрӗс мар палӑртнӑ хушмасен NSFW (18+) шалашне кӑтартма чӑрмантармасть.</string>
     <string name="no_chapters_error">Сыпӑксем ҫук</string>
     <string name="also_set_chapter_settings_for_library">Тата манӑн вулавăшри пур манкӑ валли усӑ кур</string>
     <string name="chapter_settings_updated">Яланхилле сыпӑк ӗнерлев ҫӗнетнӗ</string>
@@ -423,10 +418,8 @@
     <string name="spen_next_page">Маллали сыпӑк</string>
     <string name="spen_previous_page">Умӗнхи эл</string>
     <string name="migration_help_guide">Ҫӑл куҫ куҫарассипе пулӑшу</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) ҫӑл куҫсем</string>
     <string name="file_picker_error">Файлсене суйламалли хушӑм тупӑнман</string>
     <string name="myanimelist_relogin">Тархасшӑн MAL-а ҫӗнӗрен кӗр</string>
-    <string name="pref_show_nsfw_source">Ҫӑл куҫсен тата хушмасен йат-йышӗнче кӑтартни</string>
     <string name="track_finished_reading_date">Вулама вӗҫленӗ вӑхӑчӗ</string>
     <string name="track_started_reading_date">Вулама пуҫланӑ вӑхӑчӗ</string>
     <string name="edge_nav">Хӗррипе</string>
@@ -547,7 +540,6 @@
     <string name="pref_chapter_swipe_start">Сулахайалла туртсан сыпӑк</string>
     <string name="ext_installer_pref">Ларткӑч</string>
     <string name="ext_installer_shizuku_stopped">Shizuku ӗҫлемест</string>
-    <string name="ext_info_age_rating">Ҫул-ӳсӗм чаравӗ</string>
     <string name="action_sort_next_updated">Тепӗр кӗтӗнекен ҫӗнетӳпе</string>
     <string name="ext_install_service_notif">Хушма лартни…</string>
     <string name="action_set_interval">Тӑтӑшлӑх палӑрт</string>
@@ -624,7 +616,6 @@
     <string name="pref_flash_style_black">Хура</string>
     <string name="pref_flash_style_white">Шурӑ</string>
     <string name="pref_flash_style_white_black">Шурӑпа хура</string>
-    <string name="pref_hardware_bitmap_threshold_default">Йаланхилле (%d)</string>
     <string name="pref_inverted_colors">Хирӗҫле тӗссем</string>
     <string name="pref_skip_dupe_chapters">Иккӗллӗ сыпӑксене сиктермелле</string>
     <string name="rotation_reverse_portrait">Хирӗҫле урлӑ</string>

@@ -1,18 +1,23 @@
 package eu.kanade.tachiyomi.ui.updates
 
 import androidx.lifecycle.ViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.updates.service.UpdatesPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
 class UpdatesSettingsViewModel(
-    val updatesPreferences: UpdatesPreferences = Injekt.get(),
-    val getCategories: GetCategories = Injekt.get(),
+    val updatesPreferences: UpdatesPreferences,
+    val getCategories: GetCategories,
 ) : ViewModel() {
 
     val includedCategories = updatesPreferences.filterIncludedCategories

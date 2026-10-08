@@ -130,8 +130,6 @@
     <string name="pref_library_columns">प्रति रो वस्तुहरू</string>
     <string name="pref_category_display">प्रदर्शन</string>
     <string name="relative_time_today">आज</string>
-    <string name="pref_show_nsfw_source">स्रोत र एक्सटेन्शन सूची मा देखाउनुहोस्</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) स्रोतहरू</string>
     <string name="hide_notification_content">सूचना को सामग्री लुकाउनुहोस्</string>
     <string name="secure_screen_summary">एपहरू स्विच गर्दा \"स्क्रिन सुरक्षित गर्नुहोस्\" ले एप सामग्रीहरू लुकाउँछ र स्क्रिनसटहरू रोक्छ</string>
     <string name="secure_screen">स्क्रिन सुरक्षित गर्नुहोस्</string>
@@ -188,7 +186,6 @@
     <string name="ext_installed">स्थापना गरियो</string>
     <string name="ext_trust">विश्वास</string>
     <string name="obsolete_extension_message">यो एक्सटेन्शन अब उपलब्ध छैन। यसले राम्ररी काम नगर्न सक्छ र एपमा समस्या ल्याउन सक्छ। यसलाई अनइन्स्टल गर्न सिफारिस गरिन्छ।</string>
-    <string name="ext_nsfw_warning">यस एक्सटेन्शनको स्रोतहरूमा NSFW (१८+) सामग्री समावेश हुन सक्छ</string>
     <string name="ext_install_service_notif">एक्सटेन्शन स्थापना गर्दै…</string>
     <string name="ext_installer_shizuku_stopped">Shizuku चलिरहेको छैन</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Shizuku लाई एक्सटेन्शन इंस्टलरको रूपमा प्रयोग गर्न Shizuku स्थापना गर्नुहोस् र सुरु गर्नुहोस्।</string>
@@ -216,7 +213,6 @@
     <string name="ext_downloading">डाउनलोड गर्दै</string>
     <string name="ext_installing">स्थापना गर्दै</string>
     <string name="ext_untrusted">अविश्वसनीय</string>
-    <string name="ext_nsfw_short">१८+</string>
     <string name="filter_mode_overlay">ओभरले</string>
     <string name="pref_skip_filtered_chapters">फिल्टर गरिएका अध्यायहरू छोड्नुहोस्</string>
     <string name="pref_read_with_volume_keys_inverted">भोल्युम कीहरू उल्टाउनुहोस्</string>
@@ -235,7 +231,6 @@
     <string name="action_sort_count">कुल इन्ट्रीहरू</string>
     <string name="label_warning">सावधान</string>
     <string name="action_display_language_badge">भाषा</string>
-    <string name="parental_controls_info">यसले अनौपचारिक वा सम्भावित रूपमा गलत रूपमा फ्ल्याग गरिएका एक्सटेन्शनहरूलाई एप भित्र NSFW (१८+) सामग्री आउन बाट रोक्दैन।</string>
     <string name="default_category">पूर्वनिर्धारित वर्ग</string>
     <string name="categorized_display_settings">क्रमबद्धका लागि प्रति-वर्ग सेटिंग्स</string>
     <string name="include">समावेश गर्नुहोस्: %s</string>
@@ -357,7 +352,6 @@
     <string name="label_data">डेटा</string>
     <string name="cache_delete_error">खाली गर्दा त्रुटि भयो</string>
     <string name="status">स्थिति</string>
-    <string name="update_check_notification_download_in_progress">डाउनलोड गर्दै…</string>
     <string name="download_notifier_unknown_error">अप्रत्याशित त्रुटिका कारण अध्याय डाउनलोड गर्न सकिएन</string>
     <string name="notification_chapters_single">अध्याय %1$s</string>
     <string name="scale_type_original_size">मूल आकार</string>
@@ -483,8 +477,7 @@
     <string name="migration_dialog_what_to_include">समावेश गर्न डेटा चयन गर्नुहोस्</string>
     <string name="recent_manga_time">अध्याय. %1$s - %2$s</string>
     <string name="copy">प्रतिलिपि</string>
-    <string name="copied_to_clipboard">क्लिपबोर्डमा प्रतिलिपि गर्नुहोस्:
-\n%1$s</string>
+    <string name="copied_to_clipboard">क्लिपबोर्डमा प्रतिलिपि गर्नुहोस्: \n%1$s</string>
     <string name="clipboard_copy_error">क्लिपबोर्डमा प्रतिलिपि गर्न असफल</string>
     <string name="delete_downloads_for_manga">डाउनलोड गरिएका अध्यायहरू हटाउने हो?</string>
     <string name="pref_update_only_started">जो सुरु भएको छैन</string>
@@ -545,7 +538,6 @@
     <string name="spen_next_page">अर्को पृष्ठ</string>
     <string name="channel_progress">प्रगति</string>
     <string name="channel_complete">पूरा</string>
-    <string name="channel_app_updates">एप अपडेट्स</string>
     <string name="channel_errors">त्रुटिहरू</string>
     <string name="skipped_reason_not_started">कुनै अध्याय नपढेकाले छोडियो</string>
     <string name="notification_size_warning">ठूला अपडेटले स्रोतहरूलाई हानि पुर्‍याउँछ र यसले ढिलो अपडेट्स निम्त्याउन सक्छ र ब्याट्रीको प्रयोग पनि बढाउँछ। थप जान्न ट्याप गर्नुहोस्।</string>
@@ -594,7 +586,6 @@
     <string name="theme_tidalwave">समुन्द्री लहर</string>
     <string name="ext_info_version">संस्करण</string>
     <string name="ext_info_language">भाषा</string>
-    <string name="ext_info_age_rating">उमेर मूल्याङ्कन</string>
     <string name="action_not_now">अहिले हैन</string>
     <string name="action_open_random_manga">जुनसुकै इन्ट्री खोल्नुहोस्</string>
     <string name="reading_list">पढिरहेको सूची</string>
@@ -622,8 +613,7 @@
     <string name="invalid_location">अवैध स्थान: %s</string>
     <string name="missing_storage_permission">भण्डारण अनुमतिहरू प्रदान गरिएको छैन</string>
     <string name="pref_clear_webview_data">WebView डेटा खाली गर्नुहोस्</string>
-    <string name="fdroid_warning">F-Droid निर्माणहरू आधिकारिक रूपमा समर्थित छैनन्।
-\nथप जान्न ट्याप गर्नुहोस्।</string>
+    <string name="fdroid_warning">F-Droid निर्माणहरू आधिकारिक रूपमा समर्थित छैनन्। \nथप जान्न ट्याप गर्नुहोस्।</string>
     <string name="crash_screen_title">उफ्!</string>
     <string name="label_read_duration">पढेको अवधि</string>
     <string name="pref_reset_viewer_flags_error">रिडर सेटिंग्स रिसेट गर्न सकिएन</string>
@@ -740,11 +730,7 @@
     <string name="action_revert_to_default">पूर्वनिर्धारितमा फर्कनुहोस्</string>
     <string name="pref_onboarding_guide">अनबोर्डिङ गाइड</string>
     <string name="onboarding_description">पहिले केहि चीजहरू सेट गरौं। तपाईं पछि पनि सेटिंग्समा गएर यसलाई परिवर्तन गर्न सक्नुहुन्छ।</string>
-    <string name="onboarding_storage_info">एउटा फोल्डर चयन गर्नुहोस् जहाँ %1$s ले अध्याय डाउनलोड, ब्याकअप, र थप भण्डारण गर्नेछ।
-\n
-\nएक समर्पित फोल्डर सिफारिस गरिएको छ।
-\n
-\nचयन गरिएको फोल्डर: %2$s</string>
+    <string name="onboarding_storage_info">एउटा फोल्डर चयन गर्नुहोस् जहाँ %1$s ले अध्याय डाउनलोड, ब्याकअप, र थप भण्डारण गर्नेछ। \n \nएक समर्पित फोल्डर सिफारिस गरिएको छ। \n \nचयन गरिएको फोल्डर: %2$s</string>
     <string name="onboarding_storage_action_select">फोल्डर चयन गर्नुहोस्</string>
     <string name="onboarding_permission_install_apps">एप स्थापना गर्ने अनुमति</string>
     <string name="onboarding_permission_install_apps_description">स्रोत एक्सटेन्शन स्थापना गर्न को लागि।</string>
@@ -806,13 +792,8 @@
     <string name="remove_private_extension_message">के तपाई साँच्चै \"%s\" एक्सटेन्शन हटाउन चाहनुहुन्छ?</string>
     <string name="pref_auto_update_manga_on_mark_read">पढिएको भनी चिन्ह लगाउँदा प्रगति अपडेट गर्नुहोस्</string>
     <string name="trackers_updated_summary">ट्र्याकरहरू अध्याय %d मा अपडेट गरियो</string>
-    <string name="pref_hardware_bitmap_threshold_default">पूर्वनिर्धारित (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">यदि पाठकले खाली छवि लोड गर्छ भने क्रमशः threshold घटाउनुहोस्।\nचयन गरिएको: %s</string>
-    <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">कार्यसम्पादनमा असर गर्छ। Bitmap threshold घटाउँदा खाली छवि समस्याहरू समाधान गर्दैन भने मात्र सक्षम गर्नुहोस्</string>
     <string name="pref_incognito_mode_extension_summary">एक्सटेन्शनमा पढिएको इतिहास रोक्नुहोस्</string>
     <string name="label_auto">अटो</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">लामो स्ट्रिप रिडरको लागि लिगेसी डिकोडर प्रयोग गर्नुहोस्</string>
     <string name="pref_mark_duplicate_read_chapter_read">पढिएको अध्यायको डुप्लिकेटलाई पढिएको रूपमा चिन्ह लगाउनुहोस्</string>
     <string name="theme_monochrome">मोनोक्रोम</string>
     <string name="action_toggle_private_on">निजी रूपमा ट्र्याक गर्नुहोस्</string>

@@ -1,6 +1,9 @@
 package eu.kanade.tachiyomi.data.cache
 
 import android.content.Context
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import tachiyomi.domain.manga.model.Manga
 import java.io.File
@@ -15,6 +18,8 @@ import java.io.InputStream
  * @param context the application context.
  * @constructor creates an instance of the cover cache.
  */
+@Inject
+@SingleIn(AppScope::class)
 class CoverCache(private val context: Context) {
 
     companion object {

@@ -99,7 +99,6 @@
     <string name="ext_pending">Egiteke</string>
     <string name="ext_downloading">Deskargatzen</string>
     <string name="ext_installing">Instalatzen</string>
-    <string name="ext_nsfw_warning">NSFW (18+) edukia izan dezake</string>
     <string name="ext_installer_pref">Instalatzailea</string>
     <string name="pref_fullscreen">Pantaila osoa</string>
     <string name="pref_grayscale">Gris-eskala</string>
@@ -145,8 +144,7 @@
     <string name="unknown_author">Egile ezezaguna</string>
     <string name="unknown_status">Egoera ezezaguna</string>
     <string name="delete_downloads_for_manga">Deskargatutako kapituluak ezabatu nahi dituzu?</string>
-    <string name="copied_to_clipboard">Arbelean kopiatu da:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Arbelean kopiatu da: \n%1$s</string>
     <string name="chapter_paused">Gelditurik</string>
     <string name="show_chapter_number">Kapituluaren zenbakia</string>
     <string name="download_unread">Irakurri gabea</string>
@@ -164,7 +162,6 @@
     <string name="update_check_confirm">Deskargatu</string>
     <string name="download_notifier_title_error">Errorea</string>
     <string name="ext_installer_legacy">Ondare</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="off">Itzali</string>
     <string name="pref_reader_navigation">Nabigazioa</string>
     <string name="color_filter_b_value">U</string>
@@ -202,7 +199,6 @@
     <string name="download_notifier_unknown_error">Ezin izan da kapitulua deskargatu ustekabeko errore baten ondorioz</string>
     <string name="download_notifier_no_network">Ez dago sare-konexiorik erabilgarri</string>
     <string name="channel_new_chapters">Kapituluaren eguneraketak</string>
-    <string name="channel_app_updates">Aplikazioen eguneraketak</string>
     <string name="spen_next_page">Hurrengo orrialdea</string>
     <string name="channel_ext_updates">Luzapenen eguneraketak</string>
     <string name="filter_mode_screen">Pantaila</string>
@@ -302,7 +298,6 @@
     <string name="information_webview_outdated">Mesedez, eguneratu WebView aplikazioa bateragarritasun hobea izateko</string>
     <string name="channel_complete">Bukatua</string>
     <string name="error_category_exists">Izen hori daukan kategoria bat badago dagoeneko!</string>
-    <string name="update_check_notification_download_in_progress">Deskargatzen…</string>
     <string name="migration_selection_prompt">Hautatu migratzeko iturri bat</string>
     <string name="notification_first_add_to_library">Mesedez, gehitu manga zure liburutegian hau egin aurretik</string>
     <string name="transition_pages_loading">Orriak kargatzen…</string>
@@ -334,9 +329,7 @@
     <string name="whats_new">Zer dago berri</string>
     <string name="pref_create_backup">Sortu babeskopia</string>
     <string name="backup_restore_missing_sources">Falta diren iturriak:</string>
-    <string name="backup_restore_content_full">Babeskopia fitxategiko datuak berreskuratu egingo dira.
-\n
-\nFalta diren luzapenak instalatu eta jarraipen-zerbitzuetan saioa hasi beharko duzu ondoren horiek erabiltzeko.</string>
+    <string name="backup_restore_content_full">Babeskopia fitxategiko datuak berreskuratu egingo dira. \n \nFalta diren luzapenak instalatu eta jarraipen-zerbitzuetan saioa hasi beharko duzu ondoren horiek erabiltzeko.</string>
     <string name="chapter_downloading_progress">Deskargatzen (%1$d/%2$d)</string>
     <string name="chapter_error">Errorea</string>
     <string name="also_set_chapter_settings_for_library">Nire liburutegiko manga guztietan ere aplikatu</string>
@@ -400,9 +393,6 @@
     <string name="pref_category_security">Segurtasuna</string>
     <string name="lock_always">Beti</string>
     <string name="secure_screen_summary">Pantaila seguruak aplikazioaren edukia ezkutatzen du aplikazioak aldatzean, eta pantaila-argazkiak blokeatzen ditu</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) iturriak</string>
-    <string name="pref_show_nsfw_source">Erakutsi iturrien eta luzapenen zerrendetan</string>
-    <string name="parental_controls_info">Honek ez du eragozten ofizialak ez diren edo oker markatutako luzapenek NSFW (18+) edukia aplikazioan erakustea.</string>
     <string name="relative_time_today">Gaur</string>
     <string name="pref_category_display">Bistaratu</string>
     <string name="pref_library_columns">Errenkada bakoitzeko elementu kopurua</string>

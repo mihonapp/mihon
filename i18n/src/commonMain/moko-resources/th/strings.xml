@@ -102,9 +102,7 @@
     <string name="ext_untrusted">ไม่น่าเชื่อถือ</string>
     <string name="ext_uninstall">ถอนการติดตั้ง</string>
     <string name="untrusted_extension">ส่วนขยายที่ไม่น่าเชื่อถือ</string>
-    <string name="untrusted_extension_message">ส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ
-\n
-\nการเชื่อถือส่วนขยายนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
+    <string name="untrusted_extension_message">ส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ \n \nการเชื่อถือส่วนขยายนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
     <string name="pref_fullscreen">เต็มหน้าจอ</string>
     <string name="pref_page_transitions">แสดงแอนิเมชั่นเมื่อเปลี่ยนหน้า</string>
     <string name="pref_double_tap_anim_speed">ความเร็วแอนิเมชั่นเมื่อแตะ 2 ครั้ง</string>
@@ -196,8 +194,7 @@
     <string name="manga_added_library">เพิ่มไปยังคลังแล้ว</string>
     <string name="manga_removed_library">นำออกจากคลังแล้ว</string>
     <string name="delete_downloads_for_manga">ลบตอนที่ดาวน์โหลดแล้วหรือไม่?</string>
-    <string name="copied_to_clipboard">คัดลอกไปยังคลิปบอร์ดแล้ว:
-\n%1$s</string>
+    <string name="copied_to_clipboard">คัดลอกไปยังคลิปบอร์ดแล้ว: \n%1$s</string>
     <string name="source_not_installed">ไม่ได้ติดตั้งแหลงที่มา: %1$s</string>
     <string name="display_mode_chapter">ตอนที่ %1$s</string>
     <string name="chapter_downloading_progress">กำลังดาวน์โหลด (%1$d/%2$d)</string>
@@ -262,7 +259,6 @@
     <string name="file_select_backup">เลือกแฟ้มข้อมูลสำรอง</string>
     <string name="update_check_confirm">ดาวน์โหลด</string>
     <string name="update_check_no_new_updates">ไม่มีการอัปเดตใหม่</string>
-    <string name="update_check_notification_download_in_progress">กำลังดาวน์โหลด…</string>
     <string name="update_check_notification_update_available">มีเวอร์ชั่นใหม่!</string>
     <string name="information_no_downloads">ไม่มีการดาวน์โหลด</string>
     <string name="information_no_recent">ไม่มีอัปเดตล่าสุด</string>
@@ -309,8 +305,6 @@
     <string name="pref_dual_page_split">แยกส่วนหน้ากว้าง</string>
     <string name="pref_show_navigation_mode_summary">แสดงครู่หนึ่งเมื่อเปิดตัวอ่าน</string>
     <string name="pref_show_navigation_mode">แสดงตำแหน่งโซนการแตะ</string>
-    <string name="ext_nsfw_warning">แหล่งที่มาจากส่วนขยายนี้อาจมีเนื้อหา NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="obsolete_extension_message">ส่วนขยายนี้ไม่สามารถใช้ได้อีกต่อไป แอปอาจทำงานไม่ถูกต้องและอาจทำให้เกิดปัญหากับแอปได้ ขอแนะนำให้ถอนการติดตั้งออก</string>
     <string name="ext_obsolete">ล้าสมัย</string>
     <string name="ext_updates_pending">อัปเดตที่รอดำเนินการ</string>
@@ -322,9 +316,6 @@
     <string name="pref_library_update_refresh_metadata">โหลดข้อมูลเมตาใหม่โดยอัตโนมัติ</string>
     <string name="pref_category_library_update">อัปเดตทั้งหมด</string>
     <string name="pref_category_display">การแสดงผล</string>
-    <string name="parental_controls_info">นี่ไม่ได้เป็นการป้องกันไม่ให้ส่วนขยายที่ไม่เป็นทางการ หรือที่อาจถูกตั้งค่าสถานะไม่ถูกต้อง ให้แสดงเนื้อหา NSFW (18+) ภายในแอป</string>
-    <string name="pref_show_nsfw_source">แสดงในรายการแหล่งข้อมูลและส่วนขยาย</string>
-    <string name="pref_category_nsfw_content">แหล่งที่มา NSFW (18+)</string>
     <string name="hide_notification_content">ซ่อนเนื้อหาการแจ้งเตือน</string>
     <string name="secure_screen_summary">หน้าจอปลอดภัยจะซ่อนเนื้อหาของแอปเมื่อสลับแอปและกันไม่ให้ถ่ายภาพหน้าจอ</string>
     <string name="secure_screen">หน้าจอความปลอดภัย</string>
@@ -503,7 +494,6 @@
     <string name="cover_saved">บันทึกปกแล้ว</string>
     <string name="error_saving_cover">ผิดพลาดในการบันทึกปก</string>
     <string name="source_unsupported">ไม่รองรับแหล่งที่มานี้</string>
-    <string name="channel_app_updates">แอพอัปเดต</string>
     <string name="label_default">ค่าเริ่มต้น</string>
     <string name="error_sharing_cover">ผิดพลาดในการแบ่งปันปก</string>
     <string name="action_start_downloading_now">เริ่มดาวน์โหลดเลย</string>
@@ -585,7 +575,6 @@
     <string name="empty_screen">เอ่อ นี้มันงี่เง่าชะมัด</string>
     <string name="ext_info_version">เวอร์ชัน</string>
     <string name="ext_info_language">ภาษา</string>
-    <string name="ext_info_age_rating">ระดับความเหมาะสม</string>
     <string name="wish_list">รายการที่อยากอ่าน</string>
     <string name="on_hold_list">รายการที่พักอ่านไว้</string>
     <string name="unfinished_list">รายการที่ยังไม่จบ</string>
@@ -637,8 +626,7 @@
     <string name="updates_last_update_info_just_now">เมื่อสักครู่</string>
     <string name="error_user_agent_string_invalid">สตริงตัวแทนผู้ใช้ไม่ถูกต้อง</string>
     <string name="action_open_random_manga">สุ่มเปิดรายการ</string>
-    <string name="fdroid_warning">บิลด์ F-Droid ไม่ได้ถูกรองรับอย่างเป็นทางการ
-\nแตะเพื่อเรียนรู้เพิ่มเติม</string>
+    <string name="fdroid_warning">บิลด์ F-Droid ไม่ได้ถูกรองรับอย่างเป็นทางการ \nแตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="information_no_entries_found">ไม่พบรายการใด ๆ ในหมวดหมู่นี้</string>
     <string name="download_notifier_cache_renewal">กำลังตรวจสอบการดาวน์โหลด</string>
     <string name="action_display_show_continue_reading_button">ปุ่มอ่านต่อ</string>
@@ -759,11 +747,7 @@
     <string name="ext_permission_install_apps_warning">จำเป็นต้องมีสิทธิ์ในการติดตั้งส่วนขยาย แตะที่นี่เพื่อให้สิทธิ์</string>
     <string name="private_settings">รวมการตั้งค่าที่ละเอียดอ่อน (เช่น โทเค็นการเข้าสู่ระบบตัวติดตาม)</string>
     <string name="onboarding_permission_action_grant">อนุญาต</string>
-    <string name="onboarding_storage_info">เลือกโฟลเดอร์ที่ %1$s จะจัดเก็บการดาวน์โหลดบท การสำรองข้อมูล และอื่นๆ
-\n
-\nแนะนำให้ใช้โฟลเดอร์เฉพาะ
-\n
-\nโฟลเดอร์ที่เลือก: %2$s</string>
+    <string name="onboarding_storage_info">เลือกโฟลเดอร์ที่ %1$s จะจัดเก็บการดาวน์โหลดบท การสำรองข้อมูล และอื่นๆ \n \nแนะนำให้ใช้โฟลเดอร์เฉพาะ \n \nโฟลเดอร์ที่เลือก: %2$s</string>
     <string name="pref_library_update_smart_update">อัปเดตอัจฉริยะ</string>
     <string name="manga_interval_custom_amount">ความถี่ในการอัปเดตกำหนดเอง:</string>
     <string name="onboarding_storage_help_action">คู่มือการจัดเก็บข้อมูล</string>
@@ -819,11 +803,6 @@
     <string name="pref_mark_duplicate_read_chapter_read_existing">หลังจากอ่านตอน</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">หลังจากเรียกข้อมูลตอนใหม่</string>
     <string name="pref_hide_missing_chapter_indicators">ซ่อนตัวแสดงตอนที่หายไป</string>
-    <string name="pref_hardware_bitmap_threshold">เกณฑ์บิตแมปฮาร์ดแวร์กำหนดเอง</string>
-    <string name="pref_hardware_bitmap_threshold_default">ค่าเริ่มต้น (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">หากตัวอ่านโหลดภาพเปล่า ให้ลดเกณฑ์ลงทีละน้อย\nเลือกแล้ว: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">ใช้ตัวถอดรหัสแบบเก่าสำหรับตัวอ่านภาพยาว</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">มีผลต่อประสิทธิภาพ เปิดใช้งานเฉพาะเมื่อการลดเกณฑ์บิตแมปไม่สามารถแก้ไขปัญหาภาพเปล่าได้</string>
     <string name="storage_failed_to_create_download_directory">เกิดข้อผิดพลาดในการสร้างไดเรกเทอรี่ดาวน์โหลด</string>
     <string name="storage_failed_to_create_directory">เกิดข้อผิดพลาดในการสร้างไดเรกเทอรี่: %s</string>
     <string name="export">ส่งออก</string>

@@ -251,8 +251,7 @@
     <string name="manga_info_expand">მეტი ინფორმაციის ჩვენება</string>
     <string name="manga_info_collapse">ნაკლები ინფორმაციის ჩვენება</string>
     <string name="delete_downloads_for_manga">წაიშალოს გადმოწერილი თავები?</string>
-    <string name="copied_to_clipboard">დაკოპირებულია ბუფერში:
-\n%1$s</string>
+    <string name="copied_to_clipboard">დაკოპირებულია ბუფერში: \n%1$s</string>
     <string name="source_not_installed">წყარო არ არის დაინსტალირებული: %1$s</string>
     <string name="snack_add_to_library">დავამატო ბიბლიოთეკაში?</string>
     <string name="display_mode_chapter">თავი %1$s</string>
@@ -316,7 +315,6 @@
     <string name="file_select_backup">ამოირჩიე რეზერვის ფაილი</string>
     <string name="update_check_confirm">გადმოწერა</string>
     <string name="update_check_no_new_updates">განახლება ვერ მოიძებნა</string>
-    <string name="update_check_notification_download_in_progress">გადმოწერა…</string>
     <string name="update_check_notification_update_available">ხელმისაწვდომია ახალი ვერსია!</string>
     <string name="information_no_downloads">გადმოწერები არ არის</string>
     <string name="information_no_recent">განახლებები არ არის</string>
@@ -373,11 +371,7 @@
     <string name="action_enable_all">ჩართე ყველა</string>
     <string name="action_disable_all">გამორთე ყველა</string>
     <string name="secure_screen_summary">აპლიკაციებს შორის გადართვისას შემადგენლობის დამალვა და სკრინშოტების დაბლოკვა</string>
-    <string name="untrusted_extension_message">ეს დამატება ხელმოწერილია უცნობი სერთიფიკატის მიერ და არ არის აქტივირებული.
-\n
-\nმავნე დამატებას შეუძლია წაიკითხოს შესვლის მონაცემები შენახული ამ აპლიკაციაში ან გაუშვას თავისი კოდი.
-\n
-\nამ სერტიფიკატის ნდობით თქვენ თქვენს თავზე იღებთ რისკებს და პასუხისმგებლობას.</string>
+    <string name="untrusted_extension_message">ეს დამატება ხელმოწერილია უცნობი სერთიფიკატის მიერ და არ არის აქტივირებული. \n \nმავნე დამატებას შეუძლია წაიკითხოს შესვლის მონაცემები შენახული ამ აპლიკაციაში ან გაუშვას თავისი კოდი. \n \nამ სერტიფიკატის ნდობით თქვენ თქვენს თავზე იღებთ რისკებს და პასუხისმგებლობას.</string>
     <string name="tracking_info">ცალმხრივი სინქრონიზაცია თვალყურის სადევნებელ სერვისებში თავების პროგრესის განსაახლებლად. მიადევნე თვალყური ინდივიდუალურ ჩანაწერებს მათი ჩანართებიდან.</string>
     <string name="filter_mode_overlay">გადაფარება</string>
     <string name="information_cloudflare_bypass_failure">ვერ მოხერხდა CloudFlare-ს შემოვლა</string>
@@ -399,13 +393,10 @@
     <string name="action_disable">გამორთვა</string>
     <string name="action_start">დაწყება</string>
     <string name="action_sort_date_added">დამატების თარიღი</string>
-    <string name="ext_nsfw_warning">შეიძლება შეიჩაცდეს უცენზურო(18+) კონტენტს</string>
-    <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">მონიშნული თავების წაშლა</string>
     <string name="pref_category_delete_chapters">თავების წაშლა</string>
     <string name="right_and_left_nav">მარჯვენა და მარცხენა</string>
     <string name="pref_dual_page_split">განიერი გვერდების გაყოფა</string>
-    <string name="parental_controls_info">ეს არ აღმოფხვრავს პროგრამაში NSFW (18+) შიგთავსის არაოფიციალურ, ან შესაძლო არასწორად მონიშნული გაფართოებებოიდან გამოჩენას.</string>
     <string name="action_display_show_number_of_items">საგნების რაოდენობის ჩვენება</string>
     <string name="action_search_settings">პარამეტრების ძიება</string>
     <string name="action_start_downloading_now">დაიწყე ჩამოტვირთვა</string>

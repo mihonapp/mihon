@@ -104,7 +104,7 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
 
     override suspend fun search(query: String): List<TrackSearch> {
         if (query.startsWith(SEARCH_ID_PREFIX)) {
-            query.substringAfter(SEARCH_ID_PREFIX).toIntOrNull()?.let { id ->
+            query.substringAfter(SEARCH_ID_PREFIX).trim().toIntOrNull()?.let { id ->
                 return api.getMangaDetails(id)?.let { listOf(it) } ?: emptyList()
             }
         }
@@ -141,6 +141,20 @@ class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
         } catch (_: Exception) {
             logout()
         }
+    }
+
+    override suspend fun updateUserConfig() {
+        val currentUser = api.getCurrentUser()
+        val scoreType = when (currentUser.ratingSteps) {
+            1 -> STEP_1
+            5 -> STEP_5
+            10 -> STEP_10
+            20 -> STEP_20
+            25 -> STEP_25
+            else -> throw Exception("Unknown score step size ${currentUser.ratingSteps}")
+        }
+        scorePreference.set(scoreType)
+        saveDisplayUsername(currentUser.nickname ?: currentUser.preferredUsername ?: currentUser.id)
     }
 
     fun saveToken(oauth: MangaBakaOAuth?) {

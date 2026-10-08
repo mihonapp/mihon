@@ -10,11 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.DpOffset
@@ -39,7 +35,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.updatePadding
-import ca.mpreg.webgpuviewer.renderer.WebGpuRenderer
+import ca.mpreg.webgpuviewer.renderer.GainmapInput
+import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.viewer.ImagePage
 import ca.mpreg.webgpuviewer.viewer.ImageViewer
 import ca.mpreg.webgpuviewer.viewer.ImageViewerState
@@ -48,22 +45,26 @@ import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.size.Size
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.EditCoverAction
-import eu.kanade.tachiyomi.data.coil.ImageDecoder2
+import eu.kanade.tachiyomi.data.coil.ImageDecoder
 import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import mihon.app.di.appGraph
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Close
+import mihon.icons.materialsymbols.rounded.Edit
+import mihon.icons.materialsymbols.rounded.Save
+import mihon.icons.materialsymbols.rounded.Share
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.clickableNoIndication
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 @Composable
 fun MangaCoverDialog(
@@ -75,7 +76,7 @@ fun MangaCoverDialog(
     onEditClick: ((EditCoverAction) -> Unit)?,
     onDismissRequest: () -> Unit,
 ) {
-    val useNewRenderer = Injekt.get<BasePreferences>().highQualityRenderer.get()
+    val useNewRenderer = LocalContext.current.appGraph.basePreferences.highQualityRenderer.get()
     val view = LocalView.current
 
     Dialog(
@@ -98,7 +99,7 @@ fun MangaCoverDialog(
                     ActionsPill {
                         IconButton(onClick = onDismissRequest) {
                             Icon(
-                                imageVector = Icons.Outlined.Close,
+                                imageVector = MaterialSymbols.Rounded.Close,
                                 contentDescription = stringResource(MR.strings.action_close),
                             )
                         }
@@ -109,12 +110,12 @@ fun MangaCoverDialog(
                             actions = listOf(
                                 AppBar.Action(
                                     title = stringResource(MR.strings.action_share),
-                                    icon = Icons.Outlined.Share,
+                                    icon = MaterialSymbols.Rounded.Share,
                                     onClick = onShareClick,
                                 ),
                                 AppBar.Action(
                                     title = stringResource(MR.strings.action_save),
-                                    icon = Icons.Outlined.Save,
+                                    icon = MaterialSymbols.Rounded.Save,
                                     onClick = onSaveClick,
                                 ),
                             ),
@@ -132,7 +133,7 @@ fun MangaCoverDialog(
                                     },
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Outlined.Edit,
+                                        imageVector = MaterialSymbols.Rounded.Edit,
                                         contentDescription = stringResource(MR.strings.action_edit_cover),
                                     )
                                 }
@@ -165,27 +166,46 @@ fun MangaCoverDialog(
             if (useNewRenderer) {
                 val state = ImageViewerState()
 
-                state.dpi = view.resources.displayMetrics.densityDpi / 100f
-
                 ImageRequest.Builder(view.context)
                     .data(manga)
                     .size(Size.ORIGINAL)
                     .memoryCachePolicy(CachePolicy.DISABLED)
                     .newDecoder(true)
                     .target { result ->
-                        val res = (result as ImageDecoder2.DecodeResultImage).res
-                        val page = runBlocking(WebGpuRenderer.dispatcher) {
-                            ImagePage(res.image, res.width, res.height)
-                        }.apply {
-                            image?.backgroundColor = 0
+                        val res = (result as ImageDecoder.DecodeResultImage)
+                        // Held, then freed, around the upload: its buffer alone doesn't keep
+                        // the frame's native pixels alive.
+                        val page = res.frame.use {
+                            runBlocking(Dispatchers.Default) {
+                                ImagePage.ImageSingle(
+                                    Image(
+                                        res.image,
+                                        res.width,
+                                        res.height,
+                                        createMipMaps = true,
+                                        backgroundColor = 0,
+                                        hdr = res.isHdr,
+                                        hdrHeadroom = res.hdrHeadroom,
+                                        gainmap = res.gainmap?.let {
+                                            GainmapInput(
+                                                pixels = it.pixels,
+                                                width = it.width,
+                                                height = it.height,
+                                                channels = it.channels,
+                                                gamma = it.gamma,
+                                                minContentBoost = it.minContentBoost,
+                                                maxContentBoost = it.maxContentBoost,
+                                                offsetSdr = it.offsetSdr,
+                                                offsetHdr = it.offsetHdr,
+                                            )
+                                        },
+                                    ),
+                                )
+                            }
                         }
                         state.apply {
                             fetchPage = { index ->
-                                if (index == 0) {
-                                    page
-                                } else {
-                                    null
-                                }
+                                if (index == 0) page else null
                             }
                             invalidate()
                         }

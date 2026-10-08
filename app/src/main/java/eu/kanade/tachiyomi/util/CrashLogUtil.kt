@@ -2,9 +2,11 @@ package eu.kanade.tachiyomi.util
 
 import android.content.Context
 import android.os.Build
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.ExtensionManager
+import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.WebViewUtil
@@ -16,15 +18,14 @@ import kotlinx.datetime.offsetAt
 import kotlinx.datetime.toLocalDateTime
 import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.lang.withUIContext
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Clock
 
+@Inject
 class CrashLogUtil(
     private val context: Context,
-    private val extensionManager: ExtensionManager = Injekt.get(),
-    private val preferences: BasePreferences = Injekt.get(),
-    private val networkPreferences: NetworkPreferences = Injekt.get(),
+    private val extensionManager: ExtensionManager,
+    private val preferences: BasePreferences,
+    private val networkPreferences: NetworkPreferences,
 ) {
 
     suspend fun dumpLogs(exception: Throwable? = null) = withNonCancellableContext {
@@ -62,10 +63,10 @@ class CrashLogUtil(
         """.trimIndent()
     }
 
-    private fun getExtensionsInfo(): String? {
+    private suspend fun getExtensionsInfo(): String? {
         val availableExtensions = extensionManager.availableExtensionsFlow.value.associateBy { it.pkgName }
 
-        val extensionInfoList = extensionManager.installedExtensionsFlow.value
+        val outdatedInfoList = extensionManager.getLoadedExtensions()
             .sortedBy { it.name }
             .mapNotNull {
                 val availableExtension = availableExtensions[it.pkgName]
@@ -80,6 +81,24 @@ class CrashLogUtil(
                 """.trimIndent()
             }
 
+        val notLoadedInfoList = extensionManager.getNotLoadedExtensions()
+            .sortedBy { it.name }
+            .map { extension ->
+                buildString {
+                    appendLine("- ${extension.name}")
+                    appendLine("  Installed: ${extension.versionName} (lib ${extension.libVersion ?: "?"})")
+                    append("  Not loaded: ${extension.reason.description}")
+
+                    val reason = extension.reason
+                    if (reason is Extension.NotLoaded.Reason.Failed) {
+                        appendLine()
+                        append(reason.stackTrace.trimEnd().prependIndent("  "))
+                    }
+                }
+            }
+
+        val extensionInfoList = outdatedInfoList + notLoadedInfoList
+
         return if (extensionInfoList.isNotEmpty()) {
             (listOf("Problematic extensions:") + extensionInfoList)
                 .joinToString("\n")
@@ -88,3 +107,13 @@ class CrashLogUtil(
         }
     }
 }
+
+private val Extension.NotLoaded.Reason.description: String
+    get() = when (this) {
+        is Extension.NotLoaded.Reason.Untrusted -> "Untrusted"
+        Extension.NotLoaded.Reason.Filtered -> "Filtered by content warning"
+        Extension.NotLoaded.Reason.Unsigned -> "Unsigned"
+        Extension.NotLoaded.Reason.UnsupportedLibVersion -> "Unsupported lib version"
+        Extension.NotLoaded.Reason.Malformed -> "Malformed"
+        is Extension.NotLoaded.Reason.Failed -> "Failed ($message)"
+    }

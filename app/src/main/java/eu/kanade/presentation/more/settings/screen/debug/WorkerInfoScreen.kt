@@ -1,14 +1,11 @@
 package eu.kanade.presentation.more.settings.screen.debug
 
-import android.app.Application
 import android.content.Context
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,13 +18,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
@@ -40,12 +39,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import mihon.app.di.appGraph
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.ContentCopy
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.plus
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import kotlin.time.Instant
 
 class WorkerInfoScreen : Screen() {
@@ -59,7 +59,7 @@ class WorkerInfoScreen : Screen() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
 
-        val viewModel = viewModel<WorkerInfoViewModel>(factory = WorkerInfoViewModel.Factory)
+        val viewModel = metroViewModel<WorkerInfoViewModel>()
         val enqueued by viewModel.enqueued.collectAsState()
         val finished by viewModel.finished.collectAsState()
         val running by viewModel.running.collectAsState()
@@ -74,7 +74,7 @@ class WorkerInfoScreen : Screen() {
                             listOf(
                                 AppBar.Action(
                                     title = stringResource(MR.strings.action_copy_to_clipboard),
-                                    icon = Icons.Default.ContentCopy,
+                                    icon = MaterialSymbols.Rounded.ContentCopy,
                                     onClick = {
                                         context.copyToClipboard(TITLE, enqueued + finished + running)
                                     },
@@ -120,19 +120,12 @@ class WorkerInfoScreen : Screen() {
         )
     }
 
+    @Inject
+    @ViewModelKey
+    @ContributesIntoMap(AppScope::class)
     class WorkerInfoViewModel(
-        context: Context,
+        private val context: Context,
     ) : ViewModel() {
-
-        companion object {
-            val Factory = viewModelFactory {
-                initializer {
-                    WorkerInfoViewModel(
-                        context = Injekt.get<Application>(),
-                    )
-                }
-            }
-        }
 
         private val workManager = context.workManager
 
@@ -169,7 +162,7 @@ class WorkerInfoScreen : Screen() {
                             .toLocalDateTime(TimeZone.currentSystemDefault())
                             .toDateTimestampString(
                                 UiPreferences.dateFormat(
-                                    Injekt.get<UiPreferences>().dateFormat.get(),
+                                    context.appGraph.uiPreferences.dateFormat.get(),
                                 ),
                             )
                         appendLine("Next scheduled run: $timestamp")

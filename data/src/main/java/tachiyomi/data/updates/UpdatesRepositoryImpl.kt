@@ -1,6 +1,11 @@
 package tachiyomi.data.updates
 
+import app.cash.sqldelight.Query
 import app.cash.sqldelight.async.coroutines.awaitAsList
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.data.Database
@@ -9,6 +14,9 @@ import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.repository.UpdatesRepository
 
+@Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class UpdatesRepositoryImpl(
     private val database: Database,
 ) : UpdatesRepository {
@@ -18,14 +26,7 @@ class UpdatesRepositoryImpl(
         after: Long,
         limit: Long,
     ): List<UpdatesWithRelations> {
-        return database.updatesViewQueries
-            .getUpdatesByReadStatus(
-                read = read,
-                after = after,
-                limit = limit,
-                mapper = ::mapUpdatesWithRelations,
-            )
-            .awaitAsList()
+        return getUpdatesByReadStatus(read = read, after = after, limit = limit).awaitAsList()
     }
 
     override fun subscribeAll(
@@ -60,14 +61,23 @@ class UpdatesRepositoryImpl(
         after: Long,
         limit: Long,
     ): Flow<List<UpdatesWithRelations>> {
-        return database.updatesViewQueries
-            .getUpdatesByReadStatus(
-                read = read,
+        return getUpdatesByReadStatus(read = read, after = after, limit = limit).subscribeToList()
+    }
+
+    private fun getUpdatesByReadStatus(read: Boolean, after: Long, limit: Long): Query<UpdatesWithRelations> {
+        return if (read) {
+            database.updatesViewQueries.getReadUpdates(
                 after = after,
                 limit = limit,
                 mapper = ::mapUpdatesWithRelations,
             )
-            .subscribeToList()
+        } else {
+            database.updatesViewQueries.getUnreadUpdates(
+                after = after,
+                limit = limit,
+                mapper = ::mapUpdatesWithRelations,
+            )
+        }
     }
 
     @Suppress("UNUSED_PARAMETER")

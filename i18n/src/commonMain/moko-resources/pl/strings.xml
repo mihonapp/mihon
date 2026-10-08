@@ -84,7 +84,6 @@
     <string name="file_select_cover">Wybierz okładkę</string>
     <string name="update_check_confirm">Pobierz</string>
     <string name="update_check_no_new_updates">Brak nowych aktualizacji</string>
-    <string name="update_check_notification_download_in_progress">Pobieranie…</string>
     <string name="update_check_notification_update_available">Dostępna nowa wersja!</string>
     <string name="information_empty_library">Twoja biblioteka jest pusta</string>
     <string name="download_notifier_title_error">Błąd</string>
@@ -241,19 +240,14 @@
     <string name="manga_added_library">Dodano do biblioteki</string>
     <string name="manga_removed_library">Usunięto z biblioteki</string>
     <string name="label_migration">Migracja</string>
-    <string name="copied_to_clipboard">Skopiowano do schowka:
-\n %1$s</string>
+    <string name="copied_to_clipboard">Skopiowano do schowka: \n %1$s</string>
     <string name="copy">Kopiuj</string>
     <string name="label_extension_info">Szczegóły rozszerzenia</string>
     <string name="ext_update">Aktualizuj</string>
     <string name="ext_trust">Ufaj</string>
     <string name="ext_untrusted">Niezaufane</string>
     <string name="untrusted_extension">Niezaufane rozszerzenie</string>
-    <string name="untrusted_extension_message">To rozszerzenie było podpisane niezaufanym certyfikatem i nie zostało aktywowane.
-\n
-\nZłośliwe rozszerzenie może odczytać dane logowania albo uruchomić złośliwy kod.
-\n
-\nUfając temu rozszerzeniu akceptujesz to zagrożenie.</string>
+    <string name="untrusted_extension_message">To rozszerzenie było podpisane niezaufanym certyfikatem i nie zostało aktywowane. \n \nZłośliwe rozszerzenie może odczytać dane logowania albo uruchomić złośliwy kod. \n \nUfając temu rozszerzeniu akceptujesz to zagrożenie.</string>
     <string name="migration_dialog_what_to_include">Zaznacz dane do zawarcia</string>
     <string name="migrate">Migruj</string>
     <string name="pager_viewer">Widok stron</string>
@@ -424,13 +418,8 @@
     <string name="backup_restore_missing_trackers">Serwisy, do których nie zalogowono:</string>
     <string name="pref_remove_bookmarked_chapters">Usuwaj rozdziały dodane do zakładek</string>
     <string name="pref_category_delete_chapters">Usuń rozdziały</string>
-    <string name="ext_nsfw_warning">Źródła z tej wtyczki mogą zawierać treści NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Nie zapobiega to nieoficjalnym lub potencjalnie niepoprawnie oflagowanym rozszerzeniom przed pokazywaniem zwartości NSFW(18+) w aplikacji.</string>
-    <string name="pref_category_nsfw_content">NFSW Materiały 18+</string>
     <string name="file_picker_error">Nie znaleziono aplikacji do przeglądania plików</string>
     <string name="myanimelist_relogin">Wymagane ponowne zalogowanie do MAL</string>
-    <string name="pref_show_nsfw_source">Pokazuj na liście źródeł i rozszerzeń</string>
     <string name="track_finished_reading_date">Data zakończenia</string>
     <string name="track_started_reading_date">Data rozpoczęcia</string>
     <string name="pref_dump_crash_logs_summary">Zapisuje logi błędów do pliku do udostępnienia programistom</string>
@@ -450,9 +439,7 @@
     <string name="pref_dual_page_invert">Odwróć układ w podziale podwójnych stron</string>
     <string name="pref_dual_page_split">Podział podwójnych stron</string>
     <string name="pref_dns_over_https">DNS przez HTTPS (DoH)</string>
-    <string name="backup_restore_content_full">Dane z pliku kopii zapasowej zostaną przywrócone.
-\n
-\nBędziesz musiał zainstalować brakujące rozszerzenia i zalogować się do usług śledzących, aby móc z nich korzystać.</string>
+    <string name="backup_restore_content_full">Dane z pliku kopii zapasowej zostaną przywrócone. \n \nBędziesz musiał zainstalować brakujące rozszerzenia i zalogować się do usług śledzących, aby móc z nich korzystać.</string>
     <string name="nav_zone_right">Prawo</string>
     <string name="nav_zone_left">Lewo</string>
     <string name="nav_zone_next">Następne</string>
@@ -543,7 +530,6 @@
     <string name="connected_to_wifi">Tylko przez Wi-Fi</string>
     <string name="enhanced_tracking_info">Usługi dostarczania ulepszonych funkcji dla niektórych źródeł. Mangi po dodaniu do biblioteki są automatycznie śledzone.</string>
     <string name="enhanced_services">Ulepszone usługi śledzenia</string>
-    <string name="channel_app_updates">Aktualizacje aplikacji</string>
     <string name="ext_update_all">Zaktualizuj wszystko</string>
     <string name="ext_installer_legacy">Przestarzały</string>
     <string name="pref_auto_clear_chapter_cache">Wyczyść cache rozdziałów przy uruchamianiu aplikacji</string>
@@ -599,7 +585,6 @@
     <string name="pref_reset_viewer_flags">Resetowanie ustawień czytników serii</string>
     <string name="pref_reset_viewer_flags_summary">Resetuje tryb czytania i orientację wszystkich serii</string>
     <string name="download_notifier_split_page_not_found">Strona %d nie została znaleziona podczas podziału</string>
-    <string name="ext_info_age_rating">Oznaczenie wiekowe</string>
     <string name="rotation_reverse_portrait">Do góry nogami</string>
     <string name="download_notifier_split_page_path_not_found">Nie można było znaleźć ścieżki %d strony</string>
     <string name="pref_user_agent_string">Domyślny user agent string</string>
@@ -656,8 +641,7 @@
     <string name="action_open_random_manga">Otwórz losową pozycję</string>
     <string name="pref_library_summary">Kategorie, aktualizacja globalna, przesunięcie rozdziału</string>
     <string name="pref_invalidate_download_cache">Odbuduj indeks pobierania</string>
-    <string name="fdroid_warning">Kompilacje F-Droid nie są oficjalnie obsługiwane.
-\nNaciśnij, aby dowiedzieć się więcej.</string>
+    <string name="fdroid_warning">Kompilacje F-Droid nie są oficjalnie obsługiwane. \nNaciśnij, aby dowiedzieć się więcej.</string>
     <string name="label_read_chapters">Przeczytane</string>
     <string name="pref_downloads_summary">Automatyczne pobieranie, pobierz wstępnie</string>
     <string name="track_remove_start_date_conf_text">To spowoduje usunięcie wcześniej wybranej daty rozpoczęcia z %s</string>
@@ -753,11 +737,7 @@
     <string name="onboarding_storage_help_info">Aktualizujesz ze starszej wersji i nie jesteś pewien co wybrać? Zobacz na przewodnik po pamięci.</string>
     <string name="pref_update_only_in_release_period">Przewiduj następną aktualizację</string>
     <string name="ext_permission_install_apps_warning">Uprawnienia są wymagane aby zainstalować rozszerzenia. Kliknij tutaj aby je przyznać.</string>
-    <string name="onboarding_storage_info">Wybierz folder gdzie %1$s będzie zapisywał pobrane rozdziały, kopie zapasowe i inne.
-\n
-\nZalecany jest dedykowany folder.
-\n
-\nWybrany folder:%2$s</string>
+    <string name="onboarding_storage_info">Wybierz folder gdzie %1$s będzie zapisywał pobrane rozdziały, kopie zapasowe i inne. \n \nZalecany jest dedykowany folder. \n \nWybrany folder:%2$s</string>
     <string name="ext_revoke_trust">Unieważnij zaufanie nieznanym rozszerzeniom</string>
     <string name="action_open_repo">Repozytorium open source</string>
     <string name="pref_flash_page_summ">Redukuje ghosting na wyświetlaczach e-ink</string>
@@ -806,16 +786,12 @@
     <string name="ext_confirm_remove">Usunąć Rozszerzenie?</string>
     <string name="remove_private_extension_message">Czy na pewno chcesz usunąć rozszerzenie \"%s\"?</string>
     <string name="firebase_summary">Przesyłanie dzienników awarii i danych użytkowania pozwoli nam na zidentyfikowanie i naprawę błędów, poprawę wydajności oraz dopasowanie przyszłych wersji aplikacji do twoich potrzeb</string>
-    <string name="pref_hardware_bitmap_threshold_default">Domyślne (%d)</string>
     <string name="trackers_updated_summary">Śledzenie zaktualizowane do rozdziału %d</string>
     <string name="non_library_settings">Wszystkie przeczytane wpisy</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Jeżeli czytnik załaduje pusty obraz, stopniowo zmniejszaj zakres graniczny.\nWybrany: %s</string>
     <string name="confirm_tracker_update">Zaktualizować śledzenie do rozdziału %d?</string>
     <string name="upcoming_guide">Przewodnik nadchodzących aktualizacji</string>
     <string name="pref_download_new_unread_chapters_only">Pomiń pobieranie duplikatów przeczytanych już rozdziałów</string>
     <string name="invalid_backup_file_json">Kopia zapasowa JSON nie jest wspierana</string>
-    <string name="pref_hardware_bitmap_threshold">Niestandardowy zakres graniczny bitmapy dla urządzenia</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Wpływa na wydajność. Włącz tylko wtedy, gdy zmniejszenie zakresu granicznego bitmapy nie pomaga przy naprawie nieładujących się obrazów</string>
     <string name="pref_incognito_mode_extension_summary">Wstrzymaj historię dla rozszerzenia</string>
     <string name="action_notes">Notatki</string>
     <string name="action_edit_notes">Edytuj notatki</string>

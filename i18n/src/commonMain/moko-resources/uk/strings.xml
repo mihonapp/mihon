@@ -97,9 +97,7 @@
     <string name="ext_untrusted">Ненадійне</string>
     <string name="ext_uninstall">Видалити</string>
     <string name="untrusted_extension">Ненадійне розширення</string>
-    <string name="untrusted_extension_message">Шкідливе розширення може зчитувати будь-які збережені облікові дані для входу або виконати довільний код.
-\n
-\nДовіряючи цьому розширенню, ви приймаєте ці ризики.</string>
+    <string name="untrusted_extension_message">Шкідливе розширення може зчитувати будь-які збережені облікові дані для входу або виконати довільний код. \n \nДовіряючи цьому розширенню, ви приймаєте ці ризики.</string>
     <string name="pref_fullscreen">Повноекранний режим</string>
     <string name="pref_page_transitions">Анімація переходів сторінки</string>
     <string name="pref_double_tap_anim_speed">Швидкість анімації при подвійному натиснені</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">Додати до бібліотеки</string>
     <string name="manga_removed_library">Видалено з бібліотеки</string>
     <string name="delete_downloads_for_manga">Видаляти завантажені розділи?</string>
-    <string name="copied_to_clipboard">Скопійовано до буферу
-\n%1$s</string>
+    <string name="copied_to_clipboard">Скопійовано до буферу \n%1$s</string>
     <string name="source_not_installed">Джерело не встановлено: %1$s</string>
     <string name="display_mode_chapter">Розділ %1$s</string>
     <string name="chapter_downloading_progress">Завантажується (%1$d/%2$d)</string>
@@ -253,7 +250,6 @@
     <string name="file_select_backup">Виберіть файл резервної копії</string>
     <string name="update_check_confirm">Завантажити</string>
     <string name="update_check_no_new_updates">Оновлень не виявлено</string>
-    <string name="update_check_notification_download_in_progress">Завантаження в процесі…</string>
     <string name="update_check_notification_update_available">Доступна нова версія!</string>
     <string name="information_no_downloads">Завантажень немає</string>
     <string name="information_no_recent">Без оновлень</string>
@@ -404,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Трекери не авторизовано:</string>
     <string name="pref_remove_bookmarked_chapters">Дозволити видалення розділів з закладок</string>
     <string name="pref_category_delete_chapters">Видалити розділи</string>
-    <string name="ext_nsfw_warning">Джерела з цього розширення можуть містити контент NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Це не заважає неофіційним або потенційно невірним розширенням розміщувати вміст NSFW (18+) у застосунку.</string>
     <string name="no_chapters_error">Немає розділів</string>
     <string name="chapter_settings_updated">Налаштування розділу оновлено</string>
     <string name="share_page_info">%1$s: %2$s, сторінка %3$d</string>
@@ -427,8 +420,6 @@
     <string name="migration_help_guide">Гайд по міграції джерел</string>
     <string name="file_picker_error">Застосунок вибору файлів не знайдено</string>
     <string name="myanimelist_relogin">Будь ласка, увійдіть в MAL знову</string>
-    <string name="pref_show_nsfw_source">Показувати в списку джерел та розширень</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) джерела</string>
     <string name="track_finished_reading_date">Дата закінчення</string>
     <string name="track_started_reading_date">Дата початку</string>
     <string name="pref_dump_crash_logs_summary">Зберігає логи помилок до файлу для надсилання розробникам</string>
@@ -534,7 +525,6 @@
     <string name="pref_verbose_logging">Докладне журналювання</string>
     <string name="pref_verbose_logging_summary">Записувати докладні журнали до системного журналу (знижує продуктивність застосунку)</string>
     <string name="notification_size_warning">Попередження: великі оновлення можуть призвести до сповільнення джерел або збільшити використання батареї. Тицьніть задля подробиць.</string>
-    <string name="channel_app_updates">Оновлення застосунку</string>
     <string name="download_queue_size_warning">Попередження: великий об\'єм завантажень може призвести до сповільнення роботи джерел та/або блокуванню %s.</string>
     <string name="ext_update_all">Оновити все</string>
     <string name="backup_info">Ви повинні зберігати декілька резервних копій в інших місцях. Резервні копії можуть містити конфіденційні дані, включно зі збереженими паролями; будьте обережні, якщо ділитеся ними.</string>
@@ -592,7 +582,6 @@
     <string name="pref_app_language">Мова застосунку</string>
     <string name="ext_info_version">Версія</string>
     <string name="ext_info_language">Мова</string>
-    <string name="ext_info_age_rating">Вікові обмеження</string>
     <string name="download_notifier_split_page_path_not_found">Не вдалось знайти шлях сторінки %d</string>
     <string name="pref_navigate_pan">Панорамування широких зображень</string>
     <string name="pref_landscape_zoom">Автоматичне масштабування широких зображень</string>
@@ -639,8 +628,7 @@
     <string name="action_open_random_manga">Відкрити випадковий запис</string>
     <string name="information_no_entries_found">В цій категорії немає записів</string>
     <string name="download_notifier_cache_renewal">Перевірка завантажень</string>
-    <string name="fdroid_warning">Збірки F-Droid офіційно не підтримуються.
-\nТицьніть для того, щоб дізнатись більше.</string>
+    <string name="fdroid_warning">Збірки F-Droid офіційно не підтримуються. \nТицьніть для того, щоб дізнатись більше.</string>
     <string name="pref_invalidate_download_cache_summary">Змусити застосунок повторно перевірити завантажені розділи</string>
     <string name="action_display_show_continue_reading_button">Кнопка \"Продовжити читання\"</string>
     <string name="track_remove_date_conf_title">Видалити дату?</string>
@@ -805,12 +793,7 @@
     <string name="pref_mark_duplicate_read_chapter_read">Позначати дублікат прочитаного розділу теж як прочитаний</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Після прочитання розділу</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Після отримання нового розділу</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Використовуйте застарілий декодер для читалки довгих сторінок</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Впливає на продуктивність. Увімкніть, якщо зменшення порогу растрового зображення не розв\'язує проблему з порожніми зображеннями</string>
-    <string name="pref_hardware_bitmap_threshold">Користувацький поріг апаратного растра</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Якщо читалка завантажує порожнє зображення, поступово зменшувати поріг.\nВибрано: %s</string>
     <string name="pref_flash_style_black">Чорний</string>
-    <string name="pref_hardware_bitmap_threshold_default">За замовчуванням (%d)</string>
     <string name="invalid_backup_file_json">Резервне копіювання JSON не підтримується</string>
     <string name="invalid_backup_file_unknown">Файл резервної копії пошкоджено</string>
     <string name="trackers_updated_summary">Трекери оновлено до розділу %d</string>

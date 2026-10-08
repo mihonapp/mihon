@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +24,9 @@ import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.util.lang.toTimestampString
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Delete
+import mihon.icons.materialsymbols.rounded.Favorite
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
@@ -87,7 +87,7 @@ fun HistoryItem(
         if (!history.coverData.isMangaFavorite) {
             IconButton(onClick = onClickFavorite) {
                 Icon(
-                    imageVector = Icons.Outlined.FavoriteBorder,
+                    imageVector = MaterialSymbols.Rounded.Favorite,
                     contentDescription = stringResource(MR.strings.add_to_library),
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
@@ -96,7 +96,7 @@ fun HistoryItem(
 
         IconButton(onClick = onClickDelete) {
             Icon(
-                imageVector = Icons.Outlined.Delete,
+                imageVector = MaterialSymbols.Rounded.Delete,
                 contentDescription = stringResource(MR.strings.action_delete),
                 tint = MaterialTheme.colorScheme.onSurface,
             )

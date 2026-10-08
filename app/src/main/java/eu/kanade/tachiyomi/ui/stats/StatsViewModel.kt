@@ -4,6 +4,11 @@ import androidx.compose.ui.util.fastDistinctBy
 import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.core.util.fastCountNot
 import eu.kanade.presentation.more.stats.StatsScreenState
 import eu.kanade.presentation.more.stats.data.StatsData
@@ -21,19 +26,20 @@ import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_HAS_U
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_COMPLETED
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_READ
 import tachiyomi.domain.manga.interactor.GetLibraryManga
-import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.track.interactor.GetTracksPerManga
 import tachiyomi.domain.track.model.Track
 import tachiyomi.source.local.isLocal
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class StatsViewModel(
-    private val downloadManager: DownloadManager = Injekt.get(),
-    private val getLibraryManga: GetLibraryManga = Injekt.get(),
-    private val getTotalReadDuration: GetTotalReadDuration = Injekt.get(),
-    private val getTracks: GetTracks = Injekt.get(),
-    private val preferences: LibraryPreferences = Injekt.get(),
-    private val trackerManager: TrackerManager = Injekt.get(),
+    private val downloadManager: DownloadManager,
+    private val getLibraryManga: GetLibraryManga,
+    private val getTotalReadDuration: GetTotalReadDuration,
+    private val getTracksPerManga: GetTracksPerManga,
+    private val preferences: LibraryPreferences,
+    private val trackerManager: TrackerManager,
 ) : ViewModel() {
 
     val state: StateFlow<StatsScreenState>
@@ -108,8 +114,11 @@ class StatsViewModel(
 
     private suspend fun getMangaTrackMap(libraryManga: List<LibraryManga>): Map<Long, List<Track>> {
         val loggedInTrackerIds = loggedInTrackers.map { it.id }.toHashSet()
+        if (loggedInTrackerIds.isEmpty()) return emptyMap()
+
+        val tracksPerManga = getTracksPerManga.await()
         return libraryManga.associate { manga ->
-            val tracks = getTracks.await(manga.id)
+            val tracks = tracksPerManga[manga.id].orEmpty()
                 .fastFilter { it.trackerId in loggedInTrackerIds }
 
             manga.id to tracks

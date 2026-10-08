@@ -136,7 +136,7 @@
     <string name="pref_read_with_volume_keys">Клавиши громкости</string>
     <string name="pref_reader_navigation">Навигация</string>
     <string name="pref_reader_theme">Цвет фона</string>
-    <string name="pref_remove_after_marked_as_read">Удалять помеченое вручную как «Прочитано»</string>
+    <string name="pref_remove_after_marked_as_read">Удалять помеченное вручную как «Прочитано»</string>
     <string name="pref_remove_after_read">Удалять после прочтения</string>
     <string name="pref_rotation_type">Ориентация по умолчанию</string>
     <string name="pref_show_page_number">Номер страницы</string>
@@ -175,7 +175,6 @@
     <string name="update_6hour">Каждые 6 часов</string>
     <string name="update_check_confirm">Загрузить</string>
     <string name="update_check_no_new_updates">Нет обновлений</string>
-    <string name="update_check_notification_download_in_progress">Загрузка…</string>
     <string name="update_check_notification_update_available">Доступно обновление!</string>
     <string name="update_never">Выключено</string>
     <string name="updating_category">Обновление категории</string>
@@ -226,7 +225,7 @@
     <string name="latest">Последние</string>
     <string name="browse">Поисковик</string>
     <string name="channel_common">Общий</string>
-    <string name="information_empty_category">Нет категорий в библиотеке. Нажмите кнопку «Добавить» чтобы создать категорию для организации вашей библиотеки.</string>
+    <string name="information_empty_category">Нет категорий в библиотеке. Нажмите кнопку «Добавить», чтобы создать категорию для организации вашей библиотеки.</string>
     <string name="label_migration">Перенос</string>
     <string name="label_extensions">Расширения</string>
     <string name="label_extension_info">Информация о расширении</string>
@@ -239,17 +238,14 @@
     <string name="ext_untrusted">Ненадёжное</string>
     <string name="ext_uninstall">Удалить</string>
     <string name="untrusted_extension">Ненадёжное расширение</string>
-    <string name="untrusted_extension_message">Вредоносные расширения могут считывать любые хранящиеся учётные данные для входа или выполнять произвольный код.
-\n
-\nДоверяя этому расширению, вы принимаете эти риски.</string>
+    <string name="untrusted_extension_message">Вредоносные расширения могут считывать любые хранящиеся учётные данные для входа или выполнять произвольный код. \n \nДоверяя этому расширению, вы принимаете эти риски.</string>
     <string name="pref_double_tap_anim_speed">Скорость анимации при двойном нажатии</string>
     <string name="double_tap_anim_speed_0">Без анимации</string>
     <string name="double_tap_anim_speed_normal">Нормальная</string>
     <string name="double_tap_anim_speed_fast">Быстрая</string>
     <string name="manga_added_library">Добавлено в библиотеку</string>
     <string name="manga_removed_library">Удалено из библиотеки</string>
-    <string name="copied_to_clipboard">Скопировано в буфер обмена:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Скопировано в буфер обмена: \n%1$s</string>
     <string name="migration_dialog_what_to_include">Какие данные перенести</string>
     <string name="migrate">Перенести</string>
     <string name="copy">Копировать</string>
@@ -401,12 +397,9 @@
     <string name="channel_complete">Завершено</string>
     <string name="channel_progress">Прогресс</string>
     <string name="channel_errors">Ошибки</string>
-    <string name="backup_restore_missing_trackers">Сервисы отслеживания в которые не выполнен вход:</string>
+    <string name="backup_restore_missing_trackers">Сервисы отслеживания, в которые не выполнен вход:</string>
     <string name="pref_remove_bookmarked_chapters">Удалять главы с закладками</string>
     <string name="pref_category_delete_chapters">Удаление глав</string>
-    <string name="ext_nsfw_warning">Источики из этого расширения могут содержать контент NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Это не предотвращает появление внутри приложения контента NSFW (18+) из неофициальных или потенциально неправильно помеченных расширений.</string>
     <string name="no_chapters_error">Нет глав</string>
     <string name="chapter_settings_updated">Настройки главы по умолчанию были обновлены</string>
     <string name="set_chapter_settings_as_default">Установить по умолчанию</string>
@@ -425,8 +418,6 @@
     <string name="spen_next_page">Следующая страница</string>
     <string name="spen_previous_page">Предыдущая страница</string>
     <string name="migration_help_guide">Руководство по переносу источников</string>
-    <string name="pref_category_nsfw_content">Источники NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Показывать в списке источников и расширений</string>
     <string name="file_picker_error">Приложение для выбора файлов не найдено</string>
     <string name="myanimelist_relogin">Пожалуйста, авторизуйтесь в MyAnimeList снова</string>
     <string name="pref_viewer_nav">Зоны касания</string>
@@ -541,7 +532,6 @@
     <string name="update_72hour">Каждые 3 дня</string>
     <string name="download_queue_size_warning">Предупреждение: Большое количество загрузок может привести к замедлению работы источников и/или блокировке %s. Нажмите для подробностей.</string>
     <string name="ext_update_all">Обновить все</string>
-    <string name="channel_app_updates">Обновления приложения</string>
     <string name="pref_auto_clear_chapter_cache">Очищать кэш глав при запуске приложения</string>
     <string name="clear_database_source_item_count">%1$d не библиотечных серий в базе данных</string>
     <string name="database_clean">Нечего очищать</string>
@@ -583,7 +573,6 @@
     <string name="pref_reset_viewer_flags_success">Все настройки читалки сброшены</string>
     <string name="pref_reset_viewer_flags_error">Не удалось сбросить настройки читалки</string>
     <string name="empty_screen">Упс, ошибочка вышла</string>
-    <string name="ext_info_age_rating">Возрастное ограничение</string>
     <string name="ext_info_version">Версия</string>
     <string name="ext_info_language">Язык</string>
     <string name="complete_list">Прочитано</string>
@@ -627,7 +616,7 @@
     <string name="pref_downloads_summary">Автоматическая загрузка, загрузка наперёд</string>
     <string name="pref_tracking_summary">Односторонняя синхронизация прогресса, расширенная синхронизация</string>
     <string name="pref_browse_summary">Источники, расширения, глобальный поиск</string>
-    <string name="pref_backup_summary">Ручные и автоматические резервные копий, хранилище</string>
+    <string name="pref_backup_summary">Ручные и автоматические резервные копии, хранилище</string>
     <string name="pref_security_summary">Блокировка приложения, защита экрана</string>
     <string name="pref_advanced_summary">Выгрузка журнала сбоев, оптимизация батареи</string>
     <string name="crash_screen_title">Ой, ошибочка вышла!</string>
@@ -639,8 +628,7 @@
     <string name="download_notifier_cache_renewal">Проверка загрузок</string>
     <string name="information_no_entries_found">В этой категории нет серий</string>
     <string name="action_open_random_manga">Открыть случайную серию</string>
-    <string name="fdroid_warning">Сборки F-Droid официально не поддерживаются.
-\nНажмите, чтобы узнать больше.</string>
+    <string name="fdroid_warning">Сборки F-Droid официально не поддерживаются. \nНажмите, чтобы узнать больше.</string>
     <string name="action_display_show_continue_reading_button">Кнопка «Продолжить чтение»</string>
     <string name="track_remove_finish_date_conf_text">Это удалит ранее выбранную дату окончания из %s</string>
     <string name="track_remove_date_conf_title">Удалить дату?</string>
@@ -747,11 +735,7 @@
     <string name="onboarding_action_next">Следующее</string>
     <string name="onboarding_description">Давайте настроем парочку вещей. Вы всегда можете их поменять позже в настройках.</string>
     <string name="no_location_set">Не указан путь хранилища</string>
-    <string name="onboarding_storage_info">Выберите папку где %1$s будет хранить загруженные главы, резервные копии и другое.
-\n
-\nРекомендуется использовать выделенную папку.
-\n
-\nВыбранная папка: %2$s</string>
+    <string name="onboarding_storage_info">Выберите папку где %1$s будет хранить загруженные главы, резервные копии и другое. \n \nРекомендуется использовать выделенную папку. \n \nВыбранная папка: %2$s</string>
     <string name="onboarding_permission_notifications">Разрешения для уведомлений</string>
     <string name="onboarding_permission_install_apps">Разрешения для установки приложений</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Позволит избежать прерывания длительных обновлений библиотеки, загрузок и восстановлений резервных копий.</string>
@@ -808,17 +792,12 @@
     <string name="non_library_settings">Все прочитанные серии</string>
     <string name="trackers_updated_summary">Сервисы отслеживания обновлены для главы %d</string>
     <string name="pref_auto_update_manga_on_mark_read">Обновлять прогресс, когда отмечено как «Прочитано»</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Если читалка загружает пустое изображение, постепенно уменьшайте пороговую обработку.\nВыбрано: %s</string>
-    <string name="pref_hardware_bitmap_threshold">Пользовательская аппаратная пороговая обработка растрового изображения</string>
-    <string name="pref_hardware_bitmap_threshold_default">По умолчанию (%d)</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Влияет на производительность. Включите этот параметр, если пороговая обработка растрового изображения не помогает с ошибками, связанными с пустыми изображениями</string>
     <string name="pref_incognito_mode_extension_summary">Приостановить историю чтения для расширений</string>
     <string name="label_auto">Авто</string>
     <string name="theme_monochrome">Монохром</string>
     <string name="tracked_privately">Отслеживается приватно</string>
     <string name="action_toggle_private_on">Отслеживать приватно</string>
     <string name="action_toggle_private_off">Отслеживать публично</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Использовать старый декодер для читалки с длинными страницами</string>
     <string name="export">Экспортировать</string>
     <string name="artist">Художник</string>
     <string name="library_exported">Библиотека экспортирована</string>
@@ -850,7 +829,7 @@
     <string name="migrationConfigScreen.continueButtonText">Продолжить</string>
     <string name="migrationConfigScreen.selectNoneLabel">Ничего не выбирать</string>
     <string name="theme_catppuccin">Котопуссин</string>
-    <string name="migrationConfigScreen.enhancedOptionsWarning">Эти настройки медленные и опасные а также могут привести к ограничениям источников</string>
+    <string name="migrationConfigScreen.enhancedOptionsWarning">Эти настройки медленные и опасные, а также могут привести к ограничениям источников</string>
     <string name="migrationConfigScreen.dataToMigrateHeader">Какие данные перенести</string>
     <string name="migrationConfigScreen.removeDownloadsTitle">Удалить загрузки текущей серии после переноса</string>
     <string name="migrationConfigScreen.additionalSearchQuerySupportingText">Помогает сузить результаты поиска добавляя ключевые слова</string>
@@ -896,7 +875,7 @@
     <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
     <string name="supportUsScreen.currentlySupportedBy">Mihon сейчас поддерживается %d+ спонсорами. Мы хотим поблагодарить каждого из вас. Давайте сделаем Mihon лучше.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
-    <string name="supportUsScreen.perks">Спонсоры получать доступ к эксклюзивным каналам с будущими привилегиями и возможностями.</string>
+    <string name="supportUsScreen.perks">Спонсоры получают доступ к эксклюзивным каналам с будущими привилегиями и возможностями.</string>
     <string name="supportUsScreen.contactPlatform">Discord</string>
     <string name="donationCampaign.title">Нравится приложение?</string>
     <string name="donationCampaign.paragraph1">Приветствую! Я главный разработчик Mihon и хотел бы попросить вас об финансовой поддержке проекта. При достаточной поддержке я смогу работать над Mihon в полную силу и сосредоточиться как на давно существующих проблемах, так и на функциях, которые пользователи уже давно просят добавить.</string>
@@ -922,4 +901,53 @@
     <string name="theme_tokyonight">Токийская Ночь</string>
     <string name="pref_filter_update_categories_details">Обновления в исключённых категориях не будут показываться, даже если они находятся во включённых категориях.</string>
     <string name="pref_filter_upcoming_categories_details">Серии в исключённых категориях не будут показываться, даже если находятся в любых включённых категориях.</string>
+    <string name="pref_high_quality_renderer">Использовать рендер высокого качества</string>
+    <string name="webgpu_viewer">WebGPU</string>
+    <string name="pref_transition_animation">Анимация перехода</string>
+    <string name="transition_animation_flip_left">Перелистывать страницу (влево)</string>
+    <string name="transition_animation_flip_right">Перелистывать страницу (вправо)</string>
+    <string name="transition_animation_stack_left">Стопка (влево)</string>
+    <string name="transition_animation_stack_right">Стопка (вправо)</string>
+    <string name="transition_animation_stack_up">Стопка (вверх)</string>
+    <string name="transition_animation_stack_down">Стопка (вниз)</string>
+    <string name="transition_animation_sphere">Сфера</string>
+    <string name="transition_animation_cube_inside">Куб (внутри)</string>
+    <string name="transition_animation_cube_outside">Куб (снаружи)</string>
+    <string name="transition_animation_fade">Затухание</string>
+    <string name="transition_animation_fade_white">Затухание в белый</string>
+    <string name="pref_cutout_mode">Режим выреза экрана</string>
+    <string name="cutout_mode_ignore">Игнорирование</string>
+    <string name="cutout_mode_avoid">Избегание</string>
+    <string name="cutout_mode_shift">Смещение</string>
+    <string name="pref_dual_page_view">Режим двойных страниц</string>
+    <string name="dual_page_view_never">Никогда</string>
+    <string name="dual_page_view_always">Всегда</string>
+    <string name="dual_page_view_wide">Когда экран широкий</string>
+    <string name="pref_category_extensions">Расширения</string>
+    <string name="pref_apply_content_warnings_to_installed">Также применять на установленные расширения</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">Когда выключенно, расширения которые вы уже установили будут загружаться и обновляться независимо от предупреждения</string>
+    <string name="content_warnings_info">Перезапустите приложение для применения изменений. Установленные расширения, которые не загружены, остаются в списке без указания источников. Расширения, которые вы не устанавливали, скрываются. Это не предотвращает появления в приложении контента категории «18+» со стороны неофициальных или потенциально неправильно помеченных расширений.</string>
+    <string name="ext_filtered">Отфильтровано</string>
+    <string name="ext_not_loaded">Не загружено</string>
+    <string name="ext_not_loaded_dialog">Не удалось загрузить</string>
+    <string name="ext_copy_stacktrace">Скопировать трассировку стека</string>
+    <string name="ext_filtered_message">Предупреждение об контенте этого расширения не было загружено из-за вашего выбора, поэтому его источники недоступны.</string>
+    <string name="ext_unsigned_message">Это расширение не подписано, из-за этого проверить подлинность невозможно.</string>
+    <string name="ext_unsupported_message">Это расширение было собрано для версии библиотеки расширений, которую эта версия приложения не может загрузить. Обновление приложения или расширения может это исправить.</string>
+    <string name="ext_malformed_message">Это расширение не имеет необходимой информации, чтобы приложение его загрузило.</string>
+    <string name="ext_load_failed_message">При загрузке этого расширения возникла ошибка, поэтому его содержимое недоступно.</string>
+    <string name="ext_info_warning">Предупреждение</string>
+    <string name="ext_content_warning_safe">Безопасное</string>
+    <string name="ext_content_warning_mixed">Смешанное</string>
+    <string name="ext_content_warning_nsfw">Для взрослых (18+)</string>
+    <string name="ext_content_warning_mixed_description">Содержимое этого расширения может содержать безопасный и 18+ контент.</string>
+    <string name="ext_content_warning_nsfw_description">Содержимое этого источника нацелено на аудиторию 18+.</string>
+    <string name="pref_transition_animation_dual">Анимация перехода (двойная)</string>
+    <string name="transition_animation_basic">Обычная</string>
+    <string name="transition_animation_none">Отсутствует</string>
+    <string name="transition_animation_flip">Перелистывание</string>
+    <string name="pref_cutout_mode_dual">Режим выреза экрана (двойной)</string>
+    <string name="pref_continuous_minwidth">Минимальная ширина</string>
+    <string name="pref_continuous_gap">Зазор</string>
+    <string name="pref_allowed_content_warnings">Разрешенное предупреждение об контенте</string>
 </resources>

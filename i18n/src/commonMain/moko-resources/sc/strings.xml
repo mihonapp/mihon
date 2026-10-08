@@ -194,8 +194,7 @@
     <string name="manga_added_library">Annantu a sa biblioteca</string>
     <string name="manga_removed_library">Bogadu dae sa biblioteca</string>
     <string name="delete_downloads_for_manga">Iscantzellare sos capìtulos iscarrigados?</string>
-    <string name="copied_to_clipboard">Copiadu in punta de billete:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Copiadu in punta de billete: \n%1$s</string>
     <string name="source_not_installed">Fonte no installada: %1$s</string>
     <string name="display_mode_chapter">Capìtulu %1$s</string>
     <string name="chapter_downloading_progress">Iscarrighende (%1$d/%2$d)</string>
@@ -252,7 +251,6 @@
     <string name="file_select_backup">Ischerta sa còpia de seguresa</string>
     <string name="update_check_confirm">Iscàrriga</string>
     <string name="update_check_no_new_updates">Non bi sunt agiornamentos disponìbiles noos</string>
-    <string name="update_check_notification_download_in_progress">Iscarrighende…</string>
     <string name="update_check_notification_update_available">Versione noa a disponimentu!</string>
     <string name="information_no_downloads">Perunu iscarrigamentu</string>
     <string name="information_no_recent">Perunu agiornamentu reghente</string>
@@ -402,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Arrastadores a sos cales no as fatu atzessu:</string>
     <string name="pref_remove_bookmarked_chapters">Permite s\'iscantzelladura de sos capìtulos cun sinnalibros</string>
     <string name="pref_category_delete_chapters">Iscantzella capìtulos</string>
-    <string name="ext_nsfw_warning">Sas fontes de custa estensione diant pòdere cuntènnere cuntenutos NSFW (18+)</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Custu no impedit a estensiones no ufitziales o potentzialmente non curretas de ammustrare cuntenutos NSFW (18+) in s\'aplicatzione.</string>
     <string name="no_chapters_error">Perunu capìtulu agatadu</string>
     <string name="chapter_settings_updated">Impostatziones predefinidas de sos capìtulos agiornadas</string>
     <string name="set_chapter_settings_as_default">Imposta comente predefinidu</string>
@@ -423,8 +418,6 @@
     <string name="spen_next_page">Pàgina imbeniente</string>
     <string name="spen_previous_page">Pàgina anteposta</string>
     <string name="migration_help_guide">Ghia a sa tràmuda de sas fontes</string>
-    <string name="pref_category_nsfw_content">Cuntenutu NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Ammustra in sa lista de sas fontes e de sas estensiones</string>
     <string name="file_picker_error">Peruna aplicatzione pro ischertare documentos agatada</string>
     <string name="myanimelist_relogin">Pro praghere torra a intrare in MAL</string>
     <string name="edge_nav">Oru</string>
@@ -539,7 +532,6 @@
     <string name="connected_to_wifi">Petzi cun su Wi-Fi</string>
     <string name="download_queue_size_warning">Dae cara: sos iscarrigamentos de massa mannos diant pòdere rallentare sas fontes e/o blocare %s. Toca pro nde ischire de prus.</string>
     <string name="ext_update_all">Agiorna totu</string>
-    <string name="channel_app_updates">Agiornamentos de s\'aplicatzione</string>
     <string name="clear_database_source_item_count">%1$d elementos chi non sunt in sa biblioteca in sa base de datos</string>
     <string name="extension_api_error">Recùperu de sa lista de sas estensiones fallidu</string>
     <string name="pref_auto_clear_chapter_cache">Isbòida sa memòria temporànea de sos capìtulos cando aberis s\'aplicatzione</string>
@@ -581,7 +573,6 @@
     <string name="pref_reset_viewer_flags_summary">Resetat sa modalidade de leghidura e s\'orientamentu de totu sas sèries</string>
     <string name="pref_reset_viewer_flags_success">Totu sas impostatziones de su leghidore resetadas</string>
     <string name="pref_reset_viewer_flags_error">No at fatu a resetare sas impostatziones de su leghidore</string>
-    <string name="ext_info_age_rating">Classificatzione pro edade</string>
     <string name="ext_info_language">Limba</string>
     <string name="ext_info_version">Versione</string>
     <string name="download_notifier_split_page_path_not_found">No at fatu a agatare s\'àndala de su documentu de sa pàgina %d</string>
@@ -637,8 +628,7 @@
     <string name="download_notifier_cache_renewal">Verifichende sos iscarrigamentos</string>
     <string name="action_open_random_manga">Aberi un\'elementu a casu</string>
     <string name="information_no_entries_found">Perunu elementu atzapadu in custa categoria</string>
-    <string name="fdroid_warning">Sas versiones de F-Droid non sunt prus suportadas in manera ufitziale.
-\nToca pro nde ischire de prus.</string>
+    <string name="fdroid_warning">Sas versiones de F-Droid non sunt prus suportadas in manera ufitziale. \nToca pro nde ischire de prus.</string>
     <string name="action_display_show_continue_reading_button">Butone pro sighire a lèghere</string>
     <string name="track_remove_date_conf_title">Bogare sa data?</string>
     <string name="pref_invalidate_download_cache">Torra a inditzizare sos iscarrigamentos</string>
@@ -753,11 +743,7 @@
     <string name="onboarding_action_next">Imbeniente</string>
     <string name="onboarding_action_finish">Incumintzemus</string>
     <string name="onboarding_action_skip">Brinca</string>
-    <string name="onboarding_storage_info">Seletziona una cartella in ue %1$s at a archiviare sos capìtulos iscarrigados, sas còpias de seguresa e àteru.
-\n
-\nSi cussìgiat una cartella dedicada.
-\n
-\nCartella seletzionada: %2$s</string>
+    <string name="onboarding_storage_info">Seletziona una cartella in ue %1$s at a archiviare sos capìtulos iscarrigados, sas còpias de seguresa e àteru. \n \nSi cussìgiat una cartella dedicada. \n \nCartella seletzionada: %2$s</string>
     <string name="onboarding_storage_help_info">Ses agiornende dae una versione betza e non ses seguru de ite seletzionare? Abbista·ti sa ghia a s\'archiviatzione pro àteras informatziones.</string>
     <string name="onboarding_storage_help_action">Ghia a s\'archiviatzione</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Èvita interrutziones a agiornamentos longos de sa biblioteca, iscarrigamentos, e riprìstinos de còpias de seguresa.</string>
@@ -806,14 +792,9 @@
     <string name="confirm_tracker_update">Atualizare sos arrastadores a su capìtulu %d?</string>
     <string name="pref_auto_update_manga_on_mark_read">Agiorna su progressu cando est marcadu comente lèghidu</string>
     <string name="trackers_updated_summary">Arrastadores atualizados a su capìtulu %d</string>
-    <string name="pref_hardware_bitmap_threshold_default">Predefinidu (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Si su leghidore càrrigat un\'immàgine bianca, mìnima de pagu a pagu su lìmite.\nSeletzionadu: %s</string>
-    <string name="pref_hardware_bitmap_threshold">Mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">Influentzat su rendimentu. Abilita·lu petzi si sa minimada de sa mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines non risolvet sos problemas de sas immàgines bòidas</string>
     <string name="pref_incognito_mode_extension_summary">Pone in pàusa sa cronologia de letura pro s\'estensione</string>
     <string name="label_auto">Automàticu</string>
     <string name="library_list">Lista de sa biblioteca</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">Imprea su codificadore betzu pro su leghidore de immàgines longas</string>
     <string name="export">Esporta</string>
     <string name="theme_monochrome">Monocromo</string>
     <string name="action_display_unread_badge">Capìtulos non lèghidos</string>

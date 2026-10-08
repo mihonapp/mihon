@@ -212,7 +212,6 @@
     <string name="file_select_backup">اختر ملف النسخة الاحتياطية</string>
     <string name="update_check_confirm">تنزيل</string>
     <string name="update_check_no_new_updates">لا تتوفر تحديثات جديدة</string>
-    <string name="update_check_notification_download_in_progress">جار التنزيل…</string>
     <string name="update_check_notification_update_available">نسخة جديدة متوفرة!</string>
     <string name="information_no_downloads">لا توجد تنزيلات</string>
     <string name="information_no_recent">لا توجد تحديثات جديدة</string>
@@ -247,8 +246,7 @@
     <string name="double_tap_anim_speed_fast">سريع</string>
     <string name="manga_added_library">تم الإضافة إلى المكتبة</string>
     <string name="manga_removed_library">تم الإزالة من المكتبة</string>
-    <string name="copied_to_clipboard">نُسخ إلى الحافظة:
-\n%1$s</string>
+    <string name="copied_to_clipboard">نُسخ إلى الحافظة: \n%1$s</string>
     <string name="source_not_installed">المصدر غير مثبت: %1$s</string>
     <string name="repeating">إعادة القراءة</string>
     <string name="track_status">الحالة</string>
@@ -388,9 +386,6 @@
     <string name="pref_remove_bookmarked_chapters">حذف الفصول ذات العلامة المرجعية</string>
     <string name="pref_category_delete_chapters">حذف الفصول</string>
     <string name="pref_category_reading_mode">وضع القراءة</string>
-    <string name="ext_nsfw_warning">بعض المصادر من هذا الامتداد قد تحتوى على محتوى للبالغين (+18)</string>
-    <string name="ext_nsfw_short">محتوى غير لائق</string>
-    <string name="parental_controls_info">هذا لا يمنع الإضافات غير الرسمية أو التي تم وضع علامة عليها بشكل غير صحيح من إظهار محتوى غير لائق داخل التطبيق.</string>
     <string name="tapping_inverted_both">كليهما</string>
     <string name="tapping_inverted_vertical">عمودي</string>
     <string name="tapping_inverted_horizontal">أفقي</string>
@@ -423,8 +418,6 @@
     <string name="spen_next_page">الصفحة التالية</string>
     <string name="spen_previous_page">الصفحة السابقة</string>
     <string name="migration_help_guide">دليل نقل المصدر</string>
-    <string name="pref_category_nsfw_content">محتوى +18</string>
-    <string name="pref_show_nsfw_source">اعرض في قوائم المصادر والامتدادات</string>
     <string name="myanimelist_relogin">رجاء سجل دخولك في MAL مجدداً</string>
     <string name="file_picker_error">لم يتم العثور على تطبيق منتقي الملفات</string>
     <string name="pref_viewer_nav">مناطق اللمس</string>
@@ -532,7 +525,6 @@
     <string name="ext_app_info">معلومات التطبيق</string>
     <string name="ext_install_service_notif">جارٍ تثبيت الإضافة …</string>
     <string name="pref_verbose_logging_summary">طباعة السجلات المطولة في سجل النظام (يقلل من أداء التطبيق)</string>
-    <string name="channel_app_updates">تحديثات التطبيق</string>
     <string name="ext_update_all">تحديث الكل</string>
     <string name="update_72hour">كل ثلاثة ايام</string>
     <string name="connected_to_wifi">فقط على شبكة Wi-Fi</string>
@@ -579,7 +571,6 @@
     <string name="pref_reset_viewer_flags_success">اعادة تعيين جميع اعدادات القارئ</string>
     <string name="pref_reset_viewer_flags_summary">إعادة تعيين اعدادات القراءه لكل القصص</string>
     <string name="ext_info_language">اللغة</string>
-    <string name="ext_info_age_rating">التقييم العمري</string>
     <string name="ext_info_version">الإصدار</string>
     <string name="pref_reset_viewer_flags_error">لم يمكن إعادة تعيين إعدادات القارئ</string>
     <string name="empty_screen">هذا محرج</string>
@@ -630,8 +621,7 @@
     <string name="pref_backup_summary">النسخ الاحتياطي اليدوي والآلي وحيِّز التخزين</string>
     <string name="pref_security_summary">قفل التطبيق، شاشة آمنة</string>
     <string name="pref_advanced_summary">تفريغ سجلات الأعطال وتحسينات البطارية</string>
-    <string name="fdroid_warning">لا يتم دعم إصدارات F-Droid رسميا.
-\nانقر لمعرفة المزيد.</string>
+    <string name="fdroid_warning">لا يتم دعم إصدارات F-Droid رسميا. \nانقر لمعرفة المزيد.</string>
     <string name="invalid_location">موقع غير صالح: %s</string>
     <string name="pref_invalidate_download_cache_summary">فرض التطبيق على إعادة التحقق من الفصول التي تم تنزيلها</string>
     <string name="track_remove_date_conf_title">إزالة التاريخ؟</string>
@@ -815,14 +805,10 @@
     <string name="action_toggle_private_on">التتبع الخاص</string>
     <string name="notes_placeholder">استمتعت بالجزء حين …</string>
     <string name="trackers_updated_summary">تحديث المتابعات إلى الفصل %d</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">استخدم فك التشفير القديم لقارئ الشرائط الطويلة</string>
     <string name="pref_mark_duplicate_read_chapter_read">اعتبر الفصل المقروء المكرر مقروء</string>
     <string name="remove_private_extension_message">هل فعلا تريد حدف الإضافة \"%s\"؟</string>
-    <string name="pref_hardware_bitmap_threshold_summary">ادا تم تحميل صورة فارغة قلل الحد تدريجيا لحل المشكلة.\nتم تحديد:%s</string>
     <string name="library_list">قائمة المكتبات</string>
     <string name="non_library_settings">جميع الإدخالات المقروئة</string>
-    <string name="pref_hardware_bitmap_threshold">عتبة خريطة الصورة النقطية للأجهزة المخصصة</string>
-    <string name="pref_hardware_bitmap_threshold_default">افتراضي (%d)</string>
     <string name="possible_duplicates_summary">لديك مداخلات متشابهة في مكتبك بنفس الاسم.\n\nحدد واحدة للنقل أو الإضافة على أي حال.</string>
     <string name="possible_duplicates_title">التكرارات المحتملة</string>
     <string name="confirm_tracker_update">تحديث المتابعات إلى الفصل %d؟</string>
@@ -830,7 +816,6 @@
     <string name="theme_catppuccin">كاتبوتشين</string>
     <string name="pref_display_images_description">عرض الصور في وصف المجلات</string>
     <string name="pref_hide_missing_chapter_indicators">إخفاء مؤشر الفصول المفقودة</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">يؤثر على الأداء. فعّله فقط إذا لم يُحل تقليل عتبة الخريطة النقطية مشاكل الصورة الفارغة</string>
     <string name="pref_download_new_unread_chapters_only">تخطي تنزيل الفصول المقروءة المكررة</string>
     <string name="pref_auto_update_manga_on_mark_read">تحديث التقدم عند وضع علامة عليه كمقروء</string>
     <string name="export">يصدّر</string>
