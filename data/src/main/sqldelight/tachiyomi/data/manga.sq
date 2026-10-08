@@ -26,6 +26,7 @@ CREATE TABLE manga(
     state_chapter_fetch_interval INTEGER NOT NULL,
     state_cover_last_modified INTEGER NOT NULL,
     state_initialized INTEGER AS Boolean NOT NULL,
+    user_last_read_at INTEGER NOT NULL DEFAULT 0,
     UNIQUE(source_id, remote_url)
 );
 
@@ -37,7 +38,7 @@ SELECT
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
     user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-    state_cover_last_modified, state_initialized
+    state_cover_last_modified, state_initialized, user_last_read_at
 FROM manga
 WHERE id = :id;
 
@@ -47,7 +48,7 @@ SELECT
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
     user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-    state_cover_last_modified, state_initialized
+    state_cover_last_modified, state_initialized, user_last_read_at
 FROM manga
 WHERE source_id = :sourceId
 AND remote_url = :remoteUrl;
@@ -58,7 +59,7 @@ SELECT
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
     user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-    state_cover_last_modified, state_initialized
+    state_cover_last_modified, state_initialized, user_last_read_at
 FROM manga
 WHERE user_favorite_at IS NOT NULL;
 
@@ -68,7 +69,7 @@ SELECT
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
     user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-    state_cover_last_modified, state_initialized
+    state_cover_last_modified, state_initialized, user_last_read_at
 FROM manga
 WHERE user_favorite_at IS NULL
 AND EXISTS (
@@ -94,7 +95,7 @@ SELECT
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
     user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-    state_cover_last_modified, state_initialized
+    state_cover_last_modified, state_initialized, user_last_read_at
 FROM manga
 WHERE user_favorite_at IS NOT NULL
 AND source_id = :sourceId;
@@ -117,7 +118,7 @@ SELECT
     M.remote_update_strategy, M.remote_memo, M.user_favorite_at, M.user_notes,
     M.user_reader_flags, M.user_chapter_flags, M.state_chapter_last_update,
     M.state_chapter_next_update, M.state_chapter_fetch_interval,
-    M.state_cover_last_modified, M.state_initialized,
+    M.state_cover_last_modified, M.state_initialized, M.user_last_read_at,
     (
         SELECT count(*)
         FROM chapter C
@@ -138,7 +139,7 @@ SELECT
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
     user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-    state_cover_last_modified, state_initialized
+    state_cover_last_modified, state_initialized, user_last_read_at
 FROM manga
 WHERE state_chapter_next_update >= :startOfDay
 AND user_favorite_at IS NOT NULL
@@ -203,14 +204,14 @@ INSERT INTO manga(
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
     user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-    state_cover_last_modified, state_initialized
+    state_cover_last_modified, state_initialized, user_last_read_at
 )
 VALUES (
     :sourceId, :remoteUrl, :remoteTitle, :remoteAuthor, :remoteArtist, :remoteDescription,
     :remoteGenre, :remoteStatus, :remoteCover, :remoteUpdateStrategy, :remoteMemo,
     :userFavoriteAt, :userNotes, :userReaderFlags, :userChapterFlags,
     :stateChapterLastUpdate, :stateChapterNextUpdate, :stateChapterFetchInterval,
-    :stateCoverLastModified, :stateInitialized
+    :stateCoverLastModified, :stateInitialized, :userLastReadAt
 )
 RETURNING id;
 
@@ -219,6 +220,7 @@ UPDATE manga SET
     -- NULL is a real value here (not in the library), which coalesce cannot write
     user_favorite_at = CASE WHEN :userFavoriteAtSet THEN :userFavoriteAt ELSE user_favorite_at END,
     user_notes = coalesce(:userNotes, user_notes),
+    user_last_read_at = coalesce(:userLastReadAt, user_last_read_at),
     user_reader_flags = coalesce(:userReaderFlags, user_reader_flags),
     user_chapter_flags = coalesce(:userChapterFlags, user_chapter_flags),
     state_chapter_last_update = coalesce(:stateChapterLastUpdate, state_chapter_last_update),
@@ -240,6 +242,7 @@ UPDATE manga SET
     remote_memo = coalesce(:remoteMemo, remote_memo),
     user_favorite_at = :userFavoriteAt,
     user_notes = coalesce(:userNotes, user_notes),
+    user_last_read_at = coalesce(:userLastReadAt, user_last_read_at),
     user_reader_flags = coalesce(:userReaderFlags, user_reader_flags),
     user_chapter_flags = coalesce(:userChapterFlags, user_chapter_flags),
     state_chapter_last_update = coalesce(:stateChapterLastUpdate, state_chapter_last_update),
@@ -300,7 +303,7 @@ insertNetworkManga {
         remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
         user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
         state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
-        state_cover_last_modified, state_initialized
+        state_cover_last_modified, state_initialized, user_last_read_at
     FROM manga
     WHERE source_id = :sourceId
     AND remote_url = :remoteUrl;

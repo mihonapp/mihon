@@ -132,12 +132,14 @@ class HistoryViewModel(
     fun removeFromHistory(history: HistoryWithRelations) {
         viewModelScope.launchIO {
             removeHistory.await(history)
+            removeHistory.resetLastReadIfNoHistory(history.mangaId)
         }
     }
 
     fun removeAllFromHistory(mangaId: Long) {
         viewModelScope.launchIO {
             removeHistory.await(mangaId)
+            removeHistory.resetLastReadIfNoHistory(mangaId)
         }
     }
 
@@ -145,6 +147,7 @@ class HistoryViewModel(
         viewModelScope.launchIO {
             val result = removeHistory.awaitAll()
             if (!result) return@launchIO
+            removeHistory.resetLastReadIfNoHistory()
             _events.send(Event.HistoryCleared)
         }
     }

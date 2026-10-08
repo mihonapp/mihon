@@ -29,6 +29,7 @@ object MangaMapper {
         stateChapterFetchInterval: Long,
         stateCoverLastModified: Long,
         stateInitialized: Boolean,
+        userLastReadAt: Long,
     ): Manga = Manga(
         id = id,
         source = sourceId,
@@ -51,6 +52,7 @@ object MangaMapper {
         initialized = stateInitialized,
         notes = userNotes,
         memo = remoteMemo,
+        lastReadAt = userLastReadAt,
     )
 
     fun mapLibraryManga(
@@ -75,6 +77,7 @@ object MangaMapper {
         stateChapterFetchInterval: Long,
         stateCoverLastModified: Long,
         stateInitialized: Boolean,
+        userLastReadAt: Long,
         totalCount: Long,
         readCount: Double,
         latestUpload: Long,
@@ -105,6 +108,7 @@ object MangaMapper {
             stateChapterFetchInterval = stateChapterFetchInterval,
             stateCoverLastModified = stateCoverLastModified,
             stateInitialized = stateInitialized,
+            userLastReadAt = userLastReadAt,
         ),
         categories = categories.split(",").map { it.toLong() },
         totalChapters = totalCount,
@@ -137,6 +141,7 @@ object MangaMapper {
         stateChapterFetchInterval: Long,
         stateCoverLastModified: Long,
         stateInitialized: Boolean,
+        userLastReadAt: Long,
         chapterCount: Long,
     ): MangaWithChapterCount = MangaWithChapterCount(
         manga = mapManga(
@@ -161,6 +166,7 @@ object MangaMapper {
             stateChapterFetchInterval = stateChapterFetchInterval,
             stateCoverLastModified = stateCoverLastModified,
             stateInitialized = stateInitialized,
+            userLastReadAt = userLastReadAt,
         ),
         chapterCount = chapterCount,
     )

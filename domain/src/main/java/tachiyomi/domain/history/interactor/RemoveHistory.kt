@@ -9,6 +9,10 @@ class RemoveHistory(
     private val repository: HistoryRepository,
 ) {
 
+    suspend fun resetLastReadIfNoHistory(mangaId: Long? = null) {
+        repository.resetLastReadIfNoHistory(mangaId)
+    }
+
     suspend fun awaitAll(): Boolean {
         return repository.deleteAllHistory()
     }

@@ -16,6 +16,7 @@ import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
+import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.source.service.SourceManager
@@ -33,6 +34,7 @@ class MigrateMangaUseCase(
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val updateChapter: UpdateChapter,
     private val getCategories: GetCategories,
+    private val getLibraryManga: GetLibraryManga,
     private val setMangaCategories: SetMangaCategories,
     private val getTracks: GetTracks,
     private val upsertTrack: UpsertTrack,
@@ -110,12 +112,15 @@ class MigrateMangaUseCase(
                 coverCache.setCustomCoverToCache(target, coverCache.getCustomCoverFile(current.id).inputStream())
             }
 
+            val lastRead = getLibraryManga.await().firstOrNull { it.id == current.id }?.lastRead
+                ?: current.lastReadAt
             val currentMangaUpdate = MangaUpdate(current.id) {
                 favoriteAt = null
             }
                 .takeIf { replace }
             val targetMangaUpdate = MangaUpdate(target.id) {
                 favoriteAt = current.favoriteAt?.takeIf { replace } ?: Clock.System.now().toEpochMilliseconds()
+                lastReadAt = maxOf(target.lastReadAt, lastRead)
                 chapterFlags = current.chapterFlags
                 viewerFlags = current.viewerFlags
                 if (MigrationFlag.NOTES in flags) notes = current.notes
