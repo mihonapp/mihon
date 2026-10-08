@@ -1,10 +1,10 @@
 package eu.kanade.tachiyomi.data.backup.models
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.core.common.extensions.JsonObjectEmptyBytes
-import tachiyomi.data.MemoColumnAdapter
+import mihon.core.common.extensions.toByteArray
+import mihon.core.common.extensions.toJsonObject
 import tachiyomi.domain.chapter.model.Chapter
 
 @Serializable
@@ -23,8 +23,8 @@ class BackupChapter(
     // chapterNumber is called number is 1.x
     @ProtoNumber(9) var chapterNumber: Float = 0F,
     @ProtoNumber(10) var sourceOrder: Long = 0,
-    @ProtoNumber(11) var lastModifiedAt: Long = 0,
-    @ProtoNumber(12) var version: Long = 0,
+    // @ProtoNumber(11) var lastModifiedAt: Long, artifact of the abandoned sync attempt
+    // @ProtoNumber(12) var version: Long, artifact of the abandoned sync attempt
     @ProtoNumber(13) var memo: ByteArray = JsonObjectEmptyBytes,
 ) {
     fun toChapterImpl(): Chapter {
@@ -39,44 +39,21 @@ class BackupChapter(
             dateFetch = this@BackupChapter.dateFetch,
             dateUpload = this@BackupChapter.dateUpload,
             sourceOrder = this@BackupChapter.sourceOrder,
-            lastModifiedAt = this@BackupChapter.lastModifiedAt,
-            version = this@BackupChapter.version,
-            memo = MemoColumnAdapter.decode(this@BackupChapter.memo),
+            memo = this@BackupChapter.memo.toJsonObject(),
         )
     }
 }
 
-val backupChapterMapper = {
-        _: Long,
-        _: Long,
-        url: String,
-        name: String,
-        scanlator: String?,
-        read: Boolean,
-        bookmark: Boolean,
-        lastPageRead: Long,
-        chapterNumber: Double,
-        sourceOrder: Long,
-        dateFetch: Long,
-        dateUpload: Long,
-        lastModifiedAt: Long,
-        version: Long,
-        _: Long,
-        memo: JsonObject,
-    ->
-    BackupChapter(
-        url = url,
-        name = name,
-        chapterNumber = chapterNumber.toFloat(),
-        scanlator = scanlator,
-        read = read,
-        bookmark = bookmark,
-        lastPageRead = lastPageRead,
-        dateFetch = dateFetch,
-        dateUpload = dateUpload,
-        sourceOrder = sourceOrder,
-        lastModifiedAt = lastModifiedAt,
-        version = version,
-        memo = MemoColumnAdapter.encode(memo),
-    )
-}
+fun Chapter.toBackupChapter() = BackupChapter(
+    url = url,
+    name = name,
+    chapterNumber = chapterNumber.toFloat(),
+    scanlator = scanlator,
+    read = read,
+    bookmark = bookmark,
+    lastPageRead = lastPageRead,
+    dateFetch = dateFetch,
+    dateUpload = dateUpload,
+    sourceOrder = sourceOrder,
+    memo = memo.toByteArray(),
+)

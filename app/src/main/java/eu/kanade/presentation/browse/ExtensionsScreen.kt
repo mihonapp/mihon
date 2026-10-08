@@ -10,17 +10,22 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.SplitButtonDefaults
+import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -30,18 +35,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.browse.components.BaseBrowseItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
+import eu.kanade.presentation.browse.components.ExtensionPill
 import eu.kanade.presentation.browse.components.label
+import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.WarningBanner
-import eu.kanade.presentation.manga.components.DotSeparatorNoSpaceText
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -51,11 +60,12 @@ import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsViewModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
+import mihon.domain.extension.model.ExtensionStore
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
 import mihon.icons.materialsymbols.rounded.Download
+import mihon.icons.materialsymbols.rounded.ExpandMore
 import mihon.icons.materialsymbols.rounded.Info
-import mihon.icons.materialsymbols.rounded.Public
 import mihon.icons.materialsymbols.rounded.Refresh
 import mihon.icons.materialsymbols.rounded.Settings
 import mihon.icons.materialsymbols.rounded.VerifiedUser
@@ -71,7 +81,6 @@ import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.theme.header
 import tachiyomi.presentation.core.util.plus
-import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
 fun ExtensionScreen(
@@ -83,7 +92,7 @@ fun ExtensionScreen(
     onOpenWebView: (Extension.Available) -> Unit,
     onInstallExtension: (Extension.Available) -> Unit,
     onUninstallExtension: (Extension.Installed) -> Unit,
-    onUpdateExtension: (Extension.Loaded) -> Unit,
+    onUpdateExtension: (Extension.Installed) -> Unit,
     onTrustExtension: (Extension.NotLoaded) -> Unit,
     onOpenExtension: (Extension.Loaded) -> Unit,
     onClickUpdateAll: () -> Unit,
@@ -144,13 +153,14 @@ private fun ExtensionContent(
     onOpenWebView: (Extension.Available) -> Unit,
     onInstallExtension: (Extension.Available) -> Unit,
     onUninstallExtension: (Extension.Installed) -> Unit,
-    onUpdateExtension: (Extension.Loaded) -> Unit,
+    onUpdateExtension: (Extension.Installed) -> Unit,
     onTrustExtension: (Extension.NotLoaded) -> Unit,
     onOpenExtension: (Extension.Loaded) -> Unit,
     onClickUpdateAll: () -> Unit,
 ) {
     val context = LocalContext.current
     var notLoadedState by remember { mutableStateOf<Extension.NotLoaded?>(null) }
+    var installErrorState by remember { mutableStateOf<InstallStep.Error?>(null) }
     val installGranted = rememberRequestPackageInstallsPermissionState(initialValue = true)
 
     FastScrollLazyColumn(
@@ -232,10 +242,13 @@ private fun ExtensionContent(
                         when (it) {
                             is Extension.Available -> onOpenWebView(it)
                             is Extension.Loaded -> onOpenExtension(it)
-                            else -> {}
+                            is Extension.NotLoaded -> {
+                                notLoadedState = it
+                            }
                         }
                     },
                     onClickItemCancel = onClickItemCancel,
+                    onClickItemError = { installErrorState = it },
                     onClickItemAction = {
                         when (it) {
                             is Extension.Available -> onInstallExtension(it)
@@ -247,7 +260,11 @@ private fun ExtensionContent(
                                 }
                             }
                             is Extension.NotLoaded -> {
-                                notLoadedState = it
+                                if (it.hasUpdate) {
+                                    onUpdateExtension(it)
+                                } else {
+                                    notLoadedState = it
+                                }
                             }
                         }
                     },
@@ -280,6 +297,55 @@ private fun ExtensionContent(
             )
         }
     }
+    installErrorState?.let { error ->
+        ExtensionInstallErrorDialog(
+            error = error,
+            onDismissRequest = { installErrorState = null },
+        )
+    }
+}
+
+@Composable
+private fun ExtensionInstallErrorDialog(
+    error: InstallStep.Error,
+    onDismissRequest: () -> Unit,
+) {
+    AlertDialog(
+        title = {
+            Text(text = stringResource(MR.strings.ext_install_error))
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)) {
+                Text(
+                    text = error.message,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontFamily = FontFamily.Monospace,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+
+                error.stackTrace?.let { stackTrace ->
+                    val context = LocalContext.current
+                    TextButton(
+                        onClick = {
+                            context.copyToClipboard(
+                                label = context.stringResource(MR.strings.ext_copy_stacktrace),
+                                content = stackTrace,
+                            )
+                        },
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        Text(text = stringResource(MR.strings.ext_copy_stacktrace))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_ok))
+            }
+        },
+        onDismissRequest = onDismissRequest,
+    )
 }
 
 @Composable
@@ -288,50 +354,30 @@ private fun ExtensionItem(
     onClickItem: (Extension) -> Unit,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
+    onClickItemError: (InstallStep.Error) -> Unit,
     onClickItemAction: (Extension) -> Unit,
     onClickItemSecondaryAction: (Extension) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val (extension, installStep) = item
+    val store = when (extension) {
+        is Extension.Available -> extension.store
+        is Extension.Installed -> extension.store
+    }
+
     BaseBrowseItem(
-        modifier = modifier
-            .combinedClickable(
-                onClick = { onClickItem(extension) },
-                onLongClick = { onLongClickItem(extension) },
-            ),
+        modifier = modifier,
         onClickItem = { onClickItem(extension) },
         onLongClickItem = { onLongClickItem(extension) },
         icon = {
-            Box(
-                modifier = Modifier
-                    .size(40.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                val idle = installStep.isCompleted()
-                if (!idle) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(40.dp),
-                        strokeWidth = 2.dp,
-                    )
-                }
-
-                val padding by animateDpAsState(
-                    targetValue = if (idle) 0.dp else 8.dp,
-                    label = "iconPadding",
-                )
-                ExtensionIcon(
-                    extension = extension,
-                    modifier = Modifier
-                        .matchParentSize()
-                        .padding(padding),
-                )
-            }
+            ExtensionItemIcon(extension = extension, installStep = installStep)
         },
         action = {
             ExtensionItemActions(
                 extension = extension,
                 installStep = installStep,
                 onClickItemCancel = onClickItemCancel,
+                onClickItemError = onClickItemError,
                 onClickItemAction = onClickItemAction,
                 onClickItemSecondaryAction = onClickItemSecondaryAction,
             )
@@ -340,6 +386,7 @@ private fun ExtensionItem(
         ExtensionItemContent(
             extension = extension,
             installStep = installStep,
+            store = store,
             modifier = Modifier.weight(1f),
         )
     }
@@ -349,6 +396,7 @@ private fun ExtensionItem(
 private fun ExtensionItemContent(
     extension: Extension,
     installStep: InstallStep,
+    store: ExtensionStore?,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -360,68 +408,106 @@ private fun ExtensionItemContent(
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,
         )
-        // Won't look good but it's not like we can ellipsize overflowing content
-        FlowRow(
-            modifier = Modifier.secondaryItemAlpha(),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
-        ) {
-            ProvideTextStyle(value = MaterialTheme.typography.bodySmall) {
-                var hasAlreadyShownAnElement by remember { mutableStateOf(false) }
-                if (extension is Extension.Loaded && extension.lang.isNotEmpty()) {
-                    hasAlreadyShownAnElement = true
-                    Text(
-                        text = LocaleHelper.getSourceDisplayName(extension.lang, LocalContext.current),
-                    )
-                }
 
-                if (extension.versionName.isNotEmpty()) {
-                    if (hasAlreadyShownAnElement) DotSeparatorNoSpaceText()
-                    hasAlreadyShownAnElement = true
-                    Text(
-                        text = extension.versionName,
-                    )
-                }
+        if (store != null) {
+            Text(
+                text = store.name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
 
-                val warnings = listOfNotNull(
-                    when {
-                        extension is Extension.NotLoaded ->
-                            extension.reason.labelRes?.let { it to MaterialTheme.colorScheme.error }
-                        extension is Extension.Loaded && extension.isObsolete ->
-                            MR.strings.ext_obsolete to MaterialTheme.colorScheme.error
-                        else -> null
-                    },
-                    extension.contentWarning.label?.let { it.title to it.color },
-                )
-                warnings.forEach { (label, color) ->
-                    if (hasAlreadyShownAnElement) DotSeparatorNoSpaceText()
-                    hasAlreadyShownAnElement = true
-                    Text(
-                        text = stringResource(label).uppercase(),
-                        color = color,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
+        ExtensionItemMetadata(extension = extension, installStep = installStep)
+    }
+}
 
-                if (extension is Extension.Loaded && !extension.isShared) {
-                    if (hasAlreadyShownAnElement) DotSeparatorNoSpaceText()
-                    Text(
-                        text = stringResource(MR.strings.ext_installer_private),
-                    )
-                }
+@Composable
+private fun ExtensionItemIcon(
+    extension: Extension,
+    installStep: InstallStep,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.size(48.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        val idle = installStep.isCompleted()
+        if (!idle) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(48.dp),
+                strokeWidth = 2.dp,
+            )
+        }
 
-                if (!installStep.isCompleted()) {
-                    DotSeparatorNoSpaceText()
-                    Text(
-                        text = when (installStep) {
-                            InstallStep.Pending -> stringResource(MR.strings.ext_pending)
-                            InstallStep.Downloading -> stringResource(MR.strings.ext_downloading)
-                            InstallStep.Installing -> stringResource(MR.strings.ext_installing)
-                            else -> error("Must not show non-install process text")
-                        },
-                    )
-                }
-            }
+        val padding by animateDpAsState(
+            targetValue = if (idle) 0.dp else 8.dp,
+            label = "iconPadding",
+        )
+        ExtensionIcon(
+            extension = extension,
+            modifier = Modifier
+                .matchParentSize()
+                .padding(padding),
+        )
+    }
+}
+
+/**
+ * Plain text for what an extension simply is, pills for the few things worth noticing about it.
+ * Won't look good when it wraps, but it's not like overflowing content can be ellipsized.
+ */
+@Composable
+private fun ExtensionItemMetadata(
+    extension: Extension,
+    installStep: InstallStep,
+    modifier: Modifier = Modifier,
+) {
+    FlowRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall / 2),
+        itemVerticalAlignment = Alignment.CenterVertically,
+    ) {
+        val facts = listOfNotNull(
+            (extension as? Extension.Loaded)
+                ?.lang
+                ?.takeIf { it.isNotEmpty() }
+                ?.let { LocaleHelper.getSourceDisplayName(it, LocalContext.current) },
+            extension.versionName.takeIf { it.isNotEmpty() },
+        )
+        if (facts.isNotEmpty()) {
+            Text(
+                text = facts.joinToString(" \u2022 "),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        val notable = listOfNotNull(
+            when (installStep) {
+                InstallStep.Pending -> MR.strings.ext_pending
+                InstallStep.Downloading -> MR.strings.ext_downloading
+                InstallStep.Installing -> MR.strings.ext_installing
+                else -> null
+            }?.let { it to MaterialTheme.colorScheme.primary },
+            when {
+                extension is Extension.NotLoaded ->
+                    extension.reason.labelRes?.let { it to MaterialTheme.colorScheme.error }
+                extension is Extension.Loaded && extension.isObsolete ->
+                    MR.strings.ext_obsolete to MaterialTheme.colorScheme.error
+                else -> null
+            },
+            extension.contentWarning.label?.let { it.title to it.color },
+            (extension as? Extension.Loaded)
+                ?.takeIf { !it.isShared }
+                ?.let { MR.strings.ext_installer_private to MaterialTheme.colorScheme.onSurfaceVariant },
+        )
+        notable.forEach { (label, color) ->
+            ExtensionPill(text = stringResource(label), color = color)
         }
     }
 }
@@ -432,17 +518,30 @@ private fun ExtensionItemActions(
     installStep: InstallStep,
     modifier: Modifier = Modifier,
     onClickItemCancel: (Extension) -> Unit = {},
+    onClickItemError: (InstallStep.Error) -> Unit = {},
     onClickItemAction: (Extension) -> Unit = {},
     onClickItemSecondaryAction: (Extension) -> Unit = {},
 ) {
-    val isIdle = installStep.isCompleted()
+    val isUntrusted = (extension as? Extension.NotLoaded)?.reason is Extension.NotLoaded.Reason.Untrusted
+    val secondaryAction = when (extension) {
+        is Extension.Available -> extension.sources.takeIf { it.isNotEmpty() }
+            ?.let { stringResource(MR.strings.action_open_in_web_view) }
+        is Extension.Loaded -> stringResource(MR.strings.action_settings)
+        is Extension.NotLoaded -> if (isUntrusted) {
+            stringResource(MR.strings.ext_trust)
+        } else {
+            stringResource(MR.strings.ext_not_loaded_details)
+        }
+    }
+        ?.let { it to { onClickItemSecondaryAction(extension) } }
 
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         when {
-            !isIdle -> {
+            !installStep.isCompleted() -> {
                 IconButton(onClick = { onClickItemCancel(extension) }) {
                     Icon(
                         imageVector = MaterialSymbols.Rounded.Close,
@@ -450,73 +549,121 @@ private fun ExtensionItemActions(
                     )
                 }
             }
-            installStep == InstallStep.Error -> {
-                IconButton(onClick = { onClickItemAction(extension) }) {
+            installStep is InstallStep.Error -> {
+                ExtensionSplitButton(
+                    icon = MaterialSymbols.Rounded.Refresh,
+                    contentDescription = stringResource(MR.strings.action_retry),
+                    onClick = { onClickItemAction(extension) },
+                    menuItems = listOfNotNull(
+                        stringResource(MR.strings.ext_install_error_details) to { onClickItemError(installStep) },
+                        secondaryAction,
+                    ),
+                )
+            }
+            extension is Extension.Available -> {
+                ExtensionSplitButton(
+                    icon = MaterialSymbols.Rounded.Download,
+                    contentDescription = stringResource(MR.strings.ext_install),
+                    onClick = { onClickItemAction(extension) },
+                    menuItems = listOfNotNull(secondaryAction),
+                )
+            }
+            extension is Extension.Installed && extension.hasUpdate -> {
+                ExtensionSplitButton(
+                    icon = MaterialSymbols.Rounded.Download,
+                    contentDescription = stringResource(MR.strings.ext_update),
+                    onClick = { onClickItemAction(extension) },
+                    menuItems = listOfNotNull(secondaryAction),
+                )
+            }
+            extension is Extension.Loaded -> {
+                FilledTonalIconButton(onClick = { onClickItemSecondaryAction(extension) }) {
                     Icon(
-                        imageVector = MaterialSymbols.Rounded.Refresh,
-                        contentDescription = stringResource(MR.strings.action_retry),
+                        imageVector = MaterialSymbols.Rounded.Settings,
+                        contentDescription = stringResource(MR.strings.action_settings),
                     )
                 }
             }
-            installStep == InstallStep.Idle -> {
-                when (extension) {
-                    is Extension.Loaded -> {
-                        IconButton(onClick = { onClickItemSecondaryAction(extension) }) {
-                            Icon(
-                                imageVector = MaterialSymbols.Rounded.Settings,
-                                contentDescription = stringResource(MR.strings.action_settings),
-                            )
-                        }
-
-                        if (extension.hasUpdate) {
-                            IconButton(onClick = { onClickItemAction(extension) }) {
-                                Icon(
-                                    imageVector = MaterialSymbols.Rounded.Download,
-                                    contentDescription = stringResource(MR.strings.ext_update),
-                                )
-                            }
-                        }
-                    }
-                    is Extension.NotLoaded -> {
-                        val isUntrusted = extension.reason is Extension.NotLoaded.Reason.Untrusted
-                        IconButton(onClick = { onClickItemAction(extension) }) {
-                            Icon(
-                                imageVector = if (isUntrusted) {
-                                    MaterialSymbols.Rounded.VerifiedUser
-                                } else {
-                                    MaterialSymbols.Rounded.Info
-                                },
-                                contentDescription = if (isUntrusted) {
-                                    stringResource(MR.strings.ext_trust)
-                                } else {
-                                    stringResource(MR.strings.ext_not_loaded)
-                                },
-                            )
-                        }
-                    }
-                    is Extension.Available -> {
-                        if (extension.sources.isNotEmpty()) {
-                            IconButton(
-                                onClick = { onClickItemSecondaryAction(extension) },
-                            ) {
-                                Icon(
-                                    imageVector = MaterialSymbols.Rounded.Public,
-                                    contentDescription = stringResource(MR.strings.action_open_in_web_view),
-                                )
-                            }
-                        }
-
-                        IconButton(onClick = { onClickItemAction(extension) }) {
-                            Icon(
-                                imageVector = MaterialSymbols.Rounded.Download,
-                                contentDescription = stringResource(MR.strings.ext_install),
-                            )
-                        }
-                    }
+            extension is Extension.NotLoaded -> {
+                IconButton(onClick = { onClickItemSecondaryAction(extension) }) {
+                    Icon(
+                        imageVector = if (isUntrusted) {
+                            MaterialSymbols.Rounded.VerifiedUser
+                        } else {
+                            MaterialSymbols.Rounded.Info
+                        },
+                        contentDescription = secondaryAction?.first,
+                    )
                 }
             }
         }
     }
+}
+
+@Composable
+private fun ExtensionSplitButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    menuItems: List<Pair<String, () -> Unit>>,
+) {
+    if (menuItems.isEmpty()) {
+        FilledTonalIconButton(onClick = onClick) {
+            Icon(imageVector = icon, contentDescription = contentDescription)
+        }
+        return
+    }
+
+    val size = SplitButtonDefaults.ExtraSmallContainerHeight
+    var expanded by remember { mutableStateOf(false) }
+    SplitButtonLayout(
+        leadingButton = {
+            SplitButtonDefaults.TonalLeadingButton(
+                onClick = onClick,
+                modifier = Modifier.height(size),
+                shapes = SplitButtonDefaults.leadingButtonShapesFor(size),
+                contentPadding = SplitButtonDefaults.leadingButtonContentPaddingFor(size),
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = contentDescription,
+                    modifier = Modifier.size(SplitButtonDefaults.leadingButtonIconSizeFor(size)),
+                )
+            }
+        },
+        trailingButton = {
+            Box {
+                SplitButtonDefaults.TonalTrailingButton(
+                    checked = expanded,
+                    onCheckedChange = { expanded = it },
+                    modifier = Modifier.height(size),
+                    shapes = SplitButtonDefaults.trailingButtonShapesFor(size),
+                    contentPadding = SplitButtonDefaults.trailingButtonContentPaddingFor(size),
+                ) {
+                    Icon(
+                        imageVector = MaterialSymbols.Rounded.ExpandMore,
+                        contentDescription = stringResource(MR.strings.action_menu),
+                        modifier = Modifier.size(SplitButtonDefaults.trailingButtonIconSizeFor(size)),
+                    )
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    offset = DpOffset.Zero,
+                ) {
+                    menuItems.forEach { (text, action) ->
+                        DropdownMenuItem(
+                            text = { Text(text = text) },
+                            onClick = {
+                                expanded = false
+                                action()
+                            },
+                        )
+                    }
+                }
+            }
+        },
+    )
 }
 
 @Composable

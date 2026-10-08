@@ -1,0 +1,12 @@
+query KitsuSearchMangaByTitle(
+  $query: String!,
+) {
+  searchMangaByTitle(
+    title: $query,
+    first: 20,
+  ) {
+    nodes {
+      ...MangaFragment
+    }
+  }
+}

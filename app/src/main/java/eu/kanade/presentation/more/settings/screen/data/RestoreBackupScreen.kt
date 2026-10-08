@@ -35,7 +35,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
-import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreWorker
 import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.workManager
@@ -207,7 +207,7 @@ class RestoreBackupViewModel(
     }
 
     fun startRestore() {
-        BackupRestoreJob.start(
+        BackupRestoreWorker.start(
             workManager = context.workManager,
             uri = uri.toUri(),
             options = state.value.options,

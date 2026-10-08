@@ -10,7 +10,7 @@ import kotlin.math.max
 class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = false) :
     WebGpuViewer(activity, isReversed = false, isVertical = true, pager = ImageViewContinuous(activity)) {
 
-    override val isContinuous: Boolean = true
+    override val isContinuous: Boolean get() = true
 
     // How many pages the viewport shows depends on the zoom, and a page on screen has to be
     // decoded rather than merely reserved - so the window follows what the last frame reached.

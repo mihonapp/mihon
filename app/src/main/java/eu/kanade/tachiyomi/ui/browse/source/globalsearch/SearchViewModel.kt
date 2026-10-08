@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +27,6 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
-import java.util.concurrent.Executors
 
 abstract class SearchViewModel(
     initialState: State = State(),
@@ -48,7 +47,7 @@ abstract class SearchViewModel(
         state.update(function)
     }
 
-    private val coroutineDispatcher = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
+    private val coroutineDispatcher = Dispatchers.IO.limitedParallelism(5)
     private var searchJob: Job? = null
 
     private val enabledLanguages = sourcePreferences.enabledLanguages.get()
@@ -196,7 +195,12 @@ abstract class SearchViewModel(
     }
 
     private fun updateItem(source: Source, result: SearchItemResult) {
-        updateItems(state.value.items + (source to result))
+        state.update { currentState ->
+            val newItems = currentState.items + (source to result)
+            currentState.copy(
+                items = newItems.toSortedMap(sortComparator(newItems)),
+            )
+        }
     }
 
     fun setMigrateDialog(currentId: Long, target: Manga) {
