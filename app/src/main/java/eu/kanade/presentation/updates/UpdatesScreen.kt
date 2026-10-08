@@ -1,8 +1,10 @@
 package eu.kanade.presentation.updates
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
@@ -93,10 +95,15 @@ fun UpdateScreen(
     ) { contentPadding ->
         when {
             state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
-            state.items.isEmpty() -> EmptyScreen(
-                stringRes = MR.strings.information_no_recent,
+            state.items.isEmpty() -> Column(
                 modifier = Modifier.padding(contentPadding),
-            )
+            ) {
+                UpdatesLastUpdatedItem(lastUpdated)
+                EmptyScreen(
+                    stringRes = MR.strings.information_no_recent,
+                    modifier = Modifier.weight(1f),
+                )
+            }
             else -> {
                 val scope = rememberCoroutineScope()
                 var isRefreshing by remember { mutableStateOf(false) }
