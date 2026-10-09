@@ -12,8 +12,7 @@ import tachiyomi.domain.chapter.model.Chapter
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
+import kotlin.time.Instant
 
 @Execution(ExecutionMode.CONCURRENT)
 class FetchIntervalTest {
@@ -21,8 +20,8 @@ class FetchIntervalTest {
     private val testTime = LocalDateTime.parse("2020-01-01T00:00:00")
     private val testTimeZone = TimeZone.UTC
     private var chapter = Chapter.create().copy(
-        dateFetch = testTime.toInstant(testTimeZone).toEpochMilliseconds(),
-        dateUpload = testTime.toInstant(testTimeZone).toEpochMilliseconds(),
+        dateFetch = testTime.toInstant(testTimeZone),
+        dateUpload = testTime.toInstant(testTimeZone),
     )
 
     private val fetchInterval = FetchInterval(mockk())
@@ -35,7 +34,7 @@ class FetchIntervalTest {
         fetchInterval.calculateInterval(chaptersWithUploadDate, testTimeZone) shouldBe 7
 
         val chaptersWithoutUploadDate = chaptersWithUploadDate.map {
-            it.copy(dateUpload = 0L)
+            it.copy(dateUpload = null)
         }
         fetchInterval.calculateInterval(chaptersWithoutUploadDate, testTimeZone) shouldBe 7
     }
@@ -119,7 +118,7 @@ class FetchIntervalTest {
         fetchInterval.calculateInterval(chaptersWithUploadDate, testTimeZone) shouldBe 1
 
         val chaptersWithoutUploadDate = chaptersWithUploadDate.map {
-            it.copy(dateUpload = 0L)
+            it.copy(dateUpload = null)
         }
         fetchInterval.calculateInterval(chaptersWithoutUploadDate, testTimeZone) shouldBe 1
     }
@@ -133,10 +132,10 @@ class FetchIntervalTest {
     }
 
     private fun chapterWithTime(chapter: Chapter, duration: Duration): Chapter {
-        val newTime = testTime.toInstant(testTimeZone).plus(duration).toEpochMilliseconds()
+        val newTime = testTime.toInstant(testTimeZone) + duration
         return chapter.copy(dateFetch = newTime, dateUpload = newTime)
     }
 
     private fun List<Chapter>.lastUploadDate() =
-        last().dateUpload.toDuration(DurationUnit.MILLISECONDS)
+        last().dateUpload!! - Instant.fromEpochMilliseconds(0)
 }

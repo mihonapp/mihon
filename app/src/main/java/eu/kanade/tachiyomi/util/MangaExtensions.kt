@@ -12,7 +12,7 @@ import kotlin.time.Clock
 fun Manga.removeCovers(coverCache: CoverCache): Manga {
     if (isLocal()) return this
     return if (coverCache.deleteFromCache(this, true) > 0) {
-        copy(coverLastModified = Clock.System.now().toEpochMilliseconds())
+        copy(coverLastModified = Clock.System.now())
     } else {
         this
     }

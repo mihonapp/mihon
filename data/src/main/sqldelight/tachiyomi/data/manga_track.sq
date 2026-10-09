@@ -1,4 +1,5 @@
 import kotlin.Boolean;
+import kotlin.time.Instant;
 
 CREATE TABLE manga_track(
     id INTEGER NOT NULL PRIMARY KEY,
@@ -12,8 +13,8 @@ CREATE TABLE manga_track(
     total_chapters INTEGER NOT NULL,
     status INTEGER NOT NULL,
     score REAL NOT NULL,
-    start_date INTEGER NOT NULL,
-    finish_date INTEGER NOT NULL,
+    start_date INTEGER AS Instant,
+    finish_date INTEGER AS Instant,
     private INTEGER AS Boolean NOT NULL DEFAULT 0,
     UNIQUE (manga_id, tracker_id),
     FOREIGN KEY(manga_id) REFERENCES manga (id)

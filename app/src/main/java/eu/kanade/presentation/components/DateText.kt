@@ -15,13 +15,10 @@ import kotlin.time.Instant
 
 @Composable
 fun relativeDateText(
-    dateEpochMillis: Long,
+    date: Instant?,
 ): String {
     return relativeDateText(
-        localDate = Instant.fromEpochMilliseconds(dateEpochMillis)
-            .toLocalDateTime(TimeZone.currentSystemDefault())
-            .date
-            .takeIf { dateEpochMillis != 0L },
+        localDate = date?.toLocalDateTime(TimeZone.currentSystemDefault())?.date,
     )
 }
 

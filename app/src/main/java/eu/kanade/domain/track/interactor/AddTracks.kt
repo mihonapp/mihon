@@ -18,6 +18,7 @@ import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.interactor.UpsertTrack
+import kotlin.time.Instant
 
 @Inject
 class AddTracks(
@@ -55,18 +56,18 @@ class AddTracks(
                     tracker.setRemoteLastChapterRead(track.toDbTrack(), latestLocalReadChapterNumber.toInt())
                 }
 
-                if (track.startDate <= 0) {
+                if (track.startDate == null) {
                     val firstReadChapterDate = getHistory.await(mangaId)
-                        .mapNotNull { it.readAt?.takeIf { readAt -> readAt.time > 0 } }
+                        .mapNotNull { it.readAt }
                         .minOrNull()
 
                     firstReadChapterDate?.let {
-                        val startDate = firstReadChapterDate.time.convertEpochMillisZone(
+                        val startDate = firstReadChapterDate.toEpochMilliseconds().convertEpochMillisZone(
                             TimeZone.currentSystemDefault(),
                             TimeZone.UTC,
                         )
                         track = track.copy(
-                            startDate = startDate,
+                            startDate = Instant.fromEpochMilliseconds(startDate),
                         )
                         tracker.setRemoteStartDate(track.toDbTrack(), startDate)
                     }

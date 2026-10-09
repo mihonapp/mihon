@@ -3,7 +3,9 @@
 package eu.kanade.tachiyomi.data.database.models
 
 import eu.kanade.tachiyomi.source.model.SChapter
+import mihon.core.common.extensions.toInstantOrNull
 import java.io.Serializable
+import kotlin.time.Instant
 import tachiyomi.domain.chapter.model.Chapter as DomainChapter
 
 interface Chapter : SChapter, Serializable {
@@ -34,11 +36,11 @@ fun Chapter.toDomainChapter(): DomainChapter? {
         read = read,
         bookmark = bookmark,
         lastPageRead = last_page_read.toLong(),
-        dateFetch = date_fetch,
+        dateFetch = Instant.fromEpochMilliseconds(date_fetch),
         sourceOrder = source_order.toLong(),
         url = url,
         name = name,
-        dateUpload = date_upload,
+        dateUpload = date_upload.toInstantOrNull(),
         chapterNumber = chapter_number.toDouble(),
         scanlator = scanlator,
         memo = memo,

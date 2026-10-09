@@ -13,6 +13,7 @@ import tachiyomi.data.subscribeToList
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.repository.UpdatesRepository
+import kotlin.time.Instant
 
 @Inject
 @SingleIn(AppScope::class)
@@ -23,14 +24,14 @@ class UpdatesRepositoryImpl(
 
     override suspend fun awaitWithRead(
         read: Boolean,
-        after: Long,
+        after: Instant,
         limit: Long,
     ): List<UpdatesWithRelations> {
         return getUpdatesByReadStatus(read = read, after = after, limit = limit).awaitAsList()
     }
 
     override fun subscribeAll(
-        after: Long,
+        after: Instant,
         limit: Long,
         unread: Boolean?,
         started: Boolean?,
@@ -58,13 +59,13 @@ class UpdatesRepositoryImpl(
 
     override fun subscribeWithRead(
         read: Boolean,
-        after: Long,
+        after: Instant,
         limit: Long,
     ): Flow<List<UpdatesWithRelations>> {
         return getUpdatesByReadStatus(read = read, after = after, limit = limit).subscribeToList()
     }
 
-    private fun getUpdatesByReadStatus(read: Boolean, after: Long, limit: Long): Query<UpdatesWithRelations> {
+    private fun getUpdatesByReadStatus(read: Boolean, after: Instant, limit: Long): Query<UpdatesWithRelations> {
         return if (read) {
             database.updatesViewQueries.getReadUpdates(
                 after = after,
@@ -94,9 +95,9 @@ class UpdatesRepositoryImpl(
         sourceId: Long,
         favorite: Boolean,
         thumbnailUrl: String?,
-        coverLastModified: Long,
-        dateUpload: Long,
-        dateFetch: Long,
+        coverLastModified: Instant?,
+        dateUpload: Instant?,
+        dateFetch: Instant,
         excludedScanlator: String?,
     ): UpdatesWithRelations = UpdatesWithRelations(
         mangaId = mangaId,

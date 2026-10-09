@@ -1,6 +1,7 @@
 package tachiyomi.domain.updates.model
 
 import tachiyomi.domain.manga.model.MangaCover
+import kotlin.time.Instant
 
 data class UpdatesWithRelations(
     val mangaId: Long,
@@ -13,6 +14,6 @@ data class UpdatesWithRelations(
     val bookmark: Boolean,
     val lastPageRead: Long,
     val sourceId: Long,
-    val dateFetch: Long,
+    val dateFetch: Instant,
     val coverData: MangaCover,
 )

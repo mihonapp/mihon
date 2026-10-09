@@ -67,15 +67,25 @@ object DatabaseBindings {
         return Database(
             driver = driver,
             historyAdapter = History.Adapter(
-                read_atAdapter = DateColumnAdapter,
+                read_atAdapter = InstantColumnAdapter,
             ),
             mangaAdapter = Manga.Adapter(
                 remote_genreAdapter = StringListColumnAdapter,
                 remote_update_strategyAdapter = UpdateStrategyColumnAdapter,
                 remote_memoAdapter = MemoColumnAdapter,
+                user_favorite_atAdapter = InstantColumnAdapter,
+                state_chapter_last_updateAdapter = InstantColumnAdapter,
+                state_chapter_next_updateAdapter = InstantColumnAdapter,
+                state_cover_last_modifiedAdapter = InstantColumnAdapter,
             ),
             chapterAdapter = Chapter.Adapter(
+                remote_date_uploadAdapter = InstantColumnAdapter,
                 remote_memoAdapter = MemoColumnAdapter,
+                state_date_fetchAdapter = InstantColumnAdapter,
+            ),
+            manga_trackAdapter = Manga_track.Adapter(
+                start_dateAdapter = InstantColumnAdapter,
+                finish_dateAdapter = InstantColumnAdapter,
             ),
         )
     }

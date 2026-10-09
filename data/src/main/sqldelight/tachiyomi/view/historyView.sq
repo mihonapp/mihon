@@ -39,7 +39,7 @@ chapterNumber,
 readAt,
 readDuration
 FROM historyView
-WHERE historyView.readAt > 0
+WHERE historyView.readAt IS NOT NULL
 AND maxReadAtChapterId = historyView.chapterId
 AND lower(historyView.title) LIKE ('%' || :query || '%')
 ORDER BY readAt DESC;
@@ -62,6 +62,6 @@ JOIN manga
 ON manga.id = history.manga_id
 JOIN chapter
 ON chapter.id = history.chapter_id
-WHERE history.read_at > 0
+WHERE history.read_at IS NOT NULL
 ORDER BY history.read_at DESC
 LIMIT 1;

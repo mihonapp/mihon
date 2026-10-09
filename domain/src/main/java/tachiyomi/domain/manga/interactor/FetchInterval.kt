@@ -15,6 +15,7 @@ import tachiyomi.domain.manga.model.MangaUpdate
 import kotlin.math.absoluteValue
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
 
 @Inject
@@ -26,17 +27,13 @@ class FetchInterval(
         manga: Manga,
         dateTime: LocalDateTime,
         timeZone: TimeZone,
-        window: Pair<Long, Long>,
+        window: ClosedRange<Instant>?,
     ): MangaUpdate {
         val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(
             chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true),
             zone = timeZone,
         )
-        val currentWindow = if (window.first == 0L && window.second == 0L) {
-            getWindow(Clock.System.now().toLocalDateTime(timeZone).date, timeZone)
-        } else {
-            window
-        }
+        val currentWindow = window ?: getWindow(Clock.System.now().toLocalDateTime(timeZone).date, timeZone)
         val nextUpdate = calculateNextUpdate(manga, interval, dateTime, timeZone, currentWindow)
 
         return MangaUpdate(manga.id) {
@@ -45,22 +42,19 @@ class FetchInterval(
         }
     }
 
-    fun getWindow(localDateTime: LocalDate, timeZone: TimeZone): Pair<Long, Long> {
+    fun getWindow(localDateTime: LocalDate, timeZone: TimeZone): ClosedRange<Instant> {
         val today = localDateTime.atStartOfDayIn(timeZone)
-        val lowerBound = today - GRACE_PERIOD.days
-        val upperBound = today + GRACE_PERIOD.days
-        return Pair(lowerBound.toEpochMilliseconds(), upperBound.toEpochMilliseconds())
+        return (today - GRACE_PERIOD.days)..(today + GRACE_PERIOD.days)
     }
 
     internal fun calculateInterval(chapters: List<Chapter>, zone: TimeZone): Int {
         val chapterWindow = if (chapters.size <= 8) 3 else 10
 
         val uploadDates = chapters.asSequence()
-            .filter { it.dateUpload > 0L }
-            .sortedByDescending { it.dateUpload }
+            .mapNotNull { it.dateUpload }
+            .sortedDescending()
             .map {
-                Instant.fromEpochMilliseconds(it.dateUpload)
-                    .toLocalDateTime(zone)
+                it.toLocalDateTime(zone)
                     .date
                     .atStartOfDayIn(zone)
             }
@@ -69,10 +63,10 @@ class FetchInterval(
             .toList()
 
         val fetchDates = chapters.asSequence()
-            .sortedByDescending { it.dateFetch }
+            .map { it.dateFetch }
+            .sortedDescending()
             .map {
-                Instant.fromEpochMilliseconds(it.dateFetch)
-                    .toLocalDateTime(zone)
+                it.toLocalDateTime(zone)
                     .date
                     .atStartOfDayIn(zone)
             }
@@ -103,13 +97,13 @@ class FetchInterval(
         interval: Int,
         dateTime: LocalDateTime,
         timeZone: TimeZone,
-        window: Pair<Long, Long>,
-    ): Long {
-        if (manga.nextUpdate in window.first.rangeTo(window.second + 1)) {
+        window: ClosedRange<Instant>,
+    ): Instant {
+        if (manga.nextUpdate != null && manga.nextUpdate in window.start..window.endInclusive + 1.milliseconds) {
             return manga.nextUpdate
         }
 
-        val instant = if (manga.lastUpdate > 0) Instant.fromEpochMilliseconds(manga.lastUpdate) else Clock.System.now()
+        val instant = manga.lastUpdate ?: Clock.System.now()
         val latestDate = instant.toLocalDateTime(timeZone).date.atStartOfDayIn(timeZone)
 
         val daysSinceLatest = (dateTime.toInstant(timeZone) - latestDate).inWholeDays
@@ -119,7 +113,7 @@ class FetchInterval(
         )
 
         val offsetDays = ((cycle + 1) * interval.absoluteValue.toLong()).days
-        return latestDate.plus(offsetDays).toEpochMilliseconds()
+        return latestDate.plus(offsetDays)
     }
 
     private fun increaseInterval(delta: Int, daysSinceLatest: Long, increaseWhenOver: Int): Int {

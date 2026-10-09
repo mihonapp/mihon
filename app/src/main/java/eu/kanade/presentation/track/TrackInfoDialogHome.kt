@@ -113,13 +113,13 @@ fun TrackInfoDialogHome(
                     onScoreClick = { onScoreClick(item) }
                         .takeIf { supportsScoring },
                     startDate = remember(item.track.startDate) {
-                        dateFormat.format(item.track.startDate.toLocalDate().toJavaLocalDate())
+                        item.track.startDate?.let { dateFormat.format(it.toJavaLocalDate()) }
                     }
-                        .takeIf { supportsReadingDates && item.track.startDate != 0L },
+                        ?.takeIf { supportsReadingDates },
                     onStartDateClick = { onStartDateEdit(item) } // TODO
                         .takeIf { supportsReadingDates },
-                    endDate = dateFormat.format(item.track.finishDate.toJavaLocalDate())
-                        .takeIf { supportsReadingDates && item.track.finishDate != 0L },
+                    endDate = item.track.finishDate?.let { dateFormat.format(it.toJavaLocalDate()) }
+                        ?.takeIf { supportsReadingDates },
                     onEndDateClick = { onEndDateEdit(item) }
                         .takeIf { supportsReadingDates },
                     onNewSearch = { onNewSearch(item) },

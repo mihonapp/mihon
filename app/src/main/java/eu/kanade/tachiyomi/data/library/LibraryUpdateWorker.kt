@@ -76,6 +76,7 @@ import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.incrementAndFetch
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 @OptIn(ExperimentalAtomicApi::class)
 class LibraryUpdateWorker(private val context: Context, workerParams: WorkerParameters) :
@@ -181,10 +182,10 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
         val restrictions = libraryPreferences.autoUpdateMangaRestrictions.get()
         val skippedUpdates = mutableListOf<Pair<Manga, String?>>()
         val timeZone = TimeZone.currentSystemDefault()
-        val (_, fetchWindowUpperBound) = fetchInterval.getWindow(
+        val fetchWindowUpperBound = fetchInterval.getWindow(
             Clock.System.now().toLocalDateTime(timeZone).date,
             timeZone,
-        )
+        ).endInclusive
 
         mangaToUpdate = listToUpdate
             .filter {
@@ -214,7 +215,8 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                         false
                     }
 
-                    MANGA_OUTSIDE_RELEASE_PERIOD in restrictions && it.manga.nextUpdate > fetchWindowUpperBound -> {
+                    MANGA_OUTSIDE_RELEASE_PERIOD in restrictions &&
+                        it.manga.nextUpdate.let { next -> next != null && next > fetchWindowUpperBound } -> {
                         skippedUpdates.add(
                             it.manga to context.stringResource(MR.strings.skipped_reason_not_in_release_period),
                         )
@@ -344,7 +346,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
      * @param manga the manga to update.
      * @return a pair of the inserted and removed chapters.
      */
-    private suspend fun updateManga(manga: Manga, fetchWindow: Pair<Long, Long>): List<Chapter> {
+    private suspend fun updateManga(manga: Manga, fetchWindow: ClosedRange<Instant>): List<Chapter> {
         val source = sourceManager.getOrStub(manga.source)
 
         val update = updateMangaFromRemote(
