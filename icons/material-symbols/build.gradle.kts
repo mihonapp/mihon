@@ -72,6 +72,7 @@ androidComponents {
                     "rounded/check",
                     "rounded/close",
                     "rounded/drag_handle",
+                    "rounded/eyeglasses_2",
                     "rounded/more_vert",
                     "rounded/refresh",
                     "rounded/share",
