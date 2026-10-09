@@ -189,6 +189,9 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
         mangaToUpdate = listToUpdate
             .filter {
                 when {
+                    // Entries added without opening them have no details yet
+                    !it.manga.initialized -> true
+
                     it.manga.updateStrategy == UpdateStrategy.ONLY_FETCH_ONCE && it.totalChapters > 0L -> {
                         skippedUpdates.add(
                             it.manga to context.stringResource(MR.strings.skipped_reason_not_always_update),
@@ -347,7 +350,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
         val update = updateMangaFromRemote(
             source = source,
             manga = manga,
-            fetchDetails = libraryPreferences.autoUpdateMetadata.get(),
+            fetchDetails = !manga.initialized || libraryPreferences.autoUpdateMetadata.get(),
             fetchChapters = true,
             fetchWindow = fetchWindow,
         )
