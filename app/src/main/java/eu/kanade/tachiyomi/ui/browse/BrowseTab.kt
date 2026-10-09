@@ -35,7 +35,7 @@ data object BrowseTab : Tab {
         @Composable
         get() {
             val isSelected = LocalTabNavigator.current.current.key == key
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_browse_enter)
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.animated_browse_enter)
             return TabOptions(
                 index = 3u,
                 title = stringResource(MR.strings.browse),

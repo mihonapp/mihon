@@ -46,7 +46,7 @@ data object HistoryTab : Tab {
         @Composable
         get() {
             val isSelected = LocalTabNavigator.current.current.key == key
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_history_enter)
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.animated_history)
             return TabOptions(
                 index = 2u,
                 title = stringResource(MR.strings.label_recent_manga),
