@@ -33,6 +33,7 @@ class TrackerManager {
     val mangaBaka = MangaBaka(11L)
 
     val trackers = listOf(
+        mangaBaka,
         myAnimeList,
         aniList,
         kitsu,
@@ -43,7 +44,6 @@ class TrackerManager {
         kavita,
         suwayomi,
         hikka,
-        mangaBaka,
     )
 
     fun loggedInTrackers() = trackers.filter { it.isLoggedIn }
