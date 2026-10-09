@@ -7,12 +7,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Crop
 import mihon.icons.materialsymbols.rounded.Settings
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -50,7 +52,11 @@ fun ReaderBottomBar(
 
         IconButton(onClick = onClickCropBorder) {
             Icon(
-                painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
+                painter = if (cropEnabled) {
+                    rememberVectorPainter(MaterialSymbols.Rounded.Crop)
+                } else {
+                    painterResource(R.drawable.ic_crop_off_24dp)
+                },
                 contentDescription = stringResource(MR.strings.pref_crop_borders),
             )
         }

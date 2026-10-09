@@ -27,6 +27,7 @@ spotless {
 dependencies {
     compileOnly(gradleKotlinDsl())
     compileOnly(libs.android.gradle)
+    compileOnly(libs.android.gradle.runtimeDependency("sdk-common"))
     compileOnly(libs.kotlin.compose.compiler.gradle)
     compileOnly(libs.kotlin.gradle)
     implementation(libs.spotless.gradle)
@@ -72,4 +73,14 @@ gradlePlugin {
             implementationClass = "PluginSpotless"
         }
     }
+}
+
+fun Provider<MinimalExternalModuleDependency>.runtimeDependency(name: String): Provider<String> = map { dependency ->
+    configurations.detachedConfiguration(dependencies.create(dependency))
+        .attributes { attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME)) }
+        .incoming.resolutionResult.allComponents
+        .firstOrNull { it.moduleVersion?.name == name }
+        ?.moduleVersion
+        ?.toString()
+        ?: error("${dependency.module} has no runtime dependency named $name")
 }
