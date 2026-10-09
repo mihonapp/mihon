@@ -41,6 +41,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Show a screen while the app migrates its data after an update ([@AntsyLich](https://github.com/AntsyLich)) ([`fd4f73c`](https://github.com/mihonapp/mihon/commit/fd4f73c))
   - Keep the screen up for at least a second so it doesn't just flash by ([@AntsyLich](https://github.com/AntsyLich)) ([`b454c1b`](https://github.com/mihonapp/mihon/commit/b454c1b))
 - Add option to skip an app update version ([@AntsyLich](https://github.com/AntsyLich)) ([`fc20410`](https://github.com/mihonapp/mihon/commit/fc20410))
+- Add support for [Comick](https://comick.dev) tracker ([@MajorTanya](https://github.com/MajorTanya)) ([#4056](https://github.com/mihonapp/mihon/pull/4056))
 
 ### Changed
 - Download app updates from the update screen instead of a background job, and remove the "App updates" notification channel ([@AntsyLich](https://github.com/AntsyLich)) ([#3707](https://github.com/mihonapp/mihon/pull/3707))
