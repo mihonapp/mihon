@@ -1,18 +1,28 @@
 package tachiyomi.domain.manga.interactor
 
 import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.atTime
+import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.manga.model.Manga
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
-import kotlin.time.Instant
 
 @Execution(ExecutionMode.CONCURRENT)
 class FetchIntervalTest {
@@ -131,11 +141,112 @@ class FetchIntervalTest {
         fetchInterval.calculateInterval(chapters, testTimeZone) shouldBe 2
     }
 
+    @Test
+    fun `follows releases on a few fixed weekdays`() = runTest {
+        val mondaysAndThursdays = generateSequence(LocalDate.parse("2019-12-02")) { it.plus(DatePeriod(days = 1)) }
+            .takeWhile { it <= LocalDate.parse("2020-01-20") }
+            .filter { it.dayOfWeek == DayOfWeek.MONDAY || it.dayOfWeek == DayOfWeek.THURSDAY }
+            .toList()
+        val chapters = chaptersOn(mondaysAndThursdays)
+
+        fetchInterval.estimateSchedule(chapters, testTimeZone, LocalDate.parse("2020-01-21")).pattern shouldBe
+            ReleasePattern.Weekdays(setOf(DayOfWeek.MONDAY, DayOfWeek.THURSDAY))
+        nextUpdate(today = "2020-01-21", chapters) shouldBe LocalDate.parse("2020-01-23")
+    }
+
+    @Test
+    fun `follows releases on a day of the month`() = runTest {
+        val chapters = chaptersOn(
+            listOf("2019-09-15", "2019-10-15", "2019-11-14", "2019-12-15", "2020-01-16").map(LocalDate::parse),
+            perDay = 2,
+        )
+
+        nextUpdate(today = "2020-01-20", chapters) shouldBe LocalDate.parse("2020-02-15")
+    }
+
+    @Test
+    fun `follows releases on the last day of the month`() = runTest {
+        val chapters = chaptersOn(
+            listOf("2019-09-30", "2019-10-31", "2019-11-30", "2019-12-31", "2020-01-31").map(LocalDate::parse),
+            perDay = 2,
+        )
+
+        nextUpdate(today = "2020-02-05", chapters) shouldBe LocalDate.parse("2020-02-29")
+    }
+
+    @Test
+    fun `keeps checking on the expected day`() = runTest {
+        val chapters = chaptersOn(weekly(from = "2019-12-04", to = "2019-12-25"))
+
+        nextUpdate(today = "2020-01-01", chapters) shouldBe LocalDate.parse("2020-01-01")
+    }
+
+    @Test
+    fun `keeps a next update in the window while nothing new came out`() = runTest {
+        val chapters = chaptersOn(weekly(from = "2019-12-04", to = "2019-12-25"))
+        val manga = Manga.create().copy(nextUpdate = LocalDate.parse("2020-01-01").atStartOfDayIn(testTimeZone))
+
+        nextUpdate(today = "2020-01-02", chapters, manga) shouldBe LocalDate.parse("2020-01-01")
+    }
+
+    @Test
+    fun `counts from a release on the expected day`() = runTest {
+        val chapters = chaptersOn(weekly(from = "2019-12-04", to = "2020-01-01"))
+        val manga = Manga.create().copy(nextUpdate = LocalDate.parse("2020-01-01").atStartOfDayIn(testTimeZone))
+
+        nextUpdate(today = "2020-01-01", chapters, manga) shouldBe LocalDate.parse("2020-01-08")
+    }
+
+    @Test
+    fun `spreads out checks during a hiatus`() = runTest {
+        val chapters = chaptersOn(weekly(from = "2019-09-11", to = "2019-10-02"))
+
+        nextUpdate(today = "2020-01-01", chapters) shouldBe LocalDate.parse("2020-01-22")
+    }
+
+    @Test
+    fun `ignores chapters dated in the future`() = runTest {
+        val chapters = chaptersOn(weekly(from = "2019-12-04", to = "2019-12-25") + LocalDate.parse("2020-06-01"))
+
+        nextUpdate(today = "2020-01-01", chapters) shouldBe LocalDate.parse("2020-01-01")
+    }
+
+    private suspend fun nextUpdate(
+        today: String,
+        chapters: List<Chapter>,
+        manga: Manga = Manga.create(),
+    ): LocalDate {
+        val getChaptersByMangaId = mockk<GetChaptersByMangaId>()
+        coEvery { getChaptersByMangaId.await(any(), any()) } returns chapters
+        val fetchInterval = FetchInterval(getChaptersByMangaId)
+        val date = LocalDate.parse(today)
+        val update = fetchInterval.withFetchInterval(
+            manga = manga,
+            dateTime = date.atTime(10, 0),
+            timeZone = testTimeZone,
+            window = fetchInterval.getWindow(date, testTimeZone),
+        )
+        return update.nextUpdate!!.toLocalDateTime(testTimeZone).date
+    }
+
+    private fun weekly(from: String, to: String): List<LocalDate> {
+        return generateSequence(LocalDate.parse(from)) { it.plus(DatePeriod(days = 7)) }
+            .takeWhile { it <= LocalDate.parse(to) }
+            .toList()
+    }
+
+    private fun chaptersOn(days: List<LocalDate>, perDay: Int = 1): List<Chapter> {
+        return days.flatMap { day ->
+            val time = day.atStartOfDayIn(testTimeZone) + 12.hours
+            List(perDay) { chapter.copy(dateFetch = time, dateUpload = time) }
+        }
+    }
+
     private fun chapterWithTime(chapter: Chapter, duration: Duration): Chapter {
         val newTime = testTime.toInstant(testTimeZone) + duration
         return chapter.copy(dateFetch = newTime, dateUpload = newTime)
     }
 
     private fun List<Chapter>.lastUploadDate() =
-        last().dateUpload!! - Instant.fromEpochMilliseconds(0)
+        last().dateUpload!! - testTime.toInstant(testTimeZone)
 }
