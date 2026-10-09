@@ -16,8 +16,8 @@ import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
 import mihon.icons.materialsymbols.MaterialSymbols
-import mihon.icons.materialsymbols.automirroredrounded.ViewList
-import mihon.icons.materialsymbols.rounded.ViewModule
+import mihon.icons.materialsymbols.automirroredroundedfilled.ViewList
+import mihon.icons.materialsymbols.roundedfilled.ViewModule
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -58,9 +58,9 @@ fun BrowseSourceToolbar(
                         AppBar.Action(
                             title = stringResource(MR.strings.action_display_mode),
                             icon = if (displayMode == LibraryDisplayMode.List) {
-                                MaterialSymbols.AutoMirroredRounded.ViewList
+                                MaterialSymbols.AutoMirroredRoundedFilled.ViewList
                             } else {
-                                MaterialSymbols.Rounded.ViewModule
+                                MaterialSymbols.RoundedFilled.ViewModule
                             },
                             onClick = { selectingDisplayMode = true },
                         ),

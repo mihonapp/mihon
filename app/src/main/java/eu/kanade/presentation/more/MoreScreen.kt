@@ -20,7 +20,7 @@ import mihon.icons.materialsymbols.rounded.Info
 import mihon.icons.materialsymbols.rounded.QueryStats
 import mihon.icons.materialsymbols.rounded.Settings
 import mihon.icons.materialsymbols.rounded.Storage
-import mihon.icons.materialsymbols.rounded.VolunteerActivism
+import mihon.icons.materialsymbols.roundedfilled.VolunteerActivism
 import tachiyomi.core.common.Constants
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
@@ -136,7 +136,7 @@ fun MoreScreen(
             item {
                 TextPreferenceWidget(
                     title = stringResource(MR.strings.label_support_us),
-                    icon = MaterialSymbols.Rounded.VolunteerActivism,
+                    icon = MaterialSymbols.RoundedFilled.VolunteerActivism,
                     onPreferenceClick = onClickSupport,
                 )
             }
