@@ -5,6 +5,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import eu.kanade.tachiyomi.data.track.bangumi.Bangumi
+import eu.kanade.tachiyomi.data.track.comick.Comick
 import eu.kanade.tachiyomi.data.track.hikka.Hikka
 import eu.kanade.tachiyomi.data.track.kavita.Kavita
 import eu.kanade.tachiyomi.data.track.kitsu.Kitsu
@@ -31,6 +32,7 @@ class TrackerManager {
     val suwayomi = Suwayomi(9L)
     val hikka = Hikka(10L)
     val mangaBaka = MangaBaka(11L)
+    val comick = Comick(12L)
 
     val trackers = listOf(
         myAnimeList,
@@ -44,6 +46,7 @@ class TrackerManager {
         suwayomi,
         hikka,
         mangaBaka,
+        comick,
     )
 
     fun loggedInTrackers() = trackers.filter { it.isLoggedIn }
