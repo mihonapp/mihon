@@ -1,6 +1,8 @@
 package eu.kanade.presentation.updates
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
@@ -93,10 +95,6 @@ fun UpdateScreen(
     ) { contentPadding ->
         when {
             state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
-            state.items.isEmpty() -> EmptyScreen(
-                stringRes = MR.strings.information_no_recent,
-                modifier = Modifier.padding(contentPadding),
-            )
             else -> {
                 val scope = rememberCoroutineScope()
                 var isRefreshing by remember { mutableStateOf(false) }
@@ -116,19 +114,37 @@ fun UpdateScreen(
                     enabled = !state.selectionMode,
                     indicatorPadding = contentPadding,
                 ) {
-                    FastScrollLazyColumn(
-                        contentPadding = contentPadding,
-                    ) {
-                        updatesLastUpdatedItem(lastUpdated)
+                    if (state.items.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .padding(contentPadding)
+                                .fillMaxSize(),
+                        ) {
+                            UpdatesLastUpdatedHeader(lastUpdated = lastUpdated)
+                            EmptyScreen(
+                                stringRes = if (hasActiveFilters) {
+                                    MR.strings.error_no_match
+                                } else {
+                                    MR.strings.information_no_recent
+                                },
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                    } else {
+                        FastScrollLazyColumn(
+                            contentPadding = contentPadding,
+                        ) {
+                            updatesLastUpdatedItem(lastUpdated)
 
-                        updatesUiItems(
-                            uiModels = state.getUiModel(),
-                            selectionMode = state.selectionMode,
-                            onUpdateSelected = onUpdateSelected,
-                            onClickCover = onClickCover,
-                            onClickUpdate = onOpenChapter,
-                            onDownloadChapter = onDownloadChapter,
-                        )
+                            updatesUiItems(
+                                uiModels = state.getUiModel(),
+                                selectionMode = state.selectionMode,
+                                onUpdateSelected = onUpdateSelected,
+                                onClickCover = onClickCover,
+                                onClickUpdate = onOpenChapter,
+                                onDownloadChapter = onDownloadChapter,
+                            )
+                        }
                     }
                 }
             }
