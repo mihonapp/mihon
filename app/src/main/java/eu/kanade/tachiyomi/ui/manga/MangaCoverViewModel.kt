@@ -160,6 +160,15 @@ class MangaCoverViewModel(
         }
     }
 
+    fun addToLibraryWarning(context: Context) {
+        viewModelScope.launch {
+            snackbarHostState.showSnackbar(
+                context.stringResource(MR.strings.notification_first_add_to_library),
+                withDismissAction = true,
+            )
+        }
+    }
+
     private fun notifyCoverUpdated(context: Context) {
         viewModelScope.launch {
             snackbarHostState.showSnackbar(
