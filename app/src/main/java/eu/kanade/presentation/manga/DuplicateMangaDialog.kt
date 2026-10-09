@@ -59,8 +59,8 @@ import mihon.icons.materialsymbols.rounded.Add
 import mihon.icons.materialsymbols.rounded.AttachMoney
 import mihon.icons.materialsymbols.rounded.Block
 import mihon.icons.materialsymbols.rounded.Brush
+import mihon.icons.materialsymbols.rounded.Check
 import mihon.icons.materialsymbols.rounded.Close
-import mihon.icons.materialsymbols.rounded.Done
 import mihon.icons.materialsymbols.rounded.DoneAll
 import mihon.icons.materialsymbols.rounded.Pause
 import mihon.icons.materialsymbols.rounded.Person
@@ -257,7 +257,7 @@ private fun DuplicateMangaListItem(
                 SManga.ONGOING.toLong() -> MaterialSymbols.Rounded.Schedule
                 SManga.COMPLETED.toLong() -> MaterialSymbols.Rounded.DoneAll
                 SManga.LICENSED.toLong() -> MaterialSymbols.Rounded.AttachMoney
-                SManga.PUBLISHING_FINISHED.toLong() -> MaterialSymbols.Rounded.Done
+                SManga.PUBLISHING_FINISHED.toLong() -> MaterialSymbols.Rounded.Check
                 SManga.CANCELLED.toLong() -> MaterialSymbols.Rounded.Close
                 SManga.ON_HIATUS.toLong() -> MaterialSymbols.Rounded.Pause
                 else -> MaterialSymbols.Rounded.Block

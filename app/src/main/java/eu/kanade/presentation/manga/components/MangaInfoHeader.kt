@@ -83,8 +83,8 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.AttachMoney
 import mihon.icons.materialsymbols.rounded.Block
 import mihon.icons.materialsymbols.rounded.Brush
+import mihon.icons.materialsymbols.rounded.Check
 import mihon.icons.materialsymbols.rounded.Close
-import mihon.icons.materialsymbols.rounded.Done
 import mihon.icons.materialsymbols.rounded.DoneAll
 import mihon.icons.materialsymbols.rounded.Favorite
 import mihon.icons.materialsymbols.rounded.HourglassEmpty
@@ -230,7 +230,7 @@ fun MangaActionRow(
             } else {
                 pluralStringResource(MR.plurals.num_trackers, count = trackingCount, trackingCount)
             },
-            icon = if (trackingCount == 0) MaterialSymbols.Rounded.Sync else MaterialSymbols.Rounded.Done,
+            icon = if (trackingCount == 0) MaterialSymbols.Rounded.Sync else MaterialSymbols.Rounded.Check,
             color = if (trackingCount == 0) defaultActionButtonColor else MaterialTheme.colorScheme.primary,
             onClick = onTrackingClicked,
         )
@@ -519,7 +519,7 @@ private fun ColumnScope.MangaContentInfo(
                 SManga.ONGOING.toLong() -> MaterialSymbols.Rounded.Schedule
                 SManga.COMPLETED.toLong() -> MaterialSymbols.Rounded.DoneAll
                 SManga.LICENSED.toLong() -> MaterialSymbols.Rounded.AttachMoney
-                SManga.PUBLISHING_FINISHED.toLong() -> MaterialSymbols.Rounded.Done
+                SManga.PUBLISHING_FINISHED.toLong() -> MaterialSymbols.Rounded.Check
                 SManga.CANCELLED.toLong() -> MaterialSymbols.Rounded.Close
                 SManga.ON_HIATUS.toLong() -> MaterialSymbols.Rounded.Pause
                 else -> MaterialSymbols.Rounded.Block
