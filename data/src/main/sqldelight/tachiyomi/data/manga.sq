@@ -130,7 +130,11 @@ SELECT
 FROM manga M
 WHERE M.user_favorite_at IS NOT NULL
 AND M.id != :id
-AND (lower(M.remote_title) LIKE '%' || lower(:remoteTitle) || '%' OR M.id IN (SELECT manga_id FROM track_dupes));
+-- A blank title would match every title
+AND (
+    (trim(:remoteTitle) != '' AND lower(M.remote_title) LIKE '%' || lower(:remoteTitle) || '%')
+    OR M.id IN (SELECT manga_id FROM track_dupes)
+);
 
 getUpcomingManga:
 SELECT
