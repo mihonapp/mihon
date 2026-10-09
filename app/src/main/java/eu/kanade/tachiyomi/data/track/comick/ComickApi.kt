@@ -74,8 +74,12 @@ class ComickApi(
 
             val body = buildJsonObject {
                 put("status", track.status.toApiListStatus())
-                putJsonObject("progress") {
-                    put("number", track.last_chapter_read.takeIf { it > 0.0 }?.toString())
+                if (track.last_chapter_read > 0) {
+                    putJsonObject("progress") {
+                        put("number", track.last_chapter_read)
+                    }
+                } else {
+                    put("progress", null)
                 }
             }
                 .toString()
