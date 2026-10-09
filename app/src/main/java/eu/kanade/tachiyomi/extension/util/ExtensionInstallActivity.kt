@@ -8,7 +8,9 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.system.hasMiuiPackageInstaller
 import eu.kanade.tachiyomi.util.system.toast
+import logcat.LogPriority
 import mihon.app.di.appGraph
+import tachiyomi.core.common.util.system.logcat
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -77,7 +79,10 @@ class ExtensionInstallActivity : Activity() {
         val newStep = when (resultCode) {
             RESULT_OK -> InstallStep.Installed
             RESULT_CANCELED -> InstallStep.Idle
-            else -> InstallStep.Error("The installer reported a failure")
+            else -> {
+                logcat(LogPriority.INFO) { "The installer reported a failure ($resultCode)" }
+                InstallStep.Error
+            }
         }
         extensionManager.updateInstallStep(downloadId, newStep)
     }
