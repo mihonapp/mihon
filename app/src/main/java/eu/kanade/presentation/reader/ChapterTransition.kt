@@ -35,8 +35,8 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Info
-import mihon.icons.materialsymbols.rounded.Warning
 import mihon.icons.materialsymbols.roundedfilled.CheckCircle
+import mihon.icons.materialsymbols.roundedfilled.Warning
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.service.calculateChapterGap
 import tachiyomi.i18n.MR
@@ -184,7 +184,7 @@ private fun ChapterGapWarning(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = MaterialSymbols.Rounded.Warning,
+                imageVector = MaterialSymbols.RoundedFilled.Warning,
                 tint = MaterialTheme.colorScheme.error,
                 contentDescription = null,
             )

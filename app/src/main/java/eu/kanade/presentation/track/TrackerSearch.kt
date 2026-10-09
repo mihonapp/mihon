@@ -74,8 +74,8 @@ import kotlinx.coroutines.launch
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowBack
 import mihon.icons.materialsymbols.rounded.Close
-import mihon.icons.materialsymbols.rounded.VisibilityOff
 import mihon.icons.materialsymbols.roundedfilled.CheckCircle
+import mihon.icons.materialsymbols.roundedfilled.VisibilityOff
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -189,7 +189,7 @@ fun TrackerSearch(
                             elevation = ButtonDefaults.elevatedButtonElevation(),
                         ) {
                             Icon(
-                                imageVector = MaterialSymbols.Rounded.VisibilityOff,
+                                imageVector = MaterialSymbols.RoundedFilled.VisibilityOff,
                                 contentDescription = stringResource(MR.strings.action_toggle_private_on),
                             )
                         }

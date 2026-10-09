@@ -5,7 +5,6 @@ import androidx.core.app.NotificationCompat
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -13,6 +12,7 @@ import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.i18n.MR
+import mihon.icons.materialsymbols.R as MaterialSymbolsR
 
 @Inject
 @SingleIn(AppScope::class)
@@ -37,7 +37,7 @@ class ExtensionUpdateNotifier(
                 setContentText(extNames)
                 setStyle(NotificationCompat.BigTextStyle().bigText(extNames))
             }
-            setSmallIcon(R.drawable.ic_extension_24dp)
+            setSmallIcon(MaterialSymbolsR.drawable.rounded_filled_extension)
             setContentIntent(NotificationReceiver.openExtensionsPendingActivity(context))
             setAutoCancel(true)
         }

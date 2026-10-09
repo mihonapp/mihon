@@ -21,6 +21,26 @@ class PluginSpotless : Plugin<Project> {
                 ktlint(ktlintVersion)
                 trimTrailingWhitespace()
                 endWithNewline()
+                forbidRegex(
+                    "materialSymbolsRImport",
+                    "(?m)^import mihon\\.icons\\.materialsymbols\\.R(?! as MaterialSymbolsR$)\\b.*$",
+                    "Import mihon.icons.materialsymbols.R as MaterialSymbolsR",
+                )
+                forbidRegex(
+                    "materialSymbolsRQualified",
+                    "(?m)^(?!import ).*\\bmihon\\.icons\\.materialsymbols\\.R\\.",
+                    "Use the MaterialSymbolsR import alias instead of the qualified name",
+                )
+                forbidRegex(
+                    "customMaterialSymbolsRImport",
+                    "(?m)^import mihon\\.icons\\.custommaterialsymbols\\.R(?! as CustomMaterialSymbolsR$)\\b.*$",
+                    "Import mihon.icons.custommaterialsymbols.R as CustomMaterialSymbolsR",
+                )
+                forbidRegex(
+                    "customMaterialSymbolsRQualified",
+                    "(?m)^(?!import ).*\\bmihon\\.icons\\.custommaterialsymbols\\.R\\.",
+                    "Use the CustomMaterialSymbolsR import alias instead of the qualified name",
+                )
             }
 
             kotlinGradle {
