@@ -1,8 +1,10 @@
 package eu.kanade.domain.chapter.interactor
 
+import android.content.Context
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.download.interactor.DeleteDownload
 import logcat.LogPriority
+import mihon.sync.job.SyncJob
 import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
@@ -14,6 +16,7 @@ import tachiyomi.domain.manga.repository.MangaRepository
 
 @Inject
 class SetReadStatus(
+    private val context: Context,
     private val downloadPreferences: DownloadPreferences,
     private val deleteDownload: DeleteDownload,
     private val mangaRepository: MangaRepository,
@@ -57,6 +60,11 @@ class SetReadStatus(
                     )
                 }
         }
+
+        // Every "mark as read", "mark as unread" and "mark previous as read" goes through here,
+        // from the entry screen, the library and the updates list alike. The reader takes a
+        // different path, so page turns do not land here and cannot spam the countdown.
+        SyncJob.onUserAction(context)
 
         Result.Success
     }

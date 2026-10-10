@@ -200,6 +200,24 @@
             </intent-filter>
         </activity>
 
+        <!--
+            Google requires the OAuth redirect scheme to be the reversed client ID, which is
+            build-specific, hence the placeholder. See googleDriveRedirectScheme in build.gradle.kts.
+        -->
+        <activity
+            android:name="mihon.sync.auth.GoogleDriveLoginActivity"
+            android:exported="true"
+            android:label="@string/sync_activity_name">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="${googleDriveRedirectScheme}" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".data.notification.NotificationReceiver"
             android:exported="false" />

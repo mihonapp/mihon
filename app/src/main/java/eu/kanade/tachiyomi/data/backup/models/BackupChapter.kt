@@ -26,6 +26,13 @@ class BackupChapter(
     // @ProtoNumber(11) var lastModifiedAt: Long, artifact of the abandoned sync attempt
     // @ProtoNumber(12) var version: Long, artifact of the abandoned sync attempt
     @ProtoNumber(13) var memo: ByteArray = JsonObjectEmptyBytes,
+    /**
+     * When the reading state was decided on the device that wrote this, in seconds, so a correction
+     * (marking chapters unread, or going back to an earlier one) can reach the other devices. Only
+     * the sync writes it. Numbered far from the upstream fields so it can never collide with one
+     * added there.
+     */
+    @ProtoNumber(500) var readModifiedAt: Long = 0,
 ) {
     fun toChapterImpl(): Chapter {
         return Chapter.create().copy(

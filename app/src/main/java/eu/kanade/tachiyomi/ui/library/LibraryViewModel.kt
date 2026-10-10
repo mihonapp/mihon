@@ -45,6 +45,7 @@ import kotlinx.coroutines.flow.update
 import mihon.core.common.utils.mutate
 import mihon.domain.library.model.search.QueryNode
 import mihon.feature.library.matches
+import mihon.sync.SyncScheduler
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.util.lang.compareToWithCollator
@@ -93,6 +94,7 @@ class LibraryViewModel(
     private val downloadManager: DownloadManager,
     private val downloadCache: DownloadCache,
     private val trackerManager: TrackerManager,
+    private val syncScheduler: SyncScheduler,
 ) : ViewModel() {
 
     private val searchQuery = MutableStateFlow<String?>(null)
@@ -605,6 +607,7 @@ class LibraryViewModel(
 
                 setMangaCategories.await(manga.id, categoryIds)
             }
+            syncScheduler.schedule()
         }
     }
 
