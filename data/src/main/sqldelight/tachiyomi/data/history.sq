@@ -20,6 +20,11 @@ SELECT id, chapter_id, read_at, read_duration
 FROM history
 WHERE manga_id = :mangaId;
 
+getHistoryByMangaIds:
+SELECT id, manga_id, chapter_id, read_at, read_duration
+FROM history
+WHERE manga_id IN :mangaIds;
+
 resetHistoryById:
 UPDATE history
 SET read_at = 0

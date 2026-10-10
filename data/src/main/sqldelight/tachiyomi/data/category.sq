@@ -34,6 +34,14 @@ ON C.id = MC.category_id
 WHERE MC.manga_id = :mangaId
 ORDER BY C.`order`;
 
+getCategoriesByMangaIds:
+SELECT MC.manga_id, C.id, C.name, C.`order`, C.flags
+FROM category C
+JOIN manga_category MC
+ON C.id = MC.category_id
+WHERE MC.manga_id IN :mangaIds
+ORDER BY C.`order`;
+
 insert:
 -- The position is taken inside the insert, so two categories created at once cannot claim the same one
 INSERT INTO category(name, `order`, flags)

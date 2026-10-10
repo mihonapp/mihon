@@ -46,6 +46,21 @@ AND (
     OR ES.scanlator IS NULL
 );
 
+getChaptersByMangaIds:
+SELECT
+    C.id, C.manga_id, C.remote_url, C.remote_name, C.remote_scanlator, C.remote_chapter_number,
+    C.remote_date_upload, C.remote_order, C.remote_memo, C.user_read, C.user_bookmark,
+    C.user_last_page_read, C.state_date_fetch
+FROM chapter C
+LEFT JOIN excluded_scanlator ES
+ON C.manga_id = ES.manga_id
+AND C.remote_scanlator = ES.scanlator
+WHERE C.manga_id IN :mangaIds
+AND (
+    :applyScanlatorFilter = 0
+    OR ES.scanlator IS NULL
+);
+
 getScanlatorsByMangaId:
 SELECT DISTINCT remote_scanlator
 FROM chapter

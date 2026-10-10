@@ -43,6 +43,8 @@ interface MangaRepository {
 
     suspend fun getExcludedScanlators(mangaId: Long): Set<String>
 
+    suspend fun getExcludedScanlators(mangaIds: List<Long>): Map<Long, List<String>>
+
     fun getExcludedScanlatorsAsFlow(mangaId: Long): Flow<Set<String>>
 
     suspend fun setExcludedScanlators(mangaId: Long, excludedScanlators: Set<String>)

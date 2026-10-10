@@ -47,6 +47,13 @@ SELECT
 FROM manga_track
 WHERE manga_id = :mangaId;
 
+getTracksByMangaIds:
+SELECT
+    id, manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,
+    total_chapters, status, score, start_date, finish_date, private
+FROM manga_track
+WHERE manga_id IN :mangaIds;
+
 upsert:
 INSERT INTO manga_track(
     manga_id, tracker_id, remote_id, remote_url, library_id, title, last_chapter_read,

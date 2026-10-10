@@ -22,7 +22,10 @@ import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.chunked
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
@@ -97,7 +100,8 @@ class BackupRestorer(
     }
 
     private suspend fun restoreFromFile(uri: Uri, options: RestoreOptions) {
-        val backup = backupDecoder.decode(uri)
+        val backupMangaFlow = backupDecoder.decodeManga(uri)
+        val (mangaCount, backup) = backupDecoder.decodeMetadata(uri)
 
         // Store source mapping for error messages
         val backupMaps = backup.backupSources
@@ -105,7 +109,7 @@ class BackupRestorer(
 
         if (options.libraryEntries) {
             restoreSourceNames(backupMaps)
-            restoreAmount += backup.backupManga.size
+            restoreAmount += mangaCount
         }
         if (options.categories) {
             restoreAmount += 1
@@ -138,7 +142,7 @@ class BackupRestorer(
             }
             if (options.libraryEntries) {
                 restoreManga(
-                    backup.backupManga,
+                    backupMangaFlow,
                     if (options.categories) backup.backupCategories else emptyList(),
                     restoreCategoriesJob,
                 )
@@ -175,20 +179,20 @@ class BackupRestorer(
     }
 
     private fun CoroutineScope.restoreManga(
-        backupMangas: List<BackupManga>,
+        backupMangas: Flow<BackupManga>,
         backupCategories: List<BackupCategory>,
         categoriesRestoreJob: Job?,
     ) = launch {
         categoriesRestoreJob?.join()
-        mangaRestorer.sortByNew(backupMangas)
+        backupMangas
             .chunked(100)
-            .forEach { chunk ->
+            .collect { chunk ->
                 val restoredAsBatch = try {
-                    ensureActive()
+                    currentCoroutineContext().ensureActive()
                     mangaRestorer.restore(chunk, backupCategories)
                     true
                 } catch (e: Exception) {
-                    ensureActive()
+                    currentCoroutineContext().ensureActive()
                     logcat(LogPriority.WARN, e) { "Batch restore failed, retrying entry by entry" }
                     false
                 }
@@ -197,12 +201,12 @@ class BackupRestorer(
                     restoreProgress.addAndFetch(chunk.size)
                 } else {
                     chunk.forEach {
-                        ensureActive()
+                        currentCoroutineContext().ensureActive()
 
                         try {
                             mangaRestorer.restore(listOf(it), backupCategories)
                         } catch (e: Exception) {
-                            ensureActive()
+                            currentCoroutineContext().ensureActive()
                             val sourceName = sourceMapping[it.source] ?: it.source.toString()
                             errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
                         }

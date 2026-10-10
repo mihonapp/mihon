@@ -24,6 +24,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Show scores in MangaUpdates search results (and authors for `id:` prefix searches) ([@MajorTanya](https://github.com/MajorTanya)) ([#3795](https://github.com/mihonapp/mihon/pull/3795))
 - Remove whitespace from MAL and MB `id:` prefix search inputs before searching ([@MajorTanya](https://github.com/MajorTanya)) ([#3793](https://github.com/mihonapp/mihon/pull/3793))
 - Show a helpful error message for expired AniList credentials ([@MajorTanya](https://github.com/MajorTanya)) ([#3888](https://github.com/mihonapp/mihon/pull/3888))
+- Improve backup and restore to use less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#3850](https://github.com/mihonapp/mihon/pull/3850))
 
 ### Fixed
 - Fixed app and extension update check running again on configuration change ([@AntsyLich](https://github.com/AntsyLich)) ([#3708](https://github.com/mihonapp/mihon/pull/3708))
