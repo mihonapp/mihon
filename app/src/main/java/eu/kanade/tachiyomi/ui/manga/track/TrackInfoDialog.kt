@@ -72,7 +72,7 @@ import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
-import mihon.icons.materialsymbols.rounded.Delete
+import mihon.icons.materialsymbols.roundedfilled.Delete
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.lang.withIOContext
@@ -630,7 +630,7 @@ data class TrackDateRemoverScreen(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             icon = {
                 Icon(
-                    imageVector = MaterialSymbols.Rounded.Delete,
+                    imageVector = MaterialSymbols.RoundedFilled.Delete,
                     contentDescription = null,
                 )
             },
@@ -836,7 +836,7 @@ data class TrackerRemoveScreen(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             icon = {
                 Icon(
-                    imageVector = MaterialSymbols.Rounded.Delete,
+                    imageVector = MaterialSymbols.RoundedFilled.Delete,
                     contentDescription = null,
                 )
             },

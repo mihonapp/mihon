@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 34
+        versionCode = 35
         versionName = "0.20.4"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
@@ -205,6 +205,7 @@ dependencies {
     baselineProfile(projects.baselineProfile)
 
     implementation(projects.i18n)
+    implementation(projects.icons.customMaterialSymbols)
     implementation(projects.icons.materialSymbols)
     implementation(projects.icons.simpleIcons)
     implementation(projects.core.archive)

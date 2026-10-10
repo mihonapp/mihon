@@ -64,8 +64,8 @@ import mihon.domain.extension.model.ExtensionStore
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
 import mihon.icons.materialsymbols.rounded.Download
-import mihon.icons.materialsymbols.rounded.ExpandMore
 import mihon.icons.materialsymbols.rounded.Info
+import mihon.icons.materialsymbols.rounded.KeyboardArrowDown
 import mihon.icons.materialsymbols.rounded.Refresh
 import mihon.icons.materialsymbols.rounded.Settings
 import mihon.icons.materialsymbols.rounded.VerifiedUser
@@ -641,7 +641,7 @@ private fun ExtensionSplitButton(
                     contentPadding = SplitButtonDefaults.trailingButtonContentPaddingFor(size),
                 ) {
                     Icon(
-                        imageVector = MaterialSymbols.Rounded.ExpandMore,
+                        imageVector = MaterialSymbols.Rounded.KeyboardArrowDown,
                         contentDescription = stringResource(MR.strings.action_menu),
                         modifier = Modifier.size(SplitButtonDefaults.trailingButtonIconSizeFor(size)),
                     )

@@ -59,7 +59,7 @@ import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.datetime.toJavaLocalDate
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.MoreVert
-import mihon.icons.materialsymbols.rounded.VisibilityOff
+import mihon.icons.materialsymbols.roundedfilled.VisibilityOff
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.format.DateTimeFormatter
@@ -175,7 +175,7 @@ private fun TrackInfoItem(
                             modifier = Modifier.absoluteOffset(x = (-5).dp),
                         ) {
                             Icon(
-                                imageVector = MaterialSymbols.Rounded.VisibilityOff,
+                                imageVector = MaterialSymbols.RoundedFilled.VisibilityOff,
                                 contentDescription = stringResource(MR.strings.tracked_privately),
                                 modifier = Modifier.size(14.dp),
                             )

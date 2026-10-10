@@ -31,6 +31,7 @@ import eu.kanade.tachiyomi.crash.CrashActivity
 import eu.kanade.tachiyomi.crash.GlobalExceptionHandler
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.coil.BufferedSourceFetcher
+import eu.kanade.tachiyomi.data.coil.CoverRequestInterceptor
 import eu.kanade.tachiyomi.data.coil.ImageDecoder
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
@@ -68,6 +69,7 @@ import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.InjektScope
 import java.security.Security
+import mihon.icons.materialsymbols.R as MaterialSymbolsR
 
 class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
 
@@ -137,7 +139,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                     ) {
                         setContentTitle(stringResource(MR.strings.pref_incognito_mode))
                         setContentText(stringResource(MR.strings.notification_incognito_text))
-                        setSmallIcon(R.drawable.ic_glasses_24dp)
+                        setSmallIcon(MaterialSymbolsR.drawable.rounded_eyeglasses_2)
                         setOngoing(true)
 
                         val pendingIntent = PendingIntent.getBroadcast(
@@ -214,6 +216,8 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                 // Keyer
                 add(MangaCoverKeyer(coverCache))
                 add(MangaKeyer())
+                // Interceptor
+                add(CoverRequestInterceptor())
             }
 
             memoryCache(

@@ -1,0 +1,9 @@
+<!--
+  Custom Material Symbols Rounded 'reader_left_to_right'.
+  Frame from Material Symbols Rounded 'mobile_gear'.
+  Arrow from Material Symbols Rounded 'mobile_arrow_right', moved left so its tail runs into the frame.
+  Page edge drawn at the Material Symbols stroke weight.
+  Copyright (C) Google LLC
+  SPDX-License-Identifier: Apache-2.0
+-->
+<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M600 -660C577.9 -660 560 -642.1 560 -620L560 -340C560 -317.9 577.9 -300 600 -300C622.1 -300 640 -317.9 640 -340L640 -620C640 -642.1 622.1 -660 600 -660ZM680 -840L680 -120L280 -120L280 -440L383 -440L348 -404Q337 -393 337 -376.5Q337 -360 349 -348Q360 -337 377 -337Q394 -337 405 -348L509 -452Q515 -458 517.5 -465Q520 -472 520 -480Q520 -488 517.5 -495Q515 -502 509 -508L405 -612Q394 -623 377.5 -623.5Q376.8 -623.5 376.2 -623.5Q360.5 -623.5 349 -612Q338 -601 337.5 -584.5Q337 -568 348 -556L383 -520L280 -520L280 -840ZM280 -920Q247 -920 223.5 -896.5Q200 -873 200 -840L200 -120Q200 -87 223.5 -63.5Q247 -40 280 -40L680 -40Q713 -40 736.5 -63.5Q760 -87 760 -120L760 -524Q778 -531 789 -546Q800 -561 800 -580L800 -660Q800 -679 789 -694Q778 -709 760 -716L760 -840Q760 -873 736.5 -896.5Q713 -920 680 -920Z"/></svg>
