@@ -2,9 +2,9 @@ package tachiyomi.presentation.widget
 
 import android.content.Context
 import androidx.glance.appwidget.updateAll
-import androidx.lifecycle.LifecycleCoroutineScope
 import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -22,9 +22,9 @@ class WidgetManager(
 ) {
 
     context(context: Context)
-    fun init(scope: LifecycleCoroutineScope) {
+    fun init(scope: CoroutineScope) {
         combine(
-            getUpdates.subscribe(read = false, after = BaseUpdatesGridGlanceWidget.DateLimit.toEpochMilliseconds()),
+            getUpdates.subscribe(read = false, after = BaseUpdatesGridGlanceWidget.DateLimit),
             securityPreferences.useAuthenticator.changes(),
             transform = { a, b -> a to b },
         )

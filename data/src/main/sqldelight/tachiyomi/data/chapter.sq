@@ -1,4 +1,6 @@
 import kotlin.Boolean;
+import kotlin.Int;
+import kotlin.time.Instant;
 import kotlinx.serialization.json.JsonObject;
 
 CREATE TABLE chapter(
@@ -8,13 +10,13 @@ CREATE TABLE chapter(
     remote_name TEXT NOT NULL,
     remote_scanlator TEXT,
     remote_chapter_number REAL NOT NULL,
-    remote_date_upload INTEGER NOT NULL,
+    remote_date_upload INTEGER AS Instant,
     remote_order INTEGER NOT NULL,
     remote_memo BLOB AS JsonObject NOT NULL,
     user_read INTEGER AS Boolean NOT NULL,
     user_bookmark INTEGER AS Boolean NOT NULL,
-    user_last_page_read INTEGER NOT NULL,
-    state_date_fetch INTEGER NOT NULL,
+    user_last_page_read INTEGER AS Int NOT NULL,
+    state_date_fetch INTEGER AS Instant NOT NULL,
     UNIQUE(manga_id, remote_url),
     FOREIGN KEY(manga_id) REFERENCES manga (id)
     ON DELETE CASCADE

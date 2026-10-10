@@ -27,6 +27,8 @@ import tachiyomi.source.local.isLocal
 import java.lang.Long.max
 import java.util.TreeSet
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 
 @Inject
 class SyncChaptersWithSource(
@@ -52,7 +54,7 @@ class SyncChaptersWithSource(
         manga: Manga,
         source: Source,
         manualFetch: Boolean = false,
-        fetchWindow: Pair<Long, Long> = Pair(0, 0),
+        fetchWindow: ClosedRange<Instant>? = null,
     ): List<Chapter> {
         if (rawSourceChapters.isEmpty() && !source.isLocal()) {
             throw NoChaptersException()
@@ -60,7 +62,7 @@ class SyncChaptersWithSource(
 
         val timeZone = TimeZone.currentSystemDefault()
         val now = Clock.System.now().toLocalDateTime(timeZone)
-        val nowMillis = now.toInstant(timeZone).toEpochMilliseconds()
+        val nowInstant = now.toInstant(timeZone)
 
         val sourceChapters = rawSourceChapters
             .distinctBy { it.url }
@@ -80,33 +82,37 @@ class SyncChaptersWithSource(
 
         // Used to not set upload date of older chapters
         // to a higher value than newer chapters
-        var maxSeenUploadDate = 0L
+        var maxSeenUploadDate: Instant? = null
 
-        for (sourceChapter in sourceChapters) {
-            var chapter = sourceChapter
-
-            // Update metadata from source if necessary.
-            if (source is HttpSource) {
+        // Update metadata from source if necessary.
+        val preparedChapters = if (source is HttpSource) {
+            val sManga = manga.toSManga()
+            sourceChapters.map { chapter ->
                 val sChapter = chapter.toSChapter()
                 @Suppress("DEPRECATION")
-                source.prepareNewChapter(sChapter, manga.toSManga())
-                chapter = chapter.copyFromSChapter(sChapter)
+                source.prepareNewChapter(sChapter, sManga)
+                chapter.copyFromSChapter(sChapter)
+            }
+        } else {
+            sourceChapters
+        }
+
+        // Recognize chapter numbers, from the whole list since names alone don't always tell.
+        val recognizedChapters = preparedChapters
+            .zip(ChapterRecognition.parseChapterNumbers(manga.title, preparedChapters)) { chapter, numbering ->
+                chapter.copy(chapterNumber = numbering.chapter?.let(ChapterRecognition::toDouble) ?: -1.0)
             }
 
+        for (chapter in recognizedChapters) {
             if (!sourceUrls.add(chapter.url)) continue
-
-            // Recognize chapter number for the chapter.
-            val chapterNumber = ChapterRecognition.parseChapterNumber(manga.title, chapter.name, chapter.chapterNumber)
-            chapter = chapter.copy(chapterNumber = chapterNumber)
 
             val dbChapter = dbChaptersByUrl[chapter.url]
 
             if (dbChapter == null) {
-                val toAddChapter = if (chapter.dateUpload == 0L) {
-                    val altDateUpload = if (maxSeenUploadDate == 0L) nowMillis else maxSeenUploadDate
-                    chapter.copy(dateUpload = altDateUpload)
+                val toAddChapter = if (chapter.dateUpload == null) {
+                    chapter.copy(dateUpload = maxSeenUploadDate ?: nowInstant)
                 } else {
-                    maxSeenUploadDate = max(maxSeenUploadDate, sourceChapter.dateUpload)
+                    maxSeenUploadDate = listOfNotNull(maxSeenUploadDate, chapter.dateUpload).maxOrNull()
                     chapter
                 }
                 newChapters.add(toAddChapter)
@@ -132,7 +138,7 @@ class SyncChaptersWithSource(
                             chapterNumber = chapter.chapterNumber,
                             scanlator = chapter.scanlator,
                             sourceOrder = chapter.sourceOrder,
-                            dateUpload = chapter.dateUpload.takeIf { it != 0L },
+                            dateUpload = chapter.dateUpload,
                             memo = chapter.memo,
                         ),
                     )
@@ -142,9 +148,16 @@ class SyncChaptersWithSource(
 
         val removedChapters = dbChapters.filterNot { it.url in sourceUrls }
 
+        // The source no longer lists these, so their queued downloads could only fail
+        removedChapters.mapNotNull { downloadManager.getQueuedDownloadOrNull(it.id) }
+            .takeIf { it.isNotEmpty() }
+            ?.let { downloadManager.cancelQueuedDownloads(it) }
+
         // Return if there's nothing to add, delete, or update to avoid unnecessary db transactions.
         if (newChapters.isEmpty() && removedChapters.isEmpty() && updatedChapters.isEmpty()) {
-            if (manualFetch || manga.fetchInterval == 0 || manga.nextUpdate < fetchWindow.first) {
+            val isNextUpdateBeforeWindow = fetchWindow != null &&
+                manga.nextUpdate.let { it == null || it < fetchWindow.start }
+            if (manualFetch || manga.fetchInterval == 0 || isNextUpdateBeforeWindow) {
                 updateManga.awaitUpdateFetchInterval(
                     manga,
                     timeZone,
@@ -183,7 +196,7 @@ class SyncChaptersWithSource(
         // Sources MUST return the chapters from most to less recent, which is common.
         var itemCount = newChapters.size
         val toAdd = newChapters.map { toAddItem ->
-            var chapter = toAddItem.copy(dateFetch = nowMillis + itemCount--)
+            var chapter = toAddItem.copy(dateFetch = nowInstant + (itemCount--).milliseconds)
 
             if (chapter.chapterNumber in readChapterNumbers && markDuplicateAsRead) {
                 changedOrDuplicateReadUrls.add(chapter.url)

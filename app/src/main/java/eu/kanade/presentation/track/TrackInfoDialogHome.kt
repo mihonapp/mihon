@@ -59,7 +59,7 @@ import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.datetime.toJavaLocalDate
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.MoreVert
-import mihon.icons.materialsymbols.rounded.VisibilityOff
+import mihon.icons.materialsymbols.roundedfilled.VisibilityOff
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.format.DateTimeFormatter
@@ -113,13 +113,13 @@ fun TrackInfoDialogHome(
                     onScoreClick = { onScoreClick(item) }
                         .takeIf { supportsScoring },
                     startDate = remember(item.track.startDate) {
-                        dateFormat.format(item.track.startDate.toLocalDate().toJavaLocalDate())
+                        item.track.startDate?.let { dateFormat.format(it.toJavaLocalDate()) }
                     }
-                        .takeIf { supportsReadingDates && item.track.startDate != 0L },
+                        ?.takeIf { supportsReadingDates },
                     onStartDateClick = { onStartDateEdit(item) } // TODO
                         .takeIf { supportsReadingDates },
-                    endDate = dateFormat.format(item.track.finishDate.toJavaLocalDate())
-                        .takeIf { supportsReadingDates && item.track.finishDate != 0L },
+                    endDate = item.track.finishDate?.let { dateFormat.format(it.toJavaLocalDate()) }
+                        ?.takeIf { supportsReadingDates },
                     onEndDateClick = { onEndDateEdit(item) }
                         .takeIf { supportsReadingDates },
                     onNewSearch = { onNewSearch(item) },
@@ -175,7 +175,7 @@ private fun TrackInfoItem(
                             modifier = Modifier.absoluteOffset(x = (-5).dp),
                         ) {
                             Icon(
-                                imageVector = MaterialSymbols.Rounded.VisibilityOff,
+                                imageVector = MaterialSymbols.RoundedFilled.VisibilityOff,
                                 contentDescription = stringResource(MR.strings.tracked_privately),
                                 modifier = Modifier.size(14.dp),
                             )

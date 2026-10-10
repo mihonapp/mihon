@@ -28,10 +28,11 @@ import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import mihon.icons.materialsymbols.MaterialSymbols
-import mihon.icons.materialsymbols.rounded.Dangerous
-import mihon.icons.materialsymbols.rounded.Warning
-import tachiyomi.core.common.util.lang.withIOContext
+import mihon.icons.materialsymbols.roundedfilled.Dangerous
+import mihon.icons.materialsymbols.roundedfilled.Warning
 import tachiyomi.domain.source.model.Source
 import tachiyomi.source.local.isLocal
 
@@ -49,7 +50,7 @@ fun SourceIcon(
     when {
         source.isStub && icon == null -> {
             Image(
-                imageVector = MaterialSymbols.Rounded.Warning,
+                imageVector = MaterialSymbols.RoundedFilled.Warning,
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
                 modifier = modifier.then(defaultModifier),
@@ -113,7 +114,7 @@ fun ExtensionIcon(
             }
         }
         is Extension.NotLoaded -> Image(
-            imageVector = MaterialSymbols.Rounded.Dangerous,
+            imageVector = MaterialSymbols.RoundedFilled.Dangerous,
             contentDescription = null,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
             modifier = modifier.then(defaultModifier),
@@ -125,7 +126,7 @@ fun ExtensionIcon(
 private fun Extension.getIcon(density: Int = DisplayMetrics.DENSITY_DEFAULT): State<Result<ImageBitmap>> {
     val context = LocalContext.current
     return produceState<Result<ImageBitmap>>(initialValue = Result.Loading, this) {
-        withIOContext {
+        withContext(Dispatchers.IO) {
             value = try {
                 val appInfo = ExtensionLoader.getExtensionPackageInfoFromPkgName(context, pkgName)!!.applicationInfo!!
                 val appResources = context.packageManager.getResourcesForApplication(appInfo)

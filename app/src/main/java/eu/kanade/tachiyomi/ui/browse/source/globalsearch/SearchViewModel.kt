@@ -22,11 +22,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.domain.manga.model.toDomainManga
 import tachiyomi.core.common.preference.toggle
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.source.local.isLocal
 
 abstract class SearchViewModel(
     initialState: State = State(),
@@ -88,7 +88,7 @@ abstract class SearchViewModel(
 
     open suspend fun getEnabledSources(): List<Source> {
         return sourceManager.getAll()
-            .filter { it.lang in enabledLanguages && "${it.id}" !in disabledSources }
+            .filter { (it.lang in enabledLanguages || it.isLocal()) && "${it.id}" !in disabledSources }
             .sortedWith(
                 compareBy(
                     { "${it.id}" !in pinnedSources },
@@ -138,7 +138,7 @@ abstract class SearchViewModel(
 
         searchJob?.cancel()
 
-        searchJob = viewModelScope.launchIO {
+        searchJob = viewModelScope.launch(Dispatchers.IO) {
             val sources = getSelectedSources()
 
             // Reuse previous results if possible
@@ -204,8 +204,8 @@ abstract class SearchViewModel(
     }
 
     fun setMigrateDialog(currentId: Long, target: Manga) {
-        viewModelScope.launchIO {
-            val current = getManga.await(currentId) ?: return@launchIO
+        viewModelScope.launch(Dispatchers.IO) {
+            val current = getManga.await(currentId) ?: return@launch
             state.update { it.copy(dialog = Dialog.Migrate(target, current)) }
         }
     }

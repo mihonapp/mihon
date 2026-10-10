@@ -422,7 +422,11 @@ private fun MangaScreenSmallImpl(
                         key = MangaScreenItem.CHAPTER_HEADER,
                         contentType = MangaScreenItem.CHAPTER_HEADER,
                     ) {
-                        val missingChapterCount = remember(chapters) {
+                        val missingChapterCount = remember(chapters, state.hideMissingChapters) {
+                            if (state.hideMissingChapters) {
+                                return@remember 0
+                            }
+
                             chapters.map { it.chapter.chapterNumber }.missingChaptersCount()
                         }
                         ChapterHeader(
@@ -659,7 +663,11 @@ fun MangaScreenLargeImpl(
                                 key = MangaScreenItem.CHAPTER_HEADER,
                                 contentType = MangaScreenItem.CHAPTER_HEADER,
                             ) {
-                                val missingChapterCount = remember(chapters) {
+                                val missingChapterCount = remember(chapters, state.hideMissingChapters) {
+                                    if (state.hideMissingChapters) {
+                                        return@remember 0
+                                    }
+
                                     chapters.map { it.chapter.chapterNumber }.missingChaptersCount()
                                 }
                                 ChapterHeader(
@@ -714,7 +722,7 @@ private fun SharedMangaBottomActionMenu(
         }.takeIf { selected.fastAny { !it.chapter.read } },
         onMarkAsUnreadClicked = {
             onMultiMarkAsReadClicked(selected.fastMap { it.chapter }, false)
-        }.takeIf { selected.fastAny { it.chapter.read || it.chapter.lastPageRead > 0L } },
+        }.takeIf { selected.fastAny { it.chapter.read || it.chapter.lastPageRead > 0 } },
         onMarkPreviousAsReadClicked = {
             onMarkPreviousAsReadClicked(selected[0].chapter)
         }.takeIf { selected.size == 1 },

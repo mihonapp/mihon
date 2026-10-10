@@ -2,9 +2,11 @@ package tachiyomi.data.manga
 
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import kotlinx.serialization.json.JsonObject
+import mihon.core.common.extensions.toInstantOrNull
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
+import kotlin.time.Instant
 
 object MangaMapper {
     fun mapManga(
@@ -20,22 +22,22 @@ object MangaMapper {
         remoteCover: String?,
         remoteUpdateStrategy: UpdateStrategy,
         remoteMemo: JsonObject,
-        userFavoriteAt: Long?,
+        userFavoriteAt: Instant?,
         userNotes: String,
         userReaderFlags: Long,
         userChapterFlags: Long,
-        stateChapterLastUpdate: Long?,
-        stateChapterNextUpdate: Long?,
+        stateChapterLastUpdate: Instant?,
+        stateChapterNextUpdate: Instant?,
         stateChapterFetchInterval: Long,
-        stateCoverLastModified: Long,
+        stateCoverLastModified: Instant?,
         stateInitialized: Boolean,
         userLastReadAt: Long,
     ): Manga = Manga(
         id = id,
         source = sourceId,
         favoriteAt = userFavoriteAt,
-        lastUpdate = stateChapterLastUpdate ?: 0,
-        nextUpdate = stateChapterNextUpdate ?: 0,
+        lastUpdate = stateChapterLastUpdate,
+        nextUpdate = stateChapterNextUpdate,
         fetchInterval = stateChapterFetchInterval.toInt(),
         viewerFlags = userReaderFlags,
         chapterFlags = userChapterFlags,
@@ -68,21 +70,21 @@ object MangaMapper {
         remoteCover: String?,
         remoteUpdateStrategy: UpdateStrategy,
         remoteMemo: JsonObject,
-        userFavoriteAt: Long,
+        userFavoriteAt: Instant,
         userNotes: String,
         userReaderFlags: Long,
         userChapterFlags: Long,
-        stateChapterLastUpdate: Long?,
-        stateChapterNextUpdate: Long?,
+        stateChapterLastUpdate: Instant?,
+        stateChapterNextUpdate: Instant?,
         stateChapterFetchInterval: Long,
-        stateCoverLastModified: Long,
+        stateCoverLastModified: Instant?,
         stateInitialized: Boolean,
         userLastReadAt: Long,
         totalCount: Long,
         readCount: Double,
-        latestUpload: Long,
-        chapterFetchedAt: Long,
-        lastRead: Long,
+        latestUpload: Instant?,
+        chapterFetchedAt: Instant?,
+        lastRead: Instant?,
         bookmarkCount: Double,
         categories: String,
     ): LibraryManga = LibraryManga(
@@ -116,7 +118,7 @@ object MangaMapper {
         bookmarkCount = bookmarkCount.toLong(),
         latestUpload = latestUpload,
         chapterFetchedAt = chapterFetchedAt,
-        lastRead = lastRead,
+        lastRead = lastRead ?: userLastReadAt.toInstantOrNull(),
     )
 
     fun mapMangaWithChapterCount(
@@ -132,14 +134,14 @@ object MangaMapper {
         remoteCover: String?,
         remoteUpdateStrategy: UpdateStrategy,
         remoteMemo: JsonObject,
-        userFavoriteAt: Long?,
+        userFavoriteAt: Instant?,
         userNotes: String,
         userReaderFlags: Long,
         userChapterFlags: Long,
-        stateChapterLastUpdate: Long?,
-        stateChapterNextUpdate: Long?,
+        stateChapterLastUpdate: Instant?,
+        stateChapterNextUpdate: Instant?,
         stateChapterFetchInterval: Long,
-        stateCoverLastModified: Long,
+        stateCoverLastModified: Instant?,
         stateInitialized: Boolean,
         userLastReadAt: Long,
         chapterCount: Long,

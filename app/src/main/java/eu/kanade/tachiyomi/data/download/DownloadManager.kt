@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.drop
@@ -16,11 +17,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
@@ -70,15 +71,14 @@ class DownloadManager(
     /**
      * Tells the downloader to pause downloads.
      */
-    fun pauseDownloads() {
+    suspend fun pauseDownloads() {
         downloader.pause()
-        downloader.stop()
     }
 
     /**
      * Empties the download queue.
      */
-    fun clearQueue() {
+    suspend fun clearQueue() {
         downloader.clearQueue()
         downloader.stop()
     }
@@ -100,14 +100,12 @@ class DownloadManager(
         return queueState.value.associateBy { it.chapter.id }
     }
 
-    fun startDownloadNow(chapterId: Long) {
-        val existingDownload = getQueuedDownloadOrNull(chapterId)
+    suspend fun startDownloadNow(chapterId: Long) {
         // If not in queue try to start a new download
-        val toAdd = existingDownload ?: runBlocking { downloadFromChapterId(chapterId) } ?: return
-        queueState.value.toMutableList().apply {
-            existingDownload?.let { remove(it) }
-            add(0, toAdd)
-            reorderQueue(this)
+        val toAdd = getQueuedDownloadOrNull(chapterId) ?: downloadFromChapterId(chapterId) ?: return
+        downloader.updateQueue { queue ->
+            val (existing, others) = queue.partition { it.chapter.id == chapterId }
+            listOf(existing.firstOrNull() ?: toAdd) + others
         }
         startDownloads()
     }
@@ -123,10 +121,15 @@ class DownloadManager(
     /**
      * Reorders the download queue.
      *
-     * @param downloads value to set the download queue to
+     * @param downloads the queue in its new order. Downloads that left the queue since are dropped, and ones
+     * that joined it are kept at the end.
      */
-    fun reorderQueue(downloads: List<Download>) {
-        downloader.updateQueue(downloads)
+    suspend fun reorderQueue(downloads: List<Download>) {
+        downloader.updateQueue { queue ->
+            val queueById = queue.associateBy { it.chapter.id }
+            val orderedIds = downloads.mapTo(HashSet()) { it.chapter.id }
+            downloads.mapNotNull { queueById[it.chapter.id] } + queue.filter { it.chapter.id !in orderedIds }
+        }
     }
 
     /**
@@ -147,11 +150,11 @@ class DownloadManager(
      *
      * @param downloads the list of downloads to enqueue.
      */
-    fun addDownloadsToStartOfQueue(downloads: List<Download>) {
+    suspend fun addDownloadsToStartOfQueue(downloads: List<Download>) {
         if (downloads.isEmpty()) return
-        queueState.value.toMutableList().apply {
-            addAll(0, downloads)
-            reorderQueue(this)
+        downloader.updateQueue { queue ->
+            val chapterIds = downloads.mapTo(HashSet()) { it.chapter.id }
+            downloads + queue.filter { it.chapter.id !in chapterIds }
         }
         startDownloads()
     }
@@ -164,10 +167,12 @@ class DownloadManager(
      * @param chapter the downloaded chapter.
      * @return the list of pages from the chapter.
      */
-    fun buildPageList(source: Source, manga: Manga, chapter: Chapter): List<Page> {
+    suspend fun buildPageList(source: Source, manga: Manga, chapter: Chapter): List<Page> {
         val chapterDir = provider.findChapterDir(chapter.name, chapter.scanlator, chapter.url, manga.title, source)
-        val files = chapterDir?.listFiles().orEmpty()
-            .filter { it.isFile && ImageUtil.isImage(it.name) { it.openInputStream() } }
+        val files = withContext(Dispatchers.IO) {
+            chapterDir?.listFiles().orEmpty()
+                .filter { it.isFile && ImageUtil.isImage(it.name) { it.openInputStream() } }
+        }
 
         if (files.isEmpty()) {
             throw Exception(context.stringResource(MR.strings.page_list_empty_error))
@@ -215,7 +220,7 @@ class DownloadManager(
      * @param mangaTitle the title of the manga to query.
      * @param source the source of the chapter.
      */
-    fun isChapterDownloadedOnDisk(
+    suspend fun isChapterDownloadedOnDisk(
         chapterName: String,
         chapterScanlator: String?,
         chapterUrl: String,
@@ -241,8 +246,8 @@ class DownloadManager(
         return cache.getDownloadCount(manga)
     }
 
-    fun cancelQueuedDownloads(downloads: List<Download>) {
-        removeFromDownloadQueue(downloads.map { it.chapter })
+    suspend fun cancelQueuedDownloads(downloads: List<Download>) {
+        downloader.dequeue(downloads.map { it.chapter })
     }
 
     /**
@@ -252,14 +257,14 @@ class DownloadManager(
      * @param manga the manga of the chapters.
      * @param source the source of the chapters.
      */
-    fun deleteChapters(chapters: List<Chapter>, manga: Manga, source: Source) {
-        launchIO {
+    suspend fun deleteChapters(chapters: List<Chapter>, manga: Manga, source: Source) {
+        withContext(Dispatchers.IO) {
             val filteredChapters = getChaptersToDelete(chapters, manga)
             if (filteredChapters.isEmpty()) {
-                return@launchIO
+                return@withContext
             }
 
-            removeFromDownloadQueue(filteredChapters)
+            downloader.dequeue(filteredChapters)
 
             val (mangaDir, chapterDirs) = provider.findChapterDirs(filteredChapters, manga, source)
             chapterDirs.forEach { it.delete() }
@@ -279,8 +284,8 @@ class DownloadManager(
      * @param source the source of the manga.
      * @param removeQueued whether to also remove queued downloads.
      */
-    fun deleteManga(manga: Manga, source: Source, removeQueued: Boolean = true) {
-        launchIO {
+    suspend fun deleteManga(manga: Manga, source: Source, removeQueued: Boolean = true) {
+        withContext(Dispatchers.IO) {
             if (removeQueued) {
                 downloader.removeFromQueue(manga)
             }
@@ -292,23 +297,6 @@ class DownloadManager(
             if (sourceDir?.listFiles()?.isEmpty() == true) {
                 sourceDir.delete()
                 cache.removeSource(source)
-            }
-        }
-    }
-
-    private fun removeFromDownloadQueue(chapters: List<Chapter>) {
-        val wasRunning = downloader.isRunning
-        if (wasRunning) {
-            downloader.pause()
-        }
-
-        downloader.removeFromQueue(chapters)
-
-        if (wasRunning) {
-            if (queueState.value.isEmpty()) {
-                downloader.stop()
-            } else if (queueState.value.isNotEmpty()) {
-                downloader.start()
             }
         }
     }
@@ -340,18 +328,18 @@ class DownloadManager(
      * @param oldSource the old source.
      * @param newSource the new source.
      */
-    fun renameSource(oldSource: Source, newSource: Source) {
-        val oldFolder = provider.findSourceDir(oldSource) ?: return
+    suspend fun renameSource(oldSource: Source, newSource: Source) = withContext(Dispatchers.IO) {
+        val oldFolder = provider.findSourceDir(oldSource) ?: return@withContext
         val newName = provider.getSourceDirName(newSource)
 
-        if (oldFolder.name == newName) return
+        if (oldFolder.name == newName) return@withContext
 
         val capitalizationChanged = oldFolder.name.equals(newName, ignoreCase = true)
         if (capitalizationChanged) {
             val tempName = newName + Downloader.TMP_DIR_SUFFIX
             if (!oldFolder.renameTo(tempName)) {
                 logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}" }
-                return
+                return@withContext
             }
         }
 
@@ -366,12 +354,12 @@ class DownloadManager(
      * @param manga the manga
      * @param newTitle the new manga title.
      */
-    suspend fun renameManga(manga: Manga, newTitle: String) {
+    suspend fun renameManga(manga: Manga, newTitle: String) = withContext(Dispatchers.IO) {
         val source = sourceManager.getOrStub(manga.source)
-        val oldFolder = provider.findMangaDir(manga.title, source) ?: return
+        val oldFolder = provider.findMangaDir(manga.title, source) ?: return@withContext
         val newName = provider.getMangaDirName(newTitle)
 
-        if (oldFolder.name == newName) return
+        if (oldFolder.name == newName) return@withContext
 
         // just to be safe, don't allow downloads for this manga while renaming it
         downloader.removeFromQueue(manga)
@@ -381,7 +369,7 @@ class DownloadManager(
             val tempName = newName + Downloader.TMP_DIR_SUFFIX
             if (!oldFolder.renameTo(tempName)) {
                 logcat(LogPriority.ERROR) { "Failed to rename manga download folder: ${oldFolder.name}" }
-                return
+                return@withContext
             }
         }
 
@@ -400,32 +388,35 @@ class DownloadManager(
      * @param oldChapter the existing chapter with the old name.
      * @param newChapter the target chapter with the new name.
      */
-    suspend fun renameChapter(source: Source, manga: Manga, oldChapter: Chapter, newChapter: Chapter) {
-        val oldNames = provider.getValidChapterDirNames(oldChapter.name, oldChapter.scanlator, oldChapter.url)
-        val mangaDir = provider.getMangaDir(manga.title, source).getOrElse { e ->
-            logcat(LogPriority.ERROR, e) { "Manga download folder doesn't exist. Skipping renaming after source sync" }
-            return
+    suspend fun renameChapter(source: Source, manga: Manga, oldChapter: Chapter, newChapter: Chapter) =
+        withContext(Dispatchers.IO) {
+            val oldNames = provider.getValidChapterDirNames(oldChapter.name, oldChapter.scanlator, oldChapter.url)
+            val mangaDir = provider.getMangaDir(manga.title, source).getOrElse { e ->
+                logcat(LogPriority.ERROR, e) {
+                    "Manga download folder doesn't exist. Skipping renaming after source sync"
+                }
+                return@withContext
+            }
+
+            // Assume there's only 1 version of the chapter name formats present
+            val oldDownload = oldNames.asSequence()
+                .mapNotNull { mangaDir.findFile(it) }
+                .firstOrNull() ?: return@withContext
+
+            var newName = provider.getChapterDirName(newChapter.name, newChapter.scanlator, newChapter.url)
+            if (oldDownload.isFile && oldDownload.extension == "cbz") {
+                newName += ".cbz"
+            }
+
+            if (oldDownload.name == newName) return@withContext
+
+            if (oldDownload.renameTo(newName)) {
+                cache.removeChapter(oldChapter, manga)
+                cache.addChapter(newName, mangaDir, manga)
+            } else {
+                logcat(LogPriority.ERROR) { "Could not rename downloaded chapter: ${oldNames.joinToString()}" }
+            }
         }
-
-        // Assume there's only 1 version of the chapter name formats present
-        val oldDownload = oldNames.asSequence()
-            .mapNotNull { mangaDir.findFile(it) }
-            .firstOrNull() ?: return
-
-        var newName = provider.getChapterDirName(newChapter.name, newChapter.scanlator, newChapter.url)
-        if (oldDownload.isFile && oldDownload.extension == "cbz") {
-            newName += ".cbz"
-        }
-
-        if (oldDownload.name == newName) return
-
-        if (oldDownload.renameTo(newName)) {
-            cache.removeChapter(oldChapter, manga)
-            cache.addChapter(newName, mangaDir, manga)
-        } else {
-            logcat(LogPriority.ERROR) { "Could not rename downloaded chapter: ${oldNames.joinToString()}" }
-        }
-    }
 
     private suspend fun getChaptersToDelete(chapters: List<Chapter>, manga: Manga): List<Chapter> {
         // Retrieve the categories that are set to exclude from being deleted on read

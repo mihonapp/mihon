@@ -24,14 +24,14 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.DropdownMenu
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
+import mihon.icons.custommaterialsymbols.CustomMaterialSymbols
+import mihon.icons.custommaterialsymbols.rounded.DownloadArrow
+import mihon.icons.custommaterialsymbols.rounded.DownloadCircle
 import mihon.icons.materialsymbols.MaterialSymbols
-import mihon.icons.materialsymbols.rounded.ArrowDownward
 import mihon.icons.materialsymbols.rounded.Error
 import mihon.icons.materialsymbols.roundedfilled.CheckCircle
 import tachiyomi.i18n.MR
@@ -99,7 +99,7 @@ private fun NotDownloadedIndicator(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_download_chapter_24dp),
+            imageVector = CustomMaterialSymbols.Rounded.DownloadCircle,
             contentDescription = stringResource(MR.strings.manga_download),
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -179,7 +179,7 @@ private fun DownloadingIndicator(
             )
         }
         Icon(
-            imageVector = MaterialSymbols.Rounded.ArrowDownward,
+            imageVector = CustomMaterialSymbols.Rounded.DownloadArrow,
             contentDescription = null,
             modifier = ArrowModifier,
             tint = arrowColor,
@@ -279,4 +279,4 @@ private val IndicatorModifier = Modifier
     .size(IndicatorSize)
     .padding(IndicatorPadding)
 private val ArrowModifier = Modifier
-    .size(IndicatorSize - 7.dp)
+    .size(IndicatorSize)
