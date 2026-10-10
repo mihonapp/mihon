@@ -26,6 +26,7 @@ import com.hippo.unifile.UniFile
 import logcat.LogPriority
 import okio.Buffer
 import okio.BufferedSource
+import tachiyomi.core.common.util.system.panel.GrayImage
 import java.io.InputStream
 import java.util.Locale
 import kotlin.math.abs
@@ -297,6 +298,88 @@ object ImageUtil {
         val splitWidth: Int,
     ) {
         val bottomOffset = topOffset + splitHeight
+    }
+
+    /**
+     * Decodes [imageSource] (not consumed, uses peek()) to a luminance image, longest side <= [maxSide].
+     * If [findCrop] is given, it runs on the full-res RGBA frame and the result is cropped to it first.
+     */
+    fun decodeGrayForAnalysis(
+        imageSource: BufferedSource,
+        maxSide: Int = 1024,
+        findCrop: ((rgba: ByteArray, width: Int, height: Int) -> IntArray)? = null,
+    ): GrayImage? {
+        return try {
+            ImageDecoder.open(imageSource.peek().inputStream()).use { decoder ->
+                if (decoder.isHdr) return@use null
+                val res = decoder.decodeNext()
+                res.use {
+                    val fullW = res.width
+                    val fullH = res.height
+                    val buf = res.image
+                    buf.rewind()
+                    val rgba = ByteArray(buf.remaining())
+                    buf.get(rgba)
+                    if (fullW <= 0 || fullH <= 0 || rgba.size < fullW * fullH * 4) return@use null
+
+                    var cropLeft = 0
+                    var cropTop = 0
+                    var cropW = fullW
+                    var cropH = fullH
+                    if (findCrop != null) {
+                        val borders = findCrop(rgba, fullW, fullH)
+                        val l = borders[0]
+                        val t = borders[1]
+                        val w = borders[2]
+                        val h = borders[3]
+                        if (w > 0 && h > 0 && l >= 0 && t >= 0 && l + w <= fullW && t + h <= fullH &&
+                            (l != 0 || t != 0 || w != fullW || h != fullH)
+                        ) {
+                            cropLeft = l
+                            cropTop = t
+                            cropW = w
+                            cropH = h
+                        }
+                    }
+
+                    val limit = max(maxSide, 1)
+                    val step = max(1, (max(cropW, cropH) + limit - 1) / limit)
+                    val outW = (cropW + step - 1) / step
+                    val outH = (cropH + step - 1) / step
+                    val out = ByteArray(outW * outH)
+                    for (oy in 0 until outH) {
+                        val y0 = cropTop + oy * step
+                        val y1 = min(y0 + step, cropTop + cropH)
+                        for (ox in 0 until outW) {
+                            val x0 = cropLeft + ox * step
+                            val x1 = min(x0 + step, cropLeft + cropW)
+                            var sum = 0
+                            var count = 0
+                            for (y in y0 until y1) {
+                                var i = (y * fullW + x0) * 4
+                                for (x in x0 until x1) {
+                                    val r = rgba[i].toInt() and 0xFF
+                                    val g = rgba[i + 1].toInt() and 0xFF
+                                    val b = rgba[i + 2].toInt() and 0xFF
+                                    val a = rgba[i + 3].toInt() and 0xFF
+                                    sum += if (a < 128) 255 else (r * 299 + g * 587 + b * 114) / 1000
+                                    count++
+                                    i += 4
+                                }
+                            }
+                            out[oy * outW + ox] = (if (count > 0) sum / count else 255).toByte()
+                        }
+                    }
+                    GrayImage(outW, outH, out)
+                }
+            }
+        } catch (e: Exception) {
+            logcat(LogPriority.WARN, e) { "decodeGrayForAnalysis failed" }
+            null
+        } catch (e: OutOfMemoryError) {
+            logcat(LogPriority.WARN, e) { "decodeGrayForAnalysis out of memory" }
+            null
+        }
     }
 
     /**

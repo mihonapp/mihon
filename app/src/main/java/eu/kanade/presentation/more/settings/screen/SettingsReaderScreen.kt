@@ -189,6 +189,7 @@ object SettingsReaderScreen : SearchableSettings {
 
         val navMode by navModePref.collectAsState()
         val imageScaleType by imageScaleTypePref.collectAsState()
+        val panelNavigation by readerPreferences.panelNavigation.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
         val rotateToFit by rotateToFitPref.collectAsState()
 
@@ -241,6 +242,17 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.navigateToPan,
                     title = stringResource(MR.strings.pref_navigate_pan),
                     visible = navMode != 5,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.panelNavigation,
+                    title = stringResource(MR.strings.pref_panel_navigation),
+                    subtitle = stringResource(MR.strings.pref_panel_navigation_summary),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.panelIsolation,
+                    title = stringResource(MR.strings.pref_panel_isolation),
+                    subtitle = stringResource(MR.strings.pref_panel_isolation_summary),
+                    visible = panelNavigation,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = dualPageSplitPref,
