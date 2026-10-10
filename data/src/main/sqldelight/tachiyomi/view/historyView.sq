@@ -4,13 +4,20 @@ SELECT
     manga.id AS mangaId,
     chapter.id AS chapterId,
     manga.remote_title AS title,
+    chapter.remote_name AS chapterName,
     manga.remote_cover AS thumbnailUrl,
     manga.source_id AS sourceId,
     manga.user_favorite_at IS NOT NULL AS favorite,
     manga.state_cover_last_modified AS coverLastModified,
     chapter.remote_chapter_number AS chapterNumber,
+    chapter.remote_scanlator AS scanlator,
+    chapter.remote_url AS chapterUrl,
+    chapter.user_read AS read,
+    chapter.user_bookmark AS bookmark,
+    chapter.user_last_page_read AS lastPageRead,
     history.read_at AS readAt,
     history.read_duration AS readDuration,
+    excluded_scanlator.scanlator AS excludedScanlator,
     max_read.read_at AS maxReadAt,
     max_read.chapter_id AS maxReadAtChapterId
 FROM manga
@@ -18,6 +25,9 @@ JOIN chapter
 ON manga.id = chapter.manga_id
 JOIN history
 ON chapter.id = history.chapter_id
+LEFT JOIN excluded_scanlator
+ON manga.id = excluded_scanlator.manga_id
+AND chapter.remote_scanlator = excluded_scanlator.scanlator
 JOIN (
     SELECT manga_id, chapter_id, MAX(read_at) AS read_at
     FROM history
@@ -31,17 +41,60 @@ id,
 mangaId,
 chapterId,
 title,
+chapterName,
 thumbnailUrl,
 sourceId,
 favorite,
 coverLastModified,
 chapterNumber,
+scanlator,
+chapterUrl,
+read,
+bookmark,
+lastPageRead,
 readAt,
-readDuration
+readDuration,
+excludedScanlator
 FROM historyView
 WHERE historyView.readAt > 0
 AND maxReadAtChapterId = historyView.chapterId
 AND lower(historyView.title) LIKE ('%' || :query || '%')
+AND (:read IS NULL OR read = :read)
+-- Started means some progress but not finished, Read means finished chapter, thus:
+AND (
+    :started IS NULL
+    OR (:started = 1 AND lastPageRead > 0 AND read = 0)
+    OR (:started = 0 AND lastPageRead = 0 AND read = 0)
+)
+AND (:bookmarked IS NULL OR bookmark = :bookmarked)
+AND (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
+AND (
+    -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
+    :includedEmpty
+    OR EXISTS (
+        SELECT 1 FROM manga_category
+        WHERE manga_category.manga_id = mangaId
+        AND manga_category.category_id IN :includedCategories
+    )
+    OR (0 IN :includedCategories AND NOT EXISTS (
+        SELECT 1 FROM manga_category WHERE manga_category.manga_id = mangaId)
+    )
+)
+AND (
+    -- excludedEmpty being true expresses "don't care" state and bypasses the membership filter
+    :excludedEmpty
+    OR (
+        NOT EXISTS (
+            SELECT 1 FROM manga_category
+            WHERE manga_category.manga_id = mangaId
+            AND manga_category.category_id IN :excludedCategories
+        )
+        AND (
+            0 NOT IN :excludedCategories
+            OR EXISTS (SELECT 1 FROM manga_category WHERE manga_category.manga_id = mangaId)
+        )
+    )
+)
 ORDER BY readAt DESC;
 
 getLatestHistory:
@@ -50,13 +103,20 @@ history.id AS id,
 manga.id AS mangaId,
 chapter.id AS chapterId,
 manga.remote_title AS title,
+chapter.remote_name AS chapterName,
 manga.remote_cover AS thumbnailUrl,
 manga.source_id AS sourceId,
 manga.user_favorite_at IS NOT NULL AS favorite,
 manga.state_cover_last_modified AS coverLastModified,
 chapter.remote_chapter_number AS chapterNumber,
+chapter.remote_scanlator AS scanlator,
+chapter.remote_url AS chapterUrl,
+chapter.user_read AS read,
+chapter.user_bookmark AS bookmark,
+chapter.user_last_page_read AS lastPageRead,
 history.read_at AS readAt,
-history.read_duration AS readDuration
+history.read_duration AS readDuration,
+CAST(NULL AS TEXT) AS excludedScanlator
 FROM history
 JOIN manga
 ON manga.id = history.manga_id

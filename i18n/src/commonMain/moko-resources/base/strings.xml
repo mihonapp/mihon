@@ -921,6 +921,7 @@
     <string name="pref_clear_history">Clear history</string>
     <string name="clear_history_completed">History deleted</string>
     <string name="clear_history_confirmation">Are you sure? All history will be lost.</string>
+    <string name="pref_filter_history_categories_details">Entries in excluded categories will not be shown even if they are also in any included categories.</string>
 
     <!-- Source Screen -->
     <string name="source_empty_screen">No source found</string>
