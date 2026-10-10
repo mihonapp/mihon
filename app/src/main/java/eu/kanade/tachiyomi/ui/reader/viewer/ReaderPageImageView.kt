@@ -11,6 +11,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import androidx.annotation.AttrRes
 import androidx.annotation.CallSuper
@@ -23,6 +24,7 @@ import coil3.asDrawable
 import coil3.dispose
 import coil3.imageLoader
 import coil3.request.CachePolicy
+import coil3.request.Disposable
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.size.Precision
@@ -35,6 +37,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_
 import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonStripImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
@@ -155,18 +158,66 @@ open class ReaderPageImageView @JvmOverloads constructor(
         if (isAnimated) {
             prepareAnimatedImageView()
             setAnimatedImage(source, config)
+        } else if (isWebtoon) {
+            prepareStripImageView()
+            setStripImage(source, config)
         } else {
             prepareNonAnimatedImageView()
             setNonAnimatedImage(source, config)
         }
     }
 
-    fun recycle() = pageView?.let {
-        when (it) {
-            is SubsamplingScaleImageView -> it.recycle()
-            is AppCompatImageView -> it.dispose()
+    fun recycle() {
+        stripRequest?.dispose()
+        stripRequest = null
+        pageView?.let {
+            when (it) {
+                is SubsamplingScaleImageView -> it.recycle()
+                is AppCompatImageView -> it.dispose()
+                is WebtoonStripImageView -> it.recycle()
+            }
+            it.isVisible = false
         }
-        it.isVisible = false
+    }
+
+    private var stripRequest: Disposable? = null
+
+    private fun prepareStripImageView() {
+        if (pageView is WebtoonStripImageView) return
+        removeView(pageView)
+
+        pageView = WebtoonStripImageView(context)
+        addView(pageView, MATCH_PARENT, WRAP_CONTENT)
+    }
+
+    private fun setStripImage(data: BufferedSource, config: Config) {
+        val view = pageView as? WebtoonStripImageView ?: return
+        stripRequest?.dispose()
+        stripRequest = ImageRequest.Builder(context)
+            .data(data)
+            .memoryCachePolicy(CachePolicy.DISABLED)
+            .diskCachePolicy(CachePolicy.DISABLED)
+            .target(
+                onSuccess = { result ->
+                    val image = result as BitmapImage
+                    view.setBitmap(image.bitmap) {
+                        view.isVisible = true
+                        this@ReaderPageImageView.onImageLoaded()
+                    }
+                },
+            )
+            .listener(
+                onError = { _, result ->
+                    onImageLoadError(result.throwable)
+                },
+            )
+            .size(ViewSizeResolver(this@ReaderPageImageView))
+            .precision(Precision.INEXACT)
+            .cropBorders(config.cropBorders)
+            .customDecoder(true)
+            .crossfade(false)
+            .build()
+            .let(context.imageLoader::enqueue)
     }
 
     /**
