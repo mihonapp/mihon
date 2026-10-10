@@ -137,9 +137,12 @@ internal class HttpPageLoader(
      * starting the job has to be atomic, otherwise two chunk chains can both launch the same page.
      */
     private fun launchLoadOnce(page: ReaderPage): Job? {
+        val pageIndex = page.index
+        // A page another chain is already loading still counts towards this chunk, otherwise the chain moves on
+        // and starts the next chunk while it's in flight
+        downloadJobs[pageIndex]?.takeIf { it.isActive }?.let { return it }
         if (page.status !is Page.State.Queue && page.status !is Page.State.Error) return null
 
-        val pageIndex = page.index
         val job = scope.launch(start = CoroutineStart.LAZY) { internalLoadPage(page) }
         val running = downloadJobs.putIfAbsent(pageIndex, job)
         if (running != null) {
