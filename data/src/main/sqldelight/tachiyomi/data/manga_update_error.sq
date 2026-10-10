@@ -1,0 +1,57 @@
+CREATE TABLE manga_update_error(
+    manga_id INTEGER NOT NULL PRIMARY KEY,
+    error_message TEXT,
+    timestamp INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES manga(id) ON DELETE CASCADE
+);
+
+CREATE INDEX manga_update_error_timestamp_index ON manga_update_error(timestamp);
+
+CREATE TRIGGER delete_manga_update_error_on_unfavorite
+AFTER UPDATE OF user_favorite_at ON manga
+WHEN new.user_favorite_at IS NULL
+BEGIN
+    DELETE FROM manga_update_error WHERE manga_id = new.id;
+END;
+
+getAllWithManga:
+SELECT
+    manga_update_error.manga_id,
+    manga_update_error.error_message,
+    manga_update_error.timestamp,
+    manga.id, manga.source_id, manga.remote_url, manga.remote_title, manga.remote_author,
+    manga.remote_artist, manga.remote_description, manga.remote_genre, manga.remote_status,
+    manga.remote_cover, manga.remote_update_strategy, manga.remote_memo, manga.user_favorite_at,
+    manga.user_notes, manga.user_reader_flags, manga.user_chapter_flags,
+    manga.state_chapter_last_update, manga.state_chapter_next_update, manga.state_chapter_fetch_interval,
+    manga.state_cover_last_modified, manga.state_initialized
+FROM manga_update_error
+JOIN manga ON manga_update_error.manga_id = manga.id
+WHERE manga.user_favorite_at IS NOT NULL
+ORDER BY manga_update_error.timestamp DESC;
+
+getCount:
+SELECT COUNT(*)
+FROM manga_update_error
+JOIN manga ON manga_update_error.manga_id = manga.id
+WHERE manga.user_favorite_at IS NOT NULL;
+
+insert:
+INSERT INTO manga_update_error(manga_id, error_message, timestamp)
+SELECT id, :errorMessage, :timestamp
+FROM manga
+WHERE id = :mangaId AND user_favorite_at IS NOT NULL
+ON CONFLICT(manga_id) DO UPDATE SET
+    error_message = excluded.error_message,
+    timestamp = excluded.timestamp;
+
+delete:
+DELETE FROM manga_update_error
+WHERE manga_id = :mangaId;
+
+deleteByMangaIds:
+DELETE FROM manga_update_error
+WHERE manga_id IN :mangaIds;
+
+deleteAll:
+DELETE FROM manga_update_error;
