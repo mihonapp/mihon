@@ -33,6 +33,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed AniList rate limit ([@MajorTanya](https://github.com/MajorTanya)) ([#3942](https://github.com/mihonapp/mihon/pull/3942))
 - Fixed library search when clicking source name in manga info screen ([@choppeh](https://github.com/choppeh)) ([#4002](https://github.com/mihonapp/mihon/pull/4002))
 - Fixed entries being incorrectly marked as duplicates when tracked with some trackers ([@Secozzi](https://github.com/Secozzi)) ([#4008](https://github.com/mihonapp/mihon/pull/4008))
+- Fixed Kitsu search showing novel results ([@MajorTanya](https://github.com/MajorTanya)) ([#4069](https://github.com/mihonapp/mihon/pull/4069))
 
 ## [v0.20.4] - 2026-08-05
 ### Fixed
