@@ -55,13 +55,16 @@ class DownloadManager(
     val queueState
         get() = downloader.queueState
 
+    internal val isDownloadRequested
+        get() = DownloadWorker.isRequestedFlow(context)
+
     val isDownloaderRunning
         get() = DownloadWorker.isRunningFlow(context)
 
     /**
      * Starts the download worker, which runs the downloader.
      */
-    fun startDownloads() {
+    fun startDownloads(): Unit = synchronized(DownloadWorker.session.lock) {
         if (downloader.isRunning) return
 
         DownloadWorker.start(context)
@@ -70,7 +73,8 @@ class DownloadManager(
     /**
      * Tells the downloader to pause downloads.
      */
-    fun pauseDownloads() {
+    fun pauseDownloads(): Unit = synchronized(DownloadWorker.session.lock) {
+        DownloadWorker.stop(context)
         downloader.pause()
         downloader.stop()
     }
@@ -78,7 +82,8 @@ class DownloadManager(
     /**
      * Empties the download queue.
      */
-    fun clearQueue() {
+    fun clearQueue(): Unit = synchronized(DownloadWorker.session.lock) {
+        DownloadWorker.stop(context)
         downloader.clearQueue()
         downloader.stop()
     }
@@ -296,7 +301,7 @@ class DownloadManager(
         }
     }
 
-    private fun removeFromDownloadQueue(chapters: List<Chapter>) {
+    private fun removeFromDownloadQueue(chapters: List<Chapter>): Unit = synchronized(DownloadWorker.session.lock) {
         val wasRunning = downloader.isRunning
         if (wasRunning) {
             downloader.pause()

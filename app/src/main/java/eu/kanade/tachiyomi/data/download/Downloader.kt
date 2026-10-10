@@ -18,15 +18,19 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.DiskUtil.NOMEDIA_FILE
 import eu.kanade.tachiyomi.util.storage.saveTo
+import eu.kanade.tachiyomi.util.system.activeNetworkState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +45,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Semaphore
@@ -51,7 +56,6 @@ import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.launchNow
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
@@ -97,6 +101,7 @@ class Downloader(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     // Kept when canceled, so the next job can wait for it to finish
+    @Volatile
     private var downloaderJob: Job? = null
 
     /**
@@ -111,12 +116,15 @@ class Downloader(
     @Volatile
     var isPaused: Boolean = false
 
-    init {
-        launchNow {
-            val chapters = async { store.restore() }
-            addAllToQueue(chapters.await())
-        }
+    @Volatile
+    internal var isWaitingForNetwork: Boolean = false
+        private set
+
+    private val restoreJob = scope.async {
+        addAllToQueue(store.restore())
     }
+
+    internal suspend fun awaitQueueRestored() = restoreJob.await()
 
     /**
      * Starts the downloader. It doesn't do anything if it's already running or there isn't anything
@@ -124,26 +132,25 @@ class Downloader(
      *
      * @return true if the downloader is started, false otherwise.
      */
-    fun start(): Boolean {
+    fun start(): Boolean = synchronized(DownloadWorker.session.lock) {
         if (isRunning || queueState.value.isEmpty()) {
             return false
         }
 
-        val pending = queueState.value.filter { it.status != Download.State.DOWNLOADED }
-        pending.forEach { if (it.status != Download.State.QUEUE) it.status = Download.State.QUEUE }
-
         isPaused = false
+        isWaitingForNetwork = false
 
         launchDownloaderJob()
 
-        return pending.isNotEmpty()
+        return true
     }
 
     /**
      * Stops the downloader.
      */
-    fun stop(reason: String? = null) {
+    fun stop(reason: String? = null): Unit = synchronized(DownloadWorker.session.lock) {
         cancelDownloaderJob()
+        isWaitingForNetwork = false
         queueState.value
             .filter { it.status == Download.State.DOWNLOADING }
             .forEach { it.status = Download.State.ERROR }
@@ -165,7 +172,7 @@ class Downloader(
     /**
      * Pauses the downloader
      */
-    fun pause() {
+    fun pause(): Unit = synchronized(DownloadWorker.session.lock) {
         cancelDownloaderJob()
         queueState.value
             .filter { it.status == Download.State.DOWNLOADING }
@@ -174,10 +181,23 @@ class Downloader(
     }
 
     /**
+     * Pauses active downloads while the worker waits for network recovery.
+     */
+    fun pauseForNetwork(reason: String): Unit = synchronized(DownloadWorker.session.lock) {
+        cancelDownloaderJob()
+        queueState.value
+            .filter { it.status == Download.State.DOWNLOADING }
+            .forEach { it.status = Download.State.QUEUE }
+        isWaitingForNetwork = queueState.value.isNotEmpty()
+        notifier.onWarning(reason)
+    }
+
+    /**
      * Removes everything from the queue.
      */
-    fun clearQueue() {
+    fun clearQueue(): Unit = synchronized(DownloadWorker.session.lock) {
         cancelDownloaderJob()
+        isWaitingForNetwork = false
 
         internalClearQueue()
         notifier.dismissProgress()
@@ -186,14 +206,27 @@ class Downloader(
     /**
      * Prepares the subscriptions to start downloading.
      */
+    @OptIn(DelicateCoroutinesApi::class)
     private fun launchDownloaderJob() {
         if (isRunning) return
 
         val previousJob = downloaderJob
-        downloaderJob = scope.launch {
-            // Page writes block, so a canceled job can still be writing the pages this one would start on. Not
-            // cancelable, so a job canceled while waiting still finishes after the one before it.
+        // Even a job canceled before dispatch must enter the join, so its successor waits for earlier page writes too.
+        downloaderJob = scope.launch(start = CoroutineStart.ATOMIC) {
+            val owner = currentCoroutineContext().job
             withContext(NonCancellable) { previousJob?.join() }
+
+            synchronized(DownloadWorker.session.lock) {
+                if (downloaderJob !== owner || !owner.isActive) return@launch
+                queueState.value
+                    .filter { it.status == Download.State.DOWNLOADED }
+                    .forEach(::removeFromQueue)
+                if (queueState.value.isEmpty()) {
+                    stop()
+                    return@launch
+                }
+                queueState.value.forEach { it.status = Download.State.QUEUE }
+            }
 
             val activeDownloadsFlow = combine(
                 queueState,
@@ -242,7 +275,7 @@ class Downloader(
 
                     val sourcesToStart = activeSources.filter { it !in sourceJobs }
                     sourcesToStart.forEach { source ->
-                        sourceJobs[source] = launchSourceJob(source, downloadJobs)
+                        sourceJobs[source] = launchSourceJob(source, downloadJobs, owner)
                     }
                 }
             }
@@ -257,6 +290,7 @@ class Downloader(
     private fun CoroutineScope.launchSourceJob(
         source: HttpSource,
         downloadJobs: MutableMap<Download, Job>,
+        owner: Job,
     ) = launchIO {
         val slots = Semaphore(downloadPreferences.parallelPageLimit.get())
         while (true) {
@@ -272,7 +306,7 @@ class Downloader(
                 .filterNotNull()
                 .first()
             val pagesStarted = CompletableDeferred<Unit>()
-            val job = launchDownloadJob(download, slots, pagesStarted)
+            val job = launchDownloadJob(download, slots, pagesStarted, owner)
             downloadJobs[download] = job
             job.invokeOnCompletion { downloadJobs.remove(download, job) }
             pagesStarted.await()
@@ -283,26 +317,49 @@ class Downloader(
         download: Download,
         slots: Semaphore,
         pagesStarted: CompletableDeferred<Unit>,
+        owner: Job,
     ) = launchIO {
         try {
             downloadChapter(download, slots, pagesStarted)
 
-            // Remove successful download from queue
-            if (download.status == Download.State.DOWNLOADED) {
-                removeFromQueue(download)
-            }
-            if (areAllDownloadsFinished()) {
-                stop()
+            synchronized(DownloadWorker.session.lock) {
+                if (downloaderJob !== owner || !owner.isActive) return@launchIO
+                // Remove successful download from queue
+                if (download.status == Download.State.DOWNLOADED) {
+                    removeFromQueue(download)
+                }
+                if (pauseIfNetworkUnavailable(download)) return@launchIO
+                if (areAllDownloadsFinished()) {
+                    stop()
+                }
             }
         } catch (e: Throwable) {
             if (e is CancellationException) throw e
-            logcat(LogPriority.ERROR, e)
-            notifier.onError(e.message)
-            stop()
+            synchronized(DownloadWorker.session.lock) {
+                if (downloaderJob !== owner || !owner.isActive) return@launchIO
+                if (pauseIfNetworkUnavailable(download)) return@launchIO
+                logcat(LogPriority.ERROR, e)
+                notifier.onError(e.message)
+                stop()
+            }
         } finally {
             // Also when the chapter fails before its pages, so the source moves on to the next one
             pagesStarted.complete(Unit)
         }
+    }
+
+    private fun pauseIfNetworkUnavailable(download: Download): Boolean {
+        if (queueState.value.isEmpty()) return false
+        val networkStatus = context.activeNetworkState()
+            .toDownloadNetworkStatus(downloadPreferences.downloadOnlyOverWifi.get())
+        val reason = when (networkStatus) {
+            DownloadNetworkStatus.Available -> return false
+            DownloadNetworkStatus.NoNetwork -> context.stringResource(MR.strings.download_notifier_no_network)
+            DownloadNetworkStatus.NoWifi -> context.stringResource(MR.strings.download_notifier_text_only_wifi)
+        }
+        if (download.status == Download.State.ERROR) download.status = Download.State.QUEUE
+        pauseForNetwork(reason)
+        return true
     }
 
     /**
@@ -428,6 +485,7 @@ class Downloader(
                             try {
                                 page.imageUrl = download.source.getImageUrl(page)
                             } catch (e: Throwable) {
+                                if (e is CancellationException) throw e
                                 page.status = Page.State.Error(e)
                             }
                         }
@@ -627,12 +685,16 @@ class Downloader(
         tmpDir: UniFile,
     ): Boolean {
         // Page list hasn't been initialized
-        val downloadPageCount = download.pages?.size ?: return false
-
-        // Ensure that all pages have been downloaded
-        if (download.downloadedImages != downloadPageCount) {
+        val downloadPageCount = download.pages?.size
+        if (downloadPageCount == null) {
+            logcat(LogPriority.ERROR) {
+                "Download validation failed: page list not initialized for ${download.manga.title} - " +
+                    download.chapter.name
+            }
             return false
         }
+
+        val downloadedImages = download.downloadedImages
 
         // Ensure that the chapter folder has all the pages
         val downloadedImagesCount = tmpDir.listFiles().orEmpty().count {
@@ -645,7 +707,16 @@ class Downloader(
                 else -> true
             }
         }
-        return downloadedImagesCount == downloadPageCount
+
+        val isSuccessful = downloadedImages == downloadPageCount && downloadedImagesCount == downloadPageCount
+        if (!isSuccessful) {
+            logcat(LogPriority.ERROR) {
+                "Download validation failed for ${download.manga.title} - ${download.chapter.name}: " +
+                    "readyPages=$downloadedImages/$downloadPageCount, " +
+                    "files=$downloadedImagesCount/$downloadPageCount"
+            }
+        }
+        return isSuccessful
     }
 
     /**
@@ -772,7 +843,7 @@ class Downloader(
         }
     }
 
-    fun updateQueue(downloads: List<Download>) {
+    fun updateQueue(downloads: List<Download>): Unit = synchronized(DownloadWorker.session.lock) {
         val wasRunning = isRunning
 
         if (downloads.isEmpty()) {
