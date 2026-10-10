@@ -40,6 +40,7 @@ android {
         versionCode = 35
         versionName = "0.20.4"
 
+        buildConfigField("String", "APP_NAME", "\"Mihon\"")
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
