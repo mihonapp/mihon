@@ -66,6 +66,7 @@
     <string name="action_sort_last_read">Last read</string>
     <string name="action_sort_last_manga_update">Last update check</string>
     <string name="action_sort_unread_count">Unread count</string>
+    <string name="action_sort_download_count">Download count</string>
     <string name="action_sort_next_updated">Next expected update</string>
     <string name="action_sort_latest_chapter">Latest chapter</string>
     <string name="action_sort_chapter_fetch_date">Chapter fetch date</string>
