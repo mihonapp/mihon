@@ -160,7 +160,8 @@ class ComickApi(
     suspend fun search(search: String): List<TrackSearch> {
         return withContext(Dispatchers.IO) {
             val url = "$RESOURCE_URL/titles".toUri().buildUpon()
-                .appendQueryParameter("q", search)
+                // Comick throws a 400 when the query is over 100 characters
+                .appendQueryParameter("q", search.take(100))
                 .appendQueryParameter("media_type", "manga")
                 .appendQueryParameter("limit", "20")
                 .build()
