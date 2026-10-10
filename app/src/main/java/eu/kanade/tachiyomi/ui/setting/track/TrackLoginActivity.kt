@@ -5,9 +5,10 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.data.track.comick.ComickMissingScopesException
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 
 class TrackLoginActivity : BaseOAuthLoginActivity() {
@@ -69,7 +70,9 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
             try {
                 trackerManager.comick.login(code)
             } catch (e: ComickMissingScopesException) {
-                withUIContext { this@TrackLoginActivity.toast(e.message, Toast.LENGTH_LONG) }
+                withContext(Dispatchers.Main) {
+                    this@TrackLoginActivity.toast(e.message, Toast.LENGTH_LONG)
+                }
                 return
             }
         } else {

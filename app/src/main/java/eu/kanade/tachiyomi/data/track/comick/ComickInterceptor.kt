@@ -11,6 +11,7 @@ class ComickInterceptor(private val comick: Comick) : Interceptor {
 
     private val json: Json by injectLazy()
 
+    @Volatile
     private var oauth: ComickOAuth? = comick.restoreToken()
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -19,14 +20,19 @@ class ComickInterceptor(private val comick: Comick) : Interceptor {
         var currentAuth = oauth ?: throw Exception("Not authenticated with Comick")
 
         if (currentAuth.isExpired()) {
-            val response = chain.proceed(ComickApi.refreshTokenRequest(currentAuth.refreshToken))
-            if (response.isSuccessful) {
-                currentAuth = with(json) {
-                    response.parseAs<ComickOAuth>()
+            currentAuth = synchronized(this) {
+                val latest = oauth ?: throw Exception("Not authenticated with Comick")
+                if (!latest.isExpired()) return@synchronized latest
+
+                val response = chain.proceed(ComickApi.refreshTokenRequest(currentAuth.refreshToken))
+                if (response.isSuccessful) {
+                    with(json) {
+                        response.parseAs<ComickOAuth>()
+                    }.also(::setAuth)
+                } else {
+                    response.close()
+                    latest
                 }
-                setAuth(currentAuth)
-            } else {
-                response.close()
             }
         }
 

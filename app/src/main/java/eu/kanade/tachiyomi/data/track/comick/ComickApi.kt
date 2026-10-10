@@ -20,6 +20,8 @@ import eu.kanade.tachiyomi.network.interceptor.rateLimit
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.PkceUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -30,7 +32,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 import java.security.SecureRandom
 import java.util.Base64
@@ -67,7 +68,7 @@ class ComickApi(
         .build()
 
     suspend fun addLibManga(track: Track): Track {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val url = "$RESOURCE_URL/me/library".toUri().buildUpon()
                 .appendPath(track.remote_id.toHid())
                 .build()
@@ -95,7 +96,7 @@ class ComickApi(
     }
 
     suspend fun deleteLibManga(track: DomainTrack) {
-        withIOContext {
+        withContext(Dispatchers.IO) {
             val url = "$RESOURCE_URL/me/library".toUri().buildUpon()
                 .appendPath(track.remoteId.toHid())
                 .build()
@@ -107,7 +108,7 @@ class ComickApi(
     }
 
     suspend fun findLibManga(track: Track): Track? {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val url = "$RESOURCE_URL/me/library".toUri().buildUpon()
                 .appendPath(track.remote_id.toHid())
                 .build()
@@ -128,7 +129,7 @@ class ComickApi(
     }
 
     suspend fun updateLibManga(track: Track): Track {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val url = "$RESOURCE_URL/me/library".toUri().buildUpon()
                 .appendPath(track.remote_id.toHid())
                 .build()
@@ -157,7 +158,7 @@ class ComickApi(
     }
 
     suspend fun search(search: String): List<TrackSearch> {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val url = "$RESOURCE_URL/titles".toUri().buildUpon()
                 .appendQueryParameter("q", search)
                 .appendQueryParameter("media_type", "manga")
@@ -175,7 +176,7 @@ class ComickApi(
     }
 
     suspend fun getMangaDetails(hid: String): TrackSearch? {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val url = "$RESOURCE_URL/titles".toUri().buildUpon()
                 .appendPath(hid)
                 .build()
@@ -198,7 +199,7 @@ class ComickApi(
     }
 
     suspend fun getCurrentUser(): ComickUser {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val url = "$RESOURCE_URL/me"
 
             with(json) {
@@ -213,7 +214,7 @@ class ComickApi(
      * @throws ComickMissingScopesException Thrown when user does not grant offline_access or library:write
      */
     suspend fun getAccessToken(code: String): ComickOAuth {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val formBody = FormBody.Builder()
                 .add("grant_type", "authorization_code")
                 .add("client_id", CLIENT_ID)
