@@ -26,6 +26,7 @@ internal class HttpPageLoader(
     private val source: HttpSource,
     private val chapterCache: ChapterCache,
     private val appScope: CoroutineScope,
+    private val canLoadAhead: () -> Boolean,
 ) : PageLoader() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -163,6 +164,8 @@ internal class HttpPageLoader(
         onNewChunks: (List<List<ReaderPage>>) -> Unit = {},
     ) {
         val items = this
+        // When loading ahead isn't allowed, only the pages around the one being read load
+        val window = if (canLoadAhead()) items.indices else (index - 1)..(index + LIMITED_PAGES_AHEAD)
         val chunks = buildList {
             items.getOrNull(index)?.let(::add)
             items.getOrNull(index - 1)?.let(::add)
@@ -175,6 +178,7 @@ internal class HttpPageLoader(
                 items.subList(0, index - 1).reversed().let(::addAll)
             }
         }
+            .filter { it.index in window }
             .rollingChunked(chunkStartSize, chunkEndSize)
             .also(onNewChunks)
 
@@ -254,3 +258,5 @@ internal class HttpPageLoader(
         }
     }
 }
+
+private const val LIMITED_PAGES_AHEAD = 4
