@@ -343,6 +343,12 @@ class LibraryViewModel(
                 LibrarySort.Type.TotalChapters -> {
                     manga1.libraryManga.totalChapters.compareTo(manga2.libraryManga.totalChapters)
                 }
+                LibrarySort.Type.DownloadCount -> when {
+                    manga1.downloadCount == manga2.downloadCount -> 0
+                    manga1.downloadCount == 0 -> if (this.isAscending) 1 else -1
+                    manga2.downloadCount == 0 -> if (this.isAscending) -1 else 1
+                    else -> manga1.downloadCount.compareTo(manga2.downloadCount)
+                }
                 LibrarySort.Type.LatestChapter -> {
                     compareValues(manga1.libraryManga.latestUpload, manga2.libraryManga.latestUpload)
                 }
