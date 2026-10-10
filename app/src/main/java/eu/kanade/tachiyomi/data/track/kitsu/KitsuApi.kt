@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.kitsu.dto.KitsuOAuth
 import eu.kanade.tachiyomi.data.track.kitsu.dto.KitsuUser
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
@@ -14,6 +15,7 @@ import eu.kanade.tachiyomi.network.dataOrElse
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
+import logcat.LogPriority
 import mihon.graphql.kitsu.KitsuAddLibMangaMutation
 import mihon.graphql.kitsu.KitsuDeleteLibEntryMutation
 import mihon.graphql.kitsu.KitsuFindLibMangaQuery
@@ -182,6 +184,12 @@ class KitsuApi(
 
     suspend fun login(username: String, password: String): KitsuOAuth {
         return withIOContext {
+            try {
+                client.newCall(GET("https://kitsu.app/")).awaitSuccess()
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { "Kitsu: Failed to pre-clear Cloudflare" }
+            }
+
             val formBody: RequestBody = FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
