@@ -30,6 +30,11 @@ class BasePreferences(
         false,
     )
 
+    val skippedUpdateVersion: Preference<String> = preferenceStore.getString(
+        Preference.appStateKey("skipped_update_version"),
+        "",
+    )
+
     enum class ExtensionInstaller(val titleRes: StringResource, val requiresSystemPermission: Boolean) {
         LEGACY(MR.strings.ext_installer_legacy, true),
         PACKAGEINSTALLER(MR.strings.ext_installer_packageinstaller, true),
