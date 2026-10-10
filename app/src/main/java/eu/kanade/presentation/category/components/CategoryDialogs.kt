@@ -191,11 +191,13 @@ fun ChangeCategoryDialog(
     onDismissRequest: () -> Unit,
     onEditCategories: () -> Unit,
     onConfirm: (List<Long>, List<Long>) -> Unit,
+    showEditButton: Boolean = true,
 ) {
     if (initialSelection.isEmpty()) {
         AlertDialog(
             onDismissRequest = onDismissRequest,
             confirmButton = {
+                if(showEditButton){
                 tachiyomi.presentation.core.components.material.TextButton(
                     onClick = {
                         onDismissRequest()
@@ -203,6 +205,14 @@ fun ChangeCategoryDialog(
                     },
                 ) {
                     Text(text = stringResource(MR.strings.action_edit_categories))
+                }
+                }
+                tachiyomi.presentation.core.components.material.TextButton(
+                    onClick = {
+                        onDismissRequest()
+                    },
+                ) {
+                    Text(text = stringResource(MR.strings.empty_screen))
                 }
             },
             title = {
@@ -219,11 +229,15 @@ fun ChangeCategoryDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             Row {
-                tachiyomi.presentation.core.components.material.TextButton(onClick = {
-                    onDismissRequest()
-                    onEditCategories()
-                }) {
-                    Text(text = stringResource(MR.strings.action_edit))
+                if (showEditButton) {
+                    tachiyomi.presentation.core.components.material.TextButton(
+                        onClick = {
+                            onDismissRequest()
+                            onEditCategories()
+                        }
+                    ) {
+                        Text(text = stringResource(MR.strings.action_edit))
+                    }
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 tachiyomi.presentation.core.components.material.TextButton(onClick = onDismissRequest) {
