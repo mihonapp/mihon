@@ -9,7 +9,7 @@ data class Chapter(
     val mangaId: Long,
     val read: Boolean,
     val bookmark: Boolean,
-    val lastPageRead: Long,
+    val lastPageRead: Int,
     val dateFetch: Instant,
     val sourceOrder: Long,
     val url: String,

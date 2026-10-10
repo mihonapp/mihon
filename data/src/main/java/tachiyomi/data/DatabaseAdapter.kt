@@ -35,3 +35,10 @@ object MemoColumnAdapter : ColumnAdapter<JsonObject, ByteArray> {
     override fun decode(databaseValue: ByteArray): JsonObject = databaseValue.toJsonObject()
     override fun encode(value: JsonObject): ByteArray = value.toByteArray()
 }
+
+// SQLite has one integer type, so a column holding a value that cannot exceed Int range narrows
+// here rather than at every call site that reads or writes it.
+object IntColumnAdapter : ColumnAdapter<Int, Long> {
+    override fun decode(databaseValue: Long): Int = databaseValue.toInt()
+    override fun encode(value: Int): Long = value.toLong()
+}

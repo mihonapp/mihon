@@ -12,7 +12,7 @@ data class UpdatesWithRelations(
     val chapterUrl: String,
     val read: Boolean,
     val bookmark: Boolean,
-    val lastPageRead: Long,
+    val lastPageRead: Int,
     val sourceId: Long,
     val dateFetch: Instant,
     val coverData: MangaCover,

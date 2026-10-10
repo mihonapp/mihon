@@ -164,7 +164,7 @@ class ChapterRepositoryImpl(
         remoteMemo: JsonObject,
         userRead: Boolean,
         userBookmark: Boolean,
-        userLastPageRead: Long,
+        userLastPageRead: Int,
         stateDateFetch: Instant,
     ): Chapter = Chapter(
         id = id,
