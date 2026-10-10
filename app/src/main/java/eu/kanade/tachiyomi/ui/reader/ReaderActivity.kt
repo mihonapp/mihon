@@ -29,6 +29,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -48,6 +49,7 @@ import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
 import eu.kanade.presentation.reader.OrientationSelectDialog
+import eu.kanade.presentation.reader.PageJumpDialog
 import eu.kanade.presentation.reader.ReaderContentOverlay
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
@@ -275,7 +277,7 @@ class ReaderActivity : BaseActivity() {
         }
 
         val onDismissRequest = viewModel::closeDialog
-        when (state.dialog) {
+        when (val dialog = state.dialog) {
             is ReaderViewModel.Dialog.Loading -> {
                 AlertDialog(
                     onDismissRequest = {},
@@ -328,6 +330,30 @@ class ReaderActivity : BaseActivity() {
                     onShare = viewModel::shareImage,
                     onSave = viewModel::saveImage,
                 )
+            }
+            is ReaderViewModel.Dialog.PageJump -> {
+                if (state.currentChapter === dialog.chapter && state.totalPages == dialog.totalPages) {
+                    PageJumpDialog(
+                        currentPage = dialog.currentPage,
+                        totalPages = dialog.totalPages,
+                        onConfirm = { pageIndex ->
+                            val activeState = viewModel.state.value
+                            if (activeState.dialog == dialog) {
+                                viewModel.closeDialog()
+                                if (
+                                    activeState.currentChapter === dialog.chapter &&
+                                    activeState.totalPages == dialog.totalPages &&
+                                    pageIndex in 0 until activeState.totalPages
+                                ) {
+                                    moveToPageIndex(pageIndex)
+                                }
+                            }
+                        },
+                        onDismissRequest = onDismissRequest,
+                    )
+                } else {
+                    LaunchedEffect(dialog) { viewModel.closeDialog() }
+                }
             }
             null -> {}
         }
@@ -495,6 +521,7 @@ class ReaderActivity : BaseActivity() {
             enabledPrevious = state.viewerChapters?.prevChapter != null,
             currentPage = state.currentPage,
             totalPages = state.totalPages,
+            onClickCurrentPage = viewModel::openPageJumpDialog,
             onPageIndexChange = {
                 isScrollingThroughPages = true
                 moveToPageIndex(it)
