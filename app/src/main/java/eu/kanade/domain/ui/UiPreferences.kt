@@ -42,6 +42,11 @@ class UiPreferences(
 
     val imagesInDescription: Preference<Boolean> = preferenceStore.getBoolean("pref_render_images_description", true)
 
+    val volumeKeysNavigation: Preference<Boolean> = preferenceStore.getBoolean("pref_volume_keys_navigation", true)
+
+    val volumeKeysNavigationInverted: Preference<Boolean> =
+        preferenceStore.getBoolean("pref_volume_keys_navigation_inverted", false)
+
     companion object {
         fun dateFormat(format: String): DateTimeFormatter = when (format) {
             "" -> DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)

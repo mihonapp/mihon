@@ -664,6 +664,8 @@
     <string name="track_error">%1$s 发生错误：%2$s</string>
     <string name="information_required_plain">*必填</string>
     <string name="pref_hide_in_library_items">隐藏已添加到书架的作品</string>
+    <string name="pref_volume_keys_navigation">音量键翻页</string>
+    <string name="pref_volume_keys_navigation_summary">在阅读器之外使用音量键翻阅列表</string>
     <string name="action_copy_to_clipboard">复制到剪贴板</string>
     <string name="action_update_category">更新分类</string>
     <string name="split_tall_images">分割长图</string>
