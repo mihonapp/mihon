@@ -33,6 +33,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed AniList rate limit ([@MajorTanya](https://github.com/MajorTanya)) ([#3942](https://github.com/mihonapp/mihon/pull/3942))
 - Fixed library search when clicking source name in manga info screen ([@choppeh](https://github.com/choppeh)) ([#4002](https://github.com/mihonapp/mihon/pull/4002))
 - Fixed entries being incorrectly marked as duplicates when tracked with some trackers ([@Secozzi](https://github.com/Secozzi)) ([#4008](https://github.com/mihonapp/mihon/pull/4008))
+- Fixed tracker start date being off by a day when adding tracking to an entry with read history in some timezones ([@hazptr](https://github.com/hazptr)) ([#4049](https://github.com/mihonapp/mihon/pull/4049))
 
 ## [v0.20.4] - 2026-08-05
 ### Fixed
