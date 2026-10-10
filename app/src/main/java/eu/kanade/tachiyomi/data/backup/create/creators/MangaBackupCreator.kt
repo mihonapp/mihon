@@ -60,6 +60,7 @@ class MangaBackupCreator(
         }
 
         if (options.history) {
+            mangaObject.lastReadAt = manga.lastReadAt
             val historyByMangaId = getHistory.await(manga.id)
             if (historyByMangaId.isNotEmpty()) {
                 val chapterUrlsById = chapterRepository.getChapterByMangaId(manga.id).associate { it.id to it.url }

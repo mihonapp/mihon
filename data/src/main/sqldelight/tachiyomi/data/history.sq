@@ -37,15 +37,30 @@ removeResettedHistory:
 DELETE FROM history
 WHERE read_at = 0;
 
-upsert:
-INSERT INTO history(manga_id, chapter_id, read_at, read_duration)
-SELECT manga_id, id, :readAt, :readDuration
-FROM chapter
-WHERE id = :chapterId
-ON CONFLICT(chapter_id) DO UPDATE SET
-    read_at = excluded.read_at,
-    read_duration = read_duration + excluded.read_duration;
+upsert {
+    INSERT INTO history(manga_id, chapter_id, read_at, read_duration)
+    SELECT manga_id, id, :readAt, :readDuration
+    FROM chapter
+    WHERE id = :chapterId
+    ON CONFLICT(chapter_id) DO UPDATE SET
+        read_at = excluded.read_at,
+        read_duration = read_duration + excluded.read_duration;
+
+    UPDATE manga
+    SET user_last_read_at = max(user_last_read_at, coalesce(:readAt, 0))
+    WHERE id = (SELECT manga_id FROM chapter WHERE id = :chapterId);
+}
 
 getReadDuration:
 SELECT coalesce(sum(read_duration), 0)
 FROM history;
+
+updateLastReadFromHistory:
+UPDATE manga
+SET user_last_read_at = coalesce((
+    SELECT max(H.read_at) FROM history AS H
+    JOIN chapter AS C ON C.id = H.chapter_id
+    LEFT JOIN excluded_scanlator AS ES ON ES.manga_id = H.manga_id AND ES.scanlator = C.remote_scanlator
+    WHERE H.manga_id = manga.id AND ES.scanlator IS NULL
+), 0)
+WHERE (:mangaId IS NULL OR id = :mangaId);
