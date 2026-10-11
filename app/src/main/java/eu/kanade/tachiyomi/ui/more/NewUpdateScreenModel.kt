@@ -12,6 +12,7 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -38,6 +39,7 @@ class NewUpdateScreenModel(
     @Assisted private val downloadLink: String,
     private val context: Context,
     private val network: NetworkHelper,
+    private val preferences: BasePreferences,
 ) : ViewModel() {
 
     val state: StateFlow<NewUpdateScreenModel.State>
@@ -94,6 +96,11 @@ class NewUpdateScreenModel(
 
         val response = network.client.newCachelessCallWithProgress(GET(downloadLink), progressListener).awaitSuccess()
         response.body.source().saveTo(apkFile)
+    }
+
+    fun skipUpdate(versionName: String) {
+        downloadJob?.cancel()
+        preferences.skippedAppUpdate.set(versionName)
     }
 
     fun installUpdate() {

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,24 +32,25 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import tachiyomi.core.common.preference.TriState
+import tachiyomi.core.common.util.lang.SubscriberGate
+import tachiyomi.core.common.util.lang.pausedWhileUnsubscribed
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
@@ -81,6 +83,8 @@ class UpdatesViewModel(
     private val updatesPreferences: UpdatesPreferences,
 ) : ViewModel() {
 
+    private val subscriberGate = SubscriberGate()
+
     val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
     private val _events: Channel<Event> = Channel(Int.MAX_VALUE)
@@ -94,7 +98,11 @@ class UpdatesViewModel(
 
     private val dialog = MutableStateFlow<Dialog?>(null)
 
-    private val downloadStates = MutableStateFlow(emptyMap<Long, DownloadProgress>())
+    private val downloadStates = MutableStateFlow(emptyMap<Long, Download.State>())
+
+    // Progress ticks often, so only the download indicators that read it recompose instead of every tick rebuilding
+    // the list
+    private val downloadProgress = mutableStateMapOf<Long, Int>()
 
     // A finished chapter leaves the queue, and its last status change can be lost with it, so its state is left to
     // the queried item once it's no longer queued
@@ -105,9 +113,14 @@ class UpdatesViewModel(
 
     init {
         viewModelScope.launch {
-            merge(downloadManager.statusFlow(), downloadManager.progressFlow())
+            downloadManager.statusFlow()
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(this@UpdatesViewModel::updateDownloadState)
+        }
+        viewModelScope.launch {
+            downloadManager.progressFlow()
+                .catch { logcat(LogPriority.ERROR, it) }
+                .collect { downloadProgress[it.chapter.id] = it.progress }
         }
     }
 
@@ -119,8 +132,13 @@ class UpdatesViewModel(
             if (download.status == Download.State.NOT_DOWNLOADED || download.status == Download.State.DOWNLOADED) {
                 it - chapterId
             } else {
-                it + (chapterId to DownloadProgress(download.status, download.progress))
+                it + (chapterId to download.status)
             }
+        }
+        if (download.status == Download.State.DOWNLOADING) {
+            downloadProgress[chapterId] = download.progress
+        } else {
+            downloadProgress.remove(chapterId)
         }
     }
 
@@ -157,8 +175,8 @@ class UpdatesViewModel(
                     excludedCategories = it.filterExcludedCategories,
                 ).distinctUntilChanged()
             },
-        downloadCache.changes,
-        downloadManager.queueState,
+        downloadCache.changes.pausedWhileUnsubscribed(),
+        downloadManager.queueState.pausedWhileUnsubscribed(),
         // needed for Kotlin filters (downloaded)
         getUpdatesItemPreferenceFlow().distinctUntilChanged { old, new ->
             old.filterDownloaded == new.filterDownloaded
@@ -169,12 +187,12 @@ class UpdatesViewModel(
             .applyFilters(itemPreferences)
     }
         .flowOn(Dispatchers.Default)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), null)
+        .stateIn(viewModelScope + subscriberGate, SharingStarted.Eagerly, null)
 
     val state: StateFlow<State> = combine(
         updateItems,
         selectedChapterIds,
-        queuedDownloadStates,
+        queuedDownloadStates.pausedWhileUnsubscribed(),
         dialog,
         hasActiveFilters,
     ) { items, selectedIds, downloads, dialog, hasActiveFilters ->
@@ -182,18 +200,13 @@ class UpdatesViewModel(
             isLoading = items == null,
             hasActiveFilters = hasActiveFilters,
             items = items.orEmpty().map { item ->
-                val download = downloads[item.update.chapterId]
+                val downloadState = downloads[item.update.chapterId]
                 item.copy(
                     selected = item.update.chapterId in selectedIds,
-                    downloadStateProvider = if (download != null) {
-                        { download.status }
+                    downloadStateProvider = if (downloadState != null) {
+                        { downloadState }
                     } else {
                         item.downloadStateProvider
-                    },
-                    downloadProgressProvider = if (download != null) {
-                        { download.progress }
-                    } else {
-                        item.downloadProgressProvider
                     },
                 )
             },
@@ -201,7 +214,7 @@ class UpdatesViewModel(
         )
     }
         .flowOn(Dispatchers.Default)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
+        .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State())
 
     private fun List<UpdatesItem>.applyFilters(
         preferences: ItemPreferences,
@@ -239,7 +252,7 @@ class UpdatesViewModel(
                 UpdatesItem(
                     update = update,
                     downloadStateProvider = { downloadState },
-                    downloadProgressProvider = { activeDownload?.progress ?: 0 },
+                    downloadProgressProvider = { downloadProgress[update.chapterId] ?: 0 },
                 )
             }
     }
@@ -481,8 +494,6 @@ class UpdatesViewModel(
         val filterIncludedCategories: List<Long>,
         val filterExcludedCategories: List<Long>,
     )
-
-    private data class DownloadProgress(val status: Download.State, val progress: Int)
 
     @Immutable
     data class State(

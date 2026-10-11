@@ -225,13 +225,19 @@ class SyncChaptersWithSource(
             added = toAdd,
             updated = updatedChapters,
         )
-        updateManga.awaitUpdateFetchInterval(manga, timeZone, now, fetchWindow)
+
+        val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
+
+        // A first fetch lists the back catalogue, and chapters coming back under a deleted number were out already
+        val foundRelease = dbChapters.isNotEmpty() &&
+            toAdd.any { chapter ->
+                chapter.scanlator !in excludedScanlators &&
+                    !(chapter.isRecognizedNumber && chapter.chapterNumber in deletedChapterNumbers)
+            }
 
         // Set this manga as updated since chapters were changed
         // Note that last_update actually represents last time the chapter list changed at all
-        updateManga.awaitUpdateLastUpdate(manga.id)
-
-        val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
+        updateManga.awaitUpdateFetchIntervalAndLastUpdate(manga, timeZone, now, fetchWindow, foundRelease)
 
         return added.filterNot { it.url in changedOrDuplicateReadUrls || it.scanlator in excludedScanlators }
     }
