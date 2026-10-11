@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,9 +38,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -64,7 +63,6 @@ import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.service.UpdatesPreferences
 import kotlin.time.Clock
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
@@ -100,7 +98,11 @@ class UpdatesViewModel(
 
     private val dialog = MutableStateFlow<Dialog?>(null)
 
-    private val downloadStates = MutableStateFlow(emptyMap<Long, DownloadProgress>())
+    private val downloadStates = MutableStateFlow(emptyMap<Long, Download.State>())
+
+    // Progress ticks often, so only the download indicators that read it recompose instead of every tick rebuilding
+    // the list
+    private val downloadProgress = mutableStateMapOf<Long, Int>()
 
     // A finished chapter leaves the queue, and its last status change can be lost with it, so its state is left to
     // the queried item once it's no longer queued
@@ -111,10 +113,14 @@ class UpdatesViewModel(
 
     init {
         viewModelScope.launch {
-            // Each progress tick rebuilds every row of the list, so cap how often that happens
-            merge(downloadManager.statusFlow(), downloadManager.progressFlow().sample(200.milliseconds))
+            downloadManager.statusFlow()
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(this@UpdatesViewModel::updateDownloadState)
+        }
+        viewModelScope.launch {
+            downloadManager.progressFlow()
+                .catch { logcat(LogPriority.ERROR, it) }
+                .collect { downloadProgress[it.chapter.id] = it.progress }
         }
     }
 
@@ -126,8 +132,13 @@ class UpdatesViewModel(
             if (download.status == Download.State.NOT_DOWNLOADED || download.status == Download.State.DOWNLOADED) {
                 it - chapterId
             } else {
-                it + (chapterId to DownloadProgress(download.status, download.progress))
+                it + (chapterId to download.status)
             }
+        }
+        if (download.status == Download.State.DOWNLOADING) {
+            downloadProgress[chapterId] = download.progress
+        } else {
+            downloadProgress.remove(chapterId)
         }
     }
 
@@ -189,18 +200,13 @@ class UpdatesViewModel(
             isLoading = items == null,
             hasActiveFilters = hasActiveFilters,
             items = items.orEmpty().map { item ->
-                val download = downloads[item.update.chapterId]
+                val downloadState = downloads[item.update.chapterId]
                 item.copy(
                     selected = item.update.chapterId in selectedIds,
-                    downloadStateProvider = if (download != null) {
-                        { download.status }
+                    downloadStateProvider = if (downloadState != null) {
+                        { downloadState }
                     } else {
                         item.downloadStateProvider
-                    },
-                    downloadProgressProvider = if (download != null) {
-                        { download.progress }
-                    } else {
-                        item.downloadProgressProvider
                     },
                 )
             },
@@ -246,7 +252,7 @@ class UpdatesViewModel(
                 UpdatesItem(
                     update = update,
                     downloadStateProvider = { downloadState },
-                    downloadProgressProvider = { activeDownload?.progress ?: 0 },
+                    downloadProgressProvider = { downloadProgress[update.chapterId] ?: 0 },
                 )
             }
     }
@@ -488,8 +494,6 @@ class UpdatesViewModel(
         val filterIncludedCategories: List<Long>,
         val filterExcludedCategories: List<Long>,
     )
-
-    private data class DownloadProgress(val status: Download.State, val progress: Int)
 
     @Immutable
     data class State(
