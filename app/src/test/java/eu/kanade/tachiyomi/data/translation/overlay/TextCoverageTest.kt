@@ -47,6 +47,25 @@ class TextCoverageTest {
     }
 
     @Test
+    fun `a lower transcription threshold tolerates OCR misreads`() {
+        val regions = listOf(region("Open the monitor carefully"))
+        val boxes = listOf(box("Open the monitor"))
+
+        val strict = TextCoverage.missingRegions(regions, boxes, 100, 100, translateSfx = true)
+        val tolerant = TextCoverage.missingRegions(
+            regions,
+            boxes,
+            100,
+            100,
+            translateSfx = true,
+            minTranscriptionCoverage = 0.7f,
+        )
+
+        assertEquals(regions, strict)
+        assertTrue(tolerant.isEmpty())
+    }
+
+    @Test
     fun `reports a missed thought bubble line even when a neighboring line is translated`() {
         val thoughtLine = DetectedTextRegion(PixelRect(10, 10, 90, 24), "He's so focused")
         val translatedNeighbor = TextBox(260, 100, 400, 900, BoxKind.BUBBLE, "مترجم", "The surgery concludes")

@@ -25,7 +25,20 @@ import kotlin.math.min
  */
 object PageOverlayRenderer {
 
-    class Result(val bytes: ByteArray, val mimeType: String)
+    /**
+     * @property drawn translations lettered in place over an erased bubble
+     * @property captioned translations put in a caption box because the original could not be erased safely
+     * @property duplicates boxes dropped because they repeated another box
+     */
+    class Result(
+        val bytes: ByteArray,
+        val mimeType: String,
+        val drawn: Int = 0,
+        val captioned: Int = 0,
+        val duplicates: Int = 0,
+    )
+
+    private class Stats(val drawn: Int, val captioned: Int, val duplicates: Int)
 
     private const val MAX_SIDE = 4096
 
@@ -51,12 +64,12 @@ object PageOverlayRenderer {
         var bitmap: Bitmap? = null
         try {
             bitmap = decodeMutable(original)
-            drawTranslations(bitmap, boxes, style)
+            val stats = drawTranslations(bitmap, boxes, style)
             val out = ByteArrayOutputStream()
             if (!bitmap.compress(Bitmap.CompressFormat.JPEG, OUTPUT_QUALITY, out)) {
                 throw TranslationException.CorruptPage("could not encode the result")
             }
-            return Result(out.toByteArray(), "image/jpeg")
+            return Result(out.toByteArray(), "image/jpeg", stats.drawn, stats.captioned, stats.duplicates)
         } catch (e: OutOfMemoryError) {
             throw TranslationException.CorruptPage("page too large to process", e)
         } finally {
@@ -82,14 +95,17 @@ object PageOverlayRenderer {
             ?: throw TranslationException.CorruptPage("not a decodable image")
     }
 
-    private fun drawTranslations(bitmap: Bitmap, boxes: List<TextBox>, style: RenderStyle) {
+    private fun drawTranslations(bitmap: Bitmap, allBoxes: List<TextBox>, style: RenderStyle): Stats {
         if (style.placement == RenderStyle.Placement.BELOW) {
-            drawCaptions(bitmap, boxes, style)
-            return
+            drawCaptions(bitmap, allBoxes, style)
+            return Stats(drawn = 0, captioned = allBoxes.size, duplicates = 0)
         }
 
         val imageRect = PixelRect(0, 0, bitmap.width, bitmap.height)
-        val pixelBoxes = boxes.map { it.toPixelRect(bitmap.width, bitmap.height) }
+        val allPixelBoxes = allBoxes.map { it.toPixelRect(bitmap.width, bitmap.height) }
+        val kept = BubbleGrouping.withoutDuplicates(allBoxes, allPixelBoxes)
+        val boxes = kept.map { allBoxes[it] }
+        val pixelBoxes = kept.map { allPixelBoxes[it] }
 
         // First pass: trace every bubble on the untouched page, so one erased bubble cannot confuse the next.
         val regions = pixelBoxes.mapIndexed { index, box ->
@@ -98,19 +114,29 @@ object PageOverlayRenderer {
         val groups = BubbleGrouping.group(pixelBoxes, regions)
 
         // Merge groups into single items (union box, joined text) and trace them again if they changed.
-        class Item(val region: BubbleRegion, val text: String)
+        class Item(val region: BubbleRegion, val text: String, val box: PixelRect, val safe: Boolean)
 
-        val items = groups.mapNotNull { group ->
+        val all = groups.map { group ->
             val kind = boxes[group.first()].kind
-            val item = if (group.size == 1) {
-                Item(regions[group.first()], boxes[group.first()].text)
+            if (group.size == 1) {
+                val region = regions[group.first()]
+                Item(
+                    region,
+                    boxes[group.first()].text,
+                    pixelBoxes[group.first()],
+                    BubbleGrouping.canRenderSafely(kind, region),
+                )
             } else {
                 val union = group.map { pixelBoxes[it] }.reduce(PixelRect::union)
                 val text = BubbleGrouping.mergedText(group.map { boxes[it] })
-                Item(regionFor(bitmap, union, imageRect, traceBubble = kind == BoxKind.BUBBLE), text)
+                val region = regionFor(bitmap, union, imageRect, traceBubble = kind == BoxKind.BUBBLE)
+                Item(region, text, union, BubbleGrouping.canRenderSafely(kind, region))
             }
-            if (BubbleGrouping.canRenderSafely(kind, item.region)) item else null
         }
+        val items = all.filter { it.safe }
+        // The original cannot be erased without damaging the page (artwork behind it, stylised lettering). The
+        // translation then goes into a caption box next to it instead of being left out.
+        val fallback = all.filter { !it.safe && it.text.isNotBlank() }
 
         val canvas = Canvas(bitmap)
         val erase = Paint().apply { this.style = Paint.Style.FILL }
@@ -125,6 +151,15 @@ object PageOverlayRenderer {
             val size = if (cap > 0f) min(fitted[index], cap) else fitted[index]
             drawText(canvas, item.text, item.region, bitmap.width, style, size)
         }
+
+        if (fallback.isNotEmpty()) {
+            val caption = captionStyleFor(bitmap)
+            val placed = items.map { it.region.textRect }.toMutableList()
+            for (item in fallback.sortedBy { it.box.top }) {
+                drawCaptionBox(canvas, bitmap, item.box, item.text.trim(), placed, caption, style)
+            }
+        }
+        return Stats(drawn = items.size, captioned = fallback.size, duplicates = allBoxes.size - boxes.size)
     }
 
     /**
@@ -133,32 +168,50 @@ object PageOverlayRenderer {
      */
     private fun drawCaptions(bitmap: Bitmap, boxes: List<TextBox>, style: RenderStyle) {
         val canvas = Canvas(bitmap)
-        val page = PixelRect(0, 0, bitmap.width, bitmap.height)
         val placed = mutableListOf<PixelRect>()
-        val background = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.argb(CAPTION_BACKGROUND_ALPHA, 255, 255, 255)
-            this.style = Paint.Style.FILL
-        }
-        val border = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.argb(CAPTION_BORDER_ALPHA, 0, 0, 0)
-            this.style = Paint.Style.STROKE
-            strokeWidth = max(1f, bitmap.width * 0.002f)
-        }
-        val radius = bitmap.width * CAPTION_CORNER_RATIO
-
+        val caption = captionStyleFor(bitmap)
         for (box in boxes.sortedBy { it.yMin }) {
             val text = box.text.trim()
             if (text.isEmpty()) continue
-            val area = CaptionPlacer.place(box.toPixelRect(bitmap.width, bitmap.height), page, placed)
-            placed += area
-            val rect = RectF(area.left.toFloat(), area.top.toFloat(), area.right.toFloat(), area.bottom.toFloat())
-            canvas.drawRoundRect(rect, radius, radius, background)
-            canvas.drawRoundRect(rect, radius, radius, border)
-
-            val padding = max(2, (area.width * CAPTION_PADDING_RATIO).toInt())
-            val inner = PixelRect(area.left + padding, area.top + padding, area.right - padding, area.bottom - padding)
-            drawFitted(canvas, text, inner, Color.BLACK, outlined = false, bitmap.width, style)
+            drawCaptionBox(canvas, bitmap, box.toPixelRect(bitmap.width, bitmap.height), text, placed, caption, style)
         }
+    }
+
+    private class CaptionStyle(val background: Paint, val border: Paint, val radius: Float)
+
+    private fun captionStyleFor(bitmap: Bitmap) = CaptionStyle(
+        background = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.argb(CAPTION_BACKGROUND_ALPHA, 255, 255, 255)
+            this.style = Paint.Style.FILL
+        },
+        border = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.argb(CAPTION_BORDER_ALPHA, 0, 0, 0)
+            this.style = Paint.Style.STROKE
+            strokeWidth = max(1f, bitmap.width * 0.002f)
+        },
+        radius = bitmap.width * CAPTION_CORNER_RATIO,
+    )
+
+    /** Draws [text] in a caption box placed next to [original] and remembers the box in [placed]. */
+    private fun drawCaptionBox(
+        canvas: Canvas,
+        bitmap: Bitmap,
+        original: PixelRect,
+        text: String,
+        placed: MutableList<PixelRect>,
+        caption: CaptionStyle,
+        style: RenderStyle,
+    ) {
+        val page = PixelRect(0, 0, bitmap.width, bitmap.height)
+        val area = CaptionPlacer.place(original, page, placed)
+        placed += area
+        val rect = RectF(area.left.toFloat(), area.top.toFloat(), area.right.toFloat(), area.bottom.toFloat())
+        canvas.drawRoundRect(rect, caption.radius, caption.radius, caption.background)
+        canvas.drawRoundRect(rect, caption.radius, caption.radius, caption.border)
+
+        val padding = max(2, (area.width * CAPTION_PADDING_RATIO).toInt())
+        val inner = PixelRect(area.left + padding, area.top + padding, area.right - padding, area.bottom - padding)
+        drawFitted(canvas, text, inner, Color.BLACK, outlined = false, bitmap.width, style)
     }
 
     private fun regionFor(bitmap: Bitmap, box: PixelRect, image: PixelRect, traceBubble: Boolean): BubbleRegion {

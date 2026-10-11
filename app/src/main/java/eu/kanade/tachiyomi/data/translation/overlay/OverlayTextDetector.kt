@@ -21,16 +21,20 @@ class OverlayTextDetector {
         TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
     }
 
+    /**
+     * Text regions, one per bubble or text box: the lines OCR finds are merged by [TextRegionGrouper], and fragments
+     * that are not text are dropped. Recovering a missed bubble costs one request per region.
+     */
     suspend fun detect(bitmap: Bitmap): List<DetectedTextRegion> {
-        return recognize(bitmap).textBlocks.flatMap { block ->
-            val lines = block.lines.mapNotNull { line ->
+        val lines = recognize(bitmap).textBlocks.flatMap { block ->
+            val blockLines = block.lines.mapNotNull { line ->
                 val rect = line.boundingBox ?: return@mapNotNull null
                 val text = line.text.trim()
                 if (text.isBlank() || rect.width() <= 0 || rect.height() <= 0) return@mapNotNull null
                 DetectedTextRegion(PixelRect(rect.left, rect.top, rect.right, rect.bottom), text)
             }
-            if (lines.isNotEmpty()) {
-                lines
+            if (blockLines.isNotEmpty()) {
+                blockLines
             } else {
                 val rect = block.boundingBox
                 val text = block.text.trim()
@@ -41,6 +45,7 @@ class OverlayTextDetector {
                 }
             }
         }
+        return TextRegionGrouper.regionsFrom(lines)
     }
 
     private suspend fun recognize(bitmap: Bitmap) = suspendCoroutine { continuation ->

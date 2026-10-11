@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.data.translation.overlay.PageOverlayRenderer
 import eu.kanade.tachiyomi.data.translation.overlay.PixelRect
 import eu.kanade.tachiyomi.data.translation.overlay.RenderStyle
 import eu.kanade.tachiyomi.data.translation.overlay.TallPageCropper
+import eu.kanade.tachiyomi.data.translation.overlay.TextBox
 import eu.kanade.tachiyomi.data.translation.overlay.TextCoverage
 import eu.kanade.tachiyomi.data.translation.overlay.TextOverlayClient
 import eu.kanade.tachiyomi.source.Source
@@ -313,135 +314,39 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                                         prepareOverlayUploads(bytes, page.mimeType)
                                     }
                                     val detections = mutableListOf<TallPageCropper.Detection>()
-                                    var recoveryCalls = 0
-                                    uploads.forEach { cropUpload ->
-                                        val cropBoxes = overlayClient.detectAndTranslate(
-                                            cropUpload.bytes,
-                                            cropUpload.mimeType,
-                                            apiKey,
-                                            model,
-                                            language,
-                                            delayMillis,
-                                            PromptContext.build(glossary, previousTexts),
-                                        )
-                                        detections += cropBoxes.map {
-                                            TallPageCropper.Detection(cropUpload.crop, it)
-                                        }
-
-                                        val coverageBitmap = try {
-                                            withContext(Dispatchers.Default) {
-                                                BitmapFactory.decodeByteArray(
-                                                    cropUpload.bytes,
-                                                    0,
-                                                    cropUpload.bytes.size,
-                                                )
-                                            }
-                                        } catch (e: OutOfMemoryError) {
-                                            logcat(LogPriority.WARN, e) { "Could not allocate OCR coverage image" }
-                                            null
-                                        }
-                                        if (coverageBitmap == null) {
-                                            pageCoverageIncomplete = true
-                                            return@forEach
-                                        }
-
+                                    // Boxes found so far per crop. A second attempt adds to them: the model leaves
+                                    // out different bubbles from one request to the next.
+                                    val knownCropBoxes = HashMap<Int, List<TextBox>>()
+                                    val request = OverlayRequest(
+                                        apiKey = apiKey,
+                                        model = model,
+                                        language = language,
+                                        delayMillis = delayMillis,
+                                        promptContext = PromptContext.build(glossary, previousTexts),
+                                        translateSfx = translateSfx,
+                                    )
+                                    for (attempt in 1..MAX_PAGE_ATTEMPTS) {
                                         try {
-                                            val textRegions = overlayTextDetector.detect(coverageBitmap)
-                                            val coverageBoxes = cropBoxes.toMutableList()
-                                            val missing = TextCoverage.missingRegions(
-                                                textRegions,
-                                                coverageBoxes,
-                                                coverageBitmap.width,
-                                                coverageBitmap.height,
-                                                translateSfx,
+                                            pageCoverageIncomplete = runOverlayPass(
+                                                index + 1,
+                                                uploads,
+                                                request,
+                                                detections,
+                                                knownCropBoxes,
                                             )
-                                            val remainingCalls =
-                                                (MAX_RECOVERY_CALLS_PER_PAGE - recoveryCalls).coerceAtLeast(0)
-                                            missing.take(remainingCalls).forEach { region ->
-                                                recoveryCalls++
-                                                try {
-                                                    val recoveryCrop = recoveryCropFor(
-                                                        region,
-                                                        coverageBitmap.width,
-                                                        coverageBitmap.height,
-                                                    )
-                                                    val recoveryBytes = encodeCrop(coverageBitmap, recoveryCrop)
-                                                    val recoveryContext = buildString {
-                                                        append(PromptContext.build(glossary, previousTexts))
-                                                        append(
-                                                            "\n\nTargeted recovery: the OCR pass independently " +
-                                                                "found this source text in the enlarged crop: «",
-                                                        )
-                                                        append(region.text.take(MAX_RECOVERY_TEXT_LENGTH))
-                                                        append("». Translate every readable word of that text only. ")
-                                                        append("Return an empty boxes list if it is not readable. ")
-                                                        append("Keep each box tight to the lettering; do not include ")
-                                                        append("faces, hair, bodies, or other artwork.")
-                                                    }
-                                                    val recoveryBoxes = overlayClient.detectAndTranslate(
-                                                        recoveryBytes,
-                                                        "image/jpeg",
-                                                        apiKey,
-                                                        model,
-                                                        language,
-                                                        delayMillis,
-                                                        recoveryContext,
-                                                    ).mapNotNull { box ->
-                                                        TextCoverage.clampRecoveryBox(
-                                                            box,
-                                                            recoveryCrop,
-                                                            region,
-                                                            coverageBitmap.width,
-                                                            coverageBitmap.height,
-                                                        )
-                                                    }
-                                                    if (TextCoverage.missingRegions(
-                                                            listOf(region),
-                                                            recoveryBoxes,
-                                                            coverageBitmap.width,
-                                                            coverageBitmap.height,
-                                                            translateSfx,
-                                                        ).isEmpty()
-                                                    ) {
-                                                        coverageBoxes += recoveryBoxes
-                                                        detections += recoveryBoxes.map {
-                                                            TallPageCropper.Detection(cropUpload.crop, it)
-                                                        }
-                                                    }
-                                                } catch (e: CancellationException) {
-                                                    throw e
-                                                } catch (e: Exception) {
-                                                    logcat(LogPriority.WARN, e) {
-                                                        "Targeted OCR recovery failed on page ${index + 1}"
-                                                    }
-                                                }
-                                            }
-                                            if (TextCoverage.missingRegions(
-                                                    textRegions,
-                                                    coverageBoxes,
-                                                    coverageBitmap.width,
-                                                    coverageBitmap.height,
-                                                    translateSfx,
-                                                ).isNotEmpty()
-                                            ) {
-                                                pageCoverageIncomplete = true
-                                            }
-                                        } catch (e: CancellationException) {
-                                            throw e
-                                        } catch (e: Exception) {
+                                        } catch (e: TranslationException) {
+                                            // Keep what the first attempt found instead of losing the page.
+                                            if (attempt == 1) throw e
+                                            logcat(LogPriority.WARN, e) { "Page ${index + 1}: second attempt failed" }
                                             pageCoverageIncomplete = true
-                                            logcat(LogPriority.WARN, e) {
-                                                "OCR coverage check failed on page ${index + 1}"
-                                            }
-                                        } catch (e: OutOfMemoryError) {
-                                            pageCoverageIncomplete = true
-                                            logcat(LogPriority.WARN, e) {
-                                                "OCR coverage check ran out of memory on page ${index + 1}"
-                                            }
-                                        } finally {
-                                            coverageBitmap.recycle()
+                                        }
+                                        if (!pageCoverageIncomplete || stopEarly.get()) break
+                                        logcat(LogPriority.INFO) {
+                                            "Page ${index + 1}: coverage incomplete after attempt $attempt of " +
+                                                "$MAX_PAGE_ATTEMPTS"
                                         }
                                     }
+
                                     val firstUpload = uploads.first()
                                     val allBoxes = TallPageCropper.mapAndDeduplicate(
                                         detections,
@@ -456,6 +361,13 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                                     } else {
                                         val rendered = withContext(Dispatchers.Default) {
                                             PageOverlayRenderer.render(bytes, boxes, style)
+                                        }
+                                        logcat(LogPriority.INFO) {
+                                            "Page ${index + 1}: ${detections.size} detection(s) became " +
+                                                "${boxes.size} box(es); lettered ${rendered.drawn}, " +
+                                                "caption box ${rendered.captioned}, " +
+                                                "duplicates dropped ${rendered.duplicates}, " +
+                                                "coverage incomplete: $pageCoverageIncomplete"
                                         }
                                         TranslatedImage(rendered.bytes, rendered.mimeType)
                                     }
@@ -609,6 +521,187 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
         }
         if (bytes.isEmpty()) throw TranslationException.CorruptPage("empty file")
         return bytes
+    }
+
+    // endregion
+
+    // region Overlay detection
+
+    /** Everything one request to the text model needs besides the image. */
+    private class OverlayRequest(
+        val apiKey: String,
+        val model: String,
+        val language: String,
+        val delayMillis: Long,
+        val promptContext: String,
+        val translateSfx: Boolean,
+    )
+
+    /**
+     * One pass over every crop of a page: asks the model for the text, then checks the answer against an
+     * independent OCR pass and asks again, per bubble, for what the model left out.
+     *
+     * @param detections receives every box found, from this and from earlier passes
+     * @param knownCropBoxes boxes found so far per crop (in crop coordinates), so a second pass adds to the first
+     * @return true when text that OCR sees on the page is still not covered
+     */
+    private suspend fun runOverlayPass(
+        pageNumber: Int,
+        uploads: List<OverlayUpload>,
+        request: OverlayRequest,
+        detections: MutableList<TallPageCropper.Detection>,
+        knownCropBoxes: MutableMap<Int, List<TextBox>>,
+    ): Boolean {
+        var incomplete = false
+        var recoveryCalls = 0
+        uploads.forEachIndexed { cropIndex, cropUpload ->
+            val cropBoxes = overlayClient.detectAndTranslate(
+                cropUpload.bytes,
+                cropUpload.mimeType,
+                request.apiKey,
+                request.model,
+                request.language,
+                request.delayMillis,
+                request.promptContext,
+            )
+            detections += cropBoxes.map {
+                TallPageCropper.Detection(cropUpload.crop, it)
+            }
+
+            val coverageBitmap = try {
+                withContext(Dispatchers.Default) {
+                    BitmapFactory.decodeByteArray(
+                        cropUpload.bytes,
+                        0,
+                        cropUpload.bytes.size,
+                    )
+                }
+            } catch (e: OutOfMemoryError) {
+                logcat(LogPriority.WARN, e) { "Could not allocate OCR coverage image" }
+                null
+            }
+            if (coverageBitmap == null) {
+                incomplete = true
+                return@forEachIndexed
+            }
+
+            try {
+                val textRegions = overlayTextDetector.detect(coverageBitmap)
+                // Boxes an earlier attempt found on this crop count too: the model leaves out different bubbles
+                // from one request to the next, so the attempts add up.
+                val coverageBoxes = (knownCropBoxes[cropIndex].orEmpty() + cropBoxes).toMutableList()
+                val missing = TextCoverage.missingRegions(
+                    textRegions,
+                    coverageBoxes,
+                    coverageBitmap.width,
+                    coverageBitmap.height,
+                    request.translateSfx,
+                    DETECTION_MIN_COVERAGE,
+                )
+                val remainingCalls =
+                    (MAX_RECOVERY_CALLS_PER_PAGE - recoveryCalls).coerceAtLeast(0)
+                logcat(LogPriority.INFO) {
+                    "Page $pageNumber crop ${cropIndex + 1}/${uploads.size}: " +
+                        "model returned ${cropBoxes.size} box(es), " +
+                        "OCR found ${textRegions.size} region(s), ${missing.size} not covered, " +
+                        "$remainingCalls recovery call(s) left"
+                }
+                // Longest text first: big bubbles matter most when the budget runs out.
+                missing.sortedByDescending { it.text.length }.take(remainingCalls).forEach { region ->
+                    recoveryCalls++
+                    try {
+                        val recoveryCrop = recoveryCropFor(
+                            region,
+                            coverageBitmap.width,
+                            coverageBitmap.height,
+                        )
+                        val recoveryBytes = encodeCrop(coverageBitmap, recoveryCrop)
+                        val recoveryContext = buildString {
+                            append(request.promptContext)
+                            append(
+                                "\n\nTargeted recovery: the OCR pass independently " +
+                                    "found this source text in the enlarged crop: «",
+                            )
+                            append(region.text.take(MAX_RECOVERY_TEXT_LENGTH))
+                            append("». Translate every readable word of that text only. ")
+                            append("Return an empty boxes list if it is not readable. ")
+                            append("Keep each box tight to the lettering; do not include ")
+                            append("faces, hair, bodies, or other artwork.")
+                        }
+                        val recoveryBoxes = overlayClient.detectAndTranslate(
+                            recoveryBytes,
+                            "image/jpeg",
+                            request.apiKey,
+                            request.model,
+                            request.language,
+                            request.delayMillis,
+                            recoveryContext,
+                        ).mapNotNull { box ->
+                            TextCoverage.clampRecoveryBox(
+                                box,
+                                recoveryCrop,
+                                region,
+                                coverageBitmap.width,
+                                coverageBitmap.height,
+                            )
+                        }
+                        // The recovery crop was cut around this region, so a box that overlaps it is accepted even
+                        // when the model's transcription differs somewhat from what OCR read.
+                        val accepted = TextCoverage.missingRegions(
+                            listOf(region),
+                            recoveryBoxes,
+                            coverageBitmap.width,
+                            coverageBitmap.height,
+                            request.translateSfx,
+                            RECOVERY_ACCEPT_COVERAGE,
+                        ).isEmpty()
+                        logcat(LogPriority.INFO) {
+                            "Page $pageNumber recovery for region at ${region.bounds.left},${region.bounds.top}: " +
+                                "${recoveryBoxes.size} box(es), ${if (accepted) "accepted" else "rejected"}"
+                        }
+                        if (accepted) {
+                            coverageBoxes += recoveryBoxes
+                            detections += recoveryBoxes.map {
+                                TallPageCropper.Detection(cropUpload.crop, it)
+                            }
+                        }
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        logcat(LogPriority.WARN, e) {
+                            "Targeted OCR recovery failed on page $pageNumber"
+                        }
+                    }
+                }
+                knownCropBoxes[cropIndex] = coverageBoxes.toList()
+                if (TextCoverage.missingRegions(
+                        textRegions,
+                        coverageBoxes,
+                        coverageBitmap.width,
+                        coverageBitmap.height,
+                        request.translateSfx,
+                        DETECTION_MIN_COVERAGE,
+                    ).isNotEmpty()
+                ) {
+                    incomplete = true
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                incomplete = true
+                logcat(LogPriority.WARN, e) {
+                    "OCR coverage check failed on page $pageNumber"
+                }
+            } catch (e: OutOfMemoryError) {
+                incomplete = true
+                logcat(LogPriority.WARN, e) {
+                    "OCR coverage check ran out of memory on page $pageNumber"
+                }
+            } finally {
+                coverageBitmap.recycle()
+            }
+        }
+        return incomplete
     }
 
     // endregion
@@ -849,7 +942,14 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
         private const val MAX_AUTO_RETRY_ROUNDS = 3
         private const val AUTO_RETRY_DELAY_MILLIS = 15_000L
         private const val MAX_OFFLINE_ATTEMPTS = 5
-        private const val MAX_RECOVERY_CALLS_PER_PAGE = 6
+        private const val MAX_RECOVERY_CALLS_PER_PAGE = 12
+        private const val MAX_PAGE_ATTEMPTS = 2
+
+        /** Share of OCR words that must be in the model's transcription before a region counts as covered. */
+        private const val DETECTION_MIN_COVERAGE = 0.8f
+
+        /** Lower bar for a box from a recovery request: the request was cut around that exact region. */
+        private const val RECOVERY_ACCEPT_COVERAGE = 0.5f
         private const val MAX_RECOVERY_TEXT_LENGTH = 500
         private const val MIN_RECOVERY_CROP_PADDING = 48
 

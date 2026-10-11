@@ -16,6 +16,7 @@ object TextCoverage {
         imageWidth: Int,
         imageHeight: Int,
         translateSfx: Boolean,
+        minTranscriptionCoverage: Float = MIN_TRANSCRIPTION_COVERAGE,
     ): List<DetectedTextRegion> {
         require(imageWidth > 0 && imageHeight > 0)
         return regions.filter { region ->
@@ -38,7 +39,7 @@ object TextCoverage {
 
             val sourceTokens = translatedOverlapping.flatMap { tokens(it.sourceText) }.toSet()
             if (sourceTokens.isEmpty()) return@filter true
-            expectedTokens.count { it in sourceTokens }.toFloat() / expectedTokens.size < MIN_TRANSCRIPTION_COVERAGE
+            expectedTokens.count { it in sourceTokens }.toFloat() / expectedTokens.size < minTranscriptionCoverage
         }
     }
 

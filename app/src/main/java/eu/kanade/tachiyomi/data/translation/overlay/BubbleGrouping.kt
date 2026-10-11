@@ -65,6 +65,39 @@ object BubbleGrouping {
         return kept.joinToString(" ") { it.text.trim() }
     }
 
+    /**
+     * Indexes of the boxes to keep. Two boxes that cover (mostly) the same place and carry the same text are one
+     * detection reported twice, for example when a page is asked for twice or a recovery pass repeats a bubble. The
+     * one with the longer translation is kept, so the same sentence is never drawn on top of itself.
+     */
+    fun withoutDuplicates(boxes: List<TextBox>, pixelBoxes: List<PixelRect>): List<Int> {
+        require(boxes.size == pixelBoxes.size)
+        val dropped = BooleanArray(boxes.size)
+        for (i in boxes.indices) {
+            if (dropped[i]) continue
+            for (j in i + 1 until boxes.size) {
+                if (dropped[j]) continue
+                if (overlapShare(pixelBoxes[i], pixelBoxes[j]) < MIN_DUPLICATE_OVERLAP) continue
+                if (!isDuplicate(boxes[i], boxes[j])) continue
+                if (boxes[j].text.trim().length > boxes[i].text.trim().length) {
+                    dropped[i] = true
+                    break
+                }
+                dropped[j] = true
+            }
+        }
+        return boxes.indices.filter { !dropped[it] }
+    }
+
+    /** Area of the overlap as a share of the smaller of the two rectangles. */
+    private fun overlapShare(a: PixelRect, b: PixelRect): Float {
+        val width = minOf(a.right, b.right) - maxOf(a.left, b.left)
+        val height = minOf(a.bottom, b.bottom) - maxOf(a.top, b.top)
+        if (width <= 0 || height <= 0) return 0f
+        val smaller = minOf(a.width.toLong() * a.height, b.width.toLong() * b.height)
+        return if (smaller <= 0L) 0f else width.toLong() * height / smaller.toFloat()
+    }
+
     internal fun isDuplicate(a: TextBox, b: TextBox): Boolean {
         val sourceA = normalize(a.sourceText)
         val sourceB = normalize(b.sourceText)
@@ -94,6 +127,7 @@ object BubbleGrouping {
         text.lowercase().split(WORD_SEPARATOR).filter { it.isNotBlank() }.toSet()
 
     private const val MIN_ERASED_SHARE = 0.6f
+    private const val MIN_DUPLICATE_OVERLAP = 0.5f
     private const val MIN_CONTAINED_LENGTH = 8
     private const val MIN_OVERLAP_TOKENS = 3
     private const val MIN_TOKEN_OVERLAP = 0.7f

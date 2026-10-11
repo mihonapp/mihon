@@ -51,4 +51,36 @@ class BubbleGroupingTextTest {
 
         assertEquals("the very same translated text", BubbleGrouping.mergedText(boxes))
     }
+
+    @Test
+    fun `overlapping boxes with the same text are one detection`() {
+        val boxes = listOf(
+            box("THE NEXT DAY, EARLY MORNING translated in full", "THE NEXT DAY, EARLY MORNING"),
+            box("EARLY MORNING short", "EARLY MORNING"),
+        )
+        val pixels = listOf(PixelRect(100, 100, 400, 200), PixelRect(150, 130, 350, 170))
+
+        assertEquals(listOf(0), BubbleGrouping.withoutDuplicates(boxes, pixels))
+        // Whichever order they arrive in, the more complete translation survives
+        assertEquals(listOf(1), BubbleGrouping.withoutDuplicates(boxes.reversed(), pixels.reversed()))
+    }
+
+    @Test
+    fun `the same words in two different places are both kept`() {
+        val boxes = listOf(
+            box("first", "I WILL JUST WATCH YOU OPERATE"),
+            box("second", "I WILL JUST WATCH YOU OPERATE"),
+        )
+        val pixels = listOf(PixelRect(0, 0, 100, 50), PixelRect(0, 900, 100, 950))
+
+        assertEquals(listOf(0, 1), BubbleGrouping.withoutDuplicates(boxes, pixels))
+    }
+
+    @Test
+    fun `different text in the same place is kept`() {
+        val boxes = listOf(box("one", "HELLO THERE MY FRIEND"), box("two", "HOW ARE YOU TODAY"))
+        val pixels = listOf(PixelRect(0, 0, 100, 50), PixelRect(0, 0, 100, 50))
+
+        assertEquals(listOf(0, 1), BubbleGrouping.withoutDuplicates(boxes, pixels))
+    }
 }
