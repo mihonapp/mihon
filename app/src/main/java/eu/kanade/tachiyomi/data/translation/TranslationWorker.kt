@@ -126,6 +126,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
 
     /** The translation log file of this run, created when the first part of the log is written. */
     @Volatile private var logFile: UniFile? = null
+
     @Volatile private var logFileName: String = ""
     private val donePages = AtomicInteger(0)
 
