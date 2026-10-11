@@ -41,6 +41,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Show a screen while the app migrates its data after an update ([@AntsyLich](https://github.com/AntsyLich)) ([`fd4f73c`](https://github.com/mihonapp/mihon/commit/fd4f73c))
   - Keep the screen up for at least a second so it doesn't just flash by ([@AntsyLich](https://github.com/AntsyLich)) ([`b454c1b`](https://github.com/mihonapp/mihon/commit/b454c1b))
 - Add option to skip an app update version ([@AntsyLich](https://github.com/AntsyLich)) ([`fc20410`](https://github.com/mihonapp/mihon/commit/fc20410))
+- Add support for [Comick](https://comick.dev) tracker ([@MajorTanya](https://github.com/MajorTanya)) ([#4056](https://github.com/mihonapp/mihon/pull/4056))
 - Add Google Drive sync to keep the library, reading progress, categories, extension repos and pinned sources in step across devices ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
   - Add a list of the extensions the library uses but this device lacks, also offered when opening an entry whose source is missing ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
   - Offer to link the Google account from the first-launch guide ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
@@ -60,6 +61,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Fixed restoring a backup failing on entries that list a category or excluded scanlator twice ([@AntsyLich](https://github.com/AntsyLich)) ([#4022](https://github.com/mihonapp/mihon/pull/4022))
 - List MangaBaka first among trackers ([@AntsyLich](https://github.com/AntsyLich)) ([`dd46413`](https://github.com/mihonapp/mihon/commit/dd46413))
 - Show a wavy progress ring while a chapter downloads ([@AntsyLich](https://github.com/AntsyLich)) ([`e562a9b`](https://github.com/mihonapp/mihon/commit/e562a9b))
+- Show a confirmation dialog when unfavoriting manga from the manga screen ([@WizaHX](https://github.com/WizaHX)) ([#4073](https://github.com/mihonapp/mihon/pull/4073))
 
 ### Improved
 - Show the updates and upcoming filter icon as active when filtering by category, or by hidden excluded scanlators in updates ([@Secozzi](https://github.com/Secozzi)) ([#3772](https://github.com/mihonapp/mihon/pull/3772))
@@ -154,6 +156,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed the chapter selection being cleared when new chapters were downloaded automatically after a refresh ([@AntsyLich](https://github.com/AntsyLich)) ([`a82d27c`](https://github.com/mihonapp/mihon/commit/a82d27c))
 - Fixed actions started from a dialog sometimes not running when the dialog closed right away, Kitsu, Shikimori, MangaBaka, Bangumi and Hikka sometimes refreshing their login twice at once, adding an extension repo served over HTTP failing, and cancelling an extension install not stopping its download ([@AntsyLich](https://github.com/AntsyLich)) ([#4068](https://github.com/mihonapp/mihon/pull/4068))
 - Fixed the next library update staying "Soon" after new chapters were found, and chapters that came out early, late or were dated earlier by the source pushing the next check back ([@AntsyLich](https://github.com/AntsyLich)) ([`ba44815`](https://github.com/mihonapp/mihon/commit/ba44815))
+- Fixed long strip side padding being counted in zoom bounds ([@WizaHX](https://github.com/WizaHX)) ([#4072](https://github.com/mihonapp/mihon/pull/4072))
 
 ### Other
 - Show "Nightly" instead of "Beta" for preview builds and "FOSS" for FOSS builds in About ([@AntsyLich](https://github.com/AntsyLich)) ([#3760](https://github.com/mihonapp/mihon/pull/3760))
