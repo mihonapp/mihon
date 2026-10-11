@@ -199,15 +199,69 @@ class BubbleFinderTest {
     }
 
     @Test
-    fun `untraced speech bubbles are not safe to render in place`() {
+    fun `untraced speech bubbles over artwork are not safe to render in place`() {
+        val page = Page(200, 160, white)
+        // Busy artwork around the lettering: 4 px checker blocks
+        for (y in 0 until 160) {
+            for (x in 0 until 200) {
+                if (((x / 4) + (y / 4)) % 2 == 0) page.pixels[y * 200 + x] = black
+            }
+        }
+        val box = PixelRect(60, 70, 140, 100)
+        page.text(PixelRect(70, 78, 130, 92), black)
+        val region = find(page, box, traceBubble = false)
+
+        assertFalse(region.fromFloodFill)
+        assertFalse(region.flatSurroundings)
+        assertFalse(BubbleGrouping.canRenderSafely(BoxKind.BUBBLE, region))
+        assertTrue(BubbleGrouping.canRenderSafely(BoxKind.CAPTION, region))
+    }
+
+    @Test
+    fun `untraced speech bubble on a flat page is safe to render`() {
+        // Same situation as a bubble with a dashed outline: nothing to trace, but nothing to damage either
         val page = Page(200, 160, white)
         val box = PixelRect(60, 70, 140, 100)
         page.text(PixelRect(70, 78, 130, 92), black)
         val region = find(page, box)
 
         assertFalse(region.fromFloodFill)
-        assertFalse(BubbleGrouping.canRenderSafely(BoxKind.BUBBLE, region))
-        assertTrue(BubbleGrouping.canRenderSafely(BoxKind.CAPTION, region))
+        assertTrue(region.flatSurroundings)
+        assertTrue(BubbleGrouping.canRenderSafely(BoxKind.BUBBLE, region))
+    }
+
+    @Test
+    fun `lettering that cannot be erased is not drawn over`() {
+        // A big solid logo: taller than any letter, so the eraser leaves it alone
+        val page = Page(300, 200, white)
+        for (y in 60 until 140) for (x in 60 until 240) page.pixels[y * 300 + x] = black
+        val box = PixelRect(60, 60, 240, 140)
+        val region = find(page, box, BubbleFinder.Config(maxLetterSide = 40), traceBubble = false)
+
+        assertTrue(region.inkErasedShare < 0.6f)
+        assertFalse(BubbleGrouping.canRenderSafely(BoxKind.CAPTION, region))
+    }
+
+    @Test
+    fun `a box that reaches over the bubble outline does not repaint the outline`() {
+        val page = Page(200, 200, 0xFF808080.toInt())
+        page.ellipse(100, 100, 60, 45, white, black)
+        // Wider than the bubble: the box edges lie outside the outline
+        val box = PixelRect(35, 70, 165, 130)
+        page.text(PixelRect(70, 85, 130, 115), black)
+
+        val region = find(page, box, BubbleFinder.Config(maxLetterSide = 30))
+
+        assertTrue(region.fromFloodFill)
+        assertFalse(region.contains(40, 100), "left outline must stay")
+        assertFalse(region.contains(159, 100), "right outline must stay")
+        assertFalse(region.contains(30, 100), "page outside the bubble must stay")
+        assertTrue(region.contains(100, 70), "bubble interior is still repainted")
+        for (y in 85 until 115) {
+            for (x in 70 until 130) {
+                if ((x + y) % 2 == 0) assertTrue(region.contains(x, y), "text pixel $x,$y left uncovered")
+            }
+        }
     }
 
     @Test

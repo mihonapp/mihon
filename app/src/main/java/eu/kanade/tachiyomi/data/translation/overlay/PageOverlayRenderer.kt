@@ -39,6 +39,9 @@ object PageOverlayRenderer {
     private const val CAPTION_CORNER_RATIO = 0.012f
     private const val CAPTION_PADDING_RATIO = 0.04f
 
+    /** No text on a page may be fitted bigger than this multiple of the page's median fitted size. */
+    private const val SIZE_CAP_FACTOR = 1.35f
+
     /**
      * @param boxes translated text boxes. Must not be empty.
      * @param style font, text size and where the translation goes.
@@ -103,7 +106,7 @@ object PageOverlayRenderer {
                 Item(regions[group.first()], boxes[group.first()].text)
             } else {
                 val union = group.map { pixelBoxes[it] }.reduce(PixelRect::union)
-                val text = group.joinToString(" ") { boxes[it].text.trim() }
+                val text = BubbleGrouping.mergedText(group.map { boxes[it] })
                 Item(regionFor(bitmap, union, imageRect, traceBubble = kind == BoxKind.BUBBLE), text)
             }
             if (BubbleGrouping.canRenderSafely(kind, item.region)) item else null
@@ -112,7 +115,16 @@ object PageOverlayRenderer {
         val canvas = Canvas(bitmap)
         val erase = Paint().apply { this.style = Paint.Style.FILL }
         for (item in items) paintMask(bitmap, canvas, erase, item.region)
-        for (item in items) drawText(canvas, item.text, item.region, bitmap.width, style)
+
+        // Keep the lettering of one page even: a bubble with little text must not get far bigger letters than the
+        // typical bubble on the page.
+        val fitted = items.map { fittedSize(it.text.trim(), it.region.textRect, bitmap.width, style) }
+        val sorted = fitted.filter { it > 0f }.sorted()
+        val cap = if (sorted.isEmpty()) 0f else sorted[sorted.size / 2] * SIZE_CAP_FACTOR
+        items.forEachIndexed { index, item ->
+            val size = if (cap > 0f) min(fitted[index], cap) else fitted[index]
+            drawText(canvas, item.text, item.region, bitmap.width, style, size)
+        }
     }
 
     /**
@@ -194,7 +206,14 @@ object PageOverlayRenderer {
         }
     }
 
-    private fun drawText(canvas: Canvas, text: String, region: BubbleRegion, imageWidth: Int, style: RenderStyle) {
+    private fun drawText(
+        canvas: Canvas,
+        text: String,
+        region: BubbleRegion,
+        imageWidth: Int,
+        style: RenderStyle,
+        fittedSize: Float? = null,
+    ) {
         val clean = text.trim()
         val area = region.textRect
         if (clean.isEmpty() || area.isEmpty) return
@@ -204,8 +223,22 @@ object PageOverlayRenderer {
         val letterColor = region.textColor
         val textColor = letterColor
             ?: if (luminance(region.background) < LUMINANCE_DARK_BACKGROUND) Color.WHITE else Color.BLACK
-        drawFitted(canvas, clean, area, textColor, outlined = letterColor != null, imageWidth, style)
+        drawFitted(canvas, clean, area, textColor, outlined = letterColor != null, imageWidth, style, fittedSize)
     }
+
+    /** Largest size (before the style's size setting) at which [clean] fits [area]; 0 when there is nothing to draw. */
+    private fun fittedSize(clean: String, area: PixelRect, imageWidth: Int, style: RenderStyle): Float {
+        if (clean.isEmpty() || area.isEmpty) return 0f
+        val paint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply { typeface = typefaceFor(style.font) }
+        val minSize = minFontSize(imageWidth)
+        val maxSize = max(minSize, min(area.height * 0.9f, imageWidth * 0.05f))
+        return FontFit.largestFitting(minSize, maxSize) { candidate ->
+            val layout = layoutFor(clean, paint, candidate, area.width)
+            layout.height <= area.height && widestLine(layout) <= area.width
+        }
+    }
+
+    private fun minFontSize(imageWidth: Int) = max(6f, imageWidth * 0.007f)
 
     /** Draws [clean] centred in [area] at the largest size that fits, scaled by the style's size setting. */
     private fun drawFitted(
@@ -216,6 +249,7 @@ object PageOverlayRenderer {
         outlined: Boolean,
         imageWidth: Int,
         style: RenderStyle,
+        fittedSize: Float? = null,
     ) {
         if (area.isEmpty) return
         // Not read inside apply {}: there "style" would mean the paint's own style.
@@ -225,9 +259,9 @@ object PageOverlayRenderer {
             typeface = face
         }
 
-        val minSize = max(8f, imageWidth * 0.010f)
+        val minSize = minFontSize(imageWidth)
         val maxSize = max(minSize, min(area.height * 0.9f, imageWidth * 0.05f))
-        val fitted = FontFit.largestFitting(minSize, maxSize) { candidate ->
+        val fitted = fittedSize ?: FontFit.largestFitting(minSize, maxSize) { candidate ->
             val layout = layoutFor(clean, paint, candidate, area.width)
             layout.height <= area.height && widestLine(layout) <= area.width
         }

@@ -25,6 +25,17 @@ class BubbleRegion(
     val textColor: Int? = null,
     /** Area that counts as belonging to this region for grouping, when the mask only holds the letters. */
     val extent: PixelRect? = null,
+    /**
+     * Open text only: the page around the lettering is one flat colour. A speech bubble whose outline could not be
+     * traced (dashed or broken outline) can then still be lettered in place without damaging artwork.
+     */
+    val flatSurroundings: Boolean = false,
+    /**
+     * Open text only: share of the lettering pixels that were really erased. Low when the lettering is stylised
+     * artwork (logos, huge titles) that the eraser deliberately leaves alone. Drawing a translation over
+     * lettering that is still visible would overlap it, so such boxes are skipped.
+     */
+    val inkErasedShare: Float = 1f,
 ) {
     /** True if the page pixel ([x], [y]) belongs to this bubble. */
     fun contains(x: Int, y: Int): Boolean {
@@ -116,7 +127,13 @@ object BubbleFinder {
         val mask = BooleanArray(w * h)
         val seeds = collectSeeds(windowPixels, w, boxInWindow, background, config.colorTolerance)
         floodFill(windowPixels, w, h, seeds, background, config.colorTolerance, mask)
+        val flooded = mask.copyOf()
         fillRect(mask, w, paddedBox)
+        if (config.maxLetterSide != Int.MAX_VALUE) {
+            // The model's box often reaches over the bubble outline. Repainting the padded box as a whole would
+            // wipe out a piece of the outline (and the page beside it), so take those pixels out again.
+            protectOutline(windowPixels, w, h, mask, flooded, background, config, paddedBox)
+        }
         fillHoles(mask, w, h)
 
         // A real bubble is closed by its outline, so it stays away from the window border. A fill that reaches
@@ -192,7 +209,56 @@ object BubbleFinder {
             fill = erased.fill,
             textColor = textColor,
             extent = cleared.offset(window.left, window.top),
+            flatSurroundings = isFlatAround(pixels, w, h, cleared, background, config.colorTolerance),
+            inkErasedShare = erasedInkShare(pixels, erased.mask, w, cleared, background),
         )
+    }
+
+    /**
+     * True when a thin ring just outside [rect] is (almost) all in the [background] colour: a plain page or the
+     * inside of a bubble whose outline has gaps, as opposed to lettering over artwork or a gradient.
+     */
+    internal fun isFlatAround(
+        pixels: IntArray,
+        w: Int,
+        h: Int,
+        rect: PixelRect,
+        background: Int,
+        tolerance: Int,
+    ): Boolean {
+        val ring = max(3, min(rect.width, rect.height) / 6)
+        val outer = rect.expandedWithin(ring, ring, PixelRect(0, 0, w, h))
+        var total = 0
+        var flat = 0
+        for (y in outer.top until outer.bottom) {
+            for (x in outer.left until outer.right) {
+                if (rect.contains(x, y)) continue
+                total++
+                if (isBackground(pixels[y * w + x], background, tolerance)) flat++
+            }
+        }
+        return total > 0 && flat >= total * MIN_FLAT_SHARE
+    }
+
+    /** Share of the clearly visible lettering pixels inside [rect] that [mask] covers. 1 when there are none. */
+    internal fun erasedInkShare(
+        pixels: IntArray,
+        mask: BooleanArray,
+        w: Int,
+        rect: PixelRect,
+        background: Int,
+    ): Float {
+        var ink = 0
+        var erased = 0
+        for (y in rect.top until rect.bottom) {
+            for (x in rect.left until rect.right) {
+                val index = y * w + x
+                if (TextEraser.distance(pixels[index], background) < INK_DISTANCE) continue
+                ink++
+                if (mask[index]) erased++
+            }
+        }
+        return if (ink == 0) 1f else erased.toFloat() / ink
     }
 
     // region Background colour
@@ -368,6 +434,96 @@ object BubbleFinder {
 
     // endregion
 
+    // region Outline protection
+
+    /**
+     * Takes bubble outline and artwork pixels out of [mask] again after the padded box was added to it.
+     *
+     * Ink (anything that is not the bubble colour) forms connected groups. A group that is taller than a letter and
+     * reaches outside the padded box is the bubble outline, a panel border or artwork: it is kept. Lettering is
+     * small, or lies inside the box. Afterwards only mask pixels still connected to the traced bubble interior stay,
+     * so the part of the padded box that lies beyond the outline is not repainted either.
+     */
+    private fun protectOutline(
+        pixels: IntArray,
+        w: Int,
+        h: Int,
+        mask: BooleanArray,
+        flooded: BooleanArray,
+        background: Int,
+        config: Config,
+        paddedBox: PixelRect,
+    ) {
+        val maxWidth = config.maxLetterSide.toLong() * 3
+        val slack = max(3, min(paddedBox.width, paddedBox.height) / 8)
+        val limit = paddedBox.expandedWithin(slack, slack, PixelRect(0, 0, w, h))
+
+        val seen = BooleanArray(w * h)
+        val queue = IntArray(w * h)
+        for (start in 0 until w * h) {
+            if (seen[start] || isBackground(pixels[start], background, config.colorTolerance)) continue
+            var head = 0
+            var tail = 0
+            queue[tail++] = start
+            seen[start] = true
+            var minX = start % w
+            var maxX = minX
+            var minY = start / w
+            var maxY = minY
+            while (head < tail) {
+                val index = queue[head++]
+                val x = index % w
+                val y = index / w
+                minX = min(minX, x)
+                maxX = max(maxX, x)
+                minY = min(minY, y)
+                maxY = max(maxY, y)
+                for (dy in -1..1) {
+                    for (dx in -1..1) {
+                        val nx = x + dx
+                        val ny = y + dy
+                        if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue
+                        val next = ny * w + nx
+                        if (!seen[next] && !isBackground(pixels[next], background, config.colorTolerance)) {
+                            seen[next] = true
+                            queue[tail++] = next
+                        }
+                    }
+                }
+            }
+            val large = maxY - minY + 1 > config.maxLetterSide || maxX - minX + 1 > maxWidth
+            val insideBox = minX >= limit.left && maxX < limit.right && minY >= limit.top && maxY < limit.bottom
+            if (large && !insideBox) {
+                for (i in 0 until tail) mask[queue[i]] = false
+            }
+        }
+
+        // Keep only what is still connected to the traced interior.
+        val keep = BooleanArray(w * h)
+        var head = 0
+        var tail = 0
+
+        fun push(index: Int) {
+            if (mask[index] && !keep[index]) {
+                keep[index] = true
+                queue[tail++] = index
+            }
+        }
+        for (i in 0 until w * h) if (flooded[i]) push(i)
+        while (head < tail) {
+            val index = queue[head++]
+            val x = index % w
+            val y = index / w
+            if (x > 0) push(index - 1)
+            if (x < w - 1) push(index + 1)
+            if (y > 0) push(index - w)
+            if (y < h - 1) push(index + w)
+        }
+        for (i in 0 until w * h) mask[i] = keep[i]
+    }
+
+    // endregion
+
     // region Leftover ink
 
     /**
@@ -488,4 +644,10 @@ object BubbleFinder {
     // endregion
 
     private const val WHITE = -1 // 0xFFFFFFFF
+
+    /** Share of the ring around open text that must have the page colour for the surroundings to count as flat. */
+    private const val MIN_FLAT_SHARE = 0.92f
+
+    /** A pixel this far from the page colour is clearly visible lettering (matches the eraser's threshold). */
+    private const val INK_DISTANCE = 70
 }
