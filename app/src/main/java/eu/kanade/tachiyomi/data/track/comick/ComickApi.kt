@@ -89,6 +89,7 @@ class ComickApi(
             authClient
                 .newCall(PUT(url.toString(), body = body))
                 .awaitSuccess()
+                .close()
 
             // only returns the same data back with nothing additionally useful
             track
@@ -104,6 +105,7 @@ class ComickApi(
             authClient
                 .newCall(DELETE(url.toString(), body = RequestBody.EMPTY))
                 .awaitSuccess()
+                .close()
         }
     }
 
@@ -151,6 +153,7 @@ class ComickApi(
 
             authClient.newCall(request)
                 .awaitSuccess()
+                .close()
 
             // only returns the same data back with nothing additionally useful
             track
