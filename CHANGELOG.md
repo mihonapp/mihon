@@ -154,6 +154,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed actions started from a dialog sometimes not running when the dialog closed right away, Kitsu, Shikimori, MangaBaka, Bangumi and Hikka sometimes refreshing their login twice at once, adding an extension repo served over HTTP failing, and cancelling an extension install not stopping its download ([@AntsyLich](https://github.com/AntsyLich)) ([#4068](https://github.com/mihonapp/mihon/pull/4068))
 - Fixed the next library update staying "Soon" after new chapters were found, and chapters that came out early, late or were dated earlier by the source pushing the next check back ([@AntsyLich](https://github.com/AntsyLich)) ([`ba44815`](https://github.com/mihonapp/mihon/commit/ba44815))
 - Fixed long strip side padding being counted in zoom bounds ([@WizaHX](https://github.com/WizaHX)) ([#4072](https://github.com/mihonapp/mihon/pull/4072))
+- Fixed long strip stuttering between pages and using a lot of memory with very tall pages ([@AntsyLich](https://github.com/AntsyLich), [@matheuswr89](https://github.com/matheuswr89))
 
 ### Other
 - Show "Nightly" instead of "Beta" for preview builds and "FOSS" for FOSS builds in About ([@AntsyLich](https://github.com/AntsyLich)) ([#3760](https://github.com/mihonapp/mihon/pull/3760))
