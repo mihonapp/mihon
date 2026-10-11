@@ -98,6 +98,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Speed up loading extension repos at startup ([@AntsyLich](https://github.com/AntsyLich)) ([`8066b8d`](https://github.com/mihonapp/mihon/commit/8066b8d))
 - Speed up opening the entry details screen and showing download progress there and in updates ([@AntsyLich](https://github.com/AntsyLich)) ([`ba16158`](https://github.com/mihonapp/mihon/commit/ba16158))
 - Speed up queueing many chapters for download at once ([@AntsyLich](https://github.com/AntsyLich)) ([`f02bf5b`](https://github.com/mihonapp/mihon/commit/f02bf5b))
+- Exclude longstrip side padding from horizontal zoom bounds ([#4072](https://github.com/mihonapp/mihon/pull/4072))
 
 ### Removed
 - Remove "Custom hardware bitmap threshold", "Use legacy decoder for long strip reader" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
