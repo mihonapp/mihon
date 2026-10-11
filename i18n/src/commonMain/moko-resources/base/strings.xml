@@ -993,6 +993,9 @@
     <!--UpdateCheck-->
     <string name="update_check_confirm">Download</string>
     <string name="update_check_open">Open on GitHub</string>
+    <string name="update_check_skip">Skip this version</string>
+    <string name="update_check_skip_title">Skip %s?</string>
+    <string name="update_check_skip_message">Updates often contain bug fixes and security improvements. You won\'t be reminded about this version again, but you\'ll still be notified when a newer one is released.</string>
     <!-- reserved for future use -->
     <string name="update_check_eol">This Android version is no longer supported</string>
     <string name="update_check_no_new_updates">No new updates available</string>
