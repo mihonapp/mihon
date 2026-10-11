@@ -318,8 +318,16 @@ object ImageUtil {
             null
         }
 
+        if (image == null) return Color.WHITE.toDrawable()
+        return try {
+            chooseBackground(context, image)
+        } finally {
+            image.recycle()
+        }
+    }
+
+    private fun chooseBackground(context: Context, image: Bitmap): Drawable {
         val whiteColor = Color.WHITE
-        if (image == null) return whiteColor.toDrawable()
         if (image.width < 50 || image.height < 50) {
             return whiteColor.toDrawable()
         }

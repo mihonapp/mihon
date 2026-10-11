@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.extension
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -43,7 +42,6 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import java.util.Locale
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * The manager of extensions installed as another apk which extend the available sources. It handles
@@ -69,8 +67,6 @@ class ExtensionManager(
 
     // A full load replaces both maps, so install events wait for it and apply on top instead of being overwritten
     private val loadMutex = Mutex()
-
-    private val iconMap = ConcurrentHashMap<String, Drawable>()
 
     @Volatile
     private var stores = emptyList<ExtensionStore>()
@@ -144,15 +140,6 @@ class ExtensionManager(
                 extension.sources.any { it.id == sourceId }
             }
                 ?.pkgName
-        }
-    }
-
-    suspend fun getAppIconForSource(sourceId: Long): Drawable? {
-        val pkgName = getExtensionPackage(sourceId) ?: return null
-
-        return iconMap[pkgName] ?: iconMap.getOrPut(pkgName) {
-            ExtensionLoader.getExtensionPackageInfoFromPkgName(context, pkgName)!!.applicationInfo!!
-                .loadIcon(context.packageManager)
         }
     }
 

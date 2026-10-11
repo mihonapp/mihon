@@ -51,7 +51,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -66,9 +65,11 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import logcat.LogPriority
@@ -80,6 +81,8 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.mapAsCheckboxState
+import tachiyomi.core.common.util.lang.SubscriberGate
+import tachiyomi.core.common.util.lang.pausedWhileUnsubscribed
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
@@ -103,6 +106,7 @@ import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import kotlin.math.floor
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @AssistedInject
@@ -138,6 +142,8 @@ class MangaViewModel(
     private val refreshTracks: RefreshTracks,
     private val coverCache: CoverCache,
 ) : ViewModel() {
+
+    private val subscriberGate = SubscriberGate()
 
     @AssistedFactory
     @ManualViewModelAssistedFactoryKey
@@ -209,10 +215,10 @@ class MangaViewModel(
             emitAll(getMangaAndChapters.subscribe(mangaId, applyScanlatorFilter = true))
         }
             .distinctUntilChanged(),
-        downloadCache.changes,
-        downloadManager.queueState,
+        downloadCache.changes.pausedWhileUnsubscribed(),
+        downloadManager.queueState.pausedWhileUnsubscribed(),
         // So an extension installed while the screen is open replaces the stub source right away
-        sourceManager.sources,
+        sourceManager.sources.pausedWhileUnsubscribed(),
     ) { (manga, chapters), _, _, _ ->
         MangaAndChapters(
             manga = manga,
@@ -247,7 +253,7 @@ class MangaViewModel(
         mangaAndChapters,
         scanlators,
         trackers,
-        combine(selectedChapterIds, queuedDownloadStates, ::Pair),
+        combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
         combine(dialog, isRefreshingData, ::Pair),
     ) {
             mangaAndChapters,
@@ -286,12 +292,16 @@ class MangaViewModel(
             it.isAnySelected
         }
         .flowOn(Dispatchers.IO)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State.Loading)
+        .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State.Loading)
 
     init {
         // Progress ticks often, and each one copies the map of download states
         viewModelScope.launch(Dispatchers.Default) {
-            merge(downloadManager.statusFlow(), downloadManager.progressFlow())
+            merge(
+                downloadManager.statusFlow(),
+                // Each tick rebuilds the shown chapter items, so cap how often that happens
+                downloadManager.progressFlow().sample(200.milliseconds),
+            )
                 .filter { it.manga.id == mangaId }
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(::updateDownloadState)
