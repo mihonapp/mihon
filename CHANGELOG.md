@@ -57,6 +57,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Fixed restoring a backup failing on entries that list a category or excluded scanlator twice ([@AntsyLich](https://github.com/AntsyLich)) ([#4022](https://github.com/mihonapp/mihon/pull/4022))
 - List MangaBaka first among trackers ([@AntsyLich](https://github.com/AntsyLich)) ([`dd46413`](https://github.com/mihonapp/mihon/commit/dd46413))
 - Show a wavy progress ring while a chapter downloads ([@AntsyLich](https://github.com/AntsyLich)) ([`e562a9b`](https://github.com/mihonapp/mihon/commit/e562a9b))
+- Show a confirmation dialog on removing a manga from the manga page ([#4073](https://github.com/mihonapp/mihon/pull/4073))
 
 ### Improved
 - Show the updates and upcoming filter icon as active when filtering by category, or by hidden excluded scanlators in updates ([@Secozzi](https://github.com/Secozzi)) ([#3772](https://github.com/mihonapp/mihon/pull/3772))
