@@ -44,9 +44,10 @@ class UpdateManga(
         timeZone: TimeZone,
         dateTime: LocalDateTime,
         window: ClosedRange<Instant>?,
+        foundRelease: Boolean,
     ): Boolean {
         return mangaRepository.update(
-            fetchInterval.withFetchInterval(manga, dateTime, timeZone, window).apply {
+            fetchInterval.withFetchInterval(manga, dateTime, timeZone, window, foundRelease).apply {
                 lastUpdate = Clock.System.now()
             },
         )
