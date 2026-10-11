@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.util.storage.copyAndSetReadOnlyTo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.di.appGraph
@@ -115,7 +116,7 @@ internal object ExtensionLoader {
     ): List<Extension.Installed> {
         val trustExtension = context.appGraph.trustExtension
         val sourcePreferences = context.appGraph.sourcePreferences
-        val stores = context.appGraph.extensionStoreRepository.getAll()
+        val stores = context.appGraph.extensionStoreRepository.getAllAsFlow().first()
         val enabledContentWarnings = sourcePreferences.enabledContentWarnings.get()
         val applyContentWarningsToInstalled = sourcePreferences.applyContentWarningsToInstalled.get()
 
