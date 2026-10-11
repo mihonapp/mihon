@@ -246,19 +246,20 @@ class BubbleFinderTest {
     fun `a box that reaches over the bubble outline does not repaint the outline`() {
         val page = Page(200, 200, 0xFF808080.toInt())
         page.ellipse(100, 100, 60, 45, white, black)
-        // Wider than the bubble: the box edges lie outside the outline
-        val box = PixelRect(35, 70, 165, 130)
-        page.text(PixelRect(70, 85, 130, 115), black)
+        // The box itself lies inside the bubble, but its 8% padding reaches over the outline (x 40..42 and 158..160)
+        val box = PixelRect(46, 90, 154, 110)
+        page.text(PixelRect(50, 93, 150, 107), black)
 
         val region = find(page, box, BubbleFinder.Config(maxLetterSide = 30))
 
         assertTrue(region.fromFloodFill)
-        assertFalse(region.contains(40, 100), "left outline must stay")
-        assertFalse(region.contains(159, 100), "right outline must stay")
-        assertFalse(region.contains(30, 100), "page outside the bubble must stay")
+        assertFalse(region.contains(41, 100), "left outline must stay")
+        assertFalse(region.contains(158, 100), "right outline must stay")
+        assertFalse(region.contains(38, 100), "page left of the bubble must stay")
+        assertFalse(region.contains(161, 100), "page right of the bubble must stay")
         assertTrue(region.contains(100, 70), "bubble interior is still repainted")
-        for (y in 85 until 115) {
-            for (x in 70 until 130) {
+        for (y in 93 until 107) {
+            for (x in 50 until 150) {
                 if ((x + y) % 2 == 0) assertTrue(region.contains(x, y), "text pixel $x,$y left uncovered")
             }
         }
