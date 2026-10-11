@@ -31,7 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastMap
@@ -75,6 +78,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.shouldExpandFAB
 import tachiyomi.source.local.isLocal
+import kotlin.math.floor
 import kotlin.time.Instant
 
 @Composable
@@ -267,6 +271,15 @@ private fun MangaScreenSmallImpl(
         )
     }
 
+    var chapterSearchQuery by rememberSaveable { mutableStateOf<String?>(null) }
+    val visibleListItems = remember(listItem, chapterSearchQuery) {
+        listItem.filterByChapterNumber(chapterSearchQuery)
+    }
+
+    BackHandler(enabled = chapterSearchQuery != null) {
+        chapterSearchQuery = null
+    }
+
     BackHandler(enabled = isAnySelected) {
         onAllChapterSelected(false)
     }
@@ -293,6 +306,8 @@ private fun MangaScreenSmallImpl(
             MangaToolbar(
                 title = state.manga.title,
                 hasFilters = state.filterActive,
+                searchQuery = chapterSearchQuery,
+                onChangeSearchQuery = { chapterSearchQuery = it },
                 navigateUp = navigateUp,
                 onClickFilter = onFilterClicked,
                 onClickShare = onShareClicked,
@@ -366,56 +381,59 @@ private fun MangaScreenSmallImpl(
                     state = chapterListState,
                     contentPadding = PaddingValues(
                         start = contentPadding.calculateStartPadding(layoutDirection),
+                        top = if (chapterSearchQuery != null) topPadding else 0.dp,
                         end = contentPadding.calculateEndPadding(layoutDirection),
                         bottom = contentPadding.calculateBottomPadding(),
                     ),
                 ) {
-                    item(
-                        key = MangaScreenItem.INFO_BOX,
-                        contentType = MangaScreenItem.INFO_BOX,
-                    ) {
-                        MangaInfoBox(
-                            isTabletUi = false,
-                            appBarPadding = topPadding,
-                            manga = state.manga,
-                            source = remember { state.source },
-                            isStubSource = remember { state.source is StubSource },
-                            onCoverClick = onCoverClicked,
-                            doSearch = onSearch,
-                        )
-                    }
+                    if (chapterSearchQuery == null) {
+                        item(
+                            key = MangaScreenItem.INFO_BOX,
+                            contentType = MangaScreenItem.INFO_BOX,
+                        ) {
+                            MangaInfoBox(
+                                isTabletUi = false,
+                                appBarPadding = topPadding,
+                                manga = state.manga,
+                                source = remember { state.source },
+                                isStubSource = remember { state.source is StubSource },
+                                onCoverClick = onCoverClicked,
+                                doSearch = onSearch,
+                            )
+                        }
 
-                    item(
-                        key = MangaScreenItem.ACTION_ROW,
-                        contentType = MangaScreenItem.ACTION_ROW,
-                    ) {
-                        MangaActionRow(
-                            favorite = state.manga.favorite,
-                            trackingCount = state.trackingCount,
-                            nextUpdate = nextUpdate,
-                            isUserIntervalMode = state.manga.fetchInterval < 0,
-                            onAddToLibraryClicked = onAddToLibraryClicked,
-                            onWebViewClicked = onWebViewClicked,
-                            onWebViewLongClicked = onWebViewLongClicked,
-                            onTrackingClicked = onTrackingClicked,
-                            onEditIntervalClicked = onEditIntervalClicked,
-                            onEditCategory = onEditCategoryClicked,
-                        )
-                    }
+                        item(
+                            key = MangaScreenItem.ACTION_ROW,
+                            contentType = MangaScreenItem.ACTION_ROW,
+                        ) {
+                            MangaActionRow(
+                                favorite = state.manga.favorite,
+                                trackingCount = state.trackingCount,
+                                nextUpdate = nextUpdate,
+                                isUserIntervalMode = state.manga.fetchInterval < 0,
+                                onAddToLibraryClicked = onAddToLibraryClicked,
+                                onWebViewClicked = onWebViewClicked,
+                                onWebViewLongClicked = onWebViewLongClicked,
+                                onTrackingClicked = onTrackingClicked,
+                                onEditIntervalClicked = onEditIntervalClicked,
+                                onEditCategory = onEditCategoryClicked,
+                            )
+                        }
 
-                    item(
-                        key = MangaScreenItem.DESCRIPTION_WITH_TAG,
-                        contentType = MangaScreenItem.DESCRIPTION_WITH_TAG,
-                    ) {
-                        ExpandableMangaDescription(
-                            defaultExpandState = state.isFromSource,
-                            description = state.manga.description,
-                            tagsProvider = { state.manga.genre },
-                            notes = state.manga.notes,
-                            onTagSearch = onTagSearch,
-                            onCopyTagToClipboard = onCopyTagToClipboard,
-                            onEditNotes = onEditNotesClicked,
-                        )
+                        item(
+                            key = MangaScreenItem.DESCRIPTION_WITH_TAG,
+                            contentType = MangaScreenItem.DESCRIPTION_WITH_TAG,
+                        ) {
+                            ExpandableMangaDescription(
+                                defaultExpandState = state.isFromSource,
+                                description = state.manga.description,
+                                tagsProvider = { state.manga.genre },
+                                notes = state.manga.notes,
+                                onTagSearch = onTagSearch,
+                                onCopyTagToClipboard = onCopyTagToClipboard,
+                                onEditNotes = onEditNotesClicked,
+                            )
+                        }
                     }
 
                     item(
@@ -439,7 +457,7 @@ private fun MangaScreenSmallImpl(
 
                     sharedChapterItems(
                         manga = state.manga,
-                        chapters = listItem,
+                        chapters = visibleListItems,
                         isAnyChapterSelected = chapters.fastAny { it.selected },
                         chapterSwipeStartAction = chapterSwipeStartAction,
                         chapterSwipeEndAction = chapterSwipeEndAction,
@@ -519,6 +537,15 @@ fun MangaScreenLargeImpl(
 
     val chapterListState = rememberLazyListState()
 
+    var chapterSearchQuery by rememberSaveable { mutableStateOf<String?>(null) }
+    val visibleListItems = remember(listItem, chapterSearchQuery) {
+        listItem.filterByChapterNumber(chapterSearchQuery)
+    }
+
+    BackHandler(enabled = chapterSearchQuery != null) {
+        chapterSearchQuery = null
+    }
+
     BackHandler(enabled = isAnySelected) {
         onAllChapterSelected(false)
     }
@@ -532,6 +559,8 @@ fun MangaScreenLargeImpl(
                 modifier = Modifier.onSizeChanged { topBarHeight = it.height },
                 title = state.manga.title,
                 hasFilters = state.filterActive,
+                searchQuery = chapterSearchQuery,
+                onChangeSearchQuery = { chapterSearchQuery = it },
                 navigateUp = navigateUp,
                 onClickFilter = onFilterButtonClicked,
                 onClickShare = onShareClicked,
@@ -680,7 +709,7 @@ fun MangaScreenLargeImpl(
 
                             sharedChapterItems(
                                 manga = state.manga,
-                                chapters = listItem,
+                                chapters = visibleListItems,
                                 isAnyChapterSelected = chapters.fastAny { it.selected },
                                 chapterSwipeStartAction = chapterSwipeStartAction,
                                 chapterSwipeEndAction = chapterSwipeEndAction,
@@ -830,5 +859,18 @@ private fun onChapterItemClick(
         chapterItem.selected -> onToggleSelection(false)
         isAnyChapterSelected -> onToggleSelection(true)
         else -> onChapterClicked(chapterItem.chapter)
+    }
+}
+
+private fun List<ChapterList>.filterByChapterNumber(query: String?): List<ChapterList> {
+    val trimmedQuery = query?.trim()
+    if (trimmedQuery.isNullOrEmpty()) return this
+    val number = trimmedQuery.toDoubleOrNull() ?: return emptyList()
+    val isExactMatch = '.' in trimmedQuery
+
+    return filter { item ->
+        if (item !is ChapterList.Item || !item.chapter.isRecognizedNumber) return@filter false
+        val chapterNumber = item.chapter.chapterNumber
+        if (isExactMatch) chapterNumber == number else floor(chapterNumber) == number
     }
 }
