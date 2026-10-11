@@ -250,7 +250,7 @@ class ComickApi(
     fun verifyOAuthState(state: String): Boolean = state == oauthStateParam
 
     companion object {
-        private const val CLIENT_ID = "" // TODO: Mihon client ID
+        private const val CLIENT_ID = "SGrUojDvbgqfhSCQbwfCjUPIccYMJdBH"
         private const val REDIRECT_URI = "app.mihon://comick-auth"
 
         private const val LIBRARY_WRITE_SCOPE = "library:write"
