@@ -515,16 +515,7 @@ class LibraryViewModel(
         appScope.launch {
             mangas.forEach { manga ->
                 val chapters = getNextChapters.await(manga.id)
-                    .fastFilterNot { chapter ->
-                        downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
-                            downloadManager.isChapterDownloaded(
-                                chapter.name,
-                                chapter.scanlator,
-                                chapter.url,
-                                manga.title,
-                                manga.source,
-                            )
-                    }
+                    .filterNotQueuedOrDownloaded(manga)
                     .let { if (amount != null) it.take(amount) else it }
 
                 downloadManager.downloadChapters(manga, chapters)
@@ -537,19 +528,16 @@ class LibraryViewModel(
         appScope.launch {
             mangas.forEach { manga ->
                 val chapters = getBookmarkedChaptersByMangaId.await(manga.id)
-                    .fastFilterNot { chapter ->
-                        downloadManager.getQueuedDownloadOrNull(chapter.id) != null ||
-                            downloadManager.isChapterDownloaded(
-                                chapter.name,
-                                chapter.scanlator,
-                                chapter.url,
-                                manga.title,
-                                manga.source,
-                            )
-                    }
+                    .filterNotQueuedOrDownloaded(manga)
                 downloadManager.downloadChapters(manga, chapters)
             }
         }
+    }
+
+    private fun List<Chapter>.filterNotQueuedOrDownloaded(manga: Manga): List<Chapter> {
+        val queuedDownloads = downloadManager.getQueuedDownloadsByChapterId()
+        val downloadedChapterIds = downloadManager.getDownloadedChapterIds(this, manga)
+        return fastFilterNot { it.id in queuedDownloads || it.id in downloadedChapterIds }
     }
 
     /**

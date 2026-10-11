@@ -120,6 +120,7 @@ class MangaScreen(
                 if (isStubSource) showMissingExtensionDialog = true else openChapter(context, it)
             },
             onDownloadChapter = viewModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
+            downloadProgressProvider = viewModel::getDownloadProgress,
             onAddToLibraryClicked = {
                 viewModel.toggleFavorite()
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
