@@ -48,4 +48,7 @@ class TranslationPreferences(
     fun onlyWhenIdle() = preferenceStore.getBoolean("pref_translation_only_idle", false)
 
     fun requestDelaySeconds() = preferenceStore.getInt("pref_translation_delay_seconds", 6)
+
+    // Writes a step by step text log of every translated chapter into the Local source folder.
+    fun saveLog() = preferenceStore.getBoolean("pref_translation_save_log", true)
 }

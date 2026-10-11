@@ -33,7 +33,7 @@ object OverlayResponseParser {
      * @throws TranslationException.UnreadableAnswer when the answer is not the expected JSON.
      * @throws TranslationException.OutputTruncated when the model stopped at its output token limit.
      */
-    fun parse(body: String, json: Json): List<TextBox> {
+    fun parse(body: String, json: Json, onDropped: (String) -> Unit = {}): List<TextBox> {
         val response = try {
             json.decodeFromString<GenerateContentResponse>(body)
         } catch (_: IllegalArgumentException) {
@@ -63,10 +63,11 @@ object OverlayResponseParser {
             throw TranslationException.UnreadableAnswer(finishReason ?: "Empty answer")
         }
 
-        return parseAnswer(answer, json)
+        return parseAnswer(answer, json, onDropped)
     }
 
-    internal fun parseAnswer(answer: String, json: Json): List<TextBox> {
+    /** @param onDropped is told why a box of the answer was left out, for the translation log. */
+    internal fun parseAnswer(answer: String, json: Json, onDropped: (String) -> Unit = {}): List<TextBox> {
         // Models sometimes wrap JSON in ``` fences or add a sentence around it.
         val start = answer.indexOfFirst { it == '{' || it == '[' }
         val end = answer.indexOfLast { it == '}' || it == ']' }
@@ -86,19 +87,25 @@ object OverlayResponseParser {
                 ?: throw TranslationException.UnreadableAnswer("Missing boxes field")
             else -> throw TranslationException.UnreadableAnswer("Unexpected JSON")
         }
-        return array.mapNotNull { toTextBox(it, json) }
+        return array.mapNotNull { toTextBox(it, json, onDropped) }
     }
 
-    private fun toTextBox(element: JsonElement, json: Json): TextBox? {
+    private fun toTextBox(element: JsonElement, json: Json, onDropped: (String) -> Unit): TextBox? {
         val raw = try {
             json.decodeFromJsonElement<RawBox>(element)
         } catch (_: IllegalArgumentException) {
+            onDropped("not a box object: ${element.toString().take(MAX_DETAIL_LENGTH)}")
             return null
         }
 
         val text = raw.text?.trim().orEmpty()
         val coordinates = raw.box
-        if (text.isEmpty() || coordinates == null || coordinates.size != 4 || coordinates.any { !it.isFinite() }) {
+        if (text.isEmpty()) {
+            onDropped("no translated text, source \"${raw.sourceText.orEmpty().take(MAX_DETAIL_LENGTH)}\"")
+            return null
+        }
+        if (coordinates == null || coordinates.size != 4 || coordinates.any { !it.isFinite() }) {
+            onDropped("box_2d is not four numbers, text \"${text.take(MAX_DETAIL_LENGTH)}\"")
             return null
         }
 
@@ -107,7 +114,10 @@ object OverlayResponseParser {
         val yMax = maxOf(values[0], values[2])
         val xMin = minOf(values[1], values[3])
         val xMax = maxOf(values[1], values[3])
-        if (yMax - yMin < 1 || xMax - xMin < 1) return null
+        if (yMax - yMin < 1 || xMax - xMin < 1) {
+            onDropped("box has no area $values, text \"${text.take(MAX_DETAIL_LENGTH)}\"")
+            return null
+        }
 
         return TextBox(yMin, xMin, yMax, xMax, parseKind(raw.kind), text, raw.sourceText?.trim().orEmpty())
     }

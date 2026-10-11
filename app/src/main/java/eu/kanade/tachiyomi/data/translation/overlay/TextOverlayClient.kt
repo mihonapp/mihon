@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.data.translation.RequestContent
 import eu.kanade.tachiyomi.data.translation.RequestInlineData
 import eu.kanade.tachiyomi.data.translation.RequestPart
 import eu.kanade.tachiyomi.data.translation.TranslationException
+import eu.kanade.tachiyomi.data.translation.TranslationLog
 import eu.kanade.tachiyomi.data.translation.buildGeminiHttpClient
 import eu.kanade.tachiyomi.data.translation.isValidApiKey
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -47,6 +48,7 @@ class TextOverlayClient(
 
     /**
      * @param baseIntervalMillis minimum time between two requests (0 for paid keys).
+     * @param label names the request in the translation log, for example `page 3 crop 1/2`.
      * @return all text boxes found on the page; empty if the page has no text.
      * @throws TranslationException for all expected failures.
      */
@@ -58,6 +60,7 @@ class TextOverlayClient(
         language: String,
         baseIntervalMillis: Long,
         promptContext: String = "",
+        label: String = "request",
     ): List<TextBox> {
         if (!isValidApiKey(apiKey)) {
             throw TranslationException.InvalidApiKey("key is empty or contains invalid characters")
@@ -66,27 +69,53 @@ class TextOverlayClient(
             buildRequest(image, mimeType, language, promptContext),
         ).toRequestBody(JSON_MEDIA_TYPE)
 
+        TranslationLog.step {
+            "$label: sending ${image.size / BYTES_PER_KB} KB $mimeType to $model, " +
+                "${promptContext.length} characters of extra prompt context"
+        }
+
         var attempt = 0
         while (true) {
+            val queuedAt = System.nanoTime()
             pacer.awaitTurn(baseIntervalMillis)
+            val sentAt = System.nanoTime()
             try {
-                val boxes = executeOnce(body, apiKey, model)
+                val boxes = executeOnce(body, apiKey, model, label)
                 pacer.onSuccess()
+                TranslationLog.step {
+                    "$label: answer after ${millisBetween(sentAt, System.nanoTime())} ms " +
+                        "(${millisBetween(queuedAt, sentAt)} ms waiting for the request pacer), " +
+                        "${boxes.size} box(es)"
+                }
+                boxes.forEachIndexed { index, box ->
+                    TranslationLog.step { "$label:   #${index + 1} ${TranslationLog.describe(box)}" }
+                }
                 return boxes
             } catch (e: TranslationException) {
+                TranslationLog.step {
+                    "$label: attempt ${attempt + 1} failed after ${millisBetween(sentAt, System.nanoTime())} ms: " +
+                        TranslationLog.describe(e, maxFrames = 0)
+                }
                 if (e is TranslationException.RateLimited) pacer.onRateLimited(e.retryAfterMillis)
-                if (attempt >= e.maxRetries) throw e
+                if (attempt >= e.maxRetries) {
+                    TranslationLog.step { "$label: giving up after ${attempt + 1} attempt(s)" }
+                    throw e
+                }
                 attempt++
                 currentCoroutineContext().ensureActive()
                 // Rate limits are already handled by the pacer. Everything else gets a plain backoff.
                 if (e !is TranslationException.RateLimited) {
-                    delay(NanoBananaClient.backoffMillis(attempt, e.retryAfterMillis))
+                    val backoff = NanoBananaClient.backoffMillis(attempt, e.retryAfterMillis)
+                    TranslationLog.step { "$label: trying again in $backoff ms" }
+                    delay(backoff)
+                } else {
+                    TranslationLog.step { "$label: rate limited, trying again when the request pacer allows it" }
                 }
             }
         }
     }
 
-    private suspend fun executeOnce(body: RequestBody, apiKey: String, model: String): List<TextBox> {
+    private suspend fun executeOnce(body: RequestBody, apiKey: String, model: String, label: String): List<TextBox> {
         val request = POST(
             url = "$GEMINI_BASE_URL/$model:generateContent",
             headers = Headers.headersOf("x-goog-api-key", apiKey.trim()),
@@ -106,14 +135,21 @@ class TextOverlayClient(
                 throw TranslationException.NetworkError(e)
             }
             if (!it.isSuccessful) {
+                TranslationLog.step { "$label: HTTP ${it.code}, ${text.length} characters of answer" }
                 throw NanoBananaResponseParser.parseError(it.code, text, json, it.header("Retry-After"))
             }
-            return OverlayResponseParser.parse(text, json)
+            return OverlayResponseParser.parse(text, json) { reason ->
+                TranslationLog.step { "$label: left out a box: $reason" }
+            }
         }
     }
 
+    private fun millisBetween(from: Long, to: Long) = (to - from) / NANOS_PER_MILLI
+
     companion object {
         private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
+        private const val BYTES_PER_KB = 1024
+        private const val NANOS_PER_MILLI = 1_000_000L
 
         /** Prompt sent with every page. Tweak here. `{language}` is replaced with the target language name. */
         const val PROMPT_TEMPLATE =

@@ -1132,6 +1132,8 @@
     <string name="pref_translation_style_info">Font, size and placement are applied when a chapter is translated. To change an already translated chapter, delete it with the bin icon and translate it again.</string>
     <string name="pref_translation_sfx">Translate sound effects</string>
     <string name="pref_translation_sfx_summary">Usually looks worse than the original lettering, so it\'s off by default</string>
+    <string name="pref_translation_save_log">Save a translation log</string>
+    <string name="pref_translation_save_log_summary">Writes a detailed text file for each translated chapter into the Local source folder (translation-log-…). It contains the page text and translations, never your API key</string>
     <string name="pref_translation_delay">Pause between pages</string>
     <string name="pref_translation_free_privacy">On Google\'s free tier, the pages you upload may be used to improve Google\'s products, including human review. Don\'t use free mode for pages you consider private. Free mode is slow on purpose (rate limits and a daily cap) and the result is rougher than redrawing: text on artwork, tall narrow bubbles and slightly misplaced boxes can look wrong.</string>
     <string name="translation_delay_none">No pause</string>

@@ -66,6 +66,9 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.io.LocalSourceFileSystem
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -120,6 +123,10 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
     @Volatile private var chapterName: String = ""
 
     @Volatile private var totalPages: Int = 0
+
+    /** The translation log file of this run, created when the first part of the log is written. */
+    @Volatile private var logFile: UniFile? = null
+    @Volatile private var logFileName: String = ""
     private val donePages = AtomicInteger(0)
 
     override suspend fun doWork(): Result {
@@ -157,11 +164,16 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
 
     private suspend fun runTranslation(chapter: Chapter, manga: Manga, source: Source, apiKey: String): Result {
         setForegroundSafely()
+        if (translationPreferences.saveLog().get()) startLog(chapter, manga, apiKey)
 
         return withIOContext {
             try {
                 when (val outcome = translate(chapter, manga, source, apiKey)) {
                     is Outcome.Completed -> {
+                        note {
+                            "Finished: ${outcome.seriesName}, already translated ${outcome.alreadyTranslated}, " +
+                                "pages with a coverage warning ${outcome.coverageWarningPages}"
+                        }
                         notifier.showComplete(
                             chapter.id,
                             chapter.name,
@@ -172,6 +184,11 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                         Result.success()
                     }
                     is Outcome.Partial -> {
+                        note {
+                            "Finished with problems: ${outcome.translated} of ${outcome.total} page(s) translated, " +
+                                "failures ${outcome.failures}, " +
+                                "pages with a coverage warning ${outcome.coverageWarningPages}"
+                        }
                         notifier.showPartial(
                             chapter.id,
                             chapter.name,
@@ -184,9 +201,11 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                     }
                 }
             } catch (e: CancellationException) {
+                TranslationLog.step { "The translation was cancelled" }
                 throw e
             } catch (e: TranslationException) {
                 logcat(LogPriority.ERROR, e) { "Chapter translation stopped" }
+                TranslationLog.error("Chapter translation stopped", e)
                 notifier.showError(chapter.id, chapter.name, e, donePages.get(), totalPages)
                 // Offline is the only fatal error worth waiting for. WorkManager resumes it once connected.
                 if (e is TranslationException.Offline && runAttemptCount < MAX_OFFLINE_ATTEMPTS) {
@@ -196,10 +215,12 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                 }
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e) { "Unexpected chapter translation error" }
+                TranslationLog.error("Unexpected chapter translation error", e)
                 notifier.showUnexpectedError(chapter.id, chapter.name, e)
                 Result.failure()
             } finally {
                 notifier.cancelProgress()
+                finishLog()
             }
         }
     }
@@ -263,6 +284,11 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
         val available = DiskUtil.getAvailableStorageSpace(baseDir)
         // `available` is -1 when it cannot be determined (for example some SAF providers). Write errors still
         // surface as StorageWriteFailed in that case.
+        note {
+            "Pages: ${pages.size} in total, ${finishedPages.size} already finished, $remaining to translate. " +
+                "Free storage ${if (available >= 0) "${available / BYTES_PER_MB} MB" else "unknown"}, " +
+                "about ${required / BYTES_PER_MB} MB needed"
+        }
         if (available in 0 until required) throw TranslationException.NotEnoughStorage(required, available)
 
         val seriesDir = existingSeries
@@ -289,6 +315,13 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
         )
         val delayMillis = translationPreferences.requestDelaySeconds().get().coerceIn(0, 120) * 1000L
         val glossary = Glossary.parse(translationPreferences.glossary(manga.id).get())
+        TranslationLog.step {
+            "Settings: mode ${if (overlay) "overlay" else "redraw"}, model $model, language $language, " +
+                "translate sound effects $translateSfx, request delay ${delayMillis / MILLIS_PER_SECOND} s, " +
+                "font ${translationPreferences.fontStyle().get()}, " +
+                "text size ${translationPreferences.textSizePercent().get()}%, " +
+                "placement ${translationPreferences.placement().get()}, glossary entries ${glossary.size}"
+        }
         // Overlay mode runs one page at a time, so the text of the page before is known when the next one starts.
         // Redraw mode runs pages in parallel and only sends the glossary.
         var previousTexts: List<String> = emptyList()
@@ -308,10 +341,23 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                             if (stopEarly.get()) return@withPermit
                             try {
                                 var pageCoverageIncomplete = false
+                                val pageStartedAt = System.nanoTime()
                                 val bytes = readPage(page)
+                                TranslationLog.step {
+                                    "Page ${index + 1}/${pages.size}: read ${bytes.size / BYTES_PER_KB} KB " +
+                                        "(${page.mimeType})"
+                                }
                                 val image = if (overlay) {
                                     val uploads = withContext(Dispatchers.Default) {
                                         prepareOverlayUploads(bytes, page.mimeType)
+                                    }
+                                    note {
+                                        "Page ${index + 1}: " +
+                                            "${uploads.first().pageWidth}x${uploads.first().pageHeight} px, " +
+                                            "${uploads.size} request image(s) " +
+                                            uploads.joinToString(prefix = "(", postfix = ")") {
+                                                "${it.crop.top}-${it.crop.bottom}"
+                                            }
                                     }
                                     val detections = mutableListOf<TallPageCropper.Detection>()
                                     // Boxes found so far per crop. A second attempt adds to them: the model leaves
@@ -341,7 +387,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                                             pageCoverageIncomplete = true
                                         }
                                         if (!pageCoverageIncomplete || stopEarly.get()) break
-                                        logcat(LogPriority.INFO) {
+                                        note {
                                             "Page ${index + 1}: coverage incomplete after attempt $attempt of " +
                                                 "$MAX_PAGE_ATTEMPTS"
                                         }
@@ -354,15 +400,36 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                                         firstUpload.pageHeight,
                                     )
                                     previousTexts = allBoxes.map { it.text }
+                                    note {
+                                        "Page ${index + 1}: ${detections.size} detection(s) merged into " +
+                                            "${allBoxes.size} box(es) on the page"
+                                    }
+                                    allBoxes.forEachIndexed { boxIndex, box ->
+                                        TranslationLog.step {
+                                            val area = box.toPixelRect(firstUpload.pageWidth, firstUpload.pageHeight)
+                                            "Page ${index + 1} box #${boxIndex + 1} " +
+                                                "[${area.left},${area.top},${area.right},${area.bottom}] " +
+                                                TranslationLog.describe(box)
+                                        }
+                                    }
                                     val boxes = allBoxes.filter { translateSfx || it.kind != BoxKind.SFX }
+                                    if (boxes.size != allBoxes.size) {
+                                        note {
+                                            "Page ${index + 1}: ${allBoxes.size - boxes.size} sound effect box(es) " +
+                                                "left as they are because sound effects are off"
+                                        }
+                                    }
                                     if (boxes.isEmpty()) {
                                         // Nothing to translate: keep the page as it is.
+                                        note { "Page ${index + 1}: nothing to translate, the page is kept as it is" }
                                         TranslatedImage(bytes, page.mimeType)
                                     } else {
                                         val rendered = withContext(Dispatchers.Default) {
-                                            PageOverlayRenderer.render(bytes, boxes, style)
+                                            PageOverlayRenderer.render(bytes, boxes, style) { message ->
+                                                TranslationLog.step { "Page ${index + 1} render: $message" }
+                                            }
                                         }
-                                        logcat(LogPriority.INFO) {
+                                        note {
                                             "Page ${index + 1}: ${detections.size} detection(s) became " +
                                                 "${boxes.size} box(es); lettered ${rendered.drawn}, " +
                                                 "caption box ${rendered.captioned}, " +
@@ -385,6 +452,16 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                                     )
                                 }
                                 writePage(stagingDir, index, indexWidth, image)
+                                note {
+                                    val warning = if (overlay && pageCoverageIncomplete) {
+                                        ", COVERAGE WARNING: some text may be missing"
+                                    } else {
+                                        ""
+                                    }
+                                    "Page ${index + 1}: written as ${image.extension}, " +
+                                        "${image.bytes.size / BYTES_PER_KB} KB, " +
+                                        "took ${(System.nanoTime() - pageStartedAt) / NANOS_PER_MILLI} ms$warning"
+                                }
                                 if (overlay && pageCoverageIncomplete) {
                                     coverageWarningPages += index
                                 } else {
@@ -392,10 +469,12 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                                 }
                                 donePages.incrementAndGet()
                                 notifier.showProgress(id, chapter.name, donePages.get(), totalPages)
+                                flushLog()
                             } catch (e: TranslationException) {
                                 if (e.isFatal) {
                                     // Daily cap of the free tier reached after some pages: keep them, report "X of Y".
                                     if (overlay && e is TranslationException.QuotaExceeded && donePages.get() > 0) {
+                                        TranslationLog.error("Page ${index + 1}: daily quota reached, stopping", e)
                                         failures[index] = e
                                         stopEarly.set(true)
                                         return@withPermit
@@ -406,7 +485,9 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                                     throw TranslationException.Offline(e)
                                 }
                                 logcat(LogPriority.WARN, e) { "Page ${index + 1} of ${pages.size} failed" }
+                                TranslationLog.error("Page ${index + 1} of ${pages.size} failed", e)
                                 failures[index] = e
+                                flushLog()
                                 // Repeated rate limits mean every further page would fail too. Stop and let the
                                 // user retry later instead of burning requests.
                                 if (e is TranslationException.RateLimited &&
@@ -433,7 +514,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
             round++
             retryable.forEach { failures.remove(it) }
             pending = retryable.toSet()
-            logcat(LogPriority.INFO) { "Auto retry $round: ${pending.size} page(s)" }
+            note { "Auto retry $round: ${pending.size} page(s)" }
             delay(AUTO_RETRY_DELAY_MILLIS * round)
         }
 
@@ -525,6 +606,63 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
 
     // endregion
 
+    // region Translation log
+
+    /** Writes a step to logcat and to the translation log. */
+    private inline fun note(crossinline message: () -> String) {
+        logcat(LogPriority.INFO) { message() }
+        TranslationLog.step { message() }
+    }
+
+    private fun startLog(chapter: Chapter, manga: Manga, apiKey: String) {
+        TranslationLog.start(listOf(apiKey))
+        logFile = null
+        val stamp = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
+        logFileName = "$LOG_PREFIX$stamp-${chapter.name.take(MAX_LOG_NAME_CHARS)}"
+        TranslationLog.step { "Translation log for \"${manga.title}\", chapter \"${chapter.name}\"" }
+        TranslationLog.step {
+            "Device ${Build.MANUFACTURER} ${Build.MODEL}, Android ${Build.VERSION.RELEASE} " +
+                "(API ${Build.VERSION.SDK_INT}), work attempt ${runAttemptCount + 1}"
+        }
+    }
+
+    /** Writes the log so far to its file. Best effort: a problem with the log must never stop a translation. */
+    private fun flushLog() {
+        val text = TranslationLog.text() ?: return
+        try {
+            val file = logFile ?: createLogFile()?.also { logFile = it } ?: return
+            file.openOutputStream().use { it.write(text.toByteArray(Charsets.UTF_8)) }
+        } catch (e: Exception) {
+            logcat(LogPriority.WARN, e) { "Could not write the translation log" }
+        }
+    }
+
+    private fun finishLog() {
+        if (!TranslationLog.isActive) return
+        TranslationLog.step { "End of the log" }
+        flushLog()
+        TranslationLog.stop()
+        logFile = null
+    }
+
+    /** Creates the log file next to the translated series and removes the oldest logs beyond [MAX_LOG_FILES]. */
+    private fun createLogFile(): UniFile? {
+        val baseDir = localSourceFileSystem.getBaseDirectory() ?: return null
+        baseDir.listFiles().orEmpty()
+            .filter { it.name.orEmpty().startsWith(LOG_PREFIX) }
+            .sortedBy { it.name.orEmpty() }
+            .dropLast(MAX_LOG_FILES - 1)
+            .forEach { it.delete() }
+        val name = DiskUtil.buildValidFilename(
+            logFileName,
+            DiskUtil.MAX_FILE_NAME_BYTES - LOG_SUFFIX.length,
+            libraryPreferences.disallowNonAsciiFilenames.get(),
+        ) + LOG_SUFFIX
+        return baseDir.createFile(name)
+    }
+
+    // endregion
+
     // region Overlay detection
 
     /** Everything one request to the text model needs besides the image. */
@@ -563,6 +701,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                 request.language,
                 request.delayMillis,
                 request.promptContext,
+                label = "page $pageNumber crop ${cropIndex + 1}/${uploads.size}",
             )
             detections += cropBoxes.map {
                 TallPageCropper.Detection(cropUpload.crop, it)
@@ -600,11 +739,20 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                 )
                 val remainingCalls =
                     (MAX_RECOVERY_CALLS_PER_PAGE - recoveryCalls).coerceAtLeast(0)
-                logcat(LogPriority.INFO) {
+                note {
                     "Page $pageNumber crop ${cropIndex + 1}/${uploads.size}: " +
                         "model returned ${cropBoxes.size} box(es), " +
                         "OCR found ${textRegions.size} region(s), ${missing.size} not covered, " +
                         "$remainingCalls recovery call(s) left"
+                }
+                textRegions.forEachIndexed { regionIndex, region ->
+                    TranslationLog.step {
+                        val b = region.bounds
+                        "Page $pageNumber crop ${cropIndex + 1} OCR #${regionIndex + 1} " +
+                            "[${b.left},${b.top},${b.right},${b.bottom}] " +
+                            "${if (region in missing) "NOT COVERED" else "covered"} " +
+                            "\"${TranslationLog.clip(region.text)}\""
+                    }
                 }
                 // Longest text first: big bubbles matter most when the budget runs out.
                 missing.sortedByDescending { it.text.length }.take(remainingCalls).forEach { region ->
@@ -636,6 +784,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                             request.language,
                             request.delayMillis,
                             recoveryContext,
+                            label = "page $pageNumber recovery at ${region.bounds.left},${region.bounds.top}",
                         ).mapNotNull { box ->
                             TextCoverage.clampRecoveryBox(
                                 box,
@@ -655,7 +804,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                             request.translateSfx,
                             RECOVERY_ACCEPT_COVERAGE,
                         ).isEmpty()
-                        logcat(LogPriority.INFO) {
+                        note {
                             "Page $pageNumber recovery for region at ${region.bounds.left},${region.bounds.top}: " +
                                 "${recoveryBoxes.size} box(es), ${if (accepted) "accepted" else "rejected"}"
                         }
@@ -671,6 +820,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                         logcat(LogPriority.WARN, e) {
                             "Targeted OCR recovery failed on page $pageNumber"
                         }
+                        TranslationLog.error("Page $pageNumber: targeted recovery failed", e)
                     }
                 }
                 knownCropBoxes[cropIndex] = coverageBoxes.toList()
@@ -692,6 +842,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
                 logcat(LogPriority.WARN, e) {
                     "OCR coverage check failed on page $pageNumber"
                 }
+                TranslationLog.error("Page $pageNumber: OCR coverage check failed", e)
             } catch (e: OutOfMemoryError) {
                 incomplete = true
                 logcat(LogPriority.WARN, e) {
@@ -944,6 +1095,15 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
         private const val MAX_OFFLINE_ATTEMPTS = 5
         private const val MAX_RECOVERY_CALLS_PER_PAGE = 12
         private const val MAX_PAGE_ATTEMPTS = 2
+
+        private const val LOG_PREFIX = "translation-log-"
+        private const val LOG_SUFFIX = ".txt"
+        private const val MAX_LOG_FILES = 20
+        private const val MAX_LOG_NAME_CHARS = 60
+        private const val BYTES_PER_KB = 1024
+        private const val BYTES_PER_MB = 1024L * 1024
+        private const val MILLIS_PER_SECOND = 1000L
+        private const val NANOS_PER_MILLI = 1_000_000L
 
         /** Share of OCR words that must be in the model's transcription before a region counts as covered. */
         private const val DETECTION_MIN_COVERAGE = 0.8f

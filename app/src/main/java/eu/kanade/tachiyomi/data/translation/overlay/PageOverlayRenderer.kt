@@ -12,6 +12,7 @@ import android.text.StaticLayout
 import android.text.TextDirectionHeuristics
 import android.text.TextPaint
 import eu.kanade.tachiyomi.data.translation.TranslationException
+import eu.kanade.tachiyomi.data.translation.TranslationLog
 import java.io.ByteArrayOutputStream
 import kotlin.math.max
 import kotlin.math.min
@@ -58,13 +59,19 @@ object PageOverlayRenderer {
     /**
      * @param boxes translated text boxes. Must not be empty.
      * @param style font, text size and where the translation goes.
+     * @param log receives one line per decision (what was lettered, what became a caption box, what was dropped).
      * @throws TranslationException.CorruptPage when the page cannot be decoded or is too large for memory.
      */
-    fun render(original: ByteArray, boxes: List<TextBox>, style: RenderStyle = RenderStyle.DEFAULT): Result {
+    fun render(
+        original: ByteArray,
+        boxes: List<TextBox>,
+        style: RenderStyle = RenderStyle.DEFAULT,
+        log: (String) -> Unit = {},
+    ): Result {
         var bitmap: Bitmap? = null
         try {
             bitmap = decodeMutable(original)
-            val stats = drawTranslations(bitmap, boxes, style)
+            val stats = drawTranslations(bitmap, boxes, style, log)
             val out = ByteArrayOutputStream()
             if (!bitmap.compress(Bitmap.CompressFormat.JPEG, OUTPUT_QUALITY, out)) {
                 throw TranslationException.CorruptPage("could not encode the result")
@@ -95,7 +102,12 @@ object PageOverlayRenderer {
             ?: throw TranslationException.CorruptPage("not a decodable image")
     }
 
-    private fun drawTranslations(bitmap: Bitmap, allBoxes: List<TextBox>, style: RenderStyle): Stats {
+    private fun drawTranslations(
+        bitmap: Bitmap,
+        allBoxes: List<TextBox>,
+        style: RenderStyle,
+        log: (String) -> Unit,
+    ): Stats {
         if (style.placement == RenderStyle.Placement.BELOW) {
             drawCaptions(bitmap, allBoxes, style)
             return Stats(drawn = 0, captioned = allBoxes.size, duplicates = 0)
@@ -106,6 +118,9 @@ object PageOverlayRenderer {
         val kept = BubbleGrouping.withoutDuplicates(allBoxes, allPixelBoxes)
         val boxes = kept.map { allBoxes[it] }
         val pixelBoxes = kept.map { allPixelBoxes[it] }
+        allBoxes.indices.filter { it !in kept }.forEach {
+            log("duplicate box dropped: ${TranslationLog.describe(allBoxes[it])}")
+        }
 
         // First pass: trace every bubble on the untouched page, so one erased bubble cannot confuse the next.
         val regions = pixelBoxes.mapIndexed { index, box ->
@@ -114,7 +129,14 @@ object PageOverlayRenderer {
         val groups = BubbleGrouping.group(pixelBoxes, regions)
 
         // Merge groups into single items (union box, joined text) and trace them again if they changed.
-        class Item(val region: BubbleRegion, val text: String, val box: PixelRect, val safe: Boolean)
+        class Item(
+            val region: BubbleRegion,
+            val text: String,
+            val box: PixelRect,
+            val safe: Boolean,
+            val kind: BoxKind,
+            val count: Int,
+        )
 
         val all = groups.map { group ->
             val kind = boxes[group.first()].kind
@@ -125,13 +147,30 @@ object PageOverlayRenderer {
                     boxes[group.first()].text,
                     pixelBoxes[group.first()],
                     BubbleGrouping.canRenderSafely(kind, region),
+                    kind,
+                    1,
                 )
             } else {
                 val union = group.map { pixelBoxes[it] }.reduce(PixelRect::union)
                 val text = BubbleGrouping.mergedText(group.map { boxes[it] })
                 val region = regionFor(bitmap, union, imageRect, traceBubble = kind == BoxKind.BUBBLE)
-                Item(region, text, union, BubbleGrouping.canRenderSafely(kind, region))
+                Item(region, text, union, BubbleGrouping.canRenderSafely(kind, region), kind, group.size)
             }
+        }
+        for (item in all) {
+            val share = (item.region.inkErasedShare * PERCENT).toInt()
+            val how = if (item.region.fromFloodFill) "bubble traced" else "open text"
+            val decision = if (item.safe) {
+                "lettered in place ($how, flat surroundings ${item.region.flatSurroundings}, erased ink $share%)"
+            } else {
+                "NOT safe to erase ($how, flat surroundings ${item.region.flatSurroundings}, " +
+                    "erased ink $share%), goes into a caption box"
+            }
+            log(
+                "${item.kind.name.lowercase()} of ${item.count} box(es) at " +
+                    "[${item.box.left},${item.box.top},${item.box.right},${item.box.bottom}]: $decision; " +
+                    "text \"${TranslationLog.clip(item.text)}\"",
+            )
         }
         val items = all.filter { it.safe }
         // The original cannot be erased without damaging the page (artwork behind it, stylised lettering). The
@@ -147,6 +186,9 @@ object PageOverlayRenderer {
         val fitted = items.map { fittedSize(it.text.trim(), it.region.textRect, bitmap.width, style) }
         val sorted = fitted.filter { it > 0f }.sorted()
         val cap = if (sorted.isEmpty()) 0f else sorted[sorted.size / 2] * SIZE_CAP_FACTOR
+        if (sorted.isNotEmpty()) {
+            log("font sizes fitted ${sorted.first().toInt()}-${sorted.last().toInt()} px, capped at ${cap.toInt()} px")
+        }
         items.forEachIndexed { index, item ->
             val size = if (cap > 0f) min(fitted[index], cap) else fitted[index]
             drawText(canvas, item.text, item.region, bitmap.width, style, size)

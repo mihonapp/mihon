@@ -362,6 +362,7 @@ object SettingsAdvancedScreen : SearchableSettings {
         val fontPref = remember { translationPreferences.fontStyle() }
         val textSizePref = remember { translationPreferences.textSizePercent() }
         val placementPref = remember { translationPreferences.placement() }
+        val saveLogPref = remember { translationPreferences.saveLog() }
 
         val apiKey by apiKeyPref.collectAsState()
         val mode by modePref.collectAsState()
@@ -490,6 +491,13 @@ object SettingsAdvancedScreen : SearchableSettings {
                         ),
                     )
                 }
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = saveLogPref,
+                        title = stringResource(MR.strings.pref_translation_save_log),
+                        subtitle = stringResource(MR.strings.pref_translation_save_log_summary),
+                    ),
+                )
             },
         )
     }
