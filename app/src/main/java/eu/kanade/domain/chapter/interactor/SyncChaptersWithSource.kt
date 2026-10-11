@@ -225,11 +225,10 @@ class SyncChaptersWithSource(
             added = toAdd,
             updated = updatedChapters,
         )
-        updateManga.awaitUpdateFetchInterval(manga, timeZone, now, fetchWindow)
 
         // Set this manga as updated since chapters were changed
         // Note that last_update actually represents last time the chapter list changed at all
-        updateManga.awaitUpdateLastUpdate(manga.id)
+        updateManga.awaitUpdateFetchIntervalAndLastUpdate(manga, timeZone, now, fetchWindow)
 
         val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
 

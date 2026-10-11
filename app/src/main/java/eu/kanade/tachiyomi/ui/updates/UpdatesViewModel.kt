@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -40,15 +39,19 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import tachiyomi.core.common.preference.TriState
+import tachiyomi.core.common.util.lang.SubscriberGate
+import tachiyomi.core.common.util.lang.pausedWhileUnsubscribed
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
@@ -61,6 +64,7 @@ import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.service.UpdatesPreferences
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
@@ -80,6 +84,8 @@ class UpdatesViewModel(
     private val libraryPreferences: LibraryPreferences,
     private val updatesPreferences: UpdatesPreferences,
 ) : ViewModel() {
+
+    private val subscriberGate = SubscriberGate()
 
     val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
@@ -105,7 +111,8 @@ class UpdatesViewModel(
 
     init {
         viewModelScope.launch {
-            merge(downloadManager.statusFlow(), downloadManager.progressFlow())
+            // Each progress tick rebuilds every row of the list, so cap how often that happens
+            merge(downloadManager.statusFlow(), downloadManager.progressFlow().sample(200.milliseconds))
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(this@UpdatesViewModel::updateDownloadState)
         }
@@ -157,8 +164,8 @@ class UpdatesViewModel(
                     excludedCategories = it.filterExcludedCategories,
                 ).distinctUntilChanged()
             },
-        downloadCache.changes,
-        downloadManager.queueState,
+        downloadCache.changes.pausedWhileUnsubscribed(),
+        downloadManager.queueState.pausedWhileUnsubscribed(),
         // needed for Kotlin filters (downloaded)
         getUpdatesItemPreferenceFlow().distinctUntilChanged { old, new ->
             old.filterDownloaded == new.filterDownloaded
@@ -169,12 +176,12 @@ class UpdatesViewModel(
             .applyFilters(itemPreferences)
     }
         .flowOn(Dispatchers.Default)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), null)
+        .stateIn(viewModelScope + subscriberGate, SharingStarted.Eagerly, null)
 
     val state: StateFlow<State> = combine(
         updateItems,
         selectedChapterIds,
-        queuedDownloadStates,
+        queuedDownloadStates.pausedWhileUnsubscribed(),
         dialog,
         hasActiveFilters,
     ) { items, selectedIds, downloads, dialog, hasActiveFilters ->
@@ -201,7 +208,7 @@ class UpdatesViewModel(
         )
     }
         .flowOn(Dispatchers.Default)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
+        .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State())
 
     private fun List<UpdatesItem>.applyFilters(
         preferences: ItemPreferences,
