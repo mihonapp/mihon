@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.plus
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.YearMonth
@@ -31,6 +31,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.yearMonth
 import mihon.domain.upcoming.interactor.GetUpcomingManga
 import tachiyomi.core.common.preference.getAndSet
+import tachiyomi.core.common.util.lang.SubscriberGate
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.manga.model.Manga
@@ -46,6 +47,8 @@ class UpcomingViewModel(
     val getCategories: GetCategories,
     val upcomingPreferences: UpcomingPreferences,
 ) : ViewModel() {
+
+    private val subscriberGate = SubscriberGate()
 
     val excludedCategories = upcomingPreferences.filterExcludedCategories
     val includedCategories = upcomingPreferences.filterIncludedCategories
@@ -80,7 +83,7 @@ class UpcomingViewModel(
         .distinctUntilChanged()
         .map { it.toUpcomingUIModels() }
         .flowOn(Dispatchers.Default)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), emptyList())
+        .stateIn(viewModelScope + subscriberGate, SharingStarted.Eagerly, emptyList())
 
     val state: StateFlow<State> = combine(
         upcoming,
@@ -98,8 +101,8 @@ class UpcomingViewModel(
         )
     }
         .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5.seconds),
+            viewModelScope + subscriberGate,
+            subscriberGate.whileSubscribed(5.seconds),
             State(selectedYearMonth = selectedYearMonth.value),
         )
 

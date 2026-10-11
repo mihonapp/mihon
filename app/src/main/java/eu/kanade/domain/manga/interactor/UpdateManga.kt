@@ -36,8 +36,20 @@ class UpdateManga(
         )
     }
 
-    suspend fun awaitUpdateLastUpdate(mangaId: Long): Boolean {
-        return mangaRepository.update(MangaUpdate(mangaId) { lastUpdate = Clock.System.now() })
+    /**
+     * Updates the fetch interval and marks the chapter list as changed in a single write.
+     */
+    suspend fun awaitUpdateFetchIntervalAndLastUpdate(
+        manga: Manga,
+        timeZone: TimeZone,
+        dateTime: LocalDateTime,
+        window: ClosedRange<Instant>?,
+    ): Boolean {
+        return mangaRepository.update(
+            fetchInterval.withFetchInterval(manga, dateTime, timeZone, window).apply {
+                lastUpdate = Clock.System.now()
+            },
+        )
     }
 
     suspend fun awaitUpdateCoverLastModified(mangaId: Long): Boolean {
