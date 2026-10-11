@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -39,13 +37,17 @@ import com.mikepenz.markdown.compose.elements.listDepth
 import com.mikepenz.markdown.model.DefaultMarkdownColors
 import com.mikepenz.markdown.model.DefaultMarkdownInlineContent
 import com.mikepenz.markdown.model.DefaultMarkdownTypography
+import com.mikepenz.markdown.model.MarkdownAlertPadding
 import com.mikepenz.markdown.model.MarkdownAnnotator
 import com.mikepenz.markdown.model.MarkdownColors
 import com.mikepenz.markdown.model.MarkdownPadding
 import com.mikepenz.markdown.model.MarkdownTypography
 import com.mikepenz.markdown.model.NoOpImageTransformerImpl
+import com.mikepenz.markdown.model.markdownAlertPadding
 import com.mikepenz.markdown.model.markdownAnnotator
 import com.mikepenz.markdown.model.rememberMarkdownState
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Image
 import org.intellij.markdown.MarkdownTokenTypes.Companion.HTML_TAG
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
@@ -140,6 +142,7 @@ private fun getMarkdownTypography(): MarkdownTypography {
 }
 
 private val markdownPadding = object : MarkdownPadding {
+    override val alert: MarkdownAlertPadding = markdownAlertPadding()
     override val block: Dp = 2.dp
     override val blockQuote: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 0.dp)
     override val blockQuoteBar: PaddingValues.Absolute = PaddingValues.Absolute(
@@ -241,7 +244,7 @@ private fun getMarkdownInlineContent() = DefaultMarkdownInlineContent(
             ),
             children = {
                 Icon(
-                    imageVector = Icons.Outlined.Image,
+                    imageVector = MaterialSymbols.Rounded.Image,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                 )

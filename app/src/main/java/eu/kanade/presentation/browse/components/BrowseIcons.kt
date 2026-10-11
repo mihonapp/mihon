@@ -5,9 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dangerous
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -31,7 +28,11 @@ import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.util.ExtensionLoader
-import tachiyomi.core.common.util.lang.withIOContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.roundedfilled.Dangerous
+import mihon.icons.materialsymbols.roundedfilled.Warning
 import tachiyomi.domain.source.model.Source
 import tachiyomi.source.local.isLocal
 
@@ -44,12 +45,12 @@ fun SourceIcon(
     source: Source,
     modifier: Modifier = Modifier,
 ) {
-    val icon = source.icon
+    val icon = produceState<ImageBitmap?>(initialValue = null, source.id) { value = source.icon() }.value
 
     when {
         source.isStub && icon == null -> {
             Image(
-                imageVector = Icons.Filled.Warning,
+                imageVector = MaterialSymbols.RoundedFilled.Warning,
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
                 modifier = modifier.then(defaultModifier),
@@ -96,7 +97,7 @@ fun ExtensionIcon(
                     .clip(MaterialTheme.shapes.extraSmall),
             )
         }
-        is Extension.Installed -> {
+        is Extension.Loaded -> {
             val icon by extension.getIcon(density)
             when (icon) {
                 Result.Loading -> Box(modifier = modifier)
@@ -112,8 +113,8 @@ fun ExtensionIcon(
                 )
             }
         }
-        is Extension.Untrusted -> Image(
-            imageVector = Icons.Filled.Dangerous,
+        is Extension.NotLoaded -> Image(
+            imageVector = MaterialSymbols.RoundedFilled.Dangerous,
             contentDescription = null,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
             modifier = modifier.then(defaultModifier),
@@ -125,7 +126,7 @@ fun ExtensionIcon(
 private fun Extension.getIcon(density: Int = DisplayMetrics.DENSITY_DEFAULT): State<Result<ImageBitmap>> {
     val context = LocalContext.current
     return produceState<Result<ImageBitmap>>(initialValue = Result.Loading, this) {
-        withIOContext {
+        withContext(Dispatchers.IO) {
             value = try {
                 val appInfo = ExtensionLoader.getExtensionPackageInfoFromPkgName(context, pkgName)!!.applicationInfo!!
                 val appResources = context.packageManager.getResourcesForApplication(appInfo)

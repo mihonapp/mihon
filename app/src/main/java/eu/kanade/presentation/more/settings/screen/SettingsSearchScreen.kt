@@ -17,8 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,6 +48,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.Screen
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Close
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -128,7 +128,7 @@ class SettingsSearchScreen : Screen() {
                             if (textFieldState.text.isNotEmpty()) {
                                 IconButton(onClick = { textFieldState.clearText() }) {
                                     Icon(
-                                        imageVector = Icons.Outlined.Close,
+                                        imageVector = MaterialSymbols.Rounded.Close,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
@@ -168,44 +168,46 @@ private fun SearchResult(
     val result by produceState<List<SearchResultItem>?>(initialValue = null, searchKey) {
         value = index.asSequence()
             .flatMap { settingsData ->
+                fun result(title: String, categoryTitle: String?) = SearchResultItem(
+                    route = settingsData.route,
+                    title = title,
+                    breadcrumbs = getLocalizedBreadcrumb(
+                        path = settingsData.title,
+                        node = categoryTitle,
+                        isLtr = isLtr,
+                    ),
+                    highlightKey = title,
+                )
+
+                fun Preference.PreferenceItem<*, *>.matches(): Boolean {
+                    // Don't show info preference
+                    if (this is Preference.PreferenceItem.InfoPreference) return false
+                    val inTitle = title.contains(searchKey, true)
+                    val inSummary = subtitle?.contains(searchKey, true) ?: false
+                    return inTitle || inSummary
+                }
+
                 settingsData.contents.asSequence()
                     // Only search from enabled prefs and one with valid title
-                    .filter { it.enabled && it.title.isNotBlank() }
-                    // Flatten items contained inside *enabled* PreferenceGroup
+                    .filter { it.visible && it.title.isNotBlank() }
                     .flatMap { p ->
                         when (p) {
                             is Preference.PreferenceGroup -> {
-                                if (p.enabled) {
-                                    p.preferenceItems.asSequence()
-                                        .filter { it.enabled && it.title.isNotBlank() }
-                                        .map { p.title to it }
+                                // A matching heading leads to the group itself, not to one of its items
+                                val heading = if (p.title.contains(searchKey, true)) {
+                                    sequenceOf(result(p.title, null))
                                 } else {
                                     emptySequence()
                                 }
+                                val items = p.preferenceItems.asSequence()
+                                    .filter { it.visible && it.title.isNotBlank() && it.matches() }
+                                    .map { result(it.title, p.title) }
+                                heading + items
                             }
-                            is Preference.PreferenceItem<*, *> -> sequenceOf(null to p)
+                            is Preference.PreferenceItem<*, *> -> {
+                                if (p.matches()) sequenceOf(result(p.title, null)) else emptySequence()
+                            }
                         }
-                    }
-                    // Don't show info preference
-                    .filterNot { it.second is Preference.PreferenceItem.InfoPreference }
-                    // Filter by search query
-                    .filter { (_, p) ->
-                        val inTitle = p.title.contains(searchKey, true)
-                        val inSummary = p.subtitle?.contains(searchKey, true) ?: false
-                        inTitle || inSummary
-                    }
-                    // Map result data
-                    .map { (categoryTitle, p) ->
-                        SearchResultItem(
-                            route = settingsData.route,
-                            title = p.title,
-                            breadcrumbs = getLocalizedBreadcrumb(
-                                path = settingsData.title,
-                                node = categoryTitle,
-                                isLtr = isLtr,
-                            ),
-                            highlightKey = p.title,
-                        )
                     }
             }
             .take(10) // Just take top 10 result for quicker result

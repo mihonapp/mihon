@@ -252,8 +252,7 @@
     <string name="double_tap_anim_speed_0">Sin animación</string>
     <string name="manga_added_library">Añadido a biblioteca</string>
     <string name="manga_removed_library">Quitado de biblioteca</string>
-    <string name="copied_to_clipboard">Copiado en portapapeles:
-\n«%1$s»</string>
+    <string name="copied_to_clipboard">Copiado en portapapeles: \n«%1$s»</string>
     <string name="source_not_installed">Fuente no instalada: %1$s</string>
     <string name="repeating">Releyendo</string>
     <string name="track_status">Estado</string>
@@ -401,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Servicios de seguimiento sin conectar:</string>
     <string name="pref_remove_bookmarked_chapters">Permitir el borrado de capítulos marcados como favoritos</string>
     <string name="pref_category_delete_chapters">Borrar capítulos</string>
-    <string name="ext_nsfw_warning">Puede contener contenido para adultos (+18)</string>
-    <string name="ext_nsfw_short">+18</string>
-    <string name="parental_controls_info">Esto no evita que las extensiones extraoficiales o que estén mal clasificadas muestren contenido para mayores de 18 años en la aplicación.</string>
     <string name="no_chapters_error">No hay capítulos</string>
     <string name="chapter_settings_updated">Se han actualizado los ajustes predeterminados de capítulo</string>
     <string name="set_chapter_settings_as_default">Establecer como predeterminado</string>
@@ -422,8 +418,6 @@
     <string name="spen_next_page">Siguiente página</string>
     <string name="spen_previous_page">Página anterior</string>
     <string name="migration_help_guide">Guía de migración de fuentes</string>
-    <string name="pref_category_nsfw_content">Fuentes para adultos (+18)</string>
-    <string name="pref_show_nsfw_source">Mostrar en la lista de fuentes y extensiones</string>
     <string name="file_picker_error">No se ha encontrado ninguna aplicación con la que elegir archivos</string>
     <string name="myanimelist_relogin">Vuelve a iniciar sesión en MAL</string>
     <string name="kindlish_nav">Estilo Kindle</string>
@@ -581,7 +575,6 @@
     <string name="empty_screen">Houston, tenemos un problema</string>
     <string name="ext_info_version">Versión</string>
     <string name="ext_info_language">Idioma</string>
-    <string name="ext_info_age_rating">Clasificación por edades</string>
     <string name="reading_list">Leyendo</string>
     <string name="wish_list">A leer en un futuro</string>
     <string name="complete_list">Leídos del todo</string>
@@ -635,8 +628,7 @@
     <string name="download_notifier_cache_renewal">Reindexando descargas</string>
     <string name="action_open_random_manga">Abrir un elemento al azar</string>
     <string name="information_no_entries_found">Parece que esta categoría está vacía</string>
-    <string name="fdroid_warning">No damos soporte oficial a las versiones de F-Droid.
-\nToca para más información.</string>
+    <string name="fdroid_warning">No damos soporte oficial a las versiones de F-Droid. \nToca para más información.</string>
     <string name="action_display_show_continue_reading_button">Mostrar el botón de seguir leyendo</string>
     <string name="track_remove_start_date_conf_text">Al hacer esto %s ya no aparecerá como empezado ese día</string>
     <string name="track_remove_date_conf_title">¿Quieres quitar esta fecha?</string>

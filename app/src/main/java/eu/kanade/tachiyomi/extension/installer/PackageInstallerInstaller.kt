@@ -15,6 +15,11 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.lang.use
 import eu.kanade.tachiyomi.util.system.getParcelableExtraCompat
 import eu.kanade.tachiyomi.util.system.getUriSize
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 
@@ -22,9 +27,12 @@ class PackageInstallerInstaller(private val service: Service) : Installer(servic
 
     private val packageInstaller = service.packageManager.packageInstaller
 
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     private val packageActionReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            when (intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)) {
+            val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)
+            when (status) {
                 PackageInstaller.STATUS_PENDING_USER_ACTION -> {
                     val userAction = intent.getParcelableExtraCompat<Intent>(Intent.EXTRA_INTENT)
                         ?.run {
@@ -42,7 +50,9 @@ class PackageInstallerInstaller(private val service: Service) : Installer(servic
                                 .sanitizeByFiltering(this)
                         }
                     if (userAction == null) {
-                        logcat(LogPriority.ERROR) { "Fatal error for $intent" }
+                        logcat(LogPriority.INFO) {
+                            "The system installer asked for an action it didn't provide: $intent"
+                        }
                         continueQueue(InstallStep.Error)
                         return
                     }
@@ -53,11 +63,19 @@ class PackageInstallerInstaller(private val service: Service) : Installer(servic
                     continueQueue(InstallStep.Idle)
                 }
                 PackageInstaller.STATUS_SUCCESS -> continueQueue(InstallStep.Installed)
-                else -> continueQueue(InstallStep.Error)
+                else -> {
+                    logcat(LogPriority.INFO) {
+                        "The system installer failed ($status): ${intent.getStringExtra(
+                            PackageInstaller.EXTRA_STATUS_MESSAGE,
+                        )}"
+                    }
+                    continueQueue(InstallStep.Error)
+                }
             }
         }
     }
 
+    @Volatile
     private var activeSession: Pair<Entry, Int>? = null
 
     // Always ready
@@ -66,40 +84,43 @@ class PackageInstallerInstaller(private val service: Service) : Installer(servic
     override fun processEntry(entry: Entry) {
         super.processEntry(entry)
         activeSession = null
-        try {
-            val installParams = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                installParams.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
-            }
-            activeSession = entry to packageInstaller.createSession(installParams)
-            val fileSize = service.getUriSize(entry.uri) ?: throw IllegalStateException()
-            installParams.setSize(fileSize)
-
-            val inputStream = service.contentResolver.openInputStream(entry.uri) ?: throw IllegalStateException()
-            val session = packageInstaller.openSession(activeSession!!.second)
-            val outputStream = session.openWrite(entry.downloadId.toString(), 0, fileSize)
-            session.use {
-                arrayOf(inputStream, outputStream).use {
-                    inputStream.copyTo(outputStream)
-                    session.fsync(outputStream)
+        scope.launch {
+            try {
+                val installParams = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    installParams.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
                 }
-                service.contentResolver.delete(entry.uri, null, null)
+                activeSession = entry to packageInstaller.createSession(installParams)
+                val fileSize = service.getUriSize(entry.uri) ?: throw IllegalStateException()
+                installParams.setSize(fileSize)
 
-                val intentSender = PendingIntent.getBroadcast(
-                    service,
-                    activeSession!!.second,
-                    Intent(INSTALL_ACTION).setPackage(service.packageName),
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0,
-                ).intentSender
-                @SuppressLint("RequestInstallPackagesPolicy")
-                session.commit(intentSender)
+                val inputStream = service.contentResolver.openInputStream(entry.uri) ?: throw IllegalStateException()
+                val session = packageInstaller.openSession(activeSession!!.second)
+                val outputStream = session.openWrite(entry.downloadId.toString(), 0, fileSize)
+                session.use {
+                    arrayOf(inputStream, outputStream).use {
+                        inputStream.copyTo(outputStream)
+                        session.fsync(outputStream)
+                    }
+                    service.contentResolver.delete(entry.uri, null, null)
+
+                    val intentSender = PendingIntent.getBroadcast(
+                        service,
+                        activeSession!!.second,
+                        Intent(INSTALL_ACTION).setPackage(service.packageName),
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0,
+                    ).intentSender
+                    @SuppressLint("RequestInstallPackagesPolicy")
+                    session.commit(intentSender)
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.INFO, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
+                activeSession?.let { (_, sessionId) ->
+                    // Already abandoned when the entry was cancelled mid-copy
+                    runCatching { packageInstaller.abandonSession(sessionId) }
+                }
+                if (getActiveEntry() == entry) continueQueue(InstallStep.Error)
             }
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
-            activeSession?.let { (_, sessionId) ->
-                packageInstaller.abandonSession(sessionId)
-            }
-            continueQueue(InstallStep.Error)
         }
     }
 
@@ -120,6 +141,7 @@ class PackageInstallerInstaller(private val service: Service) : Installer(servic
 
     override fun onDestroy() {
         service.unregisterReceiver(packageActionReceiver)
+        scope.cancel()
         super.onDestroy()
     }
 

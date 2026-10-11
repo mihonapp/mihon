@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.track.anilist
 
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
-import eu.kanade.tachiyomi.data.track.anilist.dto.isExpired
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -11,14 +10,8 @@ class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Int
 
     /**
      * OAuth object used for authenticated requests.
-     *
-     * Anilist returns the date without milliseconds. We fix that and make the token expire 1 minute
-     * before its original expiration date.
      */
     private var oauth: ALOAuth? = null
-        set(value) {
-            field = value?.copy(expires = value.expires * 1000 - 60 * 1000)
-        }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
@@ -27,17 +20,11 @@ class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Int
             throw Exception("Not authenticated with Anilist")
         }
         if (oauth == null) {
-            oauth = anilist.loadOAuth()
+            oauth = anilist.loadOAuth() ?: throw IOException("No authentication token")
         }
-        // Refresh access token if null or expired.
         if (oauth!!.isExpired()) {
             anilist.logout()
-            throw IOException("Token expired")
-        }
-
-        // Throw on null auth.
-        if (oauth == null) {
-            throw IOException("No authentication token")
+            throw IOException("Token expired. Reconnect AniList in Settings.")
         }
 
         // Add the authorization header to the original request.

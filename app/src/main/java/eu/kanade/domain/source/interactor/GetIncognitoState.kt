@@ -14,7 +14,7 @@ class GetIncognitoState(
     private val sourcePreferences: SourcePreferences,
     private val extensionManager: ExtensionManager,
 ) {
-    fun await(sourceId: Long?): Boolean {
+    suspend fun await(sourceId: Long?): Boolean {
         if (basePreferences.incognitoMode.get()) return true
         if (sourceId == null) return false
         val extensionPackage = extensionManager.getExtensionPackage(sourceId) ?: return false

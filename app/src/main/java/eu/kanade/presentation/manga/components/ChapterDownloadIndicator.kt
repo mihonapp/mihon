@@ -5,10 +5,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.outlined.ArrowDownward
-import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -28,12 +24,16 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.DropdownMenu
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
+import mihon.icons.custommaterialsymbols.CustomMaterialSymbols
+import mihon.icons.custommaterialsymbols.rounded.DownloadArrow
+import mihon.icons.custommaterialsymbols.rounded.DownloadCircle
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Error
+import mihon.icons.materialsymbols.roundedfilled.CheckCircle
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.IconButtonTokens
 import tachiyomi.presentation.core.i18n.stringResource
@@ -99,7 +99,7 @@ private fun NotDownloadedIndicator(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_download_chapter_24dp),
+            imageVector = CustomMaterialSymbols.Rounded.DownloadCircle,
             contentDescription = stringResource(MR.strings.manga_download),
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -179,7 +179,7 @@ private fun DownloadingIndicator(
             )
         }
         Icon(
-            imageVector = Icons.Outlined.ArrowDownward,
+            imageVector = CustomMaterialSymbols.Rounded.DownloadArrow,
             contentDescription = null,
             modifier = ArrowModifier,
             tint = arrowColor,
@@ -206,7 +206,7 @@ private fun DownloadedIndicator(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            imageVector = Icons.Filled.CheckCircle,
+            imageVector = MaterialSymbols.RoundedFilled.CheckCircle,
             contentDescription = null,
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -241,7 +241,7 @@ private fun ErrorIndicator(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            imageVector = Icons.Outlined.ErrorOutline,
+            imageVector = MaterialSymbols.Rounded.Error,
             contentDescription = stringResource(MR.strings.chapter_error),
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.error,
@@ -279,4 +279,4 @@ private val IndicatorModifier = Modifier
     .size(IndicatorSize)
     .padding(IndicatorPadding)
 private val ArrowModifier = Modifier
-    .size(IndicatorSize - 7.dp)
+    .size(IndicatorSize)

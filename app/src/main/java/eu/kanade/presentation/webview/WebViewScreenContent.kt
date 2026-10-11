@@ -14,10 +14,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,9 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.stack.mutableStateStackOf
 import com.kevinnzou.web.AccompanistWebChromeClient
@@ -48,11 +42,15 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.tachiyomi.BuildConfig
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getHtml
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.setUserAgent
 import kotlinx.coroutines.launch
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.ArrowBack
+import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
+import mihon.icons.materialsymbols.rounded.Close
+import mihon.icons.materialsymbols.rounded.TabClose
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -232,13 +230,13 @@ fun WebViewScreenContent(
                         title = currentWindow.state.pageTitle ?: initialTitle,
                         subtitle = currentUrl,
                         navigateUp = onNavigateUp,
-                        navigationIcon = Icons.Outlined.Close,
+                        navigationIcon = MaterialSymbols.Rounded.Close,
                         actions = {
                             AppBarActions(
                                 listOf(
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_webview_back),
-                                        icon = Icons.AutoMirrored.Outlined.ArrowBack,
+                                        icon = MaterialSymbols.AutoMirroredRounded.ArrowBack,
                                         onClick = {
                                             if (navigator.canGoBack) {
                                                 navigator.navigateBack()
@@ -248,7 +246,7 @@ fun WebViewScreenContent(
                                     ),
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_webview_forward),
-                                        icon = Icons.AutoMirrored.Outlined.ArrowForward,
+                                        icon = MaterialSymbols.AutoMirroredRounded.ArrowForward,
                                         onClick = {
                                             if (navigator.canGoForward) {
                                                 navigator.navigateForward()
@@ -278,7 +276,7 @@ fun WebViewScreenContent(
                                             0,
                                             AppBar.Action(
                                                 title = stringResource(MR.strings.action_webview_close_tab),
-                                                icon = ImageVector.vectorResource(R.drawable.ic_tab_close_24px),
+                                                icon = MaterialSymbols.Rounded.TabClose,
                                                 onClick = popState,
                                             ),
                                         )

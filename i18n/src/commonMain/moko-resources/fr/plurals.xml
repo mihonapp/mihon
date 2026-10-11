@@ -96,14 +96,14 @@
         <item quantity="other">%1$s pages</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.migrateTitle">
-        <item quantity="one">Migrer %1$d série ?</item>
-        <item quantity="many">Migrer %1$d séries ?</item>
-        <item quantity="other">Migrer %1$d séries ?</item>
+        <item quantity="one">Migrer %1$d série ?</item>
+        <item quantity="many">Migrer %1$d séries ?</item>
+        <item quantity="other">Migrer %1$d séries ?</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.copyTitle">
-        <item quantity="one">Copier %1$d série ?</item>
-        <item quantity="many">Copier %1$d séries ?</item>
-        <item quantity="other">Copier %1$d séries ?</item>
+        <item quantity="one">Copier %1$d série ?</item>
+        <item quantity="many">Copier %1$d séries ?</item>
+        <item quantity="other">Copier %1$d séries ?</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.skipText">
         <item quantity="one">Une série a été ignorée</item>

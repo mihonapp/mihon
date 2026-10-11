@@ -4,8 +4,10 @@ import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.core.common.extensions.JsonObjectEmptyBytes
-import tachiyomi.data.MemoColumnAdapter
+import mihon.core.common.extensions.toInstantOrNull
+import mihon.core.common.extensions.toJsonObject
 import tachiyomi.domain.manga.model.Manga
+import kotlin.time.Instant
 
 @Suppress("DEPRECATION")
 @Serializable
@@ -38,14 +40,15 @@ class BackupManga(
     @ProtoNumber(103) var viewer_flags: Int? = null,
     @ProtoNumber(104) var history: List<BackupHistory> = emptyList(),
     @ProtoNumber(105) var updateStrategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE,
-    @ProtoNumber(106) var lastModifiedAt: Long = 0,
+    // @ProtoNumber(106) var lastModifiedAt: Long, artifact of the abandoned sync attempt
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     // Mihon values start here
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
-    @ProtoNumber(109) var version: Long = 0,
+    // @ProtoNumber(109) var version: Long, artifact of the abandoned sync attempt
     @ProtoNumber(110) var notes: String = "",
     @ProtoNumber(111) var initialized: Boolean = false,
     @ProtoNumber(112) var memo: ByteArray = JsonObjectEmptyBytes,
+    @ProtoNumber(113) var nextUpdate: Long = 0,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
@@ -57,18 +60,23 @@ class BackupManga(
             genre = this@BackupManga.genre,
             status = this@BackupManga.status.toLong(),
             thumbnailUrl = this@BackupManga.thumbnailUrl,
-            favorite = this@BackupManga.favorite,
             source = this@BackupManga.source,
-            dateAdded = this@BackupManga.dateAdded,
+            // For libraries older than dateAdded, the favorite timestamp is the only record of when
+            // an entry was added. It was written by a trigger in seconds, unlike dateAdded.
+            favoriteAt = if (this@BackupManga.favorite) {
+                this@BackupManga.dateAdded.toInstantOrNull()
+                    ?: this@BackupManga.favoriteModifiedAt?.let { Instant.fromEpochSeconds(it) }
+                    ?: Manga.UNKNOWN_FAVORITE_AT
+            } else {
+                null
+            },
             viewerFlags = (this@BackupManga.viewer_flags ?: this@BackupManga.viewer).toLong(),
             chapterFlags = this@BackupManga.chapterFlags.toLong(),
             updateStrategy = this@BackupManga.updateStrategy,
-            lastModifiedAt = this@BackupManga.lastModifiedAt,
-            favoriteModifiedAt = this@BackupManga.favoriteModifiedAt,
-            version = this@BackupManga.version,
             notes = this@BackupManga.notes,
             initialized = this@BackupManga.initialized,
-            memo = MemoColumnAdapter.decode(this@BackupManga.memo),
+            memo = this@BackupManga.memo.toJsonObject(),
+            nextUpdate = this@BackupManga.nextUpdate.toInstantOrNull(),
         )
     }
 }

@@ -32,9 +32,6 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -75,6 +72,7 @@ import eu.kanade.presentation.components.AppStateBanners
 import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
+import eu.kanade.presentation.more.AppMigratingScreen
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.util.AssistContentScreen
@@ -82,7 +80,7 @@ import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
-import eu.kanade.tachiyomi.extension.api.ExtensionApi
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
@@ -97,7 +95,9 @@ import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
 import eu.kanade.tachiyomi.util.system.updaterEnabled
 import eu.kanade.tachiyomi.util.view.setComposeContent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
@@ -110,9 +110,12 @@ import mihon.app.di.AppGraph
 import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.core.migration.Migrator
+import mihon.domain.database.repository.DatabaseRepository
 import mihon.feature.support.SupportUsScreen
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
+import mihon.icons.materialsymbols.roundedfilled.VolunteerActivism
 import tachiyomi.core.common.Constants
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.release.interactor.GetApplicationRelease
@@ -138,9 +141,13 @@ class MainActivity : BaseActivity() {
 
     @Inject private lateinit var chapterCache: ChapterCache
 
+    @Inject private lateinit var databaseRepository: DatabaseRepository
+
+    private val isAppMigrating = MutableStateFlow(Migrator.isRunning)
+
     @Inject private lateinit var getIncognitoState: GetIncognitoState
 
-    @Inject private lateinit var extensionApi: ExtensionApi
+    @Inject private lateinit var extensionManager: ExtensionManager
 
     // To be checked by splash screen. If true then splash screen will be removed.
     var ready = false
@@ -160,7 +167,10 @@ class MainActivity : BaseActivity() {
 
         super.onCreate(savedInstanceState)
 
-        Migrator.awaitAndRelease()
+        lifecycleScope.launch {
+            Migrator.awaitAndRelease()
+            isAppMigrating.value = false
+        }
 
         // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079
         if (!isTaskRoot) {
@@ -169,9 +179,18 @@ class MainActivity : BaseActivity() {
         }
 
         setComposeContent {
+            val appMigrating by isAppMigrating.collectAsState()
+            val databaseMigrating by databaseRepository.isMigrating.collectAsState()
+            if (appMigrating || databaseMigrating) {
+                AppMigratingScreen()
+                // Release the splash screen so the reason for the wait shows
+                LaunchedEffect(Unit) { ready = true }
+                return@setComposeContent
+            }
+
             val context = LocalContext.current
 
-            var incognito by remember { mutableStateOf(getIncognitoState.await(null)) }
+            var incognito by remember { mutableStateOf(false) }
             val downloadOnly by preferences.downloadedOnly.collectAsState()
             val indexing by downloadCache.isInitializing.collectAsState()
 
@@ -283,7 +302,7 @@ class MainActivity : BaseActivity() {
         setSplashScreenExitAnimation(splashScreen)
 
         if (isLaunch && libraryPreferences.autoClearChapterCache.get()) {
-            lifecycleScope.launchIO {
+            lifecycleScope.launch(Dispatchers.IO) {
                 chapterCache.clear()
             }
         }
@@ -339,7 +358,7 @@ class MainActivity : BaseActivity() {
         // Extensions updates
         LaunchedEffect(Unit) {
             try {
-                extensionApi.checkForUpdates(context)
+                extensionManager.checkForUpdates()
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
             }
@@ -418,7 +437,7 @@ class MainActivity : BaseActivity() {
                             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                         ) {
                             Icon(
-                                imageVector = Icons.Default.VolunteerActivism,
+                                imageVector = MaterialSymbols.RoundedFilled.VolunteerActivism,
                                 contentDescription = null,
                             )
                             Text(
@@ -447,7 +466,7 @@ class MainActivity : BaseActivity() {
                                     text = stringResource(MR.strings.donationCampaign_contactPlatform),
                                 )
                                 Icon(
-                                    imageVector = Icons.AutoMirrored.Default.OpenInNew,
+                                    imageVector = MaterialSymbols.AutoMirroredRounded.OpenInNew,
                                     contentDescription = null,
                                 )
                             }

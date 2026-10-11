@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionStore
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
+import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import eu.kanade.tachiyomi.data.backup.restore.restorers.CategoriesRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.ExtensionStoreRestorer
@@ -19,13 +20,15 @@ import eu.kanade.tachiyomi.data.backup.restore.restorers.PreferenceRestorer
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
-import tachiyomi.data.Database
+import tachiyomi.domain.source.repository.StubSourceRepository
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import java.io.File
 import java.text.SimpleDateFormat
@@ -42,13 +45,14 @@ class BackupRestorer(
     @Assisted private val notifier: BackupNotifier,
     @Assisted private val isSync: Boolean,
     private val context: Context,
-    private val database: Database,
     private val downloadCache: DownloadCache,
     private val categoriesRestorer: CategoriesRestorer,
     private val preferenceRestorer: PreferenceRestorer,
     private val extensionStoreRestorer: ExtensionStoreRestorer,
     private val mangaRestorer: MangaRestorer,
     private val backupDecoder: BackupDecoder,
+    private val sourceManager: SourceManager,
+    private val stubSourceRepository: StubSourceRepository,
 ) {
 
     @AssistedFactory
@@ -100,6 +104,7 @@ class BackupRestorer(
         sourceMapping = backupMaps.associate { it.sourceId to it.name }
 
         if (options.libraryEntries) {
+            restoreSourceNames(backupMaps)
             restoreAmount += backup.backupManga.size
         }
         if (options.categories) {
@@ -116,17 +121,27 @@ class BackupRestorer(
         }
 
         coroutineScope {
-            if (options.categories) {
+            val restoreCategoriesJob = if (options.categories) {
                 restoreCategories(backup.backupCategories)
+            } else {
+                null
             }
             if (options.appSettings) {
-                restoreAppPreferences(backup.backupPreferences, backup.backupCategories.takeIf { options.categories })
+                restoreAppPreferences(
+                    backup.backupPreferences,
+                    backup.backupCategories.takeIf { options.categories },
+                    restoreCategoriesJob,
+                )
             }
             if (options.sourceSettings) {
                 restoreSourcePreferences(backup.backupSourcePreferences)
             }
             if (options.libraryEntries) {
-                restoreManga(backup.backupManga, if (options.categories) backup.backupCategories else emptyList())
+                restoreManga(
+                    backup.backupManga,
+                    if (options.categories) backup.backupCategories else emptyList(),
+                    restoreCategoriesJob,
+                )
             }
             if (options.extensionStores) {
                 restoreExtensionStores(backup.backupExtensionStores)
@@ -134,6 +149,16 @@ class BackupRestorer(
 
             // TODO: optionally trigger online library + tracker update
         }
+    }
+
+    // Without a stub, a source that isn't installed has no name for the next backup to write
+    private suspend fun restoreSourceNames(backupSources: List<BackupSource>) {
+        backupSources
+            .filter { it.name.isNotBlank() }
+            .filter {
+                sourceManager.get(it.sourceId) == null && stubSourceRepository.getStubSource(it.sourceId) == null
+            }
+            .forEach { stubSourceRepository.upsertStubSource(it.sourceId, lang = "", name = it.name) }
     }
 
     private fun CoroutineScope.restoreCategories(backupCategories: List<BackupCategory>) = launch {
@@ -152,17 +177,15 @@ class BackupRestorer(
     private fun CoroutineScope.restoreManga(
         backupMangas: List<BackupManga>,
         backupCategories: List<BackupCategory>,
+        categoriesRestoreJob: Job?,
     ) = launch {
+        categoriesRestoreJob?.join()
         mangaRestorer.sortByNew(backupMangas)
             .chunked(100)
             .forEach { chunk ->
                 val restoredAsBatch = try {
-                    database.transaction {
-                        chunk.forEach {
-                            ensureActive()
-                            mangaRestorer.restore(it, backupCategories)
-                        }
-                    }
+                    ensureActive()
+                    mangaRestorer.restore(chunk, backupCategories)
                     true
                 } catch (e: Exception) {
                     ensureActive()
@@ -177,7 +200,7 @@ class BackupRestorer(
                         ensureActive()
 
                         try {
-                            mangaRestorer.restore(it, backupCategories)
+                            mangaRestorer.restore(listOf(it), backupCategories)
                         } catch (e: Exception) {
                             ensureActive()
                             val sourceName = sourceMapping[it.source] ?: it.source.toString()
@@ -195,8 +218,10 @@ class BackupRestorer(
     private fun CoroutineScope.restoreAppPreferences(
         preferences: List<BackupPreference>,
         categories: List<BackupCategory>?,
+        categoriesRestoreJob: Job?,
     ) = launch {
         ensureActive()
+        categoriesRestoreJob?.join()
         preferenceRestorer.restoreApp(
             preferences,
             categories,
@@ -230,18 +255,16 @@ class BackupRestorer(
         backupExtensionStores
             .chunked(100)
             .forEach { chunk ->
-                database.transaction {
-                    chunk.forEach {
-                        ensureActive()
+                chunk.forEach {
+                    ensureActive()
 
-                        try {
-                            extensionStoreRestorer(it)
-                        } catch (e: Exception) {
-                            errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
-                        }
-
-                        restoreProgress.incrementAndFetch()
+                    try {
+                        extensionStoreRestorer(it)
+                    } catch (e: Exception) {
+                        errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
                     }
+
+                    restoreProgress.incrementAndFetch()
                 }
                 notifier.showRestoreProgress(
                     context.stringResource(MR.strings.extensionStores),
