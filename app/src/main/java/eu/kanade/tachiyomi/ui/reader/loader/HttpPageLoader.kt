@@ -231,23 +231,14 @@ internal class HttpPageLoader(
             val imageUrl = page.imageUrl!!
 
             if (force || !chapterCache.isImageInCache(imageUrl)) {
-                val live = page.downloadStream
                 page.status = Page.State.DownloadImage
-                try {
-                    val imageResponse = source.getImage(page)
-                    chapterCache.putImageToCache(imageUrl, imageResponse, live)
-                    live?.finish()
-                } catch (e: Throwable) {
-                    live?.finish(e)
-                    throw e
-                }
+                val imageResponse = source.getImage(page)
+                chapterCache.putImageToCache(imageUrl, imageResponse)
             }
 
-            page.downloadStream = null
             page.stream = { chapterCache.getImageFile(imageUrl).inputStream() }
             page.status = Page.State.Ready
         } catch (e: Throwable) {
-            page.downloadStream = null
             if (e is CancellationException) {
                 // Chunk chains get cancelled on every page turn, so a cancelled page isn't an error. Put it back in
                 // the queue, otherwise it's stuck in a state no later pass will pick up.

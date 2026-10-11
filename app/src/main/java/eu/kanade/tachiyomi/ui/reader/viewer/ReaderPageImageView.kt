@@ -41,6 +41,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonStripImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
+import tachiyomi.core.common.util.system.ImageUtil
 
 /**
  * A wrapper view for showing page image.
@@ -240,6 +241,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         removeView(pageView)
 
         pageView = SubsamplingScaleImageView(context).apply {
+            setMaxTileSize(ImageUtil.hardwareBitmapThreshold)
             setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
             setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
             setMinimumTileDpi(180)
@@ -300,6 +302,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 isVisible = true
             }
             is BufferedSource -> {
+                setHardwareConfig(ImageUtil.canUseHardwareBitmap(data))
                 setImage(ImageSource.inputStream(data.inputStream()))
                 isVisible = true
             }

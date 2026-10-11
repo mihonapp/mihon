@@ -12,22 +12,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
-- Add experimental high quality reader renderer (Settings → Advanced → Use high quality renderer) with better image scaling, page transition animations, dual page view and display cutout handling ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3388](https://github.com/mihonapp/mihon/pull/3388))
-  - Match background and transition page colors to the old reader ([@AntsyLich](https://github.com/AntsyLich)) ([#3765](https://github.com/mihonapp/mihon/pull/3765))
-  - Support the Fit width, Fit height and Original size scale types and the zoom start position ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3801](https://github.com/mihonapp/mihon/pull/3801))
-  - Fix preloading and navigation across chapters, and right-to-left navigation ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3823](https://github.com/mihonapp/mihon/pull/3823))
-  - Add a "None" page transition and fix the background color of animated images ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3843](https://github.com/mihonapp/mihon/pull/3843))
-  - Improve transition and error pages, dual page animations and border cropping ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3852](https://github.com/mihonapp/mihon/pull/3852))
-  - Fix navigation directions and long strip bounds, and fade in loaded pages ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3870](https://github.com/mihonapp/mihon/pull/3870))
-  - Add a "Page flip" transition, a long strip minimum width setting and separate dual page settings, and show wide pages on their own in dual page view ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3886](https://github.com/mihonapp/mihon/pull/3886))
-  - Fix freezes and running out of memory when jumping between pages with the slider ([@Danidukiyu](https://github.com/Danidukiyu)) ([#3872](https://github.com/mihonapp/mihon/pull/3872))
-  - Add HDR, ICC color profile and EXIF orientation support ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3933](https://github.com/mihonapp/mihon/pull/3933))
-  - Add a page gap setting for long strip with gaps and a "Disable zoom out" setting for long strip modes ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3933](https://github.com/mihonapp/mihon/pull/3933))
-  - Fix a crash on Android 15 and long strip progress and background color ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3949](https://github.com/mihonapp/mihon/pull/3949))
-  - Keep the reader menu open while moving through pages with the slider ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3956](https://github.com/mihonapp/mihon/pull/3956))
-  - Show pages progressively while they download ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4023](https://github.com/mihonapp/mihon/pull/4023))
-  - Lower memory use for animated images and support cropping borders in long strip ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4029](https://github.com/mihonapp/mihon/pull/4029))
-  - Pair more wide pages in dual page view by comparing them with neighbouring pages ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4051](https://github.com/mihonapp/mihon/pull/4051))
 - Add `id:` prefix search to remaining trackers (AniList, Bangumi, Kitsu, MangaUpdates, Shikimori, and Hikka) ([@MajorTanya](https://github.com/MajorTanya), [@BrutuZ](https://github.com/BrutuZ)) ([#3776](https://github.com/mihonapp/mihon/pull/3776))
   - Allow `id:` to search for slugs on Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3792](https://github.com/mihonapp/mihon/pull/3792))
 - Add support for using the user's chosen rating system for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3818](https://github.com/mihonapp/mihon/pull/3818))
@@ -45,7 +29,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 - Download app updates from the update screen instead of a background job, and remove the "App updates" notification channel ([@AntsyLich](https://github.com/AntsyLich)) ([#3707](https://github.com/mihonapp/mihon/pull/3707))
-- Use a new decoder for images Android can't decode itself, like AVIF, JPEG XL and HEIF, and support JPEG 2000 images ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 - Switch app icons to Material Symbols ([@AntsyLich](https://github.com/AntsyLich)) ([#3873](https://github.com/mihonapp/mihon/pull/3873))
   - Use the filled icon for the library continue reading button ([@AntsyLich](https://github.com/AntsyLich)) ([`34a33ed`](https://github.com/mihonapp/mihon/commit/34a33ed))
   - Move notification, launcher shortcut, bottom navigation and reading mode icons to Material Symbols, bring back filled icons where the switch dropped them, and show a compact grid icon for the compact display modes ([@AntsyLich](https://github.com/AntsyLich)) ([#4057](https://github.com/mihonapp/mihon/pull/4057))
@@ -102,7 +85,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Speed up queueing many chapters for download at once ([@AntsyLich](https://github.com/AntsyLich)) ([`f02bf5b`](https://github.com/mihonapp/mihon/commit/f02bf5b))
 
 ### Removed
-- Remove "Custom hardware bitmap threshold", "Use legacy decoder for long strip reader" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
+- Remove "Use legacy decoder for long strip reader" advanced setting, since long strip pages no longer load as one big image ([@AntsyLich](https://github.com/AntsyLich))
 
 ### Fixed
 - Fixed app and extension update check running again on configuration change ([@AntsyLich](https://github.com/AntsyLich)) ([#3708](https://github.com/mihonapp/mihon/pull/3708))

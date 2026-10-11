@@ -11,8 +11,4 @@ open class ReaderPage(
 ) : Page(index, url, imageUrl, null) {
 
     open lateinit var chapter: ReaderChapter
-
-    /** Set by a viewer before the download; filled during [Page.State.DownloadImage]. */
-    @Volatile
-    var downloadStream: DownloadStream? = null
 }
