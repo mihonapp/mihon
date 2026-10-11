@@ -98,7 +98,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Speed up loading extension repos at startup ([@AntsyLich](https://github.com/AntsyLich)) ([`8066b8d`](https://github.com/mihonapp/mihon/commit/8066b8d))
 - Speed up opening the entry details screen and showing download progress there and in updates ([@AntsyLich](https://github.com/AntsyLich)) ([`ba16158`](https://github.com/mihonapp/mihon/commit/ba16158))
 - Speed up queueing many chapters for download at once ([@AntsyLich](https://github.com/AntsyLich)) ([`f02bf5b`](https://github.com/mihonapp/mihon/commit/f02bf5b))
-- Exclude longstrip side padding from horizontal zoom bounds ([#4072](https://github.com/mihonapp/mihon/pull/4072))
 
 ### Removed
 - Remove "Custom hardware bitmap threshold", "Use legacy decoder for long strip reader" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
@@ -152,6 +151,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed the chapter selection being cleared when new chapters were downloaded automatically after a refresh ([@AntsyLich](https://github.com/AntsyLich)) ([`a82d27c`](https://github.com/mihonapp/mihon/commit/a82d27c))
 - Fixed actions started from a dialog sometimes not running when the dialog closed right away, Kitsu, Shikimori, MangaBaka, Bangumi and Hikka sometimes refreshing their login twice at once, adding an extension repo served over HTTP failing, and cancelling an extension install not stopping its download ([@AntsyLich](https://github.com/AntsyLich)) ([#4068](https://github.com/mihonapp/mihon/pull/4068))
 - Fixed the next library update staying "Soon" after new chapters were found, and chapters that came out early, late or were dated earlier by the source pushing the next check back ([@AntsyLich](https://github.com/AntsyLich)) ([`ba44815`](https://github.com/mihonapp/mihon/commit/ba44815))
+- Fix long strip side padding being counted in zoom bounds ([#4072](https://github.com/mihonapp/mihon/pull/4072))
 
 ### Other
 - Show "Nightly" instead of "Beta" for preview builds and "FOSS" for FOSS builds in About ([@AntsyLich](https://github.com/AntsyLich)) ([#3760](https://github.com/mihonapp/mihon/pull/3760))
