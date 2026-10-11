@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+
+## [v0.21.0] - 2026-10-12
 ### Added
 - Add `id:` prefix search to remaining trackers (AniList, Bangumi, Kitsu, MangaUpdates, Shikimori, and Hikka) ([@MajorTanya](https://github.com/MajorTanya), [@BrutuZ](https://github.com/BrutuZ)) ([#3776](https://github.com/mihonapp/mihon/pull/3776))
   - Allow `id:` to search for slugs on Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#3792](https://github.com/mihonapp/mihon/pull/3792))
@@ -756,7 +758,8 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.20.4...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.21.0...main
+[v0.21.0]: https://github.com/mihonapp/mihon/compare/v0.20.4...v0.21.0
 [v0.20.4]: https://github.com/mihonapp/mihon/compare/v0.20.3...v0.20.4
 [v0.20.3]: https://github.com/mihonapp/mihon/compare/v0.20.2...v0.20.3
 [v0.20.2]: https://github.com/mihonapp/mihon/compare/v0.20.1...v0.20.2
