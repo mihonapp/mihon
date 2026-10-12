@@ -35,18 +35,19 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 
+## [v0.21.1] - 2026-10-12
 ### Fixed
-- Fixed refreshing chapters failing with the app language set to Arabic or another language with its own digits ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed a crash on launch on some Samsung devices running Android 9 to 11 ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed the start and resume button going under the taskbar on tablets ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed a crash when updating an extension while others were installing ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed library entries without a date added getting their last update time as date added when updating from v0.20.x ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed the app closing when WebView's page process crashed ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed installing or updating an extension sometimes cancelling the install of another one ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed updating from v0.20.x taking up to hours on libraries with many duplicate entries ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed the app staying on the updating screen for good when updating its data failed, it now shows what went wrong, and updating failing on leftover data of deleted entries ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed library updates ignoring the smart update restrictions for entries whose details were never fetched ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed resuming a chapter sometimes opening the next chapter partway through, and saving progress to it, in the right to left reader ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed refreshing chapters failing with the app language set to Arabic or another language with its own digits ([@AntsyLich](https://github.com/AntsyLich)) ([`8457fb9`](https://github.com/mihonapp/mihon/commit/8457fb9))
+- Fixed a crash on launch on some Samsung devices running Android 9 to 11 ([@AntsyLich](https://github.com/AntsyLich)) ([`abb126a`](https://github.com/mihonapp/mihon/commit/abb126a))
+- Fixed the start and resume button going under the taskbar on tablets ([@AntsyLich](https://github.com/AntsyLich)) ([`c279291`](https://github.com/mihonapp/mihon/commit/c279291))
+- Fixed a crash when updating an extension while others were installing ([@AntsyLich](https://github.com/AntsyLich)) ([`07b9fb6`](https://github.com/mihonapp/mihon/commit/07b9fb6))
+- Fixed library entries without a date added getting their last update time as date added when updating from v0.20.x ([@AntsyLich](https://github.com/AntsyLich)) ([`6dffca1`](https://github.com/mihonapp/mihon/commit/6dffca1))
+- Fixed the app closing when WebView's page process crashed ([@AntsyLich](https://github.com/AntsyLich)) ([`649fc83`](https://github.com/mihonapp/mihon/commit/649fc83))
+- Fixed installing or updating an extension sometimes cancelling the install of another one ([@AntsyLich](https://github.com/AntsyLich)) ([`ae749bb`](https://github.com/mihonapp/mihon/commit/ae749bb))
+- Fixed updating from v0.20.x taking up to hours on libraries with many duplicate entries ([@AntsyLich](https://github.com/AntsyLich)) ([`a999e49`](https://github.com/mihonapp/mihon/commit/a999e49))
+- Fixed the app staying on the updating screen for good when updating its data failed, it now shows what went wrong, and updating failing on leftover data of deleted entries ([@AntsyLich](https://github.com/AntsyLich)) ([`9dbb714`](https://github.com/mihonapp/mihon/commit/9dbb714))
+- Fixed library updates ignoring the smart update restrictions for entries whose details were never fetched ([@AntsyLich](https://github.com/AntsyLich)) ([`010ac71`](https://github.com/mihonapp/mihon/commit/010ac71))
+- Fixed resuming a chapter sometimes opening the next chapter partway through, and saving progress to it, in the right to left reader ([@AntsyLich](https://github.com/AntsyLich)) ([`51b61a3`](https://github.com/mihonapp/mihon/commit/51b61a3))
 
 ## [v0.21.0] - 2026-10-12
 ### Added
@@ -794,7 +795,8 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.21.0...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.21.1...main
+[v0.21.1]: https://github.com/mihonapp/mihon/compare/v0.21.0...v0.21.1
 [v0.21.0]: https://github.com/mihonapp/mihon/compare/v0.20.4...v0.21.0
 [v0.20.4]: https://github.com/mihonapp/mihon/compare/v0.20.3...v0.20.4
 [v0.20.3]: https://github.com/mihonapp/mihon/compare/v0.20.2...v0.20.3
