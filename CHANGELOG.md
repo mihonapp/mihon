@@ -46,6 +46,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed a crash when installing an extension on a device where the system installer can't ask for confirmation ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed a crash when tapping in the long strip reader as it closed ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed chapters downloaded before v0.21.0 showing as not downloaded when their name started with a space or dot, was long, or had a non-ASCII scanlator ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed slowdowns and running out of memory when many requests to a site hit a Cloudflare challenge at once ([@tigeryu8900](https://github.com/tigeryu8900), [@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.1] - 2026-10-12
 ### Fixed
