@@ -875,7 +875,7 @@ class MangaViewModel(
                 val series = localSourceFileSystem.getBaseDirectory()
                     ?.findFile(translatedSeriesName(state.manga))
                     ?.takeIf { it.isDirectory }
-                    ?: return@withContext(Dispatchers.IO) emptySet()
+                    ?: return@withContext emptySet()
                 val folders = series.listFiles().orEmpty()
                     .filter { it.isDirectory }
                     .mapNotNull { it.name }
