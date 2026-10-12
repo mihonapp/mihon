@@ -22,6 +22,8 @@ abstract class Installer(private val service: Service) {
     private val extensionManager: ExtensionManager by lazy { service.appGraph.extensionManager }
 
     private var waitingInstall = AtomicReference<Entry?>(null)
+
+    // Guarded by itself: cancellation comes from any thread, not only main
     private val queue = Collections.synchronizedList(mutableListOf<Entry>())
 
     private val cancelListener: (Long) -> Unit = { downloadId -> cancelQueue(downloadId) }
@@ -91,15 +93,15 @@ abstract class Installer(private val service: Service) {
         if (!ready) {
             return
         }
-        if (queue.isEmpty()) {
-            service.stopSelf()
-            return
-        }
-        val nextEntry = queue.first()
-        if (waitingInstall.compareAndSet(null, nextEntry)) {
+        val nextEntry = synchronized(queue) {
+            if (queue.isEmpty()) {
+                service.stopSelf()
+                return
+            }
+            if (!waitingInstall.compareAndSet(null, queue.first())) return
             queue.removeAt(0)
-            processEntry(nextEntry)
         }
+        processEntry(nextEntry)
     }
 
     /**
@@ -108,11 +110,11 @@ abstract class Installer(private val service: Service) {
     @CallSuper
     open fun onDestroy() {
         cancelListeners -= cancelListener
-        queue.forEach {
+        val remaining = synchronized(queue) { queue.toList().also { queue.clear() } }
+        remaining.forEach {
             logcat(LogPriority.INFO) { "The installer stopped before installing ${it.downloadId}" }
             extensionManager.updateInstallStep(it.downloadId, InstallStep.Error)
         }
-        queue.clear()
         waitingInstall.store(null)
     }
 
@@ -125,7 +127,8 @@ abstract class Installer(private val service: Service) {
      */
     private fun cancelQueue(downloadId: Long) {
         val waitingInstall = this.waitingInstall.load()
-        val toCancel = queue.find { it.downloadId == downloadId } ?: waitingInstall ?: return
+        val toCancel = synchronized(queue) { queue.find { it.downloadId == downloadId } }
+            ?: waitingInstall ?: return
         if (cancelEntry(toCancel)) {
             queue.remove(toCancel)
             if (waitingInstall == toCancel) {
