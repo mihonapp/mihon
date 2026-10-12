@@ -13,9 +13,9 @@ import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.common.i18n.stringResource
-import mihon.icons.materialsymbols.R as MaterialSymbolsR
 import tachiyomi.i18n.MR
 import java.util.UUID
+import mihon.icons.materialsymbols.R as MaterialSymbolsR
 
 /**
  * Builds and shows every notification of the chapter translation worker.
@@ -52,7 +52,11 @@ class TranslationNotifier(
             setOngoing(true)
             setOnlyAlertOnce(true)
             setProgress(total, current, total <= 0)
-            addAction(MaterialSymbolsR.drawable.rounded_close, context.stringResource(MR.strings.action_cancel), cancelIntent)
+            addAction(
+                MaterialSymbolsR.drawable.rounded_close,
+                context.stringResource(MR.strings.action_cancel),
+                cancelIntent,
+            )
         }.build()
     }
 

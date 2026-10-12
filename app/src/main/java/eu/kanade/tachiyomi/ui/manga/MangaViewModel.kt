@@ -283,8 +283,8 @@ class MangaViewModel(
             (selectedIds, downloads),
             (stateDetails, translationDetails),
         ->
-            val (dialog, isRefreshingData) = stateDetails
-            val (translationEnabled, translatedChapterIds) = translationDetails
+        val (dialog, isRefreshingData) = stateDetails
+        val (translationEnabled, translatedChapterIds) = translationDetails
         State.Success(
             manga = mangaAndChapters.manga,
             source = mangaAndChapters.source,
