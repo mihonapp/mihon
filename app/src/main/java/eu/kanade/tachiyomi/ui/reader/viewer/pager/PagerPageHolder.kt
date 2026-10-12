@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import eu.kanade.presentation.util.formattedMessage
@@ -62,6 +63,7 @@ class PagerPageHolder(
     private var loadJob: Job? = null
 
     init {
+        applyCachedBackground()
         loadJob = scope.launch { loadPageAndProcessStatus() }
     }
 
@@ -73,6 +75,12 @@ class PagerPageHolder(
         super.onDetachedFromWindow()
         loadJob?.cancel()
         loadJob = null
+    }
+
+    private fun applyCachedBackground() {
+        if (viewer.config.automaticBackground) {
+            viewer.lastAutomaticBackground?.let { setBackgroundColor(it) }
+        }
     }
 
     private fun initProgressIndicator() {
@@ -158,6 +166,9 @@ class PagerPageHolder(
                     ImageUtil.chooseBackground(context, source.peek().inputStream())
                 } else {
                     null
+                }
+                if (background is ColorDrawable) {
+                    viewer.lastAutomaticBackground = background.color
                 }
                 Triple(source, isAnimated, background)
             }
