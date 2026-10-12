@@ -96,6 +96,8 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
 
         chapters.nextChapter?.pages?.let(newItems::addAll)
 
+        val currentItem = items.getOrNull(viewer.pager.currentItem)
+
         // Resets double-page splits, else insert pages get misplaced
         items.filterIsInstance<InsertPage>().also { items.removeAll(it) }
 
@@ -106,6 +108,14 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         preprocessed = mutableMapOf()
         items = newItems
         notifyDataSetChanged()
+
+        // The pager only follows the pages it has created, so before its first layout it would stay at the same
+        // position while pages are added in front, e.g. the next chapter's in right to left, and land in another
+        // chapter
+        val currentPosition = items.indexOf(currentItem)
+        if (currentPosition != -1 && currentPosition != viewer.pager.currentItem) {
+            viewer.pager.setCurrentItem(currentPosition, false)
+        }
 
         // Will skip insert page otherwise
         if (insertPageLastPage != null) {

@@ -46,6 +46,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed updating from v0.20.x taking up to hours on libraries with many duplicate entries ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed the app staying on the updating screen for good when updating its data failed, it now shows what went wrong, and updating failing on leftover data of deleted entries ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed library updates ignoring the smart update restrictions for entries whose details were never fetched ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed resuming a chapter sometimes opening the next chapter partway through, and saving progress to it, in the right to left reader ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.0] - 2026-10-12
 ### Added
