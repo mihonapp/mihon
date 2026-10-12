@@ -59,15 +59,23 @@ abstract class WebViewInterceptor(
             return response
         }
 
+        if (!prepareWebView()) return response
+
+        return intercept(chain, request, response)
+    }
+
+    /**
+     * Returns whether a WebView can be used, initializing it if so.
+     */
+    protected fun prepareWebView(): Boolean {
         if (!WebViewUtil.supportsWebView(context)) {
             scope.launch(Dispatchers.Main) {
                 context.toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
             }
-            return response
+            return false
         }
         initWebView
-
-        return intercept(chain, request, response)
+        return true
     }
 
     fun parseHeaders(headers: Headers): Map<String, String> {
