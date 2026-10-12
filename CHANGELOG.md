@@ -12,18 +12,19 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 
+## [v0.21.2] - 2026-10-13
 ### Fixed
 - Fix long floating point numbers showing up in Comick progress ([@MajorTanya](https://github.com/MajorTanya)) ([#4090](https://github.com/mihonapp/mihon/pull/4090))
-- Fixed updating from v0.20.x failing when the database had duplicate history or tracking entries, or damaged indexes ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed a crash when a back gesture was still in progress as the reader or a dialog closed ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed Kitsu login and other requests that send data failing with "Failed to bypass Cloudflare" ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed updating from v0.20.x failing when the database had duplicate history or tracking entries, or damaged indexes ([@AntsyLich](https://github.com/AntsyLich)) ([`ea2b73a`](https://github.com/mihonapp/mihon/commit/ea2b73a))
+- Fixed a crash when a back gesture was still in progress as the reader or a dialog closed ([@AntsyLich](https://github.com/AntsyLich)) ([`43de88c`](https://github.com/mihonapp/mihon/commit/43de88c))
+- Fixed Kitsu login and other requests that send data failing with "Failed to bypass Cloudflare" ([@AntsyLich](https://github.com/AntsyLich)) ([`7ae858e`](https://github.com/mihonapp/mihon/commit/7ae858e))
 - Fixed tracker start date being off by a day when adding tracking to an entry with read history in some timezones ([@hazptr](https://github.com/hazptr)) ([#4049](https://github.com/mihonapp/mihon/pull/4049))
-- Fixed the paged reader crashing when moving to another chapter after a wide page of a neighbouring chapter was split ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed a crash when opening the filters of a source with an invalid filter ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed a crash when installing an extension on a device where the system installer can't ask for confirmation ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed a crash when tapping in the long strip reader as it closed ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed chapters downloaded before v0.21.0 showing as not downloaded when their name started with a space or dot, was long, or had a non-ASCII scanlator ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed slowdowns and running out of memory when many requests to a site hit a Cloudflare challenge at once ([@tigeryu8900](https://github.com/tigeryu8900), [@AntsyLich](https://github.com/AntsyLich))
+- Fixed the paged reader crashing when moving to another chapter after a wide page of a neighbouring chapter was split ([@AntsyLich](https://github.com/AntsyLich)) ([`3156b4a`](https://github.com/mihonapp/mihon/commit/3156b4a))
+- Fixed a crash when opening the filters of a source with an invalid filter ([@AntsyLich](https://github.com/AntsyLich)) ([`c9e1b6e`](https://github.com/mihonapp/mihon/commit/c9e1b6e))
+- Fixed a crash when installing an extension on a device where the system installer can't ask for confirmation ([@AntsyLich](https://github.com/AntsyLich)) ([`2df48e1`](https://github.com/mihonapp/mihon/commit/2df48e1))
+- Fixed a crash when tapping in the long strip reader as it closed ([@AntsyLich](https://github.com/AntsyLich)) ([`c371d63`](https://github.com/mihonapp/mihon/commit/c371d63))
+- Fixed chapters downloaded before v0.21.0 showing as not downloaded when their name started with a space or dot, was long, or had a non-ASCII scanlator ([@AntsyLich](https://github.com/AntsyLich)) ([`f0f1e4d`](https://github.com/mihonapp/mihon/commit/f0f1e4d))
+- Fixed slowdowns and running out of memory when many requests to a site hit a Cloudflare challenge at once ([@tigeryu8900](https://github.com/tigeryu8900), [@AntsyLich](https://github.com/AntsyLich)) ([`5a5ff22`](https://github.com/mihonapp/mihon/commit/5a5ff22))
 
 ## [v0.21.1] - 2026-10-12
 ### Fixed
@@ -785,7 +786,8 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.21.1...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.21.2...main
+[v0.21.2]: https://github.com/mihonapp/mihon/compare/v0.21.1...v0.21.2
 [v0.21.1]: https://github.com/mihonapp/mihon/compare/v0.21.0...v0.21.1
 [v0.21.0]: https://github.com/mihonapp/mihon/compare/v0.20.4...v0.21.0
 [v0.20.4]: https://github.com/mihonapp/mihon/compare/v0.20.3...v0.20.4
