@@ -5,6 +5,19 @@ import kotlin.collections.List;
 import kotlinx.serialization.json.JsonObject;
 
 -- ---------------------------------------------------------------------------------------------------------
+-- orphans
+-- ---------------------------------------------------------------------------------------------------------
+
+-- Rows pointing at an entry, chapter or category that no longer exists were written while foreign keys weren't
+-- enforced. Nothing can reach them, and copied over they'd fail the foreign key check that ends the migration.
+DELETE FROM chapters WHERE manga_id NOT IN (SELECT _id FROM mangas);
+DELETE FROM history WHERE chapter_id NOT IN (SELECT _id FROM chapters);
+DELETE FROM mangas_categories
+WHERE manga_id NOT IN (SELECT _id FROM mangas) OR category_id NOT IN (SELECT _id FROM categories);
+DELETE FROM manga_sync WHERE manga_id NOT IN (SELECT _id FROM mangas);
+DELETE FROM excluded_scanlators WHERE manga_id NOT IN (SELECT _id FROM mangas);
+
+-- ---------------------------------------------------------------------------------------------------------
 -- table - manga
 -- ---------------------------------------------------------------------------------------------------------
 
@@ -30,6 +43,9 @@ WHERE (source, url) IN (
     GROUP BY source, url
     HAVING count(*) > 1
 );
+
+-- Moving the chapters looks each one's entry up here, which without an index scans the whole table per chapter
+CREATE INDEX duplicate_mangas_id_index ON duplicate_mangas(_id);
 
 UPDATE mangas
 SET favorite_at = merged.favorite_at,
