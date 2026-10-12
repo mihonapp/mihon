@@ -35,6 +35,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 
+### Fixed
+- Fixed refreshing chapters failing with the app language set to Arabic or another language with its own digits ([@AntsyLich](https://github.com/AntsyLich))
+
 ## [v0.21.0] - 2026-10-12
 ### Added
 - Add `id:` prefix search to remaining trackers (AniList, Bangumi, Kitsu, MangaUpdates, Shikimori, and Hikka) ([@MajorTanya](https://github.com/MajorTanya), [@BrutuZ](https://github.com/BrutuZ)) ([#3776](https://github.com/mihonapp/mihon/pull/3776))
