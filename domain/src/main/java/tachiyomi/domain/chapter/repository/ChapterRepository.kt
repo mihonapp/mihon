@@ -20,6 +20,8 @@ interface ChapterRepository {
 
     suspend fun getChapterByMangaId(mangaId: Long, applyScanlatorFilter: Boolean = false): List<Chapter>
 
+    suspend fun getChaptersByMangaIds(mangaIds: List<Long>): Map<Long, List<Chapter>>
+
     suspend fun getChapterSummaryByMangaId(mangaId: Long): ChapterSummary
 
     suspend fun getScanlatorsByMangaId(mangaId: Long): List<String>
