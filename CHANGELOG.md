@@ -32,6 +32,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Changed
 - Use a new decoder for images Android can't decode itself, like AVIF, JPEG XL and HEIF, and support JPEG 2000 images ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 
+### Improved
+- Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich))
+
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 

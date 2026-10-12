@@ -113,6 +113,13 @@ class ChapterRepositoryImpl(
             .awaitAsList()
     }
 
+    override suspend fun getChaptersByMangaIds(mangaIds: List<Long>): Map<Long, List<Chapter>> {
+        return database.chapterQueries
+            .getChaptersByMangaIds(mangaIds, ::mapChapter)
+            .awaitAsList()
+            .groupBy { it.mangaId }
+    }
+
     override suspend fun getChapterSummaryByMangaId(mangaId: Long): ChapterSummary {
         return database.chapterQueries
             .getChapterSummaryByMangaId(mangaId) { total, latestChapterNumber ->

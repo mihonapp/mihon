@@ -48,6 +48,16 @@ AND (
     OR ES.scanlator IS NULL
 );
 
+getChaptersByMangaIds:
+-- The unique index's order, which getChaptersByMangaId returns too, so backups keep their chapter order
+SELECT
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch
+FROM chapter
+WHERE manga_id IN :mangaIds
+ORDER BY manga_id, remote_url;
+
 getChapterSummaryByMangaId:
 SELECT count(*) AS total, max(remote_chapter_number) AS latestChapterNumber
 FROM chapter
