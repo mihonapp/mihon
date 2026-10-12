@@ -80,6 +80,7 @@ import mihon.core.archive.archiveReader
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
+import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -114,6 +115,8 @@ import tachiyomi.source.local.io.LocalSourceFileSystem
 import tachiyomi.source.local.isLocal
 import kotlin.math.floor
 import kotlin.time.Duration.Companion.seconds
+
+private const val MAX_EXTRA_CHAPTERS = 10
 
 @AssistedInject
 class MangaViewModel(
@@ -268,16 +271,20 @@ class MangaViewModel(
         scanlators,
         trackers,
         combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
-        combine(dialog, isRefreshingData, ::Pair),
-        combine(translationEnabled, translatedChapterIds, ::Pair),
+        combine(
+            combine(dialog, isRefreshingData, ::Pair),
+            combine(translationEnabled, translatedChapterIds, ::Pair),
+            ::Pair,
+        ),
     ) {
             mangaAndChapters,
             (availableScanlators, excludedScanlators),
             (trackingCount, hasLoggedInTrackers),
             (selectedIds, downloads),
-            (dialog, isRefreshingData),
-            (translationEnabled, translatedChapterIds),
+            (stateDetails, translationDetails),
         ->
+            val (dialog, isRefreshingData) = stateDetails
+            val (translationEnabled, translatedChapterIds) = translationDetails
         State.Success(
             manga = mangaAndChapters.manga,
             source = mangaAndChapters.source,
@@ -965,7 +972,7 @@ class MangaViewModel(
     /**
      * Counts the image pages of a downloaded chapter, which is stored either as a folder or as a .cbz archive.
      */
-    private fun countDownloadedPages(chapter: Chapter, manga: Manga, source: Source): Int {
+    private suspend fun countDownloadedPages(chapter: Chapter, manga: Manga, source: Source): Int {
         val chapterDir = downloadProvider.findChapterDir(
             chapter.name,
             chapter.scanlator,
