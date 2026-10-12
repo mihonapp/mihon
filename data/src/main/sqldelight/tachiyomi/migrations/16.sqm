@@ -9,8 +9,9 @@ DROP INDEX library_favorite_index;
 
 ALTER TABLE mangas ADD COLUMN favorite_at INTEGER;
 
+-- favorite_modified_at is no fallback for a missing date_added: every manga update rewrote it
 UPDATE mangas
-SET favorite_at = coalesce(nullif(date_added, 0), favorite_modified_at * 1000, 0)
+SET favorite_at = coalesce(date_added, 0)
 WHERE favorite = 1;
 
 ALTER TABLE mangas DROP COLUMN favorite;

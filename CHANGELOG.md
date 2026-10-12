@@ -40,6 +40,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed a crash on launch on some Samsung devices running Android 9 to 11 ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed the start and resume button going under the taskbar on tablets ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed a crash when updating an extension while others were installing ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed library entries without a date added getting their last update time as date added when updating from v0.20.x ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.0] - 2026-10-12
 ### Added
