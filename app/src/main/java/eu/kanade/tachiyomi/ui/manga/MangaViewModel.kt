@@ -200,7 +200,7 @@ class MangaViewModel(
 
     private val dialog = MutableStateFlow<Dialog?>(null)
     private val translatedChapterIds = MutableStateFlow(emptySet<Long>())
-    private val translationEnabled = translationPreferences.enabled().asState(viewModelScope)
+    private val translationEnabled = translationPreferences.enabled().stateIn(viewModelScope)
 
     private val isRefreshingData = MutableStateFlow(false)
 
