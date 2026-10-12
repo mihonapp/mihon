@@ -43,8 +43,10 @@ class UiPreferences(
 
     val imagesInDescription: Preference<Boolean> = preferenceStore.getBoolean("pref_render_images_description", true)
 
-    val statsScreenCoverStyle: Preference<StatsCoverStyle> = preferenceStore.getEnum("stats_screen_cover_style", StatsCoverStyle.SQUARE)
-
+    val statsScreenCoverStyle: Preference<StatsCoverStyle> = preferenceStore.getEnum(
+        "stats_screen_cover_style",
+        StatsCoverStyle.SQUARE,
+    )
 
     companion object {
         fun dateFormat(format: String): DateTimeFormatter = when (format) {

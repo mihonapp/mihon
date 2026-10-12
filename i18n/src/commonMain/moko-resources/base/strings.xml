@@ -264,6 +264,7 @@
 
     <string name="stats_scale_by_manga">By Manga</string>
     <string name="stats_scale_total">Total</string>
+    <string name="stats_show_more">Show more</string>
     <string name="pref_stats_cover_style">Statistics cover style</string>
     <string name="pref_stats_cover_square">Square (Compact)</string>
     <string name="pref_stats_cover_book">Book (Full)</string>

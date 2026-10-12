@@ -1090,7 +1090,7 @@ class MangaViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val manga = successState?.manga
             val totalReadDuration = if (manga != null) {
-                getReadDurationForManga.await(mangaId, manga.title)
+                getReadDurationForManga.awaitByTitle(manga.title)
             } else {
                 getReadDurationForManga.await(mangaId)
             }

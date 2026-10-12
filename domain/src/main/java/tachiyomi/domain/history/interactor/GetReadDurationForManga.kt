@@ -11,7 +11,7 @@ class GetReadDurationForManga(
         return repository.getReadDurationForManga(mangaId)
     }
 
-    suspend fun await(mangaId: Long, title: String): Long {
+    suspend fun awaitByTitle(title: String): Long {
         return repository.getReadDurationForMangaByTitle(title)
     }
 }

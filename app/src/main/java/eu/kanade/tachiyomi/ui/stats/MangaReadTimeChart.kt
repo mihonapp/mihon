@@ -12,7 +12,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,79 +20,36 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.ui.model.StatsCoverStyle
-import eu.kanade.domain.ui.model.StatsProgressBarStyle
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.presentation.util.toDurationString
-import mihon.app.di.appGraph
 import tachiyomi.domain.history.model.ReadDurationByManga
-import tachiyomi.domain.manga.model.MangaCover as MangaCoverData
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 @Composable
-fun MangaReadTimeChart(
-    readDurations: List<ReadDurationByManga>,
-    progressBarStyle: StatsProgressBarStyle,
-    onMangaClick: (Long) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val context = LocalContext.current
-    val uiPreferences = remember { context.appGraph.uiPreferences }
-    val coverStyle by uiPreferences.statsScreenCoverStyle.collectAsState()
-
-    val maxTime = readDurations.maxOfOrNull { it.totalTimeRead } ?: 1L
-    val totalTime = readDurations.sumOf { it.totalTimeRead }
-
-    val scaleBase = when (progressBarStyle) {
-        StatsProgressBarStyle.RELATIVE_TO_MAX -> maxTime
-        StatsProgressBarStyle.RELATIVE_TO_TOTAL -> totalTime
-    }
-
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(
-            if (coverStyle == StatsCoverStyle.SQUARE) {
-                MaterialTheme.padding.extraSmall
-            } else {
-                MaterialTheme.padding.medium
-            }
-        ),
-    ) {
-        readDurations.forEach { item ->
-            MangaReadTimeItem(
-                mangaId = item.mangaId,
-                title = item.title,
-                timeRead = item.totalTimeRead,
-                scaleBase = scaleBase,
-                cover = item.cover,
-                coverStyle = coverStyle,
-                onMangaClick = onMangaClick,
-            )
-        }
-    }
-}
-
-@Composable
-private fun MangaReadTimeItem(
-    mangaId: Long,
-    title: String,
-    timeRead: Long,
+fun MangaReadTimeItem(
+    item: ReadDurationByManga,
     scaleBase: Long,
-    cover: MangaCoverData,
     coverStyle: StatsCoverStyle,
     onMangaClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val title = item.title
+    val timeRead = item.totalTimeRead
+    val cover = item.cover
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onMangaClick(mangaId) }
-            .padding(horizontal = MaterialTheme.padding.medium),
+            .clickable { onMangaClick(item.mangaId) }
+            .padding(
+                horizontal = MaterialTheme.padding.medium,
+                // The list already spaces rows by padding.small; book covers get padding.medium in total
+                vertical = if (coverStyle == StatsCoverStyle.BOOK) MaterialTheme.padding.extraSmall else 0.dp,
+            ),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
