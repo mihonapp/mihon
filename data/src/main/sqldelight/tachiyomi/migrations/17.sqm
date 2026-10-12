@@ -31,6 +31,9 @@ WHERE (source, url) IN (
     HAVING count(*) > 1
 );
 
+-- Moving the chapters looks each one's entry up here, which without an index scans the whole table per chapter
+CREATE INDEX duplicate_mangas_id_index ON duplicate_mangas(_id);
+
 UPDATE mangas
 SET favorite_at = merged.favorite_at,
     initialized = merged.initialized,

@@ -43,6 +43,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed library entries without a date added getting their last update time as date added when updating from v0.20.x ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed the app closing when WebView's page process crashed ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed installing or updating an extension sometimes cancelling the install of another one ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed updating from v0.20.x taking up to hours on libraries with many duplicate entries ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.0] - 2026-10-12
 ### Added
