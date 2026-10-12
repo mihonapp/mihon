@@ -14,6 +14,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix long floating point numbers showing up in Comick progress ([@MajorTanya](https://github.com/MajorTanya)) ([#4090](https://github.com/mihonapp/mihon/pull/4090))
+- Fixed updating from v0.20.x failing when the database had duplicate history or tracking entries, or damaged indexes ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.1] - 2026-10-12
 ### Fixed
