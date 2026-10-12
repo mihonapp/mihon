@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 
 /**
@@ -47,9 +48,9 @@ fun CombinedCircularProgressIndicator(
         label = "progressState",
         modifier = modifier,
     ) { indeterminate ->
+        val trackColor = Color.Transparent
         if (indeterminate) {
-            // Indeterminate
-            CircularProgressIndicator()
+            CircularProgressIndicator(trackColor = trackColor)
         } else {
             // Determinate
             val infiniteTransition = rememberInfiniteTransition(label = "infiniteRotation")
@@ -70,6 +71,7 @@ fun CombinedCircularProgressIndicator(
             CircularProgressIndicator(
                 progress = { animatedProgress },
                 modifier = Modifier.rotate(rotation),
+                trackColor = trackColor,
             )
         }
     }
