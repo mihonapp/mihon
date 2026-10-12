@@ -44,6 +44,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed the paged reader crashing when moving to another chapter after a wide page of a neighbouring chapter was split ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed a crash when opening the filters of a source with an invalid filter ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed a crash when installing an extension on a device where the system installer can't ask for confirmation ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed a crash when tapping in the long strip reader as it closed ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.1] - 2026-10-12
 ### Fixed
