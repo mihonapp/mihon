@@ -9,4 +9,9 @@ interface DatabaseRepository {
      * app update.
      */
     val isMigrating: StateFlow<Boolean>
+
+    /**
+     * Opens the database, migrating it if needed, and throws what made the migration fail.
+     */
+    suspend fun awaitOpen()
 }

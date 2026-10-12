@@ -12,6 +12,19 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 
+### Fixed
+- Fixed refreshing chapters failing with the app language set to Arabic or another language with its own digits ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed a crash on launch on some Samsung devices running Android 9 to 11 ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed the start and resume button going under the taskbar on tablets ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed a crash when updating an extension while others were installing ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed library entries without a date added getting their last update time as date added when updating from v0.20.x ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed the app closing when WebView's page process crashed ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed installing or updating an extension sometimes cancelling the install of another one ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed updating from v0.20.x taking up to hours on libraries with many duplicate entries ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed the app staying on the updating screen for good when updating its data failed, it now shows what went wrong, and updating failing on leftover data of deleted entries ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed library updates ignoring the smart update restrictions for entries whose details were never fetched ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed resuming a chapter sometimes opening the next chapter partway through, and saving progress to it, in the right to left reader ([@AntsyLich](https://github.com/AntsyLich))
+
 ## [v0.21.0] - 2026-10-12
 ### Added
 - Add `id:` prefix search to remaining trackers (AniList, Bangumi, Kitsu, MangaUpdates, Shikimori, and Hikka) ([@MajorTanya](https://github.com/MajorTanya), [@BrutuZ](https://github.com/BrutuZ)) ([#3776](https://github.com/mihonapp/mihon/pull/3776))
