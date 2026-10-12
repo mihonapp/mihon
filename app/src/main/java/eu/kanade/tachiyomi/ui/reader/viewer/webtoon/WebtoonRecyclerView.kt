@@ -231,7 +231,9 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     inner class GestureListener : GestureDetectorWithLongTap.Listener() {
 
         override fun onSingleTapConfirmed(ev: MotionEvent): Boolean {
-            if (!tapDuringManualScroll) {
+            // A tap is confirmed after a delay, by when the reader can be gone, and scrolling a detached list
+            // lays out pages that can't compose
+            if (!tapDuringManualScroll && isAttachedToWindow) {
                 tapListener?.invoke(ev)
             }
             return false
