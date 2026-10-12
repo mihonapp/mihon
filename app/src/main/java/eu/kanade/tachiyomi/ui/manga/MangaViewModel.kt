@@ -997,7 +997,6 @@ class MangaViewModel(
 
     // Chapter translation - end
 
-
     fun markPreviousChapterRead(pointer: Chapter) {
         val manga = successState?.manga ?: return
         val chapters = filteredChapters.orEmpty().map { it.chapter }
