@@ -42,6 +42,7 @@ import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
@@ -266,25 +267,25 @@ class MangaViewModel(
         .distinctUntilChanged()
         .onStart { emit(0 to false) }
 
+    private val translationState = combine(
+        dialog,
+        isRefreshingData,
+        translationEnabled,
+        translatedChapterIds,
+    ) { dialog, isRefreshingData, translationEnabled, translatedChapterIds ->
+        TranslationState(dialog, isRefreshingData, translationEnabled, translatedChapterIds)
+    }
+
     val state: StateFlow<State> = combine(
         mangaAndChapters,
         scanlators,
         trackers,
         combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
-        combine(
-            combine(dialog, isRefreshingData, ::Pair),
-            combine(translationEnabled, translatedChapterIds, ::Pair),
-            ::Pair,
-        ),
-    ) {
-            mangaAndChapters,
-            (availableScanlators, excludedScanlators),
-            (trackingCount, hasLoggedInTrackers),
-            (selectedIds, downloads),
-            (stateDetails, translationDetails),
-        ->
-        val (dialog, isRefreshingData) = stateDetails
-        val (translationEnabled, translatedChapterIds) = translationDetails
+        translationState,
+    ) { mangaAndChapters, scanlatorState, trackerState, selectionState, translationState ->
+        val (availableScanlators, excludedScanlators) = scanlatorState
+        val (trackingCount, hasLoggedInTrackers) = trackerState
+        val (selectedIds, downloads) = selectionState
         State.Success(
             manga = mangaAndChapters.manga,
             source = mangaAndChapters.source,
@@ -302,23 +303,13 @@ class MangaViewModel(
             excludedScanlators = excludedScanlators,
             trackingCount = trackingCount,
             hasLoggedInTrackers = hasLoggedInTrackers,
-            isRefreshingData = isRefreshingData,
-            dialog = dialog,
+            isRefreshingData = translationState.isRefreshingData,
+            dialog = translationState.dialog,
             hideMissingChapters = hideMissingChapters,
-            translationEnabled = translationEnabled,
-            translatedChapterIds = translatedChapterIds,
+            translationEnabled = translationState.translationEnabled,
+            translatedChapterIds = translationState.translatedChapterIds,
         )
     }
-        // Composition would otherwise build these on first read, on the main thread, for every new state
-        .onEach {
-            it.processedChapters
-            it.chapterListItems
-            it.isAnySelected
-            it.selectedChapters
-            it.hasUnreadChapters
-            it.hasReadChapters
-            it.missingChapterCount
-        }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State.Loading)
 
@@ -1349,6 +1340,12 @@ class MangaViewModel(
     }
 
     private data class MangaAndChapters(val manga: Manga, val source: Source, val chapters: List<ChapterList.Item>)
+    private data class TranslationState(
+        val dialog: Dialog?,
+        val isRefreshingData: Boolean,
+        val translationEnabled: Boolean,
+        val translatedChapterIds: Set<Long>,
+    )
 
     sealed interface State {
         @Immutable

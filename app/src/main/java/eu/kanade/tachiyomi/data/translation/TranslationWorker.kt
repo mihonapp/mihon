@@ -55,7 +55,6 @@ import mihon.app.di.AppGraph
 import mihon.core.archive.ArchiveReader
 import mihon.core.archive.archiveReader
 import mihon.core.metro.metroGraph
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.model.Chapter
@@ -167,7 +166,7 @@ class TranslationWorker(private val context: Context, workerParams: WorkerParame
         setForegroundSafely()
         if (translationPreferences.saveLog().get()) startLog(chapter, manga, apiKey)
 
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             try {
                 when (val outcome = translate(chapter, manga, source, apiKey)) {
                     is Outcome.Completed -> {
