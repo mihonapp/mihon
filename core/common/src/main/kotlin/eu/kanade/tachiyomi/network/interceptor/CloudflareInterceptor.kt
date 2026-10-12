@@ -79,6 +79,14 @@ class CloudflareInterceptor(
         var isRenderProcessGone = false
 
         val origRequestUrl = originalRequest.url.toString()
+        // A WebView can only load a page with GET, and loading the url of another method usually reaches an
+        // endpoint that answers GET without a challenge to solve. The clearance covers the whole site, so it's
+        // earned on the site's root page instead.
+        val challengeUrl = if (originalRequest.method == "GET") {
+            origRequestUrl
+        } else {
+            originalRequest.url.newBuilder().encodedPath("/").query(null).fragment(null).build().toString()
+        }
         val headers = parseHeaders(originalRequest.headers)
 
         executor.execute {
@@ -109,7 +117,7 @@ class CloudflareInterceptor(
                         latch.countDown()
                     }
 
-                    if (url == origRequestUrl) {
+                    if (url == challengeUrl) {
                         if (!challengeFound) {
                             // The first request didn't return the challenge, abort.
                             latch.countDown()
@@ -157,7 +165,7 @@ class CloudflareInterceptor(
                 }
             }
 
-            webview.loadUrl(origRequestUrl, headers)
+            webview.loadUrl(challengeUrl, headers)
         }
 
         latch.awaitFor30Seconds()
