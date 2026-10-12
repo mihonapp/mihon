@@ -12,10 +12,11 @@ import dev.zacsweers.metro.Inject
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.store.DelayedTrackingStore
 import eu.kanade.tachiyomi.util.system.workManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.di.AppGraph
 import mihon.core.metro.metroGraph
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.interactor.GetTracks
 import java.util.concurrent.TimeUnit
@@ -38,7 +39,7 @@ class DelayedTrackingUpdateWorker(private val context: Context, workerParams: Wo
             return Result.failure()
         }
 
-        withIOContext {
+        withContext(Dispatchers.IO) {
             delayedTrackingStore.getItems()
                 .mapNotNull {
                     val track = getTracks.awaitOne(it.trackId)

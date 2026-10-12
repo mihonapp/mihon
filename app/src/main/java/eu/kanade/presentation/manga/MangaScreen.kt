@@ -63,7 +63,6 @@ import eu.kanade.tachiyomi.util.system.copyToClipboard
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.roundedfilled.PlayArrow
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.chapter.service.missingChaptersCount
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
@@ -91,6 +90,7 @@ fun MangaScreen(
     onTranslateChapter: (ChapterList.Item) -> Unit,
     onOpenTranslatedChapter: (ChapterList.Item) -> Unit,
     onDeleteTranslatedChapter: (ChapterList.Item) -> Unit,
+    downloadProgressProvider: (chapterId: Long) -> Int,
     onAddToLibraryClicked: () -> Unit,
     onWebViewClicked: (() -> Unit)?,
     onWebViewLongClicked: (() -> Unit)?,
@@ -149,6 +149,7 @@ fun MangaScreen(
             onTranslateChapter = onTranslateChapter,
             onOpenTranslatedChapter = onOpenTranslatedChapter,
             onDeleteTranslatedChapter = onDeleteTranslatedChapter,
+            downloadProgressProvider = downloadProgressProvider,
             onAddToLibraryClicked = onAddToLibraryClicked,
             onWebViewClicked = onWebViewClicked,
             onWebViewLongClicked = onWebViewLongClicked,
@@ -188,6 +189,7 @@ fun MangaScreen(
             onTranslateChapter = onTranslateChapter,
             onOpenTranslatedChapter = onOpenTranslatedChapter,
             onDeleteTranslatedChapter = onDeleteTranslatedChapter,
+            downloadProgressProvider = downloadProgressProvider,
             onAddToLibraryClicked = onAddToLibraryClicked,
             onWebViewClicked = onWebViewClicked,
             onWebViewLongClicked = onWebViewLongClicked,
@@ -230,6 +232,7 @@ private fun MangaScreenSmallImpl(
     onTranslateChapter: (ChapterList.Item) -> Unit,
     onOpenTranslatedChapter: (ChapterList.Item) -> Unit,
     onDeleteTranslatedChapter: (ChapterList.Item) -> Unit,
+    downloadProgressProvider: (chapterId: Long) -> Int,
     onAddToLibraryClicked: () -> Unit,
     onWebViewClicked: (() -> Unit)?,
     onWebViewLongClicked: (() -> Unit)?,
@@ -285,9 +288,6 @@ private fun MangaScreenSmallImpl(
 
     Scaffold(
         topBar = {
-            val selectedChapterCount: Int = remember(chapters) {
-                chapters.count { it.selected }
-            }
             val isFirstItemVisible by remember {
                 derivedStateOf { chapterListState.firstVisibleItemIndex == 0 }
             }
@@ -313,7 +313,7 @@ private fun MangaScreenSmallImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
-                actionModeCounter = selectedChapterCount,
+                actionModeCounter = state.selectedChapters.size,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
@@ -322,11 +322,8 @@ private fun MangaScreenSmallImpl(
             )
         },
         bottomBar = {
-            val selectedChapters = remember(chapters) {
-                chapters.filter { it.selected }
-            }
             SharedMangaBottomActionMenu(
-                selected = selectedChapters,
+                selected = state.selectedChapters,
                 onMultiBookmarkClicked = onMultiBookmarkClicked,
                 onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
                 onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -337,16 +334,13 @@ private fun MangaScreenSmallImpl(
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
-            val isFABVisible = remember(chapters) {
-                chapters.fastAny { !it.chapter.read } && !isAnySelected
-            }
+            val isFABVisible = state.hasUnreadChapters && !isAnySelected
             SmallExtendedFloatingActionButton(
                 text = {
-                    val isReading = remember(state.chapters) {
-                        state.chapters.fastAny { it.chapter.read }
-                    }
                     Text(
-                        text = stringResource(if (isReading) MR.strings.action_resume else MR.strings.action_start),
+                        text = stringResource(
+                            if (state.hasReadChapters) MR.strings.action_resume else MR.strings.action_start,
+                        ),
                     )
                 },
                 icon = { Icon(imageVector = MaterialSymbols.RoundedFilled.PlayArrow, contentDescription = null) },
@@ -434,13 +428,10 @@ private fun MangaScreenSmallImpl(
                         key = MangaScreenItem.CHAPTER_HEADER,
                         contentType = MangaScreenItem.CHAPTER_HEADER,
                     ) {
-                        val missingChapterCount = remember(chapters) {
-                            chapters.map { it.chapter.chapterNumber }.missingChaptersCount()
-                        }
                         ChapterHeader(
                             enabled = !isAnySelected,
                             chapterCount = chapters.size,
-                            missingChapterCount = missingChapterCount,
+                            missingChapterCount = state.missingChapterCount,
                             onClick = onFilterClicked,
                         )
                     }
@@ -448,7 +439,7 @@ private fun MangaScreenSmallImpl(
                     sharedChapterItems(
                         manga = state.manga,
                         chapters = listItem,
-                        isAnyChapterSelected = chapters.fastAny { it.selected },
+                        isAnyChapterSelected = state.selectedChapters.isNotEmpty(),
                         chapterSwipeStartAction = chapterSwipeStartAction,
                         chapterSwipeEndAction = chapterSwipeEndAction,
                         onChapterClicked = onChapterClicked,
@@ -458,6 +449,7 @@ private fun MangaScreenSmallImpl(
                         onTranslateChapter = onTranslateChapter,
                         onOpenTranslatedChapter = onOpenTranslatedChapter,
                         onDeleteTranslatedChapter = onDeleteTranslatedChapter,
+                        downloadProgressProvider = downloadProgressProvider,
                         onChapterSelected = onChapterSelected,
                         onChapterSwipe = onChapterSwipe,
                     )
@@ -480,6 +472,7 @@ fun MangaScreenLargeImpl(
     onTranslateChapter: (ChapterList.Item) -> Unit,
     onOpenTranslatedChapter: (ChapterList.Item) -> Unit,
     onDeleteTranslatedChapter: (ChapterList.Item) -> Unit,
+    downloadProgressProvider: (chapterId: Long) -> Int,
     onAddToLibraryClicked: () -> Unit,
     onWebViewClicked: (() -> Unit)?,
     onWebViewLongClicked: (() -> Unit)?,
@@ -541,9 +534,6 @@ fun MangaScreenLargeImpl(
 
     Scaffold(
         topBar = {
-            val selectedChapterCount = remember(chapters) {
-                chapters.count { it.selected }
-            }
             MangaToolbar(
                 modifier = Modifier.onSizeChanged { topBarHeight = it.height },
                 title = state.manga.title,
@@ -557,7 +547,7 @@ fun MangaScreenLargeImpl(
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
                 onCancelActionMode = { onAllChapterSelected(false) },
-                actionModeCounter = selectedChapterCount,
+                actionModeCounter = state.selectedChapters.size,
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
                 titleAlphaProvider = { 1f },
@@ -569,11 +559,8 @@ fun MangaScreenLargeImpl(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.BottomEnd,
             ) {
-                val selectedChapters = remember(chapters) {
-                    chapters.filter { it.selected }
-                }
                 SharedMangaBottomActionMenu(
-                    selected = selectedChapters,
+                    selected = state.selectedChapters,
                     onMultiBookmarkClicked = onMultiBookmarkClicked,
                     onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
                     onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -585,17 +572,12 @@ fun MangaScreenLargeImpl(
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
-            val isFABVisible = remember(chapters) {
-                chapters.fastAny { !it.chapter.read } && !isAnySelected
-            }
+            val isFABVisible = state.hasUnreadChapters && !isAnySelected
             SmallExtendedFloatingActionButton(
                 text = {
-                    val isReading = remember(state.chapters) {
-                        state.chapters.fastAny { it.chapter.read }
-                    }
                     Text(
                         text = stringResource(
-                            if (isReading) MR.strings.action_resume else MR.strings.action_start,
+                            if (state.hasReadChapters) MR.strings.action_resume else MR.strings.action_start,
                         ),
                     )
                 },
@@ -679,13 +661,10 @@ fun MangaScreenLargeImpl(
                                 key = MangaScreenItem.CHAPTER_HEADER,
                                 contentType = MangaScreenItem.CHAPTER_HEADER,
                             ) {
-                                val missingChapterCount = remember(chapters) {
-                                    chapters.map { it.chapter.chapterNumber }.missingChaptersCount()
-                                }
                                 ChapterHeader(
                                     enabled = !isAnySelected,
                                     chapterCount = chapters.size,
-                                    missingChapterCount = missingChapterCount,
+                                    missingChapterCount = state.missingChapterCount,
                                     onClick = onFilterButtonClicked,
                                 )
                             }
@@ -693,7 +672,7 @@ fun MangaScreenLargeImpl(
                             sharedChapterItems(
                                 manga = state.manga,
                                 chapters = listItem,
-                                isAnyChapterSelected = chapters.fastAny { it.selected },
+                                isAnyChapterSelected = state.selectedChapters.isNotEmpty(),
                                 chapterSwipeStartAction = chapterSwipeStartAction,
                                 chapterSwipeEndAction = chapterSwipeEndAction,
                                 onChapterClicked = onChapterClicked,
@@ -703,6 +682,7 @@ fun MangaScreenLargeImpl(
                                 onTranslateChapter = onTranslateChapter,
                                 onOpenTranslatedChapter = onOpenTranslatedChapter,
                                 onDeleteTranslatedChapter = onDeleteTranslatedChapter,
+                                downloadProgressProvider = downloadProgressProvider,
                                 onChapterSelected = onChapterSelected,
                                 onChapterSwipe = onChapterSwipe,
                             )
@@ -739,7 +719,7 @@ private fun SharedMangaBottomActionMenu(
         }.takeIf { selected.fastAny { !it.chapter.read } },
         onMarkAsUnreadClicked = {
             onMultiMarkAsReadClicked(selected.fastMap { it.chapter }, false)
-        }.takeIf { selected.fastAny { it.chapter.read || it.chapter.lastPageRead > 0L } },
+        }.takeIf { selected.fastAny { it.chapter.read || it.chapter.lastPageRead > 0 } },
         onMarkPreviousAsReadClicked = {
             onMarkPreviousAsReadClicked(selected[0].chapter)
         }.takeIf { selected.size == 1 },
@@ -769,6 +749,7 @@ private fun LazyListScope.sharedChapterItems(
     onTranslateChapter: (ChapterList.Item) -> Unit,
     onOpenTranslatedChapter: (ChapterList.Item) -> Unit,
     onDeleteTranslatedChapter: (ChapterList.Item) -> Unit,
+    downloadProgressProvider: (chapterId: Long) -> Int,
     onChapterSelected: (ChapterList.Item, Boolean, Boolean) -> Unit,
     onChapterSwipe: (ChapterList.Item, LibraryPreferences.ChapterSwipeAction) -> Unit,
 ) {
@@ -813,7 +794,7 @@ private fun LazyListScope.sharedChapterItems(
                     selected = item.selected,
                     downloadIndicatorEnabled = !isAnyChapterSelected && !manga.isLocal(),
                     downloadStateProvider = { item.downloadState },
-                    downloadProgressProvider = { item.downloadProgress },
+                    downloadProgressProvider = { downloadProgressProvider(item.id) },
                     chapterSwipeStartAction = chapterSwipeStartAction,
                     chapterSwipeEndAction = chapterSwipeEndAction,
                     onLongClick = {

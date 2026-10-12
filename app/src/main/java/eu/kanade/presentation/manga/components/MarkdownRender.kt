@@ -45,7 +45,7 @@ import com.mikepenz.markdown.model.MarkdownTypography
 import com.mikepenz.markdown.model.NoOpImageTransformerImpl
 import com.mikepenz.markdown.model.markdownAlertPadding
 import com.mikepenz.markdown.model.markdownAnnotator
-import com.mikepenz.markdown.model.rememberMarkdownState
+import com.mikepenz.markdown.model.parseMarkdown
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Image
 import org.intellij.markdown.MarkdownTokenTypes.Companion.HTML_TAG
@@ -79,11 +79,9 @@ fun MarkdownRender(
     loadImages: Boolean = true,
 ) {
     Markdown(
-        markdownState = rememberMarkdownState(
-            content = content,
-            flavour = flavour,
-            immediate = true,
-        ),
+        // rememberMarkdownState parses again in the background even when it already parsed immediately, and its
+        // new result recomposes the whole content a second time
+        state = remember(content, flavour) { parseMarkdown(content = content, flavour = flavour) },
         annotator = annotator,
         colors = getMarkdownColors(),
         typography = getMarkdownTypography(),

@@ -1,10 +1,10 @@
-import java.util.Date;
+import kotlin.time.Instant;
 
 CREATE TABLE history(
     id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
     chapter_id INTEGER NOT NULL UNIQUE,
-    read_at INTEGER AS Date,
+    read_at INTEGER AS Instant,
     read_duration INTEGER NOT NULL,
     FOREIGN KEY(manga_id) REFERENCES manga (id)
     ON DELETE CASCADE,
@@ -22,12 +22,12 @@ WHERE manga_id = :mangaId;
 
 resetHistoryById:
 UPDATE history
-SET read_at = 0
+SET read_at = NULL
 WHERE id = :id;
 
 resetHistoryByMangaId:
 UPDATE history
-SET read_at = 0
+SET read_at = NULL
 WHERE manga_id = :mangaId;
 
 removeAllHistory:
@@ -35,7 +35,7 @@ DELETE FROM history;
 
 removeResettedHistory:
 DELETE FROM history
-WHERE read_at = 0;
+WHERE read_at IS NULL;
 
 upsert:
 INSERT INTO history(manga_id, chapter_id, read_at, read_duration)

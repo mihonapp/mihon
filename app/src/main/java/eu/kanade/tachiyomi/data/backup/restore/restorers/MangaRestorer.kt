@@ -58,8 +58,13 @@ class MangaRestorer(
             )
         }
 
-        restoreRepository.restoreManga(entries) {
-            fetchInterval.withFetchInterval(it, now, timeZone, currentFetchWindow)
+        restoreRepository.restoreManga(entries) { manga ->
+            fetchInterval.withFetchInterval(manga, now, timeZone, currentFetchWindow).apply {
+                // A next update still ahead was worked out with the chapters the backup came from
+                manga.nextUpdate
+                    ?.takeIf { it >= currentFetchWindow.start }
+                    ?.let { nextUpdate = it }
+            }
         }
     }
 }

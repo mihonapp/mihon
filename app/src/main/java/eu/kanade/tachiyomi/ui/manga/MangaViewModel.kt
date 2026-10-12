@@ -6,7 +6,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.util.fastAny
+import androidx.compose.ui.util.fastFilter
+import androidx.compose.ui.util.fastMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zacsweers.metro.AppScope
@@ -39,7 +42,6 @@ import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
@@ -51,29 +53,39 @@ import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.archive.archiveReader
+import mihon.core.metro.AppCoroutineScope
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
-import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.mapAsCheckboxState
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.launchNonCancellable
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
+import tachiyomi.core.common.util.lang.SubscriberGate
+import tachiyomi.core.common.util.lang.pausedWhileUnsubscribed
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
@@ -85,6 +97,7 @@ import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.chapter.service.calculateChapterGap
 import tachiyomi.domain.chapter.service.getChapterSort
+import tachiyomi.domain.chapter.service.missingChaptersCount
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
@@ -93,7 +106,6 @@ import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.applyFilter
-import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
@@ -101,11 +113,13 @@ import tachiyomi.source.local.LocalSource
 import tachiyomi.source.local.io.LocalSourceFileSystem
 import tachiyomi.source.local.isLocal
 import kotlin.math.floor
+import kotlin.time.Duration.Companion.seconds
 
 @AssistedInject
 class MangaViewModel(
     @Assisted private val mangaId: Long,
     @Assisted private val isFromSource: Boolean,
+    @AppCoroutineScope private val appScope: CoroutineScope,
     private val context: Context,
     private val libraryPreferences: LibraryPreferences,
     trackPreferences: TrackPreferences,
@@ -128,7 +142,6 @@ class MangaViewModel(
     private val getTracks: GetTracks,
     private val addTracks: AddTracks,
     private val setMangaCategories: SetMangaCategories,
-    private val mangaRepository: MangaRepository,
     private val filterChaptersForDownload: FilterChaptersForDownload,
     private val updateMangaFromRemote: UpdateMangaFromRemote,
     private val sourceManager: SourceManager,
@@ -140,8 +153,7 @@ class MangaViewModel(
     private val networkToLocalManga: NetworkToLocalManga,
 ) : ViewModel() {
 
-    val state: StateFlow<MangaViewModel.State>
-        field = MutableStateFlow<MangaViewModel.State>(State.Loading)
+    private val subscriberGate = SubscriberGate()
 
     @AssistedFactory
     @ManualViewModelAssistedFactoryKey
@@ -180,154 +192,201 @@ class MangaViewModel(
         LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions.get()
 
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
-    private val selectedChapterIds: HashSet<Long> = HashSet()
+    private val selectedChapterIds = MutableStateFlow(emptySet<Long>())
 
-    /**
-     * Helper function to update the UI state only if it's currently in success state
-     */
-    private inline fun updateSuccessState(func: (State.Success) -> State.Success) {
-        state.update {
-            when (it) {
-                State.Loading -> it
-                is State.Success -> func(it)
-            }
+    private val dialog = MutableStateFlow<Dialog?>(null)
+    private val translatedChapterIds = MutableStateFlow(emptySet<Long>())
+    private val translationEnabled = translationPreferences.enabled().asState(viewModelScope)
+
+    private val isRefreshingData = MutableStateFlow(false)
+
+    private val downloadStates = MutableStateFlow(emptyMap<Long, Download.State>())
+
+    // Progress ticks often, so only the download indicators that read it recompose instead of every tick rebuilding
+    // the chapter list
+    private val downloadProgress = mutableStateMapOf<Long, Int>()
+
+    // A finished chapter leaves the queue, and its last status change can be lost with it, so its state is left to
+    // the queried item once it's no longer queued
+    private val queuedDownloadStates = combine(downloadStates, downloadManager.queueState) { states, queue ->
+        val queuedChapterIds = queue.mapTo(HashSet()) { it.chapter.id }
+        states.filterKeys { it in queuedChapterIds }
+    }
+
+    private val hideMissingChapters = libraryPreferences.hideMissingChapters.get()
+
+    private var hasPromptedToAddBefore = false
+
+    private val defaultChapterFlagsJob = viewModelScope.launch {
+        val manga = getMangaAndChapters.awaitManga(mangaId)
+        if (!manga.favorite) {
+            setMangaDefaultChapterFlags.await(manga)
         }
     }
 
-    init {
-        viewModelScope.launchIO {
+    private val mangaAndChapters = combine(
+        flow {
+            // So an entry outside the library isn't shown with its old chapter settings first
+            defaultChapterFlagsJob.join()
+            emitAll(getMangaAndChapters.subscribe(mangaId, applyScanlatorFilter = true))
+        }
+            .distinctUntilChanged(),
+        downloadCache.changes.pausedWhileUnsubscribed(),
+        downloadManager.queueState.pausedWhileUnsubscribed(),
+    ) { (manga, chapters), _, _ ->
+        MangaAndChapters(
+            manga = manga,
+            source = sourceManager.getOrStub(manga.source),
+            chapters = chapters.toChapterListItems(manga),
+        )
+    }
+
+    private val scanlators = combine(
+        getAvailableScanlators.subscribe(mangaId).distinctUntilChanged(),
+        getExcludedScanlators.subscribe(mangaId).distinctUntilChanged(),
+        ::Pair,
+    )
+
+    private val trackers = flow { emit(sourceManager.getOrStub(getMangaAndChapters.awaitManga(mangaId).source)) }
+        .flatMapLatest { source ->
             combine(
-                getMangaAndChapters.subscribe(mangaId, applyScanlatorFilter = true).distinctUntilChanged(),
-                downloadCache.changes,
-                downloadManager.queueState,
-            ) { mangaAndChapters, _, _ -> mangaAndChapters }
-                .collectLatest { (manga, chapters) ->
-                    updateSuccessState {
-                        it.copy(
-                            manga = manga,
-                            chapters = chapters.toChapterListItems(manga),
-                        )
-                    }
-                    refreshTranslatedChapters()
-                }
-        }
-
-        viewModelScope.launchIO {
-            // A translation job started, finished or failed: look for new translated chapters.
-            TranslationWorker.workInfos(context).collectLatest { refreshTranslatedChapters() }
-        }
-
-        viewModelScope.launchIO {
-            getExcludedScanlators.subscribe(mangaId)
-                .distinctUntilChanged()
-                .collectLatest { excludedScanlators ->
-                    updateSuccessState {
-                        it.copy(excludedScanlators = excludedScanlators)
-                    }
-                }
-        }
-
-        viewModelScope.launchIO {
-            getAvailableScanlators.subscribe(mangaId)
-                .distinctUntilChanged()
-                .collectLatest { availableScanlators ->
-                    updateSuccessState {
-                        it.copy(availableScanlators = availableScanlators)
-                    }
-                }
-        }
-
-        viewModelScope.launchIO {
-            translationPreferences.enabled().changes()
-                .distinctUntilChanged()
-                .collectLatest { enabled ->
-                    updateSuccessState { it.copy(translationEnabled = enabled) }
-                }
-        }
-
-        observeDownloads()
-
-        viewModelScope.launchIO {
-            val manga = getMangaAndChapters.awaitManga(mangaId)
-            val chapters = getMangaAndChapters.awaitChapters(mangaId, applyScanlatorFilter = true)
-                .toChapterListItems(manga)
-
-            if (!manga.favorite) {
-                setMangaDefaultChapterFlags.await(manga)
+                getTracks.subscribe(mangaId).catch { logcat(LogPriority.ERROR, it) },
+                trackerManager.loggedInTrackersFlow(),
+            ) { mangaTracks, loggedInTrackers ->
+                // Show only if the service supports this manga's source
+                val supportedTrackers = loggedInTrackers.filter { (it as? EnhancedTracker)?.accept(source) ?: true }
+                val supportedTrackerIds = supportedTrackers.map { it.id }.toHashSet()
+                val supportedTrackerTracks = mangaTracks.filter { it.trackerId in supportedTrackerIds }
+                supportedTrackerTracks.size to supportedTrackers.isNotEmpty()
             }
+        }
+        .distinctUntilChanged()
+        .onStart { emit(0 to false) }
 
-            val needRefreshInfo = !manga.initialized
-            val needRefreshChapter = chapters.isEmpty()
-
-            // Show what we have earlier
-            state.update {
-                State.Success(
-                    manga = manga,
-                    source = sourceManager.getOrStub(manga.source),
-                    isFromSource = isFromSource,
-                    chapters = chapters,
-                    availableScanlators = getAvailableScanlators.await(mangaId),
-                    excludedScanlators = getExcludedScanlators.await(mangaId),
-                    isRefreshingData = needRefreshInfo || needRefreshChapter,
-                    dialog = null,
-                    hideMissingChapters = libraryPreferences.hideMissingChapters.get(),
-                    translationEnabled = translationPreferences.enabled().get(),
+    val state: StateFlow<State> = combine(
+        mangaAndChapters,
+        scanlators,
+        trackers,
+        combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
+        combine(dialog, isRefreshingData, ::Pair),
+        combine(translationEnabled, translatedChapterIds, ::Pair),
+    ) {
+            mangaAndChapters,
+            (availableScanlators, excludedScanlators),
+            (trackingCount, hasLoggedInTrackers),
+            (selectedIds, downloads),
+            (dialog, isRefreshingData),
+            (translationEnabled, translatedChapterIds),
+        ->
+        State.Success(
+            manga = mangaAndChapters.manga,
+            source = mangaAndChapters.source,
+            isFromSource = isFromSource,
+            chapters = mangaAndChapters.chapters.map { item ->
+                val downloadState = downloads[item.id]
+                val selected = item.id in selectedIds
+                if (downloadState == null && !selected) return@map item
+                item.copy(
+                    downloadState = downloadState ?: item.downloadState,
+                    selected = selected,
                 )
-            }
+            },
+            availableScanlators = availableScanlators,
+            excludedScanlators = excludedScanlators,
+            trackingCount = trackingCount,
+            hasLoggedInTrackers = hasLoggedInTrackers,
+            isRefreshingData = isRefreshingData,
+            dialog = dialog,
+            hideMissingChapters = hideMissingChapters,
+            translationEnabled = translationEnabled,
+            translatedChapterIds = translatedChapterIds,
+        )
+    }
+        // Composition would otherwise build these on first read, on the main thread, for every new state
+        .onEach {
+            it.processedChapters
+            it.chapterListItems
+            it.isAnySelected
+            it.selectedChapters
+            it.hasUnreadChapters
+            it.hasReadChapters
+            it.missingChapterCount
+        }
+        .flowOn(Dispatchers.IO)
+        .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State.Loading)
 
-            // The database/work-info observers can emit before the initial Success state exists. Their early
-            // translated-chapter scan then returns immediately, so scan again now that the manga is available.
+    init {
+        viewModelScope.launch(Dispatchers.Default) {
+            downloadManager.statusFlow()
+                .filter { it.manga.id == mangaId }
+                .catch { logcat(LogPriority.ERROR, it) }
+                .collect(::updateDownloadState)
+        }
+        viewModelScope.launch(Dispatchers.Default) {
+            downloadManager.progressFlow()
+                .filter { it.manga.id == mangaId }
+                .catch { logcat(LogPriority.ERROR, it) }
+                .collect { downloadProgress[it.chapter.id] = it.progress }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            state.filterIsInstance<State.Success>().first()
             refreshTranslatedChapters()
+            TranslationWorker.workInfos(context).collect { refreshTranslatedChapters() }
+        }
 
-            // Start observe tracking since it only needs mangaId
-            observeTrackers()
+        viewModelScope.launch {
+            // The state loads the entry and its chapters anyway, so they aren't queried separately
+            val loadedState = state.filterIsInstance<State.Success>().first()
+            val manga = loadedState.manga
+            val needRefreshInfo = !manga.initialized
+            val needRefreshChapter = loadedState.chapters.isEmpty()
 
             // Fetch info-chapters when needed
-            if ((needRefreshInfo || needRefreshChapter) && viewModelScope.isActive) {
+            if (needRefreshInfo || needRefreshChapter) {
+                isRefreshingData.value = true
                 fetchAllFromSource(
+                    manga = manga,
                     manualFetch = false,
                     fetchDetails = needRefreshInfo,
                     fetchChapters = needRefreshChapter,
                 )
+                isRefreshingData.value = false
             }
-
-            // Initial loading finished
-            updateSuccessState { it.copy(isRefreshingData = false) }
         }
     }
 
     fun fetchAllFromSource(manualFetch: Boolean = true) {
         viewModelScope.launch {
-            updateSuccessState { it.copy(isRefreshingData = true) }
+            isRefreshingData.value = true
             fetchAllFromSource(
+                manga = getMangaAndChapters.awaitManga(mangaId),
                 manualFetch = manualFetch,
                 fetchDetails = true,
                 fetchChapters = true,
             )
-            updateSuccessState { it.copy(isRefreshingData = false) }
+            isRefreshingData.value = false
         }
     }
 
     private suspend fun fetchAllFromSource(
+        manga: Manga,
         manualFetch: Boolean,
         fetchDetails: Boolean,
         fetchChapters: Boolean,
     ) {
-        val state = successState ?: return
         try {
-            withUIContext {
-                val update = updateMangaFromRemote(
-                    source = state.source,
-                    manga = state.manga,
-                    fetchDetails = fetchDetails,
-                    fetchChapters = fetchChapters,
-                    manualFetch = manualFetch,
-                )
-                    .getOrThrow()
+            val update = updateMangaFromRemote(
+                source = sourceManager.getOrStub(manga.source),
+                manga = manga,
+                fetchDetails = fetchDetails,
+                fetchChapters = fetchChapters,
+                manualFetch = manualFetch,
+            )
+                .getOrThrow()
 
-                if (manualFetch) {
-                    downloadNewChapters(update.newChapters)
-                }
+            if (manualFetch) {
+                downloadNewChapters(update.newChapters)
             }
         } catch (_: CancellationException) {
             // ignore
@@ -373,7 +432,7 @@ class MangaViewModel(
         checkDuplicate: Boolean = true,
     ) {
         val state = successState ?: return
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             val manga = state.manga
 
             if (isFavorited) {
@@ -383,7 +442,7 @@ class MangaViewModel(
                     if (manga.removeCovers(coverCache) != manga) {
                         updateManga.awaitUpdateCoverLastModified(manga.id)
                     }
-                    withUIContext { onRemoved() }
+                    onRemoved()
                 }
             } else {
                 // Add to library
@@ -392,8 +451,8 @@ class MangaViewModel(
                     val duplicates = getDuplicateLibraryManga(manga)
 
                     if (duplicates.isNotEmpty()) {
-                        updateSuccessState { it.copy(dialog = Dialog.DuplicateManga(manga, duplicates)) }
-                        return@launchIO
+                        dialog.value = Dialog.DuplicateManga(manga, duplicates)
+                        return@launch
                     }
                 }
 
@@ -405,14 +464,14 @@ class MangaViewModel(
                     // Default category set
                     defaultCategory != null -> {
                         val result = updateManga.awaitUpdateFavorite(manga.id, true)
-                        if (!result) return@launchIO
+                        if (!result) return@launch
                         moveMangaToCategory(defaultCategory)
                     }
 
                     // Automatic 'Default' or no categories
                     defaultCategoryId == 0L || categories.isEmpty() -> {
                         val result = updateManga.awaitUpdateFavorite(manga.id, true)
-                        if (!result) return@launchIO
+                        if (!result) return@launch
                         moveMangaToCategory(null)
                     }
 
@@ -421,9 +480,13 @@ class MangaViewModel(
                 }
 
                 // Finally match with enhanced tracking when available
-                addTracks.bindEnhancedTrackers(manga, state.source)
+                appScope.launch { addTracks.bindEnhancedTrackers(manga, state.source) }
             }
         }
+    }
+
+    fun showRemoveFromLibraryDialog() {
+        if (successState?.manga?.favorite == true) dialog.value = Dialog.RemoveFromLibrary
     }
 
     fun showChangeCategoryDialog() {
@@ -431,35 +494,24 @@ class MangaViewModel(
         viewModelScope.launch {
             val categories = getCategories()
             val selection = getMangaCategoryIds(manga)
-            updateSuccessState { successState ->
-                successState.copy(
-                    dialog = Dialog.ChangeCategory(
-                        manga = manga,
-                        initialSelection = categories.mapAsCheckboxState { it.id in selection },
-                    ),
-                )
-            }
+            dialog.value = Dialog.ChangeCategory(
+                manga = manga,
+                initialSelection = categories.mapAsCheckboxState { it.id in selection },
+            )
         }
     }
 
     fun showSetFetchIntervalDialog() {
         val manga = successState?.manga ?: return
-        updateSuccessState {
-            it.copy(dialog = Dialog.SetFetchInterval(manga))
-        }
+        dialog.value = Dialog.SetFetchInterval(manga)
     }
 
     fun setFetchInterval(manga: Manga, interval: Int) {
-        viewModelScope.launchIO {
-            if (
-                updateManga.awaitUpdateFetchInterval(
-                    // Custom intervals are negative
-                    manga.copy(fetchInterval = -interval),
-                )
-            ) {
-                val updatedManga = mangaRepository.getMangaById(manga.id)
-                updateSuccessState { it.copy(manga = updatedManga) }
-            }
+        viewModelScope.launch {
+            updateManga.awaitUpdateFetchInterval(
+                // Custom intervals are negative
+                manga.copy(fetchInterval = -interval),
+            )
         }
     }
 
@@ -476,7 +528,7 @@ class MangaViewModel(
      */
     private fun deleteDownloads() {
         val state = successState ?: return
-        downloadManager.deleteManga(state.manga, state.source)
+        appScope.launch { downloadManager.deleteManga(state.manga, state.source) }
     }
 
     /**
@@ -503,7 +555,7 @@ class MangaViewModel(
         moveMangaToCategory(categories)
         if (manga.favorite) return
 
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             updateManga.awaitUpdateFavorite(manga.id, true)
         }
     }
@@ -519,7 +571,7 @@ class MangaViewModel(
     }
 
     private fun moveMangaToCategory(categoryIds: List<Long>) {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             setMangaCategories.await(mangaId, categoryIds)
         }
     }
@@ -537,63 +589,35 @@ class MangaViewModel(
 
     // Chapters list - start
 
-    private fun observeDownloads() {
-        viewModelScope.launchIO {
-            downloadManager.statusFlow()
-                .filter { it.manga.id == successState?.manga?.id }
-                .catch { error -> logcat(LogPriority.ERROR, error) }
-                .collect {
-                    withUIContext {
-                        updateDownloadState(it)
-                    }
-                }
+    private fun updateDownloadState(download: Download) {
+        val chapterId = download.chapter.id
+        downloadStates.update {
+            // Terminal states are derived by the queried item itself, so drop the override instead
+            // of letting it outlive reality, e.g. showing a since deleted chapter as downloaded.
+            if (download.status == Download.State.NOT_DOWNLOADED || download.status == Download.State.DOWNLOADED) {
+                it - chapterId
+            } else {
+                it + (chapterId to download.status)
+            }
         }
-
-        viewModelScope.launchIO {
-            downloadManager.progressFlow()
-                .filter { it.manga.id == successState?.manga?.id }
-                .catch { error -> logcat(LogPriority.ERROR, error) }
-                .collect {
-                    withUIContext {
-                        updateDownloadState(it)
-                    }
-                }
+        if (download.status == Download.State.DOWNLOADING) {
+            downloadProgress[chapterId] = download.progress
+        } else {
+            downloadProgress.remove(chapterId)
         }
     }
 
-    private fun updateDownloadState(download: Download) {
-        updateSuccessState { successState ->
-            val modifiedIndex = successState.chapters.indexOfFirst { it.id == download.chapter.id }
-            if (modifiedIndex < 0) return@updateSuccessState successState
-
-            val newChapters = successState.chapters.toMutableList().apply {
-                val item = removeAt(modifiedIndex)
-                    .copy(downloadState = download.status, downloadProgress = download.progress)
-                add(modifiedIndex, item)
-            }
-            successState.copy(chapters = newChapters)
-        }
+    fun getDownloadProgress(chapterId: Long): Int {
+        return downloadProgress[chapterId] ?: 0
     }
 
     private fun List<Chapter>.toChapterListItems(manga: Manga): List<ChapterList.Item> {
         val isLocal = manga.isLocal()
+        val queuedDownloads = if (isLocal) emptyMap() else downloadManager.getQueuedDownloadsByChapterId()
+        val downloadedChapterIds = if (isLocal) emptySet() else downloadManager.getDownloadedChapterIds(this, manga)
         return map { chapter ->
-            val activeDownload = if (isLocal) {
-                null
-            } else {
-                downloadManager.getQueuedDownloadOrNull(chapter.id)
-            }
-            val downloaded = if (isLocal) {
-                true
-            } else {
-                downloadManager.isChapterDownloaded(
-                    chapter.name,
-                    chapter.scanlator,
-                    chapter.url,
-                    manga.title,
-                    manga.source,
-                )
-            }
+            val activeDownload = queuedDownloads[chapter.id]
+            val downloaded = isLocal || chapter.id in downloadedChapterIds
             val downloadState = when {
                 activeDownload != null -> activeDownload.status
                 downloaded -> Download.State.DOWNLOADED
@@ -603,8 +627,6 @@ class MangaViewModel(
             ChapterList.Item(
                 chapter = chapter,
                 downloadState = downloadState,
-                downloadProgress = activeDownload?.progress ?: 0,
-                selected = chapter.id in selectedChapterIds,
             )
         }
     }
@@ -684,20 +706,22 @@ class MangaViewModel(
         chapters: List<Chapter>,
         startNow: Boolean,
     ) {
-        val successState = successState ?: return
+        if (successState == null) return
+        val startNowId = if (startNow) chapters.singleOrNull()?.id ?: return else null
 
-        viewModelScope.launchNonCancellable {
-            if (startNow) {
-                val chapterId = chapters.singleOrNull()?.id ?: return@launchNonCancellable
-                downloadManager.startDownloadNow(chapterId)
-            } else {
-                downloadChapters(chapters)
-            }
-
-            if (!isFavorited && !successState.hasPromptedToAddBefore) {
-                updateSuccessState { state ->
-                    state.copy(hasPromptedToAddBefore = true)
+        viewModelScope.launch {
+            // The queueing outlives the screen, the add to library prompt doesn't
+            appScope.launch {
+                if (startNowId != null) {
+                    downloadManager.startDownloadNow(startNowId)
+                } else {
+                    downloadChapters(chapters)
                 }
+            }.join()
+            if (startNowId == null) toggleAllSelection(false)
+
+            if (!isFavorited && !hasPromptedToAddBefore) {
+                hasPromptedToAddBefore = true
                 val result = snackbarHostState.showSnackbar(
                     message = context.stringResource(MR.strings.snack_add_to_library),
                     actionLabel = context.stringResource(MR.strings.action_add),
@@ -751,8 +775,10 @@ class MangaViewModel(
 
     private fun cancelDownload(chapterId: Long) {
         val activeDownload = downloadManager.getQueuedDownloadOrNull(chapterId) ?: return
-        downloadManager.cancelQueuedDownloads(listOf(activeDownload))
-        updateDownloadState(activeDownload.apply { status = Download.State.NOT_DOWNLOADED })
+        viewModelScope.launch {
+            downloadManager.cancelQueuedDownloads(listOf(activeDownload))
+            updateDownloadState(activeDownload.apply { status = Download.State.NOT_DOWNLOADED })
+        }
     }
 
     // Chapter translation - start
@@ -771,25 +797,21 @@ class MangaViewModel(
             return
         }
 
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             val pageCount = countDownloadedPages(item.chapter, state.manga, state.source)
             if (pageCount == 0) {
                 snackbarHostState.showSnackbar(message = context.stringResource(MR.strings.translation_no_pages))
-                return@launchIO
+                return@launch
             }
             val next = nextDownloadedChapters(item.chapter, state)
                 .map { it to countDownloadedPages(it, state.manga, state.source) }
                 .filter { (_, pages) -> pages > 0 }
-            updateSuccessState {
-                it.copy(
-                    dialog = Dialog.TranslateChapter(
-                        chapter = item.chapter,
-                        pageCount = pageCount,
-                        next = next.map { (chapter, _) -> chapter },
-                        nextPageCounts = next.map { (_, pages) -> pages },
-                    ),
-                )
-            }
+            dialog.value = Dialog.TranslateChapter(
+                chapter = item.chapter,
+                pageCount = pageCount,
+                next = next.map { (chapter, _) -> chapter },
+                nextPageCounts = next.map { (_, pages) -> pages },
+            )
         }
     }
 
@@ -848,12 +870,12 @@ class MangaViewModel(
         val state = successState ?: return
         if (state.manga.isLocal()) return
 
-        val ids = withIOContext {
+        val ids = withContext(Dispatchers.IO) {
             try {
                 val series = localSourceFileSystem.getBaseDirectory()
                     ?.findFile(translatedSeriesName(state.manga))
                     ?.takeIf { it.isDirectory }
-                    ?: return@withIOContext emptySet()
+                    ?: return@withContext(Dispatchers.IO) emptySet()
                 val folders = series.listFiles().orEmpty()
                     .filter { it.isDirectory }
                     .mapNotNull { it.name }
@@ -868,7 +890,7 @@ class MangaViewModel(
             }
         }
         if (ids != successState?.translatedChapterIds) {
-            updateSuccessState { it.copy(translatedChapterIds = ids) }
+            translatedChapterIds.value = ids
         }
     }
 
@@ -881,13 +903,13 @@ class MangaViewModel(
         val manga = successState?.manga ?: return null
         val seriesName = translatedSeriesName(manga)
         val folderName = translatedChapterFolder(chapter)
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             try {
                 val exists = localSourceFileSystem.getBaseDirectory()
                     ?.findFile(seriesName)
                     ?.findFile(folderName)
                     ?.isDirectory == true
-                if (!exists) return@withIOContext null
+                if (!exists) return@withContext(Dispatchers.IO) null
 
                 val localManga = networkToLocalManga(
                     Manga.create().copy(source = LocalSource.ID, url = seriesName, title = seriesName),
@@ -907,13 +929,13 @@ class MangaViewModel(
     }
 
     fun requestDeleteTranslatedChapter(item: ChapterList.Item) {
-        updateSuccessState { it.copy(dialog = Dialog.DeleteTranslatedChapter(item.chapter)) }
+        dialog.value = Dialog.DeleteTranslatedChapter(item.chapter)
     }
 
     /** Deletes the translated copy of one chapter (and an empty series folder). The original is never touched. */
     fun confirmDeleteTranslatedChapter(chapter: Chapter) {
         val manga = successState?.manga ?: return
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             val deleted = try {
                 val series = localSourceFileSystem.getBaseDirectory()
                     ?.findFile(translatedSeriesName(manga))
@@ -975,6 +997,7 @@ class MangaViewModel(
 
     // Chapter translation - end
 
+
     fun markPreviousChapterRead(pointer: Chapter) {
         val manga = successState?.manga ?: return
         val chapters = filteredChapters.orEmpty().map { it.chapter }
@@ -991,14 +1014,17 @@ class MangaViewModel(
     fun markChaptersRead(chapters: List<Chapter>, read: Boolean) {
         toggleAllSelection(false)
         if (chapters.isEmpty()) return
-        viewModelScope.launchIO {
-            setReadStatus.await(
-                read = read,
-                chapters = chapters.toTypedArray(),
-            )
+        viewModelScope.launch {
+            // The read state is written even if the screen closes, the tracking prompt isn't
+            appScope.launch {
+                setReadStatus.await(
+                    read = read,
+                    chapters = chapters.toTypedArray(),
+                )
+            }.join()
 
             if (!read || successState?.hasLoggedInTrackers == false || autoTrackState == AutoTrackState.NEVER) {
-                return@launchIO
+                return@launch
             }
 
             refreshTrackers()
@@ -1007,13 +1033,11 @@ class MangaViewModel(
             val maxChapterNumber = chapters.maxOf { it.chapterNumber }
             val shouldPromptTrackingUpdate = tracks.any { track -> maxChapterNumber > track.lastChapterRead }
 
-            if (!shouldPromptTrackingUpdate) return@launchIO
+            if (!shouldPromptTrackingUpdate) return@launch
             if (autoTrackState == AutoTrackState.ALWAYS) {
                 trackChapter.await(context, mangaId, maxChapterNumber)
-                withUIContext {
-                    context.toast(context.stringResource(MR.strings.trackers_updated_summary, maxChapterNumber.toInt()))
-                }
-                return@launchIO
+                context.toast(context.stringResource(MR.strings.trackers_updated_summary, maxChapterNumber.toInt()))
+                return@launch
             }
 
             val result = snackbarHostState.showSnackbar(
@@ -1036,7 +1060,7 @@ class MangaViewModel(
                 logcat(LogPriority.ERROR, e) {
                     "Failed to refresh track data mangaId=$mangaId for service ${track!!.id}"
                 }
-                withUIContext {
+                withContext(Dispatchers.Main) {
                     context.toast(
                         context.stringResource(
                             MR.strings.track_error,
@@ -1055,7 +1079,6 @@ class MangaViewModel(
     private suspend fun downloadChapters(chapters: List<Chapter>) {
         val manga = successState?.manga ?: return
         downloadManager.downloadChapters(manga, chapters)
-        toggleAllSelection(false)
     }
 
     /**
@@ -1063,7 +1086,7 @@ class MangaViewModel(
      * @param chapters the list of chapters to bookmark.
      */
     fun bookmarkChapters(chapters: List<Chapter>, bookmarked: Boolean) {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             chapters
                 .filterNot { it.bookmark == bookmarked }
                 .map { ChapterUpdate(it.id) { bookmark = bookmarked } }
@@ -1078,24 +1101,20 @@ class MangaViewModel(
      * @param chapters the list of chapters to delete.
      */
     fun deleteChapters(chapters: List<Chapter>) {
-        viewModelScope.launchNonCancellable {
+        val state = successState ?: return
+        // Outlives the screen, which the delete dialog usually closes along with
+        appScope.launch {
             try {
-                successState?.let { state ->
-                    downloadManager.deleteChapters(
-                        chapters,
-                        state.manga,
-                        state.source,
-                    )
-                }
-            } catch (e: Throwable) {
+                downloadManager.deleteChapters(chapters, state.manga, state.source)
+            } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
             }
         }
     }
 
     private fun downloadNewChapters(chapters: List<Chapter>) {
-        viewModelScope.launchNonCancellable {
-            val manga = successState?.manga ?: return@launchNonCancellable
+        appScope.launch {
+            val manga = successState?.manga ?: return@launch
             val chaptersToDownload = filterChaptersForDownload.await(manga, chapters)
 
             if (chaptersToDownload.isNotEmpty()) {
@@ -1116,7 +1135,7 @@ class MangaViewModel(
             TriState.ENABLED_IS -> Manga.CHAPTER_SHOW_UNREAD
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_READ
         }
-        viewModelScope.launchNonCancellable {
+        appScope.launch {
             setMangaChapterFlags.awaitSetUnreadFilter(manga, flag)
         }
     }
@@ -1134,7 +1153,7 @@ class MangaViewModel(
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_NOT_DOWNLOADED
         }
 
-        viewModelScope.launchNonCancellable {
+        appScope.launch {
             setMangaChapterFlags.awaitSetDownloadedFilter(manga, flag)
         }
     }
@@ -1152,7 +1171,7 @@ class MangaViewModel(
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_NOT_BOOKMARKED
         }
 
-        viewModelScope.launchNonCancellable {
+        appScope.launch {
             setMangaChapterFlags.awaitSetBookmarkFilter(manga, flag)
         }
     }
@@ -1164,7 +1183,7 @@ class MangaViewModel(
     fun setDisplayMode(mode: Long) {
         val manga = successState?.manga ?: return
 
-        viewModelScope.launchNonCancellable {
+        appScope.launch {
             setMangaChapterFlags.awaitSetDisplayMode(manga, mode)
         }
     }
@@ -1176,25 +1195,27 @@ class MangaViewModel(
     fun setSorting(sort: Long) {
         val manga = successState?.manga ?: return
 
-        viewModelScope.launchNonCancellable {
+        appScope.launch {
             setMangaChapterFlags.awaitSetSortingModeOrFlipOrder(manga, sort)
         }
     }
 
     fun setCurrentSettingsAsDefault(applyToExisting: Boolean) {
         val manga = successState?.manga ?: return
-        viewModelScope.launchNonCancellable {
-            libraryPreferences.setChapterSettingsDefault(manga)
-            if (applyToExisting) {
-                setMangaDefaultChapterFlags.awaitAll()
-            }
+        viewModelScope.launch {
+            appScope.launch {
+                libraryPreferences.setChapterSettingsDefault(manga)
+                if (applyToExisting) {
+                    setMangaDefaultChapterFlags.awaitAll()
+                }
+            }.join()
             snackbarHostState.showSnackbar(message = context.stringResource(MR.strings.chapter_settings_updated))
         }
     }
 
     fun resetToDefaultSettings() {
         val manga = successState?.manga ?: return
-        viewModelScope.launchNonCancellable {
+        viewModelScope.launch {
             setMangaDefaultChapterFlags.await(manga)
         }
     }
@@ -1204,119 +1225,69 @@ class MangaViewModel(
         selected: Boolean,
         fromLongPress: Boolean = false,
     ) {
-        updateSuccessState { successState ->
-            val newChapters = successState.processedChapters.toMutableList().apply {
-                val selectedIndex = successState.processedChapters.indexOfFirst { it.id == item.chapter.id }
-                if (selectedIndex < 0) return@apply
+        val chapters = successState?.processedChapters ?: return
+        val selectedIndex = chapters.indexOfFirst { it.id == item.chapter.id }
+        if (selectedIndex < 0) return
 
-                val selectedItem = get(selectedIndex)
-                if ((selectedItem.selected && selected) || (!selectedItem.selected && !selected)) return@apply
+        // Read from the ids, as the state catches up with a selection only after it's been made
+        val selectedIds = HashSet(selectedChapterIds.value)
+        if ((item.id in selectedIds) == selected) return
 
-                val firstSelection = none { it.selected }
-                set(selectedIndex, selectedItem.copy(selected = selected))
-                selectedChapterIds.addOrRemove(item.id, selected)
+        val firstSelection = chapters.none { it.id in selectedIds }
+        selectedIds.addOrRemove(item.id, selected)
 
-                if (selected && fromLongPress) {
-                    if (firstSelection) {
-                        selectedPositions[0] = selectedIndex
-                        selectedPositions[1] = selectedIndex
-                    } else {
-                        // Try to select the items in-between when possible
-                        val range: IntRange
-                        if (selectedIndex < selectedPositions[0]) {
-                            range = selectedIndex + 1..<selectedPositions[0]
-                            selectedPositions[0] = selectedIndex
-                        } else if (selectedIndex > selectedPositions[1]) {
-                            range = (selectedPositions[1] + 1)..<selectedIndex
-                            selectedPositions[1] = selectedIndex
-                        } else {
-                            // Just select itself
-                            range = IntRange.EMPTY
-                        }
+        if (selected && fromLongPress) {
+            if (firstSelection) {
+                selectedPositions[0] = selectedIndex
+                selectedPositions[1] = selectedIndex
+            } else {
+                // Try to select the items in-between when possible
+                val range: IntRange
+                if (selectedIndex < selectedPositions[0]) {
+                    range = selectedIndex + 1..<selectedPositions[0]
+                    selectedPositions[0] = selectedIndex
+                } else if (selectedIndex > selectedPositions[1]) {
+                    range = (selectedPositions[1] + 1)..<selectedIndex
+                    selectedPositions[1] = selectedIndex
+                } else {
+                    // Just select itself
+                    range = IntRange.EMPTY
+                }
 
-                        range.forEach {
-                            val inbetweenItem = get(it)
-                            if (!inbetweenItem.selected) {
-                                selectedChapterIds.add(inbetweenItem.id)
-                                set(it, inbetweenItem.copy(selected = true))
-                            }
-                        }
-                    }
-                } else if (!fromLongPress) {
-                    if (!selected) {
-                        if (selectedIndex == selectedPositions[0]) {
-                            selectedPositions[0] = indexOfFirst { it.selected }
-                        } else if (selectedIndex == selectedPositions[1]) {
-                            selectedPositions[1] = indexOfLast { it.selected }
-                        }
-                    } else {
-                        if (selectedIndex < selectedPositions[0]) {
-                            selectedPositions[0] = selectedIndex
-                        } else if (selectedIndex > selectedPositions[1]) {
-                            selectedPositions[1] = selectedIndex
-                        }
-                    }
+                range.forEach { selectedIds.add(chapters[it].id) }
+            }
+        } else if (!fromLongPress) {
+            if (!selected) {
+                if (selectedIndex == selectedPositions[0]) {
+                    selectedPositions[0] = chapters.indexOfFirst { it.id in selectedIds }
+                } else if (selectedIndex == selectedPositions[1]) {
+                    selectedPositions[1] = chapters.indexOfLast { it.id in selectedIds }
+                }
+            } else {
+                if (selectedIndex < selectedPositions[0]) {
+                    selectedPositions[0] = selectedIndex
+                } else if (selectedIndex > selectedPositions[1]) {
+                    selectedPositions[1] = selectedIndex
                 }
             }
-            successState.copy(chapters = newChapters)
         }
+        selectedChapterIds.value = selectedIds
     }
 
     fun toggleAllSelection(selected: Boolean) {
-        updateSuccessState { successState ->
-            val newChapters = successState.chapters.map {
-                selectedChapterIds.addOrRemove(it.id, selected)
-                it.copy(selected = selected)
-            }
-            selectedPositions[0] = -1
-            selectedPositions[1] = -1
-            successState.copy(chapters = newChapters)
-        }
+        selectedChapterIds.value = if (selected) allChapters.orEmpty().mapTo(HashSet()) { it.id } else emptySet()
+        selectedPositions[0] = -1
+        selectedPositions[1] = -1
     }
 
     fun invertSelection() {
-        updateSuccessState { successState ->
-            val newChapters = successState.chapters.map {
-                selectedChapterIds.addOrRemove(it.id, !it.selected)
-                it.copy(selected = !it.selected)
-            }
-            selectedPositions[0] = -1
-            selectedPositions[1] = -1
-            successState.copy(chapters = newChapters)
-        }
+        val selectedIds = selectedChapterIds.value
+        selectedChapterIds.value = allChapters.orEmpty().filterNot { it.id in selectedIds }.mapTo(HashSet()) { it.id }
+        selectedPositions[0] = -1
+        selectedPositions[1] = -1
     }
 
     // Chapters list - end
-
-    // Track sheet - start
-
-    private fun observeTrackers() {
-        val manga = successState?.manga ?: return
-
-        viewModelScope.launchIO {
-            combine(
-                getTracks.subscribe(manga.id).catch { logcat(LogPriority.ERROR, it) },
-                trackerManager.loggedInTrackersFlow(),
-            ) { mangaTracks, loggedInTrackers ->
-                // Show only if the service supports this manga's source
-                val supportedTrackers = loggedInTrackers.filter { (it as? EnhancedTracker)?.accept(source!!) ?: true }
-                val supportedTrackerIds = supportedTrackers.map { it.id }.toHashSet()
-                val supportedTrackerTracks = mangaTracks.filter { it.trackerId in supportedTrackerIds }
-                supportedTrackerTracks.size to supportedTrackers.isNotEmpty()
-            }
-                .distinctUntilChanged()
-                .collectLatest { (trackingCount, hasLoggedInTrackers) ->
-                    updateSuccessState {
-                        it.copy(
-                            trackingCount = trackingCount,
-                            hasLoggedInTrackers = hasLoggedInTrackers,
-                        )
-                    }
-                }
-        }
-    }
-
-    // Track sheet - end
 
     sealed interface Dialog {
         data class ChangeCategory(
@@ -1324,51 +1295,54 @@ class MangaViewModel(
             val initialSelection: List<CheckboxState<Category>>,
         ) : Dialog
         data class DeleteChapters(val chapters: List<Chapter>) : Dialog
-        data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
-        data class Migrate(val target: Manga, val current: Manga) : Dialog
-        data class SetFetchInterval(val manga: Manga) : Dialog
-        data object SettingsSheet : Dialog
-        data object TrackSheet : Dialog
-        data object FullCover : Dialog
         data class TranslateChapter(
             val chapter: Chapter,
             val pageCount: Int,
-            val next: List<Chapter> = emptyList(),
-            val nextPageCounts: List<Int> = emptyList(),
+            val next: List<Chapter>,
+            val nextPageCounts: List<Int>,
         ) : Dialog
         data class DeleteTranslatedChapter(val chapter: Chapter) : Dialog
+        data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
+        data class Migrate(val target: Manga, val current: Manga) : Dialog
+        data class SetFetchInterval(val manga: Manga) : Dialog
+        data object RemoveFromLibrary : Dialog
+        data object SettingsSheet : Dialog
+        data object TrackSheet : Dialog
+        data object FullCover : Dialog
     }
 
     fun dismissDialog() {
-        updateSuccessState { it.copy(dialog = null) }
+        dialog.value = null
     }
 
     fun showDeleteChapterDialog(chapters: List<Chapter>) {
-        updateSuccessState { it.copy(dialog = Dialog.DeleteChapters(chapters)) }
+        dialog.value = Dialog.DeleteChapters(chapters)
     }
 
     fun showSettingsDialog() {
-        updateSuccessState { it.copy(dialog = Dialog.SettingsSheet) }
+        dialog.value = Dialog.SettingsSheet
     }
 
     fun showTrackDialog() {
-        updateSuccessState { it.copy(dialog = Dialog.TrackSheet) }
+        dialog.value = Dialog.TrackSheet
     }
 
     fun showCoverDialog() {
-        updateSuccessState { it.copy(dialog = Dialog.FullCover) }
+        dialog.value = Dialog.FullCover
     }
 
     fun showMigrateDialog(duplicate: Manga) {
         val manga = successState?.manga ?: return
-        updateSuccessState { it.copy(dialog = Dialog.Migrate(target = manga, current = duplicate)) }
+        dialog.value = Dialog.Migrate(target = manga, current = duplicate)
     }
 
     fun setExcludedScanlators(excludedScanlators: Set<String>) {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             setExcludedScanlators.await(mangaId, excludedScanlators)
         }
     }
+
+    private data class MangaAndChapters(val manga: Manga, val source: Source, val chapters: List<ChapterList.Item>)
 
     sealed interface State {
         @Immutable
@@ -1386,7 +1360,6 @@ class MangaViewModel(
             val hasLoggedInTrackers: Boolean = false,
             val isRefreshingData: Boolean = false,
             val dialog: Dialog? = null,
-            val hasPromptedToAddBefore: Boolean = false,
             val hideMissingChapters: Boolean = false,
             val translationEnabled: Boolean = false,
             val translatedChapterIds: Set<Long> = emptySet(),
@@ -1397,6 +1370,23 @@ class MangaViewModel(
 
             val isAnySelected by lazy {
                 chapters.fastAny { it.selected }
+            }
+
+            val selectedChapters by lazy {
+                processedChapters.fastFilter { it.selected }
+            }
+
+            val hasUnreadChapters by lazy {
+                processedChapters.fastAny { !it.chapter.read }
+            }
+
+            val hasReadChapters by lazy {
+                chapters.fastAny { it.chapter.read }
+            }
+
+            val missingChapterCount by lazy {
+                if (hideMissingChapters) return@lazy 0
+                processedChapters.fastMap { it.chapter.chapterNumber }.missingChaptersCount()
             }
 
             val chapterListItems by lazy {
@@ -1445,18 +1435,16 @@ class MangaViewModel(
                 val unreadFilter = manga.unreadFilter
                 val downloadedFilter = manga.downloadedFilter
                 val bookmarkedFilter = manga.bookmarkedFilter
+                val chapterSort = getChapterSort(manga)
                 return asSequence()
                     .filter { (chapter) -> applyFilter(unreadFilter) { !chapter.read } }
                     .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
                     .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
-                    .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
+                    .sortedWith { (chapter1), (chapter2) -> chapterSort(chapter1, chapter2) }
             }
         }
     }
 }
-
-/** How many following chapters the Translate dialog offers to queue together with the chosen one. */
-private const val MAX_EXTRA_CHAPTERS = 9
 
 @Immutable
 sealed class ChapterList {
@@ -1470,7 +1458,6 @@ sealed class ChapterList {
     data class Item(
         val chapter: Chapter,
         val downloadState: Download.State,
-        val downloadProgress: Int,
         val selected: Boolean = false,
     ) : ChapterList() {
         val id = chapter.id

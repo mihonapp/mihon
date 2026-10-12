@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.data.backup.models.toBackupChapter
 import eu.kanade.tachiyomi.data.backup.models.toBackupTracking
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import mihon.core.common.extensions.toByteArray
+import mihon.core.common.extensions.toEpochMillisOrZero
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.history.interactor.GetHistory
@@ -66,7 +67,7 @@ class MangaBackupCreator(
                 val history = historyByMangaId.mapNotNull { history ->
                     // A chapter removed since its history was read takes that history with it
                     val url = chapterUrlsById[history.chapterId] ?: return@mapNotNull null
-                    BackupHistory(url, history.readAt?.time ?: 0L, history.readDuration)
+                    BackupHistory(url, history.readAt.toEpochMillisOrZero(), history.readDuration)
                 }
                 if (history.isNotEmpty()) {
                     mangaObject.history = history
@@ -90,7 +91,7 @@ private fun Manga.toBackupManga() =
         thumbnailUrl = this.thumbnailUrl,
         favorite = this.favorite,
         source = this.source,
-        dateAdded = this.favoriteAt ?: 0L,
+        dateAdded = this.favoriteAt.toEpochMillisOrZero(),
         viewer = (this.viewerFlags.toInt() and ReadingMode.MASK),
         viewer_flags = this.viewerFlags.toInt(),
         chapterFlags = this.chapterFlags.toInt(),
@@ -98,4 +99,5 @@ private fun Manga.toBackupManga() =
         notes = this.notes,
         initialized = this.initialized,
         memo = this.memo.toByteArray(),
+        nextUpdate = this.nextUpdate.toEpochMillisOrZero(),
     )

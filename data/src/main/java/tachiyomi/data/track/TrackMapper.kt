@@ -1,6 +1,7 @@
 package tachiyomi.data.track
 
 import tachiyomi.domain.track.model.Track
+import kotlin.time.Instant
 
 object TrackMapper {
     fun mapTrack(
@@ -15,8 +16,8 @@ object TrackMapper {
         totalChapters: Long,
         status: Long,
         score: Double,
-        startDate: Long,
-        finishDate: Long,
+        startDate: Instant?,
+        finishDate: Instant?,
         private: Boolean,
     ): Track = Track(
         id = id,

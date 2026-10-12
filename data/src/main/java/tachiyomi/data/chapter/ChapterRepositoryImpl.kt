@@ -14,8 +14,10 @@ import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.ChapterRemoteUpdate
+import tachiyomi.domain.chapter.model.ChapterSummary
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.repository.ChapterRepository
+import kotlin.time.Instant
 
 @Inject
 @SingleIn(AppScope::class)
@@ -111,6 +113,14 @@ class ChapterRepositoryImpl(
             .awaitAsList()
     }
 
+    override suspend fun getChapterSummaryByMangaId(mangaId: Long): ChapterSummary {
+        return database.chapterQueries
+            .getChapterSummaryByMangaId(mangaId) { total, latestChapterNumber ->
+                ChapterSummary(chapterCount = total, latestChapterNumber = latestChapterNumber)
+            }
+            .awaitAsOne()
+    }
+
     override suspend fun getScanlatorsByMangaId(mangaId: Long): List<String> {
         return database.chapterQueries
             .getScanlatorsByMangaId(mangaId) { it.orEmpty() }
@@ -158,13 +168,13 @@ class ChapterRepositoryImpl(
         remoteName: String,
         remoteScanlator: String?,
         remoteChapterNumber: Double,
-        remoteDateUpload: Long,
+        remoteDateUpload: Instant?,
         remoteOrder: Long,
         remoteMemo: JsonObject,
         userRead: Boolean,
         userBookmark: Boolean,
-        userLastPageRead: Long,
-        stateDateFetch: Long,
+        userLastPageRead: Int,
+        stateDateFetch: Instant,
     ): Chapter = Chapter(
         id = id,
         mangaId = mangaId,

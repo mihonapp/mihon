@@ -37,8 +37,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon.translate"
 
-        versionCode = 34
-        versionName = "0.20.4"
+        versionCode = 36
+        versionName = "0.21.0"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -205,6 +205,7 @@ dependencies {
     baselineProfile(projects.baselineProfile)
 
     implementation(projects.i18n)
+    implementation(projects.icons.customMaterialSymbols)
     implementation(projects.icons.materialSymbols)
     implementation(projects.icons.simpleIcons)
     implementation(projects.core.archive)
