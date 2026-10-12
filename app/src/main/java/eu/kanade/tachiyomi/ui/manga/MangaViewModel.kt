@@ -909,7 +909,7 @@ class MangaViewModel(
                     ?.findFile(seriesName)
                     ?.findFile(folderName)
                     ?.isDirectory == true
-                if (!exists) return@withContext(Dispatchers.IO) null
+                if (!exists) return@withContext null
 
                 val localManga = networkToLocalManga(
                     Manga.create().copy(source = LocalSource.ID, url = seriesName, title = seriesName),
