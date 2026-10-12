@@ -12,6 +12,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 
+### Fixed
+- Fix long floating point numbers showing up in Comick progress ([@MajorTanya](https://github.com/MajorTanya)) ([#4090](https://github.com/mihonapp/mihon/pull/4090))
+
 ## [v0.21.1] - 2026-10-12
 ### Fixed
 - Fixed refreshing chapters failing with the app language set to Arabic or another language with its own digits ([@AntsyLich](https://github.com/AntsyLich)) ([`8457fb9`](https://github.com/mihonapp/mihon/commit/8457fb9))
