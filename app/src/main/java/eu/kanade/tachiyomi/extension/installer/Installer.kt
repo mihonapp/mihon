@@ -127,8 +127,10 @@ abstract class Installer(private val service: Service) {
      */
     private fun cancelQueue(downloadId: Long) {
         val waitingInstall = this.waitingInstall.load()
+        // Every new install cancels its own previous attempt first, which mustn't hit another extension's install
         val toCancel = synchronized(queue) { queue.find { it.downloadId == downloadId } }
-            ?: waitingInstall ?: return
+            ?: waitingInstall?.takeIf { it.downloadId == downloadId }
+            ?: return
         if (cancelEntry(toCancel)) {
             queue.remove(toCancel)
             if (waitingInstall == toCancel) {
