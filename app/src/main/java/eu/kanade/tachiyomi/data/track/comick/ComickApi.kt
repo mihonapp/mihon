@@ -33,6 +33,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import uy.kohesive.injekt.injectLazy
+import java.math.RoundingMode
 import java.security.SecureRandom
 import java.util.Base64
 import kotlin.time.Duration.Companion.minutes
@@ -77,7 +78,14 @@ class ComickApi(
                 put("status", track.status.toApiListStatus())
                 if (track.last_chapter_read > 0) {
                     putJsonObject("progress") {
-                        put("number", track.last_chapter_read)
+                        put(
+                            "number",
+                            track.last_chapter_read
+                                .toBigDecimal()
+                                .setScale(2, RoundingMode.HALF_UP)
+                                .stripTrailingZeros()
+                                .toPlainString(),
+                        )
                     }
                 } else {
                     put("progress", null)
@@ -140,7 +148,14 @@ class ComickApi(
                 put("rating", track.score.toInt().takeIf { it > 0 })
                 put("status", track.status.toApiListStatus())
                 putJsonObject("progress") {
-                    put("number", track.last_chapter_read.toString())
+                    put(
+                        "number",
+                        track.last_chapter_read
+                            .toBigDecimal()
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .stripTrailingZeros()
+                            .toPlainString(),
+                    )
                 }
             }
                 .toString()
