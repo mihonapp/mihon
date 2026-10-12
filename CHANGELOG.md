@@ -40,6 +40,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed updating from v0.20.x failing when the database had duplicate history or tracking entries, or damaged indexes ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed a crash when a back gesture was still in progress as the reader or a dialog closed ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed Kitsu login and other requests that send data failing with "Failed to bypass Cloudflare" ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed tracker start date being off by a day when adding tracking to an entry with read history in some timezones ([@hazptr](https://github.com/hazptr)) ([#4049](https://github.com/mihonapp/mihon/pull/4049))
 
 ## [v0.21.1] - 2026-10-12
 ### Fixed
