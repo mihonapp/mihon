@@ -949,4 +949,12 @@
     <string name="dual_page_view_wide">Em telas largas</string>
     <string name="pref_continuous_minwidth">Largura mínima</string>
     <string name="pref_continuous_gap">Espaçamento</string>
+    <string name="action_web_view" translatable="false"></string>
+    <string name="ext_installer_private" translatable="false"></string>
+    <string name="refresh_tracker_error"></string>
+    <string name="ext_installer_shizuku" translatable="false"></string>
+    <string name="ext_installer_packageinstaller" translatable="false"></string>
+    <string name="pref_load_ahead_only_over_wifi"></string>
+    <string name="pref_load_ahead_only_over_wifi_summary"></string>
+    <string name="app_name" translatable="false"></string>
 </resources>
