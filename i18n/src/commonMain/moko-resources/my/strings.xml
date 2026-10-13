@@ -966,4 +966,6 @@
     <string name="ext_content_warning_safe"></string>
     <string name="publishing_finished"></string>
     <string name="supportUsScreen.contactForDetailsMessage"></string>
+    <string name="ext_installer_pref"></string>
+    <string name="ext_installer_legacy"></string>
 </resources>
