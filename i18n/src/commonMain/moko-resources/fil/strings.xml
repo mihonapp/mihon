@@ -755,7 +755,6 @@
     <string name="theme_nord">Nord</string>
     <string name="manga_interval_expected_update_soon">Malapit na</string>
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
-    <string name="action_open_repo">Open source na repo</string>
     <string name="pref_webtoon_disable_zoom_out">Patayin ang pag-zoom out</string>
     <string name="action_add_anyway">Idagdag pa rin</string>
     <string name="pref_display_profile">Custom na profile sa display</string>
