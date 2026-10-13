@@ -76,4 +76,12 @@
         <item quantity="one">1 oldal</item>
         <item quantity="other">%1$s oldal</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+    </plurals>
+    <plurals name="notification_update_error">
+    </plurals>
 </resources>
