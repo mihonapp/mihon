@@ -69,7 +69,7 @@ class UpdateMangaFromRemote(
                 fetchDetails = fetchDetails,
                 fetchChapters = fetchChapters,
             )
-            awaitUpdateFromSource(manga, update.manga, fetchDetails, manualFetch)
+            awaitUpdateFromSource(manga, update.manga, manualFetch)
             val newChapters = syncChaptersWithSource.await(
                 rawSourceChapters = update.chapters,
                 manga = manga,
@@ -89,7 +89,6 @@ class UpdateMangaFromRemote(
     private suspend fun awaitUpdateFromSource(
         localManga: Manga,
         remoteManga: SManga,
-        fetchDetails: Boolean,
         manualFetch: Boolean,
     ): Boolean {
         val remoteTitle = try {
@@ -135,7 +134,7 @@ class UpdateMangaFromRemote(
                 thumbnailUrl = thumbnailUrl,
                 status = remoteManga.status.toLong(),
                 updateStrategy = remoteManga.update_strategy,
-                initialized = localManga.initialized || fetchDetails,
+                initialized = true,
                 memo = remoteManga.memo,
             ),
         )
