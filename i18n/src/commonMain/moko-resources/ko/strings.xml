@@ -726,7 +726,6 @@
     <string name="ext_revoke_trust">신뢰한 알수없는 확장 앱 신뢰 취소</string>
     <string name="pref_storage_location_info">자동 백업, 챕터 다운로드 및 로컬 소스에 사용됩니다.</string>
     <string name="manga_interval_custom_amount">사용자 지정 업데이트 빈도:</string>
-    <string name="action_open_repo">소스 저장소 열기</string>
     <string name="manga_interval_expected_update_soon">곧 출시</string>
     <string name="onboarding_description">먼저 몇 가지 사항을 설정해 보겠습니다. 나중에 언제든지 설정에서 변경할 수도 있습니다.</string>
     <string name="onboarding_action_finish">시작하기</string>
@@ -907,4 +906,66 @@
     <string name="pref_apply_content_warnings_to_installed_summary">비활성화하면 이미 설치한 확장 앱은 등급과 무관하게 컨텐츠를 불러오고 업데이트합니다</string>
     <string name="content_warnings_info">허용하지 않은 등급의 확장 앱은 이미 설치된 경우 목록에 남지만 소스는 표시되지 않으며, 설치하지 않은 경우 목록에서 숨겨집니다. 이 설정으로도 비공식 확장 앱이나 등급이 잘못 지정된 확장 앱이 앱에 18+ 콘텐츠를 표시하는 것을 완전히 막을 수는 없습니다.</string>
     <string name="ext_filtered">필터링됨</string>
+    <string name="transition_animation_flip_right"></string>
+    <string name="webgpu_viewer"></string>
+    <string name="action_web_view" translatable="false"></string>
+    <string name="ext_filtered_message"></string>
+    <string name="ext_content_warning_mixed_description"></string>
+    <string name="transition_animation_cube_inside"></string>
+    <string name="transition_animation_cube_outside"></string>
+    <string name="update_check_skip_title"></string>
+    <string name="cutout_mode_avoid"></string>
+    <string name="transition_animation_sphere"></string>
+    <string name="ext_malformed_message"></string>
+    <string name="transition_animation_stack_down"></string>
+    <string name="ext_installer_private" translatable="false"></string>
+    <string name="ext_info_warning"></string>
+    <string name="pref_continuous_gap"></string>
+    <string name="ext_content_warning_nsfw"></string>
+    <string name="ext_not_loaded"></string>
+    <string name="update_check_skip_message"></string>
+    <string name="update_check_skip"></string>
+    <string name="refresh_tracker_error"></string>
+    <string name="transition_animation_basic"></string>
+    <string name="ext_unsupported_message"></string>
+    <string name="pref_continuous_minwidth"></string>
+    <string name="app_migrating_summary"></string>
+    <string name="transition_animation_flip_left"></string>
+    <string name="cutout_mode_ignore"></string>
+    <string name="transition_animation_stack_right"></string>
+    <string name="ext_installer_shizuku" translatable="false"></string>
+    <string name="transition_animation_fade"></string>
+    <string name="transition_animation_none"></string>
+    <string name="dual_page_view_never"></string>
+    <string name="pref_enable_chapter_name_hash_details"></string>
+    <string name="transition_animation_stack_up"></string>
+    <string name="pref_enable_chapter_name_hash"></string>
+    <string name="dual_page_view_wide"></string>
+    <string name="pref_transition_animation_dual"></string>
+    <string name="transition_animation_flip"></string>
+    <string name="dual_page_view_always"></string>
+    <string name="ext_not_loaded_dialog"></string>
+    <string name="ext_content_warning_nsfw_description"></string>
+    <string name="refresh_tracker_profile"></string>
+    <string name="ext_copy_stacktrace"></string>
+    <string name="transition_animation_fade_white"></string>
+    <string name="pref_high_quality_renderer"></string>
+    <string name="ext_unsigned_message"></string>
+    <string name="pref_dual_page_view"></string>
+    <string name="refresh_tracker_success"></string>
+    <string name="ext_not_loaded_details"></string>
+    <string name="pref_transition_animation"></string>
+    <string name="ext_installer_packageinstaller" translatable="false"></string>
+    <string name="pref_load_ahead_only_over_wifi"></string>
+    <string name="app_migrating_title"></string>
+    <string name="pref_load_ahead_only_over_wifi_summary"></string>
+    <string name="ext_load_failed_message"></string>
+    <string name="information_webview_crashed"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="pref_cutout_mode"></string>
+    <string name="transition_animation_stack_left"></string>
+    <string name="pref_cutout_mode_dual"></string>
+    <string name="cutout_mode_shift"></string>
+    <string name="ext_content_warning_mixed"></string>
+    <string name="ext_content_warning_safe"></string>
 </resources>
