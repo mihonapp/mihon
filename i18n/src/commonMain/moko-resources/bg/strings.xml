@@ -598,7 +598,7 @@
     <string name="source_filter_empty_screen">Не беше намерен инсталиран източник</string>
     <string name="action_remove_everything">Премахни всичко</string>
     <string name="ext_info_version">Версия</string>
-    <string name="on_hiatus">В хиатус</string>
+    <string name="on_hiatus">Прекъсната за неопределен период</string>
     <string name="custom_cover">Корица по избор</string>
     <string name="action_search_hint">Търсене…</string>
     <string name="disabled_nav">Деактивирано</string>
@@ -650,7 +650,7 @@
     <string name="onboarding_permission_notifications_description">Получавай известия за обновления в библиотеката и други</string>
     <string name="pref_library_update_smart_update">Умно обновяване</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">След прочитане на глава</string>
-    <string name="has_results">Има резултати</string>
+    <string name="has_results">Имащи резулатати</string>
     <string name="unknown_title">Непознато заглавие</string>
     <string name="possible_duplicates_title">Възможни дубликати</string>
     <string name="action_add_anyway">Добави все пак</string>
@@ -966,4 +966,6 @@
     <string name="ext_content_warning_mixed"></string>
     <string name="ext_content_warning_safe"></string>
     <string name="supportUsScreen.contactForDetailsMessage"></string>
+    <string name="action_copy_to_clipboard">Копирай на клипборда</string>
+    <string name="logging_in">Влизане…</string>
 </resources>
