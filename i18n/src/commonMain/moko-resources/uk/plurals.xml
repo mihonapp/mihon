@@ -114,12 +114,4 @@
         <item quantity="many">Через %1$d днів</item>
         <item quantity="other">Через %1$d днів</item>
     </plurals>
-    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.skipText">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.copyTitle">
-    </plurals>
-    <plurals name="notification_update_error">
-    </plurals>
 </resources>

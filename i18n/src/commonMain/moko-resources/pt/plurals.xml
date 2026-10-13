@@ -110,6 +110,4 @@
         <item quantity="many">%1$s páginas</item>
         <item quantity="other">%1$s páginas</item>
     </plurals>
-    <plurals name="notification_update_error">
-    </plurals>
 </resources>

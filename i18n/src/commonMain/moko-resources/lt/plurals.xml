@@ -78,24 +78,4 @@
         <item quantity="many">Kiti %d neskaitytų skyrių</item>
         <item quantity="other">Kiti %d neskaitytų skyrių</item>
     </plurals>
-    <plurals name="download_amount">
-    </plurals>
-    <plurals name="pref_pages">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
-    </plurals>
-    <plurals name="upcoming_relative_time">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.skipText">
-    </plurals>
-    <plurals name="num_repos">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.copyTitle">
-    </plurals>
-    <plurals name="missing_chapters">
-    </plurals>
-    <plurals name="notification_update_error">
-    </plurals>
-    <plurals name="day">
-    </plurals>
 </resources>

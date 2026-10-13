@@ -76,12 +76,4 @@
         <item quantity="one">%d എൻട്രിക്ക്</item>
         <item quantity="other">%d എൻട്രികൾക്കായി</item>
     </plurals>
-    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.skipText">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.copyTitle">
-    </plurals>
-    <plurals name="notification_update_error">
-    </plurals>
 </resources>

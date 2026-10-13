@@ -80,18 +80,4 @@
         <item quantity="one">%d diena</item>
         <item quantity="other">%d dienas</item>
     </plurals>
-    <plurals name="pref_pages">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
-    </plurals>
-    <plurals name="upcoming_relative_time">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.skipText">
-    </plurals>
-    <plurals name="num_repos">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.copyTitle">
-    </plurals>
-    <plurals name="notification_update_error">
-    </plurals>
 </resources>

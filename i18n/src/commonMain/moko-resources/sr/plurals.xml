@@ -90,14 +90,4 @@
         <item quantity="few">За %1$d дана</item>
         <item quantity="other">За %1$d дана</item>
     </plurals>
-    <plurals name="pref_pages">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.skipText">
-    </plurals>
-    <plurals name="migrationListScreen.migrateDialog.copyTitle">
-    </plurals>
-    <plurals name="notification_update_error">
-    </plurals>
 </resources>

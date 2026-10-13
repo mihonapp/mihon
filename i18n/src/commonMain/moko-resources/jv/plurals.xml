@@ -66,6 +66,4 @@
     <plurals name="migrationListScreen.migrateDialog.skipText">
         <item quantity="other">%1$d entri lewatin</item>
     </plurals>
-    <plurals name="notification_update_error">
-    </plurals>
 </resources>

@@ -110,6 +110,4 @@
         <item quantity="many">%1$d voci sono state saltate</item>
         <item quantity="other">%1$d voci sono state saltate</item>
     </plurals>
-    <plurals name="notification_update_error">
-    </plurals>
 </resources>
