@@ -949,4 +949,18 @@
     <string name="transition_animation_stack_left">Pa-stack (kaliwa)</string>
     <string name="pref_cutout_mode_dual">Modo ng display cutout (pa-doble)</string>
     <string name="cutout_mode_shift">Pag-usog</string>
+    <string name="app_migrating_title">Tinatapos ang update</string>
+    <string name="app_migrating_summary">Inihahanda pa ang lahat pagkatapos ng update. Maaari itong tumagal nang ilang minuto, kaya pabayaang nakabukas ang app.</string>
+    <string name="pref_enable_chapter_name_hash">Paganahin ang hash suffix sa pangalan ng kabanata</string>
+    <string name="pref_enable_chapter_name_hash_details">Sinisigurong may natatanging hash suffix na idinaragdag sa pangalan ng mga kabanata upang maiwasan ang conflict sa pangalan. Kapag naka-off, hindi maida-download ang mga kabanatang may magkakaparehong pangalan.</string>
+    <string name="ext_not_loaded_details">Bakit hindi ito na-load</string>
+    <string name="pref_load_ahead_only_over_wifi">Mag-load lang sa Wi-Fi</string>
+    <string name="pref_load_ahead_only_over_wifi_summary">Makatitipid sa mobile data sa pag-load lang ng mga pahinang malapit sa kasalukuyan mong binabasa</string>
+    <string name="refresh_tracker_profile">I-refresh ang tracker profile</string>
+    <string name="refresh_tracker_success">%s na profile ay na-refresh</string>
+    <string name="refresh_tracker_error">%1$s error sa pag-refresh: %2$s</string>
+    <string name="update_check_skip">Laktawan ang bersyon na ito</string>
+    <string name="update_check_skip_title">Laktawan ang %s?</string>
+    <string name="update_check_skip_message">Ang mga update ay karaniwang may kasamang mga bug fix at pagpapahusay sa seguridad. Hindi ka na muling ipapaalala tungkol sa bersyong ito, ngunit makakatanggap ka pa rin ng abiso kapag may lumabas na mas bagong bersyon.</string>
+    <string name="information_webview_crashed">Huminto sa paggana ang WebView at isinarado ang pahina</string>
 </resources>
