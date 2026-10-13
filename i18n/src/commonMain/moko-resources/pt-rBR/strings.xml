@@ -755,7 +755,6 @@
     <string name="manga_interval_expected_update_soon">Em breve</string>
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Revogar a confiabilidade de extensões desconhecidas</string>
-    <string name="action_open_repo">Abrir repositório da fonte</string>
     <string name="pref_webtoon_disable_zoom_out">Desativar redução de zoom</string>
     <string name="action_add_anyway">Adicionar de qualquer maneira</string>
     <string name="label_upcoming">Próximo</string>
