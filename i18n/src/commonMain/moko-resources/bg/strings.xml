@@ -733,4 +733,9 @@
     <string name="onboarding_storage_info">Избери папка, където %1$s ще съхранява изтеглени глави, резервни копия и други.\n\nПрепоръчва се специална папка.\nИзбрана папка: %2$s</string>
     <string name="action_copy_to_clipboard">Копирай на клипборда</string>
     <string name="logging_in">Влизане…</string>
+    <string name="label_support_us">Подкрепи ни</string>
+    <string name="supportUsScreen.perks">Патроните получават достъп до ексклузивни канали, като предстоят още предимства.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (предпочитан)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">В момента Mihon се подкрепя от %d+ патрони. Искаме да благодарим на всеки един от вас. Нека заедно направим Mihon още по-добър.</string>
 </resources>
