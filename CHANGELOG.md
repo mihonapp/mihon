@@ -35,6 +35,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich))
 
+### Fixed
+- Fixed last read sorting when chapter history is lost ([@WizaHX](https://github.com/WizaHX)) ([#4053](https://github.com/mihonapp/mihon/pull/4053))
+
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 

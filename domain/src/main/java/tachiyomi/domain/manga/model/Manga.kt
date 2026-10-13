@@ -38,6 +38,7 @@ data class Manga(
     val initialized: Boolean,
     val notes: String,
     val memo: JsonObject,
+    val lastReadAt: Long = 0,
 ) : JavaSerializable {
 
     val favorite: Boolean
