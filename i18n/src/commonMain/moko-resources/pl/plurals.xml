@@ -120,4 +120,10 @@
         <item quantity="many">%1$d aktualizacji się nie powiodły</item>
         <item quantity="other">%1$d aktualizacji się nie powiodły</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+    </plurals>
 </resources>
