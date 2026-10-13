@@ -942,4 +942,30 @@
     <string name="transition_animation_stack_right">Gestapelt (nach rechts)</string>
     <string name="transition_animation_stack_up">Gestapelt (nach oben)</string>
     <string name="transition_animation_stack_down">Gestapelt (nach unten)</string>
+    <string name="action_web_view" translatable="false"></string>
+    <string name="ext_filtered_message"></string>
+    <string name="ext_content_warning_mixed_description"></string>
+    <string name="update_check_skip_title"></string>
+    <string name="ext_installer_private" translatable="false"></string>
+    <string name="ext_content_warning_nsfw"></string>
+    <string name="update_check_skip_message"></string>
+    <string name="update_check_skip"></string>
+    <string name="refresh_tracker_error"></string>
+    <string name="app_migrating_summary"></string>
+    <string name="ext_installer_shizuku" translatable="false"></string>
+    <string name="pref_enable_chapter_name_hash_details"></string>
+    <string name="pref_enable_chapter_name_hash"></string>
+    <string name="ext_content_warning_nsfw_description"></string>
+    <string name="refresh_tracker_profile"></string>
+    <string name="refresh_tracker_success"></string>
+    <string name="ext_not_loaded_details"></string>
+    <string name="ext_installer_packageinstaller" translatable="false"></string>
+    <string name="pref_load_ahead_only_over_wifi"></string>
+    <string name="app_migrating_title"></string>
+    <string name="pref_load_ahead_only_over_wifi_summary"></string>
+    <string name="information_webview_crashed"></string>
+    <string name="app_name" translatable="false"></string>
+    <string name="pref_cutout_mode"></string>
+    <string name="pref_cutout_mode_dual"></string>
+    <string name="ext_content_warning_safe"></string>
 </resources>
