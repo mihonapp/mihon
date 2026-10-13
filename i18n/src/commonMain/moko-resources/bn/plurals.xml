@@ -88,4 +88,6 @@
         <item quantity="one">একটি এন্ট্রি বাদ দেওয়া হয়েছে</item>
         <item quantity="other">%1$dটি এন্ট্রি বাদ দেওয়া হয়েছে</item>
     </plurals>
+    <plurals name="notification_update_error">
+    </plurals>
 </resources>
