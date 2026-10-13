@@ -88,4 +88,6 @@
         <item quantity="one">एउटा इन्ट्री छोडियो</item>
         <item quantity="other">%1$d वटा इन्ट्री छोडियो</item>
     </plurals>
+    <plurals name="notification_update_error">
+    </plurals>
 </resources>
