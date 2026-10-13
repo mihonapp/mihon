@@ -88,4 +88,6 @@
         <item quantity="one">Elemento estis preterlasita</item>
         <item quantity="other">%1$d elementoj estis preterlasitaj</item>
     </plurals>
+    <plurals name="notification_update_error">
+    </plurals>
 </resources>
