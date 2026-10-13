@@ -82,6 +82,10 @@ abstract class BaseTracker(
         field: MutableSharedFlow<RefreshResult> = MutableSharedFlow(extraBufferCapacity = 1)
 
     final override suspend fun refreshUser() {
+        // Trackers must implement RefreshableProfileTracker for this to have any effect
+        if (this !is RefreshableProfileTracker) return
+
+        // This wraps the call to RefreshableProfileTracker.updateUserConfig() to ensure proper refresh flow setting
         isRefreshingFlow.value = true
         try {
             updateUserConfig()
@@ -94,9 +98,6 @@ abstract class BaseTracker(
             isRefreshingFlow.value = false
         }
     }
-
-    // does the actual remote calls shielded from outside access to guarantee proper refresh flow setting
-    protected abstract suspend fun updateUserConfig()
 
     override fun getUsername() = trackPreferences.trackUsername(this).get()
 
