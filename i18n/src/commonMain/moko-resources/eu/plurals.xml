@@ -68,4 +68,16 @@
         <item quantity="one">Hurrengo kapitulua</item>
         <item quantity="other">Hurrengo %d kapituluak</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+    </plurals>
+    <plurals name="num_repos">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+    </plurals>
+    <plurals name="missing_chapters">
+    </plurals>
+    <plurals name="notification_update_error">
+    </plurals>
 </resources>
