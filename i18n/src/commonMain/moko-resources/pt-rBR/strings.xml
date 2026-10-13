@@ -335,7 +335,7 @@
     <string name="action_pin">Fixar</string>
     <string name="add_tracking">Adicionar monitoramento</string>
     <string name="add_to_library">Adicionar à biblioteca</string>
-    <string name="in_library">Na biblioteca</string>
+    <string name="in_library">Na Biblioteca</string>
     <string name="manga_info_collapse">Menos</string>
     <string name="manga_info_expand">Mais</string>
     <string name="information_webview_required">A WebView é necessária para o funcionamento do app</string>
@@ -957,4 +957,15 @@
     <string name="pref_load_ahead_only_over_wifi"></string>
     <string name="pref_load_ahead_only_over_wifi_summary"></string>
     <string name="app_name" translatable="false"></string>
+    <string name="update_check_skip_title">Pular %s?</string>
+    <string name="update_check_skip_message">Atualizações geralmente contêm correções de bugs e melhorias de segurança. Você não será lembrado sobre esta versão novamente, mas ainda será notificado quando uma versão mais recente for lançada.</string>
+    <string name="update_check_skip">Pular esta versão</string>
+    <string name="app_migrating_summary">Deixando as coisas prontas depois da atualização. Isso pode levar alguns minutos, então por favor mantenha o aplicativo aberto.</string>
+    <string name="pref_enable_chapter_name_hash_details">Garante que um sufixo hash exclusivo seja adicionado aos nomes dos capítulos para evitar conflitos de nomenclatura. Se desativado, os capítulos com nomes idênticos não poderão ser baixados.</string>
+    <string name="pref_enable_chapter_name_hash">Habilitar sufixo hash no nome do capitulo</string>
+    <string name="refresh_tracker_profile">Atualizar perfil do monitorador</string>
+    <string name="refresh_tracker_success">%s perfil atualizado</string>
+    <string name="ext_not_loaded_details">Por que não está carregado</string>
+    <string name="app_migrating_title">Finalizando a atualização</string>
+    <string name="information_webview_crashed">WebView parou de funcionar e a página foi fechada</string>
 </resources>
