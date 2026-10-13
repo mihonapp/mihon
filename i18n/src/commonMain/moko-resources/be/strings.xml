@@ -929,43 +929,4 @@
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="extensionStoresScreen.emptyLabel">Вы яшчэ не дадавалі крам пашырэнняў</string>
     <string name="supportUsScreen.contactForDetailsMessage">Каб даведацца пра іншыя спосабы падтрымкі ці задаць пытанні, заглядайце ў наш Discord-сервер.</string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="ext_filtered_message"></string>
-    <string name="ext_content_warning_mixed_description"></string>
-    <string name="update_check_skip_title"></string>
-    <string name="content_warnings_info"></string>
-    <string name="ext_malformed_message"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_info_warning"></string>
-    <string name="ext_content_warning_nsfw"></string>
-    <string name="ext_not_loaded"></string>
-    <string name="update_check_skip_message"></string>
-    <string name="update_check_skip"></string>
-    <string name="refresh_tracker_error"></string>
-    <string name="ext_unsupported_message"></string>
-    <string name="app_migrating_summary"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="pref_enable_chapter_name_hash_details"></string>
-    <string name="ext_filtered"></string>
-    <string name="pref_enable_chapter_name_hash"></string>
-    <string name="pref_apply_content_warnings_to_installed_summary"></string>
-    <string name="ext_not_loaded_dialog"></string>
-    <string name="pref_allowed_content_warnings"></string>
-    <string name="ext_content_warning_nsfw_description"></string>
-    <string name="refresh_tracker_profile"></string>
-    <string name="ext_copy_stacktrace"></string>
-    <string name="ext_unsigned_message"></string>
-    <string name="refresh_tracker_success"></string>
-    <string name="ext_not_loaded_details"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="pref_load_ahead_only_over_wifi"></string>
-    <string name="app_migrating_title"></string>
-    <string name="pref_category_extensions"></string>
-    <string name="pref_load_ahead_only_over_wifi_summary"></string>
-    <string name="ext_load_failed_message"></string>
-    <string name="information_webview_crashed"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="pref_apply_content_warnings_to_installed"></string>
-    <string name="ext_content_warning_mixed"></string>
-    <string name="ext_content_warning_safe"></string>
 </resources>

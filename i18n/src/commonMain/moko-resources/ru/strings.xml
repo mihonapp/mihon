@@ -949,23 +949,4 @@
     <string name="pref_continuous_minwidth">Минимальная ширина</string>
     <string name="pref_continuous_gap">Зазор</string>
     <string name="pref_allowed_content_warnings">Разрешенное предупреждение об контенте</string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="update_check_skip_title"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="update_check_skip_message"></string>
-    <string name="update_check_skip"></string>
-    <string name="refresh_tracker_error"></string>
-    <string name="app_migrating_summary"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="pref_enable_chapter_name_hash_details"></string>
-    <string name="pref_enable_chapter_name_hash"></string>
-    <string name="refresh_tracker_profile"></string>
-    <string name="refresh_tracker_success"></string>
-    <string name="ext_not_loaded_details"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="pref_load_ahead_only_over_wifi"></string>
-    <string name="app_migrating_title"></string>
-    <string name="pref_load_ahead_only_over_wifi_summary"></string>
-    <string name="information_webview_crashed"></string>
-    <string name="app_name" translatable="false"></string>
 </resources>

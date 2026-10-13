@@ -963,9 +963,4 @@
     <string name="app_migrating_title">S’està finalitzant l’actualització</string>
     <string name="pref_load_ahead_only_over_wifi_summary">Estalvia dades mòbils carregant només les pàgines pròximes a la que esteu llegint</string>
     <string name="information_webview_crashed">El WebView ha deixat de funcionar i s’ha tancat la pàgina</string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="app_name" translatable="false"></string>
 </resources>
