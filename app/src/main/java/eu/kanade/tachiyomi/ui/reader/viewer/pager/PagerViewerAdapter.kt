@@ -26,7 +26,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     /**
      * Holds preprocessed items so they don't get removed when changing chapter
      */
-    private var preprocessed: MutableMap<Int, InsertPage> = mutableMapOf()
+    private var preprocessed: List<InsertPage> = emptyList()
 
     var nextTransition: ChapterTransition.Next? = null
         private set
@@ -68,13 +68,15 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
 
             val lastPage = pages.last()
 
-            // Insert preprocessed pages into current page list
-            preprocessed.keys.sortedDescending()
-                .forEach { key ->
-                    if (lastPage.index == key) {
-                        insertPageLastPage = preprocessed[key]
+            // Insert preprocessed pages into current page list. Pages of the adjacent chapters are split too, and
+            // placed by their index, so only this chapter's belong here.
+            preprocessed.filter { it.chapter.chapter.id == chapters.currChapter.chapter.id }
+                .sortedByDescending { it.index }
+                .forEach { page ->
+                    if (lastPage.index == page.index) {
+                        insertPageLastPage = page
                     }
-                    preprocessed[key]?.let { pages.add(key + 1, it) }
+                    pages.add(page.index + 1, page)
                 }
 
             newItems.addAll(pages)
@@ -105,7 +107,8 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
             newItems.reverse()
         }
 
-        preprocessed = mutableMapOf()
+        val adjacentChapterIds = setOfNotNull(chapters.prevChapter?.chapter?.id, chapters.nextChapter?.chapter?.id)
+        preprocessed = preprocessed.filter { it.chapter.chapter.id in adjacentChapterIds }
         items = newItems
         notifyDataSetChanged()
 
@@ -161,9 +164,12 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
 
         val currentIndex = items.indexOf(currentPage)
 
-        // Put aside preprocessed pages for next chapter so they don't get removed when changing chapter
+        // Put aside pages of an adjacent chapter until it becomes the current one, so they are not lost on the change
         if (currentPage.chapter.chapter.id != currentChapter?.chapter?.id) {
-            preprocessed[newPage.index] = newPage
+            val chapterId = newPage.chapter.chapter.id
+            if (preprocessed.none { it.chapter.chapter.id == chapterId && it.index == newPage.index }) {
+                preprocessed = preprocessed + newPage
+            }
             return
         }
 

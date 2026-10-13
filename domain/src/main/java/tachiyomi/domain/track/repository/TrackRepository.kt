@@ -9,6 +9,8 @@ interface TrackRepository {
 
     suspend fun getTracksByMangaId(mangaId: Long): List<Track>
 
+    suspend fun getTracksByMangaIds(mangaIds: List<Long>): Map<Long, List<Track>>
+
     suspend fun getTracks(): List<Track>
 
     fun getTracksAsFlow(): Flow<List<Track>>
