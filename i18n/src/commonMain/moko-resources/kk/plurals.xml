@@ -63,4 +63,18 @@
         <item quantity="one">Ертең</item>
         <item quantity="other">%1$d күнде</item>
     </plurals>
+    <plurals name="pref_pages">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+    </plurals>
+    <plurals name="num_repos">
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+    </plurals>
+    <plurals name="notification_update_error">
+    </plurals>
+    <plurals name="day">
+    </plurals>
 </resources>
