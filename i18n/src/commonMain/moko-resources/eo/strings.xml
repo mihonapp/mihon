@@ -901,4 +901,14 @@
     <string name="pref_filter_update_categories_details">Ĝisdatigoj en ekskluzivitaj kategorioj ne estos montrotaj, eĉ se ili estas ankaŭ en inkluzivitaj kategorioj.</string>
     <string name="pref_filter_upcoming_categories_details">Titoloj en ekskluzivitaj kategorioj ne estos montrotaj, eĉ se ili estas ankaŭ en inkluzivitaj kategorioj.</string>
     <string name="pref_category_extensions">Etendaĵoj</string>
+    <string name="pref_apply_content_warnings_to_installed">Ankaŭ apliki al instalitaj etendaĵoj</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">Kiam malŝaltita, etendaĵoj kiuj vi jam instalis daŭras ŝargi kaj ĝisdatigi malgraŭ iliaj avertoj</string>
+    <string name="content_warnings_info">Instalitaj etendaĵoj kiuj ne estas ŝargitaj restas listitaj sen iliaj fontoj; tiuj kiujn vi ne instalis estas kaŝitaj. Ĉi tio ne preventas neoficialajn aŭ eventuale malprave markitajn etendaĵojn montri 18+-enhavon ene de la apo.</string>
+    <string name="pref_enable_chapter_name_hash">Ŝalti haketaĵan sufikson de ĉapitra nomo</string>
+    <string name="pref_enable_chapter_name_hash_details">Certigas, ke unika haketaĵa sufikso estas aldonita al ĉapitraj nomoj por preventi nomajn konfliktojn. Se malŝaltita, ĉapitroj kun indentaj nomoj ne eblas esti elŝutitaj.</string>
+    <string name="ext_filtered">Filtrita</string>
+    <string name="ext_not_loaded_dialog">Ne ŝargeblis</string>
+    <string name="ext_not_loaded_details">Kial ĝi ne estas ŝargita</string>
+    <string name="ext_copy_stacktrace">Kopii stakan spuron</string>
+    <string name="ext_filtered_message">La etendaĵa enhava averto ne estas tiu, kiun vi elektis ŝargi, do ĝiaj fontoj ne disponeblas.</string>
 </resources>
