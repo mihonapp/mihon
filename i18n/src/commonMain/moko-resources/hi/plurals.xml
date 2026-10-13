@@ -88,4 +88,6 @@
         <item quantity="one">एक प्रविष्टि त्यागी गई</item>
         <item quantity="other">%1$d प्रविष्टियाँ त्यागी गईं</item>
     </plurals>
+    <plurals name="notification_update_error">
+    </plurals>
 </resources>
