@@ -753,7 +753,6 @@
     <string name="onboarding_storage_help_action">Průvodce uložištěm</string>
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Zrušit důvěryhodná neznámá rozšíření</string>
-    <string name="action_open_repo">Open source repozitář</string>
     <string name="manga_interval_expected_update_soon">Brzy</string>
     <string name="onboarding_storage_help_info">Aktualizujete ze starší verze a nevíte, co vybrat? Další informace naleznete v průvodci úložištěm.</string>
     <string name="action_add_anyway">Přesto přidat</string>
