@@ -967,4 +967,5 @@
     <string name="ext_content_warning_mixed"></string>
     <string name="ext_content_warning_safe"></string>
     <string name="supportUsScreen.contactForDetailsMessage"></string>
+    <string name="theme_catppuccin"></string>
 </resources>
