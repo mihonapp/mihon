@@ -962,4 +962,10 @@
     <string name="ext_content_warning_mixed"></string>
     <string name="ext_content_warning_safe"></string>
     <string name="supportUsScreen.contactForDetailsMessage"></string>
+    <string name="upcoming_guide"></string>
+    <string name="file_picker_uri_permission_unsupported"></string>
+    <string name="upcoming_calendar_next"></string>
+    <string name="upcoming_calendar_prev"></string>
+    <string name="action_view_upcoming"></string>
+    <string name="pref_display_profile"></string>
 </resources>
