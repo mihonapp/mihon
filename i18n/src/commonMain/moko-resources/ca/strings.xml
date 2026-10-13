@@ -755,7 +755,6 @@
     <string name="ext_revoke_trust">Revoca les extensions de confiança desconegudes</string>
     <string name="manga_interval_expected_update_soon">Aviat</string>
     <string name="manga_interval_custom_amount">Freqüència d’actualització personalitzada:</string>
-    <string name="action_open_repo">Obre el repositori d’origen</string>
     <string name="file_picker_uri_permission_unsupported">No s’ha pogut obtenir accés persistent a la carpeta. És possible que l’aplicació es comporti de manera inesperada.</string>
     <string name="label_upcoming">Pròxim</string>
     <string name="upcoming_guide">Guia de pròximes actualitzacions</string>
@@ -953,4 +952,15 @@
     <string name="refresh_tracker_profile">Actualitza el perfil del servei de seguiment</string>
     <string name="refresh_tracker_success">S’ha actualitzat el perfil de %s</string>
     <string name="refresh_tracker_error">S’ha produït un error en actualitzar %1$s: %2$s</string>
+    <string name="update_check_skip_title">Voleu ometre %s?</string>
+    <string name="update_check_skip_message">Les actualitzacions sovint contenen solucions d’errors i millores de seguretat. No tornareu a rebre cap recordatori d’aquesta versió, però sí que en rebreu si se’n publica una altra de més nova.</string>
+    <string name="update_check_skip">Omet aquesta versió</string>
+    <string name="app_migrating_summary">S’estan enllestint algunes coses després de l’actualització. Pot tardar uns minuts, mantingueu oberta l’aplicació.</string>
+    <string name="pref_enable_chapter_name_hash_details">Assegura que s’afegeixi un sufix amb un resum únic al nom dels capítols per a evitar conflictes de noms. Si es desactiva, els capítols amb noms idèntics no es poden baixar.</string>
+    <string name="pref_enable_chapter_name_hash">Activa el sufix del resum al nom del capítol</string>
+    <string name="ext_not_loaded_details">Per què no s’ha carregat</string>
+    <string name="pref_load_ahead_only_over_wifi">Precarrega només amb Wi-Fi</string>
+    <string name="app_migrating_title">S’està finalitzant l’actualització</string>
+    <string name="pref_load_ahead_only_over_wifi_summary">Estalvia dades mòbils carregant només les pàgines pròximes a la que esteu llegint</string>
+    <string name="information_webview_crashed">El WebView ha deixat de funcionar i s’ha tancat la pàgina</string>
 </resources>
