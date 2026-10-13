@@ -911,4 +911,9 @@
     <string name="ext_not_loaded_details">Kial ĝi ne estas ŝargita</string>
     <string name="ext_copy_stacktrace">Kopii stakan spuron</string>
     <string name="ext_filtered_message">La etendaĵa enhava averto ne estas tiu, kiun vi elektis ŝargi, do ĝiaj fontoj ne disponeblas.</string>
+    <string name="ext_unsigned_message">Ĉi tiu etendaĵo ne estas subskribita, do estas neniu subskribo kontraŭ kiu ĝi povas esti kontrolita.</string>
+    <string name="app_migrating_title">Finado de la ĝisdatigo</string>
+    <string name="app_migrating_summary">Pretigas aferojn post la ĝisdatigo. Ĉi tio eble daŭros kelkajn minutojn, do teni la apon malfermitan.</string>
+    <string name="pref_allowed_content_warnings">Atentoj pri permesita enhavo</string>
+    <string name="ext_not_loaded">Ne ŝargita</string>
 </resources>
