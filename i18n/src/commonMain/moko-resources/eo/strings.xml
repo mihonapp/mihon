@@ -916,4 +916,12 @@
     <string name="app_migrating_summary">Pretigas aferojn post la ĝisdatigo. Ĉi tio eble daŭros kelkajn minutojn, do teni la apon malfermitan.</string>
     <string name="pref_allowed_content_warnings">Atentoj pri permesita enhavo</string>
     <string name="ext_not_loaded">Ne ŝargita</string>
+    <string name="ext_unsupported_message">Ĉi tiu etendaĵo estis kunmetita por versio de la etendaĵa biblioteko kiun ĉi tiu apo ne povas ŝargi. Ĝisdatigo de la apo aŭ la etendaĵo eble helpos.</string>
+    <string name="ext_load_failed_message">Ĉi tiu etendaĵo eraris dum ŝargado, do neniu de ĝiaj fontoj disponeblas.</string>
+    <string name="ext_content_warning_safe">Sendanĝera</string>
+    <string name="ext_content_warning_mixed">Miksa</string>
+    <string name="ext_content_warning_nsfw">18+</string>
+    <string name="ext_content_warning_mixed_description">Fontoj de ĉi tiu etendaĵo eble enhavas kaj sendanĝeran kaj 18+-an enhavon.</string>
+    <string name="ext_content_warning_nsfw_description">Fontoj de ĉi tiu etendaĵo estas ĉefe koncentrita pri 18+-enhavo.</string>
+    <string name="pref_load_ahead_only_over_wifi">Antaŭŝargi nur per vifio</string>
 </resources>
