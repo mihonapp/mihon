@@ -486,6 +486,10 @@
     <string name="scale_type_original_size">Original size</string>
     <string name="scale_type_smart_fit">Smart fit</string>
     <string name="pref_navigate_pan">Pan wide images</string>
+    <string name="pref_panel_navigation">Panel-by-panel navigation</string>
+    <string name="pref_panel_navigation_summary">Zoom into each detected panel before turning the page</string>
+    <string name="pref_panel_isolation">Hide around the current panel</string>
+    <string name="pref_panel_isolation_summary">Fill everything outside the zoomed panel with the reader background</string>
     <string name="pref_landscape_zoom">Automatically zoom into wide images</string>
     <string name="pref_zoom_start">Zoom start position</string>
     <string name="zoom_start_automatic">Automatic</string>

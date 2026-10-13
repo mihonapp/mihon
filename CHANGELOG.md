@@ -28,6 +28,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Show pages progressively while they download ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4023](https://github.com/mihonapp/mihon/pull/4023))
   - Lower memory use for animated images and support cropping borders in long strip ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4029](https://github.com/mihonapp/mihon/pull/4029))
   - Pair more wide pages in dual page view by comparing them with neighbouring pages ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4051](https://github.com/mihonapp/mihon/pull/4051))
+- Add panel-by-panel navigation to the paged reader, zooming into each detected panel before turning the page ([@woxakv](https://github.com/woxakv)) ([#4045](https://github.com/mihonapp/mihon/pull/4045))
 
 ### Changed
 - Use a new decoder for images Android can't decode itself, like AVIF, JPEG XL and HEIF, and support JPEG 2000 images ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
