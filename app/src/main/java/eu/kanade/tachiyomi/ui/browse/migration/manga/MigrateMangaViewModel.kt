@@ -71,7 +71,7 @@ class MigrateMangaViewModel(
     ) { titleList, selection ->
         State(source = source.await(), selection = selection, titleList = titleList)
     }
-        .flowOn(Dispatchers.IO)
+        .flowOn(Dispatchers.Default)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
 
     fun toggleSelection(item: Manga) {

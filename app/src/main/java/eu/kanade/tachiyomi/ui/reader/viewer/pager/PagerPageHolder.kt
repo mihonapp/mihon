@@ -24,13 +24,11 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import okio.Buffer
 import okio.BufferedSource
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.core.common.util.system.panel.ContourPanelDetector
@@ -137,7 +135,7 @@ class PagerPageHolder(
         val loader = page.chapter.pageLoader ?: return
 
         supervisorScope {
-            launchIO {
+            launch(Dispatchers.IO) {
                 loader.loadPage(page)
             }
             page.statusFlow.collectLatest { state ->
@@ -199,8 +197,10 @@ class PagerPageHolder(
         val streamFn = page.stream ?: return
 
         try {
-            val (source, isAnimated, background, analysisSource) = withIOContext {
-                val source = streamFn().use { process(item, Buffer().readFrom(it)) }
+            val buffer = withContext(Dispatchers.IO) { streamFn().use { Buffer().readFrom(it) } }
+            // Splitting, merging and sampling the background decode the image, which is CPU work
+            val (source, isAnimated, background, analysisSource) = withContext(Dispatchers.Default) {
+                val source = process(item, buffer)
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 val background = if (!isAnimated && viewer.config.automaticBackground) {
                     ImageUtil.chooseBackground(context, source.peek().inputStream())
@@ -215,7 +215,7 @@ class PagerPageHolder(
                 }
                 LoadedImage(source, isAnimated, background, analysisSource)
             }
-            withUIContext {
+            withContext(Dispatchers.Main) {
                 setImage(
                     source,
                     isAnimated,
@@ -237,7 +237,7 @@ class PagerPageHolder(
             }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
-            withUIContext {
+            withContext(Dispatchers.Main) {
                 setError(e)
             }
         }
@@ -268,7 +268,7 @@ class PagerPageHolder(
                 "Panel detection: page ${page.number}, image ${gray?.width}x${gray?.height}, " +
                     "${ordered.size} panels in ${System.currentTimeMillis() - start}ms"
             }
-            withUIContext {
+            withContext(Dispatchers.Main) {
                 panels = if (ordered.size >= 2) ordered else emptyList()
                 detectionFinished = true
                 if (panels.isEmpty() && viewer.config.landscapeZoom && isVisibleOnScreen()) {

@@ -21,8 +21,8 @@ import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.track.model.Track
 import tachiyomi.domain.track.repository.TrackRepository
-import java.util.Date
 import kotlin.math.max
+import kotlin.time.Instant
 
 @Inject
 @SingleIn(AppScope::class)
@@ -74,7 +74,10 @@ class RestoreRepositoryImpl(
         val details = if (dbManga.initialized || !manga.initialized) dbManga else manga
         return dbManga.copy(
             favoriteAt = if (dbManga.favorite || manga.favorite) {
-                listOfNotNull(dbManga.favoriteAt, manga.favoriteAt).filter { it > 0 }.minOrNull() ?: 0L
+                listOfNotNull(dbManga.favoriteAt, manga.favoriteAt)
+                    .filter { it > Manga.UNKNOWN_FAVORITE_AT }
+                    .minOrNull()
+                    ?: Manga.UNKNOWN_FAVORITE_AT
             } else {
                 null
             },
@@ -89,6 +92,7 @@ class RestoreRepositoryImpl(
             initialized = dbManga.initialized || manga.initialized,
             // Merge both backup and local data with local winning
             memo = JsonObject(manga.memo + dbManga.memo),
+            nextUpdate = dbManga.nextUpdate ?: manga.nextUpdate,
         )
     }
 
@@ -128,7 +132,7 @@ class RestoreRepositoryImpl(
             remoteStatus = manga.status,
             remoteCover = manga.thumbnailUrl,
             stateChapterLastUpdate = manga.lastUpdate,
-            stateChapterNextUpdate = 0L,
+            stateChapterNextUpdate = null,
             stateChapterFetchInterval = 0L,
             stateInitialized = manga.initialized,
             userReaderFlags = manga.viewerFlags,
@@ -212,7 +216,7 @@ class RestoreRepositoryImpl(
     }
 
     private fun Chapter.forComparison() =
-        this.copy(id = 0L, mangaId = 0L, dateFetch = 0L, dateUpload = 0L)
+        this.copy(id = 0L, mangaId = 0L, dateFetch = Instant.DISTANT_PAST, dateUpload = null)
 
     private suspend fun restoreHistory(manga: Manga, restoredHistory: List<RestoredHistory>) {
         if (restoredHistory.isEmpty()) return
@@ -229,17 +233,16 @@ class RestoreRepositoryImpl(
             // each copy; they are one chapter now, read as late as any copy and for as long as all
             .groupBy { chapterIdsByUrl.getValue(it.chapterUrl) }
             .map { (chapterId, copies) ->
-                val readAt = copies.maxOf { it.readAt?.time ?: 0L }
+                val readAt = copies.mapNotNull { it.readAt }.maxOrNull()
                 val readDuration = copies.sumOf { it.readDuration }
                 val dbHistory = dbHistoryByChapterId[chapterId]
                     // New history entry
-                    ?: return@map Triple(chapterId, Date(readAt), readDuration)
+                    ?: return@map Triple(chapterId, readAt, readDuration)
 
-                // Update history entry. 0 is kept rather than written as NULL, since it marks history
-                // the user removed.
+                // Update history entry
                 Triple(
                     chapterId,
-                    Date(max(readAt, dbHistory.read_at?.time ?: 0L)),
+                    listOfNotNull(readAt, dbHistory.read_at).maxOrNull(),
                     max(readDuration, dbHistory.read_duration) - dbHistory.read_duration,
                 )
             }

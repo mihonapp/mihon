@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.download
 
+import android.content.ContentResolver
 import android.content.Context
 import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.AppScope
@@ -8,6 +9,11 @@ import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.lang.Hash.md5
 import eu.kanade.tachiyomi.util.storage.DiskUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
@@ -42,7 +48,10 @@ class DownloadProvider(
      * @param mangaTitle the title of the manga to query.
      * @param source the source of the manga.
      */
-    internal fun getMangaDir(mangaTitle: String, source: Source): Result<UniFile> {
+    internal suspend fun getMangaDir(mangaTitle: String, source: Source): Result<UniFile> =
+        withContext(Dispatchers.IO) { createMangaDir(mangaTitle, source) }
+
+    private fun createMangaDir(mangaTitle: String, source: Source): Result<UniFile> {
         val downloadsDir = downloadsDir
         if (downloadsDir == null) {
             logcat(LogPriority.ERROR) { "Failed to create download directory" }
@@ -79,8 +88,8 @@ class DownloadProvider(
      *
      * @param source the source to query.
      */
-    fun findSourceDir(source: Source): UniFile? {
-        return downloadsDir?.findFile(getSourceDirName(source))
+    suspend fun findSourceDir(source: Source): UniFile? = withContext(Dispatchers.IO) {
+        downloadsDir?.findFile(getSourceDirName(source))
     }
 
     /**
@@ -89,9 +98,8 @@ class DownloadProvider(
      * @param mangaTitle the title of the manga to query.
      * @param source the source of the manga.
      */
-    fun findMangaDir(mangaTitle: String, source: Source): UniFile? {
-        val sourceDir = findSourceDir(source)
-        return sourceDir?.findFile(getMangaDirName(mangaTitle))
+    suspend fun findMangaDir(mangaTitle: String, source: Source): UniFile? = withContext(Dispatchers.IO) {
+        findSourceDir(source)?.findFile(getMangaDirName(mangaTitle))
     }
 
     /**
@@ -102,15 +110,15 @@ class DownloadProvider(
      * @param mangaTitle the title of the manga to query.
      * @param source the source of the chapter.
      */
-    fun findChapterDir(
+    suspend fun findChapterDir(
         chapterName: String,
         chapterScanlator: String?,
         chapterUrl: String,
         mangaTitle: String,
         source: Source,
-    ): UniFile? {
+    ): UniFile? = withContext(Dispatchers.IO) {
         val mangaDir = findMangaDir(mangaTitle, source)
-        return getValidChapterDirNames(chapterName, chapterScanlator, chapterUrl).asSequence()
+        getValidChapterDirNames(chapterName, chapterScanlator, chapterUrl).asSequence()
             .mapNotNull { mangaDir?.findFile(it) }
             .firstOrNull()
     }
@@ -122,13 +130,66 @@ class DownloadProvider(
      * @param manga the manga of the chapter.
      * @param source the source of the chapter.
      */
-    fun findChapterDirs(chapters: List<Chapter>, manga: Manga, source: Source): Pair<UniFile?, List<UniFile>> {
-        val mangaDir = findMangaDir(manga.title, source) ?: return null to emptyList()
-        return mangaDir to chapters.mapNotNull { chapter ->
-            getValidChapterDirNames(chapter.name, chapter.scanlator, chapter.url).asSequence()
-                .mapNotNull { mangaDir.findFile(it) }
-                .firstOrNull()
+    suspend fun findChapterDirs(
+        chapters: List<Chapter>,
+        manga: Manga,
+        source: Source,
+    ): Pair<UniFile?, List<UniFile>> = withContext(Dispatchers.IO) {
+        val mangaDir = findMangaDir(manga.title, source) ?: return@withContext null to emptyList()
+        mangaDir to findChapterDirs(chapters, mangaDir).values.toList()
+    }
+
+    /**
+     * Returns the ids of the chapters whose download directory exists.
+     *
+     * @param chapters the chapters to query.
+     * @param manga the manga of the chapters.
+     * @param source the source of the chapters.
+     */
+    suspend fun findDownloadedChapterIds(
+        chapters: List<Chapter>,
+        manga: Manga,
+        source: Source,
+    ): Set<Long> = withContext(Dispatchers.IO) {
+        val mangaDir = findMangaDir(manga.title, source) ?: return@withContext emptySet()
+        findChapterDirs(chapters, mangaDir).keys
+    }
+
+    /**
+     * Returns the download directory of each chapter that has one, keyed by chapter id.
+     *
+     * A chapter is looked for under every name it may have been downloaded with, with the chapters looked up in
+     * parallel. On a storage access framework directory each lookup is a content resolver query, so from
+     * [LIST_CHAPTER_DIRS_MIN_CHAPTERS] chapters on the directory is listed once instead and the names are matched
+     * against the listing, ignoring case as the lookups do. Plain file directories are always looked up by name, as
+     * their listing can leave out files another app created.
+     *
+     * @param chapters the chapters to query.
+     * @param mangaDir the download directory of the chapters' manga.
+     */
+    private suspend fun findChapterDirs(chapters: List<Chapter>, mangaDir: UniFile): Map<Long, UniFile> {
+        val isDocumentTree = mangaDir.uri.scheme == ContentResolver.SCHEME_CONTENT
+        if (isDocumentTree && chapters.size >= LIST_CHAPTER_DIRS_MIN_CHAPTERS) {
+            val chapterDirs = mangaDir.listFiles().orEmpty()
+                .filter { it.name != null }
+                .associateByTo(sortedMapOf(String.CASE_INSENSITIVE_ORDER)) { it.name!! }
+            return chapters
+                .mapNotNull { chapter -> chapter.findDir { chapterDirs[it] }?.let { chapter.id to it } }
+                .toMap()
         }
+        return coroutineScope {
+            chapters
+                .map { chapter ->
+                    async(chapterDirLookupDispatcher) { chapter.findDir(mangaDir::findFile)?.let { chapter.id to it } }
+                }
+                .awaitAll()
+                .filterNotNull()
+                .toMap()
+        }
+    }
+
+    private fun Chapter.findDir(find: (String) -> UniFile?): UniFile? {
+        return getValidChapterDirNames(name, scanlator, url).firstNotNullOfOrNull(find)
     }
 
     /**
@@ -169,44 +230,20 @@ class DownloadProvider(
         disallowNonAsciiFilenames: Boolean = libraryPreferences.disallowNonAsciiFilenames.get(),
         enableChapterNameHash: Boolean = libraryPreferences.enableChapterNameHash.get(),
     ): String {
-        return buildString {
-            if (!chapterScanlator.isNullOrBlank()) {
-                append(chapterScanlator + "_")
-            }
-
-            // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
-            append(
-                DiskUtil.buildValidFilename(
-                    sanitizeChapterName(chapterName),
-                    DiskUtil.MAX_FILE_NAME_BYTES - 11,
-                    disallowNonAsciiFilenames,
-                ),
-            )
-            if (enableChapterNameHash) {
-                append("_${md5(chapterUrl).take(6)}")
-            }
-        }
+        return ChapterDirNameParts(chapterName, chapterScanlator, chapterUrl)
+            .dirName(disallowNonAsciiFilenames, enableChapterNameHash)
     }
 
     /**
      * Returns list of names that might have been previously used as
      * the directory name for a chapter.
      * Add to this list if naming pattern ever changes.
-     *
-     * @param chapterName the name of the chapter to query.
-     * @param chapterScanlator scanlator of the chapter to query.
-     * @param chapterUrl url of the chapter to query.
      */
-    private fun getLegacyChapterDirNames(
-        chapterName: String,
-        chapterScanlator: String?,
-        chapterUrl: String,
-    ): Set<String> {
-        val sanitizedChapterName = sanitizeChapterName(chapterName)
+    private fun getLegacyChapterDirNames(parts: ChapterDirNameParts): Set<String> {
         val chapterNameV1 = DiskUtil.buildValidFilename(
             when {
-                !chapterScanlator.isNullOrBlank() -> "${chapterScanlator}_$sanitizedChapterName"
-                else -> sanitizedChapterName
+                !parts.chapterScanlator.isNullOrBlank() -> "${parts.chapterScanlator}_${parts.chapterName}"
+                else -> parts.chapterName
             },
         )
 
@@ -217,31 +254,30 @@ class DownloadProvider(
         val booleanPairPermutation = listOf(false to false, false to true, true to false, true to true)
         val othersChapterDirNames = booleanPairPermutation
             .map { (disallowNonAsciiFilenames, enableChapterNameHash) ->
-                getChapterDirName(
-                    chapterName,
-                    chapterScanlator,
-                    chapterUrl,
-                    disallowNonAsciiFilenames,
-                    enableChapterNameHash,
-                )
+                parts.dirName(disallowNonAsciiFilenames, enableChapterNameHash)
             }
+        val splitChapterDirNames = booleanPairPermutation
+            .map { (disallowNonAsciiFilenames, enableChapterNameHash) ->
+                parts.splitDirName(disallowNonAsciiFilenames, enableChapterNameHash, sanitizeScanlator = true)
+            }
+
+        // Scanlators weren't sanitized for a while. One with a "/" nested its folder, so it was never found anyway.
+        val scanlator = parts.chapterScanlator
+        val unsanitizedScanlatorChapterDirNames = if (scanlator != null && '/' !in scanlator) {
+            booleanPairPermutation.map { (disallowNonAsciiFilenames, enableChapterNameHash) ->
+                parts.splitDirName(disallowNonAsciiFilenames, enableChapterNameHash, sanitizeScanlator = false)
+            }
+        } else {
+            emptyList()
+        }
 
         return buildSet {
             // Chapter name without hash (unable to handle duplicate
             // chapter names)
             add(chapterNameV1)
             addAll(othersChapterDirNames)
-        }
-    }
-
-    /**
-     * Return the new name for the chapter (in case it's empty or blank)
-     *
-     * @param chapterName the name of the chapter
-     */
-    private fun sanitizeChapterName(chapterName: String): String {
-        return chapterName.ifBlank {
-            "Chapter"
+            addAll(splitChapterDirNames)
+            addAll(unsanitizedScanlatorChapterDirNames)
         }
     }
 
@@ -256,8 +292,12 @@ class DownloadProvider(
      * @param chapter the domain chapter object.
      */
     fun getValidChapterDirNames(chapterName: String, chapterScanlator: String?, chapterUrl: String): List<String> {
-        val chapterDirName = getChapterDirName(chapterName, chapterScanlator, chapterUrl)
-        val legacyChapterDirNames = getLegacyChapterDirNames(chapterName, chapterScanlator, chapterUrl)
+        val parts = ChapterDirNameParts(chapterName, chapterScanlator, chapterUrl)
+        val chapterDirName = parts.dirName(
+            disallowNonAscii = libraryPreferences.disallowNonAsciiFilenames.get(),
+            enableHash = libraryPreferences.enableChapterNameHash.get(),
+        )
+        val legacyChapterDirNames = getLegacyChapterDirNames(parts)
 
         return buildList {
             // Folder of images
@@ -271,5 +311,68 @@ class DownloadProvider(
                 add("$it.cbz")
             }
         }
+    }
+}
+
+private const val LIST_CHAPTER_DIRS_MIN_CHAPTERS = 50
+
+private const val CHAPTER_DIR_LOOKUP_PARALLELISM = 8
+
+private val chapterDirLookupDispatcher = Dispatchers.IO.limitedParallelism(CHAPTER_DIR_LOOKUP_PARALLELISM)
+
+/**
+ * The parts of a chapter's directory name, each computed once however many name variations are built from them.
+ */
+private class ChapterDirNameParts(chapterName: String, val chapterScanlator: String?, private val chapterUrl: String) {
+
+    /** The chapter name, or a placeholder when it's blank. */
+    val chapterName = chapterName.ifBlank { "Chapter" }
+
+    private val hashSuffix by lazy(LazyThreadSafetyMode.NONE) { "_${md5(chapterUrl).take(6)}" }
+
+    private val sanitizedScanlator by lazy(LazyThreadSafetyMode.NONE) {
+        chapterScanlator?.let { DiskUtil.buildValidFilename(it) }
+    }
+
+    private val validDirNames = arrayOfNulls<String>(2)
+
+    private val validChapterNames = arrayOfNulls<String>(2)
+
+    fun dirName(disallowNonAscii: Boolean, enableHash: Boolean): String {
+        val index = if (disallowNonAscii) 1 else 0
+        val dirName = validDirNames[index]
+            // The scanlator and the name are made valid together, as every version before 0.21.0 did
+            ?: DiskUtil.buildValidFilename(
+                if (chapterScanlator.isNullOrBlank()) chapterName else "${chapterScanlator}_$chapterName",
+                // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
+                DiskUtil.MAX_FILE_NAME_BYTES - 11,
+                disallowNonAscii,
+            )
+                .also { validDirNames[index] = it }
+        return if (enableHash) dirName + hashSuffix else dirName
+    }
+
+    /**
+     * The name 0.21.0 and 0.21.1 gave a chapter, which made only the chapter name valid and so differs for names
+     * starting with a space or dot, long names, and non-ASCII scanlators.
+     */
+    fun splitDirName(disallowNonAscii: Boolean, enableHash: Boolean, sanitizeScanlator: Boolean): String {
+        return buildString {
+            if (!chapterScanlator.isNullOrBlank()) {
+                // A "/" in the scanlator would otherwise nest the chapter in a folder of its own
+                append(if (sanitizeScanlator) sanitizedScanlator else chapterScanlator)
+                append("_")
+            }
+            append(validChapterName(disallowNonAscii))
+            if (enableHash) append(hashSuffix)
+        }
+    }
+
+    private fun validChapterName(disallowNonAscii: Boolean): String {
+        val index = if (disallowNonAscii) 1 else 0
+        return validChapterNames[index]
+            // Subtract 7 bytes for hash and underscore, 4 bytes for .cbz
+            ?: DiskUtil.buildValidFilename(chapterName, DiskUtil.MAX_FILE_NAME_BYTES - 11, disallowNonAscii)
+                .also { validChapterNames[index] = it }
     }
 }

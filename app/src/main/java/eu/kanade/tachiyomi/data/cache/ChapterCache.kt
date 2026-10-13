@@ -36,17 +36,20 @@ class ChapterCache(
 ) {
 
     /** Cache class used for cache management. */
-    private val diskCache = DiskLruCache.open(
-        File(context.cacheDir, "chapter_disk_cache"),
-        PARAMETER_APP_VERSION,
-        PARAMETER_VALUE_COUNT,
-        PARAMETER_CACHE_SIZE,
-    )
+    private val diskCache by lazy {
+        DiskLruCache.open(
+            File(context.cacheDir, "chapter_disk_cache"),
+            PARAMETER_APP_VERSION,
+            PARAMETER_VALUE_COUNT,
+            PARAMETER_CACHE_SIZE,
+        )
+    }
 
     /**
      * Returns directory of cache.
      */
-    private val cacheDir: File = diskCache.directory
+    private val cacheDir: File
+        get() = diskCache.directory
 
     /**
      * Returns real size of directory.

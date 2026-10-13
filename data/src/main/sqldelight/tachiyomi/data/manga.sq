@@ -2,6 +2,7 @@ import eu.kanade.tachiyomi.source.model.UpdateStrategy;
 import kotlin.Boolean;
 import kotlin.String;
 import kotlin.collections.List;
+import kotlin.time.Instant;
 import kotlinx.serialization.json.JsonObject;
 
 CREATE TABLE manga(
@@ -17,14 +18,14 @@ CREATE TABLE manga(
     remote_cover TEXT,
     remote_update_strategy INTEGER AS UpdateStrategy NOT NULL,
     remote_memo BLOB AS JsonObject NOT NULL,
-    user_favorite_at INTEGER,
+    user_favorite_at INTEGER AS Instant,
     user_notes TEXT NOT NULL,
     user_reader_flags INTEGER NOT NULL,
     user_chapter_flags INTEGER NOT NULL,
-    state_chapter_last_update INTEGER,
-    state_chapter_next_update INTEGER,
+    state_chapter_last_update INTEGER AS Instant,
+    state_chapter_next_update INTEGER AS Instant,
     state_chapter_fetch_interval INTEGER NOT NULL,
-    state_cover_last_modified INTEGER NOT NULL,
+    state_cover_last_modified INTEGER AS Instant,
     state_initialized INTEGER AS Boolean NOT NULL,
     UNIQUE(source_id, remote_url)
 );
@@ -130,7 +131,11 @@ SELECT
 FROM manga M
 WHERE M.user_favorite_at IS NOT NULL
 AND M.id != :id
-AND (lower(M.remote_title) LIKE '%' || lower(:remoteTitle) || '%' OR M.id IN (SELECT manga_id FROM track_dupes));
+-- A blank title would match every title
+AND (
+    (trim(:remoteTitle) != '' AND lower(M.remote_title) LIKE '%' || lower(:remoteTitle) || '%')
+    OR M.id IN (SELECT manga_id FROM track_dupes)
+);
 
 getUpcomingManga:
 SELECT
