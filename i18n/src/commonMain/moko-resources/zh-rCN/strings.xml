@@ -755,7 +755,6 @@
     <string name="theme_nord">Nord</string>
     <string name="manga_interval_expected_update_soon">即将更新</string>
     <string name="ext_revoke_trust">撤销已信任的未知插件</string>
-    <string name="action_open_repo">打开图源仓库</string>
     <string name="pref_webtoon_disable_zoom_out">禁用缩小</string>
     <string name="action_add_anyway">依然添加</string>
     <string name="pref_display_profile">自定义校色文件</string>
