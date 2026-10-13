@@ -547,7 +547,7 @@
     <string name="not_installed">Не е инсталиран</string>
     <string name="rotation_reverse_portrait">Обърнат портрет</string>
     <string name="ext_info_language">Език</string>
-    <string name="crash_screen_title">Случи се неочаквана грешка</string>
+    <string name="crash_screen_title">Опаа!</string>
     <string name="auto_download_while_reading">Автоматично изтегляне при четене</string>
     <string name="description_placeholder">Няма описание</string>
     <string name="empty_backup_error">Няма заглавия в библиотеката за резервно копие</string>
