@@ -17,6 +17,7 @@ import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
+import mihon.domain.source.model.sourceId
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.isLocal
 
@@ -42,18 +43,12 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
                             chapterScanlator = it.scanlator,
                             chapterUrl = it.url,
                             mangaTitle = manga.title,
-                            sourceId = manga.source,
+                            sourceId = it.sourceId(manga.source),
                         )
                     } ?: false,
                 isGoingToChapterOnDisk = goingToChapter?.let {
                     {
-                        downloadManager.isChapterDownloadedOnDisk(
-                            chapterName = it.name,
-                            chapterScanlator = it.scanlator,
-                            chapterUrl = it.url,
-                            mangaTitle = manga.title,
-                            source = source,
-                        )
+                        downloadManager.isChapterDownloadedOnDisk(it, manga)
                     }
                 },
             )

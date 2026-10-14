@@ -278,7 +278,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                                     manga,
                                 ) {
                                     try {
-                                        val newChapters = updateManga(manga, fetchWindow)
+                                        val newChapters = updateManga(manga, fetchWindow, failedUpdates)
                                             .sortedByDescending { it.sourceOrder }
 
                                         if (newChapters.isNotEmpty()) {
@@ -348,7 +348,11 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
      * @param manga the manga to update.
      * @return a pair of the inserted and removed chapters.
      */
-    private suspend fun updateManga(manga: Manga, fetchWindow: ClosedRange<Instant>): List<Chapter> {
+    private suspend fun updateManga(
+        manga: Manga,
+        fetchWindow: ClosedRange<Instant>,
+        failedUpdates: MutableList<Pair<Manga, String?>>,
+    ): List<Chapter> {
         val source = sourceManager.getOrStub(manga.source)
 
         val update = updateMangaFromRemote(
@@ -360,6 +364,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
         )
             .getOrThrow()
 
+        if (update.sourceFailures.isNotEmpty()) failedUpdates.add(manga to update.sourceFailures.joinToString("\n"))
         return if (update.manga.favorite) update.newChapters else emptyList()
     }
 

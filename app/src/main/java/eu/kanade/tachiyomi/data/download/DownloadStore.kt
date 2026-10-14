@@ -6,10 +6,15 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import mihon.domain.source.model.origins
+import mihon.domain.source.model.sourceId
+import mihon.domain.source.model.withAssignedSource
+import mihon.domain.source.service.ChapterSourceRecovery
 import tachiyomi.domain.chapter.interactor.GetChapter
+import tachiyomi.domain.chapter.model.ChapterRemoteUpdate
+import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
@@ -25,6 +30,7 @@ class DownloadStore(
     private val json: Json,
     private val getManga: GetManga,
     private val getChapter: GetChapter,
+    private val chapterRepository: ChapterRepository,
 ) {
 
     /**
@@ -91,7 +97,7 @@ class DownloadStore(
     /**
      * Returns the list of downloads to restore. It should be called in a background thread.
      */
-    suspend fun restore(): List<Download> {
+    suspend fun restore(queuedChapterIds: Set<Long> = emptySet()): List<Download> {
         val objs = preferences.all
             .mapNotNull { it.value as? String }
             .mapNotNull { deserialize(it) }
@@ -100,18 +106,59 @@ class DownloadStore(
         val downloads = mutableListOf<Download>()
         if (objs.isNotEmpty()) {
             val cachedManga = mutableMapOf<Long, Manga?>()
-            for ((mangaId, chapterId) in objs) {
-                val manga = cachedManga.getOrPut(mangaId) {
-                    getManga.await(mangaId)
-                } ?: continue
-                val source = sourceManager.get(manga.source) as? HttpSource ?: continue
-                val chapter = getChapter.await(chapterId) ?: continue
-                downloads.add(Download(source, manga, chapter))
+            val installed = sourceManager.getOnlineSources().associateBy { it.id }
+            for (obj in objs) {
+                if (obj.chapterId in queuedChapterIds) continue
+                val manga = cachedManga.getOrPut(obj.mangaId) {
+                    getManga.await(obj.mangaId)
+                }
+                val original = getChapter.await(obj.chapterId)
+                if (manga == null || original == null) {
+                    preferences.edit { remove(obj.chapterId.toString()) }
+                    continue
+                }
+                val chapter = if (original.sourceId(manga.source) in installed) {
+                    if (original.origins().isEmpty()) {
+                        original
+                    } else {
+                        original.copy(
+                            memo = original.memo.withAssignedSource(original.sourceId(manga.source)),
+                        )
+                    }
+                } else {
+                    ChapterSourceRecovery.recover(original, installed.keys, obj.attemptedSourceIds) ?: continue
+                }
+                val source = installed[chapter.sourceId(manga.source)] ?: continue
+                if (chapter.memo != original.memo) {
+                    chapterRepository.updateFromRemote(
+                        emptyList(),
+                        emptyList(),
+                        listOf(
+                            ChapterRemoteUpdate(
+                                chapter.id,
+                                chapter.name,
+                                chapter.scanlator,
+                                chapter.chapterNumber,
+                                chapter.dateUpload,
+                                chapter.sourceOrder,
+                                chapter.memo,
+                            ),
+                        ),
+                    )
+                }
+                downloads.add(
+                    Download(source, manga, chapter).apply {
+                        attemptedSourceIds = obj.attemptedSourceIds
+                        if (obj.failed && chapter.sourceId(manga.source) == original.sourceId(manga.source)) {
+                            status = Download.State.ERROR
+                        }
+                    },
+                )
             }
         }
 
-        // Clear the store, downloads will be added again immediately.
-        clear()
+        // Unrestorable entries stay persisted until an extension is available again.
+
         return downloads
     }
 
@@ -121,7 +168,13 @@ class DownloadStore(
      * @param download the download to serialize.
      */
     private fun serialize(download: Download): String {
-        val obj = DownloadObject(download.manga.id, download.chapter.id, counter++)
+        val obj = DownloadObject(
+            download.manga.id,
+            download.chapter.id,
+            counter++,
+            download.attemptedSourceIds,
+            download.status == Download.State.ERROR,
+        )
         return json.encodeToString(obj)
     }
 
@@ -147,4 +200,10 @@ class DownloadStore(
  * @param order the order of the download in the queue.
  */
 @Serializable
-private data class DownloadObject(val mangaId: Long, val chapterId: Long, val order: Int)
+private data class DownloadObject(
+    val mangaId: Long,
+    val chapterId: Long,
+    val order: Int,
+    val attemptedSourceIds: Set<Long> = emptySet(),
+    val failed: Boolean = false,
+)

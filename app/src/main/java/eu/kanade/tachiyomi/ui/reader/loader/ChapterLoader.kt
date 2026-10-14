@@ -13,10 +13,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mihon.core.archive.archiveReader
 import mihon.core.archive.epubReader
+import mihon.domain.source.model.sourceId
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.LocalSource
 import tachiyomi.source.local.io.Format
@@ -33,6 +36,8 @@ class ChapterLoader(
     private val canLoadAhead: () -> Boolean,
     private val manga: Manga,
     private val source: Source,
+    private val sourceManager: SourceManager,
+    private val getChapter: GetChapter,
 ) {
 
     /**
@@ -83,7 +88,10 @@ class ChapterLoader(
      * Returns the page loader to use for this [chapter].
      */
     private suspend fun getPageLoader(chapter: ReaderChapter): PageLoader {
+        val latest = getChapter.await(chapter.chapter.id)
+        if (latest != null) chapter.update { it.copy(memo = latest.memo) }
         val dbChapter = chapter.chapter
+        val source = sourceManager.getOrStub(dbChapter.sourceId(manga.source))
         val isDownloaded = downloadManager.isChapterDownloadedOnDisk(
             dbChapter.name,
             dbChapter.scanlator,

@@ -47,6 +47,9 @@ fun GlobalSearchToolbar(
     onlyShowHasResults: Boolean,
     onToggleResults: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
+    onApply: (() -> Unit)? = null,
+    onClear: (() -> Unit)? = null,
+    selectionActionsEnabled: Boolean = true,
 ) {
     Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
         Box {
@@ -57,6 +60,16 @@ fun GlobalSearchToolbar(
                 onClickCloseSearch = navigateUp,
                 navigateUp = navigateUp,
                 scrollBehavior = scrollBehavior,
+                searchEnabled = onApply == null,
+                actions = {
+                    if (onApply != null) {
+                        LinkedSourceSelectionActions(
+                            onApply = onApply,
+                            onClear = { onClear?.invoke() },
+                            enabled = selectionActionsEnabled,
+                        )
+                    }
+                },
             )
             if (progress in 1..<total) {
                 LinearProgressIndicator(

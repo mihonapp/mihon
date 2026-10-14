@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
+import mihon.core.common.extensions.toJsonObject
+import mihon.domain.source.model.storageSources
 import okio.buffer
 import okio.gzip
 import okio.sink
@@ -98,7 +100,7 @@ class BackupCreator(
                     val sourceIds = mutableSetOf<Long>()
                     backupManga.collect { manga ->
                         writer.writeEntry(manga)
-                        sourceIds += manga.source
+                        sourceIds += manga.memo.toJsonObject().storageSources(manga.source)
                     }
                     writer.writeMetadata(
                         Backup(
