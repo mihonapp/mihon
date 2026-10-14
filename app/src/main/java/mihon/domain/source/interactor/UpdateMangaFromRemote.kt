@@ -9,9 +9,13 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.domain.source.model.linkedSources
+import mihon.domain.source.model.origins
+import mihon.domain.source.model.withoutLinkedSources
 import mihon.domain.source.models.RemoteMangaUpdate
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
@@ -34,6 +38,7 @@ class UpdateMangaFromRemote(
     private val coverCache: CoverCache,
     private val libraryPreferences: LibraryPreferences,
     private val downloadManager: DownloadManager,
+    private val fetchLinkedChapters: FetchLinkedChapters,
 ) {
     suspend operator fun invoke(
         manga: Manga,
@@ -49,6 +54,7 @@ class UpdateMangaFromRemote(
             fetchDetails = fetchDetails,
             fetchChapters = fetchChapters,
             manualFetch = manualFetch,
+            fetchWindow = fetchWindow,
         )
     }
 
@@ -63,24 +69,54 @@ class UpdateMangaFromRemote(
         try {
             val chapters = chapterRepository.getChapterByMangaId(manga.id)
                 .sortedBy { it.sourceOrder }
-            val update = source.getMangaUpdate(
-                manga = manga.toSManga(),
-                chapters = chapters.map(Chapter::toSChapter),
-                fetchDetails = fetchDetails,
-                fetchChapters = fetchChapters,
-            )
-            awaitUpdateFromSource(manga, update.manga, fetchDetails, manualFetch)
-            val newChapters = syncChaptersWithSource.await(
-                rawSourceChapters = update.chapters,
-                manga = manga,
-                source = source,
-                manualFetch = manualFetch,
-                fetchWindow = fetchWindow,
-            )
+            val linked = manga.linkedSources().isNotEmpty() || chapters.any { it.origins().isNotEmpty() }
+            val failures = mutableListOf<String>()
+            val remoteChapters = if (linked && fetchChapters) {
+                val result = fetchLinkedChapters(manga, chapters)
+                failures += result.failures
+                if (fetchDetails) {
+                    try {
+                        val update = source.getMangaUpdate(
+                            manga.toSManga().also { it.memo = manga.memo.withoutLinkedSources() },
+                            emptyList(),
+                            fetchDetails = true,
+                            fetchChapters = false,
+                        )
+                        awaitUpdateFromSource(manga, update.manga, true, manualFetch)
+                    } catch (e: Exception) {
+                        if (e is CancellationException) throw e
+                        failures += "${source.name}: ${e.message.orEmpty()}"
+                    }
+                }
+                result.chapters
+            } else {
+                val update = source.getMangaUpdate(
+                    manga = manga.toSManga().also { it.memo = manga.memo.withoutLinkedSources() },
+                    chapters = if (linked) emptyList() else chapters.map(Chapter::toSChapter),
+                    fetchDetails = fetchDetails,
+                    fetchChapters = fetchChapters,
+                )
+                awaitUpdateFromSource(manga, update.manga, fetchDetails, manualFetch)
+                update.chapters
+            }
+            val newChapters = if (fetchChapters) {
+                syncChaptersWithSource.await(
+                    rawSourceChapters = remoteChapters,
+                    manga = manga,
+                    source = source,
+                    manualFetch = manualFetch,
+                    fetchWindow = fetchWindow,
+                )
+            } else {
+                emptyList()
+            }
             val updatedManga = mangaRepository.getMangaById(manga.id)
 
-            Result.success(RemoteMangaUpdate(manga = updatedManga, newChapters = newChapters))
+            Result.success(
+                RemoteMangaUpdate(manga = updatedManga, newChapters = newChapters, sourceFailures = failures),
+            )
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             logcat(LogPriority.ERROR, e)
             Result.failure(e)
         }
@@ -136,7 +172,7 @@ class UpdateMangaFromRemote(
                 status = remoteManga.status.toLong(),
                 updateStrategy = remoteManga.update_strategy,
                 initialized = localManga.initialized || fetchDetails,
-                memo = remoteManga.memo,
+                memo = remoteManga.memo.withoutLinkedSources(),
             ),
         )
         if (success && title != null) {

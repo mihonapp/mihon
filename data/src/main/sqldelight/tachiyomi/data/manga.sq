@@ -310,3 +310,6 @@ insertNetworkManga {
     WHERE source_id = :sourceId
     AND remote_url = :remoteUrl;
 }
+
+updateMemo:
+UPDATE manga SET remote_memo = :memo WHERE id = :id;

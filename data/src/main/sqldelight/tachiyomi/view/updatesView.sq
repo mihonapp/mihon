@@ -17,7 +17,8 @@ SELECT
     manga.state_cover_last_modified AS coverLastModified,
     chapter.remote_date_upload AS dateUpload,
     chapter.state_date_fetch AS dateFetch,
-    excluded_scanlator.scanlator AS excludedScanlator
+    excluded_scanlator.scanlator AS excludedScanlator,
+    chapter.remote_memo AS chapterMemo
 FROM manga JOIN chapter
 ON manga.id = chapter.manga_id
 LEFT JOIN excluded_scanlator
@@ -31,7 +32,7 @@ getRecentUpdatesWithFilters:
 SELECT
     mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
     lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
-    excludedScanlator
+    excludedScanlator, chapterMemo
 FROM updatesView
 WHERE dateUpload > :after
 AND (:read IS NULL OR read = :read)
@@ -77,7 +78,7 @@ getReadUpdates:
 SELECT
     mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
     lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
-    excludedScanlator
+    excludedScanlator, chapterMemo
 FROM updatesView
 WHERE read = 1
 AND dateUpload > :after
@@ -88,7 +89,7 @@ getUnreadUpdates:
 SELECT
     mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
     lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
-    excludedScanlator
+    excludedScanlator, chapterMemo
 FROM updatesView
 WHERE read = 0
 AND dateUpload > :after

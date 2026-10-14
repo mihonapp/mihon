@@ -4,6 +4,8 @@ import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.source.Source
+import mihon.core.common.extensions.toJsonObject
+import mihon.domain.source.model.storageSources
 import tachiyomi.domain.source.service.SourceManager
 
 @Inject
@@ -13,7 +15,7 @@ class SourcesBackupCreator(
 
     suspend operator fun invoke(mangas: List<BackupManga>): List<BackupSource> {
         return mangas
-            .map(BackupManga::source)
+            .flatMap { it.memo.toJsonObject().storageSources(it.source) }
             .distinct()
             .map { sourceManager.getOrStub(it).toBackupSource() }
     }

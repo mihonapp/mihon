@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.saveTo
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
+import mihon.domain.source.model.origins
 import okhttp3.Response
 import okio.buffer
 import okio.sink
@@ -224,7 +225,8 @@ class ChapterCache(
     }
 
     private fun getKey(chapter: Chapter): String {
-        return "${chapter.mangaId}${chapter.url}"
+        return "${chapter.mangaId}${chapter.url}" +
+            chapter.origins().firstOrNull()?.let { "${it.sourceId}:${it.url}" }.orEmpty()
     }
 }
 
