@@ -171,9 +171,10 @@ class BackupCreator(
         private const val MAX_AUTO_BACKUPS: Int = 4
         private val FILENAME_REGEX = """${BuildConfig.APPLICATION_ID}_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}.tachibk""".toRegex()
 
-        fun getFilename(): String {
+        fun getFilename(officialCompatibility: Boolean = false): String {
             val date = SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.ENGLISH).format(Date())
-            return "${BuildConfig.APPLICATION_ID}_$date.tachibk"
+            val suffix = if (officialCompatibility) "_official" else ""
+            return "${BuildConfig.APPLICATION_ID}_$date$suffix.tachibk"
         }
     }
 }

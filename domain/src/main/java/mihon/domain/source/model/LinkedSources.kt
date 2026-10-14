@@ -98,6 +98,8 @@ fun JsonObject.withChapterOrigins(origins: List<ChapterOrigin>): JsonObject = Js
     this + (CHAPTER_ORIGINS_KEY to sourceJson.encodeToJsonElement(origins)),
 )
 
+fun JsonObject.withoutChapterOrigins(): JsonObject = JsonObject(this - CHAPTER_ORIGINS_KEY - ASSIGNED_SOURCE_KEY)
+
 /** An origin describes an available version; it becomes assigned only when queued for download. */
 fun JsonObject.assignedSourceId(): Long? = (this[ASSIGNED_SOURCE_KEY] as? JsonPrimitive)?.longOrNull
 

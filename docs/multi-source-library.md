@@ -36,3 +36,13 @@ Refreshes query confirmed sources with bounded concurrency and timeouts. A faile
 Run `:app:compileDebugKotlin`, `:domain:testDebugUnitTest`, and Spotless checks for app, domain, and data. Merger and planner tests cover overlap, missing chapters, decimals, ambiguous chapters, preserved identities, metadata round trips, arbitrary selected batches, queue load, partial progress, unavailable sources, bounded recovery attempts, retained origins, missing extensions, and cooldown expiry.
 
 Device acceptance checks still need real extensions: add through both Browse paths, confirm two overlapping sources, download an arbitrary subset concurrently, read across source boundaries, fail one source, restart a queued download, and round-trip a backup. Also verify an existing single-source title and cancellation of source selection.
+
+## Returning to official Mihon
+
+In **Settings → Data and storage → Create backup**, enable **Compatible with official Mihon**. This export splits each linked title into ordinary library entries, one per confirmed source, and replaces internal chapter identities with that source's real chapter URLs and metadata. Read status and bookmarks transfer to every available equivalent chapter. Partial-page progress and reading history stay with the currently routed edition; page positions are not copied between different editions. Categories, tracking, notes, and reader settings are retained. This does not change the current library.
+
+Normal and automatic backups still retain the complete multi-source setup. Keep one before returning to official Mihon: compatible exports do not retain links or per-link scanlator selections. Official Mihon will treat the exported sources as independent titles; review its scanlator filters after refreshing. Install the relevant extensions before restoring. Downloaded image files are not included, and the fork's download folders may not match official chapter names and URL hashes; redownload those chapters in official Mihon.
+
+If a protected chapter retains an origin whose source has since been unlinked, compatibility export reports an error rather than dropping its progress or guessing the remote title URL. Relink that title to provide its source URL, or keep a normal backup. Missing chapter origins likewise require a source refresh before exporting.
+
+Restore the compatible backup through official Mihon's backup screen. This is a backup migration, not support for opening the fork's newer live database in an older app or bypassing Android signing requirements. Exporting and restoring use the existing protobuf format; ordinary single-source backups and older queued backup-worker options continue to work.

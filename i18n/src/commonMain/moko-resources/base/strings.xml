@@ -1123,4 +1123,6 @@
     <string name="linked_source_scanlator_single_chapter">Ch. %1$s</string>
     <string name="linked_source_scanlator_chapter_range">Ch. %1$s–%2$s</string>
     <string name="linked_sources_clear_selections">Clear selections</string>
+    <string name="backup_official_compatibility">Compatible with official Mihon</string>
+    <string name="backup_official_compatibility_summary">Splits linked titles into separate entries per source. Preserves read status and bookmarks; partial-page progress stays with the edition being read. Downloaded pages are not included. Keep a normal backup to retain source links and scanlator selections.</string>
 </resources>

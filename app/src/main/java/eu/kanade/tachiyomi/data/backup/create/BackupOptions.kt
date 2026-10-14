@@ -14,6 +14,7 @@ data class BackupOptions(
     val extensionStores: Boolean = true,
     val sourceSettings: Boolean = true,
     val privateSettings: Boolean = false,
+    val officialCompatibility: Boolean = false,
 ) {
 
     fun asBooleanArray() = booleanArrayOf(
@@ -27,11 +28,21 @@ data class BackupOptions(
         extensionStores,
         sourceSettings,
         privateSettings,
+        officialCompatibility,
     )
 
     fun canCreate() = libraryEntries || categories || appSettings || extensionStores || sourceSettings
 
     companion object {
+        val compatibilityOptions = listOf(
+            Entry(
+                label = MR.strings.backup_official_compatibility,
+                getter = BackupOptions::officialCompatibility,
+                setter = { options, enabled -> options.copy(officialCompatibility = enabled) },
+                enabled = { it.libraryEntries },
+            ),
+        )
+
         val libraryOptions = listOf(
             Entry(
                 label = MR.strings.manga,
@@ -104,6 +115,7 @@ data class BackupOptions(
             extensionStores = array[7],
             sourceSettings = array[8],
             privateSettings = array[9],
+            officialCompatibility = array.getOrElse(10) { false },
         )
     }
 
