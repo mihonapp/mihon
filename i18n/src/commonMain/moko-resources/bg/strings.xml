@@ -790,4 +790,5 @@
     <string name="file_null_uri_error">Не е избран файл</string>
     <string name="update_check_skip">Пропусни тази версия</string>
     <string name="update_check_skip_title">Пропусни%s?</string>
+    <string name="tracked_privately">Проследявани в поверителен режим</string>
 </resources>
