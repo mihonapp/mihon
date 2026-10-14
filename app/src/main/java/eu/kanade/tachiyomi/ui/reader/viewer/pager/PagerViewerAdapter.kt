@@ -54,7 +54,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         // Add previous chapter pages and transition
         chapters.prevChapter?.pages?.let(newItems::addAll)
 
-        // Skip transition page if the chapter is loaded & current page is not a transition page
+        // Show transitions for chapter gaps, forced transitions, or unloaded adjacent chapters.
         if (prevHasMissingChapters || forceTransition || chapters.prevChapter?.state !is ReaderChapter.State.Loaded) {
             newItems.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
         }
