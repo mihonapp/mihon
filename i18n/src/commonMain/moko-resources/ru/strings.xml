@@ -949,4 +949,8 @@
     <string name="pref_continuous_minwidth">Минимальная ширина</string>
     <string name="pref_continuous_gap">Зазор</string>
     <string name="pref_allowed_content_warnings">Разрешенное предупреждение об контенте</string>
+    <string name="app_migrating_summary">Подготовка после обновления. Это может занять несколько минут, поэтому не закрывайте приложение.</string>
+    <string name="pref_enable_chapter_name_hash">Включить суффикс хэша в название главы</string>
+    <string name="pref_enable_chapter_name_hash_details">Обеспечивает добавление уникального хэш-суффикса к названиям глав во избежание конфликтов имён. Если эта функция отключена, загрузка глав с одинаковыми названиями будет невозможна.</string>
+    <string name="ext_not_loaded_details">Почему это не загрузилось</string>
 </resources>
