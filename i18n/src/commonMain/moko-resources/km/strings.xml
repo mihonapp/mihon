@@ -137,8 +137,6 @@
     <string name="lock_when_idle">ចាក់សោនៅពេលមិនធ្វើអ្វី</string>
     <string name="lock_always">គ្រប់ពេល</string>
     <string name="secure_screen">ការពារអេក្រង់</string>
-    <string name="pref_category_nsfw_content">ប្រភពមិនល្អ(១៨+)</string>
-    <string name="pref_show_nsfw_source">បង្ហាញនៅក្នុងបញ្ចីប្រភព</string>
     <string name="relative_time_today">ថ្ងៃនេះ</string>
     <string name="pref_category_display">ការបង្ហាញ</string>
     <string name="pref_library_columns">ធាតុក្នុងមួយជួ</string>
@@ -161,7 +159,6 @@
     <string name="update_12hour">រាល់១២ម៉ោងម្ដង</string>
     <string name="secure_screen_summary">ការពារអេក្រង់លាក់contentរបស់កម្មវិធីនៅពេលswitchingកម្មីធីនិងប្លុកscreenshots</string>
     <string name="lock_never">មិនដែល</string>
-    <string name="parental_controls_info">ការសម្រេចចិត្តនេះមិនបិទការflagនៃប្រភពទៅលើរឿង(១៨+)នៅក្នុងកម្មវិធីឡើយ។</string>
     <string name="update_24hour">រាល់ថ្ងៃ</string>
     <string name="pref_category_library_update">ការធ្វើបច្ចុប្បន្នភាពសកល</string>
     <string name="title">ចំណងជើង</string>
@@ -180,7 +177,6 @@
     <string name="getting_started_guide">ម​គ្គុ​ទេស​ក៍​</string>
     <string name="browse">ស្វែងរក</string>
     <string name="all">ទាំងអស់</string>
-    <string name="update_check_notification_download_in_progress">កំពុងទាញយក…</string>
     <string name="label_stats">ស្ថិតិ</string>
     <string name="label_downloaded">បានទាញយក</string>
     <string name="information_cloudflare_bypass_failure">បរាជ័យក្នុងការឆ្លងកាត់Cloudflare</string>

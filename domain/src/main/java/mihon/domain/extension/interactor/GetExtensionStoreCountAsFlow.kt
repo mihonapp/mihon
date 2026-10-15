@@ -1,8 +1,9 @@
 package mihon.domain.extension.interactor
 
-import kotlinx.serialization.json.Json
+import dev.zacsweers.metro.Inject
 import mihon.domain.extension.repository.ExtensionStoreRepository
 
+@Inject
 class GetExtensionStoreCountAsFlow(
     private val repository: ExtensionStoreRepository,
 ) {

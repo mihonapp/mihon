@@ -16,15 +16,16 @@ import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import tachiyomi.core.common.Constants
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun LockedWidget(
     foreground: ColorProvider,
     modifier: GlanceModifier = GlanceModifier,
 ) {
-    val intent = Intent(LocalContext.current, Class.forName(Constants.MAIN_ACTIVITY)).apply {
+    val context = LocalContext.current
+    val intent = Intent(context, Class.forName(Constants.MAIN_ACTIVITY)).apply {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
     Box(
@@ -34,7 +35,7 @@ fun LockedWidget(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = stringResource(MR.strings.appwidget_unavailable_locked),
+            text = context.stringResource(MR.strings.appwidget_unavailable_locked),
             style = TextStyle(
                 color = foreground,
                 fontSize = 12.sp,

@@ -1,6 +1,7 @@
 package tachiyomi.domain.library.model
 
 import tachiyomi.domain.manga.model.Manga
+import kotlin.time.Instant
 
 data class LibraryManga(
     val manga: Manga,
@@ -8,9 +9,9 @@ data class LibraryManga(
     val totalChapters: Long,
     val readCount: Long,
     val bookmarkCount: Long,
-    val latestUpload: Long,
-    val chapterFetchedAt: Long,
-    val lastRead: Long,
+    val latestUpload: Instant?,
+    val chapterFetchedAt: Instant?,
+    val lastRead: Instant?,
 ) {
     val id: Long = manga.id
 

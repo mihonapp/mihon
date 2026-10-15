@@ -1,8 +1,10 @@
 package tachiyomi.domain.chapter.interactor
 
+import dev.zacsweers.metro.Inject
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.repository.ChapterRepository
 
+@Inject
 class GetChapterByUrlAndMangaId(
     private val chapterRepository: ChapterRepository,
 ) {

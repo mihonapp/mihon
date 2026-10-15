@@ -25,7 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_drag_handle_24dp"
+            app:srcCompat="@drawable/rounded_drag_handle"
             app:tint="?android:attr/textColorHint"
             tools:ignore="ContentDescription" />
 
@@ -96,7 +96,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_overflow_24dp"
+            app:srcCompat="@drawable/rounded_more_vert"
             app:tint="?attr/colorOnBackground" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

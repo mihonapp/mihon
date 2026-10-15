@@ -40,7 +40,7 @@ abstract class BaseSmartSearchEngine<T>(
     ): T? {
         val eligibleManga = supervisorScope {
             queries.map { query ->
-                async(Dispatchers.Default) {
+                async(Dispatchers.IO) {
                     val builtQuery = if (!extraSearchParams.isNullOrBlank()) {
                         "$query $extraSearchParams"
                     } else {

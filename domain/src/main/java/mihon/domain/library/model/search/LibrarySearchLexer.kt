@@ -1,7 +1,5 @@
 package mihon.domain.library.model.search
 
-import kotlin.text.get
-
 object LibrarySearchLexer {
 
     private val regex = Regex(

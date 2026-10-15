@@ -1,9 +1,14 @@
 package mihon.data.extension.service
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.awaitSuccess
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.okio.decodeFromBufferedSource
@@ -20,12 +25,16 @@ import okio.gzip
 import tachiyomi.core.common.util.system.logcat
 import kotlin.coroutines.cancellation.CancellationException
 
+@Inject
+@SingleIn(AppScope::class)
 class ExtensionStoreService(
     private val network: NetworkHelper,
     private val json: Json,
     private val protoBuf: ProtoBuf,
 ) {
-    suspend fun fetch(indexUrl: String): Result<ExtensionStore> {
+    suspend fun fetch(indexUrl: String): Result<ExtensionStore> = withContext(Dispatchers.IO) { fetchStore(indexUrl) }
+
+    private suspend fun fetchStore(indexUrl: String): Result<ExtensionStore> {
         var updatedIndexUrl: String = indexUrl
         return try {
             val response = network.client.newCall(GET(updatedIndexUrl)).awaitSuccess()
@@ -51,7 +60,7 @@ class ExtensionStoreService(
                 }
 
                 if (networkStore is NetworkLegacyExtensionRepo && networkStore.indexV2 != null) {
-                    return fetch(networkStore.indexV2)
+                    return fetchStore(networkStore.indexV2)
                 }
 
                 networkStore.toExtensionStore(updatedIndexUrl)
@@ -67,8 +76,8 @@ class ExtensionStoreService(
         }
     }
 
-    suspend fun getExtensions(store: ExtensionStore): Result<List<Extension.Available>> {
-        return try {
+    suspend fun getExtensions(store: ExtensionStore): Result<List<Extension.Available>> = withContext(Dispatchers.IO) {
+        try {
             val extensions = if (store.extensionListUrl != null) {
                 val response = network.client.newCall(GET(store.extensionListUrl!!)).awaitSuccess()
                 response.body.source().decompressIfGzipped().use { source ->

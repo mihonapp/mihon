@@ -1,6 +1,9 @@
 package mihon.feature.library
 
 import eu.kanade.tachiyomi.ui.library.LibraryItem
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import mihon.domain.library.model.search.AndNode
 import mihon.domain.library.model.search.ComparisonField
 import mihon.domain.library.model.search.ComparisonQueryNode
@@ -12,10 +15,8 @@ import mihon.domain.library.model.search.NotNode
 import mihon.domain.library.model.search.OrNode
 import mihon.domain.library.model.search.QueryNode
 import tachiyomi.source.local.LocalSource
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 import kotlin.math.abs
+import kotlin.time.Instant
 
 fun QueryNode.matches(item: LibraryItem): Boolean {
     return when (this) {
@@ -107,21 +108,21 @@ private fun FieldQueryNode.matches(item: LibraryItem): Boolean {
 private fun ComparisonQueryNode.matches(item: LibraryItem): Boolean {
     val manga = item.libraryManga.manga
 
-    fun compareDates(timestamp: Long, value: String): Boolean? {
+    fun compareDates(date: Instant, value: String): Boolean? {
         val inputDate = runCatching { LocalDate.parse(value) }.getOrNull() ?: return null
-        val mangaDate = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+        val mangaDate = date.toLocalDateTime(TimeZone.currentSystemDefault()).date
         return queryComparator.apply(mangaDate, inputDate)
     }
 
     val match = when (field) {
         ComparisonField.ID -> value.toLongOrNull()?.let { queryComparator.apply(manga.id, it) }
 
-        ComparisonField.DATE_ADDED -> compareDates(manga.dateAdded, value)
+        ComparisonField.DATE_ADDED -> manga.favoriteAt?.let { compareDates(it, value) }
 
         ComparisonField.FETCH_INTERVAL -> value.toIntOrNull()
             ?.let { queryComparator.apply(abs(manga.fetchInterval), it) }
 
-        ComparisonField.NEXT_UPDATE -> compareDates(manga.nextUpdate, value)
+        ComparisonField.NEXT_UPDATE -> manga.nextUpdate?.let { compareDates(it, value) }
 
         ComparisonField.UNREAD -> {
             value.toLongOrNull()?.let {
