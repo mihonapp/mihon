@@ -130,6 +130,8 @@ fun MangaScreen(
     onChapterSelected: (ChapterList.Item, Boolean, Boolean) -> Unit,
     onAllChapterSelected: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
+    openChapterSearch: Boolean = false,
+    onCloseChapterSearch: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val onCopyTagToClipboard: (tag: String) -> Unit = {
@@ -174,6 +176,8 @@ fun MangaScreen(
             onChapterSelected = onChapterSelected,
             onAllChapterSelected = onAllChapterSelected,
             onInvertSelection = onInvertSelection,
+            openChapterSearch = openChapterSearch,
+            onCloseChapterSearch = onCloseChapterSearch,
         )
     } else {
         MangaScreenLargeImpl(
@@ -211,6 +215,8 @@ fun MangaScreen(
             onChapterSelected = onChapterSelected,
             onAllChapterSelected = onAllChapterSelected,
             onInvertSelection = onInvertSelection,
+            openChapterSearch = openChapterSearch,
+            onCloseChapterSearch = onCloseChapterSearch,
         )
     }
 }
@@ -264,6 +270,8 @@ private fun MangaScreenSmallImpl(
     onChapterSelected: (ChapterList.Item, Boolean, Boolean) -> Unit,
     onAllChapterSelected: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
+    openChapterSearch: Boolean = false,
+    onCloseChapterSearch: (() -> Unit)? = null,
 ) {
     val chapterListState = rememberLazyListState()
 
@@ -275,13 +283,20 @@ private fun MangaScreenSmallImpl(
         )
     }
 
-    var chapterSearchQuery by rememberSaveable { mutableStateOf<String?>(null) }
+    var chapterSearchQuery by rememberSaveable { mutableStateOf<String?>(if (openChapterSearch) "" else null) }
+    val closeChapterSearch = {
+        if (onCloseChapterSearch != null) {
+            onCloseChapterSearch()
+        } else {
+            chapterSearchQuery = null
+        }
+    }
     val visibleListItems = remember(listItem, chapterSearchQuery) {
         listItem.filterByChapterNumber(chapterSearchQuery)
     }
 
     BackHandler(enabled = chapterSearchQuery != null) {
-        chapterSearchQuery = null
+        closeChapterSearch()
     }
 
     BackHandler(enabled = isAnySelected) {
@@ -308,7 +323,7 @@ private fun MangaScreenSmallImpl(
                 title = state.manga.title,
                 hasFilters = state.filterActive,
                 searchQuery = chapterSearchQuery,
-                onChangeSearchQuery = { chapterSearchQuery = it },
+                onChangeSearchQuery = { if (it == null) closeChapterSearch() else chapterSearchQuery = it },
                 navigateUp = navigateUp,
                 onClickFilter = onFilterClicked,
                 onClickShare = onShareClicked,
@@ -445,7 +460,7 @@ private fun MangaScreenSmallImpl(
 
                     sharedChapterItems(
                         manga = state.manga,
-                        chapters = listItem,
+                        chapters = visibleListItems,
                         isAnyChapterSelected = state.selectedChapters.isNotEmpty(),
                         chapterSwipeStartAction = chapterSwipeStartAction,
                         chapterSwipeEndAction = chapterSwipeEndAction,
@@ -510,6 +525,8 @@ fun MangaScreenLargeImpl(
     onChapterSelected: (ChapterList.Item, Boolean, Boolean) -> Unit,
     onAllChapterSelected: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
+    openChapterSearch: Boolean = false,
+    onCloseChapterSearch: (() -> Unit)? = null,
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val density = LocalDensity.current
@@ -527,13 +544,20 @@ fun MangaScreenLargeImpl(
 
     val chapterListState = rememberLazyListState()
 
-    var chapterSearchQuery by rememberSaveable { mutableStateOf<String?>(null) }
+    var chapterSearchQuery by rememberSaveable { mutableStateOf<String?>(if (openChapterSearch) "" else null) }
+    val closeChapterSearch = {
+        if (onCloseChapterSearch != null) {
+            onCloseChapterSearch()
+        } else {
+            chapterSearchQuery = null
+        }
+    }
     val visibleListItems = remember(listItem, chapterSearchQuery) {
         listItem.filterByChapterNumber(chapterSearchQuery)
     }
 
     BackHandler(enabled = chapterSearchQuery != null) {
-        chapterSearchQuery = null
+        closeChapterSearch()
     }
 
     BackHandler(enabled = isAnySelected) {
@@ -547,7 +571,7 @@ fun MangaScreenLargeImpl(
                 title = state.manga.title,
                 hasFilters = state.filterActive,
                 searchQuery = chapterSearchQuery,
-                onChangeSearchQuery = { chapterSearchQuery = it },
+                onChangeSearchQuery = { if (it == null) closeChapterSearch() else chapterSearchQuery = it },
                 navigateUp = navigateUp,
                 onClickFilter = onFilterButtonClicked,
                 onClickShare = onShareClicked,
@@ -681,7 +705,7 @@ fun MangaScreenLargeImpl(
 
                             sharedChapterItems(
                                 manga = state.manga,
-                                chapters = listItem,
+                                chapters = visibleListItems,
                                 isAnyChapterSelected = state.selectedChapters.isNotEmpty(),
                                 chapterSwipeStartAction = chapterSwipeStartAction,
                                 chapterSwipeEndAction = chapterSwipeEndAction,
