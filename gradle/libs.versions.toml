@@ -23,6 +23,7 @@ androidx-recyclerView = "1.4.0"
 androidx-sqlite = "2.7.1"
 androidx-test-espresso = "3.7.0"
 androidx-test-junit = "1.3.0"
+androidx-test-runner = "1.7.0"
 androidx-test-uiautomator = "2.4.0"
 androidx-viewPager = "1.1.0"
 androidx-webkit = "1.17.1"
@@ -100,6 +101,8 @@ androidx-compose-runtimeAnnotation = { module = "androidx.compose.runtime:runtim
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-uiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-uiTestManifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintLayout" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidx-core" }
@@ -120,6 +123,7 @@ androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-junit" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
 androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-test-uiautomator" }
 androidx-viewPager = { module = "androidx.viewpager:viewpager", version.ref = "androidx-viewPager" }
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "androidx-webkit" }

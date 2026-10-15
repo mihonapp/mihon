@@ -7,6 +7,10 @@ plugins {
 
 android {
     namespace = "tachiyomi.presentation.core"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 kotlin {
@@ -41,4 +45,9 @@ dependencies {
 
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
+
+    androidTestImplementation(libs.androidx.compose.uiTestJunit4)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    debugImplementation(libs.androidx.compose.uiTestManifest)
 }
