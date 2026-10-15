@@ -6,7 +6,7 @@
     <string name="chapters">章</string>
     <string name="history">履歴</string>
     <string name="label_settings">設定</string>
-    <string name="label_download_queue">ダウンロードキュー</string>
+    <string name="label_download_queue">ダウンロード キュー</string>
     <string name="label_library">ライブラリ</string>
     <string name="label_recent_manga">履歴</string>
     <string name="label_recent_updates">新着</string>
@@ -25,7 +25,7 @@
     <string name="action_download">ダウンロード</string>
     <string name="action_bookmark">章にブックマークを追加</string>
     <string name="action_remove_bookmark">章のブックマークを削除</string>
-    <string name="action_display_grid">コンパクトグリッド</string>
+    <string name="action_display_grid">コンパクト グリッド</string>
     <string name="action_display_list">リスト</string>
     <string name="action_sort">ソート</string>
     <string name="track">トラッキング</string>
@@ -488,7 +488,7 @@
     <string name="theme_yotsuba">四つ葉</string>
     <string name="theme_yinyang">陰陽</string>
     <string name="theme_tako">Tako</string>
-    <string name="theme_strawberrydaiquiri">ストロベリーダイキリ</string>
+    <string name="theme_strawberrydaiquiri">ストロベリー・ダイキリ</string>
     <string name="theme_midnightdusk">黄昏</string>
     <string name="theme_greenapple">青りんご</string>
     <string name="pref_app_theme">アプリテーマ</string>
@@ -622,9 +622,9 @@
     <string name="pref_browse_summary">ソース、拡張機能、グローバル検索</string>
     <string name="pref_backup_summary">手動・自動バックアップ、ストレージ領域</string>
     <string name="pref_security_summary">アプリロック、セキュア画面</string>
-    <string name="pref_advanced_summary">クラッシュログのダンプ、バッテリー最適化</string>
+    <string name="pref_advanced_summary">クラッシュ ログのダンプ、バッテリー最適化</string>
     <string name="pref_appearance_summary">テーマ、日付と時刻の形式</string>
-    <string name="pref_library_summary">カテゴリー、グローバルアップデート、章間スワイプ</string>
+    <string name="pref_library_summary">カテゴリー、グローバル アップデート、章間スワイプ</string>
     <string name="action_open_random_manga">おまかせ閲覧</string>
     <string name="information_no_entries_found">このカテゴリーには該当する項目が見つかりませんでした</string>
     <string name="download_notifier_cache_renewal">ダウンロード内容を検査しています</string>
@@ -752,7 +752,7 @@
     <string name="private_settings">トラッカーログイン情報などの機密性の高い情報を含む</string>
     <string name="manga_interval_expected_update_soon">間もなく</string>
     <string name="ext_revoke_trust">不明な拡張機能の信頼を取り消す</string>
-    <string name="onboarding_storage_help_info">古いバージョンからアップデートする場合で、どのオプションを選択すればよいか分からない場合は、ストレージガイドを参照してください。</string>
+    <string name="onboarding_storage_help_info">古いバージョンからアップデートする場合で、どのオプションを選択すればよいか分からない場合は、ストレージ ガイドを参照してください。</string>
     <string name="theme_nord">Nord</string>
     <string name="pref_library_update_smart_update">スマート・アップデート</string>
     <string name="pref_webtoon_disable_zoom_out">ズームアウトを無効にする</string>
@@ -900,4 +900,7 @@
     <string name="downloading_with_progress">ダウンロード中… (%d%%)</string>
     <string name="pref_filter_update_categories_details">除外対象カテゴリーに含まれる更新情報は、たとえそれらが対象カテゴリーにも含まれている場合でも表示されません。</string>
     <string name="pref_filter_upcoming_categories_details">除外対象カテゴリーに含まれるタイトルは、たとえそれらが対象カテゴリーにも含まれている場合でも表示されません。</string>
+    <string name="app_migrating_title">アップデートを完了</string>
+    <string name="app_migrating_summary">アップデート後の準備を行っています。数分かかる場合がありますので、アプリを開いたままにしておいてください。</string>
+    <string name="pref_category_extensions">拡張機能</string>
 </resources>
