@@ -279,7 +279,7 @@
     <string name="action_webview_forward">Avanti</string>
     <string name="action_webview_refresh">Aggiorna</string>
     <string name="pref_category_library">Libreria</string>
-    <string name="ext_obsolete">Obsoleta</string>
+    <string name="ext_obsolete">Orfana</string>
     <string name="obsolete_extension_message">Questa estensione non è più disponibile. Potrebbe non funzionare correttamente e causare problemi con l\'app. Si consiglia di disinstallarla.</string>
     <string name="pref_date_format">Formato data</string>
     <string name="pref_category_library_update">Aggiornamenti globali</string>
@@ -887,4 +887,9 @@
     <string name="app_migrating_summary">Stiamo completando i preparativi dopo l\'aggiornamento. Può richiedere qualche minuto, quindi tieni l\'app aperta.</string>
     <string name="pref_apply_content_warnings_to_installed">Applica anche alle estensioni installate</string>
     <string name="pref_enable_chapter_name_hash">Attiva il suffisso hash nei nomi dei capitoli</string>
+    <string name="ext_filtered">Filtrata</string>
+    <string name="ext_not_loaded">Non caricata</string>
+    <string name="ext_not_loaded_dialog">Impossibile da caricare</string>
+    <string name="ext_not_loaded_details">Perché non è caricata</string>
+    <string name="ext_copy_stacktrace">Copia traccia di stack</string>
 </resources>
