@@ -98,12 +98,13 @@ object HomeScreen : Screen() {
                     }
                 }
 
+                // Use the same elevated theme surface for the bottom bar and tablet rail.
                 NavigationSuiteScaffold(
                     navigationSuiteType = navigationSuiteType,
                     state = navigationSuiteState,
                     navigationSuiteColors = NavigationSuiteDefaults.colors(
-                        navigationRailContainerColor = MaterialTheme.colorScheme
-                            .surfaceColorAtElevation(3.dp),
+                        navigationBarContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
+                        navigationRailContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
                     ),
                     navigationItemVerticalArrangement = Arrangement.Center,
                     navigationItems = {
