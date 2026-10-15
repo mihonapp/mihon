@@ -40,6 +40,9 @@ class PagerConfig(
     var imageCropBorders = false
         private set
 
+    var pagedSidePadding = 0
+        private set
+
     var navigateToPan = false
         private set
 
@@ -64,6 +67,9 @@ class PagerConfig(
 
         readerPreferences.cropBorders
             .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
+
+        readerPreferences.pagedSidePadding
+            .register({ pagedSidePadding = it }, { imagePropertyChangedListener?.invoke() })
 
         readerPreferences.navigateToPan
             .register({ navigateToPan = it })

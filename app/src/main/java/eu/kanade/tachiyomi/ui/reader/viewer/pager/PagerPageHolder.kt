@@ -65,6 +65,14 @@ class PagerPageHolder(
         loadJob = scope.launch { loadPageAndProcessStatus() }
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        val sidePadding = (w * viewer.config.pagedSidePadding / 100f).toInt()
+        if (paddingLeft != sidePadding || paddingRight != sidePadding) {
+            setPadding(sidePadding, paddingTop, sidePadding, paddingBottom)
+        }
+    }
+
     /**
      * Called when this view is detached from the window. Unsubscribes any active subscription.
      */
