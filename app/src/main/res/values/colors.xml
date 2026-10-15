@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="splash">@color/accent_blue</color>
+    <!-- KuroToon cosmic identity palette. Official mascot art must use approved source assets. -->
+    <color name="splash">#120B24</color>
+    <color name="accent_blue">#8B5CF6</color>
+    <color name="icon_background">#120B24</color>
 
-    <color name="accent_blue">#0058A0</color>
-    <color name="icon_background">#FAFAFA</color>
+    <color name="kuro_space">#090711</color>
+    <color name="kuro_surface">#171326</color>
+    <color name="kuro_purple">#8B5CF6</color>
+    <color name="kuro_violet_glow">#B69CFF</color>
+    <color name="kuro_cosmic_blue">#5B8CFF</color>
+    <color name="kuro_rose">#FF4F8B</color>
+    <color name="kuro_gold">#F5C86A</color>
+    <color name="kuro_text_primary">#F7F3FF</color>
+    <color name="kuro_text_secondary">#B9B2CB</color>
 </resources>
