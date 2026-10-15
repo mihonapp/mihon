@@ -86,7 +86,7 @@
     <string name="ext_trust">信用する</string>
     <string name="ext_untrusted">信用できない</string>
     <string name="ext_uninstall">アンインストール</string>
-    <string name="untrusted_extension">信頼できない拡張</string>
+    <string name="untrusted_extension">信頼できない拡張機能</string>
     <string name="pref_fullscreen">フルスクリーン</string>
     <string name="pref_page_transitions">ページ遷移エフェクトを表示</string>
     <string name="pref_double_tap_anim_speed">ダブルタップアニメーション速度</string>
@@ -250,7 +250,7 @@
     <string name="download_notifier_unknown_error">予期せぬエラーが発生したため、ダウンロードは失敗しました</string>
     <string name="download_notifier_text_only_wifi">Wi-Fi 接続は利用できません</string>
     <string name="download_notifier_no_network">ネットワーク接続が利用できません</string>
-    <string name="download_notifier_download_paused">ダウンロード一時停止済み</string>
+    <string name="download_notifier_download_paused">ダウンロードが一時停止されました</string>
     <string name="channel_common">一般設定</string>
     <string name="repeating">読み返し中</string>
     <string name="source_not_installed">未インストールのソース: %1$s</string>
@@ -305,8 +305,8 @@
     <string name="downloaded_only_summary">ライブラリにある項目はフィルターされます</string>
     <string name="label_downloaded_only">ダウンロード済みのみ</string>
     <string name="check_for_updates">更新を確認</string>
-    <string name="licenses">オープンソースライセンス</string>
-    <string name="website">Web サイト</string>
+    <string name="licenses">オープン ソース ライセンス</string>
+    <string name="website">ウェブサイト</string>
     <string name="battery_optimization_setting_activity_not_found">デバイス設定を開きませんでした</string>
     <string name="battery_optimization_disabled">バッテリー最適化は既に無効です</string>
     <string name="pref_disable_battery_optimization_summary">バックグラウンドでのライブラリの更新とバックアップに役立ちます</string>
@@ -370,7 +370,7 @@
     <string name="sort_by_upload_date">アップロード日付順</string>
     <string name="manga_info_expand">詳細を表示</string>
     <string name="in_library">ライブラリ内</string>
-    <string name="local_source_help_guide">ローカルソースガイド</string>
+    <string name="local_source_help_guide">ローカル ソース ガイド</string>
     <string name="pinned_sources">ピン留め済み</string>
     <string name="last_used_source">最近使用</string>
     <string name="pref_show_reading_mode_summary">現在のビューアモードを、ビューアが立ち上がるとしばらく表示します</string>
@@ -392,7 +392,7 @@
     <string name="channel_complete">完了</string>
     <string name="channel_progress">進捗</string>
     <string name="download_insufficient_space">空き領域不足のため、章をダウンロードできませんでした</string>
-    <string name="no_pinned_sources">ピンソースがありません</string>
+    <string name="no_pinned_sources">ピン留めされたソースはありません</string>
     <string name="action_global_search_query">グローバルで「%1$s」を探す</string>
     <string name="pref_category_theme">テーマ</string>
     <string name="action_sort_date_added">ライブラリへの追加日付順</string>
@@ -411,7 +411,7 @@
     <string name="downloaded_chapters">ダウンロードした章の数</string>
     <string name="manga_from_library">ライブラリ内から</string>
     <string name="pref_incognito_mode_summary">閲覧履歴の記録を一時停止します</string>
-    <string name="pref_incognito_mode">シークレットモード</string>
+    <string name="pref_incognito_mode">シークレット モード</string>
     <string name="pref_clear_history">履歴を消去</string>
     <string name="clear_history_confirmation">続行してもよろしいですか？すべての履歴が削除されます。</string>
     <string name="clear_history_completed">履歴が削除されました</string>
@@ -494,7 +494,7 @@
     <string name="pref_app_theme">アプリテーマ</string>
     <string name="action_start_downloading_now">ダウンロードを開始します</string>
     <string name="theme_monet">ダイナミック</string>
-    <string name="about_dont_kill_my_app">一部のメーカーは、バックグラウンドサービスを停止させる追加のアプリ制限を設けています。この問題を解決する方法については、こちらのウェブサイトに詳しい情報が掲載されています。</string>
+    <string name="about_dont_kill_my_app">一部のメーカーは、バックグラウンド サービスを停止させる追加のアプリ制限を設けています。この問題を解決する方法については、こちらのウェブサイトに詳しい情報が掲載されています。</string>
     <string name="label_background_activity">バックグラウンドアクティビティ</string>
     <string name="restore_miui_warning">MIUI 最適化が無効になっている場合、バックアップおよび復元が正常に機能しない可能性があります。</string>
     <string name="pref_lowest">最低</string>
@@ -536,7 +536,7 @@
     <string name="pref_auto_clear_chapter_cache">アプリ起動時に章のキャッシュを消去</string>
     <string name="database_clean">消去できるものはありませんでした</string>
     <string name="extension_api_error">利用可能な拡張機能を取得できませんでした</string>
-    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="privacy_policy">プライバシー ポリシー</string>
     <string name="pref_update_only_completely_read">未読の章がある作品をスキップ</string>
     <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください</string>
     <string name="save_chapter_as_cbz">CBZ アーカイブとして保存</string>
@@ -615,7 +615,7 @@
     <string name="error_user_agent_string_invalid">ユーザーエージェント文字列が無効です</string>
     <string name="crash_screen_title">おっと！</string>
     <string name="updates_last_update_info_just_now">ちょうど今</string>
-    <string name="crash_screen_restart_application">アプリケーションを再起動</string>
+    <string name="crash_screen_restart_application">アプリを再起動</string>
     <string name="pref_reader_summary">ビューアモード、表示、ナビゲーション</string>
     <string name="pref_downloads_summary">自動ダウンロード、事前ダウンロード</string>
     <string name="pref_tracking_summary">一方同期、高度な同期</string>
@@ -806,7 +806,7 @@
     <string name="author">著者</string>
     <string name="artist">アーティスト</string>
     <string name="action_display_unread_badge">未読の章</string>
-    <string name="storage_failed_to_create_download_directory">ダウンロードディレクトリの作成に失敗しました</string>
+    <string name="storage_failed_to_create_download_directory">ダウンロード ディレクトリの作成に失敗しました</string>
     <string name="storage_failed_to_create_directory">ディレクトリの作成に失敗しました: %s</string>
     <string name="clear_database_text">データベースから作品が削除されます</string>
     <string name="clear_database_history_warning">ライブラリ以外の書籍の章の閲覧履歴や進捗状況は失われます</string>
@@ -903,4 +903,20 @@
     <string name="app_migrating_title">アップデートを完了</string>
     <string name="app_migrating_summary">アップデート後の準備を行っています。数分かかる場合がありますので、アプリを開いたままにしておいてください。</string>
     <string name="pref_category_extensions">拡張機能</string>
+    <string name="pref_allowed_content_warnings">許可されているコンテンツ警告</string>
+    <string name="pref_apply_content_warnings_to_installed">インストール済みの拡張機能にも適用</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">オフにすると、すでにインストール済みの拡張機能は、警告が表示されていても読み込みや更新が継続されます</string>
+    <string name="content_warnings_info">インストール済みであっても読み込まれていない拡張機能は、ソース情報なしで一覧表示されます。インストールしていない拡張機能は非表示になります。ただし、これは非公式の拡張機能や、誤ってフラグ付けされた可能性のある拡張機能がアプリ内で 18 歳以上向けコンテンツを表示することを防ぐものではありません。</string>
+    <string name="pref_enable_chapter_name_hash">章名のハッシュ接尾辞を有効にする</string>
+    <string name="pref_enable_chapter_name_hash_details">名前付けの競合を防ぐため、章名に一意のハッシュ接尾辞を追加します。この機能を無効にすると、同じ名前の章はダウンロードできなくなります。</string>
+    <string name="ext_info_warning">Warning</string>
+    <string name="ext_content_warning_safe">Safe</string>
+    <string name="ext_content_warning_mixed">Mixed</string>
+    <string name="ext_content_warning_nsfw">18 歳以上</string>
+    <string name="ext_content_warning_mixed_description">この拡張機能のソースには、安全なコンテンツと 18 歳以上向けのコンテンツの両方が含まれている可能性があります。</string>
+    <string name="ext_content_warning_nsfw_description">この拡張機能のソースは、主に 18 歳以上向けのコンテンツに焦点を当てています。</string>
+    <string name="update_check_skip">このバージョンをスキップ</string>
+    <string name="update_check_skip_title">%s をスキップしますか？</string>
+    <string name="update_check_skip_message">アップデートには、多くの場合、バグの修正やセキュリティの強化が含まれています。このバージョンに関する通知は今後表示されなくなりますが、新しいバージョンがリリースされた際には引き続き通知が届きます。</string>
+    <string name="information_webview_crashed">WebView が動作を停止し、ページが閉じられました</string>
 </resources>
