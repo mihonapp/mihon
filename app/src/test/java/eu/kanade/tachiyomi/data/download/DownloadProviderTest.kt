@@ -1,15 +1,23 @@
 package eu.kanade.tachiyomi.data.download
 
+import android.content.Context
+import com.hippo.unifile.UniFile
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.lang.Hash.md5
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verifyOrder
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import tachiyomi.core.common.preference.InMemoryPreferenceStore
 import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.domain.storage.service.StorageManager
 
 class DownloadProviderTest {
 
@@ -53,6 +61,37 @@ class DownloadProviderTest {
 
         provider(disallowNonAscii).getValidChapterDirNames(name, scanlator, URL) shouldContain
             dirName0210(name, scanlator, URL, disallowNonAscii)
+    }
+
+    @Test
+    fun `hides downloads directory from gallery before creating manga directories`() = runBlocking {
+        val context = mockk<Context>(relaxed = true)
+        val storageManager = mockk<StorageManager>()
+        val downloadsDir = mockk<UniFile>(relaxed = true)
+        val sourceDir = mockk<UniFile>(relaxed = true)
+        val mangaDir = mockk<UniFile>(relaxed = true)
+        val noMediaFile = mockk<UniFile>()
+        val source = mockk<Source> {
+            every { id } returns 1L
+        }
+        every { storageManager.getDownloadsDirectory() } returns downloadsDir
+        every { downloadsDir.exists() } returns true
+        every { downloadsDir.findFile(DiskUtil.NOMEDIA_FILE) } returns noMediaFile
+        every { downloadsDir.createDirectory(any()) } returns sourceDir
+        every { sourceDir.createDirectory(any()) } returns mangaDir
+
+        val provider = DownloadProvider(
+            context,
+            storageManager,
+            LibraryPreferences(InMemoryPreferenceStore()),
+        )
+
+        provider.getMangaDir("Manga", source).isSuccess shouldBe true
+
+        verifyOrder {
+            downloadsDir.findFile(DiskUtil.NOMEDIA_FILE)
+            downloadsDir.createDirectory(any())
+        }
     }
 
     companion object {

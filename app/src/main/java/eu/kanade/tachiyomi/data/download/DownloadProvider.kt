@@ -60,6 +60,8 @@ class DownloadProvider(
             )
         }
 
+        DiskUtil.createNoMediaFile(downloadsDir, context)
+
         val sourceDirName = getSourceDirName(source)
         val sourceDir = downloadsDir.createDirectory(sourceDirName)
         if (sourceDir == null) {
