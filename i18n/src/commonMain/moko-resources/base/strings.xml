@@ -3,7 +3,7 @@
     <string name="app_name" translatable="false">Afraga</string>
     <string name="action_continue_reading">Continue reading</string>
     <string name="action_open_manga">Open manga</string>
-    <string name="library_spotlight_eyebrow">Picked up where you left off</string>
+    <string name="library_spotlight_eyebrow">From your library</string>
     <string name="about_afraz_credit">Afraga interface customization by Afraz</string>
 
     <!-- Generic strings -->

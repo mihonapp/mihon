@@ -42,6 +42,7 @@ internal fun LibraryList(
                 LibrarySpotlightCard(
                     libraryItem = spotlightItem,
                     onClick = { onClick(spotlightItem.libraryManga) },
+                    onLongClick = { onLongClick(spotlightItem.libraryManga) },
                     onContinueReading = onClickContinueReading
                         ?.takeIf { spotlightItem.unreadCount > 0 }
                         ?.let { callback -> { callback(spotlightItem.libraryManga) } },

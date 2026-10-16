@@ -51,6 +51,7 @@ internal fun LazyGridScope.globalSearchItem(
 internal fun LazyGridScope.librarySpotlightItem(
     libraryItem: LibraryItem?,
     onClick: (LibraryManga) -> Unit,
+    onLongClick: (LibraryManga) -> Unit,
     onContinueReading: ((LibraryManga) -> Unit)?,
 ) {
     if (libraryItem == null) return
@@ -62,6 +63,7 @@ internal fun LazyGridScope.librarySpotlightItem(
         LibrarySpotlightCard(
             libraryItem = libraryItem,
             onClick = { onClick(libraryItem.libraryManga) },
+            onLongClick = { onLongClick(libraryItem.libraryManga) },
             onContinueReading = onContinueReading
                 ?.takeIf { libraryItem.unreadCount > 0 }
                 ?.let { callback -> { callback(libraryItem.libraryManga) } },

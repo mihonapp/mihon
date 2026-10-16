@@ -31,6 +31,7 @@ internal fun LibraryComfortableGrid(
         librarySpotlightItem(
             libraryItem = spotlightItem,
             onClick = onClick,
+            onLongClick = onLongClick,
             onContinueReading = onClickContinueReading,
         )
 
