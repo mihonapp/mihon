@@ -37,6 +37,7 @@ import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchTab
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -50,6 +51,7 @@ import kotlinx.coroutines.launch
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
+import mihon.icons.materialsymbols.rounded.Search
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryManga
@@ -83,6 +85,7 @@ data object LibraryTab : Tab {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val tabNavigator = LocalTabNavigator.current
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val haptic = LocalHapticFeedback.current
@@ -169,6 +172,11 @@ data object LibraryTab : Tab {
                         stringRes = MR.strings.information_empty_library,
                         modifier = Modifier.padding(contentPadding),
                         actions = listOf(
+                            EmptyScreenAction(
+                                stringRes = MR.strings.action_search,
+                                icon = MaterialSymbols.Rounded.Search,
+                                onClick = { tabNavigator.current = SearchTab },
+                            ),
                             EmptyScreenAction(
                                 stringRes = MR.strings.getting_started_guide,
                                 icon = MaterialSymbols.AutoMirroredRounded.Help,

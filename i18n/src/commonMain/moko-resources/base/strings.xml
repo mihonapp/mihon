@@ -746,6 +746,7 @@
     <string name="pinned_sources">Pinned</string>
     <string name="action_global_search_hint">Global search…</string>
     <string name="action_global_search_query">Search for \"%1$s\" globally</string>
+    <string name="search_all_extensions_intro">Search manga across all of your enabled extensions.</string>
     <string name="latest">Latest</string>
     <string name="popular">Popular</string>
     <string name="browse">Browse</string>
