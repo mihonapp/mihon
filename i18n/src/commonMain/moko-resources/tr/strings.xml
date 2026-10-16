@@ -961,4 +961,6 @@
     <string name="refresh_tracker_error">%1$s yenileme hatası: %2$s</string>
     <string name="update_check_skip">Bu sürümü atla</string>
     <string name="update_check_skip_title">%s atla?</string>
+    <string name="update_check_skip_message">Güncellemeler, hata düzeltmeleri ve güvenlik geliştirmeleri sağlar. Bu sürüm için tekrar hatırlatılmayacaksınız ancak daha yeni bir sürüm yayınlandığında size bildirim gösterilecek.</string>
+    <string name="information_webview_crashed">WebView çalışmayı durdurdu ve sayfa kapatıldı</string>
 </resources>
