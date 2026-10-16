@@ -3,7 +3,7 @@
     <string name="app_name" translatable="false">Afraga</string>
     <string name="action_continue_reading">Continue reading</string>
     <string name="action_open_manga">Open manga</string>
-    <string name="library_spotlight_eyebrow">From your library</string>
+    <string name="library_spotlight_eyebrow">Your Library</string>
     <string name="about_afraz_credit">Afraga interface customization by Afraz</string>
     <string name="profile_title">Profile</string>
     <string name="profile_local_label">Your reading profile</string>
@@ -12,6 +12,7 @@
     <string name="profile_saved_count">Saved %1$d</string>
     <string name="profile_reading_count">Reading %1$d</string>
     <string name="profile_unread_count">Unread %1$d</string>
+    <string name="profile_completed_count">Completed %1$d</string>
     <string name="profile_continue_first">Continue</string>
     <string name="profile_continue_second">Reading</string>
     <string name="profile_collection_first">Your</string>

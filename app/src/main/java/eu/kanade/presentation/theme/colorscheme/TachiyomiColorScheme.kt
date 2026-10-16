@@ -10,39 +10,39 @@ import androidx.compose.ui.graphics.Color
 internal object TachiyomiColorScheme : BaseColorScheme() {
 
     override val darkScheme = darkColorScheme(
-        primary = Color(0xFF60A5FA),
-        onPrimary = Color(0xFF07152D),
-        primaryContainer = Color(0xFF1D4ED8),
-        onPrimaryContainer = Color(0xFFDBEAFE),
-        inversePrimary = Color(0xFF2563EB),
-        secondary = Color(0xFFC4B5FD), // Violet accents and unread badge
+        primary = Color(0xFF00B0FF),
+        onPrimary = Color(0xFF001C38),
+        primaryContainer = Color(0xFF007BFF),
+        onPrimaryContainer = Color(0xFFE4F3FF),
+        inversePrimary = Color(0xFF007BFF),
+        secondary = Color(0xFFB388FF), // Violet accents and unread badge
         onSecondary = Color(0xFF24134D),
-        secondaryContainer = Color(0xFF5B3BBF), // Navigation selection
+        secondaryContainer = Color(0xFF6A35A8), // Navigation selection
         onSecondaryContainer = Color(0xFFF1EBFF),
-        tertiary = Color(0xFF22D3EE), // Cyan highlight
+        tertiary = Color(0xFF00E5FF), // Cyan highlight
         onTertiary = Color(0xFF083344),
         tertiaryContainer = Color(0xFF155E75),
         onTertiaryContainer = Color(0xFFCFFAFE),
-        background = Color(0xFF0F172A),
+        background = Color(0xFF0A0E17),
         onBackground = Color(0xFFF8FAFC),
-        surface = Color(0xFF0F172A),
+        surface = Color(0xFF0A0E17),
         onSurface = Color(0xFFF8FAFC),
-        surfaceVariant = Color(0xFF1E293B),
+        surfaceVariant = Color(0xFF182035),
         onSurfaceVariant = Color(0xFFCBD5E1),
-        surfaceTint = Color(0xFF60A5FA),
+        surfaceTint = Color(0xFF00B0FF),
         inverseSurface = Color(0xFFE2E8F0),
         inverseOnSurface = Color(0xFF0F172A),
-        error = Color(0xFFFB7185), // Warm coral alert
+        error = Color(0xFFFF5252), // Warm coral alert
         onError = Color(0xFF450A18),
         errorContainer = Color(0xFF881337),
         onErrorContainer = Color(0xFFFFE4E6),
         outline = Color(0xFF64748B),
         outlineVariant = Color(0xFF334155),
-        surfaceContainerLowest = Color(0xFF0B1120),
-        surfaceContainerLow = Color(0xFF131D30),
-        surfaceContainer = Color(0xFF1E293B),
-        surfaceContainerHigh = Color(0xFF26354C),
-        surfaceContainerHighest = Color(0xFF334155),
+        surfaceContainerLowest = Color(0xFF0A0E17),
+        surfaceContainerLow = Color(0xFF111726),
+        surfaceContainer = Color(0xFF182035),
+        surfaceContainerHigh = Color(0xFF202B42),
+        surfaceContainerHighest = Color(0xFF293550),
     )
 
     override val lightScheme = lightColorScheme(

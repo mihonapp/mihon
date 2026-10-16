@@ -138,6 +138,9 @@ data object LibraryTab : Tab {
                             }
                         }
                     },
+                    onClickProfile = {
+                        scope.launch { HomeScreen.openTab(HomeScreen.Tab.Profile) }
+                    },
                     searchQuery = state.searchQuery,
                     onSearchQueryChange = viewModel::search,
                     // For scroll overlay when no tab
