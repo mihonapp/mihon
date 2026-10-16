@@ -879,14 +879,14 @@
     <string name="extensionStoresScreen.deleteStore.title">Hapus ekstensi</string>
     <string name="extensionStoresScreen.deleteStore.body">Apakah Anda ingin menghapus ekstensi \"%1$s\" (%2$s)?</string>
     <string name="extensionStoresScreen.addStoreInput.inputLabel">Menyimpan indeks URL</string>
-    <string name="pref_webtoon_vertical_navigator_on_left">Tempatkan navigator vertikal di sisi kiri</string>
+    <string name="pref_webtoon_vertical_navigator_on_left">Letakkan navigator vertikal di sisi kiri</string>
     <string name="download_bookmarked">Ditandai</string>
     <string name="supportUsScreen.perks">Patrons mendapatkan akses ke saluran eksklusif, dengan lebih banyak keuntungan yang akan datang.</string>
-    <string name="supportUsScreen.donationPlatform.patreon">Patreon (preferred)</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (disarankan)</string>
     <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
     <string name="supportUsScreen.currentlySupportedBy">Mihon saat ini didukung oleh %d + patrons. Kami ingin berterima kasih kepada kalian semua. Mari buat Mihon menjadi lebih baik bersama-sama.</string>
     <string name="supportUsScreen.contactPlatform">Discord</string>
-    <string name="donationCampaign.title">Menikmati aplikasi?</string>
+    <string name="donationCampaign.title">Suka dengan aplikasi ini?</string>
     <string name="supportUsScreen.contactForDetailsMessage">Untuk opsi lain atau pertanyaan terkait apa pun, silakan bergabung dengan server Discord kami.</string>
     <string name="donationCampaign.paragraph1">Hai! Saya adalah pengembang utama di balik Mihon, dan saya ingin meminta Anda untuk mempertimbangkan memberikan dukungan finansial bagi pengembangan Mihon. Dengan dukungan yang cukup, saya akan dapat bekerja penuh waktu untuk Mihon dan fokus pada masalah-masalah yang sudah lama ada serta fitur-fitur yang banyak diminta.</string>
     <string name="donationCampaign.paragraph2">Anda dapat memberikan donasi melalui Patreon (disarankan) atau OpenCollective. Jika Anda memiliki pertanyaan atau ingin memberikan dukungan melalui cara lain, silakan hubungi saya melalui server Discord Mihon.</string>
@@ -955,4 +955,12 @@
     <string name="refresh_tracker_profile">Perbarui profil pelacak</string>
     <string name="refresh_tracker_success">Profil %s diperbarui</string>
     <string name="refresh_tracker_error">Gagal memperbarui %1$s: %2$s</string>
+    <string name="ext_content_warning_nsfw">18+</string>
+    <string name="webgpu_viewer">GPUWeb</string>
+    <string name="pref_filter_update_categories_details">Pembaruan dalam kategori yang dikecualikan tidak akan ditampilkan, meskipun pembaruan tersebut juga termasuk dalam kategori mana pun yang disertakan.</string>
+    <string name="pref_filter_upcoming_categories_details">Judul-judul dalam kategori yang dikecualikan tidak ditampilkan, meskipun judul-judul tersebut juga termasuk dalam salah satu kategori yang disertakan.</string>
+    <string name="update_check_skip">Lewati versi ini</string>
+    <string name="update_check_skip_title">Lewati %s?</string>
+    <string name="update_check_skip_message">Pembaruan sering kali berisi perbaikan bug dan peningkatan keamanan. Anda tidak akan lagi menerima pengingat mengenai versi ini, tetapi Anda tetap akan mendapat pemberitahuan saat versi yang lebih baru dirilis.</string>
+    <string name="information_webview_crashed">WebView berhenti berfungsi dan halaman tersebut ditutup</string>
 </resources>
