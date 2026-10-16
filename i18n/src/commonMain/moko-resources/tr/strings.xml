@@ -943,4 +943,22 @@
     <string name="transition_animation_cube_outside">Küp (dış)</string>
     <string name="transition_animation_fade">Soldur</string>
     <string name="transition_animation_fade_white">Beyaza kayarak</string>
+    <string name="transition_animation_none">Hiçbiri</string>
+    <string name="transition_animation_flip">Sayfa çevirme</string>
+    <string name="pref_cutout_mode">Ekran kesimi modu</string>
+    <string name="pref_cutout_mode_dual">Ekran kesimi modu (çift)</string>
+    <string name="cutout_mode_ignore">Görmezden gel</string>
+    <string name="cutout_mode_avoid">Kullanma</string>
+    <string name="cutout_mode_shift">Kaydır</string>
+    <string name="pref_dual_page_view">Çift sayfa görünümü</string>
+    <string name="dual_page_view_never">Asla</string>
+    <string name="dual_page_view_always">Her zaman</string>
+    <string name="dual_page_view_wide">Geniş modda</string>
+    <string name="pref_continuous_minwidth">En az genişlik</string>
+    <string name="pref_continuous_gap">Aralık</string>
+    <string name="refresh_tracker_profile">İzleyici profilini yenile</string>
+    <string name="refresh_tracker_success">%s profil yenilendi</string>
+    <string name="refresh_tracker_error">%1$s yenileme hatası: %2$s</string>
+    <string name="update_check_skip">Bu sürümü atla</string>
+    <string name="update_check_skip_title">%s atla?</string>
 </resources>
