@@ -8,6 +8,8 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Icon
@@ -25,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -43,6 +46,7 @@ import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTab
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.more.MoreTab
+import eu.kanade.tachiyomi.ui.profile.ProfileTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -70,11 +74,9 @@ object HomeScreen : Screen() {
 
     private val TABS = listOf(
         LibraryTab,
+        ProfileTab,
         SearchTab,
-        UpdatesTab,
-        HistoryTab,
         BrowseTab,
-        MoreTab,
     )
 
     @Composable
@@ -108,8 +110,8 @@ object HomeScreen : Screen() {
                     navigationSuiteType = navigationSuiteType,
                     state = navigationSuiteState,
                     navigationSuiteColors = NavigationSuiteDefaults.colors(
-                        navigationBarContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        navigationRailContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        navigationBarContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        navigationRailContainerColor = MaterialTheme.colorScheme.surfaceContainer,
                     ),
                     navigationItemVerticalArrangement = Arrangement.Center,
                     navigationItems = {
@@ -189,6 +191,11 @@ object HomeScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
         val selected = tabNavigator.current::class == tab::class
+        val iconScale by animateFloatAsState(
+            targetValue = if (selected) 1.08f else 1f,
+            animationSpec = spring(stiffness = 500f),
+            label = "navigationIconScale",
+        )
         NavigationSuiteItem(
             navigationSuiteType = navigationSuiteType,
             selected = selected,
@@ -203,6 +210,10 @@ object HomeScreen : Screen() {
                 Icon(
                     painter = tab.options.icon!!,
                     contentDescription = tab.options.title,
+                    modifier = Modifier.graphicsLayer {
+                        scaleX = iconScale
+                        scaleY = iconScale
+                    },
                 )
             },
             label = {

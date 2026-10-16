@@ -19,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -27,6 +29,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import eu.kanade.presentation.components.AfragaNeon
+import eu.kanade.presentation.components.NeonPill
+import eu.kanade.presentation.components.SplitColorHeader
+import eu.kanade.presentation.components.glassSurface
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.roundedfilled.PlayArrow
@@ -47,7 +53,7 @@ internal fun LibrarySpotlightCard(
 
     Box(
         modifier = modifier
-            .height(224.dp)
+            .height(300.dp)
             .clip(shape)
             .background(Color(0xFF16223B))
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
@@ -63,6 +69,23 @@ internal fun LibrarySpotlightCard(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
+        )
+        AsyncImage(
+            model = MangaCover(
+                mangaId = manga.id,
+                sourceId = manga.source,
+                isMangaFavorite = manga.favorite,
+                url = manga.thumbnailUrl,
+                lastModified = manga.coverLastModified,
+            ),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(170.dp)
+                .blur(16.dp)
+                .alpha(0.46f),
         )
         Box(
             modifier = Modifier
@@ -85,15 +108,21 @@ internal fun LibrarySpotlightCard(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .fillMaxWidth()
-                .padding(horizontal = 22.dp, vertical = 20.dp),
+                .padding(horizontal = 12.dp, vertical = 12.dp)
+                .glassSurface(
+                    shape = RoundedCornerShape(24.dp),
+                    tint = Color(0x99191E30),
+                    border = Color.White.copy(alpha = 0.16f),
+                    glow = Color(0xFF8C6CFF),
+                    cornerRadius = 24.dp,
+                )
+                .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalArrangement = Arrangement.spacedBy(7.dp),
         ) {
-            Text(
-                text = stringResource(MR.strings.library_spotlight_eyebrow).uppercase(),
-                color = Color(0xFF55E6D2),
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.8.sp,
+            val eyebrow = stringResource(MR.strings.library_spotlight_eyebrow)
+            SplitColorHeader(
+                firstWord = eyebrow.substringBefore(' '),
+                secondWord = eyebrow.substringAfter(' ', eyebrow),
             )
             Text(
                 text = manga.title,
@@ -108,13 +137,9 @@ internal fun LibrarySpotlightCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(
-                    text = libraryItem.sourceName,
-                    color = Color.White.copy(alpha = 0.78f),
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f),
+                NeonPill(
+                    text = libraryItem.sourceName.take(18),
+                    tone = AfragaNeon.Cyan,
                 )
                 Button(
                     onClick = onContinueReading ?: onClick,
