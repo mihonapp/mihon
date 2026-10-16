@@ -926,4 +926,7 @@
     <string name="ext_copy_stacktrace">スタックトレースをコピーする</string>
     <string name="ext_filtered_message">この拡張機能のコンテンツ警告は、あなたが読み込むことを選択したものではないため、その出典は確認できません。</string>
     <string name="ext_unsigned_message">この拡張機能には署名がないため、照合すべき署名が存在しません。</string>
+    <string name="ext_unsupported_message">この拡張機能は、このアプリのバージョンでは読み込めないバージョンの拡張機能ライブラリ向けに作成されています。アプリまたは拡張機能を更新すると、問題が解決する場合があります。</string>
+    <string name="ext_malformed_message">この拡張機能には、アプリがこれを読み込むために必要な情報が不足しています。</string>
+    <string name="ext_load_failed_message">この拡張機能は読み込み中にエラーが発生したため、そのソースコードは一切利用できません。</string>
 </resources>
