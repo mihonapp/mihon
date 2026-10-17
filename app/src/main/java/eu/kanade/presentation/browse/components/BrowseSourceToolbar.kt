@@ -16,7 +16,9 @@ import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
 import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.Label
 import mihon.icons.materialsymbols.automirroredroundedfilled.ViewList
+import mihon.icons.materialsymbols.rounded.SelectAll
 import mihon.icons.materialsymbols.roundedfilled.ViewCompact
 import mihon.icons.materialsymbols.roundedfilled.ViewModule
 import tachiyomi.domain.library.model.LibraryDisplayMode
@@ -36,8 +38,39 @@ fun BrowseSourceToolbar(
     onHelpClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onSearch: (String) -> Unit,
+    selectedCount: Int,
+    selectionMode: Boolean,
+    onStartSelection: () -> Unit,
+    isSavingSelection: Boolean,
+    onSelectAll: () -> Unit,
+    onClearSelection: () -> Unit,
+    onSetCategories: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
+    if (selectionMode) {
+        AppBar(
+            titleContent = { Text(text = "$selectedCount") },
+            isActionMode = true,
+            onCancelActionMode = onClearSelection,
+            actions = {
+                AppBarActions(
+                    listOf(
+                        AppBar.Action(
+                            title = stringResource(MR.strings.action_move_category),
+                            icon = MaterialSymbols.AutoMirroredRounded.Label,
+                            onClick = onSetCategories,
+                            enabled = selectedCount > 0 && !isSavingSelection,
+                        ),
+                        AppBar.OverflowAction(
+                            title = stringResource(MR.strings.action_select_all),
+                            onClick = onSelectAll,
+                        ),
+                    ),
+                )
+            },
+        )
+        return
+    }
     // Avoid capturing unstable source in actions lambda
     val title = source?.name
     val isLocalSource = source is LocalSource
@@ -55,6 +88,13 @@ fun BrowseSourceToolbar(
         actions = {
             AppBarActions(
                 actions = buildList {
+                    add(
+                        AppBar.Action(
+                            title = stringResource(MR.strings.action_select_titles),
+                            icon = MaterialSymbols.Rounded.SelectAll,
+                            onClick = onStartSelection,
+                        ),
+                    )
                     add(
                         AppBar.Action(
                             title = stringResource(MR.strings.action_display_mode),

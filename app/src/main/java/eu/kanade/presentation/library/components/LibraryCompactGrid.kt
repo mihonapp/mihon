@@ -18,6 +18,7 @@ internal fun LibraryCompactGrid(
     selection: Set<Long>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
+    onToggleSelection: ((LibraryManga) -> Unit)?,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
@@ -37,6 +38,7 @@ internal fun LibraryCompactGrid(
             MangaCompactGridItem(
                 isSelected = manga.id in selection,
                 title = manga.title.takeIf { showTitle },
+                selectionContentDescription = manga.title,
                 coverData = MangaCover(
                     mangaId = manga.id,
                     sourceId = manga.source,
@@ -56,6 +58,7 @@ internal fun LibraryCompactGrid(
                 },
                 onLongClick = { onLongClick(libraryItem.libraryManga) },
                 onClick = { onClick(libraryItem.libraryManga) },
+                onToggleSelection = onToggleSelection?.let { toggle -> { toggle(libraryItem.libraryManga) } },
                 onClickContinueReading = if (onClickContinueReading != null && libraryItem.unreadCount > 0) {
                     { onClickContinueReading(libraryItem.libraryManga) }
                 } else {

@@ -106,6 +106,8 @@ class LibraryViewModel(
 
     private val selection = MutableStateFlow(emptySet</* Manga */ Long>())
 
+    private val selectionEnabled = MutableStateFlow(false)
+
     private val dialog = MutableStateFlow<Dialog?>(null)
 
     private val activeCategoryIndex = MutableStateFlow(libraryPreferences.lastUsedCategory.get())
@@ -187,13 +189,14 @@ class LibraryViewModel(
 
     val state: StateFlow<State> = combine(
         library,
-        combine(searchQuery, selection, dialog, ::Triple),
+        combine(searchQuery, combine(selection, selectionEnabled, ::Pair), dialog, ::Triple),
         combine(activeCategoryIndex, displayPreferences, hasActiveFilters, ::Triple),
-    ) { library, (searchQuery, selection, dialog), (activeCategoryIndex, display, hasActiveFilters) ->
+    ) { library, (searchQuery, selectionState, dialog), (activeCategoryIndex, display, hasActiveFilters) ->
         State(
             isLoading = library == null,
             searchQuery = searchQuery,
-            selection = selection,
+            selection = selectionState.first,
+            selectionEnabled = selectionState.second,
             hasActiveFilters = hasActiveFilters,
             showCategoryTabs = display.showCategoryTabs,
             showMangaCount = display.showMangaCount,
@@ -636,12 +639,18 @@ class LibraryViewModel(
             return selection.value.mapNotNull { favoritesById[it]?.libraryManga?.manga }
         }
 
+    fun startSelection() {
+        selectionEnabled.value = true
+    }
+
     fun clearSelection() {
+        selectionEnabled.value = false
         lastSelection = null
         selection.update { setOf() }
     }
 
     fun toggleSelection(category: Category, manga: LibraryManga) {
+        selectionEnabled.value = true
         selection.update { selection ->
             val newSelection = selection.mutate { set ->
                 if (!set.remove(manga.id)) set.add(manga.id)
@@ -656,6 +665,7 @@ class LibraryViewModel(
      * same category as the given manga
      */
     fun toggleRangeSelection(category: Category, manga: LibraryManga) {
+        selectionEnabled.value = true
         val state = state.value
         selection.update { selection ->
             val newSelection = selection.mutate { list ->
@@ -682,6 +692,7 @@ class LibraryViewModel(
     }
 
     fun selectAll() {
+        selectionEnabled.value = true
         lastSelection = null
         val state = state.value
         selection.update { selection ->
@@ -692,6 +703,7 @@ class LibraryViewModel(
     }
 
     fun invertSelection() {
+        selectionEnabled.value = true
         lastSelection = null
         val state = state.value
         selection.update { selection ->
@@ -722,7 +734,7 @@ class LibraryViewModel(
             val mangaList = selectedManga
 
             // Hide the default category because it has a different behavior than the ones from db.
-            val categories = state.value.displayedCategories.filter { it.id != 0L }
+            val categories = getCategories.await().filterNot { it.isSystemCategory }
 
             val mangaCategoryIds = mangaList.map { getCategoryIds(it) }
             val common = mangaCategoryIds.reduceOrNull { set1, set2 -> set1 intersect set2 }.orEmpty()
@@ -793,6 +805,7 @@ class LibraryViewModel(
         val isLoading: Boolean = true,
         val searchQuery: String? = null,
         val selection: Set</* Manga */ Long> = setOf(),
+        val selectionEnabled: Boolean = false,
         val hasActiveFilters: Boolean = false,
         val showCategoryTabs: Boolean = false,
         val showMangaCount: Boolean = false,
@@ -813,7 +826,7 @@ class LibraryViewModel(
 
         val isLibraryEmpty = libraryData.favorites.isEmpty()
 
-        val selectionMode = selection.isNotEmpty()
+        val selectionMode = selectionEnabled || selection.isNotEmpty()
 
         val selectedManga by lazy { selection.mapNotNull { libraryData.favoritesById[it]?.libraryManga?.manga } }
 

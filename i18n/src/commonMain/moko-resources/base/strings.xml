@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_select_titles">Select titles</string>
     <string name="app_name" translatable="false">Mihon</string>
 
     <!-- Generic strings -->
@@ -784,6 +785,8 @@
     <string name="possible_duplicates_title">Possible duplicates</string>
     <string name="possible_duplicates_summary">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
     <string name="manga_added_library">Added to library</string>
+    <string name="bulk_add_to_library_success">Added %d titles to your library</string>
+    <string name="bulk_add_to_library_error">Could not save the selection. Please try again.</string>
     <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_expand">More</string>
     <string name="manga_info_collapse">Less</string>

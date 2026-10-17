@@ -25,6 +25,8 @@ fun BrowseSourceCompactGrid(
     contentPadding: PaddingValues,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
+    selection: Set<Long> = emptySet(),
+    onToggleSelection: ((Manga) -> Unit)? = null,
 ) {
     LazyVerticalGrid(
         columns = columns,
@@ -44,6 +46,8 @@ fun BrowseSourceCompactGrid(
                 manga = manga,
                 onClick = { onMangaClick(manga) },
                 onLongClick = { onMangaLongClick(manga) },
+                isSelected = manga.id in selection,
+                onToggleSelection = onToggleSelection?.let { { it(manga) } },
             )
         }
 
@@ -60,6 +64,8 @@ private fun BrowseSourceCompactGridItem(
     manga: Manga,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = onClick,
+    isSelected: Boolean = false,
+    onToggleSelection: (() -> Unit)? = null,
 ) {
     MangaCompactGridItem(
         title = manga.title,
@@ -75,6 +81,8 @@ private fun BrowseSourceCompactGridItem(
             InLibraryBadge(enabled = manga.favorite)
         },
         onLongClick = onLongClick,
+        isSelected = isSelected,
+        onToggleSelection = onToggleSelection,
         onClick = onClick,
     )
 }
