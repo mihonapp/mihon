@@ -46,6 +46,11 @@ class PagerConfig(
     var landscapeZoom = false
         private set
 
+    var doubleTapZoom = false
+        private set
+
+    var doubleTapZoomChangedListener: ((Boolean) -> Unit)? = null
+
     init {
         readerPreferences.readerTheme
             .register(
@@ -103,6 +108,15 @@ class PagerConfig(
             .register(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.pref_enable_double_tap_zoom_pager
+            .register(
+                { doubleTapZoom = it },
+                {
+                    doubleTapZoomChangedListener?.invoke(it)
+                    imagePropertyChangedListener?.invoke()
+                },
             )
     }
 
