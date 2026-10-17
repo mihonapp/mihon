@@ -906,4 +906,7 @@
     <string name="pref_apply_content_warnings_to_installed_summary">비활성화하면 이미 설치한 확장 앱은 등급과 무관하게 컨텐츠를 불러오고 업데이트합니다</string>
     <string name="content_warnings_info">허용하지 않은 등급의 확장 앱은 이미 설치된 경우 목록에 남지만 소스는 표시되지 않으며, 설치하지 않은 경우 목록에서 숨겨집니다. 이 설정으로도 비공식 확장 앱이나 등급이 잘못 지정된 확장 앱이 앱에 18+ 콘텐츠를 표시하는 것을 완전히 막을 수는 없습니다.</string>
     <string name="ext_filtered">필터링됨</string>
+    <string name="app_migrating_title">업데이트 완료</string>
+    <string name="app_migrating_summary">업데이트 후 준비 중. 몇 분 정도 소요될 수 있으므로 앱을 계속 켜두십시오.</string>
+    <string name="pref_enable_chapter_name_hash">챕터 이름에 해시 접미사 사용 허용</string>
 </resources>
