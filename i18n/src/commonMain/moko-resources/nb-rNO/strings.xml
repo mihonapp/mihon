@@ -755,7 +755,6 @@
     <string name="theme_nord">Nord</string>
     <string name="manga_interval_expected_update_soon">Snart</string>
     <string name="ext_revoke_trust">Fjern tilliten til ukjente utvidelser</string>
-    <string name="action_open_repo">Åpne pakkebrønnen</string>
     <string name="label_upcoming">Kommende</string>
     <string name="action_add_anyway">Legg til likevel</string>
 </resources>
