@@ -104,6 +104,13 @@ object AboutScreen : Screen() {
                     )
                 }
 
+                item {
+                    TextPreferenceWidget(
+                        title = stringResource(MR.strings.app_name),
+                        subtitle = stringResource(MR.strings.about_afraz_credit),
+                    )
+                }
+
                 if (updaterEnabled) {
                     item {
                         TextPreferenceWidget(
