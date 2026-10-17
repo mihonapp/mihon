@@ -291,6 +291,13 @@ object SettingsAdvancedScreen : SearchableSettings {
             title = stringResource(MR.strings.label_library),
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_refresh_missing_metadata),
+                    subtitle = stringResource(MR.strings.pref_refresh_missing_metadata_summary),
+                    onClick = {
+                        scope.launch { MetadataUpdateWorker.startNow(context.workManager, onlyMissing = true) }
+                    },
+                ),
+                Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_refresh_library_covers),
                     onClick = { scope.launch { MetadataUpdateWorker.startNow(context.workManager) } },
                 ),

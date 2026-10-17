@@ -37,8 +37,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -136,8 +136,8 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                 Result.success()
             } catch (e: Exception) {
                 if (e is CancellationException) {
-                    // Assume success although cancelled
-                    Result.success()
+                    logcat(LogPriority.INFO) { "Library update cancelled: id=$id, stopReason=$stopReason" }
+                    throw e
                 } else {
                     logcat(LogPriority.ERROR, e)
                     Result.failure()
@@ -262,54 +262,55 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
             mangaToUpdate.groupBy { it.manga.source }.values
                 .map { mangaInSource ->
                     async {
-                        semaphore.withPermit {
-                            mangaInSource.forEach { libraryManga ->
-                                val manga = libraryManga.manga
-                                ensureActive()
+                        val retry = LibraryUpdateRetry(semaphore)
+                        mangaInSource.forEach { libraryManga ->
+                            val manga = libraryManga.manga
+                            ensureActive()
 
-                                // Don't continue to update if manga is not in library
-                                if (getManga.await(manga.id)?.favorite != true) {
-                                    return@forEach
-                                }
+                            // Don't continue to update if manga is not in library
+                            if (getManga.await(manga.id)?.favorite != true) {
+                                return@forEach
+                            }
 
-                                withUpdateNotification(
-                                    currentlyUpdatingManga,
-                                    progressCount,
-                                    manga,
-                                ) {
-                                    try {
-                                        val newChapters = updateManga(manga, fetchWindow)
-                                            .sortedByDescending { it.sourceOrder }
+                            withUpdateNotification(
+                                currentlyUpdatingManga,
+                                progressCount,
+                                manga,
+                            ) {
+                                try {
+                                    val newChapters = retry.run { updateManga(manga, fetchWindow) }
+                                        .sortedByDescending { it.sourceOrder }
 
-                                        if (newChapters.isNotEmpty()) {
-                                            val chaptersToDownload = filterChaptersForDownload.await(manga, newChapters)
+                                    if (newChapters.isNotEmpty()) {
+                                        val chaptersToDownload = filterChaptersForDownload.await(manga, newChapters)
 
-                                            if (chaptersToDownload.isNotEmpty()) {
-                                                downloadChapters(manga, chaptersToDownload)
-                                                hasDownloads.store(true)
-                                            }
-
-                                            // Sources update concurrently, and getAndSet is a separate read and write
-                                            synchronized(libraryPreferences.newUpdatesCount) {
-                                                libraryPreferences.newUpdatesCount.getAndSet { it + newChapters.size }
-                                            }
-
-                                            // Convert to the manga that contains new chapters
-                                            newUpdates.add(manga to newChapters.toTypedArray())
+                                        if (chaptersToDownload.isNotEmpty()) {
+                                            downloadChapters(manga, chaptersToDownload)
+                                            hasDownloads.store(true)
                                         }
-                                    } catch (e: Throwable) {
-                                        val errorMessage = when (e) {
-                                            is NoChaptersException -> context.stringResource(
-                                                MR.strings.no_chapters_error,
-                                            )
-                                            // failedUpdates will already have the source, don't need to copy it into the message
-                                            is SourceNotInstalledException -> context.stringResource(
-                                                MR.strings.loader_not_implemented_error,
-                                            )
-                                            else -> e.message
+
+                                        // Sources update concurrently, and getAndSet is a separate read and write
+                                        synchronized(libraryPreferences.newUpdatesCount) {
+                                            libraryPreferences.newUpdatesCount.getAndSet { it + newChapters.size }
                                         }
-                                        failedUpdates.add(manga to errorMessage)
+
+                                        // Convert to the manga that contains new chapters
+                                        newUpdates.add(manga to newChapters.toTypedArray())
                                     }
+                                } catch (e: Throwable) {
+                                    if (e is CancellationException) throw e
+
+                                    val errorMessage = when (e) {
+                                        is NoChaptersException -> context.stringResource(
+                                            MR.strings.no_chapters_error,
+                                        )
+                                        // failedUpdates will already have the source, don't need to copy it into the message
+                                        is SourceNotInstalledException -> context.stringResource(
+                                            MR.strings.loader_not_implemented_error,
+                                        )
+                                        else -> e.message
+                                    }
+                                    failedUpdates.add(manga to errorMessage)
                                 }
                             }
                         }
@@ -514,10 +515,13 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
             val workQuery = WorkQuery.Builder.fromTags(listOf(TAG))
                 .addStates(listOf(WorkInfo.State.RUNNING))
                 .build()
-            workManager.getWorkInfosFlow(workQuery).first()
+            val running = workManager.getWorkInfosFlow(workQuery).first()
+            logcat(LogPriority.INFO) { "Library update cancellation requested: matchingJobs=${running.size}" }
+            running
                 // Should only return one work but just in case
                 .forEach {
-                    workManager.cancelWorkById(it.id)
+                    workManager.cancelWorkById(it.id).result.await()
+                    logcat(LogPriority.INFO) { "Library update cancellation accepted: id=${it.id}" }
 
                     // Re-enqueue cancelled scheduled work
                     if (it.tags.contains(WORK_NAME_AUTO)) {

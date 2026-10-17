@@ -670,6 +670,8 @@
     <string name="database_clean">Nothing to clear</string>
     <string name="pref_clear_webview_data">Clear WebView data</string>
     <string name="webview_data_deleted">WebView data cleared</string>
+    <string name="pref_refresh_missing_metadata">Refresh missing metadata</string>
+    <string name="pref_refresh_missing_metadata_summary">Fetch details only for library titles whose metadata has not been initialized. Does not fetch chapters or refresh initialized titles with blank fields.</string>
     <string name="pref_refresh_library_covers">Refresh library covers</string>
     <string name="pref_reset_viewer_flags">Reset per-series reader settings</string>
     <string name="pref_reset_viewer_flags_summary">Resets reading mode and orientation of all series</string>
@@ -687,6 +689,13 @@
     <string name="pref_verbose_logging">Verbose logging</string>
     <string name="pref_verbose_logging_summary">Print verbose logs to system log (reduces app performance)</string>
     <string name="pref_debug_info">Debug info</string>
+    <string name="worker_info_long_press_hint">Long press a running job for options.</string>
+    <string name="worker_info_actions">Show job options</string>
+    <string name="worker_info_cancel_job">Cancel job</string>
+    <string name="worker_info_cancel_confirmation">Cancel job %1$s?\n\nThis also disables future runs of this job if it is recurring. You may need to re-enable its schedule in settings.</string>
+    <string name="worker_info_cancel_requested">Job cancellation requested</string>
+    <string name="worker_info_not_active">This job is no longer active</string>
+    <string name="worker_info_cancel_failed">Could not cancel job. Check the logs for details.</string>
     <string name="pref_update_library_manga_titles">Update library manga titles to match source</string>
     <string name="pref_update_library_manga_titles_summary">Warning: if a manga is renamed, it will be removed from the download queue (if present).</string>
 
