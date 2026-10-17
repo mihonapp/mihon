@@ -122,6 +122,17 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
 private fun ColumnScope.PagerViewerSettings(viewModel: ReaderSettingsViewModel) {
     HeadingItem(MR.strings.pager_viewer)
 
+    val numberFormat = remember { NumberFormat.getPercentInstance() }
+    val pagedSidePadding by viewModel.preferences.pagedSidePadding.collectAsState()
+    SliderItem(
+        value = pagedSidePadding,
+        valueRange = ReaderPreferences.PAGED_PADDING_MIN..ReaderPreferences.PAGED_PADDING_MAX,
+        label = stringResource(MR.strings.pref_webtoon_side_padding),
+        valueString = numberFormat.format(pagedSidePadding / 100f),
+        onChange = { viewModel.preferences.pagedSidePadding.set(it) },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
     val navigationModePager by viewModel.preferences.navigationModePager.collectAsState()
     val pagerNavInverted by viewModel.preferences.pagerNavInverted.collectAsState()
     TapZonesItems(
@@ -318,6 +329,19 @@ private fun ColumnScope.WebGpuViewerSettings(viewModel: ReaderSettingsViewModel)
         invertMode = pagerNavInverted,
         onSelectInvertMode = viewModel.preferences.pagerNavInverted::set,
     )
+
+    if (resolved != ReadingMode.WEBTOON && resolved != ReadingMode.CONTINUOUS_VERTICAL) {
+        val numberFormat = remember { NumberFormat.getPercentInstance() }
+        val pagedSidePadding by viewModel.preferences.pagedSidePadding.collectAsState()
+        SliderItem(
+            value = pagedSidePadding,
+            valueRange = ReaderPreferences.PAGED_PADDING_MIN..ReaderPreferences.PAGED_PADDING_MAX,
+            label = stringResource(MR.strings.pref_webtoon_side_padding),
+            valueString = numberFormat.format(pagedSidePadding / 100f),
+            onChange = { viewModel.preferences.pagedSidePadding.set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+    }
 
     if (isDual) {
         val transitionAnimation by viewModel.preferences.transitionAnimationDual.collectAsState()
