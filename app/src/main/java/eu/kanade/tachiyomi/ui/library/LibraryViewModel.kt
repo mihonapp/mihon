@@ -396,6 +396,7 @@ class LibraryViewModel(
             libraryPreferences.filterBookmarked.changes(),
             libraryPreferences.filterCompleted.changes(),
             libraryPreferences.filterIntervalCustom.changes(),
+            libraryPreferences.sourceNameBadge.changes(),
         ) {
             ItemPreferences(
                 downloadBadge = it[0] as Boolean,
@@ -410,6 +411,7 @@ class LibraryViewModel(
                 filterBookmarked = it[9] as TriState,
                 filterCompleted = it[10] as TriState,
                 filterIntervalCustom = it[11] as TriState,
+                sourceNameBadge = it[12] as Boolean,
             )
         }
     }
@@ -452,6 +454,11 @@ class LibraryViewModel(
                         },
                         sourceLanguage = if (preferences.languageBadge) {
                             source.lang
+                        } else {
+                            ""
+                        },
+                        sourceName = if (preferences.sourceNameBadge) {
+                            source.name
                         } else {
                             ""
                         },
@@ -773,6 +780,7 @@ class LibraryViewModel(
         val filterBookmarked: TriState,
         val filterCompleted: TriState,
         val filterIntervalCustom: TriState,
+        val sourceNameBadge: Boolean,
     )
 
     @Immutable
