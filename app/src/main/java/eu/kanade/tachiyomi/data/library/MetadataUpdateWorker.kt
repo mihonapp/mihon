@@ -9,10 +9,12 @@ import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -20,7 +22,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.di.AppGraph
@@ -54,6 +55,7 @@ class MetadataUpdateWorker(context: Context, workerParams: WorkerParameters) :
 
     override suspend fun doWork(): Result {
         graph.inject(this)
+        notifier.setCancelIntent(applicationContext.workManager.createCancelPendingIntent(id))
 
         setForegroundSafely()
 
@@ -65,8 +67,8 @@ class MetadataUpdateWorker(context: Context, workerParams: WorkerParameters) :
                 Result.success()
             } catch (e: Exception) {
                 if (e is CancellationException) {
-                    // Assume success although cancelled
-                    Result.success()
+                    logcat(LogPriority.INFO) { "Metadata update cancelled: id=$id, stopReason=$stopReason" }
+                    throw e
                 } else {
                     logcat(LogPriority.ERROR, e)
                     Result.failure()
@@ -93,7 +95,10 @@ class MetadataUpdateWorker(context: Context, workerParams: WorkerParameters) :
      * Adds list of manga to be updated.
      */
     private suspend fun addMangaToQueue() {
-        mangaToUpdate = getLibraryManga.await()
+        mangaToUpdate = getMetadataUpdateTargets(
+            library = getLibraryManga.await(),
+            onlyMissing = inputData.getBoolean(KEY_ONLY_MISSING, false),
+        )
         notifier.showQueueSizeWarningNotificationIfNeeded(mangaToUpdate)
     }
 
@@ -107,27 +112,31 @@ class MetadataUpdateWorker(context: Context, workerParams: WorkerParameters) :
                 .values
                 .map { mangaInSource ->
                     async {
-                        semaphore.withPermit {
-                            mangaInSource.forEach { libraryManga ->
-                                val manga = libraryManga.manga
-                                ensureActive()
+                        val retry = LibraryUpdateRetry(semaphore)
+                        mangaInSource.forEach { libraryManga ->
+                            val manga = libraryManga.manga
+                            ensureActive()
 
-                                withUpdateNotification(
-                                    currentlyUpdatingManga,
-                                    progressCount,
-                                    manga,
-                                ) {
-                                    val source = sourceManager.get(manga.source) ?: return@withUpdateNotification
-                                    try {
+                            withUpdateNotification(
+                                currentlyUpdatingManga,
+                                progressCount,
+                                manga,
+                            ) {
+                                val source = sourceManager.get(manga.source) ?: return@withUpdateNotification
+                                try {
+                                    retry.run {
                                         updateMangaFromRemote(
                                             source = source,
                                             manga = manga,
                                             fetchDetails = true,
+                                            fetchChapters = false,
                                         ).getOrThrow()
-                                    } catch (e: Throwable) {
-                                        // Ignore errors and continue
-                                        logcat(LogPriority.ERROR, e)
                                     }
+                                } catch (e: Throwable) {
+                                    if (e is CancellationException) throw e
+
+                                    // Ignore errors and continue
+                                    logcat(LogPriority.ERROR, e)
                                 }
                             }
                         }
@@ -170,10 +179,11 @@ class MetadataUpdateWorker(context: Context, workerParams: WorkerParameters) :
     companion object {
         private const val TAG = "MetadataUpdate"
         private const val WORK_NAME_MANUAL = "MetadataUpdate"
+        private const val KEY_ONLY_MISSING = "only_missing"
 
         private const val MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 60
 
-        suspend fun startNow(workManager: WorkManager): Boolean {
+        suspend fun startNow(workManager: WorkManager, onlyMissing: Boolean = false): Boolean {
             if (workManager.isRunning(TAG)) {
                 // Already running either as a scheduled or manual job
                 return false
@@ -181,10 +191,15 @@ class MetadataUpdateWorker(context: Context, workerParams: WorkerParameters) :
             val request = OneTimeWorkRequestBuilder<MetadataUpdateWorker>()
                 .addTag(TAG)
                 .addTag(WORK_NAME_MANUAL)
+                .setInputData(workDataOf(KEY_ONLY_MISSING to onlyMissing))
                 .build()
             workManager.enqueueUniqueWork(WORK_NAME_MANUAL, ExistingWorkPolicy.KEEP, request)
 
             return true
         }
     }
+}
+
+internal fun getMetadataUpdateTargets(library: List<LibraryManga>, onlyMissing: Boolean): List<LibraryManga> {
+    return library.filter { !onlyMissing || !it.manga.initialized }
 }

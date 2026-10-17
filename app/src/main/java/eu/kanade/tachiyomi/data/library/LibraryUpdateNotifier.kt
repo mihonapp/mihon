@@ -88,6 +88,15 @@ class LibraryUpdateNotifier(
 
     private var lastProgressNotificationTime = 0L
 
+    fun setCancelIntent(intent: PendingIntent) {
+        progressNotificationBuilder.clearActions()
+            .addAction(
+                MaterialSymbolsR.drawable.rounded_close,
+                context.stringResource(MR.strings.action_cancel),
+                intent,
+            )
+    }
+
     /**
      * Shows the notification containing the currently updating manga and the progress.
      *
