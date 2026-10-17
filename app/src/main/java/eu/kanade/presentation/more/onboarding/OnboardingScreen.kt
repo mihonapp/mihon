@@ -15,6 +15,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import mihon.app.di.appGraph
+import mihon.feature.sync.SyncOnboardingStep
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.RocketLaunch
 import soup.compose.material.motion.animation.materialSharedAxisX
@@ -31,12 +34,15 @@ fun OnboardingScreen(
 ) {
     val slideDistance = rememberSlideDistance()
 
+    val context = LocalContext.current
     var currentStep by rememberSaveable { mutableIntStateOf(0) }
     val steps = remember {
-        listOf(
+        listOfNotNull(
             ThemeStep(),
             StorageStep(),
             PermissionStep(),
+            // Only in builds that can sign in to Google at all
+            SyncOnboardingStep().takeIf { context.appGraph.googleDriveAuth.isConfigured },
             GuidesStep(onRestoreBackup = onRestoreBackup),
         )
     }
