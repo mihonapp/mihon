@@ -132,6 +132,20 @@ internal fun ColumnScope.GeneralPage(viewModel: ReaderSettingsViewModel) {
         pref = viewModel.preferences.pageTransitions,
     )
 
+    val autoscrollSpeed by viewModel.preferences.autoscrollSpeed.collectAsState()
+    SliderItem(
+        label = stringResource(MR.strings.pref_autoscroll_speed),
+        value = autoscrollSpeed,
+        valueRange = 1..10,
+        onChange = { viewModel.preferences.autoscrollSpeed.set(it) },
+        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_autoscroll_smooth_scroll),
+        pref = viewModel.preferences.autoscrollSmoothScrolling,
+    )
+
     CheckboxItem(
         label = stringResource(MR.strings.pref_flash_page),
         pref = viewModel.preferences.flashOnPageChange,

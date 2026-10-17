@@ -51,6 +51,7 @@
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
+    <string name="action_toggle_autoscroll">Toggle autoscroll</string>
     <string name="action_menu">Menu</string>
     <string name="action_filter">Filter</string>
     <string name="action_set_interval">Set interval</string>
@@ -411,6 +412,10 @@
     <string name="pref_page_transitions">Animate page transitions</string>
     <string name="pref_load_ahead_only_over_wifi">Load ahead only on Wi-Fi</string>
     <string name="pref_load_ahead_only_over_wifi_summary">Saves mobile data by loading only the pages near the one you\'re reading</string>
+    <string name="pref_autoscroll">Autoscroll</string>
+    <string name="pref_autoscroll_speed">Autoscroll speed</string>
+    <string name="pref_autoscroll_smooth_scroll">Smooth scrolling</string>
+    <string name="pref_autoscroll_smooth_scroll_summ">Scroll continuously instead of jumping one screen at a time</string>
     <string name="pref_flash_page">Flash on page change</string>
     <string name="pref_flash_page_summ">Reduces ghosting on e-ink displays</string>
     <string name="pref_flash_duration">Flash duration</string>
