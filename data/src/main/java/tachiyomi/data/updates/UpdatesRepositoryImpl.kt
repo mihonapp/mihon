@@ -7,6 +7,8 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.json.JsonObject
+import mihon.domain.source.model.chapterOrigins
 import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
@@ -99,6 +101,7 @@ class UpdatesRepositoryImpl(
         dateUpload: Instant?,
         dateFetch: Instant,
         excludedScanlator: String?,
+        chapterMemo: JsonObject,
     ): UpdatesWithRelations = UpdatesWithRelations(
         mangaId = mangaId,
         mangaTitle = mangaTitle,
@@ -110,6 +113,7 @@ class UpdatesRepositoryImpl(
         bookmark = bookmark,
         lastPageRead = lastPageRead,
         sourceId = sourceId,
+        downloadSourceId = chapterMemo.chapterOrigins().firstOrNull()?.sourceId ?: sourceId,
         dateFetch = dateFetch,
         coverData = MangaCover(
             mangaId = mangaId,

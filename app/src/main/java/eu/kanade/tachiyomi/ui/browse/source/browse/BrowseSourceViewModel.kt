@@ -28,6 +28,7 @@ import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -250,7 +251,13 @@ class BrowseSourceViewModel(
                 MangaUpdate(manga.id) { favoriteAt = Clock.System.now() }
             }
 
-            updateManga.await(update)
+            if (updateManga.await(update) && !manga.favorite) showLinkedSources(manga)
+        }
+    }
+
+    private suspend fun showLinkedSources(manga: Manga) {
+        if (sourceManager.get(manga.source) is HttpSource) {
+            state.update { it.copy(dialog = Dialog.LinkedSources(manga)) }
         }
     }
 
@@ -350,6 +357,8 @@ class BrowseSourceViewModel(
     }
 
     sealed interface Dialog {
+        data class LinkedSources(val manga: Manga) : Dialog
+
         data object Filter : Dialog
         data class RemoveManga(val manga: Manga) : Dialog
         data class AddDuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog

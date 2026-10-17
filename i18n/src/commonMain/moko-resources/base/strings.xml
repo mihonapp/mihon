@@ -1120,4 +1120,16 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+    <string name="linked_sources">Linked sources</string>
+    <string name="linked_sources_search_hint">Select sources for %1$s, then tap Apply to save. Tap a selected title to deselect it.</string>
+    <string name="linked_sources_selected">Source selected</string>
+    <string name="linked_source_select_scanlators">Select scanlators</string>
+    <string name="linked_source_scanlators_hint">Choose one or more scanlators for this source.</string>
+    <string name="linked_source_unknown_scanlator">Unknown scanlator</string>
+    <string name="linked_sources_clear">Clear</string>
+    <string name="linked_source_scanlator_single_chapter">Ch. %1$s</string>
+    <string name="linked_source_scanlator_chapter_range">Ch. %1$s–%2$s</string>
+    <string name="linked_sources_clear_selections">Clear selections</string>
+    <string name="backup_official_compatibility">Compatible with official Mihon</string>
+    <string name="backup_official_compatibility_summary">Splits linked titles into separate entries per source. Preserves read status and bookmarks; partial-page progress stays with the edition being read. Downloaded pages are not included. Keep a normal backup to retain source links and scanlator selections.</string>
 </resources>
