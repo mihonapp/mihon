@@ -755,7 +755,6 @@
     <string name="theme_nord">Nord</string>
     <string name="manga_interval_expected_update_soon">即将更新</string>
     <string name="ext_revoke_trust">撤销已信任的未知插件</string>
-    <string name="action_open_repo">打开图源仓库</string>
     <string name="pref_webtoon_disable_zoom_out">禁用缩小</string>
     <string name="action_add_anyway">依然添加</string>
     <string name="pref_display_profile">自定义校色文件</string>
@@ -953,4 +952,7 @@
     <string name="refresh_tracker_profile">刷新跟踪器配置</string>
     <string name="refresh_tracker_success">刷新 %s 配置</string>
     <string name="refresh_tracker_error">%1$s 刷新错误： %2$s</string>
+    <string name="app_migrating_title">正在完成更新</string>
+    <string name="app_migrating_summary">更新后正在进行准备工作。这可能需要几分钟，请保持应用处于开启状态。</string>
+    <string name="pref_enable_chapter_name_hash">启用章节名称哈希后缀</string>
 </resources>
