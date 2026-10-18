@@ -250,6 +250,13 @@
     <!-- "Today" instead of "2023-12-31" -->
     <string name="pref_relative_format_summary">\"%1$s\" instead of \"%2$s\"</string>
     <string name="pref_date_format">Date format</string>
+    <string name="pref_time_format">Time format</string>
+    <!-- "Follow" as in "adhere to", "align with" (the system default) -->
+    <string name="follow_system">Follow system</string>
+    <!-- "Follow" as in "adhere to", "align with" (the language default) -->
+    <string name="follow_language">Follow language</string>
+    <string name="time_24_hours">24-hour</string>
+    <string name="time_12_hours">12-hour</string>
     <string name="pref_display_images_description">Render images in manga descriptions</string>
 
     <string name="pref_manage_notifications">Manage notifications</string>

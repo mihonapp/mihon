@@ -742,7 +742,6 @@
     <string name="ext_permission_install_apps_warning">Kebenaran diperlukan untuk memasang sambungan. Ketik di sini untuk membenarkan.</string>
     <string name="action_sort_tracker_score">Skor penjejak</string>
     <string name="ext_revoke_trust">Batalkan sambungan dipercayakan yang tidak diketahui</string>
-    <string name="action_open_repo">Buka repositori sumber</string>
     <string name="manga_interval_expected_update_soon">Tidak lama lagi</string>
     <string name="scanlator">Scanlator</string>
     <string name="exclude_scanlators">Kecualikan scanlator</string>
