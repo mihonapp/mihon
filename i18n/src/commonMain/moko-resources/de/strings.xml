@@ -942,4 +942,21 @@
     <string name="transition_animation_stack_right">Gestapelt (nach rechts)</string>
     <string name="transition_animation_stack_up">Gestapelt (nach oben)</string>
     <string name="transition_animation_stack_down">Gestapelt (nach unten)</string>
+    <string name="pref_time_format">Zeitformat</string>
+    <string name="follow_system">Systemeinstellung</string>
+    <string name="follow_language">Sprachstandard</string>
+    <string name="time_24_hours">24-Stunden-Format</string>
+    <string name="time_12_hours">12-Stunden-Format</string>
+    <string name="pref_load_ahead_only_over_wifi">Nur über WLAN im Voraus herunterladen</string>
+    <string name="pref_load_ahead_only_over_wifi_summary">Spart mobile Daten, indem nur Seiten um die aktuelle Seite herum geladen werden</string>
+    <string name="refresh_tracker_profile">Trackerprofil aktualisieren</string>
+    <string name="refresh_tracker_success">%s-Profil aktualisiert</string>
+    <string name="refresh_tracker_error">Fehler bei %1$s-Profil-Aktualisierung: %2$s</string>
+    <string name="update_check_skip">Diese Version überspringen</string>
+    <string name="update_check_skip_title">%s überspringen?</string>
+    <string name="update_check_skip_message">Aktualisierungen beinhalten oft Fehlerbehebungen und Sicherheitsverbesserungen. Du wirst nicht erneut an diese Version erinnert, aber du wirst dennoch informiert, wenn eine neuere Version herausgebracht wird.</string>
+    <string name="app_migrating_title">Aktualisierung wird abgeschlossen</string>
+    <string name="app_migrating_summary">Die Aktualisierung wird abgeschlossen. Das kann einige Minuten dauern. Bitte lass die App so lange geöffnet.</string>
+    <string name="pref_enable_chapter_name_hash">Hash-Suffix für Kapitelnamen aktivieren</string>
+    <string name="pref_enable_chapter_name_hash_details">Fügt ein eindeutiges Hash-Suffix an Kapitelnamen an, um Namenskonflikte zu vermeiden. Ist die Option deaktiviert, können Kapitel mit identischen Namen nicht heruntergeladen werden.</string>
 </resources>
