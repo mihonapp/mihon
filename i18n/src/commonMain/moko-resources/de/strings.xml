@@ -753,7 +753,6 @@
     <string name="pref_library_update_smart_update">Intelligentes Aktualisieren</string>
     <string name="manga_interval_expected_update">Ca. %1$s bis zur Veröffentlichung neuer Kapitel, wird ca. alle %2$s überprüft.</string>
     <string name="theme_nord">Nord</string>
-    <string name="action_open_repo">Open-Source-Repository</string>
     <string name="manga_interval_expected_update_soon">Bald</string>
     <string name="ext_revoke_trust">Zertifikatsbestätigungen zurücknehmen</string>
     <string name="pref_webtoon_disable_zoom_out">Rauszoomen deaktivieren</string>

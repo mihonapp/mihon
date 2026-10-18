@@ -744,7 +744,6 @@
     <string name="onboarding_permission_action_grant">منح</string>
     <string name="ext_permission_install_apps_warning">تثبيت الإضافات يتطلب أذونات. انقر هنا لمنحها.</string>
     <string name="ext_revoke_trust">إبطال الإضافات غير الموثوق بها</string>
-    <string name="action_open_repo">مستودع مفتوح المصدر</string>
     <string name="invalid_backup_file_error">الخطأ الكامل:</string>
     <string name="private_settings">تضمين إعدادات حساسة (على سبيل المثال، رموز تسجيل دخول المتتبع)</string>
     <string name="manga_interval_expected_update_soon">قريباً</string>

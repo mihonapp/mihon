@@ -739,7 +739,6 @@
     <string name="onboarding_guides_returning_user">%s aan het herinstalleren?</string>
     <string name="onboarding_permission_action_grant">Toestaan</string>
     <string name="onboarding_guides_new_user">Nieuw bij %s? Wij raden je aan om de opstartgids te lezen.</string>
-    <string name="action_open_repo">Bronrepo openen</string>
     <string name="pref_flash_duration">Flitsduur</string>
     <string name="ext_remove">Verwijderen</string>
     <string name="ext_confirm_remove">Extensie verwijderen?</string>
