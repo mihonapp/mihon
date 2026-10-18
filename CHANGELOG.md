@@ -40,6 +40,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 - Remove the "Split tall images" download setting ([@AntsyLich](https://github.com/AntsyLich))
 
+### Fixed
+- Fixed covers reloading when removing an entry from the library ([@AntsyLich](https://github.com/AntsyLich))
+
 ## [v0.21.2] - 2026-10-13
 ### Fixed
 - Fix long floating point numbers showing up in Comick progress ([@MajorTanya](https://github.com/MajorTanya)) ([#4090](https://github.com/mihonapp/mihon/pull/4090))
