@@ -26,6 +26,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fixed covers reloading when removing an entry from the library ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed WebView crashing for sources that set an Origin header ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed WebView sending source headers to other sites ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed downloads not showing for entries of a source sharing its name with another source ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.2] - 2026-10-13
 ### Fixed
