@@ -73,6 +73,16 @@ class WebGpuConfig(
     var continuousGap = 10
         private set
 
+    var imageFilters = emptyList<WebGpuShader>()
+        private set
+
+    var imageFiltersChangedListener: (() -> Unit)? = null
+
+    var tileFilters = emptyList<WebGpuShader>()
+        private set
+
+    var tileFiltersChangedListener: (() -> Unit)? = null
+
     init {
         readerPreferences.readerTheme.register(
             {
@@ -164,6 +174,16 @@ class WebGpuConfig(
         readerPreferences.continuousGap.register(
             { continuousGap = it },
             { imagePropertyChangedListener?.invoke() },
+        )
+
+        readerPreferences.imageFilters.register(
+            { imageFilters = it },
+            { imageFiltersChangedListener?.invoke() },
+        )
+
+        readerPreferences.tileFilters.register(
+            { tileFilters = it },
+            { tileFiltersChangedListener?.invoke() },
         )
     }
 

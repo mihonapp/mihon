@@ -1052,6 +1052,34 @@ open class WebGpuViewer(
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
         }
+
+        config.imageFiltersChangedListener = {
+            val shaders = config.imageFilters
+            // Else an older, slower load could land last.
+            imageFiltersJob?.cancel()
+            imageFiltersJob = scope.launch { pager.state.imageFilters = loadFilters(shaders) }
+        }
+
+        config.tileFiltersChangedListener = {
+            val shaders = config.tileFilters
+            tileFiltersJob?.cancel()
+            tileFiltersJob = scope.launch { pager.state.tileFilters = loadFilters(shaders) }
+        }
+    }
+
+    private var imageFiltersJob: Job? = null
+    private var tileFiltersJob: Job? = null
+
+    /** Fresh instances: one belongs to one viewer and one chain. Skips any that fail to load. */
+    private suspend fun loadFilters(shaders: List<WebGpuShader>) = withContext(Dispatchers.IO) {
+        shaders.mapNotNull { shader ->
+            try {
+                WebGpuShaders.load(activity, shader)
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "filter ${shader.name}" }
+                null
+            }
+        }
     }
 
     override fun destroy() {

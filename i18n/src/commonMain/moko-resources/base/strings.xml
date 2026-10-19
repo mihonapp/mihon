@@ -552,6 +552,10 @@
     <string name="dual_page_view_wide">When wide</string>
     <string name="pref_continuous_minwidth">Min width</string>
     <string name="pref_continuous_gap">Gap</string>
+    <string name="pref_image_filters">Image filters</string>
+    <string name="pref_tile_filters">Tile filters</string>
+    <string name="action_add_shader">Add shader</string>
+    <string name="image_filter_invalid">Couldn\'t add shader</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
