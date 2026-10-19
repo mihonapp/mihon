@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metro.AppScope
@@ -34,13 +35,15 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
-import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreWorker
 import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.workManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.LazyColumnWithAction
@@ -191,7 +194,9 @@ class RestoreBackupViewModel(
     }
 
     init {
-        validate(uri.toUri())
+        viewModelScope.launch(Dispatchers.IO) {
+            validate(uri.toUri())
+        }
     }
 
     fun toggle(setter: (RestoreOptions, Boolean) -> RestoreOptions, enabled: Boolean) {
@@ -203,14 +208,14 @@ class RestoreBackupViewModel(
     }
 
     fun startRestore() {
-        BackupRestoreJob.start(
+        BackupRestoreWorker.start(
             workManager = context.workManager,
             uri = uri.toUri(),
             options = state.value.options,
         )
     }
 
-    private fun validate(uri: Uri) {
+    private suspend fun validate(uri: Uri) {
         val results = try {
             backupFileValidator.validate(uri)
         } catch (e: Exception) {

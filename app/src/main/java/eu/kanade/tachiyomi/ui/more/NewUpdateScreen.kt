@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -44,6 +43,10 @@ class NewUpdateScreen(
                 }
             },
             onRejectUpdate = navigator::pop,
+            onSkipUpdate = {
+                viewModel.skipUpdate(versionName)
+                navigator.pop()
+            },
         )
     }
 }

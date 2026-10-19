@@ -5,6 +5,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import eu.kanade.tachiyomi.data.track.bangumi.Bangumi
+import eu.kanade.tachiyomi.data.track.comick.Comick
 import eu.kanade.tachiyomi.data.track.hikka.Hikka
 import eu.kanade.tachiyomi.data.track.kavita.Kavita
 import eu.kanade.tachiyomi.data.track.kitsu.Kitsu
@@ -20,26 +21,21 @@ import kotlinx.coroutines.flow.combine
 @SingleIn(AppScope::class)
 class TrackerManager {
 
-    companion object {
-        const val ANILIST = 2L
-        const val KITSU = 3L
-        const val KAVITA = 8L
-        const val MANGABAKA = 11L
-    }
-
     val myAnimeList = MyAnimeList(1L)
-    val aniList = Anilist(ANILIST)
-    val kitsu = Kitsu(KITSU)
+    val aniList = Anilist(2L)
+    val kitsu = Kitsu(3L)
     val shikimori = Shikimori(4L)
     val bangumi = Bangumi(5L)
     val komga = Komga(6L)
     val mangaUpdates = MangaUpdates(7L)
-    val kavita = Kavita(KAVITA)
+    val kavita = Kavita(8L)
     val suwayomi = Suwayomi(9L)
     val hikka = Hikka(10L)
-    val mangaBaka = MangaBaka(MANGABAKA)
+    val mangaBaka = MangaBaka(11L)
+    val comick = Comick(12L)
 
     val trackers = listOf(
+        mangaBaka,
         myAnimeList,
         aniList,
         kitsu,
@@ -50,7 +46,7 @@ class TrackerManager {
         kavita,
         suwayomi,
         hikka,
-        mangaBaka,
+        comick,
     )
 
     fun loggedInTrackers() = trackers.filter { it.isLoggedIn }

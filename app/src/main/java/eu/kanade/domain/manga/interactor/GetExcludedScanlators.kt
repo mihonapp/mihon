@@ -1,28 +1,19 @@
 package eu.kanade.domain.manga.interactor
 
-import app.cash.sqldelight.async.coroutines.awaitAsList
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import tachiyomi.data.Database
-import tachiyomi.data.subscribeToList
+import tachiyomi.domain.manga.repository.MangaRepository
 
 @Inject
 class GetExcludedScanlators(
-    private val database: Database,
+    private val mangaRepository: MangaRepository,
 ) {
 
     suspend fun await(mangaId: Long): Set<String> {
-        return database.excluded_scanlatorsQueries
-            .getExcludedScanlatorsByMangaId(mangaId)
-            .awaitAsList()
-            .toSet()
+        return mangaRepository.getExcludedScanlators(mangaId)
     }
 
     fun subscribe(mangaId: Long): Flow<Set<String>> {
-        return database.excluded_scanlatorsQueries
-            .getExcludedScanlatorsByMangaId(mangaId)
-            .subscribeToList()
-            .map { it.toSet() }
+        return mangaRepository.getExcludedScanlatorsAsFlow(mangaId)
     }
 }

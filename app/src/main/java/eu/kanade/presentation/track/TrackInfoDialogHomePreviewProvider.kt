@@ -23,8 +23,8 @@ internal class TrackInfoDialogHomePreviewProvider :
         status = 1L,
         score = 2.0,
         remoteUrl = "https://example.com",
-        startDate = 0L,
-        finishDate = 0L,
+        startDate = null,
+        finishDate = null,
         private = false,
     )
     private val privateTrack = aTrack.copy(private = true)

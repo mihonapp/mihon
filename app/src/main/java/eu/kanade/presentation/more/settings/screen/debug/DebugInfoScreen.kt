@@ -1,8 +1,6 @@
 package eu.kanade.presentation.more.settings.screen.debug
 
 import android.os.Build
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Autorenew
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +18,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
 import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.util.rememberIs24HourSystem
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -27,6 +26,8 @@ import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
 import mihon.app.di.appGraph
 import mihon.core.common.FeatureFlags
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Autorenew
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
 
@@ -59,6 +60,7 @@ class DebugInfoScreen : Screen() {
     private fun getAppInfoGroup(): Preference.PreferenceGroup {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
+        val is24HourSystem = rememberIs24HourSystem()
 
         val installationIdPref = remember { context.appGraph.basePreferences.installationId }
         val installationId by installationIdPref.collectAsState()
@@ -72,7 +74,9 @@ class DebugInfoScreen : Screen() {
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = "Build time",
-                    subtitle = AboutScreen.getFormattedBuildTime(),
+                    // Keyed on the system 12/24h setting, which can change while the app is backgrounded.
+                    // Date/time prefs only change in Appearance, which recreates this screen on return.
+                    subtitle = remember(is24HourSystem) { AboutScreen.getFormattedBuildTime() },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = "Installation ID",
@@ -86,7 +90,7 @@ class DebugInfoScreen : Screen() {
                             },
                         ) {
                             Icon(
-                                imageVector = Icons.Outlined.Autorenew,
+                                imageVector = MaterialSymbols.Rounded.Autorenew,
                                 tint = MaterialTheme.colorScheme.primary,
                                 contentDescription = null,
                             )

@@ -1,9 +1,12 @@
 package tachiyomi.presentation.core.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,8 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Newspaper
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Newspaper
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.secondaryItemAlpha
@@ -42,6 +45,7 @@ fun InfoScreen(
     canAccept: Boolean = true,
     rejectText: String? = null,
     onRejectClick: (() -> Unit)? = null,
+    rejectAction: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Scaffold(
@@ -73,11 +77,14 @@ fun InfoScreen(
                     Text(text = acceptText)
                 }
                 if (rejectText != null && onRejectClick != null) {
-                    OutlinedButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = onRejectClick,
-                    ) {
-                        Text(text = rejectText)
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall)) {
+                        OutlinedButton(
+                            modifier = Modifier.weight(1f),
+                            onClick = onRejectClick,
+                        ) {
+                            Text(text = rejectText)
+                        }
+                        rejectAction?.invoke(this)
                     }
                 }
             }
@@ -130,7 +137,7 @@ fun InfoScreen(
 @Composable
 private fun InfoScaffoldPreview() {
     InfoScreen(
-        icon = Icons.Outlined.Newspaper,
+        icon = MaterialSymbols.Rounded.Newspaper,
         headingText = "Heading",
         subtitleText = "Subtitle",
         acceptText = "Accept",

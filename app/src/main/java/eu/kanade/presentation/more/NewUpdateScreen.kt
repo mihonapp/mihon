@@ -5,20 +5,26 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
-import androidx.compose.material.icons.outlined.NewReleases
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.manga.components.MarkdownRender
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreenModel
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
+import mihon.icons.materialsymbols.rounded.UpdateDisabled
+import mihon.icons.materialsymbols.rounded.Verified
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
@@ -34,9 +40,35 @@ fun NewUpdateScreen(
     onOpenInBrowser: () -> Unit,
     onAcceptUpdate: () -> Unit,
     onRejectUpdate: () -> Unit,
+    onSkipUpdate: () -> Unit,
 ) {
+    var showSkipDialog by remember { mutableStateOf(false) }
+    if (showSkipDialog) {
+        val dismiss = { showSkipDialog = false }
+        AlertDialog(
+            onDismissRequest = dismiss,
+            title = { Text(text = stringResource(MR.strings.update_check_skip_title, versionName)) },
+            text = { Text(text = stringResource(MR.strings.update_check_skip_message)) },
+            dismissButton = {
+                TextButton(onClick = dismiss) {
+                    Text(text = stringResource(MR.strings.action_cancel))
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        dismiss()
+                        onSkipUpdate()
+                    },
+                ) {
+                    Text(text = stringResource(MR.strings.action_ok))
+                }
+            },
+        )
+    }
+
     InfoScreen(
-        icon = Icons.Outlined.NewReleases,
+        icon = MaterialSymbols.Rounded.Verified,
         headingText = stringResource(MR.strings.update_check_notification_update_available),
         subtitleText = versionName,
         acceptText = when (stage) {
@@ -52,6 +84,14 @@ fun NewUpdateScreen(
         canAccept = stage != NewUpdateScreenModel.Stage.Downloading,
         rejectText = stringResource(MR.strings.action_not_now),
         onRejectClick = onRejectUpdate,
+        rejectAction = {
+            OutlinedButton(onClick = { showSkipDialog = true }) {
+                Icon(
+                    imageVector = MaterialSymbols.Rounded.UpdateDisabled,
+                    contentDescription = stringResource(MR.strings.update_check_skip),
+                )
+            }
+        },
     ) {
         Column(
             modifier = Modifier
@@ -69,7 +109,7 @@ fun NewUpdateScreen(
             ) {
                 Text(text = stringResource(MR.strings.update_check_open))
                 Spacer(modifier = Modifier.width(MaterialTheme.padding.extraSmall))
-                Icon(imageVector = Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null)
+                Icon(imageVector = MaterialSymbols.AutoMirroredRounded.OpenInNew, contentDescription = null)
             }
         }
     }
@@ -94,6 +134,7 @@ private fun NewUpdateScreenPreview() {
             onOpenInBrowser = {},
             onAcceptUpdate = {},
             onRejectUpdate = {},
+            onSkipUpdate = {},
         )
     }
 }

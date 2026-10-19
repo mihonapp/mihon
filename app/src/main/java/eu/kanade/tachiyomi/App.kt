@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.memory.MemoryCache
@@ -21,7 +21,6 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.allowRgb565
 import coil3.request.crossfade
 import coil3.util.DebugLogger
-import dev.mihon.injekt.patchInjekt
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.createGraphFactory
 import eu.kanade.domain.base.BasePreferences
@@ -32,11 +31,16 @@ import eu.kanade.tachiyomi.crash.CrashActivity
 import eu.kanade.tachiyomi.crash.GlobalExceptionHandler
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.coil.BufferedSourceFetcher
+import eu.kanade.tachiyomi.data.coil.CoverRequestInterceptor
+import eu.kanade.tachiyomi.data.coil.ExtensionIconFetcher
 import eu.kanade.tachiyomi.data.coil.ImageDecoder
+import eu.kanade.tachiyomi.data.coil.InstalledExtensionIconKeyer
+import eu.kanade.tachiyomi.data.coil.InstalledSourceIconKeyer
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
 import eu.kanade.tachiyomi.data.coil.MangaKeyer
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
@@ -46,6 +50,7 @@ import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isDebugBuildType
 import eu.kanade.tachiyomi.util.system.notify
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -53,7 +58,8 @@ import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import logcat.LogcatLogger
 import mihon.app.di.AppGraph
-import mihon.app.di.injekt.MetroInteropModule
+import mihon.app.di.injekt.MetroInjektRegistrar
+import mihon.core.metro.AppCoroutineScope
 import mihon.core.metro.GraphProvider
 import mihon.core.migration.Migration
 import mihon.core.migration.Migrator
@@ -67,8 +73,10 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.addSingleton
+import uy.kohesive.injekt.api.InjektScope
 import java.security.Security
+import kotlin.concurrent.thread
+import mihon.icons.materialsymbols.R as MaterialSymbolsR
 
 class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
 
@@ -86,17 +94,21 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     @Inject private lateinit var uiPreferences: UiPreferences
 
-    @Inject private lateinit var coverCache: CoverCache
+    // Lazy: only the image loader uses these, and process starts without UI (workers, receivers) never build it
+    @Inject private lateinit var coverCache: Lazy<CoverCache>
 
-    @Inject private lateinit var networkHelper: NetworkHelper
+    @Inject private lateinit var networkHelper: Lazy<NetworkHelper>
 
-    @Inject private lateinit var sourceManager: SourceManager
+    @Inject private lateinit var sourceManager: Lazy<SourceManager>
+
+    @Inject private lateinit var extensionManager: Lazy<ExtensionManager>
 
     @Inject private lateinit var widgetManager: WidgetManager
 
-    @Inject private lateinit var injektMetroInteropModule: MetroInteropModule
-
     @Inject private lateinit var migrations: Set<Migration>
+
+    @Inject @AppCoroutineScope
+    private lateinit var scope: CoroutineScope
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
 
@@ -111,8 +123,14 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
             if (packageName != process) WebView.setDataDirectorySuffix(process)
         }
 
+        // The graph and the code after it read the default preferences straight away. Loading them takes a disk
+        // read, so start it on another thread while the graph is built; the first read then waits less or not at all
+        thread(name = "PreferencesPreload") { PreferenceManager.getDefaultSharedPreferences(this) }
+        // The first use of Dispatchers.Main finds its factory with a ServiceLoader, which reads the APK
+        thread(name = "MainDispatcherPreload") { Dispatchers.Main }
+
+        Injekt = InjektScope(MetroInjektRegistrar(application = this, graphProvider = this))
         graph.inject(this)
-        setupInjekt()
 
         TelemetryConfig.init(applicationContext)
 
@@ -127,8 +145,6 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
-        val scope = ProcessLifecycleOwner.get().lifecycleScope
-
         // Show notification to disable Incognito Mode when it's enabled
         basePreferences.incognitoMode.changes()
             .onEach { enabled ->
@@ -140,7 +156,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                     ) {
                         setContentTitle(stringResource(MR.strings.pref_incognito_mode))
                         setContentText(stringResource(MR.strings.notification_incognito_text))
-                        setSmallIcon(R.drawable.ic_glasses_24dp)
+                        setSmallIcon(MaterialSymbolsR.drawable.rounded_eyeglasses_2)
                         setOngoing(true)
 
                         val pendingIntent = PendingIntent.getBroadcast(
@@ -186,13 +202,6 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         initializeMigrator()
     }
 
-    private fun setupInjekt() {
-        patchInjekt()
-        Injekt.addSingleton<Application>(this)
-        Injekt.addSingleton<Context>(this)
-        Injekt.importModule(injektMetroInteropModule)
-    }
-
     private fun initializeMigrator() {
         val preference = preferenceStore.getInt(Preference.appStateKey("last_version_code"), 0)
         logcat {
@@ -211,7 +220,9 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     override fun newImageLoader(context: Context): ImageLoader {
         return ImageLoader.Builder(this).apply {
-            val callFactoryLazy = lazy { networkHelper.client }
+            val callFactoryLazy = lazy { networkHelper.value.client }
+            val coverCache = coverCache.value
+            val sourceManager = sourceManager.value
             components {
                 // NetworkFetcher.Factory
                 add(OkHttpNetworkFetcherFactory(callFactoryLazy::value))
@@ -221,9 +232,15 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                 add(BufferedSourceFetcher.Factory())
                 add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy, coverCache, sourceManager))
                 add(MangaCoverFetcher.MangaFactory(callFactoryLazy, coverCache, sourceManager))
+                add(ExtensionIconFetcher.ExtensionFactory(context))
+                add(ExtensionIconFetcher.SourceFactory(context, extensionManager))
                 // Keyer
                 add(MangaCoverKeyer(coverCache))
                 add(MangaKeyer())
+                add(InstalledExtensionIconKeyer())
+                add(InstalledSourceIconKeyer())
+                // Interceptor
+                add(CoverRequestInterceptor())
             }
 
             memoryCache(

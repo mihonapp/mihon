@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.track.bangumi
 
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
-import eu.kanade.tachiyomi.data.track.bangumi.dto.isExpired
+import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -15,6 +15,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
     /**
      * OAuth object used for authenticated requests.
      */
+    @Volatile
     private var oauth: BGMOAuth? = bangumi.restoreToken()
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -23,13 +24,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
         var currAuth: BGMOAuth = oauth ?: throw Exception("Not authenticated with Bangumi")
 
         if (currAuth.isExpired()) {
-            val response = chain.proceed(BangumiApi.refreshTokenRequest(currAuth.refreshToken!!))
-            if (response.isSuccessful) {
-                currAuth = json.decodeFromString<BGMOAuth>(response.body.string())
-                newAuth(currAuth)
-            } else {
-                response.close()
-            }
+            currAuth = refreshToken(chain, currAuth)
         }
 
         return originalRequest.newBuilder()
@@ -37,27 +32,25 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
                 "User-Agent",
                 "antsylich/Mihon/v${BuildConfig.VERSION_NAME} (Android) (http://github.com/mihonapp/mihon)",
             )
-            .apply {
-                addHeader("Authorization", "Bearer ${currAuth.accessToken}")
-            }
+            .addHeader("Authorization", "Bearer ${currAuth.accessToken}")
             .build()
             .let(chain::proceed)
     }
 
-    fun newAuth(oauth: BGMOAuth?) {
-        this.oauth = if (oauth == null) {
-            null
-        } else {
-            BGMOAuth(
-                oauth.accessToken,
-                oauth.tokenType,
-                System.currentTimeMillis() / 1000,
-                oauth.expiresIn,
-                oauth.refreshToken,
-                this.oauth?.userId,
-            )
-        }
+    private fun refreshToken(chain: Interceptor.Chain, expired: BGMOAuth): BGMOAuth = synchronized(this) {
+        val current = oauth ?: expired
+        if (!current.isExpired()) return@synchronized current
 
+        val response = chain.proceed(BangumiApi.refreshTokenRequest(current.refreshToken!!))
+        if (!response.isSuccessful) {
+            response.close()
+            return@synchronized current
+        }
+        with(json) { response.parseAs<BGMOAuth>() }.also(::newAuth)
+    }
+
+    fun newAuth(oauth: BGMOAuth?) {
+        this.oauth = oauth
         bangumi.saveToken(oauth)
     }
 }

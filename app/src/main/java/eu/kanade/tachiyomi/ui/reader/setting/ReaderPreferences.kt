@@ -22,6 +22,11 @@ class ReaderPreferences(
 
     val pageTransitions: Preference<Boolean> = preferenceStore.getBoolean("pref_enable_transitions_key", true)
 
+    val loadAheadOnlyOverWifi: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_reader_load_ahead_only_over_wifi",
+        true,
+    )
+
     val flashOnPageChange: Preference<Boolean> = preferenceStore.getBoolean("pref_reader_flash", false)
 
     val flashDurationMillis: Preference<Int> = preferenceStore.getInt("pref_reader_flash_duration", MILLI_CONVERSION)
@@ -206,9 +211,18 @@ class ReaderPreferences(
     // region WebGpu
 
     val transitionAnimation: Preference<TransitionAnimation> =
-        preferenceStore.getEnum("webgpu_transition_animation", TransitionAnimation.DEFAULT)
+        preferenceStore.getEnum("webgpu_transition_animation", TransitionAnimation.BASIC)
+
+    val transitionAnimationDual: Preference<TransitionAnimation> =
+        preferenceStore.getEnum("webgpu_dual_transition_animation", TransitionAnimation.BASIC)
 
     val cutoutMode: Preference<CutoutMode> = preferenceStore.getEnum("webgpu_cutout_mode", CutoutMode.AVOID)
+
+    val cutoutModeDual: Preference<CutoutMode> = preferenceStore.getEnum("webgpu_dual_cutout_mode", CutoutMode.IGNORE)
+
+    val continuousMinWidth: Preference<Int> = preferenceStore.getInt("webgpu_continuous_minwidth", 100)
+
+    val continuousGap: Preference<Int> = preferenceStore.getInt("webgpu_continuous_gap", 10)
 
     // endregion
 
@@ -243,7 +257,8 @@ class ReaderPreferences(
     }
 
     enum class TransitionAnimation(val titleRes: StringResource) {
-        DEFAULT(MR.strings.transition_animation_default),
+        BASIC(MR.strings.transition_animation_basic),
+        FLIP(MR.strings.transition_animation_flip),
         FLIP_LEFT(MR.strings.transition_animation_flip_left),
         FLIP_RIGHT(
             MR.strings.transition_animation_flip_right,
@@ -263,6 +278,7 @@ class ReaderPreferences(
         FADE_WHITE(
             MR.strings.transition_animation_fade_white,
         ),
+        NONE(MR.strings.transition_animation_none),
     }
 
     enum class CutoutMode(val titleRes: StringResource) {
@@ -299,6 +315,13 @@ class ReaderPreferences(
             MR.strings.scale_type_fit_height,
             MR.strings.scale_type_original_size,
             MR.strings.scale_type_smart_fit,
+        )
+
+        val ImageScaleTypeWebGpuViewer = listOf(
+            MR.strings.scale_type_fit_screen,
+            MR.strings.scale_type_fit_width,
+            MR.strings.scale_type_fit_height,
+            MR.strings.scale_type_original_size,
         )
 
         val ZoomStart = listOf(

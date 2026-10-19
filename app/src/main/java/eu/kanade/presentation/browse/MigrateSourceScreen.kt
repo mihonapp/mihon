@@ -6,12 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowDownward
-import androidx.compose.material.icons.outlined.ArrowUpward
-import androidx.compose.material.icons.outlined.Numbers
-import androidx.compose.material.icons.outlined.SortByAlpha
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,11 +17,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.browse.components.SourceIcon
 import eu.kanade.tachiyomi.ui.browse.migration.sources.MigrateSourceViewModel
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.ArrowDownward
+import mihon.icons.materialsymbols.rounded.ArrowUpward
+import mihon.icons.materialsymbols.rounded.Numbers
+import mihon.icons.materialsymbols.rounded.SortByAlpha
 import tachiyomi.domain.source.model.Source
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Badge
@@ -103,11 +105,11 @@ private fun MigrateSourceList(
                 IconButton(onClick = onToggleSortingMode) {
                     when (sortingMode) {
                         SetMigrateSorting.Mode.ALPHABETICAL -> Icon(
-                            Icons.Outlined.SortByAlpha,
+                            MaterialSymbols.Rounded.SortByAlpha,
                             contentDescription = stringResource(MR.strings.action_sort_alpha),
                         )
                         SetMigrateSorting.Mode.TOTAL -> Icon(
-                            Icons.Outlined.Numbers,
+                            MaterialSymbols.Rounded.Numbers,
                             contentDescription = stringResource(MR.strings.action_sort_count),
                         )
                     }
@@ -115,11 +117,11 @@ private fun MigrateSourceList(
                 IconButton(onClick = onToggleSortingDirection) {
                     when (sortingDirection) {
                         SetMigrateSorting.Direction.ASCENDING -> Icon(
-                            Icons.Outlined.ArrowUpward,
+                            MaterialSymbols.Rounded.ArrowUpward,
                             contentDescription = stringResource(MR.strings.action_asc),
                         )
                         SetMigrateSorting.Direction.DESCENDING -> Icon(
-                            Icons.Outlined.ArrowDownward,
+                            MaterialSymbols.Rounded.ArrowDownward,
                             contentDescription = stringResource(MR.strings.action_desc),
                         )
                     }
@@ -156,7 +158,7 @@ private fun MigrateSourceItem(
         showLanguageInContent = source.lang != "",
         onClickItem = onClickItem,
         onLongClickItem = onLongClickItem,
-        icon = { SourceIcon(source = source) },
+        icon = { SourceIcon(source = source, modifier = Modifier.size(48.dp)) },
         action = {
             BadgeGroup {
                 Badge(text = "$count")

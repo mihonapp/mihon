@@ -7,6 +7,8 @@ import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UncaughtExceptionInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
+import kotlinx.coroutines.CoroutineScope
+import mihon.core.metro.AppCoroutineScope
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,13 +19,14 @@ import kotlin.time.Duration.Companion.seconds
 @Inject
 @SingleIn(AppScope::class)
 class NetworkHelper(
+    @AppCoroutineScope private val scope: CoroutineScope,
     private val context: Context,
     private val preferences: NetworkPreferences,
 ) {
 
     val cookieJar = AndroidCookieJar()
 
-    private val clientBuilder: OkHttpClient.Builder = run {
+    private fun clientBuilder(): OkHttpClient.Builder = run {
         val builder = OkHttpClient.Builder()
             .cookieJar(cookieJar)
             .connectTimeout(30.seconds)
@@ -62,18 +65,20 @@ class NetworkHelper(
         }
     }
 
-    val client = clientBuilder
-        .addInterceptor(
-            CloudflareInterceptor(context, cookieJar, ::defaultUserAgentProvider),
-        )
-        .build()
+    val client: OkHttpClient by lazy {
+        clientBuilder()
+            .addInterceptor(
+                CloudflareInterceptor(context, cookieJar, scope, ::defaultUserAgentProvider),
+            )
+            .build()
+    }
 
     /**
      * @deprecated Since extension-lib 1.5
      */
     @Deprecated("The regular client handles Cloudflare by default")
     @Suppress("UNUSED")
-    val cloudflareClient: OkHttpClient = client
+    val cloudflareClient: OkHttpClient get() = client
 
     fun defaultUserAgentProvider() = preferences.defaultUserAgent.get().trim()
 }

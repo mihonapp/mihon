@@ -239,19 +239,14 @@
     <string name="ext_untrusted">Непотвърдени</string>
     <string name="ext_uninstall">Деинсталирай</string>
     <string name="untrusted_extension">Непотвърдено разширение</string>
-    <string name="untrusted_extension_message">Следното разширение имаше непотвърден сертификат и не беше активирано.
-\n
-\nЗлонамереното разширение може да види всичката информация за вход в системата на Mihon или да компилира неблагонадежден код.
-\n
-\nПотвърждавайки този сертификат, вие приемате тези рискове.</string>
+    <string name="untrusted_extension_message">Следното разширение имаше непотвърден сертификат и не беше активирано. \n \nЗлонамереното разширение може да види всичката информация за вход в системата на Mihon или да компилира неблагонадежден код. \n \nПотвърждавайки този сертификат, вие приемате тези рискове.</string>
     <string name="pref_double_tap_anim_speed">Скорост на анимацията</string>
     <string name="double_tap_anim_speed_0">Без анимация</string>
     <string name="double_tap_anim_speed_normal">Нормална</string>
     <string name="double_tap_anim_speed_fast">Бързо</string>
     <string name="manga_added_library">Добавена към библиотеката</string>
     <string name="manga_removed_library">Премахната от библиотеката</string>
-    <string name="copied_to_clipboard">Копирано към клипборда:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Копирано към клипборда: \n%1$s</string>
     <string name="migration_dialog_what_to_include">Изберете кои данни ще мигрирате</string>
     <string name="migrate">Мигрирай</string>
     <string name="copy">Копирай</string>
@@ -402,13 +397,9 @@
     <string name="pref_remove_bookmarked_chapters">Позволи изтриване на отметнати глави</string>
     <string name="pref_category_delete_chapters">Изтрий глави</string>
     <string name="pref_category_reading_mode">Режим на четене</string>
-    <string name="ext_nsfw_warning">Може да съдържа неприлично (18+) съдържание</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Тази настройка няма да спре неофициални или потенциално неправилно маркирани разширения да позволяват достъп до съдържание за възрастни (18+) в апликацията.</string>
     <string name="pref_category_theme">Тема</string>
     <string name="action_sort_date_added">Добавено на</string>
     <string name="no_chapters_error">Не са намерени глави</string>
-    <string name="pref_category_nsfw_content">NSFW (18+) източници</string>
     <string name="action_desc">Низходящ</string>
     <string name="action_asc">Възходящ</string>
     <string name="action_order_by_chapter_number">По брой на главите</string>
@@ -420,9 +411,7 @@
     <string name="date">Дата</string>
     <string name="pref_dark_theme_pure_black">Чисто черен режим</string>
     <string name="label_default">По подразбиране</string>
-    <string name="backup_restore_content_full">Ще бъдат възстановени данните от резервното копие.
-\n
-\nТрябва да инсталирате липсващи разширения, ако има такива, и да се впишете в услугите за тракинг, за да ги ползвате.</string>
+    <string name="backup_restore_content_full">Ще бъдат възстановени данните от резервното копие. \n \nТрябва да инсталирате липсващи разширения, ако има такива, и да се впишете в услугите за тракинг, за да ги ползвате.</string>
     <string name="action_track">Проследи</string>
     <string name="restore_miui_warning">Съхраняването/възстановяването може да не функционира правилно, ако MIUI Optimization е изключено.</string>
     <string name="about_dont_kill_my_app">Някои производители ограничават приложенията, за да убият задноплановите услуги. Следният уебсайт съдържа информация за разрешаването на проблема.</string>
@@ -521,7 +510,6 @@
     <string name="spen_previous_page">Предишна страница</string>
     <string name="spen_next_page">Следваща страница</string>
     <string name="action_display_language_badge">Език</string>
-    <string name="pref_show_nsfw_source">Показвай в списъка с източници и разширения</string>
     <string name="relative_time_today">Днес</string>
     <string name="ext_app_info">Информация</string>
     <string name="pref_show_navigation_mode_summary">Покажи зони за натискане, когато четецът се отвори</string>
@@ -559,7 +547,7 @@
     <string name="not_installed">Не е инсталиран</string>
     <string name="rotation_reverse_portrait">Обърнат портрет</string>
     <string name="ext_info_language">Език</string>
-    <string name="crash_screen_title">Случи се неочаквана грешка</string>
+    <string name="crash_screen_title">Опаа!</string>
     <string name="auto_download_while_reading">Автоматично изтегляне при четене</string>
     <string name="description_placeholder">Няма описание</string>
     <string name="empty_backup_error">Няма заглавия в библиотеката за резервно копие</string>
@@ -603,7 +591,6 @@
     <string name="theme_lavender">Лавандула</string>
     <string name="pref_app_language">Език на приложението</string>
     <string name="delete_category">Изтрий категория</string>
-    <string name="ext_info_age_rating">Възрастово ограничение</string>
     <string name="wish_list">Списък с желания</string>
     <string name="save_chapter_as_cbz">Запази като CBZ архив</string>
     <string name="webview_data_deleted">Данните на WebView изчистени</string>
@@ -611,7 +598,7 @@
     <string name="source_filter_empty_screen">Не беше намерен инсталиран източник</string>
     <string name="action_remove_everything">Премахни всичко</string>
     <string name="ext_info_version">Версия</string>
-    <string name="on_hiatus">В хиатус</string>
+    <string name="on_hiatus">Прекъсната за неопределен период</string>
     <string name="custom_cover">Корица по избор</string>
     <string name="action_search_hint">Търсене…</string>
     <string name="disabled_nav">Деактивирано</string>
@@ -663,7 +650,7 @@
     <string name="onboarding_permission_notifications_description">Получавай известия за обновления в библиотеката и други</string>
     <string name="pref_library_update_smart_update">Умно обновяване</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">След прочитане на глава</string>
-    <string name="has_results">Има резултати</string>
+    <string name="has_results">Имащи резулатати</string>
     <string name="unknown_title">Непознато заглавие</string>
     <string name="possible_duplicates_title">Възможни дубликати</string>
     <string name="action_add_anyway">Добави все пак</string>
@@ -744,4 +731,64 @@
     <string name="onboarding_permission_install_apps">Разрешение за инсталиране на приложения</string>
     <string name="onboarding_permission_ignore_battery_opts">Фоново потребление на батерията</string>
     <string name="onboarding_storage_info">Избери папка, където %1$s ще съхранява изтеглени глави, резервни копия и други.\n\nПрепоръчва се специална папка.\nИзбрана папка: %2$s</string>
+    <string name="action_copy_to_clipboard">Копирай на клипборда</string>
+    <string name="logging_in">Влизане…</string>
+    <string name="label_support_us">Подкрепи ни</string>
+    <string name="supportUsScreen.perks">Патроните получават достъп до ексклузивни канали, като предстоят още предимства.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (предпочитан)</string>
+    <string name="supportUsScreen.donationPlatform.opencollective">OpenCollective</string>
+    <string name="supportUsScreen.currentlySupportedBy">В момента Mihon се подкрепя от %d+ патрони. Искаме да благодарим на всеки един от вас. Нека заедно направим Mihon още по-добър.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.paragraph1">Здравейте! Аз съм основният разработчик на Mihon и бих искал да ви помоля да обмислите финансова подкрепа за проекта. При достатъчно подкрепа ще мога да се занимавам с Mihon на пълен работен ден и да се съсредоточа както върху отдавна съществуващи проблеми, така и върху силно желани от потребителите функции.</string>
+    <string name="donationCampaign.paragraph2">Можете да направите дарение чрез Patreon (за предпочитане) или OpenCollective. Ако имате въпроси или желаете да окажете подкрепа чрез алтернативни методи, не се колебайте да се свържете с мен в Discord сървъра на Mihon.</string>
+    <string name="ext_unsupported_message">Това разширение е създадено за версия на библиотеката с разширения, която тази версия на приложението не може да зареди. Актуализирането на приложението или на разширението може да помогне.</string>
+    <string name="migrationListScreenTitle">Миграция</string>
+    <string name="migrationListScreenTitleWithProgress">Миграция (%1$d/%2$d)</string>
+    <string name="migrationListScreen.copyActionLabel">Копирай</string>
+    <string name="migrationListScreen.migrateActionLabel">Мигрирай</string>
+    <string name="migrationListScreen.noMatchFoundText">Няма намерени алтернативи</string>
+    <string name="migrationListScreen.latestChapterLabel">Последно: %1$s</string>
+    <string name="migrationListScreen.unknownLatestChapter">Неизвестно</string>
+    <string name="migrationListScreen.searchManuallyActionLabel">Търси ръчно</string>
+    <string name="migrationListScreen.skipActionLabel">Не мигрирай</string>
+    <string name="migrationListScreen.migrateNowActionLabel">Мигрирай сега</string>
+    <string name="migrationListScreen.copyNowActionLabel">Копирай сега</string>
+    <string name="migrationListScreen.exitDialogTitle">Спри миграцията?</string>
+    <string name="migrationListScreen.exitDialog.stopLabel">Спри</string>
+    <string name="migrationListScreen.exitDialog.cancelLabel">Прекрати</string>
+    <string name="migrationListScreen.migrateDialog.copyLabel">Копирай</string>
+    <string name="migrationListScreen.migrateDialog.migrateLabel">Мигрирай</string>
+    <string name="migrationListScreen.migrateDialog.cancelLabel">Прекрати</string>
+    <string name="migrationListScreen.progressDialog.cancelLabel">Прекрати</string>
+    <string name="migrationListScreen.matchWithoutChapterToast">Не са открити глави; този запис не може да се използва за миграция.</string>
+    <string name="donationCampaign.title">Харесва ли ти приложението?</string>
+    <string name="donationCampaign.paragraph3">Въпреки това, Mihon ще продължи да се поддържа от мен и доброволците и ще остане с отворен код.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Отхвърли</string>
+    <string name="scanlator">Скано-преводач</string>
+    <string name="action_filter_interval_custom">Персонализирана честота на актуализиране</string>
+    <string name="action_apply">Приложи</string>
+    <string name="action_webview_close_tab">Затвори раздела</string>
+    <string name="pref_onboarding_guide">Въвеждащо ръководство</string>
+    <string name="app_migrating_title">Завършване на актуализацията</string>
+    <string name="app_migrating_summary">Подготвяне на всичко необходимо след актуализацията. Това може да отнеме няколко минути, затова дръжте приложението отворено.</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Избягвайте прекъсвания на продължителни актуализации на библиотеки, изтегляния и възстановявания от резервни копия.</string>
+    <string name="onboarding_permission_crashlytics">Изпрати записи от сривове</string>
+    <string name="onboarding_permission_crashlytics_description">Изпрати анонимни записи от сривове на разработчиците.</string>
+    <string name="onboarding_permission_analytics">Разрешаване на анализи</string>
+    <string name="onboarding_permission_analytics_description">Изпращайте анонимизирани данни за използването, за да подобрите функциите на приложението.</string>
+    <string name="onboarding_permission_action_grant">Позволи</string>
+    <string name="onboarding_guides_new_user">Нови си в %s? Препоръчваме ти да разгледаш ръководството за начало.</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="theme_tokyonight">Токийска нощ</string>
+    <string name="pref_relative_format">Относителни времеви отпечатъци</string>
+    <string name="pref_display_images_description">Изобразяване на изображения в описанията на манга</string>
+    <string name="pref_security">Сигурност</string>
+    <string name="pref_firebase">Анализи и записи от сривове</string>
+    <string name="firebase_summary">Изпращането на записи от сривове и данни за анализ ще ни позволи да откриваме и отстраняваме проблеми, да подобряваме производителността и да правим бъдещите актуализации по-съобразени с вашите нужди.</string>
+    <string name="pref_category_extensions">Разширения</string>
+    <string name="file_null_uri_error">Не е избран файл</string>
+    <string name="update_check_skip">Пропусни тази версия</string>
+    <string name="update_check_skip_title">Пропусни%s?</string>
+    <string name="tracked_privately">Проследявани в поверителен режим</string>
 </resources>

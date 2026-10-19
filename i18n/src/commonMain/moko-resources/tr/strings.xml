@@ -97,9 +97,7 @@
     <string name="ext_untrusted">Güvenilmeyen</string>
     <string name="ext_uninstall">Kaldır</string>
     <string name="untrusted_extension">Güvenilmeyen uzantı</string>
-    <string name="untrusted_extension_message">Kötü niyetli uzantılar, oturum açma bilgilerini okuyabilir veya güvenilmeyen kodlar çalıştırabilir.
-\n
-\nBu uzantıya güvenerek bu riskleri kabul etmiş olursunuz.</string>
+    <string name="untrusted_extension_message">Kötü niyetli uzantılar, oturum açma bilgilerini okuyabilir veya güvenilmeyen kodlar çalıştırabilir. \n \nBu uzantıya güvenerek bu riskleri kabul etmiş olursunuz.</string>
     <string name="pref_fullscreen">Tam ekran</string>
     <string name="pref_page_transitions">Sayfa geçişlerini animasyonla yap</string>
     <string name="pref_double_tap_anim_speed">Çift dokunma animasyon hızı</string>
@@ -195,8 +193,7 @@
     <string name="manga_added_library">Kitaplığa eklendi</string>
     <string name="manga_removed_library">Kitaplıktan kaldırıldı</string>
     <string name="delete_downloads_for_manga">İndirilen bölümler silinsin mi?</string>
-    <string name="copied_to_clipboard">Panoya kopyalandı:
-\n%1$s</string>
+    <string name="copied_to_clipboard">Panoya kopyalandı: \n%1$s</string>
     <string name="source_not_installed">Kaynak yüklenmedi: %1$s</string>
     <string name="display_mode_chapter">Bölüm %1$s</string>
     <string name="chapter_downloading_progress">İndiriliyor (%1$d/%2$d)</string>
@@ -403,9 +400,6 @@
     <string name="backup_restore_missing_trackers">Giriş yapılmamış izleyiciler:</string>
     <string name="pref_remove_bookmarked_chapters">Yer imi eklenmiş bölümleri silmeye izin ver</string>
     <string name="pref_category_delete_chapters">Bölümleri sil</string>
-    <string name="ext_nsfw_warning">Bu uzantıdaki kaynaklar yetişkin içerik (18+) içerebilir</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Bu, resmî olmayan veya yanlış işaretlenmiş uzantıların uygulama içinde yetişkin içeriği (18+) göstermesini engellemez.</string>
     <string name="no_chapters_error">Bölüm bulunamadı</string>
     <string name="chapter_settings_updated">Varsayılan bölüm ayarları güncellendi</string>
     <string name="set_chapter_settings_as_default">Varsayılan olarak ayarla</string>
@@ -424,8 +418,6 @@
     <string name="spen_next_page">Sonraki sayfa</string>
     <string name="spen_previous_page">Önceki sayfa</string>
     <string name="migration_help_guide">Kaynak taşıma kılavuzu</string>
-    <string name="pref_category_nsfw_content">Yetişkin içerik (18+) kaynakları</string>
-    <string name="pref_show_nsfw_source">Kaynaklar ve uzantılar listelerinde göster</string>
     <string name="file_picker_error">Dosya seçme uygulaması bulunamadı</string>
     <string name="myanimelist_relogin">Lütfen MAL\'a tekrar giriş yapın</string>
     <string name="pref_viewer_nav">Dokunma bölgeleri</string>
@@ -583,7 +575,6 @@
     <string name="empty_screen">Peki, bu garip</string>
     <string name="ext_info_version">Sürüm</string>
     <string name="ext_info_language">Dil</string>
-    <string name="ext_info_age_rating">Yaş derecelendirmesi</string>
     <string name="wish_list">İstek Listesi</string>
     <string name="on_hold_list">Beklemede Listesi</string>
     <string name="unfinished_list">Bitirilmemiş Listesi</string>
@@ -637,8 +628,7 @@
     <string name="download_notifier_cache_renewal">İndirilenler kontrol ediliyor</string>
     <string name="action_open_random_manga">Rastgele girdi aç</string>
     <string name="information_no_entries_found">Bu kategoride girdi bulunamadı</string>
-    <string name="fdroid_warning">F-Droid derlemeleri desteklenmemektedir.
-\nDaha fazla bilgi için dokunun.</string>
+    <string name="fdroid_warning">F-Droid derlemeleri desteklenmemektedir. \nDaha fazla bilgi için dokunun.</string>
     <string name="action_display_show_continue_reading_button">Okumaya devam et butonu</string>
     <string name="track_remove_date_conf_title">Tarih kaldırılsın mı?</string>
     <string name="track_remove_start_date_conf_text">Bu, daha önce seçtiğiniz başlangıç tarihini şuradan kaldıracak: %s</string>
@@ -745,11 +735,7 @@
     <string name="onboarding_action_next">Sonraki</string>
     <string name="onboarding_description">Hadi bazı şeyleri ayarlayalım. Bunları daha sonra ayarlardan da değiştirebilirsiniz.</string>
     <string name="no_location_set">Depolama konumu ayarlanmadı</string>
-    <string name="onboarding_storage_info">%1$s\'un bölüm indirmelerini, yedeklemeleri ve daha fazlasını kaydedeceği bir klasör seçin.
-\n
-\nYalnızca buna ait bir klasör tavsiye edilir.
-\n
-\nSeçilen klasör: %2$s</string>
+    <string name="onboarding_storage_info">%1$s\'un bölüm indirmelerini, yedeklemeleri ve daha fazlasını kaydedeceği bir klasör seçin. \n \nYalnızca buna ait bir klasör tavsiye edilir. \n \nSeçilen klasör: %2$s</string>
     <string name="onboarding_permission_notifications">Bildirim izni</string>
     <string name="onboarding_permission_install_apps">Uygulama yükleme izni</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Uzun süren kitaplık güncellemelerinin, indirmelerin, yedeklemelerin ve geri yüklemelerinin kesintiye uğramasını önleyin.</string>
@@ -769,7 +755,6 @@
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Güvenilmiş bilinmeyen uzantıları geri al</string>
     <string name="manga_interval_expected_update_soon">Yakında</string>
-    <string name="action_open_repo">Açık kaynaklı depo</string>
     <string name="action_copy_link">Bağlantıyı kopyala</string>
     <string name="pref_flash_with">Işık rengi</string>
     <string name="pref_flash_style_black">Siyah</string>
@@ -915,4 +900,67 @@
     <string name="downloading_with_progress">İndiriliyor… (%d%%)</string>
     <string name="pref_filter_update_categories_details">Hariç tutulan kategorilerdeki güncellemeler, dahil edilen kategorilerde olsalar bile gösterilmeyecektir.</string>
     <string name="pref_filter_upcoming_categories_details">Hariç tutulan kategorilerdeki girdiler gizlendi. Bu girdiler dahil edilen kategorilerde olsalar bile gösterilmez.</string>
+    <string name="app_migrating_title">Güncelleme tamamlanıyor</string>
+    <string name="app_migrating_summary">Güncelleme sonrası her şey hazır hâle getiriliyor. Bu birkaç dakika sürebilir. Lütfen uygulamayı açık tutun.</string>
+    <string name="pref_category_extensions">Uzantılar</string>
+    <string name="pref_allowed_content_warnings">İzin verilen içerik uyarıları</string>
+    <string name="pref_apply_content_warnings_to_installed">Yüklenmiş uzantılar için de uygula</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">Devre dışı olduğunda yüklediğiniz uzantılar, uyarılara bakılmaksızın çalışmaya ve güncellenmeye devam eder</string>
+    <string name="content_warnings_info">Yüklenmiş ama çalışmayan uzantılar, kaynakları gösterilmeden listelenmeye devam eder. Yüklemediğiniz uzantılar gizlenir. Resmî olmayan veya yanlış işaretlenmiş uzantılar yine de uygulama içinde 18+ içerik gösterebilir.</string>
+    <string name="pref_enable_chapter_name_hash">Bölüm isimleri sonuna benzersiz ek ekle</string>
+    <string name="pref_enable_chapter_name_hash_details">Bölüm isimlerinin birbirleriyle çakışmasını engellemek için isimlerin sonuna benzersiz bir metin ekler. Devre dışı olduğunda aynı ismi paylaşan bölümler indirilemez.</string>
+    <string name="ext_filtered">Filtrelenmiş</string>
+    <string name="ext_not_loaded">Çalışmıyor</string>
+    <string name="ext_not_loaded_dialog">Çalıştırılamadı</string>
+    <string name="ext_not_loaded_details">Neden çalıştırılamadı</string>
+    <string name="ext_copy_stacktrace">Yığın izini kopyala</string>
+    <string name="ext_filtered_message">Bu uzantının içerik uyarısı, çalıştırmak istediğiniz uyarıyla uyuşmuyor, bu yüzden uzantının kaynakları kullanılamıyor.</string>
+    <string name="ext_unsigned_message">Bu uzantı imzalanmadığı için imza kontrolü yapılamıyor.</string>
+    <string name="ext_unsupported_message">Bu uzantının kullandığı uzantı kitaplığı uygulamanın bu sürümünde yüklenemiyor. Uygulamayı ya da uzantıyı güncellemeyi deneyin.</string>
+    <string name="ext_malformed_message">Bu uzantının çalıştırılabilmesi için gereken bazı bilgiler uzantı tarafından sağlanmıyor.</string>
+    <string name="ext_load_failed_message">Bu uzantı çalıştırılırken bir hata bildirdi. Uzantının kaynakları kullanılamıyor.</string>
+    <string name="ext_info_warning">Uyarı</string>
+    <string name="ext_content_warning_safe">Güvenli</string>
+    <string name="ext_content_warning_mixed">Karışık</string>
+    <string name="ext_content_warning_nsfw">18+</string>
+    <string name="ext_content_warning_mixed_description">Bu uzantının sağladığı kaynaklar güvenli ve 18+ içerik içerebilir.</string>
+    <string name="ext_content_warning_nsfw_description">Bu uzantının sağladığı kaynaklar 18+ içeriklere odaklıdır.</string>
+    <string name="pref_load_ahead_only_over_wifi">Yalnızı Wi-Fi ile önden yükle</string>
+    <string name="pref_load_ahead_only_over_wifi_summary">Yalnızca okuduğunuz sayfaya yakın olan sayfaları yükleyerek mobil veri tasarruf sağlar</string>
+    <string name="pref_high_quality_renderer">Yüksek kalite işleyici kullan</string>
+    <string name="webgpu_viewer">WebGPU</string>
+    <string name="pref_transition_animation">Geçiş animasyonu</string>
+    <string name="pref_transition_animation_dual">Geçiş animasyonu (çift)</string>
+    <string name="transition_animation_basic">Basit</string>
+    <string name="transition_animation_flip_left">Sayfa çevirme (sol)</string>
+    <string name="transition_animation_flip_right">Sayfa çevirme (sağ)</string>
+    <string name="transition_animation_stack_left">Yığın (sol)</string>
+    <string name="transition_animation_stack_right">Yığın (sağ)</string>
+    <string name="transition_animation_stack_up">Yığın (yukarı)</string>
+    <string name="transition_animation_stack_down">Yığın (aşağı)</string>
+    <string name="transition_animation_sphere">Küre</string>
+    <string name="transition_animation_cube_inside">Küp (iç)</string>
+    <string name="transition_animation_cube_outside">Küp (dış)</string>
+    <string name="transition_animation_fade">Soldur</string>
+    <string name="transition_animation_fade_white">Beyaza kayarak</string>
+    <string name="transition_animation_none">Hiçbiri</string>
+    <string name="transition_animation_flip">Sayfa çevirme</string>
+    <string name="pref_cutout_mode">Ekran kesimi modu</string>
+    <string name="pref_cutout_mode_dual">Ekran kesimi modu (çift)</string>
+    <string name="cutout_mode_ignore">Görmezden gel</string>
+    <string name="cutout_mode_avoid">Kullanma</string>
+    <string name="cutout_mode_shift">Kaydır</string>
+    <string name="pref_dual_page_view">Çift sayfa görünümü</string>
+    <string name="dual_page_view_never">Asla</string>
+    <string name="dual_page_view_always">Her zaman</string>
+    <string name="dual_page_view_wide">Geniş modda</string>
+    <string name="pref_continuous_minwidth">En az genişlik</string>
+    <string name="pref_continuous_gap">Aralık</string>
+    <string name="refresh_tracker_profile">İzleyici profilini yenile</string>
+    <string name="refresh_tracker_success">%s profil yenilendi</string>
+    <string name="refresh_tracker_error">%1$s yenileme hatası: %2$s</string>
+    <string name="update_check_skip">Bu sürümü atla</string>
+    <string name="update_check_skip_title">%s atla?</string>
+    <string name="update_check_skip_message">Güncellemeler, hata düzeltmeleri ve güvenlik geliştirmeleri sağlar. Bu sürüm için tekrar hatırlatılmayacaksınız ancak daha yeni bir sürüm yayınlandığında size bildirim gösterilecek.</string>
+    <string name="information_webview_crashed">WebView çalışmayı durdurdu ve sayfa kapatıldı</string>
 </resources>

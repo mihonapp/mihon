@@ -146,6 +146,11 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         return track
     }
 
+    override suspend fun updateUserConfig() {
+        val currentUser = api.getCurrentUser()
+        saveDisplayUsername(currentUser.username)
+    }
+
     override suspend fun login(username: String, password: String) = login(password)
 
     suspend fun login(reference: String) {

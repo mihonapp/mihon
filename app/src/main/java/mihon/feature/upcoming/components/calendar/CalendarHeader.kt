@@ -12,9 +12,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +26,9 @@ import kotlinx.datetime.YearMonth
 import kotlinx.datetime.toJavaYearMonth
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.yearMonth
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.KeyboardArrowLeft
+import mihon.icons.materialsymbols.rounded.KeyboardArrowRight
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.format.DateTimeFormatter
@@ -60,11 +60,11 @@ fun CalenderHeader(
         Row {
             IconButton(onClick = onPreviousClick) {
                 @Suppress("DEPRECATION")
-                Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
+                Icon(MaterialSymbols.Rounded.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
             }
             IconButton(onClick = onNextClick) {
                 @Suppress("DEPRECATION")
-                Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
+                Icon(MaterialSymbols.Rounded.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
             }
         }
     }

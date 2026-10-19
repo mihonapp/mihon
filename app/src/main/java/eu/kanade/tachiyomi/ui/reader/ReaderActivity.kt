@@ -6,7 +6,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
@@ -48,9 +47,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.transition.platform.MaterialContainerTransform
-import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.Inject
-import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
 import eu.kanade.presentation.reader.OrientationSelectDialog
@@ -84,7 +81,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
-import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
 import eu.kanade.tachiyomi.util.system.toShareIntent
@@ -106,12 +102,9 @@ import mihon.app.di.AppGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
-import java.io.ByteArrayOutputStream
 import kotlin.time.Duration.Companion.seconds
 
 class ReaderActivity : BaseActivity() {
@@ -359,9 +352,7 @@ class ReaderActivity : BaseActivity() {
     }
 
     override fun onPause() {
-        lifecycleScope.launchNonCancellable {
-            viewModel.updateHistory()
-        }
+        viewModel.saveHistory()
         super.onPause()
     }
 
@@ -462,11 +453,7 @@ class ReaderActivity : BaseActivity() {
 
     @Composable
     fun AppBars(state: ReaderViewModel.State) {
-        if (!ifSourcesLoaded()) {
-            return
-        }
-
-        val isHttpSource = viewModel.getSource() is HttpSource
+        val isHttpSource = state.source is HttpSource
 
         val cropBorderPaged by readerPreferences.cropBorders.collectAsState()
         val cropBorderWebtoon by readerPreferences.cropBordersWebtoon.collectAsState()
@@ -650,7 +637,7 @@ class ReaderActivity : BaseActivity() {
         binding.readerContainer.removeView(loadingIndicator)
         viewModel.state.value.viewer?.setChapters(viewerChapters)
 
-        lifecycleScope.launchIO {
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getChapterUrl()?.let { url ->
                 assistUrl = url
             }
@@ -735,7 +722,7 @@ class ReaderActivity : BaseActivity() {
      * the viewer is reaching the beginning or end of a chapter or the transition page is active.
      */
     fun requestPreloadChapter(chapter: ReaderChapter) {
-        lifecycleScope.launchIO { viewModel.preload(chapter) }
+        lifecycleScope.launch(Dispatchers.IO) { viewModel.preload(chapter) }
     }
 
     /**

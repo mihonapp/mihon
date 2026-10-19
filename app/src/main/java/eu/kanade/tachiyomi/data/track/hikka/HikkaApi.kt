@@ -18,6 +18,8 @@ import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonArray
@@ -27,17 +29,16 @@ import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class HikkaApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val client: OkHttpClient,
     interceptor: HikkaInterceptor,
 ) {
     suspend fun getCurrentUser(): HKUser {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val request = Request.Builder()
                 .url("${BASE_API_URL}/user/me")
                 .get()
@@ -51,7 +52,7 @@ class HikkaApi(
     }
 
     suspend fun accessToken(reference: String): HKOAuth {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             with(json) {
                 client.newCall(authTokenCreate(reference))
                     .awaitSuccess()
@@ -61,7 +62,7 @@ class HikkaApi(
     }
 
     suspend fun searchManga(query: String): List<TrackSearch> {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val url = "$BASE_API_URL/manga".toUri().buildUpon()
                 .appendQueryParameter("page", "1")
                 .appendQueryParameter("size", "50")
@@ -95,13 +96,13 @@ class HikkaApi(
                     .awaitSuccess()
                     .parseAs<HKMangaPagination>()
                     .list
-                    .map { it.toTrack(trackId) }
+                    .map { it.toTrack(trackerId) }
             }
         }
     }
 
     suspend fun getMangaDetails(slug: String): TrackSearch? {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val url = "$BASE_API_URL/manga/$slug"
 
             with(json) {
@@ -113,14 +114,14 @@ class HikkaApi(
                 } else {
                     response
                         .parseAs<HKManga>()
-                        .toTrack(trackId)
+                        .toTrack(trackerId)
                 }
             }
         }
     }
 
     suspend fun getRead(track: Track): HKRead? {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val slug = track.tracking_url.split("/")[4]
             val url = "$BASE_API_URL/read/manga/$slug".toUri().buildUpon().build()
             with(json) {
@@ -140,7 +141,7 @@ class HikkaApi(
     }
 
     suspend fun getManga(track: Track): TrackSearch {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val slug = track.tracking_url.split("/")[4]
             val url = "$BASE_API_URL/manga/$slug".toUri().buildUpon()
                 .build()
@@ -149,25 +150,25 @@ class HikkaApi(
                 authClient.newCall(GET(url.toString()))
                     .awaitSuccess()
                     .parseAs<HKManga>()
-                    .toTrack(trackId)
+                    .toTrack(trackerId)
             }
         }
     }
 
     suspend fun deleteUserManga(track: DomainTrack) {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val slug = track.remoteUrl.split("/")[4]
 
             val url = "$BASE_API_URL/read/manga/$slug".toUri().buildUpon()
                 .build()
 
             authClient.newCall(DELETE(url.toString()))
-                .awaitSuccess()
+                .awaitSuccess().close()
         }
     }
 
     suspend fun addUserManga(track: Track): Track {
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val slug = track.tracking_url.split("/")[4]
 
             val url = "$BASE_API_URL/read/manga/$slug".toUri().buildUpon()
@@ -193,7 +194,7 @@ class HikkaApi(
                 authClient.newCall(PUT(url.toString(), body = payload.toString().toRequestBody(jsonMime)))
                     .awaitSuccess()
                     .parseAs<HKRead>()
-                    .toTrack(trackId)
+                    .toTrack(trackerId)
             }
         }
     }
