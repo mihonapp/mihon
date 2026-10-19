@@ -35,13 +35,16 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Update the sources with the most entries first during library updates ([@AntsyLich](https://github.com/AntsyLich))
 
 ### Improved
-- Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich))
+- Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich)) ([`771ba33`](https://github.com/mihonapp/mihon/commit/771ba33))
 
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 - Remove the "Split tall images" download setting ([@AntsyLich](https://github.com/AntsyLich))
 
 ### Fixed
+- Fixed WebView crashing for sources that set an Origin header ([@AntsyLich](https://github.com/AntsyLich)) ([`5f63c98`](https://github.com/mihonapp/mihon/commit/5f63c98))
+- Fixed WebView sending source headers to other sites ([@AntsyLich](https://github.com/AntsyLich)) ([`a01867d`](https://github.com/mihonapp/mihon/commit/a01867d))
+- Fixed downloads not showing for entries of a source sharing its name with another source ([@AntsyLich](https://github.com/AntsyLich)) ([`deeb9b2`](https://github.com/mihonapp/mihon/commit/deeb9b2))
 - Fixed covers reloading when removing an entry from the library ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.2] - 2026-10-13
