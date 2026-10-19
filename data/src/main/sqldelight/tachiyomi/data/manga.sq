@@ -20,6 +20,7 @@ CREATE TABLE manga(
     remote_memo BLOB AS JsonObject NOT NULL,
     user_favorite_at INTEGER AS Instant,
     user_notes TEXT NOT NULL,
+    user_custom_title TEXT,
     user_reader_flags INTEGER NOT NULL,
     user_chapter_flags INTEGER NOT NULL,
     state_chapter_last_update INTEGER AS Instant,
@@ -36,7 +37,7 @@ getMangaById:
 SELECT
     id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-    user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+    user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
     state_cover_last_modified, state_initialized
 FROM manga
@@ -46,7 +47,7 @@ getMangaByUrlAndSource:
 SELECT
     id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-    user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+    user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
     state_cover_last_modified, state_initialized
 FROM manga
@@ -57,7 +58,7 @@ getFavorites:
 SELECT
     id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-    user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+    user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
     state_cover_last_modified, state_initialized
 FROM manga
@@ -67,7 +68,7 @@ getReadMangaNotInLibrary:
 SELECT
     id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-    user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+    user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
     state_cover_last_modified, state_initialized
 FROM manga
@@ -93,7 +94,7 @@ getFavoriteBySourceId:
 SELECT
     id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-    user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+    user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
     state_cover_last_modified, state_initialized
 FROM manga
@@ -116,7 +117,7 @@ SELECT
     M.id, M.source_id, M.remote_url, M.remote_title, M.remote_author, M.remote_artist,
     M.remote_description, M.remote_genre, M.remote_status, M.remote_cover,
     M.remote_update_strategy, M.remote_memo, M.user_favorite_at, M.user_notes,
-    M.user_reader_flags, M.user_chapter_flags, M.state_chapter_last_update,
+    M.user_custom_title, M.user_reader_flags, M.user_chapter_flags, M.state_chapter_last_update,
     M.state_chapter_next_update, M.state_chapter_fetch_interval,
     M.state_cover_last_modified, M.state_initialized,
     (
@@ -141,7 +142,7 @@ getUpcomingManga:
 SELECT
     id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-    user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+    user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
     state_cover_last_modified, state_initialized
 FROM manga
@@ -206,14 +207,14 @@ insertReturningId:
 INSERT INTO manga(
     source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
     remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-    user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+    user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
     state_cover_last_modified, state_initialized
 )
 VALUES (
     :sourceId, :remoteUrl, :remoteTitle, :remoteAuthor, :remoteArtist, :remoteDescription,
     :remoteGenre, :remoteStatus, :remoteCover, :remoteUpdateStrategy, :remoteMemo,
-    :userFavoriteAt, :userNotes, :userReaderFlags, :userChapterFlags,
+    :userFavoriteAt, :userNotes, :userCustomTitle, :userReaderFlags, :userChapterFlags,
     :stateChapterLastUpdate, :stateChapterNextUpdate, :stateChapterFetchInterval,
     :stateCoverLastModified, :stateInitialized
 )
@@ -224,6 +225,7 @@ UPDATE manga SET
     -- NULL is a real value here (not in the library), which coalesce cannot write
     user_favorite_at = CASE WHEN :userFavoriteAtSet THEN :userFavoriteAt ELSE user_favorite_at END,
     user_notes = coalesce(:userNotes, user_notes),
+    user_custom_title = CASE WHEN :userCustomTitleSet THEN :userCustomTitle ELSE user_custom_title END,
     user_reader_flags = coalesce(:userReaderFlags, user_reader_flags),
     user_chapter_flags = coalesce(:userChapterFlags, user_chapter_flags),
     state_chapter_last_update = coalesce(:stateChapterLastUpdate, state_chapter_last_update),
@@ -273,14 +275,14 @@ insertNetworkManga {
     INSERT INTO manga(
         source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
         remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-        user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+        user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
         state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
         state_cover_last_modified, state_initialized
     )
     VALUES (
         :sourceId, :remoteUrl, :remoteTitle, :remoteAuthor, :remoteArtist, :remoteDescription,
         :remoteGenre, :remoteStatus, :remoteCover, :remoteUpdateStrategy, :remoteMemo,
-        :userFavoriteAt, '', :userReaderFlags, :userChapterFlags,
+        :userFavoriteAt, '', NULL, :userReaderFlags, :userChapterFlags,
         :stateChapterLastUpdate, :stateChapterNextUpdate, :stateChapterFetchInterval,
         :stateCoverLastModified, :stateInitialized
     )
@@ -303,7 +305,7 @@ insertNetworkManga {
     SELECT
         id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
         remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
-        user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+        user_favorite_at, user_notes, user_custom_title, user_reader_flags, user_chapter_flags,
         state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
         state_cover_last_modified, state_initialized
     FROM manga

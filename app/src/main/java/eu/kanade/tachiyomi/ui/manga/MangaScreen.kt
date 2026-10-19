@@ -15,6 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -61,7 +65,9 @@ import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.i18n.stringResource
 
 class MangaScreen(
     private val mangaId: Long,
@@ -104,6 +110,9 @@ class MangaScreen(
                 }
             }
         }
+
+        var showScanlatorsDialog by remember { mutableStateOf(false) }
+        var showCustomTitleDialog by remember { mutableStateOf(false) }
 
         MangaScreen(
             state = successState,
@@ -161,6 +170,7 @@ class MangaScreen(
                 navigator.push(MigrationConfigScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
+            onEditCustomTitleClicked = { showCustomTitleDialog = true },
             onMultiBookmarkClicked = viewModel::bookmarkChapters,
             onMultiMarkAsReadClicked = viewModel::markChaptersRead,
             onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,
@@ -170,8 +180,6 @@ class MangaScreen(
             onAllChapterSelected = viewModel::toggleAllSelection,
             onInvertSelection = viewModel::invertSelection,
         )
-
-        var showScanlatorsDialog by remember { mutableStateOf(false) }
 
         val onDismissRequest = { viewModel.dismissDialog() }
         when (val dialog = successState.dialog) {
@@ -289,6 +297,17 @@ class MangaScreen(
             }
         }
 
+        if (showCustomTitleDialog) {
+            CustomTitleDialog(
+                initialTitle = successState.manga.customTitle ?: successState.manga.title,
+                onDismissRequest = { showCustomTitleDialog = false },
+                onSave = { title ->
+                    viewModel.updateCustomTitle(title.takeIf { it.isNotBlank() })
+                    showCustomTitleDialog = false
+                },
+            )
+        }
+
         if (showScanlatorsDialog) {
             ScanlatorFilterDialog(
                 availableScanlators = successState.availableScanlators,
@@ -395,5 +414,39 @@ class MangaScreen(
         val source = source_ as? HttpSource ?: return
         val url = source.getMangaUrl(manga.toSManga())
         context.copyToClipboard(url, url)
+    }
+
+    @Composable
+    private fun CustomTitleDialog(
+        initialTitle: String,
+        onDismissRequest: () -> Unit,
+        onSave: (String) -> Unit,
+    ) {
+        var title by remember(initialTitle) { mutableStateOf(initialTitle) }
+
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text(text = stringResource(MR.strings.action_custom_title)) },
+            text = {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    singleLine = true,
+                    label = { Text(text = stringResource(MR.strings.action_custom_title)) },
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { onSave(title) },
+                ) {
+                    Text(text = stringResource(MR.strings.action_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissRequest) {
+                    Text(text = stringResource(MR.strings.action_cancel))
+                }
+            },
+        )
     }
 }

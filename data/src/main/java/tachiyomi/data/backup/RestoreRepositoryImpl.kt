@@ -140,6 +140,7 @@ class RestoreRepositoryImpl(
             stateCoverLastModified = manga.coverLastModified,
             remoteUpdateStrategy = manga.updateStrategy,
             userNotes = manga.notes,
+            userCustomTitle = manga.customTitle,
             remoteMemo = manga.memo,
         )
             .awaitAsOne()

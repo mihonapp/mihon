@@ -97,6 +97,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
+import tachiyomi.domain.manga.interactor.UpdateMangaCustomTitle
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.applyFilter
@@ -130,6 +131,7 @@ class MangaViewModel(
     private val setReadStatus: SetReadStatus,
     private val updateChapter: UpdateChapter,
     private val updateManga: UpdateManga,
+    private val updateMangaCustomTitle: UpdateMangaCustomTitle,
     private val getCategories: GetCategories,
     private val getTracks: GetTracks,
     private val addTracks: AddTracks,
@@ -1065,6 +1067,12 @@ class MangaViewModel(
 
     fun dismissDialog() {
         dialog.value = null
+    }
+
+    fun updateCustomTitle(title: String?) {
+        viewModelScope.launch {
+            updateMangaCustomTitle(mangaId, title)
+        }
     }
 
     fun showDeleteChapterDialog(chapters: List<Chapter>) {
