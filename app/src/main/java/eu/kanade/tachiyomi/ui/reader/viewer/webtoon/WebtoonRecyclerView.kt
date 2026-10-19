@@ -65,9 +65,22 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         super.onMeasure(widthSpec, heightSpec)
     }
 
+    var isTouching = false
+        private set
+
+    fun canAutoScroll(): Boolean {
+        return !isTouching && scrollState == SCROLL_STATE_IDLE && currentScale == DEFAULT_RATE
+    }
+
     override fun onTouchEvent(e: MotionEvent): Boolean {
-        if (e.actionMasked == MotionEvent.ACTION_DOWN) {
-            tapDuringManualScroll = isManuallyScrolling
+        when (e.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                isTouching = true
+                tapDuringManualScroll = isManuallyScrolling
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                isTouching = false
+            }
         }
 
         detector.onTouchEvent(e)

@@ -432,6 +432,13 @@
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_both">Both</string>
+    <string name="action_autoscroll">Autoscroll</string>
+    <string name="pref_category_autoscroll">Autoscroll</string>
+    <string name="pref_autoscroll_interval">Autoscroll interval</string>
+    <string name="pref_smooth_autoscroll">Smooth autoscroll</string>
+    <string name="autoscroll_started">Autoscroll started</string>
+    <string name="autoscroll_paused">Autoscroll paused</string>
+    <string name="autoscroll_stopped">Autoscroll stopped</string>
     <string name="pref_reader_actions">Actions</string>
     <string name="pref_read_with_long_tap">Show actions on long tap</string>
     <string name="pref_create_folder_per_manga">Save pages into separate folders</string>

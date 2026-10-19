@@ -43,7 +43,9 @@ import androidx.core.transition.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.hippo.unifile.UniFile
@@ -77,8 +79,10 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.openInBrowser
@@ -86,6 +90,8 @@ import eu.kanade.tachiyomi.util.system.readerBackgroundColor
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -189,6 +195,7 @@ class ReaderActivity : BaseActivity() {
 
         config = ReaderConfig()
         setMenuVisibility(viewModel.state.value.menuVisible)
+        initAutoScroll()
 
         // Finish when incognito mode is disabled
         preferences.incognitoMode.changes()
@@ -344,6 +351,7 @@ class ReaderActivity : BaseActivity() {
      */
     override fun onDestroy() {
         super.onDestroy()
+        viewModel.toggleAutoScroll(false)
         viewModel.state.value.viewer?.destroy()
         config = null
         menuToggleToast?.cancel()
@@ -528,6 +536,16 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
+            autoScroll = state.autoScroll,
+            onClickAutoScroll = {
+                val enabled = !viewModel.state.value.autoScroll
+                viewModel.toggleAutoScroll(enabled)
+                menuToggleToast?.cancel()
+                menuToggleToast = toast(if (enabled) MR.strings.autoscroll_started else MR.strings.autoscroll_stopped)
+                if (enabled) {
+                    setMenuVisibility(false)
+                }
+            },
         )
     }
 
@@ -537,6 +555,7 @@ class ReaderActivity : BaseActivity() {
     private fun setMenuVisibility(visible: Boolean) {
         viewModel.showMenus(visible)
         if (visible) {
+            (viewModel.state.value.viewer as? WebtoonViewer)?.recycler?.stopScroll()
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         } else if (readerPreferences.fullscreen.get()) {
             windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
@@ -745,6 +764,86 @@ class ReaderActivity : BaseActivity() {
         }
     }
 
+    private fun initAutoScroll() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(
+                    readerPreferences.autoscrollInterval.changes(),
+                    viewModel.state.map { it.autoScroll }.distinctUntilChanged(),
+                    viewModel.state.map { it.menuVisible }.distinctUntilChanged(),
+                ) { interval, enabled, menuVisible ->
+                    Triple(interval, enabled, menuVisible)
+                }
+                    .collectLatest { (intervalSecs, enabled, menuVisible) ->
+                        if (!enabled || menuVisible) {
+                            (viewModel.state.value.viewer as? WebtoonViewer)?.recycler?.stopScroll()
+                            return@collectLatest
+                        }
+
+                        val intervalMillis = (intervalSecs * 1000L).coerceAtLeast(500L)
+                        while (true) {
+                            val state = viewModel.state.value
+                            val viewer = state.viewer
+                            if (!state.menuVisible && !isScrollingThroughPages && viewer != null) {
+                                when (viewer) {
+                                    is WebtoonViewer -> {
+                                        if (viewer.canAutoScroll()) {
+                                            if (!viewer.recycler.canScrollVertically(1)) {
+                                                if (state.viewerChapters?.nextChapter != null) {
+                                                    loadNextChapter()
+                                                    delay(intervalMillis)
+                                                } else {
+                                                    viewModel.toggleAutoScroll(false)
+                                                    menuToggleToast?.cancel()
+                                                    menuToggleToast = toast(MR.strings.autoscroll_stopped)
+                                                    break
+                                                }
+                                            } else {
+                                                if (readerPreferences.smoothAutoScroll.get()) {
+                                                    viewer.linearScroll(intervalSecs.seconds)
+                                                    delay(intervalMillis)
+                                                } else {
+                                                    viewer.scrollDown()
+                                                    delay(intervalMillis)
+                                                }
+                                            }
+                                        } else {
+                                            delay(100)
+                                        }
+                                    }
+                                    is PagerViewer -> {
+                                        if (viewer.canAutoScroll()) {
+                                            val moved = viewer.moveToNext()
+                                            if (!moved) {
+                                                if (state.viewerChapters?.nextChapter != null) {
+                                                    loadNextChapter()
+                                                } else {
+                                                    viewModel.toggleAutoScroll(false)
+                                                    menuToggleToast?.cancel()
+                                                    menuToggleToast = toast(MR.strings.autoscroll_stopped)
+                                                    break
+                                                }
+                                            }
+                                            delay(intervalMillis)
+                                        } else {
+                                            delay(100)
+                                        }
+                                    }
+                                    is WebGpuViewer -> {
+                                        if (viewer.isReversed) viewer.moveToPrevious() else viewer.moveToNext()
+                                        delay(intervalMillis)
+                                    }
+                                    else -> delay(intervalMillis)
+                                }
+                            } else {
+                                delay(100)
+                            }
+                        }
+                    }
+            }
+        }
+    }
+
     /**
      * Called from the presenter when a page is ready to be shared. It shows Android's default
      * sharing tool.
@@ -873,7 +972,10 @@ class ReaderActivity : BaseActivity() {
                 }
                 .launchIn(lifecycleScope)
 
-            readerPreferences.keepScreenOn.changes()
+            combine(
+                readerPreferences.keepScreenOn.changes(),
+                viewModel.state.map { it.autoScroll }.distinctUntilChanged(),
+            ) { keepScreenOn, autoScroll -> keepScreenOn || autoScroll }
                 .onEach(::setKeepScreenOn)
                 .launchIn(lifecycleScope)
 

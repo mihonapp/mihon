@@ -21,8 +21,10 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import mihon.app.di.appGraph
 import tachiyomi.core.common.util.system.logcat
+import android.view.animation.LinearInterpolator
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Duration
 
 /**
  * Implementation of a [Viewer] to display pages with a [RecyclerView].
@@ -284,10 +286,26 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         }
     }
 
+    fun canAutoScroll(): Boolean {
+        return recycler.canAutoScroll()
+    }
+
+    /**
+     * Scrolls one screen over a period of time.
+     */
+    fun linearScroll(duration: Duration) {
+        recycler.smoothScrollBy(
+            0,
+            activity.resources.displayMetrics.heightPixels,
+            LinearInterpolator(),
+            duration.inWholeMilliseconds.toInt(),
+        )
+    }
+
     /**
      * Scrolls down by [scrollDistance].
      */
-    private fun scrollDown() {
+    fun scrollDown() {
         if (config.usePageTransitions) {
             recycler.smoothScrollBy(0, scrollDistance)
         } else {

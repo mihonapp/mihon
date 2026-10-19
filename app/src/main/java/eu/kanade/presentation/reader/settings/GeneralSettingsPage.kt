@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
+import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.i18n.pluralStringResource
@@ -165,4 +166,22 @@ internal fun ColumnScope.GeneralPage(viewModel: ReaderSettingsViewModel) {
             }
         }
     }
+
+    HeadingItem(MR.strings.pref_category_autoscroll)
+
+    val autoscrollIntervalPref = viewModel.preferences.autoscrollInterval
+    val autoscrollInterval by autoscrollIntervalPref.collectAsState()
+
+    SliderItem(
+        label = stringResource(MR.strings.pref_autoscroll_interval),
+        value = autoscrollInterval,
+        valueRange = 1..30,
+        valueString = "${autoscrollInterval}s",
+        onChange = { autoscrollIntervalPref.set(it) },
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_smooth_autoscroll),
+        pref = viewModel.preferences.smoothAutoScroll,
+    )
 }

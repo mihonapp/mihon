@@ -793,6 +793,10 @@ class ReaderViewModel(
         mutableState.update { it.copy(menuVisible = visible) }
     }
 
+    fun toggleAutoScroll(enable: Boolean? = null) {
+        mutableState.update { it.copy(autoScroll = enable ?: !it.autoScroll) }
+    }
+
     fun showLoadingDialog() {
         mutableState.update { it.copy(dialog = Dialog.Loading) }
     }
@@ -987,6 +991,7 @@ class ReaderViewModel(
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
         @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,
+        val autoScroll: Boolean = false,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
