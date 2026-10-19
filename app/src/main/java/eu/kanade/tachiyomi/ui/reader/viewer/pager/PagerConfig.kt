@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionAnimations
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
@@ -104,6 +105,17 @@ class PagerConfig(
                 { dualPageRotateToFitInvert = it },
                 { imagePropertyChangedListener?.invoke() },
             )
+
+        ReaderTransitionAnimations.transitionChanges(
+            enabled = readerPreferences.pageTransitions,
+            animation = readerPreferences.pagerTransitionAnimation,
+            customCurve = readerPreferences.pagerTransitionCustomCurve,
+            customDurationMs = readerPreferences.pagerTransitionCustomDuration,
+        )
+            .onEach { transition ->
+                viewer.pager.setTransitionAnimation(transition)
+            }
+            .launchIn(scope)
     }
 
     private fun zoomTypeFromPreference(value: Int) {

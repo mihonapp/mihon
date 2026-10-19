@@ -6,6 +6,7 @@ import dev.icerock.moko.resources.StringResource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import eu.kanade.tachiyomi.ui.reader.viewer.CubicBezier
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
@@ -25,6 +26,34 @@ class ReaderPreferences(
     val loadAheadOnlyOverWifi: Preference<Boolean> = preferenceStore.getBoolean(
         "pref_reader_load_ahead_only_over_wifi",
         true,
+    )
+
+    val pagerTransitionAnimation: Preference<ReaderTransitionAnimation> = preferenceStore.getEnum(
+        "pref_pager_transition_animation",
+        ReaderTransitionAnimation.DEFAULT,
+    )
+
+    val webtoonTransitionAnimation: Preference<ReaderTransitionAnimation> = preferenceStore.getEnum(
+        "pref_webtoon_transition_animation",
+        ReaderTransitionAnimation.DEFAULT,
+    )
+
+    val pagerTransitionCustomDuration: Preference<Int> =
+        preferenceStore.getInt("pref_pager_transition_custom_duration", 1000)
+    val pagerTransitionCustomCurve: Preference<CubicBezier> = preferenceStore.getObjectFromString(
+        key = "pref_pager_transition_custom_curve",
+        defaultValue = CubicBezier.EASE_IN_OUT,
+        serializer = CubicBezier::format,
+        deserializer = { requireNotNull(CubicBezier.parse(it)) },
+    )
+
+    val webtoonTransitionCustomDuration: Preference<Int> =
+        preferenceStore.getInt("pref_webtoon_transition_custom_duration", 1000)
+    val webtoonTransitionCustomCurve: Preference<CubicBezier> = preferenceStore.getObjectFromString(
+        key = "pref_webtoon_transition_custom_curve",
+        defaultValue = CubicBezier.EASE_IN_OUT,
+        serializer = CubicBezier::format,
+        deserializer = { requireNotNull(CubicBezier.parse(it)) },
     )
 
     val flashOnPageChange: Preference<Boolean> = preferenceStore.getBoolean("pref_reader_flash", false)
@@ -226,6 +255,16 @@ class ReaderPreferences(
         BLACK,
         WHITE,
         WHITE_BLACK,
+    }
+
+    enum class ReaderTransitionAnimation(val titleRes: StringResource) {
+        DEFAULT(MR.strings.label_default),
+
+        SMOOTH(MR.strings.page_transition_smooth),
+
+        GENTLE(MR.strings.page_transition_gentle),
+
+        CUSTOM(MR.strings.page_transition_custom),
     }
 
     enum class TappingInvertMode(
