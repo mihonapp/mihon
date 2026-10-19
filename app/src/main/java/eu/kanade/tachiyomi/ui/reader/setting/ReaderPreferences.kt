@@ -222,6 +222,9 @@ class ReaderPreferences(
 
     val continuousGap: Preference<Int> = preferenceStore.getInt("webgpu_continuous_gap", 10)
 
+    val disableDoubleTapGestures: Preference<Boolean> =
+        preferenceStore.getBoolean("webgpu_disable_double_tap_gestures", false)
+
     /** In run order. */
     val imageFilters: Preference<List<WebGpuShader>> = preferenceStore.getObjectFromString(
         "webgpu_image_filters",

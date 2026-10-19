@@ -223,6 +223,11 @@ internal fun WebGpuViewerSettings(viewModel: ReaderSettingsViewModel) {
             pref = viewModel.preferences.navigateToPan,
         )
 
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_disable_double_tap_gestures),
+            pref = viewModel.preferences.disableDoubleTapGestures,
+        )
+
         val transitionAnimation by viewModel.preferences.transitionAnimation.collectAsState()
         SettingsChipRow(MR.strings.pref_transition_animation) {
             ReaderPreferences.TransitionAnimation.entries.forEach {

@@ -554,6 +554,7 @@
     <string name="pref_continuous_gap">Gap</string>
     <string name="pref_image_filters">Image filters</string>
     <string name="pref_tile_filters">Tile filters</string>
+    <string name="pref_disable_double_tap_gestures">Disable double tap gestures</string>
     <string name="action_add_shader">Add shader</string>
     <string name="image_filter_invalid">Couldn\'t add shader</string>
 

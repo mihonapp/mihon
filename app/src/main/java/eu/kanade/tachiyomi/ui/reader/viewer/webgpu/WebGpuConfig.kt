@@ -171,6 +171,10 @@ class WebGpuConfig(
             { imagePropertyChangedListener?.invoke() },
         )
 
+        readerPreferences.disableDoubleTapGestures.register({
+            viewer.pager.state.doubleTapGesturesEnabled = !it
+        })
+
         readerPreferences.continuousGap.register(
             { continuousGap = it },
             { imagePropertyChangedListener?.invoke() },
