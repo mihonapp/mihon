@@ -45,6 +45,7 @@ fun LibraryContent(
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
+    onTabLongClick: (Category) -> Unit = {},
 ) {
     Column(
         modifier = Modifier.padding(
@@ -73,6 +74,7 @@ fun LibraryContent(
                         pagerState.animateScrollToPage(it)
                     }
                 },
+                onTabLongClick = onTabLongClick,
             )
         }
 

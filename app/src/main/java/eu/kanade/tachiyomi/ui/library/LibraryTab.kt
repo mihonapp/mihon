@@ -214,6 +214,7 @@ data object LibraryTab : Tab {
                         getDisplayMode = { viewModel.getDisplayMode() },
                         getColumnsForOrientation = { viewModel.getColumnsForOrientation(it) },
                         getItemsForCategory = { state.getItemsForCategory(it) },
+                        onTabLongClick = { navigator.push(CategoryScreen()) },
                     )
                 }
             }

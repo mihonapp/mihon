@@ -1,10 +1,14 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.category.visualName
 import tachiyomi.domain.category.model.Category
@@ -16,7 +20,9 @@ internal fun LibraryTabs(
     pagerState: PagerState,
     getItemCountForCategory: (Category) -> Int?,
     onTabItemClick: (Int) -> Unit,
+    onTabLongClick: (Category) -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
     val currentPageIndex = pagerState.currentPage.coerceAtMost(categories.lastIndex)
     PrimaryScrollableTabRow(
         selectedTabIndex = currentPageIndex,
@@ -25,7 +31,14 @@ internal fun LibraryTabs(
         categories.forEachIndexed { index, category ->
             Tab(
                 selected = currentPageIndex == index,
-                onClick = { onTabItemClick(index) },
+                onClick = {},
+                modifier = Modifier.combinedClickable(
+                    onClick = { onTabItemClick(index) },
+                    onLongClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onTabLongClick(category)
+                    },
+                ),
                 text = {
                     TabText(
                         text = category.visualName,
