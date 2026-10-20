@@ -30,6 +30,7 @@ fun ExtensionStoresScreen(
     onOpenWebsite: (ExtensionStore) -> Unit,
     onOpenDiscord: (ExtensionStore) -> Unit,
     onClickDelete: (ExtensionStore) -> Unit,
+    onSetEnabled: (ExtensionStore, Boolean) -> Unit,
     onClickRefresh: () -> Unit,
     navigateUp: () -> Unit,
 ) {
@@ -74,6 +75,8 @@ fun ExtensionStoresScreen(
             onOpenWebsite = onOpenWebsite,
             onOpenDiscord = onOpenDiscord,
             onClickDelete = onClickDelete,
+            disabledStores = state.disabledStores,
+            onSetEnabled = onSetEnabled,
         )
     }
 }
