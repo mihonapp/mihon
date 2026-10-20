@@ -955,4 +955,9 @@
     <string name="app_migrating_title">正在完成更新</string>
     <string name="app_migrating_summary">更新后正在进行准备工作。这可能需要几分钟，请保持应用处于开启状态。</string>
     <string name="pref_enable_chapter_name_hash">启用章节名称哈希后缀</string>
+    <string name="pref_time_format">时间格式</string>
+    <string name="follow_system">跟随系统</string>
+    <string name="follow_language">跟随系统语言</string>
+    <string name="time_24_hours">24小时</string>
+    <string name="time_12_hours">12小时</string>
 </resources>
