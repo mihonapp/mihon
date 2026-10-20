@@ -1,14 +1,14 @@
 package eu.kanade.tachiyomi.ui.reader.setting
 
 import android.content.pm.ActivityInfo
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ScreenLockLandscape
-import androidx.compose.material.icons.filled.ScreenLockPortrait
-import androidx.compose.material.icons.filled.ScreenRotation
-import androidx.compose.material.icons.filled.StayCurrentLandscape
-import androidx.compose.material.icons.filled.StayCurrentPortrait
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.StringResource
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Mobile
+import mihon.icons.materialsymbols.rounded.MobileLandscape
+import mihon.icons.materialsymbols.rounded.MobileLockLandscape
+import mihon.icons.materialsymbols.rounded.MobileLockPortrait
+import mihon.icons.materialsymbols.rounded.MobileRotate
 import tachiyomi.i18n.MR
 
 enum class ReaderOrientation(
@@ -20,43 +20,43 @@ enum class ReaderOrientation(
     DEFAULT(
         ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED,
         MR.strings.label_default,
-        Icons.Default.ScreenRotation,
+        MaterialSymbols.Rounded.MobileRotate,
         0x00000000,
     ),
     FREE(
         ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED,
         MR.strings.rotation_free,
-        Icons.Default.ScreenRotation,
+        MaterialSymbols.Rounded.MobileRotate,
         0x00000008,
     ),
     PORTRAIT(
         ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT,
         MR.strings.rotation_portrait,
-        Icons.Default.StayCurrentPortrait,
+        MaterialSymbols.Rounded.Mobile,
         0x00000010,
     ),
     LANDSCAPE(
         ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE,
         MR.strings.rotation_landscape,
-        Icons.Default.StayCurrentLandscape,
+        MaterialSymbols.Rounded.MobileLandscape,
         0x00000018,
     ),
     LOCKED_PORTRAIT(
         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
         MR.strings.rotation_force_portrait,
-        Icons.Default.ScreenLockPortrait,
+        MaterialSymbols.Rounded.MobileLockPortrait,
         0x00000020,
     ),
     LOCKED_LANDSCAPE(
         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
         MR.strings.rotation_force_landscape,
-        Icons.Default.ScreenLockLandscape,
+        MaterialSymbols.Rounded.MobileLockLandscape,
         0x00000028,
     ),
     REVERSE_PORTRAIT(
         ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT,
         MR.strings.rotation_reverse_portrait,
-        Icons.Default.StayCurrentPortrait,
+        MaterialSymbols.Rounded.Mobile,
         0x00000030,
     ),
     ;

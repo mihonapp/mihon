@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="history_enter"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="960"
+            android:viewportHeight="960">
+            <group android:translateY="960">
+                <path
+                    android:name="hands"
+                    android:fillColor="#000000"
+                    android:pathData="M 520 -496 L 620 -396 Q 631 -385 631 -368 Q 631 -351 620 -340 Q 609 -329 592 -329 Q 575 -329 564 -340 L 452 -452 Q 446 -458 443 -465.5 Q 440 -473 440 -481 L 440 -640 Q 440 -657 451.5 -668.5 Q 463 -680 480 -680 Q 497 -680 508.5 -668.5 Q 520 -657 520 -640 L 520 -496 Z" />
+                <group
+                    android:name="ring_group"
+                    android:pivotX="480"
+                    android:pivotY="-480">
+                    <path
+                        android:name="ring"
+                        android:fillColor="#000000"
+                        android:pathData="M 480 -120 Q 354 -120 257 -196.5 Q 160 -273 131 -392 Q 127 -407 137 -419.5 Q 147 -432 164 -434 Q 180 -436 193 -428 Q 206 -420 211 -404 Q 235 -314 310 -257 Q 385 -200 480 -200 Q 597 -200 678.5 -281.5 Q 760 -363 760 -480 Q 760 -597 678.5 -678.5 Q 597 -760 480 -760 Q 411 -760 351 -728 Q 291 -696 250 -640 L 320 -640 Q 337 -640 348.5 -628.5 Q 360 -617 360 -600 Q 360 -583 348.5 -571.5 Q 337 -560 320 -560 L 160 -560 Q 143 -560 131.5 -571.5 Q 120 -583 120 -600 L 120 -760 Q 120 -777 131.5 -788.5 Q 143 -800 160 -800 Q 177 -800 188.5 -788.5 Q 200 -777 200 -760 L 200 -706 Q 251 -770 324.5 -805 Q 398 -840 480 -840 Q 555 -840 620.5 -811.5 Q 686 -783 734.5 -734.5 Q 783 -686 811.5 -620.5 Q 840 -555 840 -480 Q 840 -405 811.5 -339.5 Q 783 -274 734.5 -225.5 Q 686 -177 620.5 -148.5 Q 555 -120 480 -120 Z" />
+                </group>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="ring_group">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="500"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="rotation"
+                android:valueFrom="360"
+                android:valueTo="0"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+</animated-vector>

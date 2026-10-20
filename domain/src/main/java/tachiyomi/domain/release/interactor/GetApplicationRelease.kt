@@ -1,37 +1,19 @@
 package tachiyomi.domain.release.interactor
 
-import tachiyomi.core.common.preference.Preference
-import tachiyomi.core.common.preference.PreferenceStore
+import dev.zacsweers.metro.Inject
 import tachiyomi.domain.release.model.Release
 import tachiyomi.domain.release.service.ReleaseService
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 
+@Inject
 class GetApplicationRelease(
     private val service: ReleaseService,
-    private val preferenceStore: PreferenceStore,
 ) {
-
-    private val lastChecked: Preference<Long> by lazy {
-        preferenceStore.getLong(Preference.appStateKey("last_app_check"), 0)
-    }
-
     suspend fun await(arguments: Arguments): Result {
-        val now = Instant.now()
-
-        // Limit checks to once every 3 days at most
-        val nextCheckTime = Instant.ofEpochMilli(lastChecked.get()).plus(3, ChronoUnit.DAYS)
-        if (!arguments.forceCheck && now.isBefore(nextCheckTime)) {
-            return Result.NoNewUpdate
-        }
-
         val release = service.latest(arguments) ?: return Result.NoNewUpdate
-
-        lastChecked.set(now.toEpochMilli())
 
         // Check if latest version is different from current version
         val isNewVersion = isNewVersion(
-            arguments.isPreview,
+            arguments.isNightly,
             arguments.commitCount,
             arguments.versionName,
             release.version,
@@ -43,15 +25,15 @@ class GetApplicationRelease(
     }
 
     private fun isNewVersion(
-        isPreview: Boolean,
+        isNightly: Boolean,
         commitCount: Int,
         versionName: String,
         versionTag: String,
     ): Boolean {
         // Removes prefixes like "r" or "v"
         val newVersion = versionTag.replace("[^\\d.]".toRegex(), "")
-        return if (isPreview) {
-            // Preview builds: based on releases in "mihonapp/mihon-preview" repo
+        return if (isNightly) {
+            // Nightly builds: based on releases in "mihonapp/mihon-preview" repo
             // tagged as something like "r1234"
             newVersion.toInt() > commitCount
         } else {
@@ -74,7 +56,7 @@ class GetApplicationRelease(
 
     data class Arguments(
         val isFoss: Boolean,
-        val isPreview: Boolean,
+        val isNightly: Boolean,
         val commitCount: Int,
         val versionName: String,
         val repository: String,

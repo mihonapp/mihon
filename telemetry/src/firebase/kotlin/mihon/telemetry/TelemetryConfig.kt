@@ -2,6 +2,7 @@ package mihon.telemetry
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -24,6 +25,7 @@ object TelemetryConfig {
 
         try {
             analytics = FirebaseAnalytics.getInstance(context)
+            analytics?.setUserProperty("preferred_abi", Build.SUPPORTED_ABIS[0])
             FirebaseApp.initializeApp(context)
             crashlytics = FirebaseCrashlytics.getInstance()
         } catch (e: Exception) {
@@ -56,6 +58,10 @@ object TelemetryConfig {
         return packageManager.getPackageInfo(packageName, SignatureFlags)
             .getCertificateFingerprints()
             .any { it == MIHON_CERTIFICATE_FINGERPRINT }
+    }
+
+    fun recordException(throwable: Throwable) {
+        crashlytics?.recordException(throwable)
     }
 }
 

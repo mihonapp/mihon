@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AddCircleOutline
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -33,21 +30,32 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.Screen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import mihon.core.viewmodel.StateViewModel
+import kotlinx.coroutines.launch
 import mihon.domain.network.Cookie
 import mihon.domain.network.CookieRepository
-import tachiyomi.core.common.util.lang.launchIO
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Add
+import mihon.icons.materialsymbols.rounded.Delete
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -57,18 +65,13 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.clickableNoIndication
 import tachiyomi.presentation.core.util.secondaryItemAlpha
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class CookieListScreen(val host: String) : Screen() {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val modelFactory = remember {
-            viewModelFactory { initializer { CookieListViewModel(host) } }
-        }
-        val model = viewModel<CookieListViewModel>(factory = modelFactory)
+        val model = assistedMetroViewModel<CookieListViewModel, CookieListViewModel.Factory> { create(host) }
         val state by model.state.collectAsState()
 
         when (val s = state) {
@@ -190,7 +193,7 @@ class CookieListScreen(val host: String) : Screen() {
                                     actions = listOf(
                                         AppBar.Action(
                                             title = stringResource(MR.strings.action_add_host),
-                                            icon = Icons.Outlined.AddCircleOutline,
+                                            icon = MaterialSymbols.Rounded.Add,
                                             onClick = {
                                                 model.setDialog(CookieListViewModel.Dialog())
                                             },
@@ -283,7 +286,7 @@ class CookieListScreen(val host: String) : Screen() {
                     onClick = onClickDelete,
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Delete,
+                        imageVector = MaterialSymbols.Rounded.Delete,
                         contentDescription = stringResource(MR.strings.action_delete),
                     )
                 }
@@ -292,20 +295,31 @@ class CookieListScreen(val host: String) : Screen() {
     }
 }
 
+@AssistedInject
 class CookieListViewModel(
-    private val host: String,
-    private val cookieRepository: CookieRepository = Injekt.get(),
-) : StateViewModel<CookieListViewModel.State>(State.Loading) {
+    @Assisted private val host: String,
+    private val cookieRepository: CookieRepository,
+) : ViewModel() {
+
+    val state: StateFlow<State>
+        field = MutableStateFlow<State>(State.Loading)
+
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(host: String): CookieListViewModel
+    }
 
     init {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             fetchCookies()
         }
     }
 
     private suspend fun fetchCookies() {
         cookieRepository.getCookiesForHost(host).let { cookies ->
-            mutableState.update {
+            state.update {
                 when (it) {
                     is State.Ready -> it.copy(cookies = cookies)
                     is State.Loading -> State.Ready(cookies = cookies)
@@ -314,18 +328,18 @@ class CookieListViewModel(
         }
     }
 
-    fun onSearchQueryChange(query: String?) = mutableState.update { state ->
+    fun onSearchQueryChange(query: String?) = state.update { state ->
         if (state !is State.Ready) return@update state
         state.copy(query = query)
     }
 
-    fun setDialog(dialog: Dialog?) = mutableState.update { state ->
+    fun setDialog(dialog: Dialog?) = state.update { state ->
         if (state !is State.Ready) return@update state
         state.copy(dialog = dialog)
     }
 
     fun delete(cookie: Cookie) {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             cookieRepository.deleteCookie(host, cookie)
             fetchCookies()
         }
@@ -339,7 +353,7 @@ class CookieListViewModel(
         if (cookie.name.isBlank() || cookie.value.isBlank()) return
 
         val path = if (cookie.path.startsWith("/")) cookie.path else "/${cookie.path}"
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             if (dialog != null && dialog.name.isNotBlank()) {
                 if (dialog.path != path || dialog.hostOnly != cookie.hostOnly) {
                     cookieRepository.deleteCookie(

@@ -7,11 +7,18 @@ import app.cash.sqldelight.async.coroutines.awaitAsList
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteDatabaseType
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteDriver
 import com.eygraber.sqldelight.androidx.driver.File
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import mihon.data.CookiesDatabase
 import mihon.domain.network.Cookie
 import mihon.domain.network.CookieRepository
 import java.io.File
 
+@Inject
+@SingleIn(AppScope::class)
+@ContributesBinding(AppScope::class)
 class CookieRepositoryImpl(
     private val context: Context,
 ) : CookieRepository {

@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AddCircleOutline
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,17 +25,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import mihon.core.viewmodel.StateViewModel
+import kotlinx.coroutines.launch
 import mihon.domain.network.CookieRepository
-import tachiyomi.core.common.util.lang.launchIO
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Add
+import mihon.icons.materialsymbols.rounded.Delete
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -47,15 +55,13 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class CookieManagerScreen : Screen() {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val model = viewModel<CookieManagerViewModel>()
+        val model = metroViewModel<CookieManagerViewModel>()
         val state by model.state.collectAsState()
 
         when (val s = state) {
@@ -111,7 +117,7 @@ class CookieManagerScreen : Screen() {
                                     actions = listOf(
                                         AppBar.Action(
                                             title = stringResource(MR.strings.action_add_host),
-                                            icon = Icons.Outlined.AddCircleOutline,
+                                            icon = MaterialSymbols.Rounded.Add,
                                             onClick = { model.setAddHostDialogVisible(true) },
                                         ),
                                     ),
@@ -147,7 +153,7 @@ class CookieManagerScreen : Screen() {
                                         onClick = { model.deleteHost(host) },
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.Delete,
+                                            imageVector = MaterialSymbols.Rounded.Delete,
                                             contentDescription = stringResource(MR.strings.action_delete),
                                         )
                                     }
@@ -161,14 +167,20 @@ class CookieManagerScreen : Screen() {
     }
 }
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class CookieManagerViewModel(
-    private val cookieRepository: CookieRepository = Injekt.get(),
-) : StateViewModel<CookieManagerViewModel.State>(State.Loading) {
+    private val cookieRepository: CookieRepository,
+) : ViewModel() {
+
+    val state: StateFlow<State>
+        field = MutableStateFlow<State>(State.Loading)
 
     init {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             cookieRepository.getAllHosts().let { hosts ->
-                mutableState.update {
+                state.update {
                     val sorted = hosts.sortedWith(String.CASE_INSENSITIVE_ORDER)
                     when (it) {
                         is State.Ready -> it.copy(hosts = sorted)
@@ -179,15 +191,15 @@ class CookieManagerViewModel(
         }
     }
 
-    fun setAddHostDialogVisible(visible: Boolean) = mutableState.update { state ->
+    fun setAddHostDialogVisible(visible: Boolean) = state.update { state ->
         if (state !is State.Ready) return@update state
         state.copy(showAddHostDialog = visible)
     }
 
     fun addHost(host: String) {
-        viewModelScope.launchIO {
-            if (host.isBlank()) return@launchIO
-            mutableState.update { state ->
+        viewModelScope.launch(Dispatchers.IO) {
+            if (host.isBlank()) return@launch
+            state.update { state ->
                 if (state !is State.Ready) return@update state
 
                 val hosts = (state.hosts + host.lowercase()).distinct()
@@ -197,9 +209,9 @@ class CookieManagerViewModel(
     }
 
     fun deleteHost(host: String) {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             cookieRepository.deleteHost(host)
-            mutableState.update { state ->
+            state.update { state ->
                 if (state !is State.Ready) return@update state
 
                 val hosts = state.hosts.filterNot { it == host }

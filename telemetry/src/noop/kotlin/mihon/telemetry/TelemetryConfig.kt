@@ -9,4 +9,6 @@ object TelemetryConfig {
     fun setAnalyticsEnabled(enabled: Boolean) = Unit
 
     fun setCrashlyticsEnabled(enabled: Boolean) = Unit
+
+    fun recordException(throwable: Throwable) = Unit
 }

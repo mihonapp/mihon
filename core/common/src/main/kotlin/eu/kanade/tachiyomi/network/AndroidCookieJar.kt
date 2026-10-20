@@ -7,7 +7,7 @@ import okhttp3.HttpUrl
 
 class AndroidCookieJar : CookieJar {
 
-    private val manager = CookieManager.getInstance()
+    private val manager by lazy { CookieManager.getInstance() }
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
         val urlString = url.toString()

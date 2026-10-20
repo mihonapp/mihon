@@ -3,14 +3,19 @@ package eu.kanade.tachiyomi.ui.manga
 import android.content.Context
 import android.net.Uri
 import androidx.compose.material3.SnackbarHostState
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.size.Size
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.saver.Image
@@ -19,49 +24,44 @@ import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.system.getBitmapOrNull
 import eu.kanade.tachiyomi.util.system.toShareIntent
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
-import mihon.core.viewmodel.StateViewModel
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import tachiyomi.source.local.image.LocalCoverManager
+import kotlin.time.Duration.Companion.seconds
 
+@AssistedInject
 class MangaCoverViewModel(
-    private val mangaId: Long,
-    private val getManga: GetManga = Injekt.get(),
-    private val imageSaver: ImageSaver = Injekt.get(),
-    private val coverCache: CoverCache = Injekt.get(),
-    private val updateManga: UpdateManga = Injekt.get(),
-
+    @Assisted private val mangaId: Long,
+    private val getManga: GetManga,
+    private val imageSaver: ImageSaver,
+    private val coverCache: CoverCache,
+    private val updateManga: UpdateManga,
+    private val coverManager: LocalCoverManager,
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
-) : StateViewModel<Manga?>(null) {
+) : ViewModel() {
 
-    companion object {
-        val MANGA_ID_KEY = CreationExtras.Key<Long>()
-
-        val Factory = viewModelFactory {
-            initializer {
-                MangaCoverViewModel(
-                    mangaId = get(MANGA_ID_KEY)!!,
-                )
-            }
-        }
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(mangaId: Long): MangaCoverViewModel
     }
 
-    init {
-        viewModelScope.launchIO {
-            getManga.subscribe(mangaId)
-                .collect { newManga -> mutableState.update { newManga } }
-        }
-    }
+    val state: StateFlow<Manga?> = getManga.subscribe(mangaId)
+        .flowOn(Dispatchers.IO)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), null)
 
     fun saveCover(context: Context) {
         viewModelScope.launch {
@@ -85,7 +85,7 @@ class MangaCoverViewModel(
         viewModelScope.launch {
             try {
                 val uri = saveCoverInternal(context, temp = true) ?: return@launch
-                withUIContext {
+                withContext(Dispatchers.Main) {
                     context.startActivity(uri.toShareIntent(context))
                 }
             } catch (e: Throwable) {
@@ -111,11 +111,11 @@ class MangaCoverViewModel(
             .size(Size.ORIGINAL)
             .build()
 
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val result = context.imageLoader.execute(req).image?.asDrawable(context.resources)
 
             // TODO: Handle animated cover
-            val bitmap = result?.getBitmapOrNull() ?: return@withIOContext null
+            val bitmap = result?.getBitmapOrNull() ?: return@withContext null
             imageSaver.save(
                 Image.Cover(
                     bitmap = bitmap,
@@ -134,10 +134,10 @@ class MangaCoverViewModel(
      */
     fun editCover(context: Context, data: Uri) {
         val manga = state.value ?: return
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             context.contentResolver.openInputStream(data)?.use {
                 try {
-                    manga.editCover(Injekt.get(), it, updateManga, coverCache)
+                    manga.editCover(coverManager, it, updateManga, coverCache)
                     notifyCoverUpdated(context)
                 } catch (e: Exception) {
                     notifyFailedCoverUpdate(context, e)
@@ -147,8 +147,7 @@ class MangaCoverViewModel(
     }
 
     fun deleteCustomCover(context: Context) {
-        val mangaId = state.value?.id ?: return
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 coverCache.deleteCustomCover(mangaId)
                 updateManga.awaitUpdateCoverLastModified(mangaId)
@@ -156,6 +155,15 @@ class MangaCoverViewModel(
             } catch (e: Exception) {
                 notifyFailedCoverUpdate(context, e)
             }
+        }
+    }
+
+    fun addToLibraryWarning(context: Context) {
+        viewModelScope.launch {
+            snackbarHostState.showSnackbar(
+                context.stringResource(MR.strings.notification_first_add_to_library),
+                withDismissAction = true,
+            )
         }
     }
 

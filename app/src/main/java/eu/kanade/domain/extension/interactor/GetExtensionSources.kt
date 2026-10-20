@@ -1,16 +1,18 @@
 package eu.kanade.domain.extension.interactor
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+@Inject
 class GetExtensionSources(
     private val preferences: SourcePreferences,
 ) {
 
-    fun subscribe(extension: Extension.Installed): Flow<List<ExtensionSourceItem>> {
+    fun subscribe(extension: Extension.Loaded): Flow<List<ExtensionSourceItem>> {
         val isMultiSource = extension.sources.size > 1
         val isMultiLangSingleSource =
             isMultiSource && extension.sources.map { it.name }.distinct().size == 1

@@ -9,11 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.AbstractComposeView
 import eu.kanade.presentation.reader.ChapterTransition
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.isLocal
@@ -27,22 +29,33 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
         layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     }
 
-    fun bind(transition: ChapterTransition, downloadManager: DownloadManager, manga: Manga?) {
-        data = if (manga != null) {
+    fun bind(transition: ChapterTransition, downloadManager: DownloadManager, manga: Manga?, source: Source?) {
+        data = if (manga != null && source != null) {
+            val goingToChapter = transition.to?.chapter.takeUnless { manga.isLocal() }
             Data(
                 transition = transition,
                 currChapterDownloaded = transition.from.pageLoader?.isLocal == true,
                 goingToChapterDownloaded = manga.isLocal() ||
-                    transition.to?.chapter?.let { goingToChapter ->
+                    goingToChapter?.let {
                         downloadManager.isChapterDownloaded(
-                            chapterName = goingToChapter.name,
-                            chapterScanlator = goingToChapter.scanlator,
-                            chapterUrl = goingToChapter.url,
+                            chapterName = it.name,
+                            chapterScanlator = it.scanlator,
+                            chapterUrl = it.url,
                             mangaTitle = manga.title,
                             sourceId = manga.source,
-                            skipCache = true,
                         )
                     } ?: false,
+                isGoingToChapterOnDisk = goingToChapter?.let {
+                    {
+                        downloadManager.isChapterDownloadedOnDisk(
+                            chapterName = it.name,
+                            chapterScanlator = it.scanlator,
+                            chapterUrl = it.url,
+                            mangaTitle = manga.title,
+                            source = source,
+                        )
+                    }
+                },
             )
         } else {
             null
@@ -52,6 +65,9 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
     @Composable
     override fun Content() {
         data?.let {
+            val goingToChapterDownloaded by produceState(it.goingToChapterDownloaded, it) {
+                it.isGoingToChapterOnDisk?.let { isOnDisk -> value = isOnDisk() }
+            }
             TachiyomiTheme {
                 CompositionLocalProvider(
                     LocalTextStyle provides MaterialTheme.typography.bodySmall,
@@ -60,7 +76,7 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
                     ChapterTransition(
                         transition = it.transition,
                         currChapterDownloaded = it.currChapterDownloaded,
-                        goingToChapterDownloaded = it.goingToChapterDownloaded,
+                        goingToChapterDownloaded = goingToChapterDownloaded,
                     )
                 }
             }
@@ -71,5 +87,6 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
         val transition: ChapterTransition,
         val currChapterDownloaded: Boolean,
         val goingToChapterDownloaded: Boolean,
+        val isGoingToChapterOnDisk: (suspend () -> Boolean)?,
     )
 }

@@ -34,7 +34,7 @@
             android:paddingHorizontal="10dp"
             android:paddingVertical="8dp"
             android:scaleType="center"
-            app:srcCompat="@drawable/ic_drag_handle_24dp"
+            app:srcCompat="@drawable/rounded_drag_handle"
             app:tint="?android:attr/textColorHint"
             tools:ignore="ContentDescription" />
 

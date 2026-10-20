@@ -3,7 +3,7 @@
     <string name="name">الاسم</string>
     <string name="categories">الفئات</string>
     <string name="manga">مدخلات المكتبة</string>
-    <string name="chapters">فصول</string>
+    <string name="chapters">الفصول</string>
     <string name="track">تعقب</string>
     <string name="history">السجل</string>
     <string name="label_settings">اﻹعدادات</string>
@@ -71,7 +71,7 @@
     <string name="pref_library_update_interval">التحديثات التلقائية</string>
     <string name="update_never">إيقاف</string>
     <string name="update_6hour">كل ٦ ساعات</string>
-    <string name="update_12hour">كل ١٢ ساعة</string>
+    <string name="update_12hour">كل 12 ساعة</string>
     <string name="update_24hour">يومياً</string>
     <string name="update_48hour">كل يومان</string>
     <string name="update_weekly">أسبوعياً</string>
@@ -184,7 +184,7 @@
     <string name="confirm_delete_chapters">هل أنت متأكد من أنك تريد حذف الفصول المحددة؟</string>
     <string name="manga_tracking_tab">التتبع</string>
     <string name="reading">القراءة</string>
-    <string name="completed">مكتملة</string>
+    <string name="completed">تمَّت</string>
     <string name="dropped">متروكة</string>
     <string name="on_hold">معلَّقة</string>
     <string name="plan_to_read">أنوي قراءتها</string>
@@ -212,9 +212,6 @@
     <string name="file_select_backup">اختر ملف النسخة الاحتياطية</string>
     <string name="update_check_confirm">تنزيل</string>
     <string name="update_check_no_new_updates">لا تتوفر تحديثات جديدة</string>
-    <string name="update_check_notification_download_in_progress">جار التنزيل…</string>
-    <string name="update_check_notification_download_complete">اضغط لتثبيت التحديث</string>
-    <string name="update_check_notification_download_error">حدث خطأ في التنزيل</string>
     <string name="update_check_notification_update_available">نسخة جديدة متوفرة!</string>
     <string name="information_no_downloads">لا توجد تنزيلات</string>
     <string name="information_no_recent">لا توجد تحديثات جديدة</string>
@@ -249,8 +246,7 @@
     <string name="double_tap_anim_speed_fast">سريع</string>
     <string name="manga_added_library">تم الإضافة إلى المكتبة</string>
     <string name="manga_removed_library">تم الإزالة من المكتبة</string>
-    <string name="copied_to_clipboard">نُسخ إلى الحافظة:
-\n%1$s</string>
+    <string name="copied_to_clipboard">نُسخ إلى الحافظة: \n%1$s</string>
     <string name="source_not_installed">المصدر غير مثبت: %1$s</string>
     <string name="repeating">إعادة القراءة</string>
     <string name="track_status">الحالة</string>
@@ -390,9 +386,6 @@
     <string name="pref_remove_bookmarked_chapters">حذف الفصول ذات العلامة المرجعية</string>
     <string name="pref_category_delete_chapters">حذف الفصول</string>
     <string name="pref_category_reading_mode">وضع القراءة</string>
-    <string name="ext_nsfw_warning">بعض المصادر من هذا الامتداد قد تحتوى على محتوى للبالغين (+18)</string>
-    <string name="ext_nsfw_short">محتوى غير لائق</string>
-    <string name="parental_controls_info">هذا لا يمنع الإضافات غير الرسمية أو التي تم وضع علامة عليها بشكل غير صحيح من إظهار محتوى غير لائق داخل التطبيق.</string>
     <string name="tapping_inverted_both">كليهما</string>
     <string name="tapping_inverted_vertical">عمودي</string>
     <string name="tapping_inverted_horizontal">أفقي</string>
@@ -425,8 +418,6 @@
     <string name="spen_next_page">الصفحة التالية</string>
     <string name="spen_previous_page">الصفحة السابقة</string>
     <string name="migration_help_guide">دليل نقل المصدر</string>
-    <string name="pref_category_nsfw_content">محتوى +18</string>
-    <string name="pref_show_nsfw_source">اعرض في قوائم المصادر والامتدادات</string>
     <string name="myanimelist_relogin">رجاء سجل دخولك في MAL مجدداً</string>
     <string name="file_picker_error">لم يتم العثور على تطبيق منتقي الملفات</string>
     <string name="pref_viewer_nav">مناطق اللمس</string>
@@ -534,14 +525,13 @@
     <string name="ext_app_info">معلومات التطبيق</string>
     <string name="ext_install_service_notif">جارٍ تثبيت الإضافة …</string>
     <string name="pref_verbose_logging_summary">طباعة السجلات المطولة في سجل النظام (يقلل من أداء التطبيق)</string>
-    <string name="channel_app_updates">تحديثات التطبيق</string>
     <string name="ext_update_all">تحديث الكل</string>
     <string name="update_72hour">كل ثلاثة ايام</string>
     <string name="connected_to_wifi">فقط على شبكة Wi-Fi</string>
     <string name="ext_installer_shizuku_stopped">«Shizuku» لا يعمل</string>
-    <string name="publishing_finished">انتهى النشر</string>
+    <string name="publishing_finished">مكتملة</string>
     <string name="cancelled">أُلغيت</string>
-    <string name="on_hiatus">متوقفة</string>
+    <string name="on_hiatus">منقطعة</string>
     <string name="library_errors_help">للحصول على المساعده في إصلاح أخطاء تحديث المكتبة، أنظر هنا%1$s</string>
     <string name="save_chapter_as_cbz">احفظ كأرشيف CBZ</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
@@ -551,7 +541,7 @@
     <string name="database_clean">لا شئ للتنظيف</string>
     <string name="clear_database_source_item_count">%1$d مدخلةً في قاعدة البيانات وليست في المكتبة</string>
     <string name="extension_api_error">فشل الحصول على قائمة الإضافات</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">ثبت «Shizuku» وشغله لتستخدمه كمثبت إضافات.</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">ثبِّت «Shizuku» وشغِّله لتستخدمه كمثبِّت للإضافات.</string>
     <string name="download_queue_size_warning">تحذير: يمكن أن تؤدِّي التنزيلات كبيرة الحجم والعدد إلى إبطاء المصادر، وقد يُحظر %s منها بسبب ذلك. اضغط لمعرفة المزيد۔</string>
     <string name="action_show_manga">إظهار الدخول</string>
     <string name="action_display_cover_only_grid">شبكة بالاغلفة فقط</string>
@@ -581,7 +571,6 @@
     <string name="pref_reset_viewer_flags_success">اعادة تعيين جميع اعدادات القارئ</string>
     <string name="pref_reset_viewer_flags_summary">إعادة تعيين اعدادات القراءه لكل القصص</string>
     <string name="ext_info_language">اللغة</string>
-    <string name="ext_info_age_rating">التقييم العمري</string>
     <string name="ext_info_version">الإصدار</string>
     <string name="pref_reset_viewer_flags_error">لم يمكن إعادة تعيين إعدادات القارئ</string>
     <string name="empty_screen">هذا محرج</string>
@@ -632,8 +621,7 @@
     <string name="pref_backup_summary">النسخ الاحتياطي اليدوي والآلي وحيِّز التخزين</string>
     <string name="pref_security_summary">قفل التطبيق، شاشة آمنة</string>
     <string name="pref_advanced_summary">تفريغ سجلات الأعطال وتحسينات البطارية</string>
-    <string name="fdroid_warning">لا يتم دعم إصدارات F-Droid رسميا.
-\nانقر لمعرفة المزيد.</string>
+    <string name="fdroid_warning">لا يتم دعم إصدارات F-Droid رسميا. \nانقر لمعرفة المزيد.</string>
     <string name="invalid_location">موقع غير صالح: %s</string>
     <string name="pref_invalidate_download_cache_summary">فرض التطبيق على إعادة التحقق من الفصول التي تم تنزيلها</string>
     <string name="track_remove_date_conf_title">إزالة التاريخ؟</string>
@@ -756,7 +744,6 @@
     <string name="onboarding_permission_action_grant">منح</string>
     <string name="ext_permission_install_apps_warning">تثبيت الإضافات يتطلب أذونات. انقر هنا لمنحها.</string>
     <string name="ext_revoke_trust">إبطال الإضافات غير الموثوق بها</string>
-    <string name="action_open_repo">مستودع مفتوح المصدر</string>
     <string name="invalid_backup_file_error">الخطأ الكامل:</string>
     <string name="private_settings">تضمين إعدادات حساسة (على سبيل المثال، رموز تسجيل دخول المتتبع)</string>
     <string name="manga_interval_expected_update_soon">قريباً</string>
@@ -788,8 +775,8 @@
     <string name="action_copy_link">نسخ الرابط</string>
     <string name="invalid_backup_file_unknown">ملف النسخة الإحتياطية معطل أو لا يعمل</string>
     <string name="invalid_backup_file_json">لا يتم دعم النسخ الاحتياطي لـ JSON</string>
-    <string name="artist">فنان</string>
-    <string name="author">الكاتب</string>
+    <string name="artist">الرسَّام</string>
+    <string name="author">المؤلِّف</string>
     <string name="label_auto">تلقائي</string>
     <string name="onboarding_permission_analytics_description">أرسل بيانات بشكل مخفي للمساهمة في تطوير البرنامج.</string>
     <string name="pref_security">الأمن</string>
@@ -817,14 +804,10 @@
     <string name="action_toggle_private_on">التتبع الخاص</string>
     <string name="notes_placeholder">استمتعت بالجزء حين …</string>
     <string name="trackers_updated_summary">تحديث المتابعات إلى الفصل %d</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_2">استخدم فك التشفير القديم لقارئ الشرائط الطويلة</string>
     <string name="pref_mark_duplicate_read_chapter_read">اعتبر الفصل المقروء المكرر مقروء</string>
     <string name="remove_private_extension_message">هل فعلا تريد حدف الإضافة \"%s\"؟</string>
-    <string name="pref_hardware_bitmap_threshold_summary">ادا تم تحميل صورة فارغة قلل الحد تدريجيا لحل المشكلة.\nتم تحديد:%s</string>
     <string name="library_list">قائمة المكتبات</string>
     <string name="non_library_settings">جميع الإدخالات المقروئة</string>
-    <string name="pref_hardware_bitmap_threshold">عتبة خريطة الصورة النقطية للأجهزة المخصصة</string>
-    <string name="pref_hardware_bitmap_threshold_default">افتراضي (%d)</string>
     <string name="possible_duplicates_summary">لديك مداخلات متشابهة في مكتبك بنفس الاسم.\n\nحدد واحدة للنقل أو الإضافة على أي حال.</string>
     <string name="possible_duplicates_title">التكرارات المحتملة</string>
     <string name="confirm_tracker_update">تحديث المتابعات إلى الفصل %d؟</string>
@@ -832,7 +815,6 @@
     <string name="theme_catppuccin">كاتبوتشين</string>
     <string name="pref_display_images_description">عرض الصور في وصف المجلات</string>
     <string name="pref_hide_missing_chapter_indicators">إخفاء مؤشر الفصول المفقودة</string>
-    <string name="pref_always_decode_long_strip_with_ssiv_summary">يؤثر على الأداء. فعّله فقط إذا لم يُحل تقليل عتبة الخريطة النقطية مشاكل الصورة الفارغة</string>
     <string name="pref_download_new_unread_chapters_only">تخطي تنزيل الفصول المقروءة المكررة</string>
     <string name="pref_auto_update_manga_on_mark_read">تحديث التقدم عند وضع علامة عليه كمقروء</string>
     <string name="export">يصدّر</string>
@@ -900,4 +882,29 @@
     <string name="donationCampaign.paragraph3">عمومًا، سأستمر في صيانة ميهون بواسطتي أنا والمتطوعين، وسيظل مفتوح المصدر.</string>
     <string name="donationCampaign.contactPlatform">ديسكورد</string>
     <string name="donationCampaign.dismiss">إغلاق</string>
+    <string name="time_24_hours">24‐ساعة</string>
+    <string name="time_12_hours">12‐ساعة</string>
+    <string name="pref_category_extensions">إضافات</string>
+    <string name="pref_allowed_content_warnings">تحذيرات المحتوى المسموح بها</string>
+    <string name="pref_apply_content_warnings_to_installed">يُطبَّق أيضاً على الإضافات المُثبَّتة</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">عند إيقاف التشغيل، تستمر الإضافات التي قمت بتثبيتها مسبقاً في التحميل والتحديث، بغض النظر عن التحذير المتعلق بها.</string>
+    <string name="content_warnings_info">تظل الإضافات المُثبَّتة التي لم يتم تحميلها مدرجةً دون الإشارة إلى مصادرها، بينما تظل الإضافات التي لم تُثبِّتها مخفية. ومع ذلك، لا يمنع هذا ظهور محتوى مخصص للبالغين (18+) داخل التطبيق، سواء كان ذلك عبر إضافات غير رسمية أو إضافات قد تكون صُنِّفت بشكل خاطئ.</string>
+    <string name="pref_enable_chapter_name_hash">تفعيل لاحقة التجزئة لاسم الفصل</string>
+    <string name="pref_enable_chapter_name_hash_details">يضمن إضافة لاحقة \"هاش\" (hash) فريدة إلى أسماء الفصول لتجنب تعارض الأسماء. وفي حال تعطيل هذه الميزة، لن يكون بالإمكان تنزيل الفصول التي تحمل أسماءً متطابقة.</string>
+    <string name="ext_filtered">مصفى</string>
+    <string name="ext_not_loaded">لم يتم التحميل</string>
+    <string name="ext_not_loaded_dialog">تعذّر التحميل</string>
+    <string name="ext_not_loaded_details">لماذا لم يتم تحميله</string>
+    <string name="ext_copy_stacktrace">نسخ تتبع المكدس</string>
+    <string name="ext_filtered_message">تحذير المحتوى الخاص بهذه الإضافة ليس تحذيراً اخترت تحميله، لذا فإن مصادره غير متاحة.</string>
+    <string name="ext_unsigned_message">هذه الإضافة غير مُوقَّعة، لذا لا يوجد توقيع يمكن التحقق منها من خلاله.</string>
+    <string name="ext_unsupported_message">تم إنشاء هذه الإضافة لإصدار من مكتبة الإضافات لا يمكن لإصدار التطبيق هذا تحميله. قد يساعد تحديث التطبيق أو الإضافة في حل هذه المشكلة.</string>
+    <string name="ext_malformed_message">يفتقر هذه الإضافة إلى معلومات يحتاجها التطبيق لتحميله.</string>
+    <string name="ext_load_failed_message">تسببت هذه الإضافة في حدوث خطأ أثناء التحميل، لذا فإن أياً من مصادرها غير متاح.</string>
+    <string name="ext_info_warning">تحذير</string>
+    <string name="ext_content_warning_safe">آمن</string>
+    <string name="ext_content_warning_mixed">مختلط</string>
+    <string name="ext_content_warning_nsfw">18+</string>
+    <string name="ext_content_warning_mixed_description">قد تحتوي المصادر الواردة من هذه الإضافة على محتوى آمن وآخر مخصص للبالغين (18+).</string>
+    <string name="ext_content_warning_nsfw_description">تركز المصادر الواردة من هذه الإضافة بشكل أساسي على المحتوى الموجه لمن هم في سن 18 عاماً فما فوق.</string>
 </resources>

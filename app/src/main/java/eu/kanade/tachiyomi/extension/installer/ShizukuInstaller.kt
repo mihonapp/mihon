@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.extension.installer
 
+import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.ComponentName
@@ -18,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.shizuku.IShellInterface
 import mihon.app.shizuku.ShellInterface
@@ -39,6 +41,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             .processNameSuffix("shizuku_service")
             .debuggable(BuildConfig.DEBUG)
             .daemon(false)
+            .version(2)
     }
 
     private val connection = object : ServiceConnection {
@@ -53,6 +56,13 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
         }
     }
 
+    private val statusIntent = PendingIntent.getBroadcast(
+        service.applicationContext,
+        0,
+        Intent(ACTION_INSTALL_RESULT).setPackage(BuildConfig.APPLICATION_ID),
+        PendingIntent.FLAG_MUTABLE,
+    )
+
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, Int.MIN_VALUE)
@@ -62,7 +72,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             if (status == PackageInstaller.STATUS_SUCCESS) {
                 continueQueue(InstallStep.Installed)
             } else {
-                logcat(LogPriority.ERROR) { "Failed to install extension $packageName: $message" }
+                logcat(LogPriority.INFO) { "Shizuku failed to install $packageName ($status): $message" }
                 continueQueue(InstallStep.Error)
             }
         }
@@ -108,14 +118,16 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
 
     override fun processEntry(entry: Entry) {
         super.processEntry(entry)
-        try {
-            service.contentResolver.openAssetFileDescriptor(entry.uri, "r").use {
-                shellInterface?.install(it)
+        scope.launch {
+            try {
+                service.contentResolver.openAssetFileDescriptor(entry.uri, "r").use {
+                    shellInterface?.install(it, statusIntent.intentSender)
+                }
+                service.contentResolver.delete(entry.uri, null, null)
+            } catch (e: Exception) {
+                logcat(LogPriority.INFO, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
+                continueQueue(InstallStep.Error)
             }
-            service.contentResolver.delete(entry.uri, null, null)
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
-            continueQueue(InstallStep.Error)
         }
     }
 
