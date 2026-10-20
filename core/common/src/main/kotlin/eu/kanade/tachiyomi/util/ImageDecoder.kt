@@ -19,6 +19,7 @@ object ImageDecoder {
      * Decode an image, or the first frame of an animated one. Blocking; safe to call from
      * several threads.
      *
+     * @since tachiyomix 1.6
      * @param stream the encoded image, read to the end. The caller closes it.
      * @return a new sRGB [Bitmap.Config.ARGB_8888] bitmap, recycled by the caller.
      * @throws IOException if the image can't be decoded.
@@ -42,7 +43,6 @@ object ImageDecoder {
             throw e
         }
         if (!hdr) return decoded
-        // Sources expect 8-bit sRGB pixels; HDR values above SDR white are clipped
         return try {
             createBitmap(width, height, Bitmap.Config.ARGB_8888, colorSpace = ColorSpace.get(ColorSpace.Named.SRGB))
                 .also { Canvas(it).drawBitmap(decoded, 0f, 0f, null) }
