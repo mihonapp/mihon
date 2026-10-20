@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.RefreshableProfileTracker
 import eu.kanade.tachiyomi.data.track.comick.dto.ComickOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.json.Json
@@ -13,7 +14,7 @@ import uy.kohesive.injekt.injectLazy
 import kotlin.time.Clock
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Comick(id: Long) : BaseTracker(id, "Comick"), DeletableTracker {
+class Comick(id: Long) : BaseTracker(id, "Comick"), DeletableTracker, RefreshableProfileTracker {
 
     private val json: Json by injectLazy()
 
