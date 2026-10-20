@@ -13,7 +13,7 @@ interface ExtensionStoreRepository {
 
     suspend fun refreshAll()
 
-    suspend fun fetchExtensions(): List<Extension.Available>
+    suspend fun fetchExtensions(disabledStoreUrls: Set<String> = emptySet()): List<Extension.Available>
 
     suspend fun getAll(): List<ExtensionStore>
 
