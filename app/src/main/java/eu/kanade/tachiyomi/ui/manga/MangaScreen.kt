@@ -66,6 +66,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 class MangaScreen(
     private val mangaId: Long,
     val fromSource: Boolean = false,
+    val searchFromChapterId: Long? = null,
 ) : Screen(), AssistContentScreen {
 
     private var assistUrl: String? = null
@@ -113,7 +114,10 @@ class MangaScreen(
             chapterSwipeStartAction = viewModel.chapterSwipeStartAction,
             chapterSwipeEndAction = viewModel.chapterSwipeEndAction,
             navigateUp = navigator::pop,
-            onChapterClicked = { openChapter(context, it) },
+            onChapterClicked = {
+                if (searchFromChapterId != null) navigator.pop()
+                openChapter(context, it)
+            },
             onDownloadChapter = viewModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
             downloadProgressProvider = viewModel::getDownloadProgress,
             onAddToLibraryClicked = {
@@ -169,6 +173,13 @@ class MangaScreen(
             onChapterSelected = viewModel::toggleSelection,
             onAllChapterSelected = viewModel::toggleAllSelection,
             onInvertSelection = viewModel::invertSelection,
+            openChapterSearch = searchFromChapterId != null,
+            onCloseChapterSearch = searchFromChapterId?.let { chapterId ->
+                {
+                    navigator.pop()
+                    context.startActivity(ReaderActivity.newIntent(context, mangaId, chapterId))
+                }
+            },
         )
 
         var showScanlatorsDialog by remember { mutableStateOf(false) }
