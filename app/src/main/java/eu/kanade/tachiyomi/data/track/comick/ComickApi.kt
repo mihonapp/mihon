@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.interceptor.rateLimit
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
@@ -42,30 +43,31 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class ComickApi(
     private val trackerId: Long,
     baseClient: OkHttpClient,
-    interceptor: ComickInterceptor,
+    comickInterceptor: ComickInterceptor,
 ) {
 
     private val json: Json by injectLazy()
 
     private val client = baseClient.newBuilder()
         .rateLimit(permits = 55, period = 1.minutes)
+        .addInterceptor(
+            UserAgentInterceptor(force = true) {
+                buildString {
+                    append("Mihon/v${BuildConfig.VERSION_NAME} ")
+                    append("(${BuildConfig.APPLICATION_ID}) ${BuildConfig.COMMIT_SHA}) ")
+                    append("(Android) (https://github.com/mihonapp/mihon)")
+                }
+            },
+        )
         .addInterceptor {
             it.request().newBuilder()
-                .header(
-                    "User-Agent",
-                    buildString {
-                        append("Mihon/v${BuildConfig.VERSION_NAME} ")
-                        append("(${BuildConfig.APPLICATION_ID}) ${BuildConfig.COMMIT_SHA}) ")
-                        append("(Android) (https://github.com/mihonapp/mihon)")
-                    },
-                )
                 .header("Accept", jsonMime.toString())
                 .build()
                 .let(it::proceed)
         }.build()
 
     private val authClient = client.newBuilder()
-        .addInterceptor(interceptor)
+        .addInterceptor(comickInterceptor)
         .build()
 
     suspend fun addLibManga(track: Track): Track {

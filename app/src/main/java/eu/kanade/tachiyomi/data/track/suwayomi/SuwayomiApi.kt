@@ -3,9 +3,11 @@ package eu.kanade.tachiyomi.data.track.suwayomi
 import android.content.SharedPreferences
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.network.okHttpClient
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.dataOrElse
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.sourcePreferences
@@ -28,10 +30,19 @@ class SuwayomiApi(
     private suspend fun connection(): Connection {
         connection?.let { return it }
         val source = sourceManager.get(sourceId) as HttpSource
+
+        val client = source.client.newBuilder()
+            .addInterceptor(
+                UserAgentInterceptor(force = true) {
+                    "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})"
+                },
+            )
+            .build()
+
         val baseUrl = source.baseUrl.trimEnd('/')
         val graphQlClient = ApolloClient.Builder()
             .serverUrl("$baseUrl/api/graphql")
-            .okHttpClient(source.client)
+            .okHttpClient(client)
             .dispatcher(Dispatchers.IO)
             // required to log the error body in dataOrElse, which also properly closes it
             .httpExposeErrorBody(true)

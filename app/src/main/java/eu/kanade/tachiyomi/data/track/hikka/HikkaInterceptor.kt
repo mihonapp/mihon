@@ -25,7 +25,6 @@ class HikkaInterceptor(private val hikka: Hikka) : Interceptor {
 
         val authRequest = originalRequest.newBuilder()
             .addHeader("auth", currAuth.accessToken)
-            .addHeader("accept", "application/json")
             .build()
 
         return chain.proceed(authRequest)

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.network.okHttpClient
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.data.track.shikimori.dto.SMLibraryIdResponse
@@ -14,6 +15,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.dataOrElse
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
@@ -34,13 +36,19 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 
 class ShikimoriApi(
     private val trackerId: Long,
-    private val client: OkHttpClient,
-    interceptor: ShikimoriInterceptor,
+    baseClient: OkHttpClient,
+    shikimoriInterceptor: ShikimoriInterceptor,
 ) {
 
     private val json: Json by injectLazy()
 
-    private val authClient = client.newBuilder().addInterceptor(interceptor).build()
+    private val client = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) { "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})" },
+        )
+        .build()
+
+    private val authClient = client.newBuilder().addInterceptor(shikimoriInterceptor).build()
 
     private val graphQlClient by lazy {
         ApolloClient.Builder()

@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.track.mangaupdates
 
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.mangaupdates.MangaUpdates.Companion.READING_LIST
 import eu.kanade.tachiyomi.data.track.mangaupdates.MangaUpdates.Companion.WISH_LIST
@@ -16,6 +17,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,16 +35,20 @@ import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MangaUpdatesApi(
-    private val client: OkHttpClient,
-    interceptor: MangaUpdatesInterceptor,
+    baseClient: OkHttpClient,
+    mangaUpdatesInterceptor: MangaUpdatesInterceptor,
 ) {
     private val json: Json by injectLazy()
 
-    private val authClient by lazy {
-        client.newBuilder()
-            .addInterceptor(interceptor)
-            .build()
-    }
+    private val client = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) { "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})" },
+        )
+        .build()
+
+    private val authClient = client.newBuilder()
+        .addInterceptor(mangaUpdatesInterceptor)
+        .build()
 
     suspend fun getSeriesListItem(track: Track): Pair<MUListItem, MURating?> {
         val listItem = withContext(Dispatchers.IO) {

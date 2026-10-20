@@ -1,10 +1,12 @@
 package eu.kanade.tachiyomi.data.track.kavita
 
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
@@ -21,15 +23,21 @@ import java.net.SocketTimeoutException
 
 class KavitaApi(
     private val trackerId: Long,
-    private val client: OkHttpClient,
-    interceptor: KavitaInterceptor,
+    baseClient: OkHttpClient,
+    kavitaInterceptor: KavitaInterceptor,
 ) {
 
     private val json: Json by injectLazy()
 
+    private val client = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) { "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})" },
+        )
+        .build()
+
     private val authClient = client.newBuilder()
         .dns(Dns.SYSTEM)
-        .addInterceptor(interceptor)
+        .addInterceptor(kavitaInterceptor)
         .build()
 
     fun getApiFromUrl(url: String): String {

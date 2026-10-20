@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.hikka
 
 import android.net.Uri
 import androidx.core.net.toUri
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKManga
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKMangaPagination
@@ -16,6 +17,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
@@ -34,9 +36,27 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 
 class HikkaApi(
     private val trackerId: Long,
-    private val client: OkHttpClient,
-    interceptor: HikkaInterceptor,
+    baseClient: OkHttpClient,
+    hikkaInterceptor: HikkaInterceptor,
 ) {
+
+    private val json: Json by injectLazy()
+
+    private val client = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) { "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})" },
+        )
+        .addInterceptor {
+            it.request()
+                .newBuilder()
+                .header("Accept", jsonMime.toString())
+                .build()
+                .let(it::proceed)
+        }
+        .build()
+
+    private val authClient = client.newBuilder().addInterceptor(hikkaInterceptor).build()
+
     suspend fun getCurrentUser(): HKUser {
         return withContext(Dispatchers.IO) {
             val request = Request.Builder()
@@ -200,9 +220,6 @@ class HikkaApi(
     }
 
     suspend fun updateUserManga(track: Track): Track = addUserManga(track)
-
-    private val json: Json by injectLazy()
-    private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     companion object {
         const val BASE_API_URL = "https://api.hikka.io"
