@@ -305,6 +305,10 @@ class MangaScreen(
                     viewModel.updateCustomTitle(title.takeIf { it.isNotBlank() })
                     showCustomTitleDialog = false
                 },
+                onReset = {
+                    viewModel.updateCustomTitle(null)
+                    showCustomTitleDialog = false
+                },
             )
         }
 
@@ -421,6 +425,7 @@ class MangaScreen(
         initialTitle: String,
         onDismissRequest: () -> Unit,
         onSave: (String) -> Unit,
+        onReset: () -> Unit,
     ) {
         var title by remember(initialTitle) { mutableStateOf(initialTitle) }
 
@@ -430,21 +435,25 @@ class MangaScreen(
             text = {
                 OutlinedTextField(
                     value = title,
-                    onValueChange = { title = it },
-                    singleLine = true,
+                    onValueChange = { title = it.replace('\n', ' ').replace('\r', ' ') },
+                    minLines = 1,
+                    maxLines = 5,
                     label = { Text(text = stringResource(MR.strings.action_custom_title)) },
                 )
             },
             confirmButton = {
-                TextButton(
-                    onClick = { onSave(title) },
-                ) {
+                TextButton(onClick = { onSave(title) }) {
                     Text(text = stringResource(MR.strings.action_save))
                 }
             },
             dismissButton = {
-                TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(MR.strings.action_cancel))
+                androidx.compose.foundation.layout.Row {
+                    TextButton(onClick = onDismissRequest) {
+                        Text(text = stringResource(MR.strings.action_cancel))
+                    }
+                    TextButton(onClick = onReset) {
+                        Text(text = stringResource(MR.strings.action_reset))
+                    }
                 }
             },
         )
