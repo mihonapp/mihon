@@ -73,6 +73,9 @@ class WebGpuConfig(
     var continuousGap = 10
         private set
 
+    var pagedSidePadding = 0
+        private set
+
     init {
         readerPreferences.readerTheme.register(
             {
@@ -163,6 +166,11 @@ class WebGpuConfig(
 
         readerPreferences.continuousGap.register(
             { continuousGap = it },
+            { imagePropertyChangedListener?.invoke() },
+        )
+
+        readerPreferences.pagedSidePadding.register(
+            { pagedSidePadding = it },
             { imagePropertyChangedListener?.invoke() },
         )
     }

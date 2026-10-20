@@ -931,6 +931,7 @@ open class WebGpuViewer(
         // keeps animating independently via its own already-running frame loop - no copying of
         // animation state needed. The other slot is simply null when there's no partner (yet).
         val spread = ImagePage.ImageSpread(left, right)
+        applySidePaddingToSpread(spread)
         page.spreadPage = spread
         return spread
     }
@@ -1416,7 +1417,7 @@ open class WebGpuViewer(
                         page.imagePage = single
                         cleanupImage(old)
                         if (old.isOnScreen) single.fadeIn()
-                        if (!isDualPageMode() && !applyWideZoomIfNeeded(single)) applyFitModeAnchor(single)
+                        applyImagePageAnchor(page, single)
                         pager.state.invalidate()
                     }
                 }
@@ -1532,9 +1533,7 @@ open class WebGpuViewer(
                         // Fade up from the placeholder's colour, if that placeholder was on screen -
                         // one that decoded out of view has nothing left to fade from.
                         if (old.isOnScreen && !fromPreview) imagePage.fadeIn()
-                        if (!isDualPageMode() && !applyWideZoomIfNeeded(imagePage)) {
-                            applyFitModeAnchor(imagePage)
-                        }
+                        applyImagePageAnchor(page, imagePage)
                         imagePage
                     }
 
@@ -1636,8 +1635,8 @@ open class WebGpuViewer(
 
         page.parent = pager.state
 
-        // Half the image width fills the screen width.
-        page.homeScale = screenW.toFloat() / (page.trimWidth / 2f)
+        // Half the image width fills the available width after side padding.
+        page.homeScale = paddedViewportWidth(screenW.toFloat()) / (page.trimWidth / 2f)
 
         page.scale = page.homeScale
 
@@ -1657,7 +1656,23 @@ open class WebGpuViewer(
 
     private fun applyFitModeAnchor(page: ImagePage.ImageSingle) {
         val scaleType = config.imageScaleType
-        if (scaleType != 3 && scaleType != 4 && scaleType != 5) return
+
+        if (scaleType != 3 && scaleType != 4 && scaleType != 5) {
+            if (config.pagedSidePadding == 0) return
+
+            val screenW = pager.state.width
+            if (screenW <= 0 || page.trimWidth <= 0) return
+
+            page.parent = pager.state
+            page.homeScale = min(
+                page.homeScale,
+                paddedViewportWidth(screenW.toFloat()) / page.trimWidth,
+            ).coerceAtLeast(0.01f)
+            page.scale = page.homeScale
+            page.x = page.homeX
+            page.y = page.homeY
+            return
+        }
 
         val screenW = pager.state.width
         val screenH = pager.state.viewportHeight
@@ -1669,11 +1684,17 @@ open class WebGpuViewer(
 
         page.parent = pager.state
 
-        page.homeScale = when (scaleType) {
+        val scale = when (scaleType) {
             3 -> screenW / w
             4 -> screenH / h
-            else -> 1f // original size
-        }.coerceAtLeast(0.01f)
+            5 -> 1f // original size
+            else -> min(screenW / w, screenH / h)
+        }
+        page.homeScale = if (config.pagedSidePadding == 0) {
+            scale.coerceAtLeast(0.01f)
+        } else {
+            min(scale, paddedViewportWidth(screenW.toFloat()) / w).coerceAtLeast(0.01f)
+        }
 
         page.scale = page.homeScale
 
@@ -1693,6 +1714,42 @@ open class WebGpuViewer(
         }
 
         page.y = page.homeY
+    }
+
+    private fun applyImagePageAnchor(page: ViewerReaderPage, imagePage: ImagePage.ImageSingle) {
+        val isDualPage = isDualPageMode()
+        if (isDualPage) {
+            if (page.spreadPosition != SpreadPosition.SINGLE || config.pagedSidePadding == 0) return
+            applyFitModeAnchor(imagePage)
+            return
+        }
+        if (!isDualPage && applyWideZoomIfNeeded(imagePage)) return
+        applyFitModeAnchor(imagePage)
+    }
+
+    private fun applySidePaddingToSpread(spread: ImagePage.ImageSpread) {
+        if (config.pagedSidePadding == 0) return
+
+        val availableHalfWidth = paddedViewportWidth(pager.state.width.toFloat()) / 2f
+        if (availableHalfWidth <= 0f) return
+
+        val sides = listOfNotNull(spread.left, spread.right).filter { it.width > 0 && it.height > 0 }
+        val tallestSide = sides.maxOfOrNull { it.height } ?: return
+        val widthScale = sides.minOf { side ->
+            val widthAtSpreadHeight = side.width * (tallestSide.toFloat() / side.height)
+            availableHalfWidth / widthAtSpreadHeight
+        }
+
+        spread.parent = pager.state
+        spread.homeScale = min(spread.homeScale, widthScale).coerceAtLeast(0.01f)
+        spread.x = spread.homeX
+        spread.y = spread.homeY
+        spread.scale = spread.homeScale
+    }
+
+    private fun paddedViewportWidth(width: Float): Float {
+        val sidePaddingFraction = config.pagedSidePadding / 100f
+        return width * (1f - 2f * sidePaddingFraction)
     }
 
     protected fun preloadPage(page: ViewerPage, prioritize: Boolean = false) {
