@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.bangumi
 
 import android.net.Uri
 import androidx.core.net.toUri
+import eu.kanade.tachiyomi.BuildConfig.VERSION_NAME
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMCollectionResponse
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
@@ -13,6 +14,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,13 +34,21 @@ import uy.kohesive.injekt.injectLazy
 
 class BangumiApi(
     private val trackerId: Long,
-    private val client: OkHttpClient,
-    interceptor: BangumiInterceptor,
+    baseClient: OkHttpClient,
+    bangumiInterceptor: BangumiInterceptor,
 ) {
 
     private val json: Json by injectLazy()
 
-    private val authClient = client.newBuilder().addInterceptor(interceptor).build()
+    private val client = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) {
+                "antsylich/Mihon/v${VERSION_NAME} (Android) (http://github.com/mihonapp/mihon)"
+            },
+        )
+        .build()
+
+    private val authClient = client.newBuilder().addInterceptor(bangumiInterceptor).build()
 
     suspend fun addLibManga(track: Track): Track {
         return withContext(Dispatchers.IO) {

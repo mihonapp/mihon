@@ -39,7 +39,7 @@ class NetworkHelper(
                 ),
             )
             .addInterceptor(UncaughtExceptionInterceptor())
-            .addInterceptor(UserAgentInterceptor(::defaultUserAgentProvider))
+            .addInterceptor(UserAgentInterceptor(defaultUserAgentProvider = ::defaultUserAgentProvider))
 
         if (preferences.verboseLogging.get()) {
             val httpLoggingInterceptor = HttpLoggingInterceptor().apply {

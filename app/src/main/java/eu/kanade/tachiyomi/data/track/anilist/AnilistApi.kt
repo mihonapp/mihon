@@ -5,10 +5,12 @@ import androidx.core.net.toUri
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.apollographql.apollo.network.okHttpClient
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALUser
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.dataOrElse
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.interceptor.rateLimit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.TimeZone
@@ -30,12 +32,15 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 
 class AnilistApi(
     val trackerId: Long,
-    val client: OkHttpClient,
-    interceptor: AnilistInterceptor,
+    baseClient: OkHttpClient,
+    anilistInterceptor: AnilistInterceptor,
 ) {
 
-    private val authClient = client.newBuilder()
-        .addInterceptor(interceptor)
+    private val authClient = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) { "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})" },
+        )
+        .addInterceptor(anilistInterceptor)
         .rateLimit(permits = 25, period = 1.minutes)
         .build()
 

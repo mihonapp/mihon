@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.shikimori
 
-import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.track.shikimori.dto.SMOAuth
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
@@ -41,7 +40,6 @@ class ShikimoriInterceptor(private val shikimori: Shikimori) : Interceptor {
         // Add the authorization header to the original request.
         val authRequest = originalRequest.newBuilder()
             .addHeader("Authorization", "Bearer ${currAuth.accessToken}")
-            .header("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
             .build()
 
         return chain.proceed(authRequest)

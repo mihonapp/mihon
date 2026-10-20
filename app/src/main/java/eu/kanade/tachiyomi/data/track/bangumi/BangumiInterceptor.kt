@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.bangumi
 
-import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
@@ -28,10 +27,6 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
         }
 
         return originalRequest.newBuilder()
-            .header(
-                "User-Agent",
-                "antsylich/Mihon/v${BuildConfig.VERSION_NAME} (Android) (http://github.com/mihonapp/mihon)",
-            )
             .addHeader("Authorization", "Bearer ${currAuth.accessToken}")
             .build()
             .let(chain::proceed)

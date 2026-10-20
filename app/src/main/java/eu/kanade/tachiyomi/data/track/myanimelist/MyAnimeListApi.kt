@@ -33,13 +33,20 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MyAnimeListApi(
     private val trackerId: Long,
-    private val client: OkHttpClient,
-    interceptor: MyAnimeListInterceptor,
+    baseClient: OkHttpClient,
+    malInterceptor: MyAnimeListInterceptor,
 ) {
 
     private val json: Json by injectLazy()
 
-    private val authClient = client.newBuilder().addInterceptor(interceptor).build()
+    private val client = baseClient.newBuilder()
+        // TODO(antsy): Add back custom user agent when they stop blocking us for no apparent reason
+        // .addInterceptor(
+        //     UserAgentInterceptor(force = true) { "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})" },
+        // )
+        .build()
+
+    private val authClient = client.newBuilder().addInterceptor(malInterceptor).build()
 
     suspend fun getAccessToken(authCode: String): MALOAuth {
         return withContext(Dispatchers.IO) {

@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.track.kitsu
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.apollographql.apollo.network.okHttpClient
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.kitsu.dto.KitsuOAuth
 import eu.kanade.tachiyomi.data.track.kitsu.dto.KitsuUser
@@ -11,6 +12,7 @@ import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.dataOrElse
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,13 +36,19 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 
 class KitsuApi(
     private val trackerId: Long,
-    private val client: OkHttpClient,
-    interceptor: KitsuInterceptor,
+    baseClient: OkHttpClient,
+    kitsuInterceptor: KitsuInterceptor,
 ) {
 
     private val json: Json by injectLazy()
 
-    private val authClient = client.newBuilder().addInterceptor(interceptor).build()
+    private val client = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) { "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})" },
+        )
+        .build()
+
+    private val authClient = client.newBuilder().addInterceptor(kitsuInterceptor).build()
 
     private val graphQlClient by lazy {
         ApolloClient.Builder()

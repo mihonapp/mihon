@@ -5,12 +5,12 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
-import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -22,28 +22,28 @@ private const val READLIST_API = "/api/v1/readlists"
 
 class KomgaApi(
     private val trackerId: Long,
-    private val client: OkHttpClient,
+    baseClient: OkHttpClient,
 ) {
 
-    private val headers: Headers by lazy {
-        Headers.Builder()
-            .add("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
-            .build()
-    }
-
     private val json: Json by injectLazy()
+
+    private val client = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) { "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})" },
+        )
+        .build()
 
     suspend fun getTrackSearch(url: String): TrackSearch =
         withContext(Dispatchers.IO) {
             try {
                 val track = with(json) {
                     if (url.contains(READLIST_API)) {
-                        client.newCall(GET(url, headers))
+                        client.newCall(GET(url))
                             .awaitSuccess()
                             .parseAs<ReadListDto>()
                             .toTrack()
                     } else {
-                        client.newCall(GET(url, headers))
+                        client.newCall(GET(url))
                             .awaitSuccess()
                             .parseAs<SeriesDto>()
                             .toTrack()
@@ -52,7 +52,7 @@ class KomgaApi(
 
                 val progress = client
                     .newCall(
-                        GET("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi", headers),
+                        GET("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi"),
                     )
                     .awaitSuccess().let {
                         with(json) {
@@ -90,7 +90,6 @@ class KomgaApi(
         client.newCall(
             Request.Builder()
                 .url("${track.tracking_url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi")
-                .headers(headers)
                 .put(payload.toRequestBody("application/json".toMediaType()))
                 .build(),
         )

@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.PUT
 import eu.kanade.tachiyomi.network.awaitSuccess
+import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.PkceUtil
 import eu.kanade.tachiyomi.util.lang.toLocalDate
@@ -43,26 +44,24 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class MangaBakaApi(
     private val trackerId: Long,
     baseClient: OkHttpClient,
-    interceptor: MangaBakaInterceptor,
+    mangaBakaInterceptor: MangaBakaInterceptor,
 ) {
 
     private val json: Json by injectLazy()
 
-    private val client = baseClient.newBuilder().addInterceptor {
-        it.request().newBuilder()
-            .header(
-                "User-Agent",
+    private val client = baseClient.newBuilder()
+        .addInterceptor(
+            UserAgentInterceptor(force = true) {
                 buildString {
                     append("Mihon/v${BuildConfig.VERSION_NAME} ")
                     append("(${BuildConfig.APPLICATION_ID} ${BuildConfig.COMMIT_SHA}) ")
                     append("(Android) (https://github.com/mihonapp/mihon)")
-                },
-            )
-            .build()
-            .let(it::proceed)
-    }.build()
+                }
+            },
+        )
+        .build()
 
-    private val authClient = client.newBuilder().addInterceptor(interceptor).build()
+    private val authClient = client.newBuilder().addInterceptor(mangaBakaInterceptor).build()
 
     suspend fun addLibManga(track: Track): Track {
         return withContext(Dispatchers.IO) {
