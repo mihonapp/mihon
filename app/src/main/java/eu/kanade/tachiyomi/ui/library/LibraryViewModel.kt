@@ -49,6 +49,7 @@ import mihon.core.common.utils.mutate
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.library.model.search.QueryNode
 import mihon.feature.library.matches
+import mihon.sync.SyncScheduler
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.util.lang.SubscriberGate
@@ -98,6 +99,7 @@ class LibraryViewModel(
     private val downloadManager: DownloadManager,
     private val downloadCache: DownloadCache,
     private val trackerManager: TrackerManager,
+    private val syncScheduler: SyncScheduler,
 ) : ViewModel() {
 
     private val subscriberGate = SubscriberGate()
@@ -601,6 +603,7 @@ class LibraryViewModel(
 
                 setMangaCategories.await(manga.id, categoryIds)
             }
+            syncScheduler.schedule()
         }
     }
 

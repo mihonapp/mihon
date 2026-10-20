@@ -91,6 +91,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Keep the screen up for at least a second so it doesn't just flash by ([@AntsyLich](https://github.com/AntsyLich)) ([`b454c1b`](https://github.com/mihonapp/mihon/commit/b454c1b))
 - Add option to skip an app update version ([@AntsyLich](https://github.com/AntsyLich)) ([`fc20410`](https://github.com/mihonapp/mihon/commit/fc20410))
 - Add support for [Comick](https://comick.dev) tracker ([@MajorTanya](https://github.com/MajorTanya)) ([#4056](https://github.com/mihonapp/mihon/pull/4056))
+- Add Google Drive sync to keep the library, reading progress, categories, extension repos and pinned sources in step across devices ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
+  - Add a list of the extensions the library uses but this device lacks, also offered when opening an entry whose source is missing ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
+  - Offer to link the Google account from the first-launch guide ([@FurTorie](https://github.com/FurTorie)) ([#4047](https://github.com/mihonapp/mihon/pull/4047))
 
 ### Changed
 - Download app updates from the update screen instead of a background job, and remove the "App updates" notification channel ([@AntsyLich](https://github.com/AntsyLich)) ([#3707](https://github.com/mihonapp/mihon/pull/3707))

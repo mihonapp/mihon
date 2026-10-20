@@ -1,0 +1,109 @@
+-- What the sync needs to know about an entry beyond what Mihon keeps for itself.
+--
+-- It lives apart from `manga` so the sync's bookkeeping never shapes the main tables: the triggers below
+-- maintain it from them, and the sync reads it when it publishes or merges an entry.
+CREATE TABLE sync_manga(
+    manga_id INTEGER NOT NULL PRIMARY KEY,
+    -- When the entry last joined or left the library, in seconds. A removal has to be able to beat an
+    -- older addition made on another device, and `user_favorite_at` forgets everything once cleared.
+    favorite_changed_at INTEGER NOT NULL DEFAULT 0,
+    -- Moves whenever something the sync publishes for the entry changes, so a round only rebuilds the
+    -- entries that may differ from what it published last.
+    change_count INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+-- An entry joins the library when it was added, and leaves it now
+CREATE TRIGGER sync_manga_favorite_inserted AFTER INSERT ON manga
+WHEN new.user_favorite_at IS NOT NULL
+BEGIN
+    INSERT INTO sync_manga(manga_id, favorite_changed_at, change_count)
+    VALUES (new.id, new.user_favorite_at / 1000, 1)
+    ON CONFLICT(manga_id) DO UPDATE SET
+        favorite_changed_at = excluded.favorite_changed_at,
+        change_count = change_count + 1;
+END;
+
+CREATE TRIGGER sync_manga_favorite_changed AFTER UPDATE OF user_favorite_at ON manga
+WHEN (new.user_favorite_at IS NULL) != (old.user_favorite_at IS NULL)
+BEGIN
+    INSERT INTO sync_manga(manga_id, favorite_changed_at)
+    VALUES (new.id, coalesce(new.user_favorite_at / 1000, strftime('%s', 'now')))
+    ON CONFLICT(manga_id) DO UPDATE SET favorite_changed_at = excluded.favorite_changed_at;
+END;
+
+-- Only what the user decides counts: a refresh from the source rewrites the row without changing any
+CREATE TRIGGER sync_manga_user_changed AFTER UPDATE ON manga
+WHEN new.user_favorite_at IS NOT old.user_favorite_at
+    OR new.user_notes != old.user_notes
+    OR new.user_reader_flags != old.user_reader_flags
+    OR new.user_chapter_flags != old.user_chapter_flags
+    OR new.remote_update_strategy != old.remote_update_strategy
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count) VALUES (new.id, 1)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+CREATE TRIGGER sync_manga_category_inserted AFTER INSERT ON manga_category
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count) VALUES (new.manga_id, 1)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+-- Leaving a category counts as much as joining one. When the entry itself is being deleted there is
+-- nothing left to count against, hence the check on each of these deletions.
+CREATE TRIGGER sync_manga_category_deleted AFTER DELETE ON manga_category
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count)
+    SELECT old.manga_id, 1 WHERE EXISTS (SELECT 1 FROM manga WHERE id = old.manga_id)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+CREATE TRIGGER sync_manga_track_inserted AFTER INSERT ON manga_track
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count) VALUES (new.manga_id, 1)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+CREATE TRIGGER sync_manga_track_updated AFTER UPDATE ON manga_track
+WHEN new.remote_id != old.remote_id
+    OR new.library_id IS NOT old.library_id
+    OR new.last_chapter_read != old.last_chapter_read
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count) VALUES (new.manga_id, 1)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+CREATE TRIGGER sync_manga_track_deleted AFTER DELETE ON manga_track
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count)
+    SELECT old.manga_id, 1 WHERE EXISTS (SELECT 1 FROM manga WHERE id = old.manga_id)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+CREATE TRIGGER sync_excluded_scanlator_inserted AFTER INSERT ON excluded_scanlator
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count) VALUES (new.manga_id, 1)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+CREATE TRIGGER sync_excluded_scanlator_deleted AFTER DELETE ON excluded_scanlator
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count)
+    SELECT old.manga_id, 1 WHERE EXISTS (SELECT 1 FROM manga WHERE id = old.manga_id)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+getStates:
+SELECT manga_id, favorite_changed_at, change_count
+FROM sync_manga;
+
+setFavoriteChangedAt:
+INSERT INTO sync_manga(manga_id, favorite_changed_at) VALUES (:mangaId, :favoriteChangedAt)
+ON CONFLICT(manga_id) DO UPDATE SET favorite_changed_at = excluded.favorite_changed_at;
+
+getFavoriteChangedAt:
+SELECT favorite_changed_at
+FROM sync_manga
+WHERE manga_id = :mangaId;

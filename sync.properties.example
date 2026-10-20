@@ -1,0 +1,26 @@
+# Google Drive sync configuration.
+#
+# Copy this file to `sync.properties` (which is gitignored) and fill in your own OAuth client ID.
+# Without it the app still builds, but the Google Drive sync stays unavailable in the settings.
+#
+# How to obtain one:
+#   1. https://console.cloud.google.com -> create a project
+#   2. APIs & Services -> Library -> enable "Google Drive API"
+#   3. OAuth consent screen -> External -> add the "drive.file" scope under Data Access
+#      (drive.file is a non-sensitive scope, so no Google verification is required)
+#   4. Audience -> add your Google account as a test user. While the app is in testing, Google lets
+#      refresh tokens expire after 7 days, so the account has to be linked again about once a week.
+#      Publishing the app lifts that limit, but asks for a homepage and a privacy policy URL on a
+#      domain you own.
+#   5. Credentials -> Create credentials -> OAuth client ID -> Android
+#        Package name: app.mihon.dev          (debug builds; use app.mihon for release)
+#        SHA-1:        keytool -list -v -keystore ~/.android/debug.keystore \
+#                        -alias androiddebugkey -storepass android -keypass android
+#   6. Open that client -> Advanced settings -> enable "Custom URI scheme": the sign-in page hands the
+#      account back to the app through it, and without it Google answers "400: invalid_request".
+#      The switch can take from a few minutes to a few hours to apply.
+#
+# Android OAuth clients have no client secret: this value is not sensitive, it is merely
+# specific to your own Google Cloud project.
+
+googleDriveClientId=000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
