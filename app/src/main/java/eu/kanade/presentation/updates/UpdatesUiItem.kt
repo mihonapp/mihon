@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontStyle
@@ -119,6 +120,7 @@ internal fun LazyListScope.updatesUiItems(
                                 it + 1,
                             )
                         },
+                    scanlator = updatesItem.update.scanlator.takeIf { !it.isNullOrBlank() },
                     onLongClick = {
                         onUpdateSelected(updatesItem, !updatesItem.selected, true)
                     },
@@ -145,6 +147,7 @@ private fun UpdatesUiItem(
     update: UpdatesWithRelations,
     selected: Boolean,
     readProgress: String?,
+    scanlator: String?,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickCover: (() -> Unit)?,
@@ -214,25 +217,45 @@ private fun UpdatesUiItem(
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                 }
-                Text(
-                    text = update.chapterName,
-                    maxLines = 1,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = LocalContentColor.current.copy(alpha = textAlpha),
-                    overflow = TextOverflow.Ellipsis,
-                    onTextLayout = { textHeight = it.size.height },
-                    modifier = Modifier
-                        .weight(weight = 1f, fill = false),
+                ChapterInfoLayout(
+                    chapterName = {
+                        Text(
+                            text = update.chapterName,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LocalContentColor.current.copy(alpha = textAlpha),
+                            overflow = TextOverflow.Ellipsis,
+                            onTextLayout = { textHeight = it.size.height },
+                        )
+                    },
+                    readProgress = {
+                        if (readProgress != null) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                DotSeparatorText()
+                                Text(
+                                    text = readProgress,
+                                    maxLines = 1,
+                                    color = LocalContentColor.current.copy(alpha = DISABLED_ALPHA),
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+                    },
+                    scanlator = {
+                        if (scanlator != null) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                DotSeparatorText()
+                                Text(
+                                    text = scanlator,
+                                    maxLines = 1,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = LocalContentColor.current.copy(alpha = DISABLED_ALPHA),
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+                    },
                 )
-                if (readProgress != null) {
-                    DotSeparatorText()
-                    Text(
-                        text = readProgress,
-                        maxLines = 1,
-                        color = LocalContentColor.current.copy(alpha = DISABLED_ALPHA),
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
             }
         }
 
@@ -243,5 +266,44 @@ private fun UpdatesUiItem(
             downloadProgressProvider = downloadProgressProvider,
             onClick = { onDownloadChapter?.invoke(it) },
         )
+    }
+}
+
+/**
+ * Lays out the chapter name and read progress like a [Row], then gives the scanlator only the
+ * remaining width so it never takes space from the other two.
+ */
+@Composable
+private fun ChapterInfoLayout(
+    chapterName: @Composable () -> Unit,
+    readProgress: @Composable () -> Unit,
+    scanlator: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Layout(
+        contents = listOf(chapterName, readProgress, scanlator),
+        modifier = modifier,
+    ) { (chapterNameMeasurables, readProgressMeasurables, scanlatorMeasurables), constraints ->
+        val looseConstraints = constraints.copy(minWidth = 0)
+        val readProgressPlaceable = readProgressMeasurables.firstOrNull()?.measure(looseConstraints)
+        val chapterNamePlaceable = chapterNameMeasurables.first().measure(
+            looseConstraints.copy(
+                maxWidth = (constraints.maxWidth - (readProgressPlaceable?.width ?: 0)).coerceAtLeast(0),
+            ),
+        )
+        val remainingWidth = constraints.maxWidth - chapterNamePlaceable.width - (readProgressPlaceable?.width ?: 0)
+        val scanlatorPlaceable = scanlatorMeasurables.firstOrNull()
+            ?.takeIf { remainingWidth > 0 }
+            ?.measure(looseConstraints.copy(maxWidth = remainingWidth))
+
+        val placeables = listOfNotNull(chapterNamePlaceable, readProgressPlaceable, scanlatorPlaceable)
+        val height = placeables.maxOf { it.height }
+        layout(placeables.sumOf { it.width }, height) {
+            var x = 0
+            placeables.forEach {
+                it.placeRelative(x, (height - it.height) / 2)
+                x += it.width
+            }
+        }
     }
 }
