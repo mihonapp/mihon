@@ -96,6 +96,7 @@ class HistoryviewModelStateProvider : PreviewParameterProvider<HistoryViewModel.
                         chapterId = Random.nextLong(),
                         mangaId = Random.nextLong(),
                         title = "Test Title",
+                        customTitle = null,
                         chapterNumber = Random.nextDouble(),
                         readAt = Clock.System.now(),
                         readDuration = Random.nextLong(),

@@ -65,7 +65,7 @@ fun HistoryItem(
         ) {
             val textStyle = MaterialTheme.typography.bodyMedium
             Text(
-                text = history.title,
+                text = history.customTitle?.takeIf { it.isNotBlank() } ?: history.title,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,

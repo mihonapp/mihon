@@ -296,7 +296,7 @@ private fun MangaScreenSmallImpl(
                 label = "Top Bar Background",
             )
             MangaToolbar(
-                title = state.manga.title,
+                title = state.manga.customTitle?.takeIf { it.isNotBlank() } ?: state.manga.title,
                 hasFilters = state.filterActive,
                 navigateUp = navigateUp,
                 onClickFilter = onFilterClicked,
@@ -410,6 +410,7 @@ private fun MangaScreenSmallImpl(
                         ExpandableMangaDescription(
                             defaultExpandState = state.isFromSource,
                             description = state.manga.description,
+                            originalTitle = state.manga.title.takeIf { !state.manga.customTitle.isNullOrBlank() },
                             tagsProvider = { state.manga.genre },
                             notes = state.manga.notes,
                             onTagSearch = onTagSearch,
@@ -523,7 +524,7 @@ fun MangaScreenLargeImpl(
         topBar = {
             MangaToolbar(
                 modifier = Modifier.onSizeChanged { topBarHeight = it.height },
-                title = state.manga.title,
+                title = state.manga.customTitle?.takeIf { it.isNotBlank() } ?: state.manga.title,
                 hasFilters = state.filterActive,
                 navigateUp = navigateUp,
                 onClickFilter = onFilterButtonClicked,
@@ -624,6 +625,7 @@ fun MangaScreenLargeImpl(
                         ExpandableMangaDescription(
                             defaultExpandState = true,
                             description = state.manga.description,
+                            originalTitle = state.manga.title.takeIf { !state.manga.customTitle.isNullOrBlank() },
                             tagsProvider = { state.manga.genre },
                             notes = state.manga.notes,
                             onTagSearch = onTagSearch,
