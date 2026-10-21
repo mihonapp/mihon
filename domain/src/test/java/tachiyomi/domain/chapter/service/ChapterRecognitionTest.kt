@@ -427,6 +427,17 @@ class ChapterRecognitionTest {
             listOf(ChapterNumbering("1", "7"), ChapterNumbering(null, "2"))
     }
 
+    @Test
+    fun `Name holding a number sign is read on its own`() {
+        // These names used to be grouped together, since a number and a literal # were both read as #.
+        // The group was then indexed by the slots of its first name, which has a number more.
+        assertNumbers(
+            "Chapter 1 (2024)" to ChapterNumbering(null, "1"),
+            "Chapter 2 (2024)" to ChapterNumbering(null, "2"),
+            "Chapter # (2024)" to ChapterNumbering(null, "2024"),
+        )
+    }
+
     private fun assertNumbers(vararg expected: Pair<String, ChapterNumbering>) = assertNumbers("", *expected)
 
     /**

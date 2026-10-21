@@ -48,6 +48,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed covers reloading when removing an entry from the library ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed the More tab icon pausing and then bouncing back when leaving the tab ([@AntsyLich](https://github.com/AntsyLich))
 
+### Fixed
+- Fix a crash refreshing a manga whose chapter names contain a number sign ([@Darkslayer3324j](https://github.com/Darkslayer3324j)) ([#4107](https://github.com/mihonapp/mihon/pull/4107))
+
 ## [v0.21.2] - 2026-10-13
 ### Fixed
 - Fix long floating point numbers showing up in Comick progress ([@MajorTanya](https://github.com/MajorTanya)) ([#4090](https://github.com/mihonapp/mihon/pull/4090))
