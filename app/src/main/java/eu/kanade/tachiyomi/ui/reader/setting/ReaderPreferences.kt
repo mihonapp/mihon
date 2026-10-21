@@ -98,7 +98,7 @@ class ReaderPreferences(
 
     val cropBordersWebtoon: Preference<Boolean> = preferenceStore.getBoolean("crop_borders_webtoon", false)
 
-    val webtoonSidePadding: Preference<Int> = preferenceStore.getInt("webtoon_side_padding", WEBTOON_PADDING_MIN)
+    val webtoonSidePadding: Preference<Int> = preferenceStore.getInt("webtoon_side_padding", WEBTOON_PADDING_DEFAULT)
 
     val readerHideThreshold: Preference<ReaderHideThreshold> = preferenceStore.getEnum(
         "reader_hide_threshold",
@@ -311,7 +311,8 @@ class ReaderPreferences(
     }
 
     companion object {
-        const val WEBTOON_PADDING_MIN = 0
+        const val WEBTOON_PADDING_MIN = -5
+        const val WEBTOON_PADDING_DEFAULT = 0
         const val WEBTOON_PADDING_MAX = 25
 
         const val MILLI_CONVERSION = 100
