@@ -81,6 +81,7 @@ class RestoreRepositoryImpl(
             } else {
                 null
             },
+            lastReadAt = max(manga.lastReadAt, dbManga.lastReadAt),
             title = details.title,
             artist = details.artist,
             author = details.author,
@@ -99,6 +100,7 @@ class RestoreRepositoryImpl(
     private suspend fun updateManga(manga: Manga): Manga {
         database.mangaQueries.updateFromBackup(
             userFavoriteAt = manga.favoriteAt,
+            userLastReadAt = manga.lastReadAt,
             remoteArtist = manga.artist,
             remoteAuthor = manga.author,
             remoteDescription = manga.description,
@@ -122,6 +124,7 @@ class RestoreRepositoryImpl(
     private suspend fun insertManga(manga: Manga): Long {
         return database.mangaQueries.insertReturningId(
             userFavoriteAt = manga.favoriteAt,
+            userLastReadAt = manga.lastReadAt,
             sourceId = manga.source,
             remoteUrl = manga.url,
             remoteArtist = manga.artist,
@@ -248,7 +251,7 @@ class RestoreRepositoryImpl(
             }
 
         toUpdate.forEach { (chapterId, readAt, readDuration) ->
-            database.historyQueries.upsert(chapterId = chapterId, readAt = readAt, readDuration = readDuration)
+            database.historyQueries.upsert(chapterId = chapterId, readAt = readAt, readDuration = readDuration).await()
         }
     }
 

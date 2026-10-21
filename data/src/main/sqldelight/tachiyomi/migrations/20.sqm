@@ -1,0 +1,4 @@
+ALTER TABLE manga ADD COLUMN user_last_read_at INTEGER NOT NULL DEFAULT 0;
+
+UPDATE manga
+SET user_last_read_at = coalesce((SELECT max(read_at) FROM history WHERE manga_id = manga.id), 0);
