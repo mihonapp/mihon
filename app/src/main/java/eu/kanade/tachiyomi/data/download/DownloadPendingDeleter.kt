@@ -7,6 +7,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 
@@ -131,7 +132,7 @@ class DownloadPendingDeleter(
     /**
      * Returns a chapter entry from a chapter model.
      */
-    private fun Chapter.toEntry() = ChapterEntry(id, url, name, scanlator)
+    private fun Chapter.toEntry() = ChapterEntry(id, url, name, scanlator, memo)
 
     /**
      * Returns a manga model from a manga entry.
@@ -151,6 +152,7 @@ class DownloadPendingDeleter(
         url = url,
         name = name,
         scanlator = scanlator,
+        memo = memo,
     )
 
     /**
@@ -171,6 +173,7 @@ class DownloadPendingDeleter(
         val url: String,
         val name: String,
         val scanlator: String? = null,
+        val memo: JsonObject = JsonObject(emptyMap()),
     )
 
     /**

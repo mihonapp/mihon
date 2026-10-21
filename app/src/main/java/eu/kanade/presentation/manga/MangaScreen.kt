@@ -112,6 +112,7 @@ fun MangaScreen(
     onEditFetchIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onManageSourcesClicked: (() -> Unit)?,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -162,6 +163,7 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onEditNotesClicked = onEditNotesClicked,
+            onManageSourcesClicked = onManageSourcesClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
             onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -199,6 +201,7 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onEditNotesClicked = onEditNotesClicked,
+            onManageSourcesClicked = onManageSourcesClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
             onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -246,6 +249,7 @@ private fun MangaScreenSmallImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onManageSourcesClicked: (() -> Unit)?,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -302,6 +306,7 @@ private fun MangaScreenSmallImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
+                onClickManageSources = onManageSourcesClicked,
                 actionModeCounter = state.selectedChapters.size,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 onSelectAll = { onAllChapterSelected(true) },
@@ -478,6 +483,7 @@ fun MangaScreenLargeImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onManageSourcesClicked: (() -> Unit)?,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -527,6 +533,7 @@ fun MangaScreenLargeImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
+                onClickManageSources = onManageSourcesClicked,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 actionModeCounter = state.selectedChapters.size,
                 onSelectAll = { onAllChapterSelected(true) },
@@ -759,7 +766,8 @@ private fun LazyListScope.sharedChapterItems(
                                 it + 1,
                             )
                         },
-                    scanlator = item.chapter.scanlator.takeIf { !it.isNullOrBlank() },
+                    scanlator = listOfNotNull(item.sourceName, item.chapter.scanlator)
+                        .filter { it.isNotBlank() }.joinToString(" • ").takeIf { it.isNotBlank() },
                     read = item.chapter.read,
                     bookmark = item.chapter.bookmark,
                     selected = item.selected,
