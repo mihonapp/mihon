@@ -1,7 +1,9 @@
 package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -23,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -31,6 +35,10 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -38,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.manga.components.MangaCover
 import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Check
 import mihon.icons.materialsymbols.roundedfilled.PlayArrow
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.BadgeGroup
@@ -63,6 +72,12 @@ private val ContinueReadingButtonGridPadding = 6.dp
 private val ContinueReadingButtonListSpacing = 8.dp
 
 private const val GRID_SELECTED_COVER_ALPHA = 0.76f
+private val SelectionControlSize = 48.dp
+private val SelectionCheckboxInset = 8.dp
+private val SelectionCheckboxSize = 20.dp
+private val SelectionCheckboxCornerRadius = 5.dp
+private val SelectionCheckboxStroke = 2.5.dp
+private val SelectionCheckmarkSize = 16.dp
 
 /**
  * Layout of grid list item with title overlaying the cover.
@@ -79,9 +94,12 @@ fun MangaCompactGridItem(
     coverAlpha: Float = 1f,
     coverBadgeStart: @Composable (RowScope.() -> Unit)? = null,
     coverBadgeEnd: @Composable (RowScope.() -> Unit)? = null,
+    onToggleSelection: (() -> Unit)? = null,
+    selectionContentDescription: String = title.orEmpty(),
 ) {
+    val highlightSelection = isSelected && onToggleSelection == null
     GridItemSelectable(
-        isSelected = isSelected,
+        isSelected = highlightSelection,
         onClick = onClick,
         onLongClick = onLongClick,
     ) {
@@ -90,12 +108,15 @@ fun MangaCompactGridItem(
                 MangaCover.Book(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
+                        .alpha(if (highlightSelection) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                     data = coverData,
                 )
             },
             badgesStart = coverBadgeStart,
             badgesEnd = coverBadgeEnd,
+            selection = onToggleSelection?.let { toggle ->
+                { MangaSelectionCheckbox(selectionContentDescription, isSelected, toggle, alignToCover = true) }
+            },
             content = {
                 if (title != null) {
                     CoverTextOverlay(
@@ -185,9 +206,11 @@ fun MangaComfortableGridItem(
     coverBadgeStart: (@Composable RowScope.() -> Unit)? = null,
     coverBadgeEnd: (@Composable RowScope.() -> Unit)? = null,
     onClickContinueReading: (() -> Unit)? = null,
+    onToggleSelection: (() -> Unit)? = null,
 ) {
+    val highlightSelection = isSelected && onToggleSelection == null
     GridItemSelectable(
-        isSelected = isSelected,
+        isSelected = highlightSelection,
         onClick = onClick,
         onLongClick = onLongClick,
     ) {
@@ -197,12 +220,15 @@ fun MangaComfortableGridItem(
                     MangaCover.Book(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
+                            .alpha(if (highlightSelection) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                         data = coverData,
                     )
                 },
                 badgesStart = coverBadgeStart,
                 badgesEnd = coverBadgeEnd,
+                selection = onToggleSelection?.let { toggle ->
+                    { MangaSelectionCheckbox(title, isSelected, toggle, alignToCover = true) }
+                },
                 content = {
                     if (onClickContinueReading != null) {
                         ContinueReadingButton(
@@ -237,6 +263,7 @@ private fun MangaGridCover(
     badgesStart: (@Composable RowScope.() -> Unit)? = null,
     badgesEnd: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable (BoxScope.() -> Unit)? = null,
+    selection: (@Composable () -> Unit)? = null,
 ) {
     Box(
         modifier = modifier
@@ -257,10 +284,21 @@ private fun MangaGridCover(
         if (badgesEnd != null) {
             BadgeGroup(
                 modifier = Modifier
-                    .padding(4.dp)
+                    .padding(
+                        top = if (selection != null) SelectionControlSize else 4.dp,
+                        end = 4.dp,
+                    )
                     .align(Alignment.TopEnd),
                 content = badgesEnd,
             )
+        }
+        if (selection != null) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
+            ) {
+                selection()
+            }
         }
     }
 }
@@ -338,10 +376,11 @@ fun MangaListItem(
     isSelected: Boolean = false,
     coverAlpha: Float = 1f,
     onClickContinueReading: (() -> Unit)? = null,
+    onToggleSelection: (() -> Unit)? = null,
 ) {
     Row(
         modifier = Modifier
-            .selectedBackground(isSelected)
+            .selectedBackground(isSelected && onToggleSelection == null)
             .height(56.dp)
             .combinedClickable(
                 onClick = onClick,
@@ -373,6 +412,60 @@ fun MangaListItem(
                 onClick = onClickContinueReading,
                 modifier = Modifier.padding(start = ContinueReadingButtonListSpacing),
             )
+        }
+        if (onToggleSelection != null) {
+            MangaSelectionCheckbox(title, isSelected, onToggleSelection)
+        }
+    }
+}
+
+@Composable
+private fun MangaSelectionCheckbox(
+    title: String,
+    selected: Boolean,
+    onToggle: () -> Unit,
+    alignToCover: Boolean = false,
+) {
+    val shape = RoundedCornerShape(SelectionCheckboxCornerRadius)
+    val color = MaterialTheme.colorScheme.primary
+    Box(
+        modifier = Modifier
+            .size(SelectionControlSize)
+            .toggleable(
+                value = selected,
+                role = Role.Checkbox,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onValueChange = { onToggle() },
+            )
+            .semantics(mergeDescendants = true) {
+                role = Role.Checkbox
+                contentDescription = title
+            },
+        contentAlignment = if (alignToCover) Alignment.TopEnd else Alignment.Center,
+    ) {
+        Box(
+            modifier = Modifier
+                .then(
+                    if (alignToCover) {
+                        Modifier.padding(top = SelectionCheckboxInset, end = SelectionCheckboxInset)
+                    } else {
+                        Modifier
+                    },
+                )
+                .size(SelectionCheckboxSize)
+                .background(if (selected) color else Color.Transparent, shape)
+                .border(SelectionCheckboxStroke, color, shape),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (selected) {
+                Icon(
+                    imageVector = MaterialSymbols.Rounded.Check,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(SelectionCheckmarkSize),
+                )
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.core.preference.asState
+import eu.kanade.domain.manga.interactor.AddMangaToCategories
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.source.service.SourcePreferences
@@ -29,8 +30,10 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -40,6 +43,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -79,11 +83,15 @@ class BrowseSourceViewModel(
     private val getManga: GetManga,
     private val updateManga: UpdateManga,
     private val addTracks: AddTracks,
+    private val addMangaToCategories: AddMangaToCategories,
     getIncognitoState: GetIncognitoState,
 ) : ViewModel() {
 
     val state: StateFlow<BrowseSourceViewModel.State>
         field = MutableStateFlow<BrowseSourceViewModel.State>(State(Listing.valueOf(listingQuery)))
+
+    private val _events = Channel<Event>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
     @AssistedFactory
     @ManualViewModelAssistedFactoryKey
@@ -162,7 +170,9 @@ class BrowseSourceViewModel(
     }
 
     fun setListing(listing: Listing) {
-        state.update { it.copy(listing = listing, toolbarQuery = null) }
+        state.update {
+            it.copy(listing = listing, toolbarQuery = null, selectedManga = emptyList(), selectionMode = false)
+        }
     }
 
     fun setFilters(filters: FilterList) {
@@ -184,6 +194,8 @@ class BrowseSourceViewModel(
                     filters = filters ?: input.filters,
                 ),
                 toolbarQuery = query ?: input.query,
+                selectedManga = emptyList(),
+                selectionMode = false,
             )
         }
     }
@@ -227,6 +239,8 @@ class BrowseSourceViewModel(
                 filters = defaultFilters,
                 listing = listing,
                 toolbarQuery = listing.query,
+                selectedManga = emptyList(),
+                selectionMode = false,
             )
         }
     }
@@ -319,6 +333,62 @@ class BrowseSourceViewModel(
         setDialog(Dialog.Filter)
     }
 
+    fun startSelection() {
+        state.update { if (it.isSavingSelection) it else it.copy(selectionMode = true) }
+    }
+
+    fun toggleSelection(manga: Manga) {
+        state.update {
+            if (it.isSavingSelection) return@update it
+            val selection = if (it.selectedManga.any { selected -> selected.id == manga.id }) {
+                it.selectedManga.filterNot { selected -> selected.id == manga.id }
+            } else {
+                it.selectedManga + manga
+            }
+            it.copy(selectedManga = selection, selectionMode = true)
+        }
+    }
+
+    fun selectAll(manga: List<Manga>) {
+        state.update {
+            if (it.isSavingSelection) return@update it
+            it.copy(selectedManga = (it.selectedManga + manga).distinctBy(Manga::id), selectionMode = true)
+        }
+    }
+
+    fun clearSelection() {
+        state.update {
+            if (it.isSavingSelection) it else it.copy(selectedManga = emptyList(), selectionMode = false)
+        }
+    }
+
+    fun openSelectedCategories() {
+        if (state.value.selectedManga.isEmpty() || state.value.isSavingSelection) return
+        viewModelScope.launch {
+            setDialog(Dialog.ChangeSelectedCategories(getCategories().mapAsCheckboxState { false }))
+        }
+    }
+
+    fun addSelectionToCategories(categoryIds: List<Long>) {
+        val current = state.value
+        if (current.isSavingSelection || current.selectedManga.isEmpty()) return
+        val ids = current.selectedManga.map(Manga::id)
+        state.update { it.copy(isSavingSelection = true) }
+        appScope.launch(Dispatchers.IO) {
+            try {
+                val count = addMangaToCategories.await(ids, categoryIds)
+                state.update { it.copy(selectedManga = emptyList(), selectionMode = false) }
+                _events.send(Event.Saved(count))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                _events.send(Event.SaveFailed)
+            } finally {
+                state.update { it.copy(isSavingSelection = false) }
+            }
+        }
+    }
+
     fun setDialog(dialog: Dialog?) {
         state.update { it.copy(dialog = dialog) }
     }
@@ -354,7 +424,13 @@ class BrowseSourceViewModel(
             val manga: Manga,
             val initialSelection: List<CheckboxState.State<Category>>,
         ) : Dialog
+        data class ChangeSelectedCategories(val initialSelection: List<CheckboxState.State<Category>>) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
+    }
+
+    sealed interface Event {
+        data class Saved(val count: Int) : Event
+        data object SaveFailed : Event
     }
 
     @Immutable
@@ -364,6 +440,9 @@ class BrowseSourceViewModel(
         val filters: FilterList = FilterList(),
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
+        val selectedManga: List<Manga> = emptyList(),
+        val selectionMode: Boolean = false,
+        val isSavingSelection: Boolean = false,
     ) {
         val isUserQuery get() = listing is Listing.Search && !listing.query.isNullOrEmpty()
     }

@@ -16,8 +16,8 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.SearchToolbar
 import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.automirroredrounded.Label
 import mihon.icons.materialsymbols.rounded.FilterList
-import mihon.icons.materialsymbols.rounded.FlipToBack
 import mihon.icons.materialsymbols.rounded.SelectAll
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
@@ -28,10 +28,13 @@ import tachiyomi.presentation.core.theme.active
 fun LibraryToolbar(
     hasActiveFilters: Boolean,
     selectedCount: Int,
+    selectionMode: Boolean,
+    onStartSelection: () -> Unit,
     title: LibraryToolbarTitle,
     onClickUnselectAll: () -> Unit,
     onClickSelectAll: () -> Unit,
     onClickInvertSelection: () -> Unit,
+    onClickChangeCategory: () -> Unit,
     onClickFilter: () -> Unit,
     onClickRefresh: () -> Unit,
     onClickGlobalUpdate: () -> Unit,
@@ -40,11 +43,12 @@ fun LibraryToolbar(
     onSearchQueryChange: (String?) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
 ) = when {
-    selectedCount > 0 -> LibrarySelectionToolbar(
+    selectionMode -> LibrarySelectionToolbar(
         selectedCount = selectedCount,
         onClickUnselectAll = onClickUnselectAll,
         onClickSelectAll = onClickSelectAll,
         onClickInvertSelection = onClickInvertSelection,
+        onClickChangeCategory = onClickChangeCategory,
     )
     else -> LibraryRegularToolbar(
         title = title,
@@ -55,6 +59,7 @@ fun LibraryToolbar(
         onClickRefresh = onClickRefresh,
         onClickGlobalUpdate = onClickGlobalUpdate,
         onClickOpenRandomManga = onClickOpenRandomManga,
+        onStartSelection = onStartSelection,
         scrollBehavior = scrollBehavior,
     )
 }
@@ -69,6 +74,7 @@ private fun LibraryRegularToolbar(
     onClickRefresh: () -> Unit,
     onClickGlobalUpdate: () -> Unit,
     onClickOpenRandomManga: () -> Unit,
+    onStartSelection: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
@@ -96,6 +102,11 @@ private fun LibraryRegularToolbar(
             val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
             AppBarActions(
                 listOf(
+                    AppBar.Action(
+                        title = stringResource(MR.strings.action_select_titles),
+                        icon = MaterialSymbols.Rounded.SelectAll,
+                        onClick = onStartSelection,
+                    ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_filter),
                         icon = MaterialSymbols.Rounded.FilterList,
@@ -127,6 +138,7 @@ private fun LibrarySelectionToolbar(
     onClickUnselectAll: () -> Unit,
     onClickSelectAll: () -> Unit,
     onClickInvertSelection: () -> Unit,
+    onClickChangeCategory: () -> Unit,
 ) {
     AppBar(
         titleContent = { Text(text = "$selectedCount") },
@@ -134,13 +146,17 @@ private fun LibrarySelectionToolbar(
             AppBarActions(
                 listOf(
                     AppBar.Action(
+                        title = stringResource(MR.strings.action_move_category),
+                        icon = MaterialSymbols.AutoMirroredRounded.Label,
+                        onClick = onClickChangeCategory,
+                        enabled = selectedCount > 0,
+                    ),
+                    AppBar.OverflowAction(
                         title = stringResource(MR.strings.action_select_all),
-                        icon = MaterialSymbols.Rounded.SelectAll,
                         onClick = onClickSelectAll,
                     ),
-                    AppBar.Action(
+                    AppBar.OverflowAction(
                         title = stringResource(MR.strings.action_select_inverse),
-                        icon = MaterialSymbols.Rounded.FlipToBack,
                         onClick = onClickInvertSelection,
                     ),
                 ),

@@ -1,10 +1,12 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -12,6 +14,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -26,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -57,6 +61,7 @@ import mihon.icons.materialsymbols.rounded.Verified
 import mihon.icons.materialsymbols.roundedfilled.Favorite
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -107,7 +112,28 @@ data class BrowseSourceScreen(
         val scope = rememberCoroutineScope()
         val haptic = LocalHapticFeedback.current
         val uriHandler = LocalUriHandler.current
+        val context = LocalContext.current
         val snackbarHostState = remember { SnackbarHostState() }
+        val mangaList = viewModel.mangaPagerFlowFlow.collectAsLazyPagingItems()
+
+        BackHandler(enabled = state.selectionMode && !state.isSavingSelection) {
+            viewModel.clearSelection()
+        }
+
+        LaunchedEffect(viewModel) {
+            viewModel.events.collect { event ->
+                val message = when (event) {
+                    is BrowseSourceViewModel.Event.Saved -> context.stringResource(
+                        MR.strings.bulk_add_to_library_success,
+                        event.count,
+                    )
+                    BrowseSourceViewModel.Event.SaveFailed -> context.stringResource(
+                        MR.strings.bulk_add_to_library_error,
+                    )
+                }
+                snackbarHostState.showSnackbar(message)
+            }
+        }
 
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
         val onWebViewClick = f@{
@@ -143,7 +169,18 @@ data class BrowseSourceScreen(
                         onHelpClick = onHelpClick,
                         onSettingsClick = { navigator.push(SourcePreferencesScreen(sourceId)) },
                         onSearch = viewModel::search,
+                        selectedCount = state.selectedManga.size,
+                        selectionMode = state.selectionMode,
+                        onStartSelection = viewModel::startSelection,
+                        isSavingSelection = state.isSavingSelection,
+                        onSelectAll = { viewModel.selectAll(mangaList.itemSnapshotList.items.map { it.value }) },
+                        onClearSelection = viewModel::clearSelection,
+                        onSetCategories = viewModel::openSelectedCategories,
                     )
+
+                    if (state.isSavingSelection) {
+                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    }
 
                     Row(
                         modifier = Modifier
@@ -215,7 +252,7 @@ data class BrowseSourceScreen(
         ) { paddingValues ->
             BrowseSourceContent(
                 source = source,
-                mangaList = viewModel.mangaPagerFlowFlow.collectAsLazyPagingItems(),
+                mangaList = mangaList,
                 columns = viewModel.getColumnsPreference(LocalConfiguration.current.orientation),
                 displayMode = viewModel.displayMode,
                 snackbarHostState = snackbarHostState,
@@ -223,18 +260,30 @@ data class BrowseSourceScreen(
                 onWebViewClick = onWebViewClick,
                 onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
                 onLocalSourceHelpClick = onHelpClick,
-                onMangaClick = { navigator.push((MangaScreen(it.id, true))) },
+                selection = state.selectedManga.map { it.id }.toSet(),
+                onToggleSelection = (viewModel::toggleSelection).takeIf { state.selectionMode },
+                onMangaClick = {
+                    if (state.selectionMode) {
+                        viewModel.toggleSelection(it)
+                    } else {
+                        navigator.push(MangaScreen(it.id, true))
+                    }
+                },
                 onMangaLongClick = { manga ->
-                    scope.launch(Dispatchers.IO) {
-                        val duplicates = viewModel.getDuplicateLibraryManga(manga)
-                        when {
-                            manga.favorite -> viewModel.setDialog(BrowseSourceViewModel.Dialog.RemoveManga(manga))
-                            duplicates.isNotEmpty() -> viewModel.setDialog(
-                                BrowseSourceViewModel.Dialog.AddDuplicateManga(manga, duplicates),
-                            )
-                            else -> viewModel.addFavorite(manga)
+                    if (state.selectionMode) {
+                        viewModel.toggleSelection(manga)
+                    } else {
+                        scope.launch(Dispatchers.IO) {
+                            val duplicates = viewModel.getDuplicateLibraryManga(manga)
+                            when {
+                                manga.favorite -> viewModel.setDialog(BrowseSourceViewModel.Dialog.RemoveManga(manga))
+                                duplicates.isNotEmpty() -> viewModel.setDialog(
+                                    BrowseSourceViewModel.Dialog.AddDuplicateManga(manga, duplicates),
+                                )
+                                else -> viewModel.addFavorite(manga)
+                            }
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     }
                 },
             )
@@ -288,6 +337,14 @@ data class BrowseSourceScreen(
                         viewModel.changeMangaFavorite(dialog.manga)
                         viewModel.moveMangaToCategories(dialog.manga, include)
                     },
+                )
+            }
+            is BrowseSourceViewModel.Dialog.ChangeSelectedCategories -> {
+                ChangeCategoryDialog(
+                    initialSelection = dialog.initialSelection,
+                    onDismissRequest = onDismissRequest,
+                    onEditCategories = { navigator.push(CategoryScreen()) },
+                    onConfirm = { include, _ -> viewModel.addSelectionToCategories(include) },
                 )
             }
             else -> {}
