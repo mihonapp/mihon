@@ -349,28 +349,38 @@ class CookieListViewModel(
         val state = state.value
 
         if (state !is State.Ready) return
-        val dialog = state.dialog
+
         if (cookie.name.isBlank() || cookie.value.isBlank()) return
 
-        val path = if (cookie.path.startsWith("/")) cookie.path else "/${cookie.path}"
+        val dialog = state.dialog
+        val normalizedPath = cookie.path.normalizePath()
+
         viewModelScope.launch(Dispatchers.IO) {
             if (dialog != null && dialog.name.isNotBlank()) {
-                if (dialog.path != path || dialog.hostOnly != cookie.hostOnly) {
+                val normalizedOldPath = dialog.path.normalizePath()
+
+                if (normalizedOldPath != normalizedPath || dialog.hostOnly != cookie.hostOnly) {
                     cookieRepository.deleteCookie(
                         host = host,
                         cookie = Cookie(
                             name = dialog.name,
                             value = dialog.value,
-                            path = path,
+                            path = normalizedOldPath,
                             hostOnly = dialog.hostOnly,
-                        ),
+                        )
                     )
                 }
             }
 
-            cookieRepository.addOrUpdateCookie(host, cookie)
+            cookieRepository.addOrUpdateCookie(host, cookie.copy(path = normalizedPath))
             fetchCookies()
         }
+    }
+
+    private fun String.normalizePath(): String {
+        val trimmed = this.trim()
+        if (trimmed.isBlank() || trimmed == "/") return "/"
+        return if (trimmed.startsWith("/")) trimmed else "/$trimmed"
     }
 
     data class Dialog(
