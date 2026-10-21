@@ -1,19 +1,21 @@
 package mihon.data.network
 
 import android.content.Context
+import android.database.SQLException
 import android.webkit.CookieManager
+import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import app.cash.sqldelight.async.coroutines.awaitAsList
-import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteDatabaseType
-import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteDriver
-import com.eygraber.sqldelight.androidx.driver.File
+import androidx.sqlite.driver.bundled.SQLITE_OPEN_READONLY
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import mihon.data.CookiesDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import logcat.LogPriority
 import mihon.domain.network.Cookie
 import mihon.domain.network.CookieRepository
+import tachiyomi.core.common.util.system.logcat
 import java.io.File
 
 @Inject
@@ -25,60 +27,80 @@ class CookieRepositoryImpl(
 
     private val cookieManager = CookieManager.getInstance()
 
-    private val database: CookiesDatabase by lazy {
-        val cookiesFile = File(context.applicationInfo.dataDir, "app_webview/Default/Cookies")
-
-        if (!cookiesFile.exists()) {
-            cookieManager.setCookie("http://localhost", "init=true")
-            cookieManager.flush()
-
-            cookieManager.setCookie("http://localhost", "init=true; Max-Age=0")
-            cookieManager.flush()
-        }
-
-        val driver = AndroidxSqliteDriver(
-            driver = BundledSQLiteDriver(),
-            databaseType = AndroidxSqliteDatabaseType.File(cookiesFile),
-            schema = CookiesDatabase.Schema,
-        )
-
-        CookiesDatabase(driver)
-    }
+    private val cookiesFile: File
+        get() = File(context.applicationInfo.dataDir, "app_webview/Default/Cookies")
 
     override suspend fun getCookiesForHost(host: String): List<Cookie> {
         cookieManager.flush()
-        return database.cookiesQueries.getCookiesForHost(host) { host, name, value, path ->
-            Cookie(
-                name = name,
-                value = value,
-                path = path,
-                hostOnly = !host.startsWith("."),
-            )
-        }.awaitAsList()
+        return withConnection { conn ->
+            conn.prepare(
+                "SELECT host_key, name, value, path FROM cookies WHERE host_key = ?1 OR host_key = '.' || ?1",
+            ).use { statement ->
+                statement.bindText(1, host)
+                buildList {
+                    while (statement.step()) {
+                        add(
+                            Cookie(
+                                name = statement.getText(1),
+                                value = statement.getText(2),
+                                path = statement.getText(3),
+                                hostOnly = !statement.getText(0).startsWith("."),
+                            ),
+                        )
+                    }
+                }
+            }
+        }.orEmpty()
     }
 
     override suspend fun getAllHosts(): List<String> {
         cookieManager.flush()
-        return database.cookiesQueries.getAllHosts().awaitAsList()
+        return withConnection { conn ->
+            conn.prepare("SELECT DISTINCT ltrim(host_key, '.') FROM cookies").use { stmt ->
+                buildList { while (stmt.step()) add(stmt.getText(0)) }
+            }
+        }.orEmpty()
     }
 
     override suspend fun addOrUpdateCookie(host: String, cookie: Cookie) {
-        cookieManager.setCookie(host, cookie.string(host))
+        cookieManager.setCookie(buildUrl(host), cookie.string(host))
         cookieManager.flush()
     }
 
     override suspend fun deleteCookie(host: String, cookie: Cookie) {
-        cookieManager.setCookie(host, cookie.deleteString(host))
+        cookieManager.setCookie(buildUrl(host), cookie.deleteString(host))
         cookieManager.flush()
     }
 
     override suspend fun deleteHost(host: String) {
         val cookies = getCookiesForHost(host)
         cookies.forEach { cookie ->
-            cookieManager.setCookie(host, cookie.deleteString(host))
+            cookieManager.setCookie(buildUrl(host), cookie.deleteString(host))
         }
         cookieManager.flush()
     }
+
+    private suspend fun <T> withConnection(block: (SQLiteConnection) -> T): T? =
+        withContext(Dispatchers.IO) {
+            if (!cookiesFile.exists()) {
+                cookieManager.setCookie("http://localhost", "init=true")
+                cookieManager.flush()
+
+                cookieManager.setCookie("http://localhost", "init=true; Max-Age=0")
+                cookieManager.flush()
+                return@withContext null
+            }
+            try {
+                BundledSQLiteDriver()
+                    .open(cookiesFile.path, SQLITE_OPEN_READONLY)
+                    .use(block)
+            } catch (e: SQLException) {
+                logcat(LogPriority.ERROR, e) { "Failed to read WebView cookie database" }
+                null
+            }
+        }
+
+    private fun buildUrl(host: String): String = "https://$host/"
 
     private fun Cookie.string(host: String) = buildString {
         append("$name=$value")
