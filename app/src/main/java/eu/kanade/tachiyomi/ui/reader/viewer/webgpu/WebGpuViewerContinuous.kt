@@ -84,6 +84,19 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
         state.animateScroll(direction * state.height / 2f)
     }
 
+    fun autoScrollStep(pixels: Float) {
+        if (!state.isPanning && !state.isFlinging) {
+            state.scrollBy(pixels)
+            state.invalidate()
+        }
+    }
+
+    fun autoScrollPage() {
+        if (!state.isPanning && !state.isFlinging) {
+            state.animateScroll(state.height * 0.75f)
+        }
+    }
+
     override fun moveRight() = scrollByHalfPage(1)
 
     override fun moveLeft() = scrollByHalfPage(-1)
