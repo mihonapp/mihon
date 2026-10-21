@@ -53,9 +53,12 @@ fun LibraryPager(
             return@HorizontalPager
         }
         val category = getCategoryForPage(page)
-        val items = getItemsForCategory(category)
+        val categoryItems = getItemsForCategory(category)
+        val spotlightItem = categoryItems.firstOrNull()
+            ?.takeIf { searchQuery.isNullOrEmpty() && selection.isEmpty() }
+        val items = if (spotlightItem != null) categoryItems.drop(1) else categoryItems
 
-        if (items.isEmpty()) {
+        if (categoryItems.isEmpty()) {
             LibraryPagerEmptyScreen(
                 searchQuery = searchQuery,
                 hasActiveFilters = hasActiveFilters,
@@ -82,6 +85,7 @@ fun LibraryPager(
             LibraryDisplayMode.List -> {
                 LibraryList(
                     items = items,
+                    spotlightItem = spotlightItem,
                     contentPadding = contentPadding,
                     selection = selection,
                     onClick = onClickManga,
@@ -94,6 +98,7 @@ fun LibraryPager(
             LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
                 LibraryCompactGrid(
                     items = items,
+                    spotlightItem = spotlightItem,
                     showTitle = displayMode is LibraryDisplayMode.CompactGrid,
                     columns = columns,
                     contentPadding = contentPadding,
@@ -108,6 +113,7 @@ fun LibraryPager(
             LibraryDisplayMode.ComfortableGrid -> {
                 LibraryComfortableGrid(
                     items = items,
+                    spotlightItem = spotlightItem,
                     columns = columns,
                     contentPadding = contentPadding,
                     selection = selection,
