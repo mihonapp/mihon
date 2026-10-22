@@ -1,7 +1,13 @@
 package mihon.core.navigation.util
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -29,29 +35,34 @@ data class TwoPaneSettingsScene<T : Any>(
     override val previousEntries: List<NavEntry<T>>,
     val firstEntry: NavEntry<T>,
     val secondEntry: NavEntry<T>,
+    private val detailDepth: Int,
 ) : Scene<T> {
     override val entries: List<NavEntry<T>> = listOf(firstEntry, secondEntry)
     override val content: @Composable (() -> Unit) = {
+        val insets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
         TwoPanelBox(
             startContent = { firstEntry.Content() },
             endContent = {
                 CompositionLocalProvider(LocalBackButtonVisibility provides false) {
                     val slideDistance = rememberSlideDistance()
                     AnimatedContent(
-                        targetState = secondEntry,
-                        contentKey = { entry -> entry.contentKey },
+                        targetState = secondEntry to detailDepth,
+                        contentKey = { (entry) -> entry.contentKey },
                         transitionSpec = {
                             materialSharedAxisX(
-                                forward = true,
+                                forward = targetState.second >= initialState.second,
                                 slideDistance = slideDistance,
                             )
                         },
-                    ) { entry ->
+                    ) { (entry) ->
                         entry.Content()
                     }
                 }
             },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(insets)
+                .consumeWindowInsets(insets),
         )
     }
 
@@ -98,11 +109,15 @@ class TwoPaneSettingsSceneStrategy<T : Any>(val isTabletUi: Boolean) : SceneStra
         // having NavDisplay animate the whole scene out when the selected detail item changes.
         val sceneKey = listEntry.contentKey
 
+        // Popping a detail opened from another detail goes back to that one, not past the list
+        val popped = if (entries[entries.lastIndex - 1] === listEntry) 2 else 1
+
         return TwoPaneSettingsScene(
             key = sceneKey,
-            previousEntries = entries.dropLast(2),
+            previousEntries = entries.dropLast(popped),
             firstEntry = listEntry,
             secondEntry = detailEntry,
+            detailDepth = entries.lastIndex - entries.lastIndexOf(listEntry),
         )
     }
 }

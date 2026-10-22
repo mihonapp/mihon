@@ -92,7 +92,7 @@ fun SettingsScreen() {
             AppBar(
                 title = stringResource(MR.strings.label_settings),
                 navigateUp = {
-                    if (isTabletUi) navigator.pop()
+                    navigator.popTo { it is SettingsRoute }
                     navigator.pop()
                 },
                 actions = {
@@ -113,7 +113,8 @@ fun SettingsScreen() {
         content = { contentPadding ->
             val state = rememberLazyListState()
             val indexSelected = if (isTabletUi) {
-                items.indexOfFirst { it.route == navigator.current }
+                val detailRoute = navigator.routes.takeLastWhile { it !is SettingsRoute }.firstOrNull()
+                items.indexOfFirst { it.route == detailRoute }
                     .takeIf { it > -1 } // Don't trigger if route for right side hasn't been added yet
                     ?.also {
                         LaunchedEffect(Unit) {
@@ -170,11 +171,8 @@ fun SettingsScreen() {
 }
 
 fun Navigator.navigate(route: NavKey, isTabletUi: Boolean) {
-    if (isTabletUi) {
-        replace(route)
-    } else {
-        push(route)
-    }
+    if (isTabletUi) popTo { it is SettingsRoute }
+    push(route)
 }
 
 @Composable
