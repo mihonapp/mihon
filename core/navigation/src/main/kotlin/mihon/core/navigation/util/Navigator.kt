@@ -76,7 +76,7 @@ class Navigator internal constructor(internal val backStack: NavBackStack<NavKey
     }
 
     /**
-     * Replaces every route above the root with [route].
+     * Replaces every route above the root with [route], leaving only the root if [route] is the root.
      */
     fun replaceAll(route: NavKey) {
         popToRoot()

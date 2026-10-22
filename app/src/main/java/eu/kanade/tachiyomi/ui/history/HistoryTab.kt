@@ -15,7 +15,7 @@ import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
-import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
+import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.coroutines.flow.collectLatest
@@ -115,7 +115,7 @@ fun HistoryTab() {
         }
     }
 
-    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+    ResultEffect<Unit>(resultKey = TopLevelRoute.History.reselectEventKey) {
         openChapter(context, snackbarHostState, viewModel.getNextChapter())
     }
 }

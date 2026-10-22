@@ -19,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
@@ -26,11 +28,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
-import androidx.navigation3.ui.NavDisplay
 import eu.kanade.presentation.util.rememberAnimatedVectorPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.BrowseSwitchToExtensionEventKey
@@ -47,8 +49,10 @@ import mihon.app.di.appGraph
 import mihon.core.navigation.DownloadQueueRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.util.LocalNavigator
-import mihon.core.navigation.util.LocalTopLevelBackStack
+import mihon.core.navigation.util.Navigator
+import mihon.core.navigation.util.NavigatorDisplay
 import mihon.core.navigation.util.TabOptions
+import mihon.core.navigation.util.rememberNavigator
 import mihon.presentation.core.util.isTabletUi
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
@@ -58,6 +62,9 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Serializable
 sealed interface TopLevelRoute : NavKey {
+
+    val reselectEventKey: String
+        get() = "TabReselectEvent:$this"
 
     @Composable
     fun options(isSelected: Boolean): TabOptions
@@ -127,7 +134,7 @@ sealed interface TopLevelRoute : NavKey {
 
 @Composable
 fun HomeScreen() {
-    val topLevelBackStack = LocalTopLevelBackStack.current
+    val tabNavigator = rememberNavigator(TopLevelRoute.Library)
     val navigator = LocalNavigator.current
     val resultEventBus = LocalResultEventBus.current
     val tabletUi = isTabletUi()
@@ -158,14 +165,19 @@ fun HomeScreen() {
         ),
         navigationItemVerticalArrangement = Arrangement.Center,
         navigationItems = {
-            TABS.fastForEach { NavigationSuiteItem(it, navigationSuiteType) }
+            TABS.fastForEach { NavigationSuiteItem(it, tabNavigator, navigationSuiteType) }
         },
     ) {
-        NavDisplay(
-            backStack = topLevelBackStack.backStack,
-            onBack = {
-                topLevelBackStack.removeLast()
-            },
+        val tabStateHolder = rememberSaveableStateHolder()
+        NavigatorDisplay(
+            navigator = tabNavigator,
+            entryDecorators = listOf(
+                remember(tabStateHolder) {
+                    NavEntryDecorator { entry ->
+                        tabStateHolder.SaveableStateProvider(entry.contentKey) { entry.Content() }
+                    }
+                },
+            ),
             transitionSpec = { spec },
             popTransitionSpec = { spec },
             predictivePopTransitionSpec = { spec },
@@ -194,7 +206,7 @@ fun HomeScreen() {
     }
 
     ResultEffect<String>(resultKey = LibrarySearchEventKey) {
-        topLevelBackStack.setTopLevel(TopLevelRoute.Library)
+        tabNavigator.replaceAll(TopLevelRoute.Library)
         resultEventBus.sendResult(
             resultKey = LibraryTabSearchEventKey,
             result = it,
@@ -217,7 +229,7 @@ fun HomeScreen() {
             }
             is TabEvent.More -> TopLevelRoute.More
         }
-        topLevelBackStack.setTopLevel(route)
+        tabNavigator.replaceAll(route)
 
         if (it is TabEvent.Library && it.mangaIdToOpen != null) {
             navigator.push(MangaRoute(it.mangaIdToOpen))
@@ -231,11 +243,11 @@ fun HomeScreen() {
 @Composable
 private fun NavigationSuiteItem(
     tab: TopLevelRoute,
+    tabNavigator: Navigator,
     navigationSuiteType: NavigationSuiteType,
 ) {
-    val topLevelBackStack = LocalTopLevelBackStack.current
     val resultEventBus = LocalResultEventBus.current
-    val selected = topLevelBackStack.topLevelKey == tab
+    val selected = tabNavigator.current == tab
     val options = tab.options(selected)
 
     NavigationSuiteItem(
@@ -243,10 +255,10 @@ private fun NavigationSuiteItem(
         selected = selected,
         onClick = {
             if (!selected) {
-                topLevelBackStack.setTopLevel(tab)
+                tabNavigator.replaceAll(tab)
             } else {
                 resultEventBus.sendResult(
-                    resultKey = TabReselectEventKey,
+                    resultKey = tab.reselectEventKey,
                     result = Unit,
                 )
             }
@@ -328,9 +340,6 @@ sealed interface TabEvent {
     data class Browse(val toExtensions: Boolean = false) : TabEvent
     data class More(val toDownloads: Boolean) : TabEvent
 }
-
-@Suppress("ConstPropertyName")
-const val TabReselectEventKey = "TabReselectEventKey"
 
 @Suppress("ConstPropertyName")
 const val LibrarySearchEventKey = "LibrarySearchEventKey"

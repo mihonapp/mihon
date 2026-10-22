@@ -16,7 +16,7 @@ import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
+import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -56,7 +56,7 @@ fun MoreTab() {
         onClickAbout = { navigator.addSettingsRoute(SettingsRoute(SettingsDestination.About), isTabletUi) },
     )
 
-    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+    ResultEffect<Unit>(resultKey = TopLevelRoute.More.reselectEventKey) {
         navigator.addSettingsRoute(SettingsRoute(), isTabletUi)
     }
 }

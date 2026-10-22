@@ -29,7 +29,7 @@ import eu.kanade.presentation.manga.components.LibraryBottomActionMenu
 import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
 import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.ui.home.ShowBottomNavEvent
-import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
+import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.workManager
@@ -254,7 +254,7 @@ fun LibraryTab() {
         viewModel.search(it)
     }
 
-    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+    ResultEffect<Unit>(resultKey = TopLevelRoute.Library.reselectEventKey) {
         viewModel.showSettingsDialog()
     }
 }

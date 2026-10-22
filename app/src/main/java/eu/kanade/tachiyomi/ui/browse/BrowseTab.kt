@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsViewModel
 import eu.kanade.tachiyomi.ui.browse.extension.extensionsTab
 import eu.kanade.tachiyomi.ui.browse.migration.sources.migrateSourceTab
 import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
-import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
+import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import mihon.core.navigation.GlobalSearchRoute
 import mihon.core.navigation.util.LocalNavigator
@@ -52,7 +52,7 @@ fun BrowseTab() {
         state.scrollToPage(1)
     }
 
-    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+    ResultEffect<Unit>(resultKey = TopLevelRoute.Browse.reselectEventKey) {
         navigator.push(GlobalSearchRoute())
     }
 }

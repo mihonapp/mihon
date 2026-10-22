@@ -125,12 +125,10 @@ import mihon.core.navigation.appEntries
 import mihon.core.navigation.util.AssistContentManager
 import mihon.core.navigation.util.LocalAssistContentManager
 import mihon.core.navigation.util.LocalNavigator
-import mihon.core.navigation.util.LocalTopLevelBackStack
 import mihon.core.navigation.util.Navigator
 import mihon.core.navigation.util.NavigatorDisplay
 import mihon.core.navigation.util.rememberNavigator
 import mihon.core.navigation.util.rememberOverlaySheetSceneStrategy
-import mihon.core.navigation.util.rememberTopLevelBackStack
 import mihon.core.navigation.util.rememberTwoPaneSettingsSceneStrategy
 import mihon.data.cache.ChapterCache
 import mihon.domain.database.repository.DatabaseRepository
@@ -259,7 +257,6 @@ class MainActivity : BaseActivity() {
             }
 
             val navigator = rememberNavigator(HomeRoute)
-            val topLevelBackStack = rememberTopLevelBackStack(TopLevelRoute.Library)
             val twoPaneStrategy = rememberTwoPaneSettingsSceneStrategy<NavKey>()
             val overlaySheetSceneStrategy = rememberOverlaySheetSceneStrategy<NavKey>()
             val resultEventBus = rememberResultEventBus()
@@ -269,7 +266,6 @@ class MainActivity : BaseActivity() {
 
             CompositionLocalProvider(
                 LocalNavigator provides navigator,
-                LocalTopLevelBackStack provides topLevelBackStack,
                 LocalAssistContentManager provides assistContentManager,
             ) {
                 LaunchedEffect(navigator) {

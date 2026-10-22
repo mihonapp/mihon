@@ -13,7 +13,7 @@ import eu.kanade.presentation.updates.UpdateScreen
 import eu.kanade.presentation.updates.UpdatesDeleteConfirmationDialog
 import eu.kanade.presentation.updates.UpdatesFilterDialog
 import eu.kanade.tachiyomi.ui.home.ShowBottomNavEvent
-import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
+import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.updates.UpdatesViewModel.Event
@@ -103,7 +103,7 @@ fun UpdatesTab() {
         }
     }
 
-    ResultEffect<Unit>(resultKey = TabReselectEventKey) {
+    ResultEffect<Unit>(resultKey = TopLevelRoute.Updates.reselectEventKey) {
         navigator.push(DownloadQueueRoute)
     }
 
