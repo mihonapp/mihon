@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.deeplink
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -33,29 +34,20 @@ fun DeepLinkScreen(query: String) {
             )
         },
     ) { contentPadding ->
-        when (state) {
-            is DeepLinkViewModel.State.Loading -> {
-                LoadingScreen(Modifier.padding(contentPadding))
-            }
-            is DeepLinkViewModel.State.NoResults -> {
-                navigator.replace(GlobalSearchRoute(query))
-            }
+        LoadingScreen(Modifier.padding(contentPadding))
+    }
+
+    LaunchedEffect(state) {
+        when (val result = state) {
+            is DeepLinkViewModel.State.Loading -> Unit
+            is DeepLinkViewModel.State.NoResults -> navigator.replace(GlobalSearchRoute(query))
             is DeepLinkViewModel.State.Result -> {
-                val resultState = state as DeepLinkViewModel.State.Result
-                if (resultState.chapterId == null) {
-                    navigator.replace(
-                        MangaRoute(
-                            resultState.manga.id,
-                            true,
-                        ),
-                    )
+                if (result.chapterId == null) {
+                    navigator.replace(MangaRoute(result.manga.id, true))
                 } else {
                     navigator.pop()
-                    ReaderActivity.newIntent(
-                        context,
-                        resultState.manga.id,
-                        resultState.chapterId,
-                    ).also(context::startActivity)
+                    ReaderActivity.newIntent(context, result.manga.id, result.chapterId)
+                        .also(context::startActivity)
                 }
             }
         }

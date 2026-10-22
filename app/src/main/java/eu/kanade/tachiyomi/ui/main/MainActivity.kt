@@ -499,7 +499,7 @@ class MainActivity : BaseActivity() {
         val navigator = LocalNavigator.current
 
         LaunchedEffect(Unit) {
-            if (!preferences.shownOnboardingFlow.get() && navigator.current !is OnboardingRoute) {
+            if (!preferences.shownOnboardingFlow.get() && OnboardingRoute !in navigator.routes) {
                 navigator.push(OnboardingRoute)
             }
         }

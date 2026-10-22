@@ -108,7 +108,7 @@ fun NavigatorDisplay(
         backStack = navigator.backStack,
         modifier = modifier,
         onBack = { navigator.pop() },
-        entryDecorators = entryDecorators,
+        entryDecorators = entryDecorators + rememberLeavingEntryInputNavEntryDecorator(),
         sceneStrategies = sceneStrategies,
         sizeTransform = sizeTransform,
         transitionSpec = transitionSpec,
