@@ -57,7 +57,7 @@ import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.TrackInfoDialogRoute
 import mihon.core.navigation.WebViewRoute
 import mihon.core.navigation.domain.SettingsDestination
-import mihon.core.navigation.util.LocalAssistContentManager
+import mihon.core.navigation.util.LocalAssistUrl
 import mihon.core.navigation.util.LocalNavigator
 import mihon.core.navigation.util.Navigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
@@ -74,7 +74,7 @@ fun MangaScreen(
 ) {
     val navigator = LocalNavigator.current
     val resultEventBus = LocalResultEventBus.current
-    val assistContentManager = LocalAssistContentManager.current
+    val setAssistUrl = LocalAssistUrl.current
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val isTabletUi = isTabletUi()
@@ -98,7 +98,7 @@ fun MangaScreen(
         if (isHttpSource) {
             try {
                 withContext(Dispatchers.IO) {
-                    assistContentManager.currentAssistUrl = getMangaUrl(viewModel.manga, viewModel.source)
+                    setAssistUrl(getMangaUrl(viewModel.manga, viewModel.source))
                 }
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e) { "Failed to get manga URL" }

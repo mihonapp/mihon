@@ -43,6 +43,7 @@ import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import eu.kanade.tachiyomi.ui.stats.StatsScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
+import mihon.core.navigation.util.LocalAssistContentManager
 import mihon.core.navigation.util.LocalNavigator
 import mihon.core.navigation.util.OverlaySheetScene
 import mihon.core.navigation.util.TwoPaneSettingsScene
@@ -59,11 +60,13 @@ fun EntryProviderScope<NavKey>.appEntries() {
         DeepLinkScreen(route.query)
     }
     entry<WebViewRoute> { route ->
-        WebViewScreen(
-            url = route.url,
-            initialTitle = route.initialTitle,
-            sourceId = route.sourceId,
-        )
+        LocalAssistContentManager.current.Provide(route) {
+            WebViewScreen(
+                url = route.url,
+                initialTitle = route.initialTitle,
+                sourceId = route.sourceId,
+            )
+        }
     }
 
     // Entry
@@ -71,7 +74,9 @@ fun EntryProviderScope<NavKey>.appEntries() {
         MangaNotesScreen(route.mangaId)
     }
     entry<MangaRoute> { route ->
-        MangaScreen(route.mangaId, route.fromSource)
+        LocalAssistContentManager.current.Provide(route) {
+            MangaScreen(route.mangaId, route.fromSource)
+        }
     }
     entry<TrackInfoDialogRoute>(metadata = OverlaySheetScene.overlaySheet()) { route ->
         val navigator = LocalNavigator.current
@@ -95,7 +100,9 @@ fun EntryProviderScope<NavKey>.appEntries() {
 
     // Browse tab
     entry<BrowseSourceRoute> { route ->
-        BrowseSourceScreen(route.sourceId, route.listingQuery)
+        LocalAssistContentManager.current.Provide(route) {
+            BrowseSourceScreen(route.sourceId, route.listingQuery)
+        }
     }
     entry<ExtensionDetailsRoute> { route ->
         ExtensionDetailsScreen(route.pkgName)

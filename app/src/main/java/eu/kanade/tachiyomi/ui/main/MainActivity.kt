@@ -109,7 +109,6 @@ import mihon.app.di.AppGraph
 import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.core.migration.Migrator
-import mihon.core.navigation.AssistContentRoute
 import mihon.core.navigation.BrowseSourceRoute
 import mihon.core.navigation.DeepLinkRoute
 import mihon.core.navigation.ExtensionStoresRoute
@@ -121,6 +120,7 @@ import mihon.core.navigation.OnboardingRoute
 import mihon.core.navigation.RestoreBackupRoute
 import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.SupportUsRoute
+import mihon.core.navigation.TrackInfoDialogRoute
 import mihon.core.navigation.appEntries
 import mihon.core.navigation.util.AssistContentManager
 import mihon.core.navigation.util.LocalAssistContentManager
@@ -408,13 +408,9 @@ class MainActivity : BaseActivity() {
 
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        when (navigator?.current) {
-            is AssistContentRoute -> {
-                assistContentManager.currentAssistUrl?.let {
-                    outContent.webUri = it.toUri()
-                }
-            }
-        }
+        val navigator = navigator ?: return
+        val route = navigator.routes.lastOrNull { it !is TrackInfoDialogRoute } ?: return
+        assistContentManager.urlFor(route, navigator.routes)?.let { outContent.webUri = it.toUri() }
     }
 
     override fun reportFullyDrawn() {

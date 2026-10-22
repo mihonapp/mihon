@@ -15,7 +15,7 @@ data class WebViewRoute(
     val url: String,
     val initialTitle: String? = null,
     val sourceId: Long? = null,
-) : NavKey, AssistContentRoute
+) : NavKey
 
 // Entry
 @Serializable
@@ -25,7 +25,7 @@ data class MangaNotesRoute(val mangaId: Long) : NavKey
 data class MangaRoute(
     val mangaId: Long,
     val fromSource: Boolean = false,
-) : NavKey, AssistContentRoute
+) : NavKey
 
 @Serializable
 data class TrackInfoDialogRoute(
@@ -50,7 +50,7 @@ data object UpcomingRoute : NavKey
 data class BrowseSourceRoute(
     val sourceId: Long,
     val listingQuery: String?,
-) : NavKey, AssistContentRoute
+) : NavKey
 
 @Serializable
 data class ExtensionDetailsRoute(val pkgName: String) : NavKey

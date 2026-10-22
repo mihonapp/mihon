@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.webview.WebViewScreenContent
-import mihon.core.navigation.util.LocalAssistContentManager
+import mihon.core.navigation.util.LocalAssistUrl
 import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
@@ -17,7 +17,7 @@ fun WebViewScreen(
     sourceId: Long?,
 ) {
     val navigator = LocalNavigator.current
-    val assistContentManager = LocalAssistContentManager.current
+    val setAssistUrl = LocalAssistUrl.current
     val context = LocalContext.current
     val viewModel =
         assistedMetroViewModel<WebViewViewModel, WebViewViewModel.Factory> { create(sourceId = sourceId) }
@@ -35,7 +35,7 @@ fun WebViewScreen(
         headers = headers.orEmpty(),
         defaultUserAgentProvider = viewModel::defaultUserAgentProvider,
         onUrlChange = {
-            assistContentManager.currentAssistUrl = it
+            setAssistUrl(it)
         },
         onShare = { viewModel.shareWebpage(context, it) },
         onOpenInBrowser = { viewModel.openInBrowser(context, it) },

@@ -44,7 +44,7 @@ import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.SourcePreferencesRoute
 import mihon.core.navigation.WebViewRoute
-import mihon.core.navigation.util.LocalAssistContentManager
+import mihon.core.navigation.util.LocalAssistUrl
 import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -73,7 +73,7 @@ fun BrowseSourceScreen(
     val state by viewModel.state.collectAsState()
 
     val navigator = LocalNavigator.current
-    val assistContentManager = LocalAssistContentManager.current
+    val setAssistUrl = LocalAssistUrl.current
     val navigateUp: () -> Unit = {
         when {
             !state.isUserQuery && state.toolbarQuery != null -> viewModel.setToolbarQuery(null)
@@ -113,7 +113,7 @@ fun BrowseSourceScreen(
     }
 
     LaunchedEffect(source) {
-        assistContentManager.currentAssistUrl = (source as? HttpSource)?.getHomeUrl()
+        setAssistUrl((source as? HttpSource)?.getHomeUrl())
     }
 
     Scaffold(
