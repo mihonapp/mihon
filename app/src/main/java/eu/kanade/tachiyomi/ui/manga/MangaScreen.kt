@@ -168,7 +168,7 @@ fun MangaScreen(
             navigator.push(MigrationConfigRoute(successState.manga.id))
             Unit
         }.takeIf { successState.manga.favorite },
-        onEditNotesClicked = { navigator.push(MangaNotesRoute(manga = successState.manga)) },
+        onEditNotesClicked = { navigator.push(MangaNotesRoute(mangaId = successState.manga.id)) },
         onMultiBookmarkClicked = viewModel::bookmarkChapters,
         onMultiMarkAsReadClicked = viewModel::markChaptersRead,
         onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,

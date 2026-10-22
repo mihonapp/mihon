@@ -3,7 +3,6 @@ package mihon.core.navigation
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 import mihon.core.navigation.domain.SettingsDestination
-import tachiyomi.domain.manga.model.Manga
 
 @Serializable
 data object HomeRoute : NavKey
@@ -20,7 +19,7 @@ data class WebViewRoute(
 
 // Entry
 @Serializable
-data class MangaNotesRoute(val manga: Manga) : NavKey
+data class MangaNotesRoute(val mangaId: Long) : NavKey
 
 @Serializable
 data class MangaRoute(
@@ -67,7 +66,7 @@ data class MigrateSearchRoute(val mangaId: Long) : NavKey
 
 @Serializable
 data class MigrateSourceSearchRoute(
-    val currentManga: Manga,
+    val currentMangaId: Long,
     val sourceId: Long,
     val query: String?,
 ) : NavKey

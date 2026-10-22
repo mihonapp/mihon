@@ -68,7 +68,7 @@ fun EntryProviderScope<NavKey>.appEntries() {
 
     // Entry
     entry<MangaNotesRoute> { route ->
-        MangaNotesScreen(route.manga)
+        MangaNotesScreen(route.mangaId)
     }
     entry<MangaRoute> { route ->
         MangaScreen(route.mangaId, route.fromSource)
@@ -110,7 +110,7 @@ fun EntryProviderScope<NavKey>.appEntries() {
         MigrateSearchScreen(route.mangaId)
     }
     entry<MigrateSourceSearchRoute> { route ->
-        MigrateSourceSearchScreen(route.currentManga, route.sourceId, route.query)
+        MigrateSourceSearchScreen(route.currentMangaId, route.sourceId, route.query)
     }
     entry<MigrationConfigRoute> { route ->
         MigrationConfigScreen(route.mangaIds)

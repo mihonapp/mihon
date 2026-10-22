@@ -15,7 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.result.LocalResultEventBus
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
+import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.components.SearchToolbar
@@ -23,6 +32,8 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterDialog
 import eu.kanade.tachiyomi.ui.home.TabEvent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationListRoute
@@ -34,6 +45,7 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
+import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -43,10 +55,16 @@ import tachiyomi.source.local.LocalSource
 
 @Composable
 fun MigrateSourceSearchScreen(
-    currentManga: Manga,
+    currentMangaId: Long,
     sourceId: Long,
     query: String?,
 ) {
+    val currentManga = assistedMetroViewModel<CurrentMangaViewModel, CurrentMangaViewModel.Factory> {
+        create(mangaId = currentMangaId)
+    }
+        .manga
+        .collectAsState()
+        .value
     val uriHandler = LocalUriHandler.current
     val navigator = LocalNavigator.current
     val resultEventBus = LocalResultEventBus.current
@@ -59,7 +77,7 @@ fun MigrateSourceSearchScreen(
     val state by viewModel.state.collectAsState()
 
     val source = state.source
-    if (source == null) {
+    if (source == null || currentManga == null) {
         LoadingScreen()
         return
     }
@@ -157,5 +175,28 @@ fun MigrateSourceSearchScreen(
             )
         }
         else -> {}
+    }
+}
+
+@AssistedInject
+class CurrentMangaViewModel(
+    @Assisted mangaId: Long,
+    getManga: GetManga,
+) : ViewModel() {
+
+    val manga: StateFlow<Manga?>
+        field = MutableStateFlow<Manga?>(null)
+
+    init {
+        viewModelScope.launch {
+            manga.value = getManga.await(mangaId)
+        }
+    }
+
+    @AssistedFactory
+    @ManualViewModelAssistedFactoryKey
+    @ContributesIntoMap(AppScope::class)
+    interface Factory : ManualViewModelAssistedFactory {
+        fun create(mangaId: Long): CurrentMangaViewModel
     }
 }

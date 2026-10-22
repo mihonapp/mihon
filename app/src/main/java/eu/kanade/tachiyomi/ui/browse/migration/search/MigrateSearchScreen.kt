@@ -32,7 +32,7 @@ fun MigrateSearchScreen(mangaId: Long) {
         getManga = { viewModel.getManga(it) },
         onChangeSearchFilter = viewModel::setSourceFilter,
         onToggleResults = viewModel::toggleFilterResults,
-        onClickSource = { navigator.push(MigrateSourceSearchRoute(state.from!!, it.id, state.searchQuery)) },
+        onClickSource = { navigator.push(MigrateSourceSearchRoute(state.from!!.id, it.id, state.searchQuery)) },
         onClickItem = {
             val migrateListRoute = navigator
                 .routes.filterIsInstance<MigrationListRoute>()
