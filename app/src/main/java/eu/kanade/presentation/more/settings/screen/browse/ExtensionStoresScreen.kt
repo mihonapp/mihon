@@ -1,10 +1,10 @@
 package eu.kanade.presentation.more.settings.screen.browse
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.result.ResultEffect
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreConfirmDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreCreateDialog
@@ -12,19 +12,20 @@ import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionSt
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoresScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import mihon.core.navigation.ExtensionStoresRoute
 import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable
-fun ExtensionStoresScreen(url: String?) {
+fun ExtensionStoresScreen() {
     val context = LocalContext.current
     val navigator = LocalNavigator.current
 
     val viewModel = metroViewModel<ExtensionStoresViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(url) {
-        url?.let { viewModel.addFromDeeplink(url) }
+    ResultEffect<String>(resultKey = ExtensionStoresRoute.DEEP_LINK_RESULT_KEY) {
+        viewModel.addFromDeeplink(it)
     }
 
     if (state is ExtensionStoreScreenState.Loading) {

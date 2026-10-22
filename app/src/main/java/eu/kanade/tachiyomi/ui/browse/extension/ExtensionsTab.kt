@@ -45,7 +45,7 @@ fun extensionsTab(
             ),
             AppBar.OverflowAction(
                 title = stringResource(MR.strings.extensionStores),
-                onClick = { navigator.push(ExtensionStoresRoute()) },
+                onClick = { navigator.push(ExtensionStoresRoute) },
             ),
         ),
         content = { contentPadding, _ ->

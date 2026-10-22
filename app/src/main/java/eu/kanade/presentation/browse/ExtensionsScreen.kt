@@ -111,7 +111,7 @@ fun ExtensionScreen(
                         EmptyScreenAction(
                             stringRes = MR.strings.extensionStores,
                             icon = MaterialSymbols.Rounded.Settings,
-                            onClick = { navigator.push(ExtensionStoresRoute()) },
+                            onClick = { navigator.push(ExtensionStoresRoute) },
                         ),
                     ),
                 )

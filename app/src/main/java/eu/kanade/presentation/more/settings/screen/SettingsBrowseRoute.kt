@@ -48,7 +48,7 @@ object SettingsBrowseRoute : SearchableRoute {
                         title = stringResource(MR.strings.extensionStores),
                         subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.toInt(), reposCount),
                         onClick = {
-                            navigator.push(ExtensionStoresRoute())
+                            navigator.push(ExtensionStoresRoute)
                         },
                     ),
                 ),

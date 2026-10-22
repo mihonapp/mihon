@@ -148,7 +148,7 @@ fun MigrateSourceSearchScreen(
                 onComplete = {
                     scope.launch {
                         navigator.popToRoot()
-                        resultEventBus.sendResult(
+                        resultEventBus.sendResult<TabEvent>(
                             result = TabEvent.Browse(),
                         )
                         navigator.push(MangaRoute(dialog.target.id))

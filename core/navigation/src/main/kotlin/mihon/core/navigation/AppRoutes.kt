@@ -138,7 +138,9 @@ data object CreateBackupRoute : NavKey
 data object DebugInfoRoute : NavKey
 
 @Serializable
-data class ExtensionStoresRoute(val url: String? = null) : NavKey
+data object ExtensionStoresRoute : NavKey {
+    const val DEEP_LINK_RESULT_KEY = "ExtensionStoreDeepLink"
+}
 
 @Serializable
 data object OpenSourceLicensesRoute : NavKey

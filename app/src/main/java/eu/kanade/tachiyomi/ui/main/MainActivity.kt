@@ -735,7 +735,8 @@ class MainActivity : BaseActivity() {
                 // Deep link to add extension store
                 else if (intent.isAddExtensionStoreIntent()) {
                     intent.data?.getQueryParameter("url")?.let { repoUrl ->
-                        navigator.replaceAll(ExtensionStoresRoute(repoUrl))
+                        navigator.replaceAll(ExtensionStoresRoute)
+                        resultEventBus.sendResult(ExtensionStoresRoute.DEEP_LINK_RESULT_KEY, repoUrl)
                     }
                 }
                 null

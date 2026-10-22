@@ -172,8 +172,8 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<DebugInfoRoute> {
         DebugInfoScreen()
     }
-    entry<ExtensionStoresRoute> { route ->
-        ExtensionStoresScreen(route.url)
+    entry<ExtensionStoresRoute> {
+        ExtensionStoresScreen()
     }
     entry<OpenSourceLicensesRoute> {
         OpenSourceLicensesScreen()
