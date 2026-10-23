@@ -1,9 +1,9 @@
 package mihon.data.network
 
 import android.content.Context
-import android.database.SQLException
 import android.webkit.CookieManager
 import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.SQLiteException
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.driver.bundled.SQLITE_OPEN_READONLY
 import dev.zacsweers.metro.AppScope
@@ -30,13 +30,12 @@ class CookieRepositoryImpl(
     private val context: Context,
 ) : CookieRepository {
 
-    private val cookieManager = CookieManager.getInstance()
+    private val cookieManager by lazy { CookieManager.getInstance() }
 
     private val cookiesFile: File
         get() = File(context.applicationInfo.dataDir, "app_webview/Default/Cookies")
 
     override suspend fun getCookiesForHost(host: String): List<Cookie> {
-        cookieManager.flush()
         return withConnection { conn ->
             conn.prepare(
                 """
@@ -68,7 +67,6 @@ class CookieRepositoryImpl(
     }
 
     override suspend fun getAllHosts(): List<String> {
-        cookieManager.flush()
         return withConnection { conn ->
             conn.prepare("SELECT DISTINCT ltrim(host_key, '.') FROM cookies").use { statement ->
                 buildList { while (statement.step()) add(statement.getText(0)) }
@@ -76,19 +74,18 @@ class CookieRepositoryImpl(
         }.orEmpty()
     }
 
-    override suspend fun addOrUpdateCookie(host: String, cookie: Cookie) {
+    override suspend fun addOrUpdateCookie(host: String, cookie: Cookie) = withContext(Dispatchers.IO) {
         cookieManager.setCookie(buildUrl(host), cookie.toSetCookie(host))
         cookieManager.flush()
     }
 
-    override suspend fun deleteCookie(host: String, cookie: Cookie) {
+    override suspend fun deleteCookie(host: String, cookie: Cookie) = withContext(Dispatchers.IO) {
         cookieManager.setCookie(buildUrl(host), cookie.toDeleteCookie(host))
         cookieManager.flush()
     }
 
-    override suspend fun deleteHost(host: String) {
-        val cookies = getCookiesForHost(host)
-        cookies.forEach { cookie ->
+    override suspend fun deleteHost(host: String) = withContext(Dispatchers.IO) {
+        getCookiesForHost(host).forEach { cookie ->
             cookieManager.setCookie(buildUrl(host), cookie.toDeleteCookie(host))
         }
         cookieManager.flush()
@@ -96,6 +93,9 @@ class CookieRepositoryImpl(
 
     private suspend fun <T> withConnection(block: (SQLiteConnection) -> T): T? =
         withContext(Dispatchers.IO) {
+            cookieManager.flush()
+
+            // Should ideally never run; Just in case
             if (!cookiesFile.exists()) {
                 cookieManager.setCookie("http://localhost", "init=true")
                 cookieManager.flush()
@@ -104,11 +104,12 @@ class CookieRepositoryImpl(
                 cookieManager.flush()
                 return@withContext null
             }
+
             try {
                 BundledSQLiteDriver()
                     .open(cookiesFile.path, SQLITE_OPEN_READONLY)
                     .use(block)
-            } catch (e: SQLException) {
+            } catch (e: SQLiteException) {
                 logcat(LogPriority.ERROR, e) { "Failed to read WebView cookie database" }
                 null
             }
@@ -138,9 +139,7 @@ class CookieRepositoryImpl(
     }
 }
 
-/**
- * WebView stores expiry as microseconds since 1601-01-01, while [Instant] counts from 1970-01-01.
- */
+// WebView stores expiry as microseconds since 1601-01-01, while `Instant` counts from 1970-01-01.
 private const val MICROS_PER_SECOND = 1_000_000L
 private const val WINDOWS_TO_UNIX_EPOCH_SECONDS = 11_644_473_600L
 

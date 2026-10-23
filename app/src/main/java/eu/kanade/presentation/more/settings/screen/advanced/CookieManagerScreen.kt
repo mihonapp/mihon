@@ -1,8 +1,6 @@
 package eu.kanade.presentation.more.settings.screen.advanced
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,7 +36,6 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -78,13 +75,13 @@ class CookieManagerScreen : Screen() {
                     AlertDialog(
                         title = { Text(stringResource(MR.strings.action_add_host)) },
                         text = {
-                            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)) {
-                                OutlinedTextField(
-                                    state = textFieldState,
-                                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                                    lineLimits = TextFieldLineLimits.SingleLine,
-                                )
-                            }
+                            OutlinedTextField(
+                                state = textFieldState,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .focusRequester(focusRequester),
+                                lineLimits = TextFieldLineLimits.SingleLine,
+                            )
                         },
                         onDismissRequest = { model.setAddHostDialogVisible(false) },
                         confirmButton = {
@@ -132,11 +129,11 @@ class CookieManagerScreen : Screen() {
                         ScrollbarLazyColumn(
                             contentPadding = contentPadding,
                         ) {
-                            items(s.hosts) { host ->
+                            items(s.hosts, key = { it }) { host ->
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .clickable(onClick = { navigator.push(CookieListScreen(host)) })
+                                        .clickable { navigator.push(CookieListScreen(host)) }
                                         .padding(
                                             horizontal = MaterialTheme.padding.medium,
                                             vertical = MaterialTheme.padding.small,
@@ -146,8 +143,7 @@ class CookieManagerScreen : Screen() {
                                     Text(
                                         text = host,
                                         style = MaterialTheme.typography.bodyLarge,
-                                        modifier = Modifier
-                                            .weight(1f),
+                                        modifier = Modifier.weight(1f),
                                     )
                                     IconButton(
                                         onClick = { model.deleteHost(host) },
@@ -178,14 +174,12 @@ class CookieManagerViewModel(
         field = MutableStateFlow<State>(State.Loading)
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            cookieRepository.getAllHosts().let { hosts ->
-                state.update {
-                    val sorted = hosts.sortedWith(String.CASE_INSENSITIVE_ORDER)
-                    when (it) {
-                        is State.Ready -> it.copy(hosts = sorted)
-                        is State.Loading -> State.Ready(hosts = sorted)
-                    }
+        viewModelScope.launch {
+            val hosts = cookieRepository.getAllHosts().sortedWith(String.CASE_INSENSITIVE_ORDER)
+            state.update {
+                when (it) {
+                    is State.Ready -> it.copy(hosts = hosts)
+                    is State.Loading -> State.Ready(hosts = hosts)
                 }
             }
         }
@@ -197,19 +191,19 @@ class CookieManagerViewModel(
     }
 
     fun addHost(host: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (host.isBlank()) return@launch
-            state.update { state ->
-                if (state !is State.Ready) return@update state
+        if (host.isBlank()) return
+        state.update { state ->
+            if (state !is State.Ready) return@update state
 
-                val hosts = (state.hosts + host.lowercase()).distinct()
-                state.copy(hosts = hosts)
-            }
+            val hosts = (state.hosts + host.trim().lowercase())
+                .distinct()
+                .sortedWith(String.CASE_INSENSITIVE_ORDER)
+            state.copy(hosts = hosts)
         }
     }
 
     fun deleteHost(host: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             cookieRepository.deleteHost(host)
             state.update { state ->
                 if (state !is State.Ready) return@update state

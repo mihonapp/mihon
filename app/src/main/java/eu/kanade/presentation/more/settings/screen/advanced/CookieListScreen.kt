@@ -70,7 +70,6 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.lang.toTimestampString
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -103,9 +102,7 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
 
-class CookieListScreen(
-    val host: String,
-) : Screen() {
+class CookieListScreen(private val host: String) : Screen() {
 
     @Composable
     override fun Content() {
@@ -138,7 +135,7 @@ class CookieListScreen(
                                 AppBarActions(
                                     actions = listOf(
                                         AppBar.Action(
-                                            title = stringResource(MR.strings.action_add_host),
+                                            title = stringResource(MR.strings.action_add_cookie),
                                             icon = MaterialSymbols.Rounded.Add,
                                             onClick = {
                                                 model.setDialog(CookieListViewModel.Dialog())
@@ -209,7 +206,7 @@ class CookieListScreen(
             title = {
                 Text(
                     text = stringResource(
-                        if (dialog.name.isEmpty()) {
+                        if (dialog.existing == null) {
                             MR.strings.action_add_cookie
                         } else {
                             MR.strings.action_edit_cookie
@@ -228,13 +225,13 @@ class CookieListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .then(
-                                if (dialog.name.isEmpty()) {
+                                if (dialog.existing == null) {
                                     Modifier.focusRequester(focusRequester)
                                 } else {
                                     Modifier
                                 },
                             ),
-                        enabled = dialog.name.isEmpty(),
+                        enabled = dialog.existing == null,
                         lineLimits = TextFieldLineLimits.SingleLine,
                     )
                     OutlinedTextField(
@@ -243,7 +240,7 @@ class CookieListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .then(
-                                if (dialog.name.isNotEmpty()) {
+                                if (dialog.existing != null) {
                                     Modifier.focusRequester(focusRequester)
                                 } else {
                                     Modifier
@@ -345,6 +342,7 @@ class CookieListScreen(
                             ),
                         )
                     },
+                    enabled = nameState.text.isNotBlank(),
                 ) {
                     Text(stringResource(MR.strings.action_save))
                 }
@@ -620,7 +618,7 @@ class CookieListViewModel(
     }
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             fetchCookies()
         }
     }
@@ -647,19 +645,19 @@ class CookieListViewModel(
     }
 
     fun delete(cookie: Cookie) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             cookieRepository.deleteCookie(host, cookie)
             fetchCookies()
         }
     }
 
     fun addOrUpdate(dialog: Dialog, cookie: Cookie) {
-        if (cookie.name.isBlank() || cookie.value.isBlank()) return
+        if (cookie.name.isBlank()) return
 
         val updated = cookie.copy(path = cookie.path.normalizePath())
         val existing = dialog.existing
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             if (existing != null && (existing.identity != updated.identity || (existing.secure && !updated.secure))) {
                 cookieRepository.deleteCookie(host, existing)
             }
