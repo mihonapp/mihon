@@ -1,5 +1,7 @@
 package eu.kanade.presentation.more.settings.screen.advanced
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,10 +21,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -36,14 +40,19 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mihon.domain.network.CookieRepository
+import mihon.domain.network.NetscapeCookieParser
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Add
 import mihon.icons.materialsymbols.rounded.Delete
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -60,6 +69,28 @@ class CookieManagerScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         val model = metroViewModel<CookieManagerViewModel>()
         val state by model.state.collectAsState()
+
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+        val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            uri?.let {
+                scope.launch {
+                    val text = withContext(Dispatchers.IO) {
+                        runCatching {
+                            context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+                        }.getOrNull()
+                    }
+                    val count = text?.let { model.importCookies(it) } ?: 0
+                    context.toast(
+                        if (count > 0) {
+                            context.stringResource(MR.strings.cookies_imported, count)
+                        } else {
+                            context.stringResource(MR.strings.cookies_import_none)
+                        },
+                    )
+                }
+            }
+        }
 
         when (val s = state) {
             is CookieManagerViewModel.State.Loading -> LoadingScreen()
@@ -141,6 +172,17 @@ class CookieManagerScreen : Screen() {
                                             title = stringResource(MR.strings.action_add_host),
                                             icon = MaterialSymbols.Rounded.Add,
                                             onClick = { model.setAddHostDialogVisible(true) },
+                                        ),
+                                        AppBar.OverflowAction(
+                                            title = stringResource(MR.strings.action_import_cookies),
+                                            onClick = {
+                                                importLauncher.launch(
+                                                    arrayOf(
+                                                        "text/plain",
+                                                        "application/octet-stream",
+                                                    ),
+                                                )
+                                            },
                                         ),
                                     ),
                                 )
@@ -242,6 +284,19 @@ class CookieManagerViewModel(
                 state.copy(hosts = hosts, hostToDelete = null)
             }
         }
+    }
+
+    suspend fun importCookies(text: String): Int {
+        val cookiesByHost = NetscapeCookieParser.parse(text)
+        if (cookiesByHost.isEmpty()) return 0
+
+        cookieRepository.addOrUpdateCookies(cookiesByHost)
+        state.update { state ->
+            if (state !is State.Ready) return@update state
+            val hosts = cookieRepository.getAllHosts().sortedWith(String.CASE_INSENSITIVE_ORDER)
+            state.copy(hosts = hosts)
+        }
+        return cookiesByHost.values.sumOf { it.size }
     }
 
     sealed interface State {

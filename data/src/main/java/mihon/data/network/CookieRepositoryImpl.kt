@@ -79,6 +79,14 @@ class CookieRepositoryImpl(
         cookieManager.flush()
     }
 
+    override suspend fun addOrUpdateCookies(cookiesByHost: Map<String, List<Cookie>>) = withContext(Dispatchers.IO) {
+        cookiesByHost.forEach { (host, cookies) ->
+            val url = buildUrl(host)
+            cookies.forEach { cookieManager.setCookie(url, it.toSetCookie(host)) }
+        }
+        cookieManager.flush()
+    }
+
     override suspend fun deleteCookie(host: String, cookie: Cookie) = withContext(Dispatchers.IO) {
         cookieManager.setCookie(buildUrl(host), cookie.toDeleteCookie(host))
         cookieManager.flush()
