@@ -557,7 +557,7 @@ class CookieListScreen(private val host: String) : Screen() {
             if (cookie.secure) add(stringResource(MR.strings.cookie_secure))
             if (cookie.httpOnly) add(stringResource(MR.strings.cookie_http_only))
             if (cookie.sameSite != SameSite.Unspecified) {
-                add("${stringResource(MR.strings.cookie_same_site)}=${cookie.sameSite.label()}")
+                add(cookie.sameSite.label())
             }
         }
 
