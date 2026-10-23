@@ -1,11 +1,15 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
+import android.content.Context
 import android.graphics.PointF
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup.LayoutParams
+import android.widget.FrameLayout
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.children
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -207,11 +211,12 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      */
     abstract fun createPager(): Pager
 
-    /**
-     * Returns the view this viewer uses.
-     */
-    override fun getView(): View {
-        return pager
+    @Composable
+    override fun Content(modifier: Modifier) {
+        AndroidView(
+            factory = { context -> DisallowInterceptBarrier(context).apply { addView(pager) } },
+            modifier = modifier,
+        )
     }
 
     /**
@@ -504,4 +509,13 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private fun cleanupPageSplit() {
         adapter.cleanupPageSplit()
     }
+}
+
+/**
+ * Keeps [requestDisallowInterceptTouchEvent] from reaching Compose. Its interop filter cancels the
+ * gesture when a child re-allows intercepting mid-drag, which stops a zoomed page from handing the
+ * drag to the pager at its edge.
+ */
+private class DisallowInterceptBarrier(context: Context) : FrameLayout(context) {
+    override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) = Unit
 }

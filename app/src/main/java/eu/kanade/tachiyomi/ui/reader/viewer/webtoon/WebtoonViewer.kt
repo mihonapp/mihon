@@ -3,9 +3,11 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 import android.graphics.PointF
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -211,11 +213,9 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         }
     }
 
-    /**
-     * Returns the view this viewer uses.
-     */
-    override fun getView(): View {
-        return frame
+    @Composable
+    override fun Content(modifier: Modifier) {
+        AndroidView(factory = { frame }, modifier = modifier)
     }
 
     /**

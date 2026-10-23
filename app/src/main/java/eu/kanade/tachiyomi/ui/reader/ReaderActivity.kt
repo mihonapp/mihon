@@ -14,7 +14,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 import android.view.View.LAYER_TYPE_HARDWARE
 import android.view.WindowManager
 import android.widget.Toast
@@ -23,23 +22,26 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
-import androidx.core.graphics.Insets
 import androidx.core.net.toUri
 import androidx.core.transition.doOnEnd
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
@@ -174,6 +176,7 @@ class ReaderActivity : BaseActivity() {
 
         binding = ReaderActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.setViewerContent()
         binding.setComposeOverlay()
 
         if (!viewModel.hasValidArgs) {
@@ -253,6 +256,24 @@ class ReaderActivity : BaseActivity() {
                 }
             }
             .launchIn(lifecycleScope)
+    }
+
+    private fun ReaderActivityBinding.setViewerContent() = viewerContainer.setContent {
+        val viewer by viewerFlow.collectAsState()
+        val fullscreen by readerPreferences.fullscreen.collectAsState()
+        val drawUnderCutout by readerPreferences.drawUnderCutout.collectAsState()
+        val insets = when {
+            !fullscreen -> WindowInsets.systemBars
+            !drawUnderCutout -> WindowInsets.displayCutout
+            else -> WindowInsets(0)
+        }
+        key(viewer) {
+            viewer?.Content(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(insets),
+            )
+        }
     }
 
     private fun ReaderActivityBinding.setComposeOverlay(): Unit = composeOverlay.setComposeContent {
@@ -549,13 +570,8 @@ class ReaderActivity : BaseActivity() {
         }
 
         // Destroy previous viewer if there was one
-        if (prevViewer != null) {
-            prevViewer.destroy()
-            binding.viewerContainer.removeAllViews()
-        }
+        prevViewer?.destroy()
         viewerFlow.value = newViewer
-        updateViewerInset(readerPreferences.fullscreen.get(), readerPreferences.drawUnderCutout.get())
-        binding.viewerContainer.addView(newViewer.getView())
 
         if (readerPreferences.showReadingMode.get()) {
             showReadingModeToast(viewModel.getMangaReadingMode())
@@ -794,35 +810,6 @@ class ReaderActivity : BaseActivity() {
         }
     }
 
-    /**
-     * Updates viewer inset depending on fullscreen reader preferences.
-     */
-    private fun updateViewerInset(fullscreen: Boolean, drawUnderCutout: Boolean) {
-        if (!::binding.isInitialized) return
-        val view = binding.viewerContainer
-
-        view.applyInsetsPadding(ViewCompat.getRootWindowInsets(view), fullscreen, drawUnderCutout)
-        ViewCompat.setOnApplyWindowInsetsListener(view) { view, windowInsets ->
-            view.applyInsetsPadding(windowInsets, fullscreen, drawUnderCutout)
-            windowInsets
-        }
-    }
-
-    private fun View.applyInsetsPadding(
-        windowInsets: WindowInsetsCompat?,
-        fullscreen: Boolean,
-        drawUnderCutout: Boolean,
-    ) {
-        val insets = when {
-            !fullscreen -> windowInsets?.getInsets(WindowInsetsCompat.Type.systemBars())
-            !drawUnderCutout -> windowInsets?.getInsets(WindowInsetsCompat.Type.displayCutout())
-            else -> null
-        }
-            ?: Insets.NONE
-
-        setPadding(insets.left, insets.top, insets.right, insets.bottom)
-    }
-
     private fun applyGeneralSettings(old: GeneralSettings?, new: GeneralSettings) {
         if (old?.theme != new.theme) {
             binding.readerContainer.setBackgroundColor(baseContext.readerBackgroundColor(new.theme))
@@ -832,9 +819,6 @@ class ReaderActivity : BaseActivity() {
         }
         if (old?.grayscale != new.grayscale || old?.invertedColors != new.invertedColors) {
             setLayerPaint(new.grayscale, new.invertedColors)
-        }
-        if (old?.fullscreen != new.fullscreen || old?.drawUnderCutout != new.drawUnderCutout) {
-            updateViewerInset(new.fullscreen, new.drawUnderCutout)
         }
     }
 
