@@ -24,7 +24,6 @@ data class Cookie(
         get() = Identity(name, path, hostOnly)
 }
 
-
 enum class SameSite {
     Unspecified,
     None,
