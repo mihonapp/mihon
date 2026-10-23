@@ -1,34 +1,49 @@
 package eu.kanade.presentation.more.settings.screen.advanced
 
+import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,19 +57,30 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
+import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.domain.ui.model.TimeFormat
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.util.lang.toTimestampString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import mihon.app.di.appGraph
 import mihon.domain.network.Cookie
 import mihon.domain.network.CookieRepository
+import mihon.domain.network.SameSite
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Add
+import mihon.icons.materialsymbols.rounded.Close
 import mihon.icons.materialsymbols.rounded.Delete
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
@@ -63,10 +89,15 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
-import tachiyomi.presentation.core.util.clickableNoIndication
+import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.secondaryItemAlpha
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 
-class CookieListScreen(val host: String) : Screen() {
+class CookieListScreen(
+    val host: String,
+) : Screen() {
 
     @Composable
     override fun Content() {
@@ -78,107 +109,12 @@ class CookieListScreen(val host: String) : Screen() {
             is CookieListViewModel.State.Loading -> LoadingScreen()
             is CookieListViewModel.State.Ready -> {
                 s.dialog?.let { dialog ->
-                    val keyState = rememberTextFieldState(dialog.name)
-                    val valueState = rememberTextFieldState(dialog.value)
-                    val pathState = rememberTextFieldState(dialog.path)
-                    var hostOnly by remember { mutableStateOf(dialog.hostOnly) }
-
-                    val focusRequester = remember { FocusRequester() }
-                    LaunchedEffect(focusRequester) {
-                        focusRequester.requestFocus()
-                    }
-
-                    AlertDialog(
-                        onDismissRequest = { model.setDialog(null) },
-                        title = {
-                            Text(
-                                text = stringResource(
-                                    if (dialog.name.isEmpty()) {
-                                        MR.strings.action_add_cookie
-                                    } else {
-                                        MR.strings.action_edit_cookie
-                                    },
-                                ),
-                            )
-                        },
-                        text = {
-                            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                                OutlinedTextField(
-                                    state = keyState,
-                                    label = { Text(stringResource(MR.strings.cookie_name)) },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .then(
-                                            if (dialog.name.isEmpty()) {
-                                                Modifier.focusRequester(
-                                                    focusRequester,
-                                                )
-                                            } else {
-                                                Modifier
-                                            },
-                                        ),
-                                    enabled = dialog.name.isEmpty(),
-                                )
-                                OutlinedTextField(
-                                    state = valueState,
-                                    label = { Text(stringResource(MR.strings.cookie_value)) },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .then(
-                                            if (dialog.name.isNotEmpty()) {
-                                                Modifier.focusRequester(
-                                                    focusRequester,
-                                                )
-                                            } else {
-                                                Modifier
-                                            },
-                                        ),
-                                )
-                                OutlinedTextField(
-                                    state = pathState,
-                                    label = { Text(stringResource(MR.strings.cookie_path)) },
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
-                                Row(
-                                    modifier = Modifier
-                                        .clickableNoIndication { hostOnly = !hostOnly }
-                                        .fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                ) {
-                                    Text(
-                                        text = "Host only",
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    Switch(
-                                        checked = hostOnly,
-                                        onCheckedChange = { hostOnly = !hostOnly },
-                                    )
-                                }
-                            }
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    model.addOrUpdate(
-                                        Cookie(
-                                            name = keyState.text.toString(),
-                                            value = valueState.text.toString(),
-                                            path = pathState.text.toString(),
-                                            hostOnly = hostOnly,
-                                        ),
-                                    )
-                                    model.setDialog(null)
-                                },
-                            ) {
-                                Text(stringResource(MR.strings.action_save))
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { model.setDialog(null) }) {
-                                Text(stringResource(MR.strings.action_cancel))
-                            }
+                    CookieDialog(
+                        dialog = dialog,
+                        onDismiss = { model.setDialog(null) },
+                        onConfirm = { cookie ->
+                            model.addOrUpdate(dialog, cookie)
+                            model.setDialog(null)
                         },
                     )
                 }
@@ -214,21 +150,14 @@ class CookieListScreen(val host: String) : Screen() {
                         ScrollbarLazyColumn(
                             contentPadding = contentPadding,
                         ) {
-                            items(s.filteredCookies, key = { "${it.path}$${it.name}$${it.hostOnly}" }) {
+                            items(
+                                items = s.filteredCookies,
+                                key = { it.identity.key },
+                            ) {
                                 CookieItem(
-                                    name = it.name,
-                                    value = it.value,
-                                    path = it.path,
-                                    hostOnly = it.hostOnly,
+                                    cookie = it,
                                     onClick = {
-                                        model.setDialog(
-                                            CookieListViewModel.Dialog(
-                                                name = it.name,
-                                                value = it.value,
-                                                path = it.path,
-                                                hostOnly = it.hostOnly,
-                                            ),
-                                        )
+                                        model.setDialog(CookieListViewModel.Dialog.from(it))
                                     },
                                     onClickDelete = { model.delete(it) },
                                 )
@@ -241,11 +170,331 @@ class CookieListScreen(val host: String) : Screen() {
     }
 
     @Composable
+    private fun CookieDialog(
+        dialog: CookieListViewModel.Dialog,
+        onDismiss: () -> Unit,
+        onConfirm: (Cookie) -> Unit,
+    ) {
+        val context = LocalContext.current
+        val locale = LocalLocale.current
+        val uiPreferences = context.appGraph.uiPreferences
+        val dateFormat by uiPreferences.dateFormat.collectAsState()
+        val timeFormat by uiPreferences.timeFormat.collectAsState()
+        val is24HourSystem = DateFormat.is24HourFormat(context)
+        val dateTimeFormatter = remember(dateFormat, timeFormat, locale, is24HourSystem) {
+            UiPreferences.dateTimeFormat(
+                dateFormat = dateFormat,
+                timeFormat = timeFormat,
+                locale = locale.platformLocale,
+                is24HourSystem = is24HourSystem,
+            )
+        }
+
+        val nameState = rememberTextFieldState(dialog.name)
+        val valueState = rememberTextFieldState(dialog.value)
+        val pathState = rememberTextFieldState(dialog.path)
+
+        var hostOnly by remember { mutableStateOf(dialog.hostOnly) }
+        var secure by remember { mutableStateOf(dialog.secure) }
+        var httpOnly by remember { mutableStateOf(dialog.httpOnly) }
+        var sameSite by remember { mutableStateOf(dialog.sameSite) }
+        var expiresAt by remember { mutableStateOf(dialog.expiresAt) }
+
+        var showExpiryPicker by remember { mutableStateOf(false) }
+
+        val focusRequester = remember { FocusRequester() }
+        LaunchedEffect(focusRequester) {
+            focusRequester.requestFocus()
+        }
+
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(
+                    text = stringResource(
+                        if (dialog.name.isEmpty()) {
+                            MR.strings.action_add_cookie
+                        } else {
+                            MR.strings.action_edit_cookie
+                        },
+                    ),
+                )
+            },
+            text = {
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    OutlinedTextField(
+                        state = nameState,
+                        label = { Text(stringResource(MR.strings.cookie_name)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(
+                                if (dialog.name.isEmpty()) {
+                                    Modifier.focusRequester(focusRequester)
+                                } else {
+                                    Modifier
+                                },
+                            ),
+                        enabled = dialog.name.isEmpty(),
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                    )
+                    OutlinedTextField(
+                        state = valueState,
+                        label = { Text(stringResource(MR.strings.cookie_value)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(
+                                if (dialog.name.isNotEmpty()) {
+                                    Modifier.focusRequester(focusRequester)
+                                } else {
+                                    Modifier
+                                },
+                            ),
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                    )
+                    OutlinedTextField(
+                        state = pathState,
+                        label = { Text(stringResource(MR.strings.cookie_path)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                    )
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = stringResource(MR.strings.cookie_expires),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            OutlinedButton(
+                                onClick = { showExpiryPicker = true },
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                Text(
+                                    expiresAt?.toTimestampString(dateTimeFormatter)
+                                        ?: stringResource(MR.strings.cookie_expires_session),
+                                )
+                            }
+                            if (expiresAt != null) {
+                                IconButton(onClick = { expiresAt = null }) {
+                                    Icon(
+                                        imageVector = MaterialSymbols.Rounded.Close,
+                                        contentDescription = stringResource(MR.strings.action_clear),
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        ToggleChip(
+                            label = stringResource(MR.strings.cookie_host_only),
+                            selected = hostOnly,
+                            onClick = { hostOnly = !hostOnly },
+                        )
+                        ToggleChip(
+                            label = stringResource(MR.strings.cookie_secure),
+                            selected = secure,
+                            onClick = { secure = !secure },
+                        )
+                        ToggleChip(
+                            label = stringResource(MR.strings.cookie_http_only),
+                            selected = httpOnly,
+                            onClick = { httpOnly = !httpOnly },
+                        )
+                    }
+
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(MR.strings.cookie_same_site),
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            SameSite.entries.forEach {
+                                ToggleChip(
+                                    label = it.label(),
+                                    selected = sameSite == it,
+                                    onClick = {
+                                        if (sameSite != SameSite.None && it == SameSite.None) {
+                                            secure = true
+                                        }
+                                        sameSite = it
+                                    },
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onConfirm(
+                            Cookie(
+                                name = nameState.text.toString(),
+                                value = valueState.text.toString(),
+                                path = pathState.text.toString(),
+                                hostOnly = hostOnly,
+                                expiresAt = expiresAt,
+                                secure = secure,
+                                httpOnly = httpOnly,
+                                sameSite = sameSite,
+                            ),
+                        )
+                    },
+                ) {
+                    Text(stringResource(MR.strings.action_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(MR.strings.action_cancel))
+                }
+            },
+        )
+
+        if (showExpiryPicker) {
+            ExpiryPickerDialog(
+                initial = expiresAt,
+                onDismiss = { showExpiryPicker = false },
+                onConfirm = {
+                    expiresAt = it
+                    showExpiryPicker = false
+                },
+            )
+        }
+    }
+
+    @Composable
+    private fun ExpiryPickerDialog(
+        initial: Instant?,
+        onDismiss: () -> Unit,
+        onConfirm: (Instant) -> Unit,
+    ) {
+        val context = LocalContext.current
+        val locale = LocalLocale.current.platformLocale
+        val uiPreferences = context.appGraph.uiPreferences
+        val timeFormat by uiPreferences.timeFormat.collectAsState()
+        val is24HourFormat = remember(timeFormat, locale) {
+            when (timeFormat) {
+                TimeFormat.FOLLOW_LANGUAGE -> {
+                    val pattern = DateFormat.getBestDateTimePattern(locale, "j")
+                    pattern.contains('H') || pattern.contains('k')
+                }
+
+                TimeFormat.FOLLOW_SYSTEM -> DateFormat.is24HourFormat(context)
+                TimeFormat.HOURS_24 -> true
+                TimeFormat.HOURS_12 -> false
+            }
+        }
+
+        val timeZone = remember { TimeZone.currentSystemDefault() }
+        val initialDateTime = remember(initial) {
+            (initial ?: (Clock.System.now() + 1.days)).toLocalDateTime(timeZone)
+        }
+        val initialDateMillis = remember(initialDateTime) {
+            LocalDateTime(initialDateTime.date, LocalTime(0, 0))
+                .toInstant(TimeZone.UTC)
+                .toEpochMilliseconds()
+        }
+        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDateMillis)
+        val timePickerState = rememberTimePickerState(
+            initialHour = initialDateTime.hour,
+            initialMinute = initialDateTime.minute,
+            is24Hour = is24HourFormat,
+        )
+
+        var selectedTab by remember { mutableIntStateOf(0) }
+
+        DatePickerDialog(
+            onDismissRequest = onDismiss,
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val dateMillis = datePickerState.selectedDateMillis ?: return@TextButton
+                        val date = Instant.fromEpochMilliseconds(dateMillis).toLocalDateTime(TimeZone.UTC).date
+                        onConfirm(
+                            LocalDateTime(
+                                date = date,
+                                time = LocalTime(timePickerState.hour, timePickerState.minute),
+                            ).toInstant(timeZone),
+                        )
+                    },
+                    enabled = datePickerState.selectedDateMillis != null,
+                ) {
+                    Text(stringResource(MR.strings.action_ok))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(MR.strings.action_cancel))
+                }
+            },
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                PrimaryTabRow(selectedTabIndex = selectedTab) {
+                    Tab(
+                        selected = selectedTab == 0,
+                        onClick = { selectedTab = 0 },
+                        text = { Text(stringResource(MR.strings.date)) },
+                    )
+                    Tab(
+                        selected = selectedTab == 1,
+                        onClick = { selectedTab = 1 },
+                        text = { Text(stringResource(MR.strings.time)) },
+                    )
+                }
+
+                if (selectedTab == 0) {
+                    DatePicker(
+                        state = datePickerState,
+                        title = null,
+                        headline = null,
+                    )
+                } else {
+                    TimePicker(
+                        state = timePickerState,
+                        modifier = Modifier.padding(vertical = MaterialTheme.padding.medium),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ToggleChip(
+        label: String,
+        selected: Boolean,
+        onClick: () -> Unit,
+    ) {
+        FilterChip(
+            selected = selected,
+            onClick = onClick,
+            label = { Text(label) },
+        )
+    }
+
+    @Composable
+    private fun SameSite.label(): String = stringResource(
+        when (this) {
+            SameSite.Unspecified -> MR.strings.cookie_same_site_unspecified
+            SameSite.None -> MR.strings.cookie_same_site_none
+            SameSite.Lax -> MR.strings.cookie_same_site_lax
+            SameSite.Strict -> MR.strings.cookie_same_site_strict
+        },
+    )
+
+    @Composable
     private fun CookieItem(
-        name: String,
-        value: String,
-        path: String,
-        hostOnly: Boolean,
+        cookie: Cookie,
         onClick: () -> Unit,
         onClickDelete: () -> Unit,
     ) {
@@ -265,19 +514,19 @@ class CookieListScreen(val host: String) : Screen() {
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(
-                        text = "$name = $value",
+                        text = "${cookie.name} = ${cookie.value}",
                         style = MaterialTheme.typography.bodyLarge,
                     )
 
                     Text(
-                        text = "${stringResource(MR.strings.cookie_path)} = $path",
+                        text = "${stringResource(MR.strings.cookie_path)} = ${cookie.path}",
                         modifier = Modifier.secondaryItemAlpha(),
                         style = MaterialTheme.typography.bodySmall,
                     )
 
                     Text(
-                        text = stringResource(MR.strings.cookie_host_only),
-                        modifier = Modifier.alpha(if (hostOnly) 1f else 0f),
+                        text = cookieAttributes(cookie),
+                        modifier = Modifier.secondaryItemAlpha(),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -293,6 +542,16 @@ class CookieListScreen(val host: String) : Screen() {
             }
         }
     }
+
+    @Composable
+    private fun cookieAttributes(cookie: Cookie): String = buildList {
+        if (cookie.hostOnly) add(stringResource(MR.strings.cookie_host_only))
+        if (cookie.secure) add(stringResource(MR.strings.cookie_secure))
+        if (cookie.httpOnly) add(stringResource(MR.strings.cookie_http_only))
+        if (cookie.sameSite != SameSite.Unspecified) {
+            add("${stringResource(MR.strings.cookie_same_site)}=${cookie.sameSite.name}")
+        }
+    }.joinToString(" · ")
 }
 
 @AssistedInject
@@ -345,34 +604,18 @@ class CookieListViewModel(
         }
     }
 
-    fun addOrUpdate(cookie: Cookie) {
-        val state = state.value
-
-        if (state !is State.Ready) return
-
+    fun addOrUpdate(dialog: Dialog, cookie: Cookie) {
         if (cookie.name.isBlank() || cookie.value.isBlank()) return
 
-        val dialog = state.dialog
-        val normalizedPath = cookie.path.normalizePath()
+        val updated = cookie.copy(path = cookie.path.normalizePath())
+        val existing = dialog.existing
 
         viewModelScope.launch(Dispatchers.IO) {
-            if (dialog != null && dialog.name.isNotBlank()) {
-                val normalizedOldPath = dialog.path.normalizePath()
-
-                if (normalizedOldPath != normalizedPath || dialog.hostOnly != cookie.hostOnly) {
-                    cookieRepository.deleteCookie(
-                        host = host,
-                        cookie = Cookie(
-                            name = dialog.name,
-                            value = dialog.value,
-                            path = normalizedOldPath,
-                            hostOnly = dialog.hostOnly,
-                        )
-                    )
-                }
+            if (existing != null && (existing.identity != updated.identity || (existing.secure && !updated.secure))) {
+                cookieRepository.deleteCookie(host, existing)
             }
 
-            cookieRepository.addOrUpdateCookie(host, cookie.copy(path = normalizedPath))
+            cookieRepository.addOrUpdateCookie(host, updated)
             fetchCookies()
         }
     }
@@ -388,7 +631,26 @@ class CookieListViewModel(
         val value: String = "",
         val path: String = "",
         val hostOnly: Boolean = false,
-    )
+        val secure: Boolean = false,
+        val httpOnly: Boolean = false,
+        val sameSite: SameSite = SameSite.Unspecified,
+        val expiresAt: Instant? = null,
+        val existing: Cookie? = null,
+    ) {
+        companion object {
+            fun from(cookie: Cookie) = Dialog(
+                name = cookie.name,
+                value = cookie.value,
+                path = cookie.path,
+                hostOnly = cookie.hostOnly,
+                secure = cookie.secure,
+                httpOnly = cookie.httpOnly,
+                sameSite = cookie.sameSite,
+                expiresAt = cookie.expiresAt,
+                existing = cookie,
+            )
+        }
+    }
 
     sealed interface State {
         @Immutable

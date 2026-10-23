@@ -707,10 +707,22 @@
     <string name="action_add_cookie">Add cookie</string>
     <string name="action_edit_cookie">Edit cookie</string>
     <string name="no_cookies_indexed">No cookies indexed</string>
-    <string name="cookie_name">Name</string>
-    <string name="cookie_value">Value</string>
-    <string name="cookie_path">Path</string>
-    <string name="cookie_host_only">Host only</string>
+    <string name="action_clear">Clear</string>
+    <string name="time">Time</string>
+    <!-- Technical cookie attributes, disallow translating -->
+    <string name="cookie_name" translatable="false">Name</string>
+    <string name="cookie_value" translatable="false">Value</string>
+    <string name="cookie_path" translatable="false">Path</string>
+    <string name="cookie_host_only" translatable="false">HostOnly</string>
+    <string name="cookie_secure" translatable="false">Secure</string>
+    <string name="cookie_http_only" translatable="false">HttpOnly</string>
+    <string name="cookie_expires" translatable="false">Expires</string>
+    <string name="cookie_expires_session" translatable="false">Session</string>
+    <string name="cookie_same_site" translatable="false">SameSite</string>
+    <string name="cookie_same_site_unspecified" translatable="false">Unset</string>
+    <string name="cookie_same_site_none" translatable="false">None</string>
+    <string name="cookie_same_site_lax" translatable="false">Lax</string>
+    <string name="cookie_same_site_strict" translatable="false">Strict</string>
 
       <!-- About section -->
     <string name="website">Website</string>

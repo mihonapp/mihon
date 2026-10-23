@@ -15,8 +15,13 @@ import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.domain.network.Cookie
 import mihon.domain.network.CookieRepository
+import mihon.domain.network.SameSite
 import tachiyomi.core.common.util.system.logcat
 import java.io.File
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import kotlin.time.Instant
+import kotlin.time.toJavaInstant
 
 @Inject
 @SingleIn(AppScope::class)
@@ -34,17 +39,26 @@ class CookieRepositoryImpl(
         cookieManager.flush()
         return withConnection { conn ->
             conn.prepare(
-                "SELECT host_key, name, value, path FROM cookies WHERE host_key = ?1 OR host_key = '.' || ?1",
+                """
+                SELECT host_key, name, value, path, expires_utc, has_expires, is_secure, is_httponly, samesite
+                FROM cookies
+                WHERE host_key = ?1 OR host_key = '.' || ?1
+                """.trimIndent(),
             ).use { statement ->
                 statement.bindText(1, host)
                 buildList {
                     while (statement.step()) {
+                        val hostKey = statement.getText(0)
                         add(
                             Cookie(
                                 name = statement.getText(1),
                                 value = statement.getText(2),
                                 path = statement.getText(3),
-                                hostOnly = !statement.getText(0).startsWith("."),
+                                hostOnly = !hostKey.startsWith("."),
+                                expiresAt = statement.getLong(4).takeIf { statement.getLong(5) != 0L }?.toInstant(),
+                                secure = statement.getLong(6) != 0L,
+                                httpOnly = statement.getLong(7) != 0L,
+                                sameSite = SameSite.fromDatabaseValue(statement.getLong(8)),
                             ),
                         )
                     }
@@ -56,26 +70,26 @@ class CookieRepositoryImpl(
     override suspend fun getAllHosts(): List<String> {
         cookieManager.flush()
         return withConnection { conn ->
-            conn.prepare("SELECT DISTINCT ltrim(host_key, '.') FROM cookies").use { stmt ->
-                buildList { while (stmt.step()) add(stmt.getText(0)) }
+            conn.prepare("SELECT DISTINCT ltrim(host_key, '.') FROM cookies").use { statement ->
+                buildList { while (statement.step()) add(statement.getText(0)) }
             }
         }.orEmpty()
     }
 
     override suspend fun addOrUpdateCookie(host: String, cookie: Cookie) {
-        cookieManager.setCookie(buildUrl(host), cookie.string(host))
+        cookieManager.setCookie(buildUrl(host), cookie.toSetCookie(host))
         cookieManager.flush()
     }
 
     override suspend fun deleteCookie(host: String, cookie: Cookie) {
-        cookieManager.setCookie(buildUrl(host), cookie.deleteString(host))
+        cookieManager.setCookie(buildUrl(host), cookie.toDeleteCookie(host))
         cookieManager.flush()
     }
 
     override suspend fun deleteHost(host: String) {
         val cookies = getCookiesForHost(host)
         cookies.forEach { cookie ->
-            cookieManager.setCookie(buildUrl(host), cookie.deleteString(host))
+            cookieManager.setCookie(buildUrl(host), cookie.toDeleteCookie(host))
         }
         cookieManager.flush()
     }
@@ -102,15 +116,36 @@ class CookieRepositoryImpl(
 
     private fun buildUrl(host: String): String = "https://$host/"
 
-    private fun Cookie.string(host: String) = buildString {
+    private fun Cookie.toSetCookie(host: String) = buildString {
         append("$name=$value")
         if (!hostOnly) append("; Domain=$host")
         append("; Path=$path")
+        expiresAt?.let { append("; Expires=${it.toHttpDate()}") }
+        if (secure) append("; Secure")
+        if (httpOnly) append("; HttpOnly")
+        when (sameSite) {
+            SameSite.None -> append("; SameSite=None")
+            SameSite.Lax -> append("; SameSite=Lax")
+            SameSite.Strict -> append("; SameSite=Strict")
+            SameSite.Unspecified -> {}
+        }
     }
 
-    private fun Cookie.deleteString(host: String) = buildString {
+    private fun Cookie.toDeleteCookie(host: String) = buildString {
         append("$name=; Max-Age=0")
         if (!hostOnly) append("; Domain=$host")
         append("; Path=$path")
     }
 }
+
+/**
+ * WebView stores expiry as microseconds since 1601-01-01, while [Instant] counts from 1970-01-01.
+ */
+private const val MICROS_PER_SECOND = 1_000_000L
+private const val WINDOWS_TO_UNIX_EPOCH_SECONDS = 11_644_473_600L
+
+private fun Long.toInstant(): Instant =
+    Instant.fromEpochSeconds(this / MICROS_PER_SECOND - WINDOWS_TO_UNIX_EPOCH_SECONDS)
+
+private fun Instant.toHttpDate(): String =
+    DateTimeFormatter.RFC_1123_DATE_TIME.format(toJavaInstant().atOffset(ZoneOffset.UTC))
