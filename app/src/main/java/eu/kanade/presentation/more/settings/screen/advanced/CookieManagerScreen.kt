@@ -39,6 +39,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
+import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.Dispatchers
@@ -162,8 +163,8 @@ class CookieManagerScreen : Screen() {
 
                 Scaffold(
                     topBar = {
-                        AppBar(
-                            title = stringResource(MR.strings.pref_cookie_manager),
+                        SearchToolbar(
+                            titleContent = { Text(stringResource(MR.strings.pref_cookie_manager)) },
                             navigateUp = navigator::pop,
                             actions = {
                                 AppBarActions(
@@ -187,16 +188,20 @@ class CookieManagerScreen : Screen() {
                                     ),
                                 )
                             },
+                            searchQuery = s.query,
+                            onChangeSearchQuery = model::onSearchQueryChange,
                         )
                     },
                 ) { contentPadding ->
                     if (s.hosts.isEmpty()) {
                         EmptyScreen(MR.strings.no_hosts_indexed)
+                    } else if (s.filteredHosts.isEmpty()) {
+                        EmptyScreen(stringResource(MR.strings.no_results_found))
                     } else {
                         ScrollbarLazyColumn(
                             contentPadding = contentPadding,
                         ) {
-                            items(s.hosts, key = { it }) { host ->
+                            items(s.filteredHosts, key = { it }) { host ->
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -250,6 +255,11 @@ class CookieManagerViewModel(
                 }
             }
         }
+    }
+
+    fun onSearchQueryChange(query: String?) = state.update { state ->
+        if (state !is State.Ready) return@update state
+        state.copy(query = query)
     }
 
     fun setAddHostDialogVisible(visible: Boolean) = state.update { state ->
@@ -307,8 +317,16 @@ class CookieManagerViewModel(
         @Immutable
         data class Ready(
             val hosts: List<String> = emptyList(),
+            val query: String? = null,
             val showAddHostDialog: Boolean = false,
             val hostToDelete: String? = null,
-        ) : State
+        ) : State {
+            val filteredHosts: List<String>
+                get() = if (query.isNullOrBlank()) {
+                    hosts
+                } else {
+                    hosts.filter { it.contains(query, ignoreCase = true) }
+                }
+        }
     }
 }
