@@ -47,7 +47,6 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
-import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.util.chapter.filterDownloaded
 import eu.kanade.tachiyomi.util.chapter.removeDuplicates
 import eu.kanade.tachiyomi.util.editCover
@@ -525,12 +524,6 @@ class ReaderViewModel(
             return
         }
         eventChannel.trySend(Event.ReloadViewerChapters)
-    }
-
-    fun onViewerLoaded(viewer: Viewer?) {
-        mutableState.update {
-            it.copy(viewer = viewer)
-        }
     }
 
     /**
@@ -1110,11 +1103,6 @@ class ReaderViewModel(
         val bookmarked: Boolean = false,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
-
-        /**
-         * Viewer used to display the pages (pager, webtoon, ...).
-         */
-        val viewer: Viewer? = null,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
         @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,

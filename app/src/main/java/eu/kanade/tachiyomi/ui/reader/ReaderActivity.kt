@@ -73,6 +73,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
@@ -82,6 +83,7 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -136,6 +138,12 @@ class ReaderActivity : BaseActivity() {
     private val windowInsetsController by lazy { WindowInsetsControllerCompat(window, window.decorView) }
 
     private var loadingIndicator: ReaderProgressIndicator? = null
+
+    /**
+     * Viewer used to display the pages (pager, webtoon, ...).
+     */
+    private val viewerFlow = MutableStateFlow<Viewer?>(null)
+    private val viewer: Viewer? inline get() = viewerFlow.value
 
     var isScrollingThroughPages = false
         private set
@@ -251,6 +259,7 @@ class ReaderActivity : BaseActivity() {
         val settingsviewModel = remember {
             ReaderSettingsViewModel(
                 readerState = viewModel.state,
+                viewerFlow = viewerFlow,
                 onChangeReadingMode = viewModel::setMangaReadingMode,
                 onChangeOrientation = viewModel::setMangaOrientationType,
                 preferences = readerPreferences,
@@ -337,7 +346,7 @@ class ReaderActivity : BaseActivity() {
      */
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.state.value.viewer?.destroy()
+        viewer?.destroy()
         config = null
         menuToggleToast?.cancel()
         readingModeToast?.cancel()
@@ -408,7 +417,7 @@ class ReaderActivity : BaseActivity() {
      * Dispatches a key event. If the viewer doesn't handle it, call the default implementation.
      */
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        val handled = viewModel.state.value.viewer?.handleKeyEvent(event) ?: false
+        val handled = viewer?.handleKeyEvent(event) ?: false
         return handled || super.dispatchKeyEvent(event)
     }
 
@@ -417,7 +426,7 @@ class ReaderActivity : BaseActivity() {
      * implementation.
      */
     override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
-        val handled = viewModel.state.value.viewer?.handleGenericMotionEvent(event) ?: false
+        val handled = viewer?.handleGenericMotionEvent(event) ?: false
         return handled || super.dispatchGenericMotionEvent(event)
     }
 
@@ -446,6 +455,7 @@ class ReaderActivity : BaseActivity() {
     @Composable
     fun AppBars(state: ReaderViewModel.State) {
         val isHttpSource = state.source is HttpSource
+        val viewer by viewerFlow.collectAsState()
 
         val cropBorderPaged by readerPreferences.cropBorders.collectAsState()
         val cropBorderWebtoon by readerPreferences.cropBordersWebtoon.collectAsState()
@@ -473,7 +483,7 @@ class ReaderActivity : BaseActivity() {
             onShare = ::shareChapter.takeIf { isHttpSource },
 
             chapterNavigatorType = if (!verticalNavigator) {
-                if (state.viewer is R2LPagerViewer || (state.viewer as? WebGpuViewer)?.isReversed ?: false) {
+                if (viewer is R2LPagerViewer || (viewer as? WebGpuViewer)?.isReversed ?: false) {
                     ChapterNavigatorType.HORIZONTAL_RTL
                 } else {
                     ChapterNavigatorType.HORIZONTAL_LTR
@@ -534,7 +544,7 @@ class ReaderActivity : BaseActivity() {
      * Called from the presenter when a manga is ready. Used to instantiate the appropriate viewer.
      */
     private fun updateViewer() {
-        val prevViewer = viewModel.state.value.viewer
+        val prevViewer = viewer
         val newViewer = ReadingMode.toViewer(viewModel.getMangaReadingMode(), this)
 
         if (window.sharedElementEnterTransition is MaterialContainerTransform) {
@@ -551,7 +561,7 @@ class ReaderActivity : BaseActivity() {
             prevViewer.destroy()
             binding.viewerContainer.removeAllViews()
         }
-        viewModel.onViewerLoaded(newViewer)
+        viewerFlow.value = newViewer
         updateViewerInset(readerPreferences.fullscreen.get(), readerPreferences.drawUnderCutout.get())
         binding.viewerContainer.addView(newViewer.getView())
 
@@ -616,7 +626,7 @@ class ReaderActivity : BaseActivity() {
     @SuppressLint("RestrictedApi")
     private fun setChapters(viewerChapters: ViewerChapters) {
         binding.readerContainer.removeView(loadingIndicator)
-        viewModel.state.value.viewer?.setChapters(viewerChapters)
+        viewer?.setChapters(viewerChapters)
 
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getChapterUrl()?.let { url ->
@@ -654,7 +664,7 @@ class ReaderActivity : BaseActivity() {
      * page is not found.
      */
     private fun moveToPageIndex(index: Int) {
-        val viewer = viewModel.state.value.viewer ?: return
+        val viewer = this.viewer ?: return
         val currentChapter = viewModel.state.value.currentChapter ?: return
         val page = currentChapter.pages?.getOrNull(index) ?: return
         viewer.moveToPage(page)
