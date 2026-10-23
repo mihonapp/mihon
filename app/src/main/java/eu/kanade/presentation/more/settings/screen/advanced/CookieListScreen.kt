@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -43,7 +47,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -83,6 +89,7 @@ import mihon.icons.materialsymbols.rounded.Add
 import mihon.icons.materialsymbols.rounded.Close
 import mihon.icons.materialsymbols.rounded.Delete
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
@@ -91,6 +98,7 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.secondaryItemAlpha
+import java.time.format.DateTimeFormatter
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
@@ -104,6 +112,7 @@ class CookieListScreen(
         val navigator = LocalNavigator.currentOrThrow
         val model = assistedMetroViewModel<CookieListViewModel, CookieListViewModel.Factory> { create(host) }
         val state by model.state.collectAsState()
+        val dateTimeFormatter = rememberDateTimeFormatter()
 
         when (val s = state) {
             is CookieListViewModel.State.Loading -> LoadingScreen()
@@ -111,6 +120,7 @@ class CookieListScreen(
                 s.dialog?.let { dialog ->
                     CookieDialog(
                         dialog = dialog,
+                        dateTimeFormatter = dateTimeFormatter,
                         onDismiss = { model.setDialog(null) },
                         onConfirm = { cookie ->
                             model.addOrUpdate(dialog, cookie)
@@ -156,6 +166,7 @@ class CookieListScreen(
                             ) {
                                 CookieItem(
                                     cookie = it,
+                                    dateTimeFormatter = dateTimeFormatter,
                                     onClick = {
                                         model.setDialog(CookieListViewModel.Dialog.from(it))
                                     },
@@ -172,24 +183,10 @@ class CookieListScreen(
     @Composable
     private fun CookieDialog(
         dialog: CookieListViewModel.Dialog,
+        dateTimeFormatter: DateTimeFormatter,
         onDismiss: () -> Unit,
         onConfirm: (Cookie) -> Unit,
     ) {
-        val context = LocalContext.current
-        val locale = LocalLocale.current
-        val uiPreferences = context.appGraph.uiPreferences
-        val dateFormat by uiPreferences.dateFormat.collectAsState()
-        val timeFormat by uiPreferences.timeFormat.collectAsState()
-        val is24HourSystem = DateFormat.is24HourFormat(context)
-        val dateTimeFormatter = remember(dateFormat, timeFormat, locale, is24HourSystem) {
-            UiPreferences.dateTimeFormat(
-                dateFormat = dateFormat,
-                timeFormat = timeFormat,
-                locale = locale.platformLocale,
-                is24HourSystem = is24HourSystem,
-            )
-        }
-
         val nameState = rememberTextFieldState(dialog.name)
         val valueState = rememberTextFieldState(dialog.value)
         val pathState = rememberTextFieldState(dialog.path)
@@ -495,6 +492,7 @@ class CookieListScreen(
     @Composable
     private fun CookieItem(
         cookie: Cookie,
+        dateTimeFormatter: DateTimeFormatter,
         onClick: () -> Unit,
         onClickDelete: () -> Unit,
     ) {
@@ -515,20 +513,31 @@ class CookieListScreen(
                 ) {
                     Text(
                         text = "${cookie.name} = ${cookie.value}",
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+
+                    val expires = cookie.expiresAt?.toTimestampString(dateTimeFormatter)
+                        ?: stringResource(MR.strings.cookie_expires_session)
+                    Text(
+                        text = "${stringResource(MR.strings.cookie_expires)} = $expires",
+                        modifier = Modifier.secondaryItemAlpha(),
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
 
                     Text(
                         text = "${stringResource(MR.strings.cookie_path)} = ${cookie.path}",
                         modifier = Modifier.secondaryItemAlpha(),
                         style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
 
-                    Text(
-                        text = cookieAttributes(cookie),
-                        modifier = Modifier.secondaryItemAlpha(),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
+                    Spacer(Modifier.height(MaterialTheme.padding.extraSmall))
+                    CookieAttributes(cookie)
                 }
 
                 IconButton(
@@ -544,14 +553,54 @@ class CookieListScreen(
     }
 
     @Composable
-    private fun cookieAttributes(cookie: Cookie): String = buildList {
-        if (cookie.hostOnly) add(stringResource(MR.strings.cookie_host_only))
-        if (cookie.secure) add(stringResource(MR.strings.cookie_secure))
-        if (cookie.httpOnly) add(stringResource(MR.strings.cookie_http_only))
-        if (cookie.sameSite != SameSite.Unspecified) {
-            add("${stringResource(MR.strings.cookie_same_site)}=${cookie.sameSite.name}")
+    private fun CookieAttributes(cookie: Cookie) {
+        val tags = buildList {
+            if (cookie.hostOnly) add(stringResource(MR.strings.cookie_host_only))
+            if (cookie.secure) add(stringResource(MR.strings.cookie_secure))
+            if (cookie.httpOnly) add(stringResource(MR.strings.cookie_http_only))
+            if (cookie.sameSite != SameSite.Unspecified) {
+                add("${stringResource(MR.strings.cookie_same_site)}=${cookie.sameSite.label()}")
+            }
         }
-    }.joinToString(" · ")
+
+        val style = MaterialTheme.typography.labelSmall
+        // line height + Pill's 1.dp vertical padding on both sides
+        val pillHeight = with(LocalDensity.current) { style.lineHeight.toDp() } + 2.dp
+
+        FlowRow(
+            modifier = Modifier
+                .offset(x = (-4).dp) // cancel Pill's start padding
+                .heightIn(min = pillHeight),
+            maxLines = 1,
+        ) {
+            tags.forEach { tag ->
+                Pill(
+                    text = tag,
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    style = style,
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun rememberDateTimeFormatter(): DateTimeFormatter {
+        val context = LocalContext.current
+        val locale = LocalLocale.current
+        val uiPreferences = context.appGraph.uiPreferences
+        val dateFormat by uiPreferences.dateFormat.collectAsState()
+        val timeFormat by uiPreferences.timeFormat.collectAsState()
+        val is24HourSystem = DateFormat.is24HourFormat(context)
+        return remember(dateFormat, timeFormat, locale, is24HourSystem) {
+            UiPreferences.dateTimeFormat(
+                dateFormat = dateFormat,
+                timeFormat = timeFormat,
+                locale = locale.platformLocale,
+                is24HourSystem = is24HourSystem,
+            )
+        }
+    }
 }
 
 @AssistedInject
