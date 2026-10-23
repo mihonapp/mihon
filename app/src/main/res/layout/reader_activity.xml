@@ -15,14 +15,6 @@
 
     </FrameLayout>
 
-    <eu.kanade.tachiyomi.ui.reader.ReaderNavigationOverlayView
-        android:id="@+id/navigation_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="false"
-        android:visibility="gone" />
-
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/compose_overlay"
         android:layout_width="match_parent"

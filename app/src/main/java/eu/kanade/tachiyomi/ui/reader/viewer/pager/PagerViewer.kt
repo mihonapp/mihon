@@ -24,11 +24,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.GeneralSettings
 import eu.kanade.tachiyomi.ui.reader.viewer.PagedSettings
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView.ZoomStartPosition
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
-import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import eu.kanade.tachiyomi.ui.reader.viewer.collectChanges
-import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
-import eu.kanade.tachiyomi.ui.reader.viewer.navigation.RightAndLeftNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.position
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -72,10 +69,6 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      */
     val general: GeneralSettings
         get() = settingsViewModel.general.value
-
-    private val forceNavigationOverlay = settingsViewModel.takeNavigationOverlayForNewUser()
-
-    private var navigator = paged.navigation.navigator(::defaultNavigation)
 
     val imageZoomType: ZoomStartPosition
         get() = paged.page.zoomStart.position(
@@ -150,7 +143,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
                 (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / pager.width,
                 (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / pager.height,
             )
-            when (navigator.getAction(pos)) {
+            when (activity.settingsViewModel.navigation.value?.getAction(pos) ?: NavigationRegion.MENU) {
                 NavigationRegion.MENU -> activity.toggleMenu()
                 NavigationRegion.NEXT -> moveToNext()
                 NavigationRegion.PREV -> moveToPrevious()
@@ -186,18 +179,6 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             if (old != null && old.page != new.page) {
                 refreshAdapter()
             }
-            if (old?.navigation != new.navigation) {
-                navigator = new.navigation.navigator(::defaultNavigation)
-                val showOnStart = general.navigationOverlayOnStart || forceNavigationOverlay
-                activity.binding.navigationOverlay.setNavigation(navigator, showOnStart)
-            }
-        }
-    }
-
-    private fun defaultNavigation(): ViewerNavigation {
-        return when (this) {
-            is VerticalPagerViewer -> LNavigation()
-            else -> RightAndLeftNavigation()
         }
     }
 

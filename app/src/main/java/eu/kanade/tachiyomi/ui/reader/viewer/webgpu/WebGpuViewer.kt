@@ -46,11 +46,8 @@ import eu.kanade.tachiyomi.ui.reader.viewer.LongStripSettings
 import eu.kanade.tachiyomi.ui.reader.viewer.PagedSettings
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView.ZoomStartPosition
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
-import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import eu.kanade.tachiyomi.ui.reader.viewer.collectChanges
-import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
-import eu.kanade.tachiyomi.ui.reader.viewer.navigation.RightAndLeftNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.position
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
@@ -301,10 +298,6 @@ open class WebGpuViewer(
      */
     val general: GeneralSettings
         get() = settingsViewModel.general.value
-
-    private val forceNavigationOverlay = settingsViewModel.takeNavigationOverlayForNewUser()
-
-    private var navigator = paged.navigation.navigator(::defaultNavigation)
 
     val imageZoomType: ZoomStartPosition
         get() = paged.page.zoomStart.position(
@@ -820,7 +813,8 @@ open class WebGpuViewer(
             }
 
             onTap = { offset ->
-                when (navigator.getAction(PointF(offset.x, offset.y))) {
+                val region = activity.settingsViewModel.navigation.value?.getAction(PointF(offset.x, offset.y))
+                when (region ?: NavigationRegion.MENU) {
                     NavigationRegion.MENU -> activity.toggleMenu()
                     NavigationRegion.NEXT -> moveToNext()
                     NavigationRegion.PREV -> moveToPrevious()
@@ -882,16 +876,7 @@ open class WebGpuViewer(
             if (old != null && old.page != new.page) {
                 onPageSettingsChanged()
             }
-            if (old?.navigation != new.navigation) {
-                navigator = new.navigation.navigator(::defaultNavigation)
-                val showOnStart = general.navigationOverlayOnStart || forceNavigationOverlay
-                activity.binding.navigationOverlay.setNavigation(navigator, showOnStart)
-            }
         }
-    }
-
-    private fun defaultNavigation(): ViewerNavigation {
-        return if (isVertical) LNavigation() else RightAndLeftNavigation()
     }
 
     /**

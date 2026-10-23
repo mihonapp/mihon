@@ -53,6 +53,8 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
 import eu.kanade.presentation.reader.OrientationSelectDialog
 import eu.kanade.presentation.reader.ReaderContentOverlay
+import eu.kanade.presentation.reader.ReaderNavigationOverlay
+import eu.kanade.presentation.reader.ReaderNavigationOverlayState
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
@@ -135,6 +137,7 @@ class ReaderActivity : BaseActivity() {
     private var menuToggleToast: Toast? = null
     private var readingModeToast: Toast? = null
     private val displayRefreshHost = DisplayRefreshHost()
+    private val navigationOverlayState = ReaderNavigationOverlayState()
 
     private val windowInsetsController by lazy { WindowInsetsControllerCompat(window, window.decorView) }
 
@@ -193,6 +196,14 @@ class ReaderActivity : BaseActivity() {
         settingsViewModel.general.collectChanges(lifecycleScope, ::applyGeneralSettings)
         settingsViewModel.brightness
             .onEach(::setCustomBrightnessValue)
+            .launchIn(lifecycleScope)
+        val forceNavigationOverlay = settingsViewModel.takeNavigationOverlayForNewUser()
+        settingsViewModel.navigation
+            .filterNotNull()
+            .onEach { navigation ->
+                val showOnStart = forceNavigationOverlay || settingsViewModel.general.value.navigationOverlayOnStart
+                navigationOverlayState.setNavigation(navigation, showOnStart)
+            }
             .launchIn(lifecycleScope)
         setMenuVisibility(viewModel.state.value.menuVisible)
 
@@ -292,6 +303,8 @@ class ReaderActivity : BaseActivity() {
             }
 
             ContentOverlay(state = state)
+
+            ReaderNavigationOverlay(state = navigationOverlayState)
 
             AppBars(state = state)
         }
@@ -429,6 +442,13 @@ class ReaderActivity : BaseActivity() {
     /**
      * Dispatches a key event. If the viewer doesn't handle it, call the default implementation.
      */
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+            navigationOverlayState.hide()
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         val handled = viewer?.handleKeyEvent(event) ?: false
         return handled || super.dispatchKeyEvent(event)
@@ -558,7 +578,9 @@ class ReaderActivity : BaseActivity() {
      */
     private fun updateViewer() {
         val prevViewer = viewer
-        val newViewer = ReadingMode.toViewer(viewModel.getMangaReadingMode(), this)
+        val readingMode = viewModel.getMangaReadingMode()
+        settingsViewModel.setViewerReadingMode(ReadingMode.fromPreference(readingMode))
+        val newViewer = ReadingMode.toViewer(readingMode, this)
 
         if (window.sharedElementEnterTransition is MaterialContainerTransform) {
             // Wait until transition is complete to avoid crash on API 26
