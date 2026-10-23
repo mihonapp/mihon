@@ -104,6 +104,31 @@ class CookieManagerScreen : Screen() {
                     )
                 }
 
+                if (s.hostToDelete != null) {
+                    val host = s.hostToDelete
+                    AlertDialog(
+                        title = { Text(stringResource(MR.strings.are_you_sure)) },
+                        text = { Text(stringResource(MR.strings.confirm_delete_host, host)) },
+                        onDismissRequest = { model.setHostToDelete(null) },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    model.deleteHost(host)
+                                },
+                            ) {
+                                Text(text = stringResource(MR.strings.action_ok))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = { model.setHostToDelete(null) },
+                            ) {
+                                Text(text = stringResource(MR.strings.action_cancel))
+                            }
+                        },
+                    )
+                }
+
                 Scaffold(
                     topBar = {
                         AppBar(
@@ -146,7 +171,7 @@ class CookieManagerScreen : Screen() {
                                         modifier = Modifier.weight(1f),
                                     )
                                     IconButton(
-                                        onClick = { model.deleteHost(host) },
+                                        onClick = { model.setHostToDelete(host) },
                                     ) {
                                         Icon(
                                             imageVector = MaterialSymbols.Rounded.Delete,
@@ -202,6 +227,11 @@ class CookieManagerViewModel(
         }
     }
 
+    fun setHostToDelete(host: String?) = state.update { state ->
+        if (state !is State.Ready) return@update state
+        state.copy(hostToDelete = host)
+    }
+
     fun deleteHost(host: String) {
         viewModelScope.launch {
             cookieRepository.deleteHost(host)
@@ -209,7 +239,7 @@ class CookieManagerViewModel(
                 if (state !is State.Ready) return@update state
 
                 val hosts = state.hosts.filterNot { it == host }
-                state.copy(hosts = hosts)
+                state.copy(hosts = hosts, hostToDelete = null)
             }
         }
     }
@@ -223,6 +253,7 @@ class CookieManagerViewModel(
         data class Ready(
             val hosts: List<String> = emptyList(),
             val showAddHostDialog: Boolean = false,
+            val hostToDelete: String? = null,
         ) : State
     }
 }

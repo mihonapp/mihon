@@ -704,6 +704,7 @@
         <!-- Cookie manager screen -->
     <string name="action_add_host">Add host</string>
     <string name="no_hosts_indexed">No hosts indexed</string>
+    <string name="confirm_delete_host">Are you sure you want to delete the host %s</string>
     <string name="action_add_cookie">Add cookie</string>
     <string name="action_edit_cookie">Edit cookie</string>
     <string name="no_cookies_indexed">No cookies indexed</string>
