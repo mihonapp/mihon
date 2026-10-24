@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.content.Context
 import android.net.Uri
-import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -937,10 +936,6 @@ class ReaderViewModel(
         mutableState.update { it.copy(dialog = null) }
     }
 
-    fun setBrightnessOverlayValue(value: Int) {
-        mutableState.update { it.copy(brightnessOverlayValue = value) }
-    }
-
     /**
      * Saves the image of the selected page on the pictures directory and notifies the UI of the result.
      * There's also a notification to allow sharing the image somewhere else or deleting it.
@@ -1105,7 +1100,6 @@ class ReaderViewModel(
         val currentPage: Int = -1,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
-        @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
