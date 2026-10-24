@@ -183,6 +183,8 @@ fun MangaCoverDialog(
         ) { contentPadding ->
             if (useNewRenderer) {
                 val state = remember(manga) { ImageViewerState() }
+                    // A tap dismisses, as on the other renderer's cover.
+                    .apply { onTap = { onDismissRequest() } }
                 LaunchedEffect(manga) {
                     val request = ImageRequest.Builder(view.context)
                         .data(manga)

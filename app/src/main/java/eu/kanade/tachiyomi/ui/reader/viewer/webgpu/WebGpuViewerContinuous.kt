@@ -40,9 +40,8 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
                 readThrough?.let { select(it) }
             }
 
-            val page0 = state.getPage(0)
-            val edge = (page0 is TransitionPage && page0.prevChapter == null) ||
-                (readThrough is TransitionPage && readThrough.nextChapter == null)
+            // Only past the last chapter, where the reader is likely to be closed, as the webtoon viewer did
+            val edge = readThrough is TransitionPage && readThrough.nextChapter == null
 
             val first = wasAtEdge == null
             val edgeChanged = edge != wasAtEdge
@@ -89,13 +88,14 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
         super.destroy()
     }
 
-    private fun scrollByHalfPage(direction: Int) {
-        state.animateScroll(direction * state.height / 2f)
+    // Three quarters of the screen, as the other long strips step.
+    private fun scrollByStep(direction: Int) {
+        state.animateScroll(direction * activity.resources.displayMetrics.heightPixels * 3 / 4f)
     }
 
-    override fun moveRight() = scrollByHalfPage(1)
+    override fun moveRight() = scrollByStep(1)
 
-    override fun moveLeft() = scrollByHalfPage(-1)
+    override fun moveLeft() = scrollByStep(-1)
 
     override fun moveToPage(page: ReaderPage) {
         super.moveToPage(page)

@@ -14,5 +14,6 @@ data class WebGpuLongStripSettings(
     data class Page(
         val continuousMinWidth: Int,
         val continuousGap: Int,
+        val sidePadding: Int,
     )
 }

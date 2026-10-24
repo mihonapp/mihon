@@ -233,6 +233,7 @@ class ReaderSettingsViewModel(
     val webgpuLongStrip = settings(
         preferences.continuousMinWidth,
         preferences.continuousGap,
+        preferences.webtoonSidePadding,
         preferences.disableDoubleTapGestures,
         preferences.imageFilters,
         preferences.tileFilters,
@@ -241,6 +242,7 @@ class ReaderSettingsViewModel(
             page = WebGpuLongStripSettings.Page(
                 continuousMinWidth = continuousMinWidth.get(),
                 continuousGap = continuousGap.get(),
+                sidePadding = webtoonSidePadding.get(),
             ),
             common = WebGpuSettings(
                 doubleTapGesturesDisabled = disableDoubleTapGestures.get(),
