@@ -31,6 +31,7 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
             when (uri.host) {
                 "anilist-auth" -> handleAniList(data["access_token"])
                 "comick-auth" -> handleComick(data["code"], data["state"])
+                "mangadex-auth" -> handleMangaDex(data["code"])
                 "bangumi-auth" -> handleBangumi(data["code"])
                 "mangabaka-auth" -> handleMangaBaka(data["code"], data["state"])
                 "myanimelist-auth" -> handleMyAnimeList(data["code"])
@@ -46,6 +47,14 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
             trackerManager.aniList.login(accessToken)
         } else {
             trackerManager.aniList.logout()
+        }
+    }
+
+    private suspend fun handleMangaDex(code: String?) {
+        if (code != null) {
+            trackerManager.mangaDex.login(code)
+        } else {
+            trackerManager.mangaDex.logout()
         }
     }
 

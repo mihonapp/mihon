@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.track.kavita.Kavita
 import eu.kanade.tachiyomi.data.track.kitsu.Kitsu
 import eu.kanade.tachiyomi.data.track.komga.Komga
 import eu.kanade.tachiyomi.data.track.mangabaka.MangaBaka
+import eu.kanade.tachiyomi.data.track.mangadex.MangaDex
 import eu.kanade.tachiyomi.data.track.mangaupdates.MangaUpdates
 import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeList
 import eu.kanade.tachiyomi.data.track.shikimori.Shikimori
@@ -33,6 +34,7 @@ class TrackerManager {
     val hikka = Hikka(10L)
     val mangaBaka = MangaBaka(11L)
     val comick = Comick(12L)
+    val mangaDex = MangaDex(13L)
 
     val trackers = listOf(
         mangaBaka,
@@ -47,6 +49,7 @@ class TrackerManager {
         suwayomi,
         hikka,
         comick,
+        mangaDex,
     )
 
     fun loggedInTrackers() = trackers.filter { it.isLoggedIn }

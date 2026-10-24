@@ -208,6 +208,7 @@
                 <!-- Comick requires native reverse-domain schemes  -->
                 <data android:scheme="app.mihon" />
                 <data android:host="comick-auth" />
+                <data android:host="mangadex-auth" />
             </intent-filter>
         </activity>
 
