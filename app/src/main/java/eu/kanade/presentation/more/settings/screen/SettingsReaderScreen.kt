@@ -6,7 +6,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.more.settings.screen.reader.ReaderTransitionAnimationScreen
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
@@ -28,6 +31,8 @@ object SettingsReaderScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val context = LocalContext.current
         val readerPref = remember { context.appGraph.readerPreferences }
+        val navigator = LocalNavigator.currentOrThrow
+        val pageTransitions by readerPref.pageTransitions.collectAsState()
 
         return listOf(
             Preference.PreferenceItem.ListPreference(
@@ -58,6 +63,12 @@ object SettingsReaderScreen : SearchableSettings {
             Preference.PreferenceItem.SwitchPreference(
                 preference = readerPref.pageTransitions,
                 title = stringResource(MR.strings.pref_page_transitions),
+            ),
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_page_transition_animation),
+                subtitle = stringResource(MR.strings.pref_page_transition_animation_summary),
+                visible = pageTransitions,
+                onClick = { navigator.push(ReaderTransitionAnimationScreen()) },
             ),
             Preference.PreferenceItem.SwitchPreference(
                 preference = readerPref.loadAheadOnlyOverWifi,
