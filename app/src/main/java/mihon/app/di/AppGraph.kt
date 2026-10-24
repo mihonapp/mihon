@@ -39,8 +39,10 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.setting.track.BaseOAuthLoginActivity
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.CrashLogUtil
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
+import mihon.core.metro.AppCoroutineScope
 import mihon.core.metro.IsDebugBuild
 import mihon.data.cache.ChapterCache
 import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
@@ -78,6 +80,9 @@ interface AppGraph : ViewModelGraph {
     fun inject(extensionInstallActivity: ExtensionInstallActivity)
 
     val context: Context
+
+    @AppCoroutineScope
+    val appScope: CoroutineScope
 
     val viewModelFactory: MetroViewModelFactory
 
