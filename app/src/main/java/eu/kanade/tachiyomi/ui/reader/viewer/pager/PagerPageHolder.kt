@@ -3,11 +3,11 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 import android.annotation.SuppressLint
 import android.content.Context
 import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageErrorView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.processPagedImage
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,7 +18,6 @@ import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import okio.Buffer
-import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 
@@ -147,7 +146,9 @@ class PagerPageHolder(
             val buffer = withContext(Dispatchers.IO) { streamFn().use { Buffer().readFrom(it) } }
             // Splitting, merging and sampling the background decode the image, which is CPU work
             val (source, isAnimated, background) = withContext(Dispatchers.Default) {
-                val source = process(item, buffer)
+                val source = viewer.simplePaged.processPagedImage(item, buffer, viewer is L2RPagerViewer) {
+                    viewer.onPageSplit(item, it)
+                }
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 val background = if (!isAnimated && viewer.general.automaticBackground) {
                     ImageUtil.chooseBackground(context, source.peek().inputStream())
@@ -179,63 +180,6 @@ class PagerPageHolder(
                 setError(e)
             }
         }
-    }
-
-    private fun process(page: ReaderPage, imageSource: BufferedSource): BufferedSource {
-        if (viewer.simplePaged.dualPageRotateToFit) {
-            return rotateDualPage(imageSource)
-        }
-
-        if (!viewer.simplePaged.dualPageSplit) {
-            return imageSource
-        }
-
-        if (page is InsertPage) {
-            return splitInHalf(imageSource)
-        }
-
-        val isDoublePage = ImageUtil.isWideImage(imageSource)
-        if (!isDoublePage) {
-            return imageSource
-        }
-
-        onPageSplit(page)
-
-        return splitInHalf(imageSource)
-    }
-
-    private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
-        val isDoublePage = ImageUtil.isWideImage(imageSource)
-        return if (isDoublePage) {
-            val rotation = if (viewer.simplePaged.dualPageRotateToFitInvert) -90f else 90f
-            ImageUtil.rotateImage(imageSource, rotation)
-        } else {
-            imageSource
-        }
-    }
-
-    private fun splitInHalf(imageSource: BufferedSource): BufferedSource {
-        var side = when {
-            viewer is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.RIGHT
-            viewer !is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.LEFT
-            viewer is L2RPagerViewer && page !is InsertPage -> ImageUtil.Side.LEFT
-            viewer !is L2RPagerViewer && page !is InsertPage -> ImageUtil.Side.RIGHT
-            else -> error("We should choose a side!")
-        }
-
-        if (viewer.simplePaged.dualPageInvert) {
-            side = when (side) {
-                ImageUtil.Side.RIGHT -> ImageUtil.Side.LEFT
-                ImageUtil.Side.LEFT -> ImageUtil.Side.RIGHT
-            }
-        }
-
-        return ImageUtil.splitInHalf(imageSource, side)
-    }
-
-    private fun onPageSplit(page: ReaderPage) {
-        val newPage = InsertPage(page)
-        viewer.onPageSplit(page, newPage)
     }
 
     /**
