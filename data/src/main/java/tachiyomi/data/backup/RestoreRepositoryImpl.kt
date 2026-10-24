@@ -81,6 +81,7 @@ class RestoreRepositoryImpl(
             } else {
                 null
             },
+            customTitle = manga.customTitle ?: dbManga.customTitle,
             title = details.title,
             artist = details.artist,
             author = details.author,
@@ -114,6 +115,7 @@ class RestoreRepositoryImpl(
             id = manga.id,
             remoteUpdateStrategy = manga.updateStrategy,
             userNotes = manga.notes,
+            userCustomTitle = manga.customTitle,
             remoteMemo = manga.memo,
         )
         return manga

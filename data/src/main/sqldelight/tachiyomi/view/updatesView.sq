@@ -3,7 +3,7 @@ import kotlin.Int;
 CREATE VIEW updatesView AS
 SELECT
     manga.id AS mangaId,
-    manga.remote_title AS mangaTitle,
+    COALESCE(NULLIF(TRIM(manga.user_custom_title), ''), manga.remote_title) AS mangaTitle,
     chapter.id AS chapterId,
     chapter.remote_name AS chapterName,
     chapter.remote_scanlator AS scanlator,
