@@ -263,23 +263,24 @@ class ReaderActivity : BaseActivity() {
                 AppBars(state = state)
             }
 
+            if (state.isLoadingAdjacentChapter) {
+                AlertDialog(
+                    onDismissRequest = {},
+                    confirmButton = {},
+                    text = {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            CircularProgressIndicator()
+                            Text(stringResource(MR.strings.loading))
+                        }
+                    },
+                )
+            }
+
             val onDismissRequest = viewModel::closeDialog
             when (state.dialog) {
-                is ReaderViewModel.Dialog.Loading -> {
-                    AlertDialog(
-                        onDismissRequest = {},
-                        confirmButton = {},
-                        text = {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                CircularProgressIndicator()
-                                Text(stringResource(MR.strings.loading))
-                            }
-                        },
-                    )
-                }
                 is ReaderViewModel.Dialog.Settings -> {
                     ReaderSettingsDialog(
                         onDismissRequest = onDismissRequest,
@@ -346,12 +347,6 @@ class ReaderActivity : BaseActivity() {
             .distinctUntilChanged()
             .filterNotNull()
             .onEach(::setInitialChapterError)
-            .launchIn(lifecycleScope)
-
-        viewModel.state
-            .map { it.isLoadingAdjacentChapter }
-            .distinctUntilChanged()
-            .onEach(::setProgressDialog)
             .launchIn(lifecycleScope)
 
         viewModel.state
@@ -719,20 +714,6 @@ class ReaderActivity : BaseActivity() {
         logcat(LogPriority.ERROR, error)
         finish()
         toast(error.message)
-    }
-
-    /**
-     * Called from the presenter whenever it's loading the next or previous chapter. It shows or
-     * dismisses a non-cancellable dialog to prevent user interaction according to the value of
-     * [show]. This is only used when the next/previous buttons on the toolbar are clicked; the
-     * other cases are handled with chapter transitions on the viewers and chapter preloading.
-     */
-    private fun setProgressDialog(show: Boolean) {
-        if (show) {
-            viewModel.showLoadingDialog()
-        } else {
-            viewModel.closeDialog()
-        }
     }
 
     /**
