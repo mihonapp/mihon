@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageErrorView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
+import eu.kanade.tachiyomi.ui.reader.viewer.processStripImage
 import eu.kanade.tachiyomi.util.system.dpToPx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,7 +24,6 @@ import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import okio.Buffer
-import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 
@@ -186,7 +186,7 @@ class WebtoonPageHolder(
             val buffer = withContext(Dispatchers.IO) { streamFn().use { Buffer().readFrom(it) } }
             // Splitting and merging decode the image, which is CPU work
             val (source, isAnimated) = withContext(Dispatchers.Default) {
-                val source = process(buffer)
+                val source = viewer.simpleLongStrip.page.processStripImage(buffer)
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
                 Pair(source, isAnimated)
             }
@@ -207,36 +207,6 @@ class WebtoonPageHolder(
             withContext(Dispatchers.Main) {
                 setError(e)
             }
-        }
-    }
-
-    private fun process(imageSource: BufferedSource): BufferedSource {
-        if (viewer.simpleLongStrip.page.dualPageRotateToFit) {
-            return rotateDualPage(imageSource)
-        }
-
-        if (viewer.simpleLongStrip.page.dualPageSplit) {
-            val isDoublePage = ImageUtil.isWideImage(imageSource)
-            if (isDoublePage) {
-                val upperSide = if (viewer.simpleLongStrip.page.dualPageInvert) {
-                    ImageUtil.Side.LEFT
-                } else {
-                    ImageUtil.Side.RIGHT
-                }
-                return ImageUtil.splitAndMerge(imageSource, upperSide)
-            }
-        }
-
-        return imageSource
-    }
-
-    private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
-        val isDoublePage = ImageUtil.isWideImage(imageSource)
-        return if (isDoublePage) {
-            val rotation = if (viewer.simpleLongStrip.page.dualPageRotateToFitInvert) -90f else 90f
-            ImageUtil.rotateImage(imageSource, rotation)
-        } else {
-            imageSource
         }
     }
 
