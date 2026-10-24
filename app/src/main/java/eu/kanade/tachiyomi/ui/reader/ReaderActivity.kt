@@ -196,12 +196,15 @@ class ReaderActivity : BaseActivity() {
             val colorOverlayEnabled by readerPreferences.colorFilter.collectAsState()
             val colorOverlay by readerPreferences.colorFilterValue.collectAsState()
             val colorOverlayMode by readerPreferences.colorFilterMode.collectAsState()
+            val brightness by settingsViewModel.brightness.collectAsState()
             val navigation = settingsViewModel.navigation.collectAsState().value
 
             val backgroundColor = remember(general.theme) { Color(baseContext.readerBackgroundColor(general.theme)) }
             val colorOverlayBlendMode = remember(colorOverlayMode) {
                 ReaderPreferences.ColorFilterMode.getOrNull(colorOverlayMode)?.second
             }
+
+            LaunchedEffect(brightness) { setWindowBrightness(brightness) }
 
             val forceNavigationOverlay = remember { settingsViewModel.takeNavigationOverlayForNewUser() }
             LaunchedEffect(navigation) {
@@ -236,7 +239,7 @@ class ReaderActivity : BaseActivity() {
                 }
 
                 ReaderContentOverlay(
-                    brightness = state.brightnessOverlayValue,
+                    brightness = brightness,
                     color = colorOverlay.takeIf { colorOverlayEnabled },
                     colorBlendMode = colorOverlayBlendMode,
                 )
@@ -330,9 +333,6 @@ class ReaderActivity : BaseActivity() {
             Notifications.ID_NEW_CHAPTERS,
         )
 
-        settingsViewModel.brightness
-            .onEach(::setCustomBrightnessValue)
-            .launchIn(lifecycleScope)
         setMenuVisibility(viewModel.state.value.menuVisible)
 
         // Finish when incognito mode is disabled
@@ -880,11 +880,11 @@ class ReaderActivity : BaseActivity() {
 
     /**
      * Sets the brightness of the screen. Range is [-75, 100].
-     * From -75 to -1 a semi-transparent black view is overlaid with the minimum brightness.
+     * From -75 to -1 the minimum brightness is used, and the overlay darkens further.
      * From 1 to 100 it sets that value as brightness.
-     * 0 sets system brightness and hides the overlay.
+     * 0 sets system brightness.
      */
-    private fun setCustomBrightnessValue(value: Int) {
+    private fun setWindowBrightness(value: Int) {
         // Calculate and set reader brightness.
         val readerBrightness = when {
             value > 0 -> {
@@ -896,8 +896,6 @@ class ReaderActivity : BaseActivity() {
             else -> WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
         }
         window.attributes = window.attributes.apply { screenBrightness = readerBrightness }
-
-        viewModel.setBrightnessOverlayValue(value)
     }
 }
 
