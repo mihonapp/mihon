@@ -196,10 +196,18 @@ class ReaderActivity : BaseActivity() {
             val colorOverlayEnabled by readerPreferences.colorFilter.collectAsState()
             val colorOverlay by readerPreferences.colorFilterValue.collectAsState()
             val colorOverlayMode by readerPreferences.colorFilterMode.collectAsState()
+            val navigation = settingsViewModel.navigation.collectAsState().value
 
             val backgroundColor = remember(general.theme) { Color(baseContext.readerBackgroundColor(general.theme)) }
             val colorOverlayBlendMode = remember(colorOverlayMode) {
                 ReaderPreferences.ColorFilterMode.getOrNull(colorOverlayMode)?.second
+            }
+
+            val forceNavigationOverlay = remember { settingsViewModel.takeNavigationOverlayForNewUser() }
+            LaunchedEffect(navigation) {
+                if (navigation == null) return@LaunchedEffect
+                val showOnStart = forceNavigationOverlay || settingsViewModel.general.value.navigationOverlayOnStart
+                navigationOverlayState.setNavigation(navigation, showOnStart)
             }
 
             val focusRequester = remember { FocusRequester() }
@@ -324,14 +332,6 @@ class ReaderActivity : BaseActivity() {
 
         settingsViewModel.brightness
             .onEach(::setCustomBrightnessValue)
-            .launchIn(lifecycleScope)
-        val forceNavigationOverlay = settingsViewModel.takeNavigationOverlayForNewUser()
-        settingsViewModel.navigation
-            .filterNotNull()
-            .onEach { navigation ->
-                val showOnStart = forceNavigationOverlay || settingsViewModel.general.value.navigationOverlayOnStart
-                navigationOverlayState.setNavigation(navigation, showOnStart)
-            }
             .launchIn(lifecycleScope)
         setMenuVisibility(viewModel.state.value.menuVisible)
 
