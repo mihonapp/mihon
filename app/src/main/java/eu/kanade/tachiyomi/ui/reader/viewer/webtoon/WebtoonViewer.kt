@@ -1,12 +1,16 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
+import android.graphics.ColorFilter
 import android.graphics.PointF
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asAndroidColorFilter
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
@@ -18,7 +22,9 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.GeneralSettings
+import eu.kanade.tachiyomi.ui.reader.viewer.LocalPageColorFilter
 import eu.kanade.tachiyomi.ui.reader.viewer.LongStripSettings
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import eu.kanade.tachiyomi.ui.reader.viewer.collectChanges
@@ -26,6 +32,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import mihon.app.di.appGraph
 import tachiyomi.core.common.util.system.logcat
+import java.util.Collections
+import java.util.WeakHashMap
 import kotlin.math.max
 import kotlin.math.min
 
@@ -203,8 +211,25 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         }
     }
 
+    /** The page images' colours, for pages bound later - see [LocalPageColorFilter]. */
+    var pageColorFilter: ColorFilter? = null
+        private set
+
+    /** Every page view made, as the recycler's cached ones are neither children nor always bound again. */
+    private val pageViews = Collections.newSetFromMap(WeakHashMap<ReaderPageImageView, Boolean>())
+
+    fun onPageViewCreated(view: ReaderPageImageView) {
+        pageViews += view
+    }
+
     @Composable
     override fun Content(modifier: Modifier) {
+        val filter = LocalPageColorFilter.current
+        val pageFilter = remember(filter) { filter?.asAndroidColorFilter() }
+        SideEffect {
+            pageColorFilter = pageFilter
+            pageViews.forEach { it.pageColorFilter = pageFilter }
+        }
         AndroidView(factory = { frame }, modifier = modifier)
     }
 

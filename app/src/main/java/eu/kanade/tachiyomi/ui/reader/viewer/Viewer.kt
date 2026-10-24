@@ -3,7 +3,9 @@ package eu.kanade.tachiyomi.ui.reader.viewer
 import android.view.KeyEvent
 import android.view.MotionEvent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 
@@ -45,3 +47,9 @@ interface Viewer {
      */
     fun handleGenericMotionEvent(event: MotionEvent): Boolean
 }
+
+/**
+ * The reader's grayscale and inverted colours, for page images only: transition, loading and error pages keep
+ * theirs. Null when both are off.
+ */
+val LocalPageColorFilter = compositionLocalOf<ColorFilter?> { null }
