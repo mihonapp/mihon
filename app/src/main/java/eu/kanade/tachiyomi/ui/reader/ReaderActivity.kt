@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.PointF
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -42,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
@@ -535,7 +535,7 @@ class ReaderActivity : BaseActivity() {
     /**
      * Called from the viewer when it's tapped at [pos], given as a fraction of its size.
      */
-    fun onViewerTap(pos: PointF) {
+    fun onViewerTap(pos: Offset) {
         val action = settingsViewModel.navigation.value?.getAction(pos) ?: Action.MENU
         when (action) {
             Action.MENU -> toggleMenu()
