@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
 import android.content.Context
 import android.graphics.ColorFilter
-import android.graphics.PointF
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.widget.FrameLayout
@@ -10,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asAndroidColorFilter
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.children
@@ -143,7 +143,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             pager.getLocationOnScreen(viewPosition)
             val viewPositionRelativeToWindow = IntArray(2)
             pager.getLocationInWindow(viewPositionRelativeToWindow)
-            val pos = PointF(
+            val pos = Offset(
                 (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / pager.width,
                 (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / pager.height,
             )

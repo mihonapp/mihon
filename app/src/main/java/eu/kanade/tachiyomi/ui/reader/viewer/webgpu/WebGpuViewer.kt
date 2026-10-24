@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
 import android.content.Context
-import android.graphics.PointF
 import android.graphics.Rect
 import android.os.SystemClock
 import androidx.compose.runtime.Composable
@@ -810,7 +809,7 @@ open class WebGpuViewer(
             }
 
             onTap = { offset ->
-                activity.onViewerTap(PointF(offset.x, offset.y))
+                activity.onViewerTap(offset)
             }
 
             onLongTap = { _ ->

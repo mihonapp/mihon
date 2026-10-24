@@ -49,10 +49,10 @@ fun ReaderNavigationOverlay(
 
         Canvas(modifier = Modifier.fillMaxSize()) {
             regions.forEachIndexed { index, region ->
-                val rect = region.rectF
+                val rect = region.rect
                 val topLeft = Offset(size.width * rect.left, size.height * rect.top)
-                val regionSize = Size(size.width * rect.width(), size.height * rect.height())
-                drawRect(color = Color(region.type.color), topLeft = topLeft, size = regionSize)
+                val regionSize = Size(size.width * rect.width, size.height * rect.height)
+                drawRect(color = region.type.color, topLeft = topLeft, size = regionSize)
 
                 val text = textMeasurer.measure(labels[index], textStyle)
                 val textTopLeft = Offset(

@@ -1,13 +1,13 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.graphics.ColorFilter
-import android.graphics.PointF
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asAndroidColorFilter
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
@@ -136,7 +136,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             recycler.getLocationOnScreen(viewPosition)
             val viewPositionRelativeToWindow = IntArray(2)
             recycler.getLocationInWindow(viewPositionRelativeToWindow)
-            val pos = PointF(
+            val pos = Offset(
                 (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / recycler.width,
                 (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / recycler.originalHeight,
             )
