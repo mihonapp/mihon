@@ -8,7 +8,16 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.lang.invert
 import tachiyomi.i18n.MR
 
-abstract class ViewerNavigation(val invertMode: ReaderPreferences.TappingInvertMode) {
+/**
+ * Tap zones of a viewer. [isReversed] is set for right to left books, where the right side of the
+ * screen goes back.
+ */
+abstract class ViewerNavigation(
+    val invertMode: ReaderPreferences.TappingInvertMode,
+    val isReversed: Boolean,
+) {
+
+    enum class Action { MENU, FORWARD, BACKWARD }
 
     sealed class NavigationRegion(val nameRes: StringResource, val color: Int) {
         data object MENU : NavigationRegion(MR.strings.action_menu, Color.argb(0xCC, 0x95, 0x81, 0x8D))
@@ -39,19 +48,30 @@ abstract class ViewerNavigation(val invertMode: ReaderPreferences.TappingInvertM
         return regionList.map { it.invert(invertMode) }
     }
 
-    fun getAction(pos: PointF): NavigationRegion {
+    fun getAction(pos: PointF): Action {
         val x = pos.x
         val y = pos.y
         val region = getRegions().find { it.rectF.contains(x, y) }
         return when {
-            region != null -> region.type
-            constantMenuRegion.contains(x, y) -> NavigationRegion.MENU
-            else -> NavigationRegion.MENU
+            region != null -> actionOf(region.type)
+            constantMenuRegion.contains(x, y) -> Action.MENU
+            else -> Action.MENU
         }
     }
 
-    override fun equals(other: Any?): Boolean =
-        other is ViewerNavigation && other.javaClass == javaClass && other.invertMode == invertMode
+    fun actionOf(region: NavigationRegion): Action = when (region) {
+        NavigationRegion.MENU -> Action.MENU
+        NavigationRegion.NEXT -> Action.FORWARD
+        NavigationRegion.PREV -> Action.BACKWARD
+        NavigationRegion.RIGHT -> if (isReversed) Action.BACKWARD else Action.FORWARD
+        NavigationRegion.LEFT -> if (isReversed) Action.FORWARD else Action.BACKWARD
+    }
 
-    override fun hashCode(): Int = 31 * javaClass.hashCode() + invertMode.hashCode()
+    override fun equals(other: Any?): Boolean =
+        other is ViewerNavigation &&
+            other.javaClass == javaClass &&
+            other.invertMode == invertMode &&
+            other.isReversed == isReversed
+
+    override fun hashCode(): Int = (31 * javaClass.hashCode() + invertMode.hashCode()) * 31 + isReversed.hashCode()
 }

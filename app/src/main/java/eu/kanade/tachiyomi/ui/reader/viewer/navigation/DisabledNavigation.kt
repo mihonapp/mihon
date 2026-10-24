@@ -13,7 +13,10 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
  * | M | M | M |   N: Next
  * +---+---+---+
 */
-class DisabledNavigation(invertMode: TappingInvertMode) : ViewerNavigation(invertMode) {
+class DisabledNavigation(
+    invertMode: TappingInvertMode,
+    isReversed: Boolean,
+) : ViewerNavigation(invertMode, isReversed) {
 
     override val regionList: List<Region> = emptyList()
 }

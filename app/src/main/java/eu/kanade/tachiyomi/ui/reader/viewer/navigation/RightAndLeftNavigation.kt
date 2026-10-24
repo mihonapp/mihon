@@ -14,7 +14,10 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
  * | N | M | P |   N: Move Left
  * +---+---+---+
  */
-class RightAndLeftNavigation(invertMode: TappingInvertMode) : ViewerNavigation(invertMode) {
+class RightAndLeftNavigation(
+    invertMode: TappingInvertMode,
+    isReversed: Boolean,
+) : ViewerNavigation(invertMode, isReversed) {
 
     override val regionList: List<Region> = listOf(
         Region(

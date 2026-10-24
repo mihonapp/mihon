@@ -14,7 +14,10 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
  * | P | N | N |   N: Next
  * +---+---+---+
 */
-class KindlishNavigation(invertMode: TappingInvertMode) : ViewerNavigation(invertMode) {
+class KindlishNavigation(
+    invertMode: TappingInvertMode,
+    isReversed: Boolean,
+) : ViewerNavigation(invertMode, isReversed) {
 
     override val regionList: List<Region> = listOf(
         Region(

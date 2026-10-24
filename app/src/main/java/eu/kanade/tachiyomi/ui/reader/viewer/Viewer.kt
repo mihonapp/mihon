@@ -1,11 +1,12 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
-import android.view.KeyEvent
-import android.view.MotionEvent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 
@@ -36,16 +37,14 @@ interface Viewer {
     fun moveToPage(page: ReaderPage)
 
     /**
-     * Called from the containing activity when a key [event] is received. It should return true
-     * if the event was handled, false otherwise.
+     * Moves forward through the pages.
      */
-    fun handleKeyEvent(event: KeyEvent): Boolean
+    fun moveForward()
 
     /**
-     * Called from the containing activity when a generic motion [event] is received. It should
-     * return true if the event was handled, false otherwise.
+     * Moves backward through the pages.
      */
-    fun handleGenericMotionEvent(event: MotionEvent): Boolean
+    fun moveBackward()
 }
 
 /**
@@ -53,3 +52,22 @@ interface Viewer {
  * theirs. Null when both are off.
  */
 val LocalPageColorFilter = compositionLocalOf<ColorFilter?> { null }
+
+/**
+ * Turns pages with the mouse wheel instead of letting the content scroll.
+ */
+fun Modifier.mouseWheelPaging(viewer: Viewer): Modifier = pointerInput(viewer) {
+    awaitPointerEventScope {
+        while (true) {
+            val event = awaitPointerEvent(PointerEventPass.Initial)
+            if (event.type != PointerEventType.Scroll) continue
+            val delta = event.changes.first().scrollDelta.y
+            when {
+                delta > 0 -> viewer.moveForward()
+                delta < 0 -> viewer.moveBackward()
+                else -> continue
+            }
+            event.changes.forEach { it.consume() }
+        }
+    }
+}
