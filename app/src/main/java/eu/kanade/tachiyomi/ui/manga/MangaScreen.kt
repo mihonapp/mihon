@@ -27,6 +27,7 @@ import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
+import eu.kanade.presentation.manga.components.HiddenChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
@@ -164,6 +165,7 @@ fun MangaScreen(
             navigator.push(MigrationConfigRoute(successState.manga.id))
         }.takeIf { successState.manga.favorite },
         onEditNotesClicked = { navigator.push(MangaNotesRoute(mangaId = successState.manga.id)) },
+        onHiddenChaptersClicked = viewModel::showHiddenChapters,
         onMultiHideClicked = viewModel::hideChapters,
         onMultiBookmarkClicked = viewModel::bookmarkChapters,
         onMultiMarkAsReadClicked = viewModel::markChaptersRead,
@@ -228,6 +230,13 @@ fun MangaScreen(
                 onDismissRequest = onDismissRequest,
             )
         }
+        MangaViewModel.Dialog.HiddenChapters -> HiddenChaptersDialog(
+            manga = successState.manga,
+            chapters = successState.hiddenChapters,
+            snackbarHostState = viewModel.snackbarHostState,
+            onDismissRequest = onDismissRequest,
+            onUnhide = { viewModel.hideChapters(it, false) },
+        )
         MangaViewModel.Dialog.SettingsSheet -> ChapterSettingsDialog(
             onDismissRequest = onDismissRequest,
             manga = successState.manga,
