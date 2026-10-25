@@ -164,6 +164,12 @@ class ChapterRepositoryImpl(
             .subscribeToList()
     }
 
+    override fun getHiddenChaptersByMangaIdAsFlow(mangaId: Long): Flow<List<Chapter>> {
+        return database.chapterQueries
+            .getHiddenChaptersByMangaId(mangaId, ::mapChapter)
+            .subscribeToList()
+    }
+
     override suspend fun getChapterByUrlAndMangaId(url: String, mangaId: Long): Chapter? {
         return database.chapterQueries
             .getChapterByUrlAndMangaId(mangaId = mangaId, remoteUrl = url, mapper = ::mapChapter)

@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.ContentResolver
 import android.content.Context
-import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -24,7 +23,6 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.i18n.MR
-import java.io.File
 import java.io.IOException
 
 /**
@@ -151,25 +149,33 @@ class DownloadProvider(
         root.requireReadableDirectory()
         val sourceName = getSourceDirName(source)
         val mangaName = getMangaDirName(manga.title)
-        val targetDir = root.findReadableDirectory(sourceName)?.findReadableDirectory(mangaName)
-            ?: return@withContext emptySet()
+        val sourceDir = root.findReadableDirectory(sourceName) ?: return@withContext emptySet()
+        val targetDir = sourceDir.findReadableDirectory(mangaName) ?: return@withContext emptySet()
         val targetIdentity = targetDir.directoryIdentity()
+        val sourceDirectories = mutableMapOf<String, UniFile?>(sourceName to sourceDir)
         candidates.mapNotNullTo(HashSet()) { (candidate, candidateSource) ->
             val candidateSourceName = getSourceDirName(candidateSource)
             val candidateMangaName = getMangaDirName(candidate.title)
-            val directory = root.findReadableDirectory(candidateSourceName)?.findReadableDirectory(candidateMangaName)
             val sameNames = sourceName.equals(candidateSourceName, ignoreCase = true) &&
                 mangaName.equals(candidateMangaName, ignoreCase = true)
-            candidate.id.takeIf { sameNames || directory?.directoryIdentity() == targetIdentity }
-        }
+            if (sameNames) return@mapNotNullTo candidate.id
+
+            // Cache absent sources too. Resolve aliases before requiring unrelated directories to be readable.
+            if (candidateSourceName !in sourceDirectories) {
+                sourceDirectories[candidateSourceName] = root.findDirectoryForOwnership(candidateSourceName)
+            }
+            val directory = sourceDirectories[candidateSourceName]?.findDirectoryForOwnership(candidateMangaName)
+            if (directory == null || directory.directoryIdentity() != targetIdentity) return@mapNotNullTo null
+            directory.requireReadableDirectory()
+            candidate.id
+        }.also { root.requireReadableDirectory() }
     }
 
-    private fun UniFile.directoryIdentity() = uri.let {
-        if (it.scheme == ContentResolver.SCHEME_FILE) {
-            File(it.path ?: throw IOException("Download storage path is unavailable")).canonicalFile.toUri()
-        } else {
-            it
-        }
+    private fun UniFile.findDirectoryForOwnership(name: String): UniFile? {
+        val child = findFile(name)
+        // An unreadable parent cannot establish absence: it could conceal an alias of the target.
+        if (child == null) requireReadableDirectory()
+        return child
     }
 
     /**
@@ -205,20 +211,6 @@ class DownloadProvider(
     private fun Chapter.hidePathNames(): Sequence<String> =
         getValidChapterDirNames(name, scanlator, url).asSequence()
             .flatMap { sequenceOf(it, it + Downloader.TMP_DIR_SUFFIX) }
-
-    private fun UniFile.requireReadableDirectory() {
-        if (!exists() || !isDirectory || !canRead()) {
-            throw IOException("Download storage directory is unavailable")
-        }
-    }
-
-    private fun UniFile.findReadableDirectory(name: String): UniFile? {
-        val child = findFile(name)
-        // A failed lookup must not turn a newly inaccessible parent into an absent child.
-        requireReadableDirectory()
-        child?.requireReadableDirectory()
-        return child
-    }
 
     /**
      * Returns the ids of the chapters whose download directory exists.

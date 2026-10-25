@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.drop
@@ -297,22 +298,32 @@ class DownloadManager(
                 source,
                 allManga.filterNot { it.isLocal() }.map { it to sources.getValue(it.source) },
             )
-            val directoryChapters = mangaChapters + owners.filter { it != manga.id }.flatMap {
-                chapterRepository.getChapterByMangaId(it)
+            val otherOwners = owners.filter { it != manga.id }
+            val directoryChapters = mangaChapters + if (otherOwners.isEmpty()) {
+                emptyList()
+            } else {
+                chapterRepository.getChaptersByMangaIds(otherOwners).values.flatten()
             }
             // Protected selections remain owners of their completed and unfinished download names.
             val paths = provider.findChapterPathsForHide(chaptersToDelete, directoryChapters, currentManga, source)
+            val directoryOwners = allManga.filter { it.id == currentManga.id || it.id in owners }
             var failed = false
+            var deletionFailure: Exception? = null
             try {
                 paths.forEach { if (!it.delete()) failed = true }
                 if (failed) throw IOException("Failed to remove hidden chapter downloads")
             } catch (e: Exception) {
-                // A partial failure must not clear the cached state of files still present.
-                cache.invalidateCache()
-                throw e
+                deletionFailure = e
             }
-            // Shared legacy names may still exist for siblings; rebuild from disk instead of clearing their entries.
-            cache.invalidateCache()
+            // Finish the affected cache refresh even if navigation cancels this hide after files were removed.
+            withContext(NonCancellable) {
+                try {
+                    cache.refreshMangaDirectories(directoryOwners)
+                } catch (e: Exception) {
+                    deletionFailure?.addSuppressed(e) ?: throw e
+                }
+            }
+            deletionFailure?.let { throw it }
         }
     }
 

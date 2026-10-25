@@ -49,6 +49,15 @@ AND (
     OR ES.scanlator IS NULL
 );
 
+getHiddenChaptersByMangaId:
+SELECT
+    id, manga_id, remote_url, remote_name, remote_scanlator, remote_chapter_number,
+    remote_date_upload, remote_order, remote_memo, user_read, user_bookmark,
+    user_last_page_read, state_date_fetch, user_hidden
+FROM chapter
+WHERE manga_id = :mangaId
+AND user_hidden;
+
 getChaptersByMangaIds:
 -- The unique index's order, which getChaptersByMangaId returns too, so backups keep their chapter order
 SELECT

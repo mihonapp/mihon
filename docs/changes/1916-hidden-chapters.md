@@ -100,7 +100,7 @@ Native review flow:
 
 Verified locally on 25 October 2026 using JDK 21 and Android SDK 37.2:
 
-- 103 domain tests and 130 app tests passed, with no skips or failures.
+- 103 domain tests and 157 app tests passed, with no skips or failures.
 - SQLDelight debug/release migration verification and repository formatting checks passed.
 - Debug APK assembled successfully. The list-visibility update reran all app/domain
   tests, formatting, migration verification and APK assembly.
@@ -129,6 +129,34 @@ target files without unhiding or changing progress/bookmarks.
 Native verification used no extension network requests. Physical devices,
 remote extension network behavior and a full manual backup import were not
 exercised; protobuf compatibility is covered by automated tests.
+
+## Performance and code quality
+
+A review of this PR identified seven distinct avoidable costs or integration issues.
+The fixes remain scoped to the Hide feature and its direct dependencies:
+
+- Recovery uses a hidden-only chapter query instead of a second full manga/chapter subscription.
+- Ownership scans resolve each source directory once, including absent sources; resolved unrelated
+  directories need not be readable, while unresolved ownership still fails closed.
+- Other directory owners use the existing unfiltered batch chapter query.
+- Header and separator gap calculations share indexed normalized chapter numbers.
+  Binary-search bounds count known numbers in each separator interval, avoiding
+  overlapping linear range walks when sorting by source order.
+- Hide refreshes the affected physical download directory and its cached aliases instead of
+  rebuilding the entire download cache. Empty/absent downloads still clear stale cached entries,
+  and protected or partially undeleted files remain represented accurately.
+- Provider and cache share directory-validation and identity helpers. Refresh completes after
+  file deletion even if navigation cancels the Hide action, and secondary refresh errors do not
+  replace the original deletion failure.
+
+The final suite passed 103 domain and 157 app tests, migration verification, formatting
+and APK assembly. Regression checks include lookup counts, batch ownership including
+owners without chapters, filter-independent live recovery, cache aliases, stale entries,
+partial failures, initialization/renewal races, cancellation and bounded separator reads
+for source-order sorting. Independent final Standards and Spec reviews found no remaining
+issues in the repaired scope. Native follow-up verified live Unhide/Hide, genuine missing
+chapter 6 and retention of chapter 4’s downloaded indicator. These establish removed
+work and preserved behavior; no end-to-end latency benchmark was performed.
 
 ## Native screenshots
 
