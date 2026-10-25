@@ -28,7 +28,6 @@ fun TabText(text: String, badgeCount: Int? = null) {
         )
         if (badgeCount != null) {
             Pill(
-                modifier = Modifier.padding(start = 4.dp),
                 text = "$badgeCount",
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = pillAlpha),
                 fontSize = 10.sp,
