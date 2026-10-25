@@ -56,6 +56,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.app.di.appGraph
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.util.system.logcat
@@ -227,6 +228,7 @@ class MangaScreen(
             MangaViewModel.Dialog.SettingsSheet -> ChapterSettingsDialog(
                 onDismissRequest = onDismissRequest,
                 manga = successState.manga,
+                downloadedOnly = successState.downloadedOnly,
                 onDownloadFilterChanged = viewModel::setDownloadedFilter,
                 onUnreadFilterChanged = viewModel::setUnreadFilter,
                 onBookmarkedFilterChanged = viewModel::setBookmarkedFilter,
@@ -262,7 +264,7 @@ class MangaScreen(
                     MangaCoverDialog(
                         manga = manga!!,
                         snackbarHostState = vm.snackbarHostState,
-                        isCustomCover = remember(manga) { manga!!.hasCustomCover() },
+                        isCustomCover = remember(manga) { manga!!.hasCustomCover(context.appGraph.coverCache) },
                         onShareClick = { vm.shareCover(context) },
                         onSaveClick = { vm.saveCover(context) },
                         onEditClick = {
