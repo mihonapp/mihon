@@ -9,6 +9,8 @@ import tachiyomi.domain.manga.model.MangaWithChapterCount
 
 interface MangaRepository {
 
+    suspend fun getAll(): List<Manga>
+
     suspend fun getMangaById(id: Long): Manga
 
     fun getMangaByIdAsFlow(id: Long): Flow<Manga>

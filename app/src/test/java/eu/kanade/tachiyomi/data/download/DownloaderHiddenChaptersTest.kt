@@ -9,8 +9,11 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -18,6 +21,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.withContext
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import tachiyomi.domain.chapter.interactor.GetChapter
@@ -91,6 +95,39 @@ class DownloaderHiddenChaptersTest {
         fixture.completed.status shouldBe Download.State.DOWNLOADED
         coVerify(exactly = 1) { fixture.provider.getMangaDir(any(), fixture.source) }
         verify(exactly = 0) { fixture.store.remove(queued) }
+    }
+
+    @Test
+    fun `hide dequeue waits for canceled writes and retains unrelated completed download`() = runTest(
+        timeout = 10.seconds,
+    ) {
+        val fixture = fixture()
+        val target = fixture.downloader.queueState.first { it.size == 2 }.first()
+        fixture.completed.status = Download.State.DOWNLOADED
+        val writing = CompletableDeferred<Unit>()
+        val finishWrite = CompletableDeferred<Unit>()
+        coEvery { fixture.provider.getMangaDir(any(), any()) } coAnswers {
+            withContext(NonCancellable) {
+                writing.complete(Unit)
+                finishWrite.await()
+            }
+            Result.failure(IllegalStateException("writer finished"))
+        }
+        fixture.downloader.start()
+        writing.await()
+        fixture.currentChapter = target.chapter.copy(hidden = true)
+
+        val cleanup = async(start = CoroutineStart.UNDISPATCHED) {
+            fixture.downloader.dequeueAndAwait(listOf(target.chapter))
+        }
+        cleanup.isCompleted shouldBe false
+        fixture.downloader.queueState.value shouldBe listOf(fixture.completed)
+        finishWrite.complete(Unit)
+        cleanup.await()
+
+        fixture.downloader.queueState.value shouldBe listOf(fixture.completed)
+        fixture.completed.status shouldBe Download.State.DOWNLOADED
+        verify(exactly = 0) { fixture.store.remove(fixture.completed) }
     }
 
     private fun TestScope.fixture(): Fixture {

@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.ContentResolver
 import android.content.Context
+import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -23,6 +24,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.i18n.MR
+import java.io.File
 import java.io.IOException
 
 /**
@@ -137,6 +139,85 @@ class DownloadProvider(
     ): Pair<UniFile?, List<UniFile>> = withContext(Dispatchers.IO) {
         val mangaDir = findMangaDir(manga.title, source) ?: return@withContext null to emptyList()
         mangaDir to findChapterDirs(chapters, mangaDir).values.toList()
+    }
+
+    /** Resolve ownership by storage identity, including colliding source names and sanitized manga titles. */
+    suspend fun findMangaIdsSharingDownloadDirectory(
+        manga: Manga,
+        source: Source,
+        candidates: List<Pair<Manga, Source>>,
+    ): Set<Long> = withContext(Dispatchers.IO) {
+        val root = downloadsDir ?: throw IOException("Download storage is unavailable")
+        root.requireReadableDirectory()
+        val sourceName = getSourceDirName(source)
+        val mangaName = getMangaDirName(manga.title)
+        val targetDir = root.findReadableDirectory(sourceName)?.findReadableDirectory(mangaName)
+            ?: return@withContext emptySet()
+        val targetIdentity = targetDir.directoryIdentity()
+        candidates.mapNotNullTo(HashSet()) { (candidate, candidateSource) ->
+            val candidateSourceName = getSourceDirName(candidateSource)
+            val candidateMangaName = getMangaDirName(candidate.title)
+            val directory = root.findReadableDirectory(candidateSourceName)?.findReadableDirectory(candidateMangaName)
+            val sameNames = sourceName.equals(candidateSourceName, ignoreCase = true) &&
+                mangaName.equals(candidateMangaName, ignoreCase = true)
+            candidate.id.takeIf { sameNames || directory?.directoryIdentity() == targetIdentity }
+        }
+    }
+
+    private fun UniFile.directoryIdentity() = uri.let {
+        if (it.scheme == ContentResolver.SCHEME_FILE) {
+            File(it.path ?: throw IOException("Download storage path is unavailable")).canonicalFile.toUri()
+        } else {
+            it
+        }
+    }
+
+    /**
+     * All compatible completed and unfinished paths owned only by the selected chapters.
+     * Ambiguous names belong to other chapters sharing the directory until ownership can be established.
+     */
+    suspend fun findChapterPathsForHide(
+        chapters: List<Chapter>,
+        mangaChapters: List<Chapter>,
+        manga: Manga,
+        source: Source,
+    ): List<UniFile> = withContext(Dispatchers.IO) {
+        val root = downloadsDir ?: throw IOException("Download storage is unavailable")
+        root.requireReadableDirectory()
+        val sourceDir = root.findReadableDirectory(getSourceDirName(source)) ?: return@withContext emptyList()
+        val mangaDir = sourceDir.findReadableDirectory(getMangaDirName(manga.title)) ?: return@withContext emptyList()
+        val selectedIds = chapters.mapTo(HashSet()) { it.id }
+        // SAF lookups ignore case. Protect the same names on every storage backend.
+        val siblingNames = mangaChapters.asSequence()
+            .filter { it.id !in selectedIds }
+            .flatMap { it.hidePathNames() }
+            .toCollection(sortedSetOf(String.CASE_INSENSITIVE_ORDER))
+        chapters.asSequence()
+            .flatMap { it.hidePathNames() }
+            .filterNot { it in siblingNames }
+            .distinct()
+            .mapNotNull(mangaDir::findFile)
+            .distinctBy { it.uri }
+            .toList()
+            .also { mangaDir.requireReadableDirectory() }
+    }
+
+    private fun Chapter.hidePathNames(): Sequence<String> =
+        getValidChapterDirNames(name, scanlator, url).asSequence()
+            .flatMap { sequenceOf(it, it + Downloader.TMP_DIR_SUFFIX) }
+
+    private fun UniFile.requireReadableDirectory() {
+        if (!exists() || !isDirectory || !canRead()) {
+            throw IOException("Download storage directory is unavailable")
+        }
+    }
+
+    private fun UniFile.findReadableDirectory(name: String): UniFile? {
+        val child = findFile(name)
+        // A failed lookup must not turn a newly inaccessible parent into an absent child.
+        requireReadableDirectory()
+        child?.requireReadableDirectory()
+        return child
     }
 
     /**
