@@ -12,7 +12,9 @@ cannot open the reader or start downloads. Hiding preserves reading progress,
 bookmarks and completed downloads; queued downloads are canceled.
 
 The reader skips hidden chapters regardless of the Skip filtered chapters
-setting. Resume and download ahead skip them too, including when the history
+setting. Hiding chapter 5 makes chapters 4 and 6 adjacent in both directions.
+The first and last non-hidden chapters become the reader’s first and last
+chapters. Resume and download ahead skip hidden chapters too, including when the history
 anchor was subsequently hidden. Hidden chapters do not extend the range used
 for missing-chapter warnings, and known hidden chapters within that range do
 not become missing chapters. This handles an unwanted Chapter 99990000 above
@@ -58,7 +60,7 @@ Native review flow:
 
 Verified locally on 25 October 2026 using JDK 21 and Android SDK 37.2:
 
-- 100 domain tests and 49 app tests passed, with no skips or failures.
+- 103 domain tests and 49 app tests passed, with no skips or failures.
 - SQLDelight debug/release migration verification and repository formatting checks passed.
 - Debug APK assembled successfully.
 - Android 16 ARM64 emulator: phone and tablet layouts, light/dark mode,
