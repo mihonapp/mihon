@@ -30,6 +30,7 @@ import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.chaptersFiltered
 import eu.kanade.domain.manga.model.downloadedFilter
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.TrackChapter
@@ -45,6 +46,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
@@ -115,6 +117,7 @@ class MangaViewModel(
     @AppCoroutineScope private val appScope: CoroutineScope,
     private val context: Context,
     private val basePreferences: BasePreferences,
+    private val sourcePreferences: SourcePreferences,
     private val libraryPreferences: LibraryPreferences,
     trackPreferences: TrackPreferences,
     readerPreferences: ReaderPreferences,
@@ -222,9 +225,11 @@ class MangaViewModel(
         downloadCache.changes.pausedWhileUnsubscribed(),
         downloadManager.queueState.pausedWhileUnsubscribed(),
     ) { (manga, chapters), _, _ ->
+        val source = sourceManager.getOrStub(manga.source)
         MangaAndChapters(
             manga = manga,
-            source = sourceManager.getOrStub(manga.source),
+            source = source,
+            sourceName = source.getNameForMangaInfo(sourcePreferences),
             chapters = chapters.toChapterListItems(manga),
         )
     }
@@ -267,6 +272,7 @@ class MangaViewModel(
         State.Success(
             manga = mangaAndChapters.manga,
             source = mangaAndChapters.source,
+            sourceName = mangaAndChapters.sourceName,
             isFromSource = isFromSource,
             chapters = mangaAndChapters.chapters.map { item ->
                 val downloadState = downloads[item.id]
@@ -1094,7 +1100,12 @@ class MangaViewModel(
         }
     }
 
-    private data class MangaAndChapters(val manga: Manga, val source: Source, val chapters: List<ChapterList.Item>)
+    private data class MangaAndChapters(
+        val manga: Manga,
+        val source: Source,
+        val sourceName: String,
+        val chapters: List<ChapterList.Item>,
+    )
 
     sealed interface State {
         @Immutable
@@ -1104,6 +1115,7 @@ class MangaViewModel(
         data class Success(
             val manga: Manga,
             val source: Source,
+            val sourceName: String,
             val isFromSource: Boolean,
             val chapters: List<ChapterList.Item>,
             val availableScanlators: Set<String>,
