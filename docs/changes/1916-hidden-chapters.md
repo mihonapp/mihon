@@ -6,9 +6,11 @@ Selecting chapters adds a Hide action to the chapter selection bar. When every
 selected chapter is hidden, the action becomes Unhide. Mixed selections hide all
 selected chapters.
 
-Hidden chapters stay in their normal list position, dimmed, with a crossed-eye
-icon replacing the download indicator on the right. The icon remains at normal
-contrast so hidden chapters can be distinguished from read chapters. Long press still
+Hidden chapters stay in their normal list position with a small Hidden label
+beside the date and a crossed-eye icon replacing the download indicator on the
+right. Title and metadata dimming applies once, even for chapters that are both
+read and hidden. The label and icon remain at normal contrast so hidden chapters
+can be distinguished from read chapters. Long press still
 selects them, and taps toggle selection while selection mode is active. They
 cannot open the reader or start downloads. Hiding preserves reading progress and
 bookmarks. Hiding cancels queued downloads and removes eligible completed and
@@ -67,8 +69,8 @@ Native review flow:
 
 1. Open an entry with normal chapters and an unwanted high-numbered chapter.
 2. Long press the unwanted chapter and tap the fifth action, Hide.
-3. Confirm the dimmed row remains with a crossed-eye icon instead of a download
-   indicator, and its tap/download/swipe actions cannot
+3. Confirm the dimmed row remains with a Hidden label and crossed-eye icon instead
+   of a download indicator, and its tap/download/swipe actions cannot
    open or download it. Confirm the missing-chapter warning ignores it.
 4. Long press the dimmed row and tap Unhide. Confirm normal interaction returns.
 5. Hide multiple chapters, then test a mixed selection and an all-hidden selection.
@@ -114,10 +116,15 @@ exercised; protobuf compatibility is covered by automated tests.
 
 ## Native screenshots
 
-Current hidden-row appearance: chapter 5 has a crossed-eye icon, chapter 4 is
+Current hidden-row appearance: chapter 5 has a Hidden label and crossed-eye icon, chapter 4 is
 read, and chapter 6 is unread. Verified in both themes; tapping the hidden status
 icon does not open the reader, long pressing it selects the row, and Unhide/Hide
-still work. APK assembly, formatting and app regression checks cover this update.
+still work. The label remains when the chapter is unread. The component’s nullable-date
+branch was checked in source; the current manga screen formats a zero timestamp
+as an epoch date, so that fixture does not exercise a null date. Hidden/read title opacity is applied once, and the existing row state
+description announces Hidden while the visible label avoids a duplicate
+accessibility announcement. APK assembly, formatting and all 119 app tests passed
+for this label update. TalkBack runtime was not exercised.
 
 ![Hidden versus read chapters, light theme](1916-hidden-chapters/hidden-row-light.png)
 
