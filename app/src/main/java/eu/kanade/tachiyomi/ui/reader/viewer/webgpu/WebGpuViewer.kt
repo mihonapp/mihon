@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
-import android.graphics.Color
+import android.content.Context
 import android.graphics.PointF
 import android.graphics.Rect
 import android.os.SystemClock
@@ -8,17 +8,9 @@ import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animate
-import androidx.compose.animation.core.spring
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastCoerceIn
-import androidx.webgpu.GPUTexture
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.ImageView
 import ca.mpreg.webgpuviewer.closeTo
-import ca.mpreg.webgpuviewer.draw.TextAlign
 import ca.mpreg.webgpuviewer.renderer.GainmapInput
 import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
@@ -38,7 +30,6 @@ import ca.mpreg.webgpuviewer.transition.TransitionStackUp
 import ca.mpreg.webgpuviewer.viewer.AnimationFrame
 import ca.mpreg.webgpuviewer.viewer.ImagePage
 import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuousState
-import com.google.android.material.color.MaterialColors
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.loader.HttpPageLoader
@@ -98,18 +89,18 @@ open class WebGpuViewer(
     @Volatile
     private var cachedBackgroundColor: Int? = null
 
-    @Volatile
-    private var cachedOnBackgroundColor: Int? = null
-
-    protected fun readerBackgroundColor(): Int =
+    internal fun readerBackgroundColor(): Int =
         cachedBackgroundColor ?: activity.baseContext.readerBackgroundColor(config.theme)
             .also { cachedBackgroundColor = it }
 
-    private fun readerOnBackgroundColor(): Int = cachedOnBackgroundColor ?: MaterialColors.getColor(
-        activity.createReaderThemeContext(),
-        com.google.android.material.R.attr.colorOnBackground,
-        Color.WHITE,
-    ).also { cachedOnBackgroundColor = it }
+    @Volatile
+    private var cachedThemedContext: Context? = null
+
+    /** The reader's night mode rather than the app's - see [ReaderComposePage]. */
+    internal val readerThemedContext: Context
+        get() = cachedThemedContext ?: activity.createReaderThemeContext().also { cachedThemedContext = it }
+
+    val downloadManager by lazy { activity.appGraph.downloadManager }
 
     protected val scope = MainScope()
 
@@ -248,8 +239,7 @@ open class WebGpuViewer(
                         synchronized(lock) {
                             if (pageInCache(page) && !page.isDecoded && !page.imagePage.destroyed) {
                                 val oldImagePage = page.imagePage
-                                val errorMessage = e.message ?: "Failed to decode image"
-                                page.imagePage = ErrorPage(errorMessage, page.spreadPosition)
+                                page.imagePage = ErrorPage(this@WebGpuViewer, page, e)
                                 page.preview = null
                                 page.state = PageState.IDLE
                                 cleanupImage(oldImagePage)
@@ -498,177 +488,6 @@ open class WebGpuViewer(
         }
     }
 
-    inner class ErrorPage internal constructor(
-        message: String,
-        private val spreadPosition: SpreadPosition = SpreadPosition.SINGLE,
-    ) : ImagePage.Render(0, 0) {
-        override val width: Int
-            get() = viewportPageWidth(spreadPosition != SpreadPosition.SINGLE)
-        override val height: Int
-            get() = pager.state.height
-
-        init {
-            minScale = 1f
-            maxScale = 1f
-            homeScale = 1f
-        }
-
-        var message: String = message
-            set(value) {
-                field = value
-                invalidate()
-            }
-
-        override val backgroundColor: Int = readerBackgroundColor()
-
-        override fun render(dst: GPUTexture, x: Float, y: Float, scale: Float) {
-            val padding = with(pager.state.density) { 24.dp.toPx() }
-            val size = scale * with(pager.state.density) { 16.dp.toPx() }
-
-            val cx = dst.width * (0.5f + scale * x)
-            val cy = dst.height * (0.5f + scale * y)
-
-            text(
-                dst,
-                activity.baseContext,
-                FontFamily.Default,
-                message,
-                cx,
-                cy,
-                size,
-                color = readerOnBackgroundColor(),
-                align = TextAlign.Center,
-                maxWidth = dst.width - 2f * padding,
-            )
-        }
-    }
-
-    inner class ProgressPage(foregroundColor: Int = readerOnBackgroundColor()) : ImagePage.Render(0, 0) {
-        override val width: Int
-            get() = viewportPageWidth(isDualPageMode())
-        override val height: Int
-            get() = pager.state.height
-
-        init {
-            minScale = 1f
-            maxScale = 1f
-            homeScale = 1f
-        }
-
-        @Volatile
-        private var progressValue: Float = 0f
-        private var progressJob: Job? = null
-        var progress: Float
-            get() = progressValue
-            set(value) {
-                val target = value.fastCoerceIn(0f, 1f)
-                synchronized(this) {
-                    progressJob?.cancel()
-                    progressJob = null
-
-                    if (destroyed || progressValue == target) return
-
-                    val scope = scope ?: run {
-                        progressValue = target
-                        invalidate()
-                        return
-                    }
-
-                    val start = progressValue
-                    progressJob = scope.launch {
-                        animate(
-                            start,
-                            target,
-                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                        ) { current, _ ->
-                            progressValue = current
-                            invalidate()
-                        }
-                    }
-                }
-            }
-
-        override fun cleanup() {
-            super.cleanup()
-            synchronized(this) {
-                progressJob?.cancel()
-                progressJob = null
-            }
-        }
-
-        var foregroundColor: Int = foregroundColor
-            set(value) {
-                field = value
-                invalidate()
-            }
-
-        override val backgroundColor: Int = readerBackgroundColor()
-
-        override fun render(dst: GPUTexture, x: Float, y: Float, scale: Float) {
-            // Its own footprint, so the page carries its background wherever a transition puts it.
-            fillPage(dst, x, y, scale, backgroundColor)
-
-            val cx = dst.width * (0.5f + scale * x)
-            val cy = dst.height * (0.5f + scale * y)
-
-            val full = min(width, height) * 0.25f * scale
-
-            circle(cx, cy, full / 2f, 0xAAAAAAAA.toInt())
-
-            val diameter = full * progress.fastCoerceIn(0f, 1f)
-            if (diameter > 0) {
-                circle(cx, cy, diameter / 2f, foregroundColor)
-            }
-        }
-    }
-
-    inner class TransitionPage(val prevChapter: ReaderChapter?, val nextChapter: ReaderChapter?) :
-        ImagePage.Render(0, 0) {
-        /** Square, and never a spread side - [buildSpreadPage] hands it back whole. */
-        override val width: Int
-            get() = min(pager.state.width, pager.state.height)
-        override val height: Int
-            get() = width
-
-        init {
-            minScale = 1f
-            maxScale = 1f
-            homeScale = 1f
-        }
-
-        override val backgroundColor: Int = readerBackgroundColor()
-
-        override fun render(dst: GPUTexture, x: Float, y: Float, scale: Float) {
-            // Its own footprint, so the page carries its background wherever a transition puts it.
-            fillPage(dst, x, y, scale, backgroundColor)
-
-            val lines: MutableList<String> = mutableListOf()
-            prevChapter?.chapter?.let { chapter -> lines.add("Previous: " + chapter.name) }
-            nextChapter?.chapter?.let { chapter -> lines.add("Next: " + chapter.name) }
-
-            val text = lines.joinToString("\n")
-
-            val padding = with(pager.state.density) { 24.dp.toPx() }
-            val size = scale * with(pager.state.density) { 16.dp.toPx() }
-
-            val cx = dst.width * (0.5f + scale * x)
-            val cy = dst.height * (0.5f + scale * y)
-
-            text(
-                dst,
-                activity.baseContext,
-                FontFamily.Default,
-                text,
-                cx,
-                cy,
-                size,
-                readerOnBackgroundColor(),
-                align = TextAlign.Center,
-                maxWidth = dst.width - 2f * padding,
-            )
-        }
-    }
-
     abstract class ViewerPage {
         abstract val prevChapter: ReaderChapter?
         abstract val nextChapter: ReaderChapter?
@@ -688,7 +507,7 @@ open class WebGpuViewer(
         override val prevChapter: ReaderChapter?,
         override val nextChapter: ReaderChapter?,
     ) : ViewerPage() {
-        override var imagePage: ImagePage = TransitionPage(prevChapter, nextChapter)
+        override var imagePage: ImagePage = TransitionPage(this@WebGpuViewer, prevChapter, nextChapter)
 
         override val prev: ViewerPage?
             get() = prevChapter?.pages?.lastOrNull()?.let { getPage(it, currentPage) }
@@ -707,7 +526,7 @@ open class WebGpuViewer(
 
         /** The decoded image's shape, or null while this page is still a placeholder. */
         internal val aspectRatio: Float?
-            get() = (imagePage as? ImagePage.ImageSingle)?.let {
+            get() = (imagePage as? ImagePage.ImageSingle)?.takeIf { it !is ImagePage.Compose }?.let {
                 val height = it.trimHeight
                 if (it.isDecoded && height > 0) it.trimWidth.toFloat() / height else null
             }
@@ -730,7 +549,7 @@ open class WebGpuViewer(
         internal val standsAlone: Boolean
             get() = taggedSpreadPosition == SpreadPosition.SINGLE || (aspectRatio ?: 0f) > wideAspect
 
-        override var imagePage: ImagePage = ProgressPage()
+        override var imagePage: ImagePage = ProgressPage(this@WebGpuViewer)
 
         /** So a download streams once; weak, as it holds the whole download. Under [lock]. */
         internal var streamedFrom: WeakReference<DownloadStream>? = null
@@ -738,12 +557,14 @@ open class WebGpuViewer(
         /** A streaming decode owns the page. Under [lock]. */
         internal var streaming = false
 
-        /** Not counted by [isDecoded]. */
+        /** Not counted by [isDecoded], and nor is the reader's chrome, which is always "decoded". */
         @Volatile
         internal var preview: ImagePage? = null
 
         override val isDecoded
-            get() = imagePage.let { it !== preview && (it as? ImagePage.ImageSingle)?.isDecoded == true }
+            get() = imagePage.let {
+                it !== preview && it !is ImagePage.Compose && (it as? ImagePage.ImageSingle)?.isDecoded == true
+            }
 
         override val prevChapter: ReaderChapter?
             get() = when (page.chapter) {
@@ -975,7 +796,7 @@ open class WebGpuViewer(
         config.imagePropertyChangedListener = {
             // A theme change comes through here.
             cachedBackgroundColor = null
-            cachedOnBackgroundColor = null
+            cachedThemedContext = null
 
             val isDual = isDualPageMode()
             pager.state.apply {
@@ -1052,6 +873,34 @@ open class WebGpuViewer(
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
         }
+
+        config.imageFiltersChangedListener = {
+            val shaders = config.imageFilters
+            // Else an older, slower load could land last.
+            imageFiltersJob?.cancel()
+            imageFiltersJob = scope.launch { pager.state.imageFilters = loadFilters(shaders) }
+        }
+
+        config.tileFiltersChangedListener = {
+            val shaders = config.tileFilters
+            tileFiltersJob?.cancel()
+            tileFiltersJob = scope.launch { pager.state.tileFilters = loadFilters(shaders) }
+        }
+    }
+
+    private var imageFiltersJob: Job? = null
+    private var tileFiltersJob: Job? = null
+
+    /** Fresh instances: one belongs to one viewer and one chain. Skips any that fail to load. */
+    private suspend fun loadFilters(shaders: List<WebGpuShader>) = withContext(Dispatchers.IO) {
+        shaders.mapNotNull { shader ->
+            try {
+                WebGpuShaders.load(activity, shader)
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "filter ${shader.name}" }
+                null
+            }
+        }
     }
 
     override fun destroy() {
@@ -1104,6 +953,22 @@ open class WebGpuViewer(
                 loader.loadPage(page.page)
             }
         }
+    }
+
+    /** [ErrorPage]'s Retry: back to the ring, then loaded and decoded afresh. */
+    internal fun retryLoad(page: ViewerReaderPage) {
+        synchronized(lock) {
+            if (!pageInCache(page) || page.imagePage !is ErrorPage) return
+            val old = page.imagePage
+            page.imagePage = ProgressPage(this)
+            cleanupImage(old)
+            if (page.state != PageState.LOADING) page.state = PageState.IDLE
+        }
+        page.page.chapter.pageLoader?.retryPage(page.page)
+        synchronized(lock) {
+            if (pageInCache(page)) queueForDecode(page, prioritize = true)
+        }
+        pager.state.invalidate()
     }
 
     /** Downloads [page] if needed, then re-queues it for decode once ready. */
@@ -1169,6 +1034,15 @@ open class WebGpuViewer(
                 downloadProgressJob.cancel()
 
                 synchronized(lock) {
+                    val status = page.page.status
+                    if (pageInCache(page) && status is Page.State.Error && !page.streaming) {
+                        val old = page.imagePage
+                        if (old is ProgressPage) {
+                            page.imagePage = ErrorPage(this@WebGpuViewer, page, status.error)
+                            cleanupImage(old)
+                            pager.state.invalidate()
+                        }
+                    }
                     if (pageInCache(page) && page.state == PageState.LOADING) {
                         page.state = PageState.IDLE
                         if (page.page.status == Page.State.Ready && !page.isDecoded && !page.streaming) {
@@ -1299,11 +1173,12 @@ open class WebGpuViewer(
             } finally {
                 synchronized(lock) {
                     page.streaming = false
-                    // Failed download: back to the ring for a retry.
+                    // Failed download: the error, with Retry.
                     val preview = page.preview
-                    if (pageInCache(page) && page.imagePage === preview && page.page.status is Page.State.Error) {
+                    val status = page.page.status
+                    if (pageInCache(page) && page.imagePage === preview && status is Page.State.Error) {
                         page.preview = null
-                        page.imagePage = ProgressPage()
+                        page.imagePage = ErrorPage(this@WebGpuViewer, page, status.error)
                         cleanupImage(preview)
                         pager.state.invalidate()
                     }

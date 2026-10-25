@@ -180,6 +180,9 @@ class MainActivity : BaseActivity() {
             Migrator.awaitAndRelease()
             isAppMigrating.value = false
         }
+        // Uncaught on purpose: a failed database migration otherwise leaves the migrating screen up for good,
+        // while the crash screen tells what went wrong and lets the logs be shared
+        lifecycleScope.launch { databaseRepository.awaitOpen() }
 
         // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079
         if (!isTaskRoot) {
@@ -344,6 +347,16 @@ class MainActivity : BaseActivity() {
             is AssistContentScreen -> {
                 screen.onProvideAssistUrl()?.let { outContent.webUri = it.toUri() }
             }
+        }
+    }
+
+    override fun reportFullyDrawn() {
+        try {
+            super.reportFullyDrawn()
+        } catch (e: SecurityException) {
+            // Some Samsung Android 9 to 11 builds deny the platform's fully drawn broadcast
+            // and the report only feeds startup metrics, so it shouldn't crash the app
+            logcat(LogPriority.WARN, e)
         }
     }
 

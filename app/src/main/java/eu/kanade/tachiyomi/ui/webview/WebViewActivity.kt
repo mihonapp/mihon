@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
+import eu.kanade.tachiyomi.util.system.toWebViewHeaders
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import kotlinx.coroutines.Dispatchers
@@ -71,7 +72,7 @@ class WebViewActivity : BaseActivity() {
                 val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource
                 value = withContext(Dispatchers.IO) {
                     try {
-                        source?.headers?.toMultimap()?.mapValues { it.value.getOrNull(0) ?: "" }.orEmpty()
+                        source?.headers?.toWebViewHeaders().orEmpty()
                     } catch (e: Exception) {
                         logcat(LogPriority.ERROR, e) { "Failed to build headers" }
                         emptyMap()

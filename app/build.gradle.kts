@@ -55,8 +55,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 35
-        versionName = "0.20.4"
+        versionCode = 38
+        versionName = "0.21.2"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -249,6 +249,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.uiTooling)
     implementation(libs.androidx.compose.uiToolingPreview)
     implementation(libs.androidx.compose.uiUtil)
+    implementation(libs.androidx.navigationEvent)
 
     implementation(libs.androidx.interpolator)
 
@@ -315,7 +316,6 @@ dependencies {
 
     // UI libraries
     implementation(libs.material)
-    implementation(libs.flexibleAdapter)
     implementation(libs.photoView)
     implementation(libs.directionalViewPager) {
         exclude(group = "androidx.viewpager", module = "viewpager")
