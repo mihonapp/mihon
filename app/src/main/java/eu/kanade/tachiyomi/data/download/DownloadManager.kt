@@ -266,7 +266,7 @@ class DownloadManager(
         downloader.dequeue(downloads.map { it.chapter })
     }
 
-    /** Explicit hiding bypasses automatic deletion exclusions, but never touches local source originals. */
+    /** Hiding cancels every selected writer and respects deletion exclusions, preserving local source originals. */
     suspend fun deleteHiddenChapters(chapters: List<Chapter>, manga: Manga, source: Source) {
         downloader.dequeueAndAwait(chapters)
         if (manga.isLocal() || source.isLocal()) return
@@ -286,6 +286,9 @@ class DownloadManager(
             if (currentManga.source != source.id) {
                 throw IOException("Cannot establish hidden chapter source ownership")
             }
+            val chaptersToDelete = getChaptersToDelete(currentChapters, currentManga)
+            if (chaptersToDelete.isEmpty()) return@withContext
+
             val sources = allManga.filterNot { it.isLocal() }.map { it.source }.distinct().associateWith {
                 if (it == source.id) source else sourceManager.getOrStub(it)
             }
@@ -297,7 +300,8 @@ class DownloadManager(
             val directoryChapters = mangaChapters + owners.filter { it != manga.id }.flatMap {
                 chapterRepository.getChapterByMangaId(it)
             }
-            val paths = provider.findChapterPathsForHide(currentChapters, directoryChapters, currentManga, source)
+            // Protected selections remain owners of their completed and unfinished download names.
+            val paths = provider.findChapterPathsForHide(chaptersToDelete, directoryChapters, currentManga, source)
             var failed = false
             try {
                 paths.forEach { if (!it.delete()) failed = true }
@@ -486,7 +490,7 @@ class DownloadManager(
 
         val categoriesForManga = getCategories.await(manga.id)
             .map { it.id }
-            .ifEmpty { listOf(0) }
+            .ifEmpty { listOf(0L) }
         val filteredCategoryManga = if (categoriesForManga.intersect(categoriesToExclude).isNotEmpty()) {
             chapters.filterNot { it.read }
         } else {
