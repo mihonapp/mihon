@@ -58,6 +58,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
@@ -88,6 +89,7 @@ class Downloader(
     private val getTracks: GetTracks,
     private val store: DownloadStore,
     private val notifier: DownloadNotifier,
+    private val getChapter: GetChapter,
 ) {
     /**
      * Queue where active downloads are kept.
@@ -316,6 +318,12 @@ class Downloader(
         try {
             // Removed from the queue between being picked and starting
             if (download !in queueState.value) return@launch
+            // Queue entries can outlive visibility changes (including a restored queue).
+            if (getChapter.await(download.chapter.id)?.hidden != false) {
+                removeFromQueue(download)
+                stopIfFinished(owner)
+                return@launch
+            }
 
             downloadChapter(download, slots, pagesStarted)
 

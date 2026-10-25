@@ -20,10 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -63,10 +66,12 @@ fun MangaChapterListItem(
     onClick: () -> Unit,
     onDownloadClick: ((ChapterDownloadAction) -> Unit)?,
     onChapterSwipe: (LibraryPreferences.ChapterSwipeAction) -> Unit,
+    hidden: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
+    val hiddenDescription = stringResource(MR.strings.chapter_hidden)
     val start = getSwipeAction(
-        action = chapterSwipeStartAction,
+        action = chapterSwipeStartAction.takeUnless { hidden } ?: LibraryPreferences.ChapterSwipeAction.Disabled,
         read = read,
         bookmark = bookmark,
         downloadState = downloadStateProvider(),
@@ -74,7 +79,7 @@ fun MangaChapterListItem(
         onSwipe = { onChapterSwipe(chapterSwipeStartAction) },
     )
     val end = getSwipeAction(
-        action = chapterSwipeEndAction,
+        action = chapterSwipeEndAction.takeUnless { hidden } ?: LibraryPreferences.ChapterSwipeAction.Disabled,
         read = read,
         bookmark = bookmark,
         downloadState = downloadStateProvider(),
@@ -92,6 +97,8 @@ fun MangaChapterListItem(
         Row(
             modifier = modifier
                 .selectedBackground(selected)
+                .semantics { if (hidden) stateDescription = hiddenDescription }
+                // Hidden chapters must still accept long presses and selection taps to unhide them.
                 .combinedClickable(
                     onClick = onClick,
                     onLongClick = onLongClick,
@@ -99,7 +106,7 @@ fun MangaChapterListItem(
                 .padding(start = 16.dp, top = 12.dp, end = 8.dp, bottom = 12.dp),
         ) {
             Column(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).alpha(if (hidden) DISABLED_ALPHA else 1f),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Row(
@@ -172,8 +179,8 @@ fun MangaChapterListItem(
             }
 
             ChapterDownloadIndicator(
-                enabled = downloadIndicatorEnabled,
-                modifier = Modifier.padding(start = 4.dp),
+                enabled = downloadIndicatorEnabled && !hidden,
+                modifier = Modifier.padding(start = 4.dp).alpha(if (hidden) DISABLED_ALPHA else 1f),
                 downloadStateProvider = downloadStateProvider,
                 downloadProgressProvider = downloadProgressProvider,
                 onClick = { onDownloadClick?.invoke(it) },

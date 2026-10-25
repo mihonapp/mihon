@@ -122,6 +122,7 @@ SELECT
         ON C.manga_id = ES.manga_id
         AND C.remote_scanlator = ES.scanlator
         WHERE C.manga_id = M.id
+        AND C.user_hidden = 0
         AND ES.scanlator IS NULL
     ) AS chapter_count
 FROM manga M

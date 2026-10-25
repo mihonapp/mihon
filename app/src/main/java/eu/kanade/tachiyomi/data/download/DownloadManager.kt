@@ -112,6 +112,7 @@ class DownloadManager(
 
     private suspend fun downloadFromChapterId(chapterId: Long): Download? {
         val chapter = getChapter.await(chapterId) ?: return null
+        if (chapter.hidden) return null
         val manga = getManga.await(chapter.mangaId) ?: return null
         val source = sourceManager.get(manga.source) as? HttpSource ?: return null
 
@@ -140,7 +141,7 @@ class DownloadManager(
      * @param autoStart whether to start the downloader after enqueing the chapters.
      */
     suspend fun downloadChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean = true) {
-        if (downloader.queueChapters(manga, chapters, autoStart)) {
+        if (downloader.queueChapters(manga, chapters.filterNot { it.hidden }, autoStart)) {
             startDownloads()
         }
     }

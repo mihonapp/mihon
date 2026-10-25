@@ -164,6 +164,7 @@ fun MangaScreen(
             navigator.push(MigrationConfigRoute(successState.manga.id))
         }.takeIf { successState.manga.favorite },
         onEditNotesClicked = { navigator.push(MangaNotesRoute(mangaId = successState.manga.id)) },
+        onMultiHideClicked = viewModel::hideChapters,
         onMultiBookmarkClicked = viewModel::bookmarkChapters,
         onMultiMarkAsReadClicked = viewModel::markChaptersRead,
         onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,
@@ -297,6 +298,7 @@ private fun continueReading(context: Context, unreadChapter: Chapter?) {
 }
 
 private fun openChapter(context: Context, chapter: Chapter) {
+    if (chapter.hidden) return
     context.startActivity(ReaderActivity.newIntent(context, chapter.mangaId, chapter.id))
 }
 

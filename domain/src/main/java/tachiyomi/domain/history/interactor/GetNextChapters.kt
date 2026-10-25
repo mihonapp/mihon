@@ -23,6 +23,7 @@ class GetNextChapters(
     suspend fun await(mangaId: Long, onlyUnread: Boolean = true): List<Chapter> {
         val manga = getManga.await(mangaId) ?: return emptyList()
         val chapters = getChaptersByMangaId.await(mangaId, applyScanlatorFilter = true)
+            .filterNot { it.hidden }
             .sortedWith(getChapterSort(manga, sortDescending = false))
 
         return if (onlyUnread) {
@@ -37,9 +38,14 @@ class GetNextChapters(
         fromChapterId: Long,
         onlyUnread: Boolean = true,
     ): List<Chapter> {
-        val chapters = await(mangaId, onlyUnread)
+        val manga = getManga.await(mangaId) ?: return emptyList()
+        // Keep the anchor until after slicing: a chapter hidden after reading must not
+        // cause resume or download-ahead to restart at the beginning of the entry.
+        val chapters = getChaptersByMangaId.await(mangaId, applyScanlatorFilter = true)
+            .sortedWith(getChapterSort(manga, sortDescending = false))
         val currChapterIndex = chapters.indexOfFirst { it.id == fromChapterId }
         val nextChapters = chapters.subList(max(0, currChapterIndex), chapters.size)
+            .filterNot { it.hidden || (onlyUnread && it.read) }
 
         if (onlyUnread) {
             return nextChapters
@@ -49,7 +55,7 @@ class GetNextChapters(
         // - The current chapter if it isn't completely read
         // - The chapters after the current chapter if the current one is completely read
         val fromChapter = chapters.getOrNull(currChapterIndex)
-        return if (fromChapter != null && !fromChapter.read) {
+        return if (fromChapter != null && (fromChapter.hidden || !fromChapter.read)) {
             nextChapters
         } else {
             nextChapters.drop(1)
