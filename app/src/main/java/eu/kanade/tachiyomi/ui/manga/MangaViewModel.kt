@@ -22,6 +22,7 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
@@ -113,6 +114,7 @@ class MangaViewModel(
     @Assisted private val isFromSource: Boolean,
     @AppCoroutineScope private val appScope: CoroutineScope,
     private val context: Context,
+    private val basePreferences: BasePreferences,
     private val libraryPreferences: LibraryPreferences,
     trackPreferences: TrackPreferences,
     readerPreferences: ReaderPreferences,
@@ -254,13 +256,13 @@ class MangaViewModel(
         scanlators,
         trackers,
         combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
-        combine(dialog, isRefreshingData, ::Pair),
+        combine(dialog, isRefreshingData, basePreferences.downloadedOnly.changes(), ::Triple),
     ) {
             mangaAndChapters,
             (availableScanlators, excludedScanlators),
             (trackingCount, hasLoggedInTrackers),
             (selectedIds, downloads),
-            (dialog, isRefreshingData),
+            (dialog, isRefreshingData, downloadedOnly),
         ->
         State.Success(
             manga = mangaAndChapters.manga,
@@ -282,6 +284,7 @@ class MangaViewModel(
             isRefreshingData = isRefreshingData,
             dialog = dialog,
             hideMissingChapters = hideMissingChapters,
+            downloadedOnly = downloadedOnly,
         )
     }
         // Composition would otherwise build these on first read, on the main thread, for every new state
@@ -652,7 +655,7 @@ class MangaViewModel(
      */
     fun getNextUnreadChapter(): Chapter? {
         val successState = successState ?: return null
-        return successState.chapters.getNextUnread(successState.manga)
+        return successState.chapters.getNextUnread(successState.manga, successState.downloadedOnly)
     }
 
     private fun getUnreadChapters(): List<Chapter> {
@@ -1110,6 +1113,7 @@ class MangaViewModel(
             val isRefreshingData: Boolean = false,
             val dialog: Dialog? = null,
             val hideMissingChapters: Boolean = false,
+            val downloadedOnly: Boolean = false,
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()
@@ -1171,7 +1175,7 @@ class MangaViewModel(
                 get() = excludedScanlators.intersect(availableScanlators).isNotEmpty()
 
             val filterActive: Boolean
-                get() = scanlatorFilterActive || manga.chaptersFiltered()
+                get() = scanlatorFilterActive || manga.chaptersFiltered(downloadedOnly)
 
             /**
              * Applies the view filters to the list of chapters obtained from the database.
@@ -1180,7 +1184,7 @@ class MangaViewModel(
             private fun List<ChapterList.Item>.applyFilters(manga: Manga): Sequence<ChapterList.Item> {
                 val isLocalManga = manga.isLocal()
                 val unreadFilter = manga.unreadFilter
-                val downloadedFilter = manga.downloadedFilter
+                val downloadedFilter = manga.downloadedFilter(downloadedOnly)
                 val bookmarkedFilter = manga.bookmarkedFilter
                 val chapterSort = getChapterSort(manga)
                 return asSequence()

@@ -111,7 +111,7 @@ class MigrateMangaUseCase(
             }
 
             // Update custom cover (recheck if custom cover exists)
-            if (MigrationFlag.CUSTOM_COVER in flags && current.hasCustomCover()) {
+            if (MigrationFlag.CUSTOM_COVER in flags && current.hasCustomCover(coverCache)) {
                 coverCache.getCustomCoverFile(current.id).inputStream().use {
                     coverCache.setCustomCoverToCache(target, it)
                 }
