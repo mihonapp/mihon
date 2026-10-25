@@ -219,6 +219,10 @@ class ReaderViewModel(
 
     private suspend fun loadChapterList(): List<ReaderChapter> {
         val manga = manga!!
+        val hiddenChapterNumbers = getUnfilteredChapterList()
+            .filter { it.hidden && it.isRecognizedNumber }
+            .map { it.chapterNumber.toInt() }
+            .toSet()
         val chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true)
             .let { filtered ->
                 if (filtered.any { it.id == chapterId }) {
@@ -227,6 +231,7 @@ class ReaderViewModel(
                     filtered + getUnfilteredChapterList().filter { it.id == chapterId }
                 }
             }
+            .filterNot { it.hidden }
 
         val selectedChapter = chapters.find { it.id == chapterId }
             ?: error("Requested chapter of id $chapterId not found in chapter list")
@@ -291,7 +296,7 @@ class ReaderViewModel(
                     this
                 }
             }
-            .map(::ReaderChapter)
+            .map { ReaderChapter(it, hiddenChapterNumbers) }
     }
 
     private var incognitoMode: Boolean = false

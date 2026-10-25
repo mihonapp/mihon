@@ -37,7 +37,8 @@ LEFT JOIN (
     LEFT JOIN excluded_scanlator
     ON chapter.manga_id = excluded_scanlator.manga_id
     AND chapter.remote_scanlator = excluded_scanlator.scanlator
-    WHERE excluded_scanlator.scanlator IS NULL
+    WHERE chapter.user_hidden = 0
+    AND excluded_scanlator.scanlator IS NULL
     AND chapter.manga_id IN (SELECT id FROM manga WHERE user_favorite_at IS NOT NULL)
     GROUP BY chapter.manga_id
 ) AS C
