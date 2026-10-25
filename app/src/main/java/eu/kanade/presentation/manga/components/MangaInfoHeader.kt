@@ -435,6 +435,7 @@ private fun ColumnScope.MangaContentInfo(
     textAlign: TextAlign? = LocalTextStyle.current.textAlign,
 ) {
     val context = LocalContext.current
+    val sourcePreferences = remember { context.appGraph.sourcePreferences }
     Text(
         text = title.ifBlank { stringResource(MR.strings.unknown_title) },
         style = MaterialTheme.typography.titleLarge,
@@ -555,7 +556,7 @@ private fun ColumnScope.MangaContentInfo(
                 )
             }
             Text(
-                text = source.getNameForMangaInfo(),
+                text = source.getNameForMangaInfo(sourcePreferences),
                 modifier = Modifier.clickableNoIndication {
                     doSearch(source.query(), false)
                 },
