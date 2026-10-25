@@ -1,25 +1,32 @@
 package eu.kanade.tachiyomi.data.track.mangabaka
 
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.TrackerDependencies
 import eu.kanade.tachiyomi.data.track.mangabaka.dto.MangaBakaOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class MangaBaka(id: Long) : BaseTracker(id, "MangaBaka"), DeletableTracker {
+@Inject
+@SingleIn(AppScope::class)
+class MangaBaka(
+    dependencies: TrackerDependencies,
+    private val json: Json,
+) : BaseTracker(11L, "MangaBaka", dependencies),
+    DeletableTracker {
 
-    private val json: Json by injectLazy()
-
-    private val interceptor by lazy { MangaBakaInterceptor(this) }
-    private val api by lazy { MangaBakaApi(id, client, interceptor) }
+    private val interceptor by lazy { MangaBakaInterceptor(this, json) }
+    private val api by lazy { MangaBakaApi(id, client, interceptor, json) }
 
     override val supportsReadingDates: Boolean = true
     override val supportsPrivateTracking: Boolean = true
