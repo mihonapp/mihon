@@ -81,6 +81,41 @@ class GetNextChaptersTest {
         getNextChapters.await(manga.id).map { it.id } shouldBe listOf(1L, 2L, 3L, 99990000L)
     }
 
+    @Test
+    fun `hiding chapter five makes chapter six follow chapter four`() = runTest {
+        coEvery { chapterRepository.getChapterByMangaId(manga.id, true) } returns listOf(
+            chapter(4),
+            chapter(5, hidden = true),
+            chapter(6),
+        )
+
+        getNextChapters.await(manga.id, 4L, onlyUnread = false).map { it.id } shouldBe listOf(4L, 6L)
+    }
+
+    @Test
+    fun `hiding the final chapter makes the preceding chapter the end`() = runTest {
+        coEvery { chapterRepository.getChapterByMangaId(manga.id, true) } returns listOf(
+            chapter(4),
+            chapter(5, read = true),
+            chapter(6, hidden = true),
+        )
+
+        getNextChapters.await(manga.id, onlyUnread = false).last().id shouldBe 5L
+        getNextChapters.await(manga.id, 5L, onlyUnread = false) shouldBe emptyList()
+    }
+
+    @Test
+    fun `hiding the first chapter makes the following chapter the start`() = runTest {
+        coEvery { chapterRepository.getChapterByMangaId(manga.id, true) } returns listOf(
+            chapter(4, hidden = true),
+            chapter(5),
+            chapter(6),
+        )
+
+        getNextChapters.await(manga.id).first().id shouldBe 5L
+        getNextChapters.await(manga.id, onlyUnread = false).map { it.id } shouldBe listOf(5L, 6L)
+    }
+
     private fun chapter(id: Long, hidden: Boolean = false, read: Boolean = false) = Chapter.create().copy(
         id = id,
         mangaId = manga.id,
