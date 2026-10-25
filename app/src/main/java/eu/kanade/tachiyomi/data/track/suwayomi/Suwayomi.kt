@@ -1,19 +1,30 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
+import eu.kanade.tachiyomi.data.track.TrackerDependencies
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.domain.manga.model.Manga as DomainManga
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
+@Inject
+@SingleIn(AppScope::class)
+class Suwayomi(
+    dependencies: TrackerDependencies,
+    private val sourceManager: Lazy<SourceManager>,
+) : BaseTracker(9L, "Suwayomi", dependencies),
+    EnhancedTracker {
 
-    val api by lazy { SuwayomiApi(id, appGraph.sourceManager) }
+    val api by lazy { SuwayomiApi(id, sourceManager.value) }
 
     override fun getLogo() = R.drawable.brand_suwayomi
 
