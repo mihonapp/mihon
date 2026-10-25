@@ -112,6 +112,7 @@ fun MangaScreen(
     onEditFetchIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onHiddenChaptersClicked: () -> Unit,
 
     // For bottom action menu
     onMultiHideClicked: (List<Chapter>, hidden: Boolean) -> Unit,
@@ -163,6 +164,7 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onEditNotesClicked = onEditNotesClicked,
+            onHiddenChaptersClicked = onHiddenChaptersClicked,
             onMultiHideClicked = onMultiHideClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
@@ -201,6 +203,7 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onEditNotesClicked = onEditNotesClicked,
+            onHiddenChaptersClicked = onHiddenChaptersClicked,
             onMultiHideClicked = onMultiHideClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
@@ -249,6 +252,7 @@ private fun MangaScreenSmallImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onHiddenChaptersClicked: () -> Unit,
 
     // For bottom action menu
     onMultiHideClicked: (List<Chapter>, hidden: Boolean) -> Unit,
@@ -306,6 +310,8 @@ private fun MangaScreenSmallImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
+                hasHiddenChapters = state.hasHiddenChapters,
+                onHiddenChaptersClicked = onHiddenChaptersClicked,
                 actionModeCounter = state.selectedChapters.size,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 onSelectAll = { onAllChapterSelected(true) },
@@ -483,6 +489,7 @@ fun MangaScreenLargeImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onHiddenChaptersClicked: () -> Unit,
 
     // For bottom action menu
     onMultiHideClicked: (List<Chapter>, hidden: Boolean) -> Unit,
@@ -533,6 +540,8 @@ fun MangaScreenLargeImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
+                hasHiddenChapters = state.hasHiddenChapters,
+                onHiddenChaptersClicked = onHiddenChaptersClicked,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 actionModeCounter = state.selectedChapters.size,
                 onSelectAll = { onAllChapterSelected(true) },

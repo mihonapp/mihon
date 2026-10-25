@@ -20,7 +20,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.core.preference.asState
-import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetChapterHidden
@@ -65,6 +64,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -181,8 +181,8 @@ class MangaViewModel(
     val isUpdateIntervalEnabled =
         LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions.get()
 
-    private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
-    private val selectedChapterIds = MutableStateFlow(emptySet<Long>())
+    private val chapterSelection = MangaChapterSelection()
+    private val selectedChapterIds = chapterSelection.ids
 
     private val dialog = MutableStateFlow<Dialog?>(null)
 
@@ -202,6 +202,15 @@ class MangaViewModel(
     }
 
     private val hideMissingChapters = libraryPreferences.hideMissingChapters.get()
+
+    // Recovery must include hidden chapters excluded by the normal scanlator filters.
+    private val hiddenChapters = flow {
+        emitAll(getMangaAndChapters.subscribe(mangaId, applyScanlatorFilter = false))
+    }.map { (_, chapters) ->
+        chapters.filter { it.hidden }.map {
+            ChapterList.Item(chapter = it, downloadState = Download.State.NOT_DOWNLOADED)
+        }
+    }.distinctUntilChanged()
 
     private var hasPromptedToAddBefore = false
 
@@ -252,17 +261,17 @@ class MangaViewModel(
         .onStart { emit(0 to false) }
 
     val state: StateFlow<State> = combine(
-        mangaAndChapters,
+        combine(mangaAndChapters, hiddenChapters, ::Pair),
         scanlators,
         trackers,
         combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
-        combine(dialog, isRefreshingData, ::Pair),
+        combine(dialog, isRefreshingData, libraryPreferences.hideHiddenChapters.changes(), ::Triple),
     ) {
-            mangaAndChapters,
+            (mangaAndChapters, hiddenChapters),
             (availableScanlators, excludedScanlators),
             (trackingCount, hasLoggedInTrackers),
             (selectedIds, downloads),
-            (dialog, isRefreshingData),
+            (dialog, isRefreshingData, hideHiddenChapters),
         ->
         State.Success(
             manga = mangaAndChapters.manga,
@@ -284,6 +293,8 @@ class MangaViewModel(
             isRefreshingData = isRefreshingData,
             dialog = dialog,
             hideMissingChapters = hideMissingChapters,
+            hideHiddenChapters = hideHiddenChapters,
+            hiddenChapters = hiddenChapters,
         )
     }
         // Composition would otherwise build these on first read, on the main thread, for every new state
@@ -295,6 +306,8 @@ class MangaViewModel(
             it.hasUnreadChapters
             it.hasReadChapters
             it.missingChapterCount
+            // Drop ids that left the displayed list so they cannot reappear selected when revealed.
+            chapterSelection.retain(it.processedChapters)
         }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State.Loading)
@@ -1005,71 +1018,26 @@ class MangaViewModel(
         }
     }
 
+    fun showHiddenChapters() {
+        toggleAllSelection(false)
+        dialog.value = Dialog.HiddenChapters
+    }
+
     fun toggleSelection(
         item: ChapterList.Item,
         selected: Boolean,
         fromLongPress: Boolean = false,
     ) {
         val chapters = successState?.processedChapters ?: return
-        val selectedIndex = chapters.indexOfFirst { it.id == item.chapter.id }
-        if (selectedIndex < 0) return
-
-        // Read from the ids, as the state catches up with a selection only after it's been made
-        val selectedIds = HashSet(selectedChapterIds.value)
-        if ((item.id in selectedIds) == selected) return
-
-        val firstSelection = chapters.none { it.id in selectedIds }
-        selectedIds.addOrRemove(item.id, selected)
-
-        if (selected && fromLongPress) {
-            if (firstSelection) {
-                selectedPositions[0] = selectedIndex
-                selectedPositions[1] = selectedIndex
-            } else {
-                // Try to select the items in-between when possible
-                val range: IntRange
-                if (selectedIndex < selectedPositions[0]) {
-                    range = selectedIndex + 1..<selectedPositions[0]
-                    selectedPositions[0] = selectedIndex
-                } else if (selectedIndex > selectedPositions[1]) {
-                    range = (selectedPositions[1] + 1)..<selectedIndex
-                    selectedPositions[1] = selectedIndex
-                } else {
-                    // Just select itself
-                    range = IntRange.EMPTY
-                }
-
-                range.forEach { selectedIds.add(chapters[it].id) }
-            }
-        } else if (!fromLongPress) {
-            if (!selected) {
-                if (selectedIndex == selectedPositions[0]) {
-                    selectedPositions[0] = chapters.indexOfFirst { it.id in selectedIds }
-                } else if (selectedIndex == selectedPositions[1]) {
-                    selectedPositions[1] = chapters.indexOfLast { it.id in selectedIds }
-                }
-            } else {
-                if (selectedIndex < selectedPositions[0]) {
-                    selectedPositions[0] = selectedIndex
-                } else if (selectedIndex > selectedPositions[1]) {
-                    selectedPositions[1] = selectedIndex
-                }
-            }
-        }
-        selectedChapterIds.value = selectedIds
+        chapterSelection.toggle(chapters, item, selected, fromLongPress)
     }
 
     fun toggleAllSelection(selected: Boolean) {
-        selectedChapterIds.value = if (selected) allChapters.orEmpty().mapTo(HashSet()) { it.id } else emptySet()
-        selectedPositions[0] = -1
-        selectedPositions[1] = -1
+        chapterSelection.selectAll(filteredChapters.orEmpty(), selected)
     }
 
     fun invertSelection() {
-        val selectedIds = selectedChapterIds.value
-        selectedChapterIds.value = allChapters.orEmpty().filterNot { it.id in selectedIds }.mapTo(HashSet()) { it.id }
-        selectedPositions[0] = -1
-        selectedPositions[1] = -1
+        chapterSelection.invert(filteredChapters.orEmpty())
     }
 
     // Chapters list - end
@@ -1084,6 +1052,7 @@ class MangaViewModel(
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
         data object RemoveFromLibrary : Dialog
+        data object HiddenChapters : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog
@@ -1139,13 +1108,23 @@ class MangaViewModel(
             val isRefreshingData: Boolean = false,
             val dialog: Dialog? = null,
             val hideMissingChapters: Boolean = false,
+            val hideHiddenChapters: Boolean = false,
+            val hiddenChapters: List<ChapterList.Item> = chapters.filter { it.chapter.hidden },
         ) : State {
-            val processedChapters by lazy {
+            private val filteredChapters by lazy {
                 chapters.applyFilters(manga).toList()
             }
 
+            val processedChapters by lazy {
+                if (hideHiddenChapters) filteredChapters.fastFilter { !it.chapter.hidden } else filteredChapters
+            }
+
+            val hasHiddenChapters by lazy {
+                hiddenChapters.isNotEmpty()
+            }
+
             val isAnySelected by lazy {
-                chapters.fastAny { it.selected }
+                processedChapters.fastAny { it.selected }
             }
 
             val selectedChapters by lazy {
@@ -1162,17 +1141,17 @@ class MangaViewModel(
 
             val missingChapterCount by lazy {
                 if (hideMissingChapters) return@lazy 0
-                val latestVisibleNumber = processedChapters.filterNot { it.chapter.hidden }
+                val latestVisibleNumber = filteredChapters.filterNot { it.chapter.hidden }
                     .maxOfOrNull { it.chapter.chapterNumber } ?: return@lazy 0
                 // Hidden chapters are known to exist, but must not extend the range
                 // used to look for missing chapters (for example a bogus 99990000).
-                processedChapters.filter { it.chapter.chapterNumber <= latestVisibleNumber }
+                (filteredChapters + hiddenChapters).filter { it.chapter.chapterNumber <= latestVisibleNumber }
                     .fastMap { it.chapter.chapterNumber }
                     .missingChaptersCount()
             }
 
             private val knownChapterNumbers by lazy {
-                processedChapters.mapNotNull { item ->
+                (filteredChapters + hiddenChapters).mapNotNull { item ->
                     item.chapter.chapterNumber.takeIf { it >= 0 }?.let { floor(it).toInt() }
                 }.toSortedSet()
             }
@@ -1182,7 +1161,7 @@ class MangaViewModel(
                     return@lazy processedChapters
                 }
 
-                // Keep hidden rows in place, but bridge gaps using only visible chapter numbers.
+                // Hidden numbers remain known even when their rows are omitted from the display.
                 var previousVisible: ChapterList.Item? = null
                 processedChapters.insertSeparators { before, after ->
                     if (before != null && !before.chapter.hidden) previousVisible = before
