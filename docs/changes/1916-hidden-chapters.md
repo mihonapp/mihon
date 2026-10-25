@@ -6,7 +6,7 @@ Selecting chapters adds a Hide action to the chapter selection bar. When every
 selected chapter is hidden, the action becomes Unhide. Mixed selections hide all
 selected chapters.
 
-Hidden chapters stay in their normal list position with a small Hidden label
+By default, hidden chapters stay in their normal list position with a small Hidden label
 beside the date and a crossed-eye icon replacing the download indicator on the
 right. Title and metadata dimming applies once, even for chapters that are both
 read and hidden. The label and icon remain at normal contrast so hidden chapters
@@ -27,6 +27,15 @@ snapshot. Uncategorized entries use the Default category for exclusions. Hiding
 a mixed selection cancels all selected downloads, then deletes only eligible
 copies; protected chapters still contribute their filename ownership claims.
 
+Library settings, under Behavior, includes Hide hidden chapters (off by default).
+When enabled, hidden rows are omitted from the normal chapter list. The entry's
+three-dot menu opens Hidden chapters, a separate list containing only that entry's
+hidden chapters, with selection and Unhide available. Ordinary chapter filters do
+not prevent hidden chapters from appearing there. Opening or leaving this list
+does not change the preference or normal chapter filters. Hidden chapters remain
+unavailable for reading/downloading until unhidden. Missing-chapter warnings still
+account for known hidden numbers even when their rows are not shown.
+
 The reader skips hidden chapters regardless of the Skip filtered chapters
 setting. Hiding chapter 5 makes chapters 4 and 6 adjacent in both directions.
 The first and last non-hidden chapters become the reader’s first and last
@@ -34,7 +43,7 @@ chapters. Resume and download ahead skip hidden chapters too, including when the
 anchor was subsequently hidden. Hidden chapters do not extend the range used
 for missing-chapter warnings, and known hidden chapters within that range do
 not become missing chapters. This handles an unwanted Chapter 99990000 above
-Chapter 203 without removing the unwanted row from the list.
+Chapter 203 without counting the unwanted chapter as missing.
 
 ## Persistence
 
@@ -81,22 +90,29 @@ Native review flow:
    protected copies and unrelated completed downloads must remain. Verify the
    bookmark deletion option and read/unread chapters in excluded categories. Unhide and confirm files are not
    restored or downloaded automatically.
-8. Check phone and tablet layouts, light and dark themes, and accessibility
+8. Enable Library > Behavior > Hide hidden chapters. Restart and confirm hidden
+   rows are omitted while genuine missing chapters remain counted. Open Hidden
+   chapters from the three-dot menu, select and unhide chapters, and confirm the
+   preference and normal filters stay unchanged. Repeat with all chapters hidden
+   and ordinary chapter filters enabled.
+9. Check phone and tablet layouts, light and dark themes, and accessibility
    announcements for hidden rows.
 
 Verified locally on 25 October 2026 using JDK 21 and Android SDK 37.2:
 
-- 103 domain tests and 119 app tests passed, with no skips or failures.
+- 103 domain tests and 130 app tests passed, with no skips or failures.
 - SQLDelight debug/release migration verification and repository formatting checks passed.
-- Debug APK assembled successfully. The accepted deletion-policy update reran all
-  119 app tests, formatting and APK assembly; the domain/data implementation is unchanged.
+- Debug APK assembled successfully. The list-visibility update reran all app/domain
+  tests, formatting, migration verification and APK assembly.
 - Android 16 ARM64 emulator: phone and tablet layouts, light/dark mode,
   Hide/Unhide, disabled row taps, mixed/all-hidden selections, refresh, restart,
   and reader chapter 1 → 3 navigation with hidden chapter 2 passed.
 - Reader skipping was checked with Skip filtered chapters enabled and disabled.
 - Independent source review findings about existing download queues and reader
   gap warnings, cleanup ownership, cleanup Retry and deletion-policy integration were repaired and
-  re-reviewed with no further source findings. Cross-provider review was unavailable.
+  re-reviewed with no further source findings. The list preference and separate hidden-only
+  sheet also received independent source review with no actionable findings.
+  Cross-provider review was unavailable.
 
 Native verification used an offline local-source fixture and synthetic
 downloaded copies under a stub source. Hide retained the protected chapter 5
@@ -115,6 +131,25 @@ remote extension network behavior and a full manual backup import were not
 exercised; protobuf compatibility is covered by automated tests.
 
 ## Native screenshots
+
+The list preference defaults off. Native phone checks verified enabling it through
+Settings, persistence after restart, and a normal list omitting hidden chapters 5
+and 8. Chapter 6 was absent: the header and separator still reported one missing
+chapter. The separate Hidden chapters sheet showed only hidden chapters, including
+read chapter 5 while the normal list used the unread filter. Unhide returned the
+chapter to the normal list without changing the preference or ordinary filters.
+All-hidden recovery, bulk Unhide and the empty recovery state also passed. Tablet
+select-all, inverse selection and Unhide passed; the phone sheet was checked in
+both light and dark themes. Its date-free rows retain the Hidden label.
+
+![Hide hidden chapters setting](1916-hidden-chapters/hide-hidden-setting.png)
+
+![Normal list omits hidden chapters](1916-hidden-chapters/hidden-omitted.png)
+
+![Separate hidden-only list with Unhide](1916-hidden-chapters/hidden-list.png)
+
+![Hidden-only list on tablet](1916-hidden-chapters/hidden-list-tablet.png)
+
 
 Current hidden-row appearance: chapter 5 has a Hidden label and crossed-eye icon, chapter 4 is
 read, and chapter 6 is unread. Verified in both themes; tapping the hidden status
