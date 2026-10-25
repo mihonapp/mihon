@@ -30,6 +30,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed WebView sending source headers to other sites ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed downloads not showing for entries of a source sharing its name with another source ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed the More tab icon pausing and then bouncing back when leaving the tab ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed Shizuku extension installer being unavailable with Sui ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.2] - 2026-10-13
 ### Fixed
