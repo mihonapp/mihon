@@ -20,6 +20,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Improved
 - Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich))
+  - Read backups faster before restoring, and decode each entry only once while restoring ([@AntsyLich](https://github.com/AntsyLich))
 
 ### Removed
 - Remove the "Split tall images" download setting ([@AntsyLich](https://github.com/AntsyLich))
