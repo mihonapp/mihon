@@ -105,6 +105,8 @@ private fun getMarkdownColors(): MarkdownColors {
         inlineCodeBackground = codeBackground,
         dividerColor = MaterialTheme.colorScheme.outlineVariant,
         tableBackground = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
+        highlightText = MaterialTheme.colorScheme.onSecondaryContainer,
+        highlightBackground = MaterialTheme.colorScheme.secondaryContainer,
     )
 }
 

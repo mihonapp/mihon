@@ -28,15 +28,25 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Show pages progressively while they download ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4023](https://github.com/mihonapp/mihon/pull/4023))
   - Lower memory use for animated images and support cropping borders in long strip ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4029](https://github.com/mihonapp/mihon/pull/4029))
   - Pair more wide pages in dual page view by comparing them with neighbouring pages ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4051](https://github.com/mihonapp/mihon/pull/4051))
+- Add a Time Format setting to customize how times are displayed ([@MajorTanya](https://github.com/MajorTanya)) ([#4118](https://github.com/mihonapp/mihon/pull/4118))
 
 ### Changed
 - Use a new decoder for images Android can't decode itself, like AVIF, JPEG XL and HEIF, and support JPEG 2000 images ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
+- Update the sources with the most entries first during library updates ([@AntsyLich](https://github.com/AntsyLich))
 
 ### Improved
-- Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich))
+- Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich)) ([`771ba33`](https://github.com/mihonapp/mihon/commit/771ba33))
 
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
+- Remove the "Split tall images" download setting ([@AntsyLich](https://github.com/AntsyLich))
+
+### Fixed
+- Fixed WebView crashing for sources that set an Origin header ([@AntsyLich](https://github.com/AntsyLich)) ([`5f63c98`](https://github.com/mihonapp/mihon/commit/5f63c98))
+- Fixed WebView sending source headers to other sites ([@AntsyLich](https://github.com/AntsyLich)) ([`a01867d`](https://github.com/mihonapp/mihon/commit/a01867d))
+- Fixed downloads not showing for entries of a source sharing its name with another source ([@AntsyLich](https://github.com/AntsyLich)) ([`deeb9b2`](https://github.com/mihonapp/mihon/commit/deeb9b2))
+- Fixed covers reloading when removing an entry from the library ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed the More tab icon pausing and then bouncing back when leaving the tab ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.2] - 2026-10-13
 ### Fixed
