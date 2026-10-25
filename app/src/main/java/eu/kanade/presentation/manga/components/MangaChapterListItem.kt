@@ -22,11 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
@@ -110,7 +110,7 @@ fun MangaChapterListItem(
                 .padding(start = 16.dp, top = 12.dp, end = 8.dp, bottom = 12.dp),
         ) {
             Column(
-                modifier = Modifier.weight(1f).alpha(if (hidden) DISABLED_ALPHA else 1f),
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Row(
@@ -143,7 +143,7 @@ fun MangaChapterListItem(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         onTextLayout = { textHeight = it.size.height },
-                        color = LocalContentColor.current.copy(alpha = if (read) DISABLED_ALPHA else 1f),
+                        color = LocalContentColor.current.copy(alpha = if (read || hidden) DISABLED_ALPHA else 1f),
                     )
                 }
 
@@ -151,7 +151,7 @@ fun MangaChapterListItem(
                     val subtitleStyle = MaterialTheme.typography.bodySmall
                         .merge(
                             color = LocalContentColor.current
-                                .copy(alpha = if (read) DISABLED_ALPHA else SECONDARY_ALPHA),
+                                .copy(alpha = if (read || hidden) DISABLED_ALPHA else SECONDARY_ALPHA),
                         )
                     ProvideTextStyle(value = subtitleStyle) {
                         if (date != null) {
@@ -159,6 +159,17 @@ fun MangaChapterListItem(
                                 text = date,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
+                            )
+                            if (hidden || readProgress != null || scanlator != null) DotSeparatorText()
+                        }
+                        if (hidden) {
+                            Text(
+                                text = hiddenDescription,
+                                // The row's state description already announces Hidden.
+                                modifier = Modifier.clearAndSetSemantics {},
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             if (readProgress != null || scanlator != null) DotSeparatorText()
                         }
