@@ -838,6 +838,22 @@ class Downloader(
         removeFromQueue(chapters)
     }
 
+    /** Removes targets and waits for canceled blocking page/archive writes before deleting their files. */
+    suspend fun dequeueAndAwait(chapters: List<Chapter>) {
+        val previousJob = lock.withLock {
+            val previousJob = downloaderJob
+            val wasRunning = isRunning
+            if (wasRunning) pauseLocked()
+            removeFromQueue(chapters)
+            if (wasRunning) {
+                if (queueState.value.isEmpty()) stopLocked() else startLocked()
+            }
+            previousJob
+        }
+        // Joining under lock would deadlock a writer finishing through stopIfFinished/stopIfCurrent.
+        previousJob?.join()
+    }
+
     private suspend inline fun editQueue(edit: () -> Unit) = lock.withLock {
         val wasRunning = isRunning
         if (wasRunning) pauseLocked()
