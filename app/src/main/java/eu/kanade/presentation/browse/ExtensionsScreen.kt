@@ -1,7 +1,6 @@
 package eu.kanade.presentation.browse
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,16 +42,13 @@ import eu.kanade.presentation.browse.components.BaseBrowseItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.browse.components.ExtensionPill
 import eu.kanade.presentation.browse.components.label
-import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
-import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsViewModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
-import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import mihon.domain.extension.model.ExtensionStore
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
@@ -89,6 +86,7 @@ fun ExtensionScreen(
     onOpenExtension: (Extension.Loaded) -> Unit,
     onClickUpdateAll: () -> Unit,
     onRefresh: () -> Unit,
+    onToggleExtensionEnabled: (Extension.Loaded, Boolean) -> Unit,
 ) {
     val navigator = LocalNavigator.currentOrThrow
 
@@ -130,6 +128,7 @@ fun ExtensionScreen(
                     onTrustExtension = onTrustExtension,
                     onOpenExtension = onOpenExtension,
                     onClickUpdateAll = onClickUpdateAll,
+                    onToggleExtensionEnabled = onToggleExtensionEnabled,
                 )
             }
         }
@@ -149,25 +148,13 @@ private fun ExtensionContent(
     onTrustExtension: (Extension.NotLoaded) -> Unit,
     onOpenExtension: (Extension.Loaded) -> Unit,
     onClickUpdateAll: () -> Unit,
+    onToggleExtensionEnabled: (Extension.Loaded, Boolean) -> Unit,
 ) {
-    val context = LocalContext.current
     var notLoadedState by remember { mutableStateOf<Extension.NotLoaded?>(null) }
-    val installGranted = rememberRequestPackageInstallsPermissionState(initialValue = true)
 
     FastScrollLazyColumn(
         contentPadding = contentPadding + topSmallPaddingValues,
     ) {
-        if (!installGranted && state.installer?.requiresSystemPermission == true) {
-            item(key = "extension-permissions-warning") {
-                WarningBanner(
-                    textRes = MR.strings.ext_permission_install_apps_warning,
-                    modifier = Modifier.clickable {
-                        context.launchRequestPackageInstallsPermission()
-                    },
-                )
-            }
-        }
-
         state.items.forEach { (header, items) ->
             item(
                 contentType = "header",
@@ -258,6 +245,7 @@ private fun ExtensionContent(
                             }
                         }
                     },
+                    onToggleExtensionEnabled = onToggleExtensionEnabled,
                 )
             }
         }
@@ -297,6 +285,7 @@ private fun ExtensionItem(
     onClickItemCancel: (Extension) -> Unit,
     onClickItemAction: (Extension) -> Unit,
     onClickItemSecondaryAction: (Extension) -> Unit,
+    onToggleExtensionEnabled: (Extension.Loaded, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val (extension, installStep) = item
@@ -319,6 +308,7 @@ private fun ExtensionItem(
                 onClickItemCancel = onClickItemCancel,
                 onClickItemAction = onClickItemAction,
                 onClickItemSecondaryAction = onClickItemSecondaryAction,
+                onToggleExtensionEnabled = onToggleExtensionEnabled,
             )
         },
     ) {
@@ -459,6 +449,7 @@ private fun ExtensionItemActions(
     onClickItemCancel: (Extension) -> Unit = {},
     onClickItemAction: (Extension) -> Unit = {},
     onClickItemSecondaryAction: (Extension) -> Unit = {},
+    onToggleExtensionEnabled: (Extension.Loaded, Boolean) -> Unit = { _, _ -> },
 ) {
     Row(
         modifier = modifier,
@@ -473,6 +464,15 @@ private fun ExtensionItemActions(
                 )
             }
             return@Row
+        }
+
+        // An installed extension is already deployed on the device, so flipping this is all it takes
+        // to start or stop contributing sources: no download, no install step.
+        if (extension is Extension.Loaded) {
+            Switch(
+                checked = extension.isEnabled,
+                onCheckedChange = { onToggleExtensionEnabled(extension, it) },
+            )
         }
 
         val secondaryAction = when (extension) {

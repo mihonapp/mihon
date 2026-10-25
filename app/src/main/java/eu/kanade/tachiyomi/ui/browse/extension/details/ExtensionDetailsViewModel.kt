@@ -134,6 +134,12 @@ class ExtensionDetailsViewModel(
         }
     }
 
+    fun toggleExtension(enable: Boolean) {
+        successState?.extension?.pkgName?.let { packageName ->
+            extensionManager.setExtensionEnabled(packageName, enable)
+        }
+    }
+
     sealed interface State {
 
         data object Loading : State

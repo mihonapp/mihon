@@ -37,8 +37,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 38
-        versionName = "0.21.2"
+        versionCode = 40
+        versionName = "0.21.3beta2"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -313,9 +313,6 @@ dependencies {
 
     // Logging
     implementation(libs.logcat)
-
-    // Shizuku
-    implementation(libs.bundles.shizuku)
 
     // String similarity
     implementation(libs.stringSimilarity)

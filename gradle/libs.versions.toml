@@ -65,7 +65,6 @@ photoView = "2.3.0"
 quickJs = "547f5b1597"
 reorderable = "3.1.0"
 rxJava = "1.3.8"
-shizuku = "13.1.5"
 spotless = "8.10.4"
 sqldelight = "2.4.1"
 sqldelight-androidx-driver = "0.2.2"
@@ -181,8 +180,6 @@ photoView = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoVi
 quickJs = { module = "com.github.zhanghai.quickjs-java:quickjs-android", version.ref = "quickJs" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 rxJava = { module = "io.reactivex:rxjava", version.ref = "rxJava" }
-shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
-shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
 spotless-gradle = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 sqldelight-androidxDriver = { module = "com.eygraber:sqldelight-androidx-driver", version.ref = "sqldelight-androidx-driver" }
 sqldelight-androidxPaging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
@@ -229,7 +226,6 @@ kotlinx-coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-android", "
 markdown = ["markdown-core", "markdown-coil"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsOverHttps", "okhttp-zstd"]
 serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio", "kotlinx-serialization-protobuf", "xmlutil-core", "xmlutil-serialization"]
-shizuku = ["shizuku-api", "shizuku-provider"]
 sqldelight = ["sqldelight-androidxDriver", "sqldelight-async", "sqldelight-coroutines", "sqldelight-androidxPaging"]
 test = ["junit-jupiter", "kotest-assertions", "mockk"]
 voyager = ["voyager-navigator", "voyager-tabNavigator", "voyager-transitions"]

@@ -16,6 +16,7 @@
 *.ico binary
 *.gz binary
 *.zip binary
+*.apk binary
 *.7z binary
 *.ttf binary
 *.eot binary

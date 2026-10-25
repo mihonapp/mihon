@@ -96,6 +96,8 @@
     <string name="ext_trust">信任</string>
     <string name="ext_untrusted">未信任</string>
     <string name="ext_uninstall">卸载</string>
+    <string name="ext_enabled">启用插件</string>
+    <string name="ext_enabled_summary">插件保持安装状态，关闭后不再加载它提供的图源。</string>
     <string name="untrusted_extension">插件未受信任</string>
     <string name="untrusted_extension_message">恶意插件可能会读取所有登录的账号或执行任意代码。 \n \n信任此插件即代表你愿意承担上述风险。</string>
     <string name="pref_fullscreen">全屏</string>

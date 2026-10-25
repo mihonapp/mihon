@@ -10,7 +10,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -45,7 +44,6 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ExtensionsViewModel(
     private val preferences: SourcePreferences,
-    basePreferences: BasePreferences,
     private val extensionManager: ExtensionManager,
     private val getExtensions: GetExtensionsByType,
     private val context: Context,
@@ -113,14 +111,12 @@ class ExtensionsViewModel(
         searchQuery,
         isRefreshing,
         preferences.extensionUpdatesCount.changes(),
-        basePreferences.extensionInstaller.changes(),
-    ) { items, searchQuery, isRefreshing, updates, installer ->
+    ) { items, searchQuery, isRefreshing, updates ->
         State(
             isLoading = items == null,
             isRefreshing = isRefreshing,
             items = items.orEmpty(),
             updates = updates,
-            installer = installer,
             searchQuery = searchQuery,
         )
     }
@@ -228,13 +224,20 @@ class ExtensionsViewModel(
         extensionManager.trust(extension)
     }
 
+    /**
+     * Flips an already deployed extension on or off. The manager reloads, so the switch shows up
+     * everywhere at once and the extension's sources stop being registered.
+     */
+    fun toggleExtensionEnabled(extension: Extension.Loaded, enabled: Boolean) {
+        extensionManager.setExtensionEnabled(extension.pkgName, enabled)
+    }
+
     @Immutable
     data class State(
         val isLoading: Boolean = true,
         val isRefreshing: Boolean = false,
         val items: ItemGroups = mutableMapOf(),
         val updates: Int = 0,
-        val installer: BasePreferences.ExtensionInstaller? = null,
         val searchQuery: String? = null,
     ) {
         val isEmpty = items.isEmpty()

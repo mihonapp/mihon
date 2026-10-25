@@ -38,6 +38,7 @@ import mihon.core.metro.AppCoroutineScope
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.model.ExtensionStore
 import mihon.domain.extension.repository.ExtensionStoreRepository
+import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
@@ -103,6 +104,7 @@ class ExtensionManager(
                 trustExtension.changes(),
                 preferences.enabledContentWarnings.changes().distinctUntilChanged().drop(1).map {},
                 preferences.applyContentWarningsToInstalled.changes().distinctUntilChanged().drop(1).map {},
+                preferences.disabledExtensions.changes().distinctUntilChanged().drop(1).map {},
             )
                 .collectLatest { loadExtensions() }
         }
@@ -282,8 +284,7 @@ class ExtensionManager(
      */
     fun updateExtension(extension: Extension.Installed): Flow<InstallStep> {
         val update = extension.findUpdate(availableExtensionListFlow.value) ?: return emptyFlow()
-        val isUpdateForPrivatelyInstalled = !extension.isShared
-        return installer.downloadAndInstall(update, isUpdateForPrivatelyInstalled)
+        return installer.downloadAndInstall(update)
     }
 
     fun cancelInstallUpdateExtension(extension: Extension) {
@@ -310,6 +311,16 @@ class ExtensionManager(
      */
     fun uninstallExtension(extension: Extension.Installed) {
         installer.uninstallApk(extension.pkgName)
+    }
+
+    /**
+     * Switches a deployed extension on or off. Nothing is installed or removed: the apk stays where
+     * it is, so switching it back on needs no download and no install step.
+     */
+    fun setExtensionEnabled(pkgName: String, enabled: Boolean) {
+        preferences.disabledExtensions.getAndSet { disabled ->
+            if (enabled) disabled - pkgName else disabled + pkgName
+        }
     }
 
     /**

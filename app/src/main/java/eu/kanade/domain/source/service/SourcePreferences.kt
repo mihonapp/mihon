@@ -36,6 +36,15 @@ class SourcePreferences(
 
     val incognitoExtensions: Preference<Set<String>> = preferenceStore.getStringSet("incognito_extensions", emptySet())
 
+    /**
+     * Extensions the user switched off. Their apks stay deployed on the device, they're simply not
+     * loaded, so switching one back on needs no download and no install step.
+     */
+    val disabledExtensions: Preference<Set<String>> = preferenceStore.getStringSet(
+        "disabled_extensions",
+        emptySet(),
+    )
+
     val pinnedSources: Preference<Set<String>> = preferenceStore.getStringSet("pinned_catalogues", emptySet())
 
     val lastUsedSource: Preference<Long> = preferenceStore.getLong(

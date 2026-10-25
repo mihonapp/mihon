@@ -34,8 +34,6 @@ import androidx.core.net.toUri
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
-import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import eu.kanade.tachiyomi.util.system.telemetryIncluded
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -58,8 +56,6 @@ internal class PermissionStep : OnboardingStep {
         val privacyPreferences = remember { context.appGraph.privacyPreferences }
         val lifecycleOwner = LocalLifecycleOwner.current
 
-        val installGranted = rememberRequestPackageInstallsPermissionState()
-
         DisposableEffect(lifecycleOwner.lifecycle) {
             val observer = object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
@@ -80,15 +76,6 @@ internal class PermissionStep : OnboardingStep {
         }
 
         Column {
-            PermissionCheckbox(
-                title = stringResource(MR.strings.onboarding_permission_install_apps),
-                subtitle = stringResource(MR.strings.onboarding_permission_install_apps_description),
-                granted = installGranted,
-                onButtonClick = {
-                    context.launchRequestPackageInstallsPermission()
-                },
-            )
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val permissionRequester = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.RequestPermission(),

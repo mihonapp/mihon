@@ -2,17 +2,12 @@ package eu.kanade.tachiyomi.extension.util
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import dev.zacsweers.metro.Inject
-import eu.kanade.domain.base.BasePreferences
-import eu.kanade.tachiyomi.extension.installer.Installer
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.await
-import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -41,13 +36,11 @@ import java.util.concurrent.ConcurrentHashMap
 class ExtensionInstaller(
     @AppCoroutineScope private val scope: CoroutineScope,
     private val context: Context,
-    basePreferences: BasePreferences,
     networkHelper: NetworkHelper,
 ) {
 
     private val activeJobs = ConcurrentHashMap<String, Job>()
     private val activeSteps = ConcurrentHashMap<Long, MutableStateFlow<InstallStep>>()
-    private val extensionInstaller = basePreferences.extensionInstaller
 
     private val httpClient: OkHttpClient by lazy { networkHelper.client }
 
@@ -56,12 +49,8 @@ class ExtensionInstaller(
      * step in the installation process.
      *
      * @param extension The listing to install, whose apk must be signed with its store's key.
-     * @param isUpdateForPrivatelyInstalled If this is an update for a privately installed extension
      */
-    fun downloadAndInstall(
-        extension: Extension.Available,
-        isUpdateForPrivatelyInstalled: Boolean = false,
-    ): Flow<InstallStep> {
+    fun downloadAndInstall(extension: Extension.Available): Flow<InstallStep> {
         val downloadId = extension.pkgName.hashCode().toLong()
         cancelInstall(extension.pkgName)
 
@@ -97,7 +86,7 @@ class ExtensionInstaller(
 
                 ensureActive()
                 step.value = InstallStep.Installing
-                installApk(downloadId, tmpFile, packageInfo, isUpdateForPrivatelyInstalled)
+                deployExtension(downloadId, tmpFile)
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 logcat(LogPriority.INFO, e)
@@ -116,52 +105,16 @@ class ExtensionInstaller(
     }
 
     /**
-     * Starts an intent to install the extension at the given uri.
+     * Deploys the downloaded apk into the app's private extension directory and lets the loader pick
+     * it up.
      *
-     * @param tempFile The file of the extension to install. Delete after use.
-     * @param packageInfo The package info already read from [tempFile].
-     * @param isUpdateForPrivatelyInstalled If this install is an update for a privately installed extension
+     * Extensions are never handed to the system installer: they only ever run inside this app, so
+     * deploying one is a file copy plus a load, and switching it back off is a preference flip
+     * rather than an uninstall.
      */
-    private fun installApk(
-        downloadId: Long,
-        tempFile: File,
-        packageInfo: PackageInfo,
-        isUpdateForPrivatelyInstalled: Boolean = false,
-    ) {
-        if (isUpdateForPrivatelyInstalled) {
-            installApkPrivately(downloadId, tempFile, packageInfo)
-            return
-        }
-
-        when (val installer = extensionInstaller.get()) {
-            BasePreferences.ExtensionInstaller.LEGACY -> {
-                val intent = Intent(context, ExtensionInstallActivity::class.java)
-                    .setDataAndType(tempFile.getUriCompat(context), APK_MIME)
-                    .putExtra(EXTRA_DOWNLOAD_ID, downloadId)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-                context.startActivity(intent)
-            }
-
-            BasePreferences.ExtensionInstaller.PRIVATE -> {
-                installApkPrivately(downloadId, tempFile, packageInfo)
-            }
-
-            else -> {
-                val intent = ExtensionInstallService.getIntent(
-                    context,
-                    downloadId,
-                    tempFile.getUriCompat(context),
-                    installer,
-                )
-                ContextCompat.startForegroundService(context, intent)
-            }
-        }
-    }
-
-    private fun installApkPrivately(downloadId: Long, tempFile: File, packageInfo: PackageInfo) {
+    private fun deployExtension(downloadId: Long, tempFile: File) {
         try {
-            ExtensionLoader.installPrivateExtensionFile(context, tempFile, packageInfo)
+            ExtensionLoader.installPrivateExtensionFile(context, tempFile)
             updateInstallStep(downloadId, InstallStep.Installed)
         } catch (e: Exception) {
             logcat(LogPriority.INFO, e) { "Failed to install extension privately" }
@@ -172,11 +125,10 @@ class ExtensionInstaller(
     }
 
     /**
-     * Cancels extension install and remove from download manager and installer.
+     * Cancels a queued download and its deployment.
      */
     fun cancelInstall(pkgName: String) {
         activeJobs.remove(pkgName)?.cancel()
-        Installer.cancelInstallQueue(pkgName.hashCode().toLong())
     }
 
     /**
@@ -207,7 +159,7 @@ class ExtensionInstaller(
     }
 
     companion object {
+        // Also used by the app update flow, which still hands an apk to the system installer
         const val APK_MIME = "application/vnd.android.package-archive"
-        const val EXTRA_DOWNLOAD_ID = "ExtensionInstaller.extra.DOWNLOAD_ID"
     }
 }

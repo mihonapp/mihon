@@ -11,7 +11,6 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceFactory
 import eu.kanade.tachiyomi.util.lang.Hash
-import eu.kanade.tachiyomi.util.storage.copyAndSetReadOnlyTo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -19,11 +18,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.di.appGraph
-import mihon.data.dalvik.DelegateLastClassLoaderCompat
+import mihon.data.dalvik.extensionClassLoader
 import mihon.domain.extension.model.ContentWarning
 import mihon.domain.extension.model.ExtensionStore
 import tachiyomi.core.common.util.system.logcat
 import java.io.File
+import java.io.FileOutputStream
 
 /**
  * Class that handles the loading of the extensions. Supports two kinds of extensions:
@@ -62,35 +62,160 @@ internal object ExtensionLoader {
 
     private fun getPrivateExtensionDir(context: Context) = File(context.filesDir, "exts")
 
-    fun installPrivateExtensionFile(context: Context, file: File, extension: PackageInfo) {
-        check(isPackageAnExtension(extension)) { "${extension.packageName} isn't an extension" }
-        val currentExtension = getExtensionPackageInfoFromPkgName(context, extension.packageName)
+    /**
+     * Reads what an extension declares without running any of its code: no class loader, no
+     * `Class.forName`, no instantiation. That's what makes it safe to call before the user has
+     * accepted the signature, which is exactly when the install flow needs it.
+     */
+    fun inspect(context: Context, file: File): InspectResult {
+        if (!file.isFile) return InspectResult.Rejected("The extension file doesn't exist")
 
-        if (currentExtension != null) {
-            check(
-                PackageInfoCompat.getLongVersionCode(extension) >=
-                    PackageInfoCompat.getLongVersionCode(currentExtension),
-            ) { "The installed version is newer, and downgrading isn't allowed" }
+        val pkgManager = context.packageManager
+        val pkgInfo = pkgManager.getPackageArchiveInfo(file.absolutePath, PACKAGE_FLAGS)
+            ?.also { it.applicationInfo?.fixBasePaths(file.absolutePath) }
+            ?: return InspectResult.Rejected("The file isn't a readable APK")
 
-            val extensionSignatures = getSignatures(extension)
-            check(!extensionSignatures.isNullOrEmpty()) { "The extension isn't signed" }
-            check(extensionSignatures.containsAll(getSignatures(currentExtension)!!)) {
+        if (!isPackageAnExtension(pkgInfo)) {
+            return InspectResult.Rejected("${pkgInfo.packageName} isn't an extension")
+        }
+
+        val appInfo = pkgInfo.applicationInfo
+            ?: return InspectResult.Rejected("Missing application info for ${pkgInfo.packageName}")
+        val metaData = appInfo.metaData
+            ?: return InspectResult.Rejected("Missing metadata for ${pkgInfo.packageName}")
+
+        val versionName = pkgInfo.versionName
+        if (versionName.isNullOrEmpty()) {
+            return InspectResult.Rejected("Missing versionName for ${pkgInfo.packageName}")
+        }
+
+        val sourceClasses = metaData.getString(METADATA_SOURCE_CLASS)
+            ?.split(";")
+            ?.map { it.trim() }
+            ?.filter { it.isNotEmpty() }
+            ?.map { if (it.startsWith(".")) pkgInfo.packageName + it else it }
+            .orEmpty()
+        if (sourceClasses.isEmpty()) {
+            return InspectResult.Rejected("Missing source class for ${pkgInfo.packageName}")
+        }
+
+        val libVersion = metaData.getFloat(METADATA_EXTENSION_LIB)
+            .takeUnless { it == 0.0f }
+            ?.toString()
+            ?.toDouble()
+            ?: versionName.substringBeforeLast('.').toDoubleOrNull()
+        if (libVersion == null || libVersion !in SUPPORTED_LIB_VERSIONS) {
+            return InspectResult.Rejected(
+                "Lib version is $libVersion, while only version(s) " +
+                    "${SUPPORTED_LIB_VERSIONS.joinToString()} are supported",
+            )
+        }
+
+        val signatures = getSignatures(pkgInfo).orEmpty()
+        if (signatures.isEmpty()) {
+            return InspectResult.Rejected("Package ${pkgInfo.packageName} isn't signed")
+        }
+
+        return InspectResult.Ok(
+            ExtensionInspection(
+                pkgName = pkgInfo.packageName,
+                name = metaData.getString(METADATA_NAME)
+                    ?: pkgManager.getApplicationLabel(appInfo).toString().substringAfter("Tachiyomi: "),
+                versionName = versionName,
+                versionCode = PackageInfoCompat.getLongVersionCode(pkgInfo),
+                libVersion = libVersion,
+                signatures = signatures,
+                sourceClasses = sourceClasses,
+            ),
+        )
+    }
+
+    /**
+     * Installs [file] as a private extension, replacing whatever version is already there.
+     *
+     * Every check runs against the staged copy instead of the incoming file, so a file swapped
+     * between validation and install can't slip through. Any failure rolls back, leaving either the
+     * previous extension or nothing at all, never a half written one.
+     */
+    fun installPrivateExtensionFile(context: Context, file: File) {
+        val incoming = when (val result = inspect(context, file)) {
+            is InspectResult.Ok -> result.inspection
+            is InspectResult.Rejected -> throw IllegalStateException(result.reason)
+        }
+
+        val dir = getPrivateExtensionDir(context).also { it.mkdirs() }
+        val target = File(dir, "${incoming.pkgName}.$PRIVATE_EXTENSION_EXTENSION")
+        val part = File(dir, "${target.name}.part")
+        val previous = File(dir, "${target.name}.previous")
+
+        val installed = (inspect(context, target) as? InspectResult.Ok)?.inspection
+        if (installed != null) {
+            check(incoming.versionCode >= installed.versionCode) {
+                "The installed version is newer, and downgrading isn't allowed"
+            }
+            check(incoming.signatures.containsAll(installed.signatures)) {
                 "It isn't signed with the same key as the installed extension"
             }
         }
 
-        val target = File(getPrivateExtensionDir(context), "${extension.packageName}.$PRIVATE_EXTENSION_EXTENSION")
+        part.delete()
         try {
-            target.delete()
-            file.copyAndSetReadOnlyTo(target, overwrite = true)
-        } catch (e: Exception) {
-            target.delete()
-            throw e
+            FileOutputStream(part).use { output ->
+                file.inputStream().use { input -> input.copyTo(output) }
+                output.fd.sync()
+            }
+            // Just in case, since Android 14+ requires them to be read-only
+            if (!part.setReadOnly()) {
+                throw IllegalStateException("Unable to make the staged extension read-only")
+            }
+
+            validate(context, part, incoming)
+
+            previous.delete()
+            if (target.exists() && !target.renameTo(previous)) {
+                throw IllegalStateException("Unable to stage the extension update")
+            }
+            try {
+                if (!part.renameTo(target)) {
+                    throw IllegalStateException("Unable to install the extension")
+                }
+                target.setReadOnly()
+                previous.delete()
+            } catch (e: Exception) {
+                target.delete()
+                if (previous.exists()) previous.renameTo(target)
+                throw e
+            }
+        } finally {
+            part.delete()
         }
-        if (currentExtension != null) {
-            ExtensionInstallReceiver.notifyReplaced(context, extension.packageName)
+
+        if (installed != null) {
+            ExtensionInstallReceiver.notifyReplaced(context, incoming.pkgName)
         } else {
-            ExtensionInstallReceiver.notifyAdded(context, extension.packageName)
+            ExtensionInstallReceiver.notifyAdded(context, incoming.pkgName)
+        }
+    }
+
+    /**
+     * Loads a staged file for real: the dex is read and every declared source class is instantiated,
+     * so an extension that can't run is rejected before it gets to replace a working one.
+     */
+    private fun validate(context: Context, file: File, inspection: ExtensionInspection) {
+        val classLoader = extensionClassLoader(file.absolutePath, context.classLoader)
+        inspection.sourceClasses.forEach { className ->
+            try {
+                when (val obj = Class.forName(className, false, classLoader).getDeclaredConstructor().newInstance()) {
+                    is Source -> listOf(obj)
+                    is SourceFactory -> obj.createSources()
+                    else -> throw Exception("Unknown source class type: ${obj.javaClass}")
+                }
+            } catch (e: Throwable) {
+                throw IllegalStateException(
+                    "Unable to instantiate extension source $className: ${e.rootMessage}",
+                    e,
+                )
+            }
         }
     }
 
@@ -119,6 +244,7 @@ internal object ExtensionLoader {
         val stores = context.appGraph.extensionStoreRepository.getAllAsFlow().first()
         val enabledContentWarnings = sourcePreferences.enabledContentWarnings.get()
         val applyContentWarningsToInstalled = sourcePreferences.applyContentWarningsToInstalled.get()
+        val disabledExtensions = sourcePreferences.disabledExtensions.get()
 
         val pkgManager = context.packageManager
 
@@ -177,6 +303,7 @@ internal object ExtensionLoader {
                             stores = stores,
                             enabledContentWarnings = enabledContentWarnings,
                             applyContentWarningsToInstalled = applyContentWarningsToInstalled,
+                            disabledExtensions = disabledExtensions,
                             alreadyLoaded = alreadyLoaded[it.packageInfo.packageName],
                         )
                     }
@@ -204,6 +331,7 @@ internal object ExtensionLoader {
             stores = context.appGraph.extensionStoreRepository.getAll(),
             enabledContentWarnings = sourcePreferences.enabledContentWarnings.get(),
             applyContentWarningsToInstalled = sourcePreferences.applyContentWarningsToInstalled.get(),
+            disabledExtensions = sourcePreferences.disabledExtensions.get(),
         )
     }
 
@@ -255,6 +383,7 @@ internal object ExtensionLoader {
         stores: List<ExtensionStore>,
         enabledContentWarnings: Set<ContentWarning>,
         applyContentWarningsToInstalled: Boolean,
+        disabledExtensions: Set<String>,
         alreadyLoaded: Extension.Loaded? = null,
     ): Extension.Installed {
         return try {
@@ -265,6 +394,7 @@ internal object ExtensionLoader {
                 stores = stores,
                 enabledContentWarnings = enabledContentWarnings,
                 applyContentWarningsToInstalled = applyContentWarningsToInstalled,
+                disabledExtensions = disabledExtensions,
                 alreadyLoaded = alreadyLoaded,
             )
         } catch (e: Throwable) {
@@ -298,6 +428,7 @@ internal object ExtensionLoader {
         stores: List<ExtensionStore>,
         enabledContentWarnings: Set<ContentWarning>,
         applyContentWarningsToInstalled: Boolean,
+        disabledExtensions: Set<String>,
         alreadyLoaded: Extension.Loaded? = null,
     ): Extension.Installed {
         val pkgManager = context.packageManager
@@ -378,17 +509,19 @@ internal object ExtensionLoader {
             return notLoaded(Extension.NotLoaded.Reason.Filtered, libVersion)
         }
 
+        val isEnabled = pkgName !in disabledExtensions
+
         // Everything above is cheap to check again, everything below isn't. Nothing about this apk
         // changed and it still passes, so keep the sources that are already registered for it.
         if (alreadyLoaded != null &&
             alreadyLoaded.versionCode == versionCode &&
             alreadyLoaded.isShared == extensionInfo.isShared
         ) {
-            return alreadyLoaded.copy(store = store)
+            return alreadyLoaded.copy(store = store, isEnabled = isEnabled)
         }
 
         val classLoader = try {
-            DelegateLastClassLoaderCompat(appInfo.sourceDir, null, context.classLoader)
+            extensionClassLoader(appInfo.sourceDir, context.classLoader)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Extension load error: $extName ($pkgName)" }
             return notLoaded(Extension.NotLoaded.Reason.Failed(e.rootMessage, e.stackTraceToString()), libVersion)
@@ -444,6 +577,7 @@ internal object ExtensionLoader {
             sources = sources,
             pkgFactory = metaData.getString(METADATA_SOURCE_FACTORY),
             isShared = extensionInfo.isShared,
+            isEnabled = isEnabled,
             signatures = signatures,
             store = store,
         )
@@ -519,6 +653,27 @@ internal object ExtensionLoader {
         val packageInfo: PackageInfo,
         val isShared: Boolean,
     )
+}
+
+/**
+ * What an extension declares in its manifest, read without running any of its code.
+ */
+internal data class ExtensionInspection(
+    val pkgName: String,
+    val name: String,
+    val versionName: String,
+    val versionCode: Long,
+    val libVersion: Double,
+    /** SHA-256 digests of the certificates its apk is signed with. */
+    val signatures: List<String>,
+    val sourceClasses: List<String>,
+)
+
+internal sealed interface InspectResult {
+    data class Ok(val inspection: ExtensionInspection) : InspectResult
+
+    /** Why the file can't be installed, phrased for the user who picked it. */
+    data class Rejected(val reason: String) : InspectResult
 }
 
 /**

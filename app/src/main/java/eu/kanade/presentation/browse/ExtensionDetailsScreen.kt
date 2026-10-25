@@ -74,6 +74,7 @@ fun ExtensionDetailsScreen(
     onClickUninstall: () -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
     onClickIncognito: (Boolean) -> Unit,
+    onClickToggleExtension: (Boolean) -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -118,6 +119,7 @@ fun ExtensionDetailsScreen(
             onClickUninstall = onClickUninstall,
             onClickSource = onClickSource,
             onClickIncognito = onClickIncognito,
+            onClickToggleExtension = onClickToggleExtension,
         )
     }
 }
@@ -133,6 +135,7 @@ private fun ExtensionDetails(
     onClickUninstall: () -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
     onClickIncognito: (Boolean) -> Unit,
+    onClickToggleExtension: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     var showContentWarning by remember { mutableStateOf(false) }
@@ -164,6 +167,7 @@ private fun ExtensionDetails(
                     showContentWarning = true
                 },
                 onExtIncognitoChange = onClickIncognito,
+                onExtEnabledChange = onClickToggleExtension,
             )
         }
 
@@ -199,6 +203,7 @@ private fun DetailsHeader(
     onClickUninstall: () -> Unit,
     onClickAppInfo: (() -> Unit)?,
     onExtIncognitoChange: (Boolean) -> Unit,
+    onExtEnabledChange: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     val contentWarning = extension.contentWarning.label
@@ -344,6 +349,23 @@ private fun DetailsHeader(
                 }
             }
         }
+
+        TextPreferenceWidget(
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small),
+            title = stringResource(MR.strings.ext_enabled),
+            subtitle = stringResource(MR.strings.ext_enabled_summary),
+            widget = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Switch(
+                        checked = (extension as? Extension.Loaded)?.isEnabled ?: true,
+                        onCheckedChange = onExtEnabledChange,
+                        modifier = Modifier.padding(start = TrailingWidgetBuffer),
+                    )
+                }
+            },
+        )
 
         TextPreferenceWidget(
             modifier = Modifier.padding(horizontal = MaterialTheme.padding.small),

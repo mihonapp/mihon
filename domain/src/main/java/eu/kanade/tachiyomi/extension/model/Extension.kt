@@ -94,6 +94,8 @@ sealed interface Extension {
         override val signatures: List<String>,
         val pkgFactory: String?,
         val sources: List<Source>,
+        /** False when the user switched the extension off: it stays deployed but provides no sources. */
+        val isEnabled: Boolean = true,
         override val hasUpdate: Boolean = false,
         val isObsolete: Boolean = false,
         override val store: ExtensionStore? = null,

@@ -44,6 +44,7 @@ data class ExtensionDetailsScreen(
                     onClickUninstall = viewModel::uninstallExtension,
                     onClickSource = viewModel::toggleSource,
                     onClickIncognito = viewModel::toggleIncognito,
+                    onClickToggleExtension = viewModel::toggleExtension,
                 )
             }
         }

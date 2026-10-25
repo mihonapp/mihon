@@ -106,7 +106,7 @@ abstract class SearchViewModel(
         }
 
         return extensionManager.getLoadedExtensions()
-            .filter { it.pkgName == filter }
+            .filter { it.isEnabled && it.pkgName == filter }
             .flatMap { it.sources }
             .filter { it in enabledSources }
     }

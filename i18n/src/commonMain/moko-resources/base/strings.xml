@@ -363,6 +363,8 @@
     <string name="ext_load_failed_message">This extension threw an error while loading, so none of its sources are available.</string>
     <string name="ext_uninstall">Uninstall</string>
     <string name="ext_remove">Remove</string>
+    <string name="ext_enabled">Extension enabled</string>
+    <string name="ext_enabled_summary">The extension stays installed. Switching it off stops its sources from loading.</string>
     <string name="ext_confirm_remove">Remove Extension?</string>
     <string name="ext_app_info">App info</string>
     <string name="untrusted_extension">Untrusted extension</string>

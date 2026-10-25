@@ -90,6 +90,8 @@
     <string name="ext_installing">安裝中</string>
     <string name="ext_installed">已安裝</string>
     <string name="ext_uninstall">解除安裝</string>
+    <string name="ext_enabled">啟用插件</string>
+    <string name="ext_enabled_summary">插件會保持安裝狀態，關閉後不再載入它提供的圖源。</string>
     <string name="pref_fullscreen">全螢幕</string>
     <string name="pref_double_tap_anim_speed">輕觸兩下動畫速度</string>
     <string name="pref_show_page_number">顯示頁碼</string>
