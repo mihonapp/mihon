@@ -2,10 +2,12 @@ package eu.kanade.presentation.manga.components
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -41,9 +43,11 @@ import mihon.icons.materialsymbols.rounded.FileDownloadOff
 import mihon.icons.materialsymbols.rounded.RemoveDone
 import mihon.icons.materialsymbols.roundedfilled.Bookmark
 import mihon.icons.materialsymbols.roundedfilled.Circle
+import mihon.icons.materialsymbols.roundedfilled.VisibilityOff
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
+import tachiyomi.presentation.core.components.material.IconButtonTokens
 import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
@@ -178,13 +182,27 @@ fun MangaChapterListItem(
                 }
             }
 
-            ChapterDownloadIndicator(
-                enabled = downloadIndicatorEnabled && !hidden,
-                modifier = Modifier.padding(start = 4.dp).alpha(if (hidden) DISABLED_ALPHA else 1f),
-                downloadStateProvider = downloadStateProvider,
-                downloadProgressProvider = downloadProgressProvider,
-                onClick = { onDownloadClick?.invoke(it) },
-            )
+            if (hidden) {
+                Box(
+                    modifier = Modifier.padding(start = 4.dp).size(IconButtonTokens.StateLayerSize),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = MaterialSymbols.RoundedFilled.VisibilityOff,
+                        contentDescription = null, // The row already announces its hidden state.
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            } else {
+                ChapterDownloadIndicator(
+                    enabled = downloadIndicatorEnabled,
+                    modifier = Modifier.padding(start = 4.dp),
+                    downloadStateProvider = downloadStateProvider,
+                    downloadProgressProvider = downloadProgressProvider,
+                    onClick = { onDownloadClick?.invoke(it) },
+                )
+            }
         }
     }
 }

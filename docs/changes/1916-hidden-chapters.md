@@ -6,7 +6,9 @@ Selecting chapters adds a Hide action to the chapter selection bar. When every
 selected chapter is hidden, the action becomes Unhide. Mixed selections hide all
 selected chapters.
 
-Hidden chapters stay in their normal list position, dimmed. Long press still
+Hidden chapters stay in their normal list position, dimmed, with a crossed-eye
+icon replacing the download indicator on the right. The icon remains at normal
+contrast so hidden chapters can be distinguished from read chapters. Long press still
 selects them, and taps toggle selection while selection mode is active. They
 cannot open the reader or start downloads. Hiding preserves reading progress and
 bookmarks. Hiding cancels queued downloads and removes that chapter’s completed
@@ -57,7 +59,8 @@ Native review flow:
 
 1. Open an entry with normal chapters and an unwanted high-numbered chapter.
 2. Long press the unwanted chapter and tap the fifth action, Hide.
-3. Confirm the dimmed row remains and its tap/download/swipe actions cannot
+3. Confirm the dimmed row remains with a crossed-eye icon instead of a download
+   indicator, and its tap/download/swipe actions cannot
    open or download it. Confirm the missing-chapter warning ignores it.
 4. Long press the dimmed row and tap Unhide. Confirm normal interaction returns.
 5. Hide multiple chapters, then test a mixed selection and an all-hidden selection.
@@ -97,6 +100,17 @@ remote extension network behavior and a full manual backup import were not
 exercised; protobuf compatibility is covered by automated tests.
 
 ## Native screenshots
+
+Current hidden-row appearance: chapter 5 has a crossed-eye icon, chapter 4 is
+read, and chapter 6 is unread. Verified in both themes; tapping the hidden status
+icon does not open the reader, long pressing it selects the row, and Unhide/Hide
+still work. APK assembly, formatting and app regression checks cover this update.
+
+![Hidden versus read chapters, light theme](1916-hidden-chapters/hidden-row-light.png)
+
+![Hidden versus read chapters, dark theme](1916-hidden-chapters/hidden-row-dark.png)
+
+Earlier selection-layout captures below predate the crossed-eye row indicator.
 
 The offline local-source fixture uses Delete in the fourth slot because its
 chapters are already available locally; Hide/Unhide is the fifth action.
