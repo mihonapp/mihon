@@ -11,6 +11,11 @@ import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
+import tachiyomi.core.common.preference.InMemoryPreferenceStore
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -24,8 +29,14 @@ class DownloadHiddenChaptersTest {
     private val downloader = mockk<Downloader>(relaxUnitFun = true)
     private val cache = mockk<DownloadCache>(relaxUnitFun = true)
 
-    // No exclusions may be queried on the hide path, including bookmarks and category protections.
-    private val preferences = mockk<DownloadPreferences>()
+    private val settings = DownloadPreferences(InMemoryPreferenceStore()).apply {
+        removeBookmarkedChapters.set(true)
+    }
+    private val preferences = mockk<DownloadPreferences> {
+        every { removeBookmarkedChapters } returns settings.removeBookmarkedChapters
+        every { removeExcludeCategories } returns settings.removeExcludeCategories
+    }
+    private val categories = mockk<GetCategories> { coEvery { await(any()) } returns emptyList() }
     private val source = mockk<Source> { every { id } returns 7 }
     private val manga = Manga.create().copy(id = 1, source = 7)
     private val target = Chapter.create().copy(id = 2, mangaId = 1, bookmark = true, read = true)
@@ -41,12 +52,12 @@ class DownloadHiddenChaptersTest {
     }
 
     private val manager = DownloadManager(
-        mockk(), provider, cache, mockk(), mockk(), mockk(), repository, mockk(), preferences, downloader,
+        mockk(), provider, cache, categories, mockk(), mockk(), repository, mockk(), preferences, downloader,
         mockk(), mangas,
     )
 
     @Test
-    fun `hide deletes protected target final and partial paths only after writers finish`() = runTest {
+    fun `hide deletes eligible target final and partial paths only after writers finish`() = runTest {
         val final = mockk<UniFile> { every { delete() } returns true }
         val partial = mockk<UniFile> { every { delete() } returns true }
         val unrelated = mockk<UniFile>()
@@ -64,6 +75,138 @@ class DownloadHiddenChaptersTest {
             cache.invalidateCache()
         }
         verify(exactly = 0) { unrelated.delete() }
+        coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `hide respects allow deleting bookmarked chapters`(allowDeletingBookmarks: Boolean) = runTest {
+        settings.removeBookmarkedChapters.set(allowDeletingBookmarks)
+        val downloaded = mockk<UniFile> { every { delete() } returns true }
+        coEvery { provider.findChapterPathsForHide(any(), any(), any(), any()) } returns listOf(downloaded)
+
+        manager.deleteHiddenChapters(listOf(target), manga, source)
+
+        coVerify(exactly = 1) { downloader.dequeueAndAwait(listOf(target)) }
+        coVerify(exactly = if (allowDeletingBookmarks) 1 else 0) {
+            provider.findChapterPathsForHide(listOf(target), snapshot, manga, source)
+        }
+        coVerify(exactly = if (allowDeletingBookmarks) 1 else 0) {
+            provider.findMangaIdsSharingDownloadDirectory(any(), any(), any())
+        }
+        verify(exactly = if (allowDeletingBookmarks) 1 else 0) { downloaded.delete() }
+        verify(exactly = if (allowDeletingBookmarks) 1 else 0) { cache.invalidateCache() }
+        coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `excluded categories protect read chapters but still delete unread chapters`(read: Boolean) = runTest {
+        settings.removeExcludeCategories.set(setOf("4"))
+        coEvery { categories.await(manga.id) } returns listOf(Category(4, "Protected", 0, 0))
+        val current = target.copy(read = read, hidden = true)
+        val currentSnapshot = listOf(current, sibling)
+        coEvery { repository.getChapterByMangaId(manga.id, false) } returns currentSnapshot
+        val downloaded = mockk<UniFile> { every { delete() } returns true }
+        coEvery { provider.findChapterPathsForHide(any(), any(), any(), any()) } returns listOf(downloaded)
+
+        // Deliberately stale read state must not authorize or prevent deletion.
+        manager.deleteHiddenChapters(listOf(target.copy(read = !read)), manga, source)
+
+        coVerify { downloader.dequeueAndAwait(listOf(target.copy(read = !read))) }
+        coVerify(exactly = if (read) 0 else 1) {
+            provider.findChapterPathsForHide(listOf(current), currentSnapshot, manga, source)
+        }
+        coVerify(exactly = if (read) 0 else 1) {
+            provider.findMangaIdsSharingDownloadDirectory(any(), any(), any())
+        }
+        verify(exactly = if (read) 0 else 1) { downloaded.delete() }
+        verify(exactly = if (read) 0 else 1) { cache.invalidateCache() }
+        coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `uncategorized manga uses default category zero for read protection`(read: Boolean) = runTest {
+        settings.removeExcludeCategories.set(setOf("0"))
+        val current = target.copy(read = read)
+        coEvery { repository.getChapterByMangaId(manga.id, false) } returns listOf(current)
+        val downloaded = mockk<UniFile> { every { delete() } returns true }
+        coEvery { provider.findChapterPathsForHide(any(), any(), any(), any()) } returns listOf(downloaded)
+
+        manager.deleteHiddenChapters(listOf(current), manga, source)
+
+        coVerify { categories.await(manga.id) }
+        coVerify(exactly = if (read) 0 else 1) {
+            provider.findChapterPathsForHide(listOf(current), listOf(current), manga, source)
+        }
+        verify(exactly = if (read) 0 else 1) { downloaded.delete() }
+        verify(exactly = if (read) 0 else 1) { cache.invalidateCache() }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `bookmark eligibility uses current database flags instead of stale selection`(bookmarked: Boolean) = runTest {
+        settings.removeBookmarkedChapters.set(false)
+        val current = target.copy(bookmark = bookmarked, hidden = true)
+        val currentSnapshot = listOf(current, sibling)
+        coEvery { repository.getChapterByMangaId(manga.id, false) } returns currentSnapshot
+        val downloaded = mockk<UniFile> { every { delete() } returns true }
+        coEvery { provider.findChapterPathsForHide(any(), any(), any(), any()) } returns listOf(downloaded)
+
+        manager.deleteHiddenChapters(listOf(target.copy(bookmark = !bookmarked)), manga, source)
+
+        coVerify { downloader.dequeueAndAwait(listOf(target.copy(bookmark = !bookmarked))) }
+        coVerify(exactly = if (bookmarked) 0 else 1) {
+            provider.findChapterPathsForHide(listOf(current), currentSnapshot, manga, source)
+        }
+        verify(exactly = if (bookmarked) 0 else 1) { downloaded.delete() }
+        verify(exactly = if (bookmarked) 0 else 1) { cache.invalidateCache() }
+    }
+
+    @Test
+    fun `mixed selections cancel every writer but pass only eligible current records and all owners`() = runTest {
+        settings.removeBookmarkedChapters.set(false)
+        val eligible = sibling.copy(hidden = true, bookmark = false, read = false, lastPageRead = 9)
+        val currentTarget = target.copy(hidden = true, lastPageRead = 5)
+        val currentSnapshot = listOf(currentTarget, eligible)
+        coEvery { repository.getChapterByMangaId(manga.id, false) } returns currentSnapshot
+        val currentManga = manga.copy(title = "Current manga title")
+        coEvery { mangas.getAll() } returns listOf(currentManga)
+        val downloaded = mockk<UniFile> { every { delete() } returns true }
+        coEvery {
+            provider.findChapterPathsForHide(listOf(eligible), currentSnapshot, currentManga, source)
+        } returns listOf(downloaded)
+
+        manager.deleteHiddenChapters(snapshot, manga, source)
+
+        coVerifyOrder {
+            downloader.dequeueAndAwait(snapshot)
+            repository.getChapterByMangaId(manga.id, false)
+            categories.await(currentManga.id)
+            provider.findChapterPathsForHide(listOf(eligible), currentSnapshot, currentManga, source)
+            downloaded.delete()
+        }
+        coVerify(exactly = 0) { repository.updateAll(any()) }
+        coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["category", "excluded categories setting", "bookmark setting"])
+    fun `failed deletion policy lookup never accesses storage or clears cached downloads`(lookup: String) = runTest {
+        val failure = IllegalStateException("$lookup unavailable")
+        when (lookup) {
+            "category" -> coEvery { categories.await(manga.id) } throws failure
+            "excluded categories setting" -> every { preferences.removeExcludeCategories } throws failure
+            "bookmark setting" -> every { preferences.removeBookmarkedChapters } throws failure
+        }
+
+        assertThrows<IllegalStateException> { manager.deleteHiddenChapters(listOf(target), manga, source) }
+
+        coVerify { downloader.dequeueAndAwait(listOf(target)) }
+        coVerify(exactly = 0) { provider.findMangaIdsSharingDownloadDirectory(any(), any(), any()) }
+        coVerify(exactly = 0) { provider.findChapterPathsForHide(any(), any(), any(), any()) }
+        verify(exactly = 0) { cache.invalidateCache() }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 

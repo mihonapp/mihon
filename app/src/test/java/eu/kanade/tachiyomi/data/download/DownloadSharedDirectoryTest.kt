@@ -4,6 +4,7 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.Source
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -13,8 +14,10 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
 import tachiyomi.core.common.preference.InMemoryPreferenceStore
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.repository.ChapterRepository
+import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.repository.MangaRepository
@@ -70,7 +73,37 @@ class DownloadSharedDirectoryTest {
         verify(exactly = 0) { fixture.cache.invalidateCache() }
     }
 
-    private class SharedStorage(title: String, otherTitle: String, otherSourceId: Long, otherSourceName: String) {
+    @ParameterizedTest
+    @CsvSource(
+        "Chapter 1,false",
+        "Chapter 1,true",
+        "Chapter 1_tmp,false",
+        "Chapter 1_tmp,true",
+        "Chapter 1.cbz_tmp,false",
+        "Chapter 1.cbz_tmp,true",
+        "CHAPTER 1_TMP,false",
+        "CHAPTER 1_TMP,true",
+    )
+    fun `selected protected chapters retain every shared filename claim`(protectedTitle: String, hashEnabled: Boolean) =
+        runTest {
+            val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name", hashEnabled)
+
+            val (retained, deleted) = fixture.hideWithProtectedChapter(protectedTitle)
+
+            retained.isNotEmpty() shouldBe true
+            deleted.isNotEmpty() shouldBe true
+            retained.forEach { path -> verify(exactly = 0) { path.delete() } }
+            deleted.forEach { path -> verify(exactly = 1) { path.delete() } }
+            verify(exactly = 1) { fixture.cache.invalidateCache() }
+        }
+
+    private class SharedStorage(
+        title: String,
+        otherTitle: String,
+        otherSourceId: Long,
+        otherSourceName: String,
+        hashEnabled: Boolean = true,
+    ) {
         private val source = mockk<Source> {
             every { id } returns 7
         }
@@ -105,7 +138,7 @@ class DownloadSharedDirectoryTest {
         private val provider = DownloadProvider(
             mockk(),
             storage,
-            LibraryPreferences(InMemoryPreferenceStore()).apply { enableChapterNameHash.set(true) },
+            LibraryPreferences(InMemoryPreferenceStore()).apply { enableChapterNameHash.set(hashEnabled) },
         )
         val shared = file()
         val partial = file()
@@ -126,9 +159,12 @@ class DownloadSharedDirectoryTest {
             coEvery { getOrStub(otherSourceId) } returns otherSource
             coEvery { getOrStub(9) } returns unrelatedSource
         }
+        private val preferences = DownloadPreferences(InMemoryPreferenceStore())
+        private val categories = mockk<GetCategories> { coEvery { await(manga.id) } returns emptyList() }
+        private val downloader = mockk<Downloader>(relaxUnitFun = true)
         private val manager = DownloadManager(
-            mockk(), provider, cache, mockk(), mockk(), mockk(), chapters,
-            sources, mockk(), mockk(relaxUnitFun = true), mockk(), mangas,
+            mockk(), provider, cache, categories, mockk(), mockk(), chapters,
+            sources, preferences, downloader, mockk(), mangas,
         )
 
         init {
@@ -154,6 +190,29 @@ class DownloadSharedDirectoryTest {
         }
 
         suspend fun hide() = manager.deleteHiddenChapters(listOf(target), manga, source)
+
+        suspend fun hideWithProtectedChapter(protectedTitle: String): Pair<List<UniFile>, List<UniFile>> {
+            val protectedChapter = target.copy(id = 11, name = protectedTitle, url = "/a/protected", bookmark = true)
+            coEvery { chapters.getChapterByMangaId(manga.id, false) } returns listOf(target, protectedChapter)
+            // The collision in this regression belongs to another selected chapter in the same manga.
+            coEvery { chapters.getChapterByMangaId(otherManga.id, false) } returns
+                listOf(otherChapter.copy(name = "Other manga chapter"))
+            val protectedNames = provider.getValidChapterDirNames(
+                protectedChapter.name,
+                protectedChapter.scanlator,
+                protectedChapter.url,
+            )
+                .flatMap { listOf(it, it + "_tmp") }.toCollection(sortedSetOf(String.CASE_INSENSITIVE_ORDER))
+            val files = provider.getValidChapterDirNames(target.name, target.scanlator, target.url)
+                .flatMap { listOf(it, it + "_tmp") }.distinct().associateWith { file() }
+            every { mangaDir.findFile(any()) } answers { files[firstArg<String>()] }
+
+            manager.deleteHiddenChapters(listOf(target, protectedChapter), manga, source)
+
+            coVerify(exactly = 1) { downloader.dequeueAndAwait(listOf(target, protectedChapter)) }
+            return files.filterKeys { it in protectedNames }.values.toList() to
+                files.filterKeys { it !in protectedNames }.values.toList()
+        }
 
         private fun directory() = mockk<UniFile> {
             every { exists() } returns true
