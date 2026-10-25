@@ -1,6 +1,7 @@
 package tachiyomi.domain.chapter.interactor
 
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
@@ -10,6 +11,9 @@ import tachiyomi.domain.chapter.repository.ChapterRepository
 class GetChaptersByMangaId(
     private val chapterRepository: ChapterRepository,
 ) {
+
+    fun subscribeHidden(mangaId: Long): Flow<List<Chapter>> =
+        chapterRepository.getHiddenChaptersByMangaIdAsFlow(mangaId)
 
     suspend fun await(mangaId: Long, applyScanlatorFilter: Boolean = false): List<Chapter> {
         return try {
