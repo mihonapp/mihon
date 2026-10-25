@@ -8,7 +8,12 @@ import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -72,10 +77,49 @@ class DownloadHiddenChaptersTest {
             provider.findChapterPathsForHide(listOf(target), snapshot, manga, source)
             final.delete()
             partial.delete()
-            cache.invalidateCache()
+            cache.refreshMangaDirectories(any())
         }
         verify(exactly = 0) { unrelated.delete() }
+        verify(exactly = 0) { cache.invalidateCache() }
+        coVerify(exactly = 1) { cache.refreshMangaDirectories(listOf(manga)) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
+    }
+
+    @Test
+    fun `refresh failure does not replace the original deletion failure`() = runTest {
+        val deletionFailure = IOException("Deletion failed")
+        val refreshFailure = IOException("Refresh failed")
+        val final = mockk<UniFile> { every { delete() } throws deletionFailure }
+        coEvery { provider.findChapterPathsForHide(any(), any(), any(), any()) } returns listOf(final)
+        coEvery { cache.refreshMangaDirectories(any()) } throws refreshFailure
+
+        val thrown = assertThrows<IOException> { manager.deleteHiddenChapters(listOf(target), manga, source) }
+
+        // Coroutine stack-trace recovery can copy an exception while retaining its original as the cause.
+        val failures = generateSequence<Throwable>(thrown) { it.cause }.toList()
+        assertEquals("Deletion failed", thrown.message)
+        assertTrue(failures.any { it === deletionFailure })
+        assertTrue(failures.any { refreshFailure in it.suppressed })
+        verify(exactly = 0) { cache.invalidateCache() }
+    }
+
+    @Test
+    fun `navigation cancellation after deletion still refreshes the affected cache`() = runTest {
+        lateinit var hide: Job
+        val final = mockk<UniFile> {
+            every { delete() } answers {
+                hide.cancel()
+                true
+            }
+        }
+        coEvery { provider.findChapterPathsForHide(any(), any(), any(), any()) } returns listOf(final)
+        hide = launch(start = CoroutineStart.LAZY) { manager.deleteHiddenChapters(listOf(target), manga, source) }
+
+        hide.start()
+        hide.join()
+
+        coVerify(exactly = 1) { cache.refreshMangaDirectories(listOf(manga)) }
+        verify(exactly = 0) { cache.invalidateCache() }
     }
 
     @ParameterizedTest
@@ -95,7 +139,7 @@ class DownloadHiddenChaptersTest {
             provider.findMangaIdsSharingDownloadDirectory(any(), any(), any())
         }
         verify(exactly = if (allowDeletingBookmarks) 1 else 0) { downloaded.delete() }
-        verify(exactly = if (allowDeletingBookmarks) 1 else 0) { cache.invalidateCache() }
+        coVerify(exactly = if (allowDeletingBookmarks) 1 else 0) { cache.refreshMangaDirectories(any()) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 
@@ -121,7 +165,7 @@ class DownloadHiddenChaptersTest {
             provider.findMangaIdsSharingDownloadDirectory(any(), any(), any())
         }
         verify(exactly = if (read) 0 else 1) { downloaded.delete() }
-        verify(exactly = if (read) 0 else 1) { cache.invalidateCache() }
+        coVerify(exactly = if (read) 0 else 1) { cache.refreshMangaDirectories(any()) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 
@@ -141,7 +185,7 @@ class DownloadHiddenChaptersTest {
             provider.findChapterPathsForHide(listOf(current), listOf(current), manga, source)
         }
         verify(exactly = if (read) 0 else 1) { downloaded.delete() }
-        verify(exactly = if (read) 0 else 1) { cache.invalidateCache() }
+        coVerify(exactly = if (read) 0 else 1) { cache.refreshMangaDirectories(any()) }
     }
 
     @ParameterizedTest
@@ -161,7 +205,7 @@ class DownloadHiddenChaptersTest {
             provider.findChapterPathsForHide(listOf(current), currentSnapshot, manga, source)
         }
         verify(exactly = if (bookmarked) 0 else 1) { downloaded.delete() }
-        verify(exactly = if (bookmarked) 0 else 1) { cache.invalidateCache() }
+        coVerify(exactly = if (bookmarked) 0 else 1) { cache.refreshMangaDirectories(any()) }
     }
 
     @Test
@@ -206,7 +250,7 @@ class DownloadHiddenChaptersTest {
         coVerify { downloader.dequeueAndAwait(listOf(target)) }
         coVerify(exactly = 0) { provider.findMangaIdsSharingDownloadDirectory(any(), any(), any()) }
         coVerify(exactly = 0) { provider.findChapterPathsForHide(any(), any(), any(), any()) }
-        verify(exactly = 0) { cache.invalidateCache() }
+        coVerify(exactly = 0) { cache.refreshMangaDirectories(any()) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 
@@ -218,7 +262,7 @@ class DownloadHiddenChaptersTest {
 
         assertThrows<IOException> { manager.deleteHiddenChapters(listOf(target), manga, source) }
         verify { otherPath.delete() }
-        verify { cache.invalidateCache() }
+        coVerify { cache.refreshMangaDirectories(any()) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 
@@ -237,7 +281,7 @@ class DownloadHiddenChaptersTest {
 
         coVerify { downloader.dequeueAndAwait(listOf(target)) }
         coVerify(exactly = 0) { provider.findChapterPathsForHide(any(), any(), any(), any()) }
-        verify(exactly = 0) { cache.invalidateCache() }
+        coVerify(exactly = 0) { cache.refreshMangaDirectories(any()) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 
@@ -248,7 +292,7 @@ class DownloadHiddenChaptersTest {
         assertThrows<IOException> { manager.deleteHiddenChapters(listOf(target), manga, source) }
 
         coVerify(exactly = 0) { provider.findChapterPathsForHide(any(), any(), any(), any()) }
-        verify(exactly = 0) { cache.invalidateCache() }
+        coVerify(exactly = 0) { cache.refreshMangaDirectories(any()) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 
@@ -263,7 +307,7 @@ class DownloadHiddenChaptersTest {
         manager.deleteHiddenChapters(listOf(target), manga, source)
 
         coVerify { provider.findChapterPathsForHide(listOf(current), currentSnapshot, manga, source) }
-        verify { cache.invalidateCache() }
+        coVerify { cache.refreshMangaDirectories(any()) }
     }
 
     @Test
@@ -273,7 +317,7 @@ class DownloadHiddenChaptersTest {
 
         assertThrows<IOException> { manager.deleteHiddenChapters(listOf(target), manga, source) }
 
-        verify(exactly = 0) { cache.invalidateCache() }
+        coVerify(exactly = 0) { cache.refreshMangaDirectories(any()) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 
@@ -283,7 +327,7 @@ class DownloadHiddenChaptersTest {
 
         manager.deleteHiddenChapters(listOf(target), manga, source)
 
-        verify { cache.invalidateCache() }
+        coVerify { cache.refreshMangaDirectories(any()) }
         coVerify(exactly = 0) { cache.removeChapters(any(), any()) }
     }
 }

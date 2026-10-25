@@ -9,6 +9,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -50,7 +51,7 @@ class DownloadSharedDirectoryTest {
         verify(exactly = 0) { fixture.archive.delete() }
         verify(exactly = 0) { fixture.unrelatedFile.delete() }
         verify(exactly = 1) { fixture.owned.delete() }
-        verify(exactly = 1) { fixture.cache.invalidateCache() }
+        coVerify(exactly = 1) { fixture.cache.refreshMangaDirectories(any()) }
     }
 
     @ParameterizedTest
@@ -60,7 +61,7 @@ class DownloadSharedDirectoryTest {
         val failure = IOException("$failedLookup ownership unavailable")
         when (failedLookup) {
             "manga" -> coEvery { fixture.mangas.getAll() } throws failure
-            "chapter" -> coEvery { fixture.chapters.getChapterByMangaId(2, false) } throws failure
+            "chapter" -> coEvery { fixture.chapters.getChaptersByMangaIds(listOf(2)) } throws failure
             "source" -> coEvery { fixture.sources.getOrStub(8) } throws failure
             "storage" -> every { fixture.sourceDir.canRead() } returns false
         }
@@ -70,7 +71,7 @@ class DownloadSharedDirectoryTest {
         verify(exactly = 0) { fixture.shared.delete() }
         verify(exactly = 0) { fixture.partial.delete() }
         verify(exactly = 0) { fixture.owned.delete() }
-        verify(exactly = 0) { fixture.cache.invalidateCache() }
+        coVerify(exactly = 0) { fixture.cache.refreshMangaDirectories(any()) }
     }
 
     @ParameterizedTest
@@ -94,8 +95,91 @@ class DownloadSharedDirectoryTest {
             deleted.isNotEmpty() shouldBe true
             retained.forEach { path -> verify(exactly = 0) { path.delete() } }
             deleted.forEach { path -> verify(exactly = 1) { path.delete() } }
-            verify(exactly = 1) { fixture.cache.invalidateCache() }
+            coVerify(exactly = 1) { fixture.cache.refreshMangaDirectories(any()) }
         }
+
+    @Test
+    fun `directory scan resolves each source once including absent sources and checks every candidate`() = runTest {
+        val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name")
+        val absentSource = mockk<Source>()
+        every { absentSource.toString() } returns "Absent"
+        every { fixture.root.findFile("Absent") } returns null
+        val sameSource = (10L..109L).map { fixture.manga.copy(id = it, title = "Candidate $it") to fixture.source }
+        val absent = (110L..209L).map { fixture.manga.copy(id = it) to absentSource }
+
+        val owners = fixture.provider.findMangaIdsSharingDownloadDirectory(
+            fixture.manga,
+            fixture.source,
+            sameSource + absent,
+        )
+
+        owners shouldBe sameSource.map { it.first.id }.toSet()
+        verify(exactly = 1) { fixture.root.findFile("Source_Name") }
+        verify(exactly = 1) { fixture.root.findFile("Absent") }
+        verify(atMost = 4) { fixture.root.canRead() }
+        sameSource.forEach { (manga, _) ->
+            verify(exactly = 1) { fixture.sourceDir.findFile(manga.title) }
+        }
+    }
+
+    @Test
+    fun `multiple directory owners use one chapter batch and tolerate owners without chapters`() = runTest {
+        val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name")
+        val third = fixture.manga.copy(id = 5)
+        val empty = fixture.manga.copy(id = 6)
+        coEvery { fixture.mangas.getAll() } returns listOf(fixture.manga, fixture.otherManga, third, empty)
+        val thirdChapter = fixture.otherChapter.copy(id = 50, mangaId = third.id)
+        coEvery { fixture.chapters.getChaptersByMangaIds(any()) } returns mapOf(
+            fixture.otherManga.id to listOf(fixture.otherChapter),
+            third.id to listOf(thirdChapter),
+        )
+
+        fixture.hide()
+
+        coVerify(exactly = 1) { fixture.chapters.getChaptersByMangaIds(match { it.toSet() == setOf(2L, 5L, 6L) }) }
+        coVerify(exactly = 1) { fixture.chapters.getChapterByMangaId(1, false) }
+        coVerify(exactly = 0) { fixture.chapters.getChapterByMangaId(neq(1L), any()) }
+        coVerify(exactly = 1) {
+            fixture.cache.refreshMangaDirectories(
+                match {
+                    it.map { owner -> owner.id }.toSet() == setOf(1L, 2L, 5L, 6L)
+                },
+            )
+        }
+        verify(exactly = 0) { fixture.cache.invalidateCache() }
+        verify(exactly = 0) { fixture.shared.delete() }
+        verify(exactly = 1) { fixture.owned.delete() }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["source", "manga"])
+    fun `resolved distinct unreadable directory does not block target cleanup`(level: String) = runTest {
+        val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name")
+        val unrelated = if (level == "source") fixture.unrelatedSourceDir else fixture.unrelatedMangaDir
+        every { unrelated.canRead() } returns false
+
+        fixture.hide()
+
+        verify(exactly = 1) { fixture.owned.delete() }
+        verify(exactly = 0) { fixture.unrelatedFile.delete() }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `unreadable source with unresolved manga identity fails closed`(lookupThrows: Boolean) = runTest {
+        val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name")
+        every { fixture.unrelatedSourceDir.canRead() } returns false
+        if (lookupThrows) {
+            every { fixture.unrelatedSourceDir.findFile(any()) } throws IOException("Ownership lookup failed")
+        } else {
+            every { fixture.unrelatedSourceDir.findFile(any()) } returns null
+        }
+
+        assertThrows<IOException> { fixture.hide() }
+
+        verify(exactly = 0) { fixture.owned.delete() }
+        coVerify(exactly = 0) { fixture.cache.refreshMangaDirectories(any()) }
+    }
 
     private class SharedStorage(
         title: String,
@@ -104,7 +188,7 @@ class DownloadSharedDirectoryTest {
         otherSourceName: String,
         hashEnabled: Boolean = true,
     ) {
-        private val source = mockk<Source> {
+        val source = mockk<Source> {
             every { id } returns 7
         }
         private val otherSource = if (otherSourceId == 7L) {
@@ -117,8 +201,8 @@ class DownloadSharedDirectoryTest {
         private val unrelatedSource = mockk<Source> {
             every { id } returns 9
         }
-        private val manga = Manga.create().copy(id = 1, source = 7, title = title)
-        private val otherManga = manga.copy(id = 2, source = otherSourceId, title = otherTitle, url = "/other")
+        val manga = Manga.create().copy(id = 1, source = 7, title = title)
+        val otherManga = manga.copy(id = 2, source = otherSourceId, title = otherTitle, url = "/other")
         private val unrelatedManga = manga.copy(id = 3, source = 9)
         private val localManga = manga.copy(id = 4, source = LocalSource.ID)
         private val target = Chapter.create().copy(
@@ -128,14 +212,14 @@ class DownloadSharedDirectoryTest {
             url = "/a/1",
             hidden = true,
         )
-        private val otherChapter = target.copy(id = 20, mangaId = 2, url = "/b/1", hidden = false)
-        private val root = directory()
+        val otherChapter = target.copy(id = 20, mangaId = 2, url = "/b/1", hidden = false)
+        val root = directory()
         val sourceDir = directory()
         private val mangaDir = directory()
-        private val unrelatedSourceDir = directory()
-        private val unrelatedMangaDir = directory()
+        val unrelatedSourceDir = directory()
+        val unrelatedMangaDir = directory()
         private val storage = mockk<StorageManager> { every { getDownloadsDirectory() } returns root }
-        private val provider = DownloadProvider(
+        val provider = DownloadProvider(
             mockk(),
             storage,
             LibraryPreferences(InMemoryPreferenceStore()).apply { enableChapterNameHash.set(hashEnabled) },
@@ -148,9 +232,7 @@ class DownloadSharedDirectoryTest {
         val cache = mockk<DownloadCache>(relaxUnitFun = true)
         val chapters = mockk<ChapterRepository> {
             coEvery { getChapterByMangaId(1, false) } returns listOf(target)
-            coEvery { getChapterByMangaId(2, false) } returns listOf(otherChapter)
-            coEvery { getChapterByMangaId(3, false) } throws
-                AssertionError("Unrelated manga must not protect target paths")
+            coEvery { getChaptersByMangaIds(listOf(2)) } returns mapOf(2L to listOf(otherChapter))
         }
         val mangas = mockk<MangaRepository> {
             coEvery { getAll() } returns listOf(manga, otherManga, unrelatedManga, localManga)
@@ -195,8 +277,8 @@ class DownloadSharedDirectoryTest {
             val protectedChapter = target.copy(id = 11, name = protectedTitle, url = "/a/protected", bookmark = true)
             coEvery { chapters.getChapterByMangaId(manga.id, false) } returns listOf(target, protectedChapter)
             // The collision in this regression belongs to another selected chapter in the same manga.
-            coEvery { chapters.getChapterByMangaId(otherManga.id, false) } returns
-                listOf(otherChapter.copy(name = "Other manga chapter"))
+            coEvery { chapters.getChaptersByMangaIds(listOf(otherManga.id)) } returns
+                mapOf(otherManga.id to listOf(otherChapter.copy(name = "Other manga chapter")))
             val protectedNames = provider.getValidChapterDirNames(
                 protectedChapter.name,
                 protectedChapter.scanlator,

@@ -12,11 +12,13 @@ import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.unmockkStatic
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -39,7 +41,9 @@ import org.junit.jupiter.api.Test
 import tachiyomi.core.common.preference.InMemoryPreferenceStore
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.TriState
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.manga.model.Manga
@@ -63,7 +67,9 @@ class MangaHiddenChaptersViewModelTest {
     // Absent from the normal subscription because its scanlator is excluded.
     private val hidden = Chapter.create().copy(id = 2, mangaId = 1, chapterNumber = 2.0, hidden = true, read = true)
     private val normalData = MutableStateFlow(manga to listOf(visible))
-    private val rawData = MutableStateFlow(manga to listOf(visible, hidden))
+    private val hiddenData = MutableStateFlow(listOf(hidden))
+    private val chapters = mockk<ChapterRepository>()
+    private val getChapters = GetChaptersByMangaId(chapters)
     private val getManga = mockk<GetMangaWithChapters>()
 
     @BeforeEach
@@ -76,7 +82,7 @@ class MangaHiddenChaptersViewModelTest {
         every { preferences.hideHiddenChapters } returns preference
         coEvery { getManga.awaitManga(1) } returns manga
         coEvery { getManga.subscribe(1, true) } returns normalData
-        coEvery { getManga.subscribe(1, false) } returns rawData
+        every { chapters.getHiddenChaptersByMangaIdAsFlow(1) } returns hiddenData
     }
 
     @AfterEach
@@ -105,10 +111,12 @@ class MangaHiddenChaptersViewModelTest {
 
         // The unhide write emits through both database subscriptions, without fetching the source.
         val unhidden = hidden.copy(hidden = false)
-        rawData.value = manga to listOf(visible, unhidden)
+        hiddenData.value = emptyList()
         normalData.value = manga to listOf(visible, unhidden)
         state = vm.awaitState { !it.hasHiddenChapters && it.processedChapters.size == 2 }
         assertTrue(state.hiddenChapters.isEmpty())
+        verify(exactly = 1) { chapters.getHiddenChaptersByMangaIdAsFlow(1) }
+        coVerify(exactly = 0) { getManga.subscribe(1, false) }
     }
 
     @Test
@@ -131,6 +139,24 @@ class MangaHiddenChaptersViewModelTest {
         val fresh = createViewModel().awaitState { it.hideHiddenChapters }
         assertEquals(listOf(1L), fresh.processedChapters.map { it.id })
         assertEquals(listOf(2L), fresh.hiddenChapters.map { it.id })
+    }
+
+    @Test
+    fun `dedicated hidden subscription ignores all ordinary filters and updates live`() = runBlocking {
+        val filtered = manga.copy(chapterFlags = Manga.CHAPTER_SHOW_UNREAD or Manga.CHAPTER_SHOW_NOT_BOOKMARKED)
+        normalData.value = filtered to emptyList()
+        every { any<Manga>().downloadedFilter } returns TriState.ENABLED_IS
+        val filteredHidden = hidden.copy(bookmark = true, scanlator = "Excluded")
+        hiddenData.value = listOf(filteredHidden)
+        val vm = createViewModel()
+        var state = vm.awaitState { it.hasHiddenChapters }
+        assertTrue(state.processedChapters.isEmpty())
+        assertEquals(listOf(filteredHidden), state.hiddenChapters.map { it.chapter })
+        hiddenData.value = emptyList()
+        state = vm.awaitState { !it.hasHiddenChapters }
+        assertTrue(state.hiddenChapters.isEmpty())
+        verify(exactly = 1) { chapters.getHiddenChaptersByMangaIdAsFlow(1) }
+        coVerify(exactly = 0) { getManga.subscribe(1, false) }
     }
 
     private suspend fun MangaViewModel.awaitState(predicate: (MangaViewModel.State.Success) -> Boolean) =
@@ -171,6 +197,7 @@ class MangaHiddenChaptersViewModelTest {
             downloadManager = downloads,
             downloadCache = cache,
             getMangaAndChapters = getManga,
+            getChaptersByMangaId = getChapters,
             getDuplicateLibraryManga = mockk(),
             getAvailableScanlators = available,
             getExcludedScanlators = excluded,

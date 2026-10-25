@@ -206,6 +206,99 @@ class MangaHiddenChaptersTest {
         }
     }
 
+    @Test
+    fun `normalized numbers preserve unknown fractional duplicate and initial gaps with raw hidden data`() {
+        fun numbered(id: Int, number: Double, hidden: Boolean = false) = item(id, hidden).let {
+            it.copy(chapter = it.chapter.copy(chapterNumber = number))
+        }
+        val chapters = listOf(numbered(2, 3.2), numbered(3, 3.9), numbered(4, 7.5))
+        val rawHidden = listOf(
+            numbered(5, 2.1, true),
+            numbered(6, 5.8, true),
+            numbered(7, 5.1, true),
+            numbered(8, -1.0, true),
+            numbered(9, 99990000.0, true),
+        )
+        for (descending in listOf(false, true)) {
+            for (hide in listOf(false, true)) {
+                val state = state(chapters, descending).copy(hiddenChapters = rawHidden, hideHiddenChapters = hide)
+                assertEquals(3, state.missingChapterCount) // Missing 1, 4 and 6.
+                assertEquals(
+                    listOf(1, 2),
+                    state.chapterListItems.filterIsInstance<ChapterList.MissingCount>().map { it.count }.sorted(),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `counting known numbers between exclusive bounds uses logarithmic indexed reads`() {
+        val emptyNumbers = CountingList(emptyList())
+        assertEquals(0, emptyNumbers.countSortedUniqueChapterNumbersBetween(0, 3))
+        assertEquals(0, emptyNumbers.readCount)
+
+        for (size in listOf(2000, 200000)) {
+            val values = List(size) { it * 2 + 1 }
+            val ranges = listOf(
+                Triple(1, size * 2 - 1, size - 2),
+                Triple(2, size * 2 - 2, size - 2),
+                Triple(0, size * 2, size),
+                Triple(-2, 0, 0),
+                Triple(size * 2, size * 2 + 2, 0),
+                Triple(5, 5, 0),
+                Triple(6, 4, 0),
+            )
+            val maxReads = 2 * (Int.SIZE_BITS - size.countLeadingZeroBits())
+            for ((lower, higher, expected) in ranges) {
+                val numbers = CountingList(values)
+
+                assertEquals(expected, numbers.countSortedUniqueChapterNumbersBetween(lower, higher))
+                assertTrue(
+                    numbers.readCount <= maxReads,
+                    "Size $size, bounds ($lower, $higher): ${numbers.readCount} indexed reads exceed $maxReads",
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `alternating source order preserves all 2000 chapters without false missing indicators`() {
+        val sourceOrder = (1..1000).flatMap { listOf(it, 2001 - it) }
+        val chapters = sourceOrder.mapIndexed { index, number ->
+            item(number).let { it.copy(chapter = it.chapter.copy(sourceOrder = (sourceOrder.size - index).toLong())) }
+        }
+        val base = state(chapters)
+        for (descending in listOf(false, true)) {
+            for (hide in listOf(false, true)) {
+                val state = base.copy(
+                    manga = base.manga.copy(
+                        chapterFlags = Manga.CHAPTER_SORTING_SOURCE or
+                            if (descending) Manga.CHAPTER_SORT_DESC else Manga.CHAPTER_SORT_ASC,
+                    ),
+                    hideHiddenChapters = hide,
+                )
+                val expectedOrder = if (descending) sourceOrder.reversed() else sourceOrder
+
+                assertEquals(expectedOrder.map(Int::toLong), state.processedChapters.map { it.id })
+                assertEquals(0, state.missingChapterCount)
+                assertEquals(state.processedChapters, state.chapterListItems)
+            }
+        }
+    }
+
+    private class CountingList(private val values: List<Int>) : AbstractList<Int>() {
+        var readCount = 0
+            private set
+
+        override val size: Int
+            get() = values.size
+
+        override fun get(index: Int): Int {
+            readCount++
+            return values[index]
+        }
+    }
+
     private fun item(number: Int, hidden: Boolean = false, selected: Boolean = false) = ChapterList.Item(
         chapter = Chapter.create().copy(id = number.toLong(), chapterNumber = number.toDouble(), hidden = hidden),
         downloadState = Download.State.NOT_DOWNLOADED,

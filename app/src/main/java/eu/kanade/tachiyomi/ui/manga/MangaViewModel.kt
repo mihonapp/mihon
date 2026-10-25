@@ -86,6 +86,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
@@ -122,6 +123,7 @@ class MangaViewModel(
     private val downloadManager: DownloadManager,
     private val downloadCache: DownloadCache,
     private val getMangaAndChapters: GetMangaWithChapters,
+    getChaptersByMangaId: GetChaptersByMangaId,
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga,
     private val getAvailableScanlators: GetAvailableScanlators,
     private val getExcludedScanlators: GetExcludedScanlators,
@@ -204,10 +206,8 @@ class MangaViewModel(
     private val hideMissingChapters = libraryPreferences.hideMissingChapters.get()
 
     // Recovery must include hidden chapters excluded by the normal scanlator filters.
-    private val hiddenChapters = flow {
-        emitAll(getMangaAndChapters.subscribe(mangaId, applyScanlatorFilter = false))
-    }.map { (_, chapters) ->
-        chapters.filter { it.hidden }.map {
+    private val hiddenChapters = getChaptersByMangaId.subscribeHidden(mangaId).map { chapters ->
+        chapters.map {
             ChapterList.Item(chapter = it, downloadState = Download.State.NOT_DOWNLOADED)
         }
     }.distinctUntilChanged()
@@ -1145,15 +1145,20 @@ class MangaViewModel(
                     .maxOfOrNull { it.chapter.chapterNumber } ?: return@lazy 0
                 // Hidden chapters are known to exist, but must not extend the range
                 // used to look for missing chapters (for example a bogus 99990000).
-                (filteredChapters + hiddenChapters).filter { it.chapter.chapterNumber <= latestVisibleNumber }
-                    .fastMap { it.chapter.chapterNumber }
+                knownChapterNumbers.asSequence()
+                    .takeWhile { it <= latestVisibleNumber }
+                    .asIterable()
                     .missingChaptersCount()
             }
 
-            private val knownChapterNumbers by lazy {
-                (filteredChapters + hiddenChapters).mapNotNull { item ->
-                    item.chapter.chapterNumber.takeIf { it >= 0 }?.let { floor(it).toInt() }
-                }.toSortedSet()
+            private val knownChapterNumbers: List<Int> by lazy {
+                (filteredChapters.asSequence() + hiddenChapters.asSequence())
+                    .mapNotNull { item ->
+                        item.chapter.chapterNumber.takeIf { it >= 0 }?.let { floor(it).toInt() }
+                    }
+                    .distinct()
+                    .sorted()
+                    .toList()
             }
 
             val chapterListItems by lazy {
@@ -1184,7 +1189,7 @@ class MangaViewModel(
                     val lowerNumber = lowerChapter?.chapter?.chapterNumber?.let { floor(it).toInt() } ?: 0
                     val higherNumber = floor(higherChapter.chapter.chapterNumber).toInt()
                     val knownBetween = if (gap > 0) {
-                        knownChapterNumbers.subSet(lowerNumber + 1, higherNumber).size
+                        knownChapterNumbers.countSortedUniqueChapterNumbersBetween(lowerNumber, higherNumber)
                     } else {
                         0
                     }
@@ -1222,6 +1227,13 @@ class MangaViewModel(
             }
         }
     }
+}
+
+internal fun List<Int>.countSortedUniqueChapterNumbersBetween(lowerExclusive: Int, higherExclusive: Int): Int {
+    if (lowerExclusive >= higherExclusive) return 0
+    val lowerIndex = binarySearch(lowerExclusive).let { if (it >= 0) it + 1 else -it - 1 }
+    val higherIndex = binarySearch(higherExclusive).let { if (it >= 0) it else -it - 1 }
+    return higherIndex - lowerIndex
 }
 
 @Immutable

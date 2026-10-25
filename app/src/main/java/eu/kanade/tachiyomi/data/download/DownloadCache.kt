@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -53,6 +54,7 @@ import tachiyomi.domain.storage.service.StorageManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import java.io.IOException
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
@@ -361,6 +363,80 @@ class DownloadCache(
         notifyChanges()
     }
 
+    /**
+     * Refreshes only the requested manga directories and every cached alias of their physical paths.
+     * Pass the target manga and its known directory owners, including owners with different source ids.
+     * Discovery must finish successfully before changing any cached entries.
+     */
+    suspend fun refreshMangaDirectories(manga: List<Manga>) = withContext(Dispatchers.IO) {
+        if (manga.isEmpty()) return@withContext
+        // An older disk index must not replace this refresh after it completes.
+        initJob.join()
+        rootDownloadsDirMutex.withLock {
+            val root = storageManager.getDownloadsDirectory()
+                ?: throw IOException("Download storage is unavailable")
+            root.requireReadableDirectory()
+            val sourcesByName = mutableMapOf<String, UniFile?>()
+            val sources = manga.map { it.source }.distinct().associateWith {
+                val source = sourceManager.getOrStub(it)
+                val name = provider.getSourceDirName(source)
+                if (name !in sourcesByName) sourcesByName[name] = root.findReadableDirectory(name)
+                sourcesByName[name]
+            }
+            val targets = manga.map { it.source to provider.getMangaDirName(it.title) }.distinct()
+                .map { (sourceId, name) -> Triple(sourceId, name, sources[sourceId]?.findReadableDirectory(name)) }
+            val identities = targets.mapNotNull { it.third }.associateWith { it.directoryIdentity() }
+            // The same directory may have several titles, source ids, or file:// aliases.
+            val chapterDirsByIdentity = identities.keys.distinctBy { identities.getValue(it) }
+                .associate { directory ->
+                    directory.requireReadableDirectory()
+                    val files = directory.listFiles()
+                        ?: throw IOException("Failed to list download storage directory")
+                    directory.requireReadableDirectory()
+                    identities.getValue(directory) to chapterDirectoryNames(files)
+                }.toMutableMap()
+            targets.filter { it.third == null }.forEach { (sourceId, name, _) ->
+                rootDownloadsDir.sourceDirs[sourceId]?.mangaDirs?.get(name)?.dir?.let {
+                    chapterDirsByIdentity.putIfAbsent(it.directoryIdentity(), emptySet())
+                }
+            }
+            // Resolve all cached identities before mutation too: canonical path resolution can fail.
+            val aliases = rootDownloadsDir.sourceDirs.values.flatMap { it.mangaDirs.values }.distinct()
+                .mapNotNull { directory ->
+                    directory.dir?.directoryIdentity()?.let { identity ->
+                        chapterDirsByIdentity[identity]?.let { directory to it }
+                    }
+                }
+            root.requireReadableDirectory()
+            sources.values.filterNotNull().distinct().forEach { it.requireReadableDirectory() }
+            aliases.forEach { (directory, chapters) -> directory.chapterDirs = chapters }
+            targets.forEach { (sourceId, name, directory) ->
+                if (directory == null) return@forEach
+                val sourceDir = rootDownloadsDir.sourceDirs[sourceId] ?: SourceDirectory(sources[sourceId]).also {
+                    rootDownloadsDir.sourceDirs += sourceId to it
+                }
+                sourceDir.mangaDirs += name to MangaDirectory(
+                    directory,
+                    chapterDirsByIdentity.getValue(identities.getValue(directory)),
+                )
+            }
+        }
+        notifyChanges()
+    }
+
+    private fun chapterDirectoryNames(files: Array<out UniFile>): Set<String> = files.mapNotNull {
+        when {
+            // Ignore incomplete downloads
+            it.name?.endsWith(Downloader.TMP_DIR_SUFFIX) == true -> null
+            // Folder of images
+            it.isDirectory -> it.name
+            // CBZ files
+            it.isFile && it.extension == "cbz" -> it.nameWithoutExtension
+            // Anything else is irrelevant
+            else -> null
+        }
+    }.toSet()
+
     fun invalidateCache() {
         lastRenew = 0L
         renewalJob?.cancel()
@@ -412,22 +488,7 @@ class DownloadCache(
                             .associate { it.name!! to MangaDirectory(it) }
 
                         sourceDir.mangaDirs.values.forEach { mangaDir ->
-                            val chapterDirs = mangaDir.dir?.listFiles().orEmpty()
-                                .mapNotNull {
-                                    when {
-                                        // Ignore incomplete downloads
-                                        it.name?.endsWith(Downloader.TMP_DIR_SUFFIX) == true -> null
-                                        // Folder of images
-                                        it.isDirectory -> it.name
-                                        // CBZ files
-                                        it.isFile && it.extension == "cbz" -> it.nameWithoutExtension
-                                        // Anything else is irrelevant
-                                        else -> null
-                                    }
-                                }
-                                .toSet()
-
-                            mangaDir.chapterDirs = chapterDirs
+                            mangaDir.chapterDirs = chapterDirectoryNames(mangaDir.dir?.listFiles().orEmpty())
                         }
                     }
                 }
