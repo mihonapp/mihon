@@ -23,6 +23,7 @@ import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
+import eu.kanade.domain.chapter.interactor.SetChapterHidden
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
@@ -128,6 +129,7 @@ class MangaViewModel(
     private val setMangaChapterFlags: SetMangaChapterFlags,
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags,
     private val setReadStatus: SetReadStatus,
+    private val setChapterHidden: SetChapterHidden,
     private val updateChapter: UpdateChapter,
     private val updateManga: UpdateManga,
     private val getCategories: GetCategories,
@@ -846,18 +848,20 @@ class MangaViewModel(
         downloadManager.downloadChapters(manga, chapters.filterNot { it.hidden })
     }
 
-    /** Updates visibility without changing progress, bookmarks, or completed downloads. */
+    /** Hiding removes downloaded copies while preserving progress and bookmarks. */
     fun hideChapters(chapters: List<Chapter>, hidden: Boolean) {
+        val state = successState ?: return
+        val targets = chapters.toList()
         appScope.launch {
-            chapters
-                .filterNot { it.hidden == hidden }
-                .map { ChapterUpdate(it.id) { this.hidden = hidden } }
-                .let { updateChapter.awaitAll(it) }
-            if (hidden) {
-                chapters.mapNotNull { downloadManager.getQueuedDownloadOrNull(it.id) }
-                    .takeIf { it.isNotEmpty() }
-                    ?.let { downloadManager.cancelQueuedDownloads(it) }
-            }
+            snackbarHostState.setChapterHiddenWithRetry(
+                interactor = setChapterHidden,
+                chapters = targets,
+                manga = state.manga,
+                source = state.source,
+                hidden = hidden,
+                errorMessage = context.stringResource(MR.strings.chapter_hide_error),
+                retryLabel = context.stringResource(MR.strings.action_retry),
+            )
         }
         toggleAllSelection(false)
     }

@@ -8,8 +8,12 @@ selected chapters.
 
 Hidden chapters stay in their normal list position, dimmed. Long press still
 selects them, and taps toggle selection while selection mode is active. They
-cannot open the reader or start downloads. Hiding preserves reading progress,
-bookmarks and completed downloads; queued downloads are canceled.
+cannot open the reader or start downloads. Hiding preserves reading progress and
+bookmarks. Hiding cancels queued downloads and removes that chapter’s completed
+and partial downloaded files, including bookmarked chapters and chapters in
+categories protected from automatic deletion. Unrelated downloads and local-source
+original files are retained. Unhiding allows downloading again, but does not
+restore deleted files or automatically download them.
 
 The reader skips hidden chapters regardless of the Skip filtered chapters
 setting. Hiding chapter 5 makes chapters 4 and 6 adjacent in both directions.
@@ -35,7 +39,13 @@ restoring into an existing library preserves a hidden flag from either copy.
 Regression coverage includes hidden outliers, known hidden chapter gaps, both
 sort directions, all-hidden lists, selecting hidden rows, resume anchors and
 protobuf compatibility. Download queue coverage checks current chapter state
-when restoring a saved queue.
+when restoring a saved queue. Hide cleanup coverage includes cancellation of
+active writers, completed and partial files, bookmark/category exclusions,
+sibling filename collisions, manga sharing a download directory, and inaccessible storage. Ownership is resolved from
+the current chapter records; ambiguous legacy paths shared with other chapters
+are retained to protect their files. This includes manga with titles that map
+to the same directory. Storage failures leave the chapter hidden
+and show an error; the snackbar’s Retry action retries cleanup without unhiding.
 
 Run the repository checks with the configured JDK and Android SDK:
 
@@ -54,13 +64,15 @@ Native review flow:
 6. Verify Start/Resume and reader next/previous navigation skip hidden chapters,
    with Skip filtered chapters both enabled and disabled.
 7. Repeat after refreshing, restarting and restoring a backup. Verify queued
-   hidden chapters do not resume downloading, while completed downloads remain.
+   hidden chapters do not resume downloading and their downloaded files are gone;
+   unrelated completed downloads must remain. Unhide and confirm files are not
+   restored or downloaded automatically.
 8. Check phone and tablet layouts, light and dark themes, and accessibility
    announcements for hidden rows.
 
 Verified locally on 25 October 2026 using JDK 21 and Android SDK 37.2:
 
-- 103 domain tests and 49 app tests passed, with no skips or failures.
+- 103 domain tests and 99 app tests passed, with no skips or failures.
 - SQLDelight debug/release migration verification and repository formatting checks passed.
 - Debug APK assembled successfully.
 - Android 16 ARM64 emulator: phone and tablet layouts, light/dark mode,
@@ -68,9 +80,19 @@ Verified locally on 25 October 2026 using JDK 21 and Android SDK 37.2:
   and reader chapter 1 → 3 navigation with hidden chapter 2 passed.
 - Reader skipping was checked with Skip filtered chapters enabled and disabled.
 - Independent source review findings about existing download queues and reader
-  gap warnings were repaired and re-reviewed with no further source findings.
+  gap warnings, cleanup ownership and cleanup Retry were repaired and
+  re-reviewed with no further source findings. Cross-provider review was unavailable.
 
-Native verification used an offline local-source fixture. Physical devices,
+Native verification used an offline local-source fixture and synthetic
+downloaded copies under a stub source. Hide removed the target folder, archive
+and partial files while preserving chapters 4 and 6, local originals, reading
+progress and bookmarks. Unhide did not restore files. A chapter named with a
+sibling’s `_tmp` suffix retained its files. A second manga with the same title
+retained its shared download paths. Making the download root unreadable showed
+the failure snackbar with Retry; restoring access and tapping Retry removed the
+target files without unhiding or changing progress/bookmarks.
+
+Native verification used no extension network requests. Physical devices,
 remote extension network behavior and a full manual backup import were not
 exercised; protobuf compatibility is covered by automated tests.
 

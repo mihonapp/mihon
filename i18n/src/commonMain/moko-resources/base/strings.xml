@@ -10,6 +10,7 @@
     <string name="action_hide">Hide</string>
     <string name="action_unhide">Unhide</string>
     <string name="chapter_hidden">Hidden</string>
+    <string name="chapter_hide_error">Could not update chapter visibility or remove downloads. Try again.</string>
     <string name="action_menu_overflow_description">More options</string>
     <string name="action_bar_up_description">Navigate up</string>
 
