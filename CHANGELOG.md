@@ -50,6 +50,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed the More tab icon pausing and then bouncing back when leaving the tab ([@AntsyLich](https://github.com/AntsyLich))
 - Fixed Shizuku extension installer being unavailable with Sui ([@AntsyLich](https://github.com/AntsyLich))
 
+### Fixed
+- Fix deleted categories being left behind in Updates/Upcoming category filters ([@MajorTanya](https://github.com/MajorTanya)) ([#4113](https://github.com/mihonapp/mihon/pull/4113))
+
 ## [v0.21.2] - 2026-10-13
 ### Fixed
 - Fix long floating point numbers showing up in Comick progress ([@MajorTanya](https://github.com/MajorTanya)) ([#4090](https://github.com/mihonapp/mihon/pull/4090))
