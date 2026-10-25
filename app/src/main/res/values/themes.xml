@@ -79,10 +79,6 @@
         <item name="materialSwitchStyle">@style/Widget.Material3.CompoundButton.MaterialSwitch</item>
         <item name="switchPreferenceCompatStyle">@style/Widget.Tachiyomi.Switch</item>
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
-
-        <!-- Preference text appearance -->
-        <item name="android:textAppearanceListItem">?attr/textAppearanceBodyLarge</item>
-        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Tachiyomi.Preference.Secondary</item>
     </style>
 
     <!--== Default Theme ==-->

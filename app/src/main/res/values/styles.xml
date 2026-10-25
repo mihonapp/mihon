@@ -29,8 +29,6 @@
         <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
 
-    <style name="TextAppearance.Tachiyomi.Preference.Secondary" parent="TextAppearance.Material3.BodySmall" />
-
 
     <!--=======================-->
     <!--Widgets.MaterialDivider-->

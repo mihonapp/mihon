@@ -615,9 +615,6 @@ open class WebGpuViewer(
             }
     }
 
-    /** Read live: these pages are built before the surface has a size, and outlive a rotation. */
-    private fun viewportPageWidth(half: Boolean): Int = if (half) pager.state.width / 2 else pager.state.width
-
     /**
      * Check if dual page mode is currently active based on config and view dimensions.
      * Dual page is never active for continuous (scrolling) viewers.
