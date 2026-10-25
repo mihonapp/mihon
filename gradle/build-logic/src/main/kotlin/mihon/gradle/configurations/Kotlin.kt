@@ -1,12 +1,12 @@
 package mihon.gradle.configurations
 
+import com.gradleup.tapmoc.configureJavaCompatibility
 import mihon.gradle.extensions.mihonx
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompilerOptions
-import tapmoc.configureJavaCompatibility
 
 fun Project.configureKotlin() {
     configureJavaCompatibility(mihonx.versions.java.get().toInt())

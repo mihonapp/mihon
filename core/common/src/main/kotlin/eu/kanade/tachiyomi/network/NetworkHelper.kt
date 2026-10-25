@@ -44,6 +44,10 @@ class NetworkHelper(
         if (preferences.verboseLogging.get()) {
             val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.HEADERS
+                if (preferences.redactSensitiveHeaders.get()) {
+                    redactHeader("Authorization")
+                    redactHeader("Auth")
+                }
             }
             builder.addNetworkInterceptor(httpLoggingInterceptor)
         }
