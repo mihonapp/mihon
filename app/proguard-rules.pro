@@ -76,6 +76,11 @@
 }
 ##---------------End: proguard configuration for kotlinx.serialization  ----------
 
+# Pager.setTransitionAnimation swaps DirectionalViewPager's mScroller field via reflection
+-keepclassmembers class androidx.viewpager.widget.DirectionalViewPager {
+    android.widget.Scroller mScroller;
+}
+
 # XmlUtil
 -keep public enum nl.adaptivity.xmlutil.EventType { *; }
 

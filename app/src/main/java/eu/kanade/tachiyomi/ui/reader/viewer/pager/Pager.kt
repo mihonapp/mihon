@@ -4,8 +4,13 @@ import android.content.Context
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.widget.Scroller
 import androidx.viewpager.widget.DirectionalViewPager
 import eu.kanade.tachiyomi.ui.reader.viewer.GestureDetectorWithLongTap
+import eu.kanade.tachiyomi.ui.reader.viewer.PageTransition
+import eu.kanade.tachiyomi.ui.reader.viewer.toInterpolator
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
 
 /**
  * Pager implementation that listens for tap and long tap and allows temporarily disabling touch
@@ -107,5 +112,37 @@ open class Pager(
      */
     fun setGestureDetectorEnabled(enabled: Boolean) {
         isGestureDetectorEnabled = enabled
+    }
+
+    // DirectionalViewPager has no API to replace its Scroller, so mScroller is swapped via reflection.
+    private val scrollerField = runCatching {
+        DirectionalViewPager::class.java.getDeclaredField("mScroller").apply { isAccessible = true }
+    }.getOrNull()
+
+    private val nativeScroller = runCatching { scrollerField?.get(this) as? Scroller }.getOrNull()
+
+    /**
+     * Applies the page [transition] to page changes, or restores the native scroller if null.
+     */
+    fun setTransitionAnimation(transition: PageTransition?) {
+        val field = scrollerField ?: return
+        try {
+            val scroller = transition?.let { FixedDurationScroller(context, it) } ?: nativeScroller ?: return
+            (field.get(this) as? Scroller)?.takeUnless { it.isFinished }?.let {
+                it.abortAnimation()
+                scrollTo(it.finalX, it.finalY)
+            }
+            field.set(this, scroller)
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to apply reader page transition animation" }
+        }
+    }
+
+    private class FixedDurationScroller(context: Context, private val transition: PageTransition) :
+        Scroller(context, transition.curve.toInterpolator()) {
+
+        override fun startScroll(startX: Int, startY: Int, dx: Int, dy: Int, duration: Int) {
+            super.startScroll(startX, startY, dx, dy, transition.durationMs)
+        }
     }
 }

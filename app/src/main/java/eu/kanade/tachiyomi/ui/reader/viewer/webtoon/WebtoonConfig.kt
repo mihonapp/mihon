@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
+import eu.kanade.tachiyomi.ui.reader.viewer.PageTransition
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderTransitionAnimations
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerConfig
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
@@ -39,6 +41,9 @@ class WebtoonConfig(
         private set
 
     var doubleTapZoomChangedListener: ((Boolean) -> Unit)? = null
+
+    var transition: PageTransition? = null
+        private set
 
     val theme = readerPreferences.readerTheme.get()
 
@@ -88,6 +93,15 @@ class WebtoonConfig(
                 { doubleTapZoom = it },
                 { doubleTapZoomChangedListener?.invoke(it) },
             )
+
+        ReaderTransitionAnimations.transitionChanges(
+            enabled = readerPreferences.pageTransitions,
+            animation = readerPreferences.webtoonTransitionAnimation,
+            customCurve = readerPreferences.webtoonTransitionCustomCurve,
+            customDurationMs = readerPreferences.webtoonTransitionCustomDuration,
+        )
+            .onEach { transition = it }
+            .launchIn(scope)
 
         readerPreferences.readerTheme.changes()
             .drop(1)

@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
+import eu.kanade.tachiyomi.ui.reader.viewer.toInterpolator
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import mihon.app.di.appGraph
@@ -280,7 +281,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private fun scrollUp() {
         if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, -scrollDistance)
+            smoothScrollBy(-scrollDistance)
         } else {
             recycler.scrollBy(0, -scrollDistance)
         }
@@ -291,9 +292,18 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private fun scrollDown() {
         if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, scrollDistance)
+            smoothScrollBy(scrollDistance)
         } else {
             recycler.scrollBy(0, scrollDistance)
+        }
+    }
+
+    private fun smoothScrollBy(distance: Int) {
+        val transition = config.transition
+        if (transition != null) {
+            recycler.smoothScrollBy(0, distance, transition.curve.toInterpolator(), transition.durationMs)
+        } else {
+            recycler.smoothScrollBy(0, distance)
         }
     }
 
