@@ -67,7 +67,8 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      * Whether the view pager is currently in idle mode. It sets the awaiting chapters if setting
      * this field to true.
      */
-    private var isIdle = true
+    var isIdle = true
+        private set
         set(value) {
             field = value
             if (value) {
@@ -313,24 +314,28 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
     }
 
+    fun canAutoScroll(): Boolean {
+        return isIdle
+    }
+
     /**
      * Moves to the next page.
      */
-    open fun moveToNext() {
-        moveRight()
+    open fun moveToNext(): Boolean {
+        return moveRight()
     }
 
     /**
      * Moves to the previous page.
      */
-    open fun moveToPrevious() {
-        moveLeft()
+    open fun moveToPrevious(): Boolean {
+        return moveLeft()
     }
 
     /**
      * Moves to the page at the right.
      */
-    protected open fun moveRight() {
+    protected open fun moveRight(): Boolean {
         if (pager.currentItem != adapter.count - 1) {
             val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
             if (holder != null && config.navigateToPan && holder.canPanRight()) {
@@ -338,13 +343,15 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             } else {
                 pager.setCurrentItem(pager.currentItem + 1, config.usePageTransitions)
             }
+            return true
         }
+        return false
     }
 
     /**
      * Moves to the page at the left.
      */
-    protected open fun moveLeft() {
+    protected open fun moveLeft(): Boolean {
         if (pager.currentItem != 0) {
             val holder = (currentPage as? ReaderPage)?.let(::getPageHolder)
             if (holder != null && config.navigateToPan && holder.canPanLeft()) {
@@ -352,7 +359,9 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             } else {
                 pager.setCurrentItem(pager.currentItem - 1, config.usePageTransitions)
             }
+            return true
         }
+        return false
     }
 
     /**
