@@ -8,6 +8,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ExtensionStoresViewModel(
     private val getExtensionStores: GetExtensionStores,
+    private val sourcePreferences: SourcePreferences,
     private val addExtensionStore: AddExtensionStore,
     private val removeExtensionStore: RemoveExtensionStore,
     private val updateExtensionStores: UpdateExtensionStores,
@@ -41,9 +43,14 @@ class ExtensionStoresViewModel(
 
     val state: StateFlow<ExtensionStoreScreenState> = combine(
         getExtensionStores.subscribe(),
+        sourcePreferences.disabledExtensionStores.changes(),
         dialog,
-    ) { stores, dialog ->
-        ExtensionStoreScreenState.Success(stores = stores, dialog = dialog)
+    ) { stores, disabledStores, dialog ->
+        ExtensionStoreScreenState.Success(
+            stores = stores,
+            disabledStores = disabledStores,
+            dialog = dialog,
+        )
     }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), ExtensionStoreScreenState.Loading)
@@ -100,6 +107,19 @@ class ExtensionStoresViewModel(
     fun deleteRepo(baseUrl: String) {
         viewModelScope.launch(Dispatchers.IO) {
             removeExtensionStore(baseUrl)
+            sourcePreferences.disabledExtensionStores.set(
+                sourcePreferences.disabledExtensionStores.get() - baseUrl,
+            )
+            extensionManager.findAvailableExtensions()
+        }
+    }
+
+    fun setRepoEnabled(baseUrl: String, enabled: Boolean) {
+        val disabledStores = sourcePreferences.disabledExtensionStores.get()
+        sourcePreferences.disabledExtensionStores.set(
+            if (enabled) disabledStores - baseUrl else disabledStores + baseUrl,
+        )
+        viewModelScope.launch(Dispatchers.IO) {
             extensionManager.findAvailableExtensions()
         }
     }
@@ -139,6 +159,7 @@ sealed class ExtensionStoreScreenState {
     @Immutable
     data class Success(
         val stores: List<ExtensionStore>,
+        val disabledStores: Set<String> = emptySet(),
         val dialog: ExtensionStoreDialog? = null,
     ) : ExtensionStoreScreenState() {
 

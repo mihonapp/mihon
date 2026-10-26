@@ -221,7 +221,7 @@ class ExtensionManager(
     }
 
     private suspend fun fetchExtensions(): List<Extension.Available> {
-        return extensionStoreRepository.fetchExtensions()
+        return extensionStoreRepository.fetchExtensions(preferences.disabledExtensionStores.get())
     }
 
     private fun setAvailableExtensions(extensions: List<Extension.Available>) {

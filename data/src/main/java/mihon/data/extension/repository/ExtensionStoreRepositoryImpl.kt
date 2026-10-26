@@ -111,18 +111,20 @@ class ExtensionStoreRepositoryImpl(
         )
     }
 
-    override suspend fun fetchExtensions(): List<Extension.Available> {
+    override suspend fun fetchExtensions(disabledStoreUrls: Set<String>): List<Extension.Available> {
         return try {
             supervisorScope {
-                database.extension_storeQueries.getAll(::extensionStoreMapper).awaitAsList().map { store ->
-                    async {
-                        service.getExtensions(store).onFailure {
-                            this@ExtensionStoreRepositoryImpl.logcat(LogPriority.ERROR, it) {
-                                "Failed to fetch extensions for store '${store.name} (${store.indexUrl})'"
+                database.extension_storeQueries.getAll(::extensionStoreMapper).awaitAsList()
+                    .filter { it.indexUrl !in disabledStoreUrls }
+                    .map { store ->
+                        async {
+                            service.getExtensions(store).onFailure {
+                                this@ExtensionStoreRepositoryImpl.logcat(LogPriority.ERROR, it) {
+                                    "Failed to fetch extensions for store '${store.name} (${store.indexUrl})'"
+                                }
                             }
                         }
                     }
-                }
                     .awaitAll()
                     .flatMap { it.getOrDefault(emptyList()) }
             }
