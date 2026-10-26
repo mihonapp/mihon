@@ -1,5 +1,5 @@
 [versions]
-aboutLibraries = "15.2.0"
+aboutLibraries = "15.3.0"
 android-desugar = "2.1.5"
 android-gradle = "9.4.1"
 androidx-activity-compose = "1.13.0"
@@ -8,14 +8,15 @@ androidx-appCompat = "1.8.0"
 androidx-baselineProfile = "1.5.0"
 androidx-benchmark = "1.5.0"
 androidx-biometric = "1.2.0-alpha05"
-androidx-compose-bom = "2026.09.01"
+androidx-compose-bom = "2026.10.01"
 androidx-constraintLayout = "2.2.2"
 androidx-core = "1.19.1"
 androidx-coreSplashScreen = "1.2.0"
 androidx-glance = "1.2.0"
 androidx-interpolator = "1.0.0"
 androidx-lifecycle = "2.11.0"
-androidx-paging = "3.5.1"
+androidx-navigationEvent = "1.2.0"
+androidx-paging = "3.5.3"
 androidx-preference = "1.2.1"
 androidx-profileInstaller = "1.4.1"
 androidx-recyclerView = "1.4.0"
@@ -24,7 +25,7 @@ androidx-test-espresso = "3.7.0"
 androidx-test-junit = "1.3.0"
 androidx-test-uiautomator = "2.4.0"
 androidx-viewPager = "1.1.0"
-androidx-webkit = "1.17.1"
+androidx-webkit = "1.18.0"
 androidx-work = "2.12.0"
 apollo = "5.2.0"
 apollo-adapters = "0.8.0"
@@ -34,49 +35,47 @@ composeGrid = "2.9.0"
 composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.2.1"
 composeWebview = "0.33.6"
-conscrypt = "2.7.0"
+conscrypt = "2.8.0"
 directionalViewPager = "1.0.0"
-diskLruCache = "2.0.2"
-firebase-bom = "34.19.0"
+firebase-bom = "35.1.0"
 firebase-crashlytics = "3.0.8"
-flexibleAdapter = "5.1.0"
 google-services = "4.5.0"
-image-decoder = "16"
+image-decoder = "17"
 injekt = "1.16.1"
 jsoup = "1.23.2"
 junit = "6.1.3"
-kotest-assertions = "6.2.5"
-kotlin-gradle = "2.4.20"
+kotest-assertions = "6.2.6"
+kotlin-gradle = "2.4.21"
 kotlinx-coroutines = "1.11.0"
 kotlinx-datetime = "0.8.0"
-kotlinx-serialization = "1.11.0"
+kotlinx-serialization = "1.12.0"
 ktlint = "1.8.0"
 leakCanary = "2.14"
 logcat = "0.4"
-markdown = "0.45.0"
+markdown = "0.46.0"
 material = "1.14.0"
 materialKolor = "5.0.1"
-metro = "1.4.5"
+metro = "1.5.0"
 mockk = "1.14.11"
 moko-resources = "0.26.4"
-okhttp = "5.5.0"
+okhttp = "5.5.1"
 okio = "3.18.2"
 photoView = "2.3.0"
 quickJs = "547f5b1597"
 reorderable = "3.1.0"
 rxJava = "1.3.8"
 shizuku = "13.1.5"
-spotless = "8.10.3"
-sqldelight = "2.4.0"
+spotless = "8.10.4"
+sqldelight = "2.4.1"
 sqldelight-androidx-driver = "0.2.2"
 stringSimilarity = "0.1.0"
-subsamplingScaleImageView = "1b283e2bc4"
+subsamplingScaleImageView = "72a0537151"
 swipe = "1.3.0"
-tapmoc = "0.4.2"
+tapmoc = "0.5.0"
 unifile = "08f224c8f9"
 valkyrie = "0.5.2"
 voyager = "2.2.21-1.10.3"
-webgpuviewer = "51"
+webgpuviewer = "53"
 xmlutil = "1.0.2"
 
 [libraries]
@@ -90,7 +89,7 @@ androidx-benchmark-macroJunit4 = { module = "androidx.benchmark:benchmark-macro-
 androidx-biometric = { module = "androidx.biometric:biometric-ktx", version.ref = "androidx-biometric" }
 androidx-compose-animation = { module = "androidx.compose.animation:animation" }
 androidx-compose-animationGraphics = { module = "androidx.compose.animation:animation-graphics" }
-androidx-compose-bom = { module = "androidx.compose:compose-bom-alpha", version.ref = "androidx-compose-bom" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom-beta", version.ref = "androidx-compose-bom" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-material3NavSuite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite" }
@@ -110,6 +109,7 @@ androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", 
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-navigationEvent = { module = "androidx.navigationevent:navigationevent", version.ref = "androidx-navigationEvent" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
@@ -135,11 +135,9 @@ composeRichEditor = { module = "com.mohamedrejeb.richeditor:richeditor-compose",
 composeWebview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
 conscrypt = { module = "org.conscrypt:conscrypt-android", version.ref = "conscrypt" }
 directionalViewPager = { module = "com.github.tachiyomiorg:DirectionalViewPager", version.ref = "directionalViewPager" }
-diskLruCache = { module = "com.jakewharton:disklrucache", version.ref = "diskLruCache" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-flexibleAdapter = { module = "eu.davidea:flexible-adapter", version.ref = "flexibleAdapter" }
 image-decoder = { module = "ca.mpreg:imagedecoder", version.ref = "image-decoder" }
 injekt = { module = "uy.kohesive.injekt:injekt-core", version.ref = "injekt" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }

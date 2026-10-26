@@ -15,10 +15,11 @@ import eu.kanade.presentation.more.stats.data.StatsData
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.model.SManga
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import tachiyomi.core.common.util.lang.launchIO
+import kotlinx.coroutines.launch
 import tachiyomi.domain.history.interactor.GetTotalReadDuration
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -48,7 +49,7 @@ class StatsViewModel(
     private val loggedInTrackers by lazy { trackerManager.loggedInTrackers() }
 
     init {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             val libraryManga = getLibraryManga.await()
 
             val distinctLibraryManga = libraryManga.fastDistinctBy { it.id }

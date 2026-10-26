@@ -1,9 +1,9 @@
 package tachiyomi.domain.history.model
 
-import java.util.Date
+import kotlin.time.Instant
 
 data class HistoryUpdate(
     val chapterId: Long,
-    val readAt: Date,
+    val readAt: Instant,
     val sessionReadDuration: Long,
 )

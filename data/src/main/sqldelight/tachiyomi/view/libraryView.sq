@@ -3,28 +3,25 @@ SELECT
     M.*,
     coalesce(C.total, 0) AS totalCount,
     coalesce(C.readCount, 0) AS readCount,
-    coalesce(C.latestUpload, 0) AS latestUpload,
-    coalesce(C.fetchedAt, 0) AS chapterFetchedAt,
+    C.latestUpload AS latestUpload,
+    C.fetchedAt AS chapterFetchedAt,
     -- Joining history to every chapter is the slowest part of the query, and only entries with excluded
     -- scanlators need the chapters to leave theirs out
-    coalesce(
-        CASE WHEN EXISTS (SELECT 0 FROM excluded_scanlator WHERE excluded_scanlator.manga_id = M.id)
-        THEN (
-            SELECT max(history.read_at)
-            FROM history
-            JOIN chapter
-            ON chapter.id = history.chapter_id
-            WHERE history.manga_id = M.id
-            AND NOT EXISTS (
-                SELECT 0 FROM excluded_scanlator
-                WHERE excluded_scanlator.manga_id = M.id
-                AND excluded_scanlator.scanlator = chapter.remote_scanlator
-            )
+    CASE WHEN EXISTS (SELECT 0 FROM excluded_scanlator WHERE excluded_scanlator.manga_id = M.id)
+    THEN (
+        SELECT max(history.read_at)
+        FROM history
+        JOIN chapter
+        ON chapter.id = history.chapter_id
+        WHERE history.manga_id = M.id
+        AND NOT EXISTS (
+            SELECT 0 FROM excluded_scanlator
+            WHERE excluded_scanlator.manga_id = M.id
+            AND excluded_scanlator.scanlator = chapter.remote_scanlator
         )
-        ELSE (SELECT max(history.read_at) FROM history WHERE history.manga_id = M.id)
-        END,
-        0
-    ) AS lastRead,
+    )
+    ELSE (SELECT max(history.read_at) FROM history WHERE history.manga_id = M.id)
+    END AS lastRead,
     coalesce(C.bookmarkCount, 0) AS bookmarkCount,
     coalesce(MC.categories, '0') AS categories
 FROM manga M
@@ -33,8 +30,8 @@ LEFT JOIN (
         chapter.manga_id,
         count(*) AS total,
         sum(user_read) AS readCount,
-        coalesce(max(chapter.remote_date_upload), 0) AS latestUpload,
-        coalesce(max(chapter.state_date_fetch), 0) AS fetchedAt,
+        max(chapter.remote_date_upload) AS latestUpload,
+        max(chapter.state_date_fetch) AS fetchedAt,
         sum(chapter.user_bookmark) AS bookmarkCount
     FROM chapter
     LEFT JOIN excluded_scanlator

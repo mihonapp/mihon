@@ -15,7 +15,7 @@ class DelayedTrackingStore(context: Context) {
     /**
      * Preference file where queued tracking updates are stored.
      */
-    private val preferences = context.getSharedPreferences("tracking_queue", Context.MODE_PRIVATE)
+    private val preferences by lazy { context.getSharedPreferences("tracking_queue", Context.MODE_PRIVATE) }
 
     fun add(trackId: Long, lastChapterRead: Double) {
         val previousLastChapterRead = preferences.getFloat(trackId.toString(), 0f)

@@ -740,7 +740,6 @@
     <string name="ext_permission_install_apps_warning">За инсталацију додатака потребне су дозволе. Додирни овде за одобрење</string>
     <string name="invalid_backup_file_error">Грешка:</string>
     <string name="manga_interval_custom_amount">Прилагођена учесталост ажурирања:</string>
-    <string name="action_open_repo">Отвори репозиторију</string>
     <string name="not_selected">Није одабрано</string>
     <string name="selected">Одабрано</string>
     <string name="action_menu_overflow_description">Више опција</string>

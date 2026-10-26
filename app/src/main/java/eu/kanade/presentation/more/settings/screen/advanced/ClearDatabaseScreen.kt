@@ -42,16 +42,17 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import mihon.core.metro.AppCoroutineScope
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FlipToBack
 import mihon.icons.materialsymbols.rounded.SelectAll
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.launchUI
-import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.domain.history.repository.HistoryRepository
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.interactor.GetSourcesWithNonLibraryManga
@@ -117,7 +118,7 @@ class ClearDatabaseScreen : Screen() {
                         confirmButton = {
                             TextButton(
                                 onClick = {
-                                    scope.launchUI {
+                                    scope.launch(Dispatchers.Main) {
                                         viewModel.removeMangaBySourceId(keepReadManga)
                                         viewModel.clearSelection()
                                         viewModel.hideConfirmation()
@@ -229,6 +230,7 @@ class ClearDatabaseScreen : Screen() {
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ClearDatabaseViewModel(
+    @AppCoroutineScope private val appScope: CoroutineScope,
     private val mangaRepository: MangaRepository,
     private val historyRepository: HistoryRepository,
     private val getSourcesWithNonLibraryManga: GetSourcesWithNonLibraryManga,
@@ -238,7 +240,7 @@ class ClearDatabaseViewModel(
         field = MutableStateFlow<ClearDatabaseViewModel.State>(State.Loading)
 
     init {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             getSourcesWithNonLibraryManga.subscribe()
                 .collectLatest { list ->
                     state.update { old ->
@@ -252,10 +254,13 @@ class ClearDatabaseViewModel(
         }
     }
 
-    suspend fun removeMangaBySourceId(keepReadManga: Boolean) = withNonCancellableContext {
-        val state = state.value as? State.Ready ?: return@withNonCancellableContext
-        mangaRepository.deleteNonLibraryManga(state.selection, keepReadManga)
-        historyRepository.deleteResetHistory()
+    suspend fun removeMangaBySourceId(keepReadManga: Boolean) {
+        val state = state.value as? State.Ready ?: return
+        // Finishes even if the screen is left while it runs
+        appScope.launch {
+            mangaRepository.deleteNonLibraryManga(state.selection, keepReadManga)
+            historyRepository.deleteResetHistory()
+        }.join()
     }
 
     fun toggleSelection(source: Source) = state.update { state ->

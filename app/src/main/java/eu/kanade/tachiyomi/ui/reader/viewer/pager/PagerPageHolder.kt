@@ -13,18 +13,17 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import okio.Buffer
 import okio.BufferedSource
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
@@ -94,7 +93,7 @@ class PagerPageHolder(
         val loader = page.chapter.pageLoader ?: return
 
         supervisorScope {
-            launchIO {
+            launch(Dispatchers.IO) {
                 loader.loadPage(page)
             }
             page.statusFlow.collectLatest { state ->
@@ -150,26 +149,28 @@ class PagerPageHolder(
         val streamFn = page.stream ?: return
 
         try {
-            val (source, isAnimated, background) = withIOContext {
-                val source = streamFn().use { process(item, Buffer().readFrom(it)) }
+            val buffer = withContext(Dispatchers.IO) { streamFn().use { Buffer().readFrom(it) } }
+            // Splitting, merging and sampling the background decode the image, which is CPU work
+            val (source, isAnimated, background) = withContext(Dispatchers.Default) {
+                val source = process(item, buffer)
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
-                val background = if (!isAnimated && viewer.config.automaticBackground) {
+                val background = if (!isAnimated && viewer.general.automaticBackground) {
                     ImageUtil.chooseBackground(context, source.peek().inputStream())
                 } else {
                     null
                 }
                 Triple(source, isAnimated, background)
             }
-            withUIContext {
+            withContext(Dispatchers.Main) {
                 setImage(
                     source,
                     isAnimated,
                     Config(
-                        zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = viewer.config.imageScaleType,
-                        cropBorders = viewer.config.imageCropBorders,
-                        zoomStartPosition = viewer.config.imageZoomType,
-                        landscapeZoom = viewer.config.landscapeZoom,
+                        zoomDuration = viewer.general.doubleTapAnimDuration,
+                        minimumScaleType = viewer.paged.page.imageScaleType.value,
+                        cropBorders = viewer.paged.page.cropBorders,
+                        zoomStartPosition = viewer.imageZoomType,
+                        landscapeZoom = viewer.paged.page.landscapeZoom,
                     ),
                 )
                 if (!isAnimated) {
@@ -179,18 +180,18 @@ class PagerPageHolder(
             }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
-            withUIContext {
+            withContext(Dispatchers.Main) {
                 setError(e)
             }
         }
     }
 
     private fun process(page: ReaderPage, imageSource: BufferedSource): BufferedSource {
-        if (viewer.config.dualPageRotateToFit) {
+        if (viewer.simplePaged.dualPageRotateToFit) {
             return rotateDualPage(imageSource)
         }
 
-        if (!viewer.config.dualPageSplit) {
+        if (!viewer.simplePaged.dualPageSplit) {
             return imageSource
         }
 
@@ -211,7 +212,7 @@ class PagerPageHolder(
     private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
         val isDoublePage = ImageUtil.isWideImage(imageSource)
         return if (isDoublePage) {
-            val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
+            val rotation = if (viewer.simplePaged.dualPageRotateToFitInvert) -90f else 90f
             ImageUtil.rotateImage(imageSource, rotation)
         } else {
             imageSource
@@ -227,7 +228,7 @@ class PagerPageHolder(
             else -> error("We should choose a side!")
         }
 
-        if (viewer.config.dualPageInvert) {
+        if (viewer.simplePaged.dualPageInvert) {
             side = when (side) {
                 ImageUtil.Side.RIGHT -> ImageUtil.Side.LEFT
                 ImageUtil.Side.LEFT -> ImageUtil.Side.RIGHT

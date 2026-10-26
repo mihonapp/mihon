@@ -9,7 +9,6 @@ import eu.kanade.tachiyomi.data.backup.BackupDecoder
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionStore
-import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
@@ -23,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.chunked
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
@@ -97,7 +97,7 @@ class BackupRestorer(
     }
 
     private suspend fun restoreFromFile(uri: Uri, options: RestoreOptions) {
-        val backup = backupDecoder.decode(uri)
+        val (entryCount, backup) = backupDecoder.decodeMetadata(uri)
 
         // Store source mapping for error messages
         val backupMaps = backup.backupSources
@@ -105,7 +105,7 @@ class BackupRestorer(
 
         if (options.libraryEntries) {
             restoreSourceNames(backupMaps)
-            restoreAmount += backup.backupManga.size
+            restoreAmount += entryCount
         }
         if (options.categories) {
             restoreAmount += 1
@@ -138,7 +138,7 @@ class BackupRestorer(
             }
             if (options.libraryEntries) {
                 restoreManga(
-                    backup.backupManga,
+                    uri,
                     if (options.categories) backup.backupCategories else emptyList(),
                     restoreCategoriesJob,
                 )
@@ -175,14 +175,15 @@ class BackupRestorer(
     }
 
     private fun CoroutineScope.restoreManga(
-        backupMangas: List<BackupManga>,
+        uri: Uri,
         backupCategories: List<BackupCategory>,
         categoriesRestoreJob: Job?,
     ) = launch {
         categoriesRestoreJob?.join()
-        mangaRestorer.sortByNew(backupMangas)
+
+        backupDecoder.decodeEntries(uri)
             .chunked(100)
-            .forEach { chunk ->
+            .collect { chunk ->
                 val restoredAsBatch = try {
                     ensureActive()
                     mangaRestorer.restore(chunk, backupCategories)

@@ -11,10 +11,11 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.domain.source.models.RemoteMangaUpdate
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.NoChaptersException
@@ -30,6 +31,7 @@ import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 @Inject
 class UpdateMangaFromRemote(
@@ -49,7 +51,7 @@ class UpdateMangaFromRemote(
         fetchDetails: Boolean = false,
         fetchChapters: Boolean = false,
         manualFetch: Boolean = false,
-        fetchWindow: Pair<Long, Long> = Pair(0, 0),
+        fetchWindow: ClosedRange<Instant>? = null,
     ): Result<RemoteMangaUpdate> {
         val source = sourceManager.getOrStub(manga.source)
         return invoke(
@@ -67,19 +69,17 @@ class UpdateMangaFromRemote(
         fetchDetails: Boolean = false,
         fetchChapters: Boolean = false,
         manualFetch: Boolean = false,
-        fetchWindow: Pair<Long, Long> = Pair(0, 0),
-    ): Result<RemoteMangaUpdate> {
+        fetchWindow: ClosedRange<Instant>? = null,
+    ): Result<RemoteMangaUpdate> = withContext(Dispatchers.IO) {
         val result = try {
             val chapters = chapterRepository.getChapterByMangaId(manga.id)
                 .sortedBy { it.sourceOrder }
-            val update = withIOContext {
-                source.getMangaUpdate(
-                    manga = manga.toSManga(),
-                    chapters = chapters.map(Chapter::toSChapter),
-                    fetchDetails = fetchDetails,
-                    fetchChapters = fetchChapters,
-                )
-            }
+            val update = source.getMangaUpdate(
+                manga = manga.toSManga(),
+                chapters = chapters.map(Chapter::toSChapter),
+                fetchDetails = fetchDetails,
+                fetchChapters = fetchChapters,
+            )
             awaitUpdateFromSource(manga, update.manga, manualFetch)
             val newChapters = if (!fetchChapters && chapters.isEmpty() && update.chapters.isEmpty()) {
                 emptyList()
@@ -102,7 +102,7 @@ class UpdateMangaFromRemote(
             Result.failure(e)
         }
 
-        if (!fetchChapters) return result
+        if (!fetchChapters) return@withContext result
 
         try {
             val error = result.exceptionOrNull()
@@ -122,7 +122,7 @@ class UpdateMangaFromRemote(
             logcat(LogPriority.ERROR, e) { "Failed to update stored error for manga ${manga.title}" }
         }
 
-        return result
+        result
     }
 
     private suspend fun awaitUpdateFromSource(
@@ -148,14 +148,14 @@ class UpdateMangaFromRemote(
             // Never refresh covers if the url is empty to avoid "losing" existing covers
             remoteManga.thumbnail_url.isNullOrEmpty() -> null
             !manualFetch && localManga.thumbnailUrl == remoteManga.thumbnail_url -> null
-            localManga.isLocal() -> Clock.System.now().toEpochMilliseconds()
+            localManga.isLocal() -> Clock.System.now()
             localManga.hasCustomCover(coverCache) -> {
                 coverCache.deleteFromCache(localManga, false)
                 null
             }
             else -> {
                 coverCache.deleteFromCache(localManga, false)
-                Clock.System.now().toEpochMilliseconds()
+                Clock.System.now()
             }
         }
 

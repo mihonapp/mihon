@@ -23,13 +23,6 @@ class MangaRestorer(
     private val now = Clock.System.now().toLocalDateTime(timeZone)
     private val currentFetchWindow = fetchInterval.getWindow(now.date, timeZone)
 
-    suspend fun sortByNew(backupMangas: List<BackupManga>): List<BackupManga> {
-        val urlsBySource = restoreRepository.getMangaUrlsBySourceId()
-
-        return backupMangas
-            .sortedBy { it.url in urlsBySource[it.source].orEmpty() }
-    }
-
     /**
      * Restores [backupMangas] all together, so either every one of them is restored or none is.
      */
@@ -58,8 +51,13 @@ class MangaRestorer(
             )
         }
 
-        restoreRepository.restoreManga(entries) {
-            fetchInterval.withFetchInterval(it, now, timeZone, currentFetchWindow)
+        restoreRepository.restoreManga(entries) { manga ->
+            fetchInterval.withFetchInterval(manga, now, timeZone, currentFetchWindow).apply {
+                // A next update still ahead was worked out with the chapters the backup came from
+                manga.nextUpdate
+                    ?.takeIf { it >= currentFetchWindow.start }
+                    ?.let { nextUpdate = it }
+            }
         }
     }
 }

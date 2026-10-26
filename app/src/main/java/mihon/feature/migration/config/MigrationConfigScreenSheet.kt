@@ -34,7 +34,7 @@ import mihon.domain.migration.models.MigrationFlag
 import mihon.feature.common.utils.getLabel
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Check
-import mihon.icons.materialsymbols.rounded.Warning
+import mihon.icons.materialsymbols.roundedfilled.Warning
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.preference.toggle
@@ -226,7 +226,7 @@ private fun MigrationSheetWarningItem(
     ListItem(
         leadingContent = {
             Icon(
-                imageVector = MaterialSymbols.Rounded.Warning,
+                imageVector = MaterialSymbols.RoundedFilled.Warning,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.active,
             )

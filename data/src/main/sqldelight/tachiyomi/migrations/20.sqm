@@ -1,0 +1,15 @@
+CREATE TABLE manga_update_error(
+    manga_id INTEGER NOT NULL PRIMARY KEY,
+    error_message TEXT,
+    timestamp INTEGER NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES manga(id) ON DELETE CASCADE
+);
+
+CREATE INDEX manga_update_error_timestamp_index ON manga_update_error(timestamp);
+
+CREATE TRIGGER delete_manga_update_error_on_unfavorite
+AFTER UPDATE OF user_favorite_at ON manga
+WHEN new.user_favorite_at IS NULL
+BEGIN
+    DELETE FROM manga_update_error WHERE manga_id = new.id;
+END;

@@ -689,7 +689,6 @@
     <string name="ext_info_language">ভাষা</string>
     <string name="ext_permission_install_apps_warning">এক্সটেনশন ইনস্টল করতে অনুমতি লাগবে। অনুমতি দিতে এখানে ট্যাপ করুন।</string>
     <string name="ext_revoke_trust">অজানা এক্সটেনশনের ট্রাস্ট বাতিল</string>
-    <string name="action_open_repo">রিপোর সোর্সে যান</string>
     <string name="pref_page_rotate">চওড়া পেজ রোটেট করে ফিট হবে</string>
     <string name="pref_page_rotate_invert">রোটেট করা চওড়া পেজের অরিয়েন্টেশন উল্টানো হবে</string>
     <string name="pref_double_tap_zoom">জুম করতে ডাবল ট্যাপ</string>

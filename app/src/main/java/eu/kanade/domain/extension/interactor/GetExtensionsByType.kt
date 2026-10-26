@@ -30,11 +30,10 @@ class GetExtensionsByType(
 
             val updates = (loadedUpdates + notLoadedUpdates).sortedWith(byName)
 
+            val installedSignatures = (_loaded + _notLoaded).groupBy({ it.pkgName }, { it.signatures })
             val available = _available
                 .filter { extension ->
-                    (_loaded + _notLoaded).none {
-                        it.pkgName == extension.pkgName && extension.store.signingKey in it.signatures
-                    } &&
+                    installedSignatures[extension.pkgName].orEmpty().none { extension.store.signingKey in it } &&
                         extension.contentWarning in enabledContentWarnings
                 }
                 .flatMap { ext ->

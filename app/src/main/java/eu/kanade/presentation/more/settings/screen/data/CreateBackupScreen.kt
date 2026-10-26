@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -31,6 +32,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.LazyColumnWithAction
@@ -46,6 +48,7 @@ class CreateBackupScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = metroViewModel<CreateBackupViewModel>()
         val state by viewModel.state.collectAsState()
+        val scope = rememberCoroutineScope()
 
         val chooseBackupDir = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument("application/*"),
@@ -75,14 +78,16 @@ class CreateBackupScreen : Screen() {
                 actionLabel = stringResource(MR.strings.action_create),
                 actionEnabled = state.options.canCreate(),
                 onClickAction = {
-                    if (!BackupCreateWorker.isManualJobRunning(context)) {
-                        try {
-                            chooseBackupDir.launch(BackupCreator.getFilename())
-                        } catch (_: ActivityNotFoundException) {
-                            context.toast(MR.strings.file_picker_error)
+                    scope.launch {
+                        if (!BackupCreateWorker.isManualJobRunning(context)) {
+                            try {
+                                chooseBackupDir.launch(BackupCreator.getFilename())
+                            } catch (_: ActivityNotFoundException) {
+                                context.toast(MR.strings.file_picker_error)
+                            }
+                        } else {
+                            context.toast(MR.strings.backup_in_progress)
                         }
-                    } else {
-                        context.toast(MR.strings.backup_in_progress)
                     }
                 },
             ) {
