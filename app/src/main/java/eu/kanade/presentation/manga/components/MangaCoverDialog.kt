@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -42,9 +43,11 @@ import ca.mpreg.webgpuviewer.viewer.ImagePage
 import ca.mpreg.webgpuviewer.viewer.ImageViewer
 import ca.mpreg.webgpuviewer.viewer.ImageViewerState
 import coil3.asDrawable
+import coil3.fetch.SourceFetchResult
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.Options
 import coil3.request.SuccessResult
 import coil3.size.Size
 import eu.kanade.presentation.components.AppBar
@@ -54,14 +57,23 @@ import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.tachiyomi.data.coil.ImageDecoder
 import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import eu.kanade.tachiyomi.ui.reader.viewer.compose.PageImageSource
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import logcat.LogPriority
+import me.saket.telephoto.subsamplingimage.SubSamplingImage
+import me.saket.telephoto.subsamplingimage.rememberSubSamplingImageState
+import me.saket.telephoto.zoomable.rememberZoomableState
+import me.saket.telephoto.zoomable.zoomable
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
 import mihon.icons.materialsymbols.rounded.Edit
 import mihon.icons.materialsymbols.rounded.Save
 import mihon.icons.materialsymbols.rounded.Share
+import okio.Buffer
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -80,6 +92,7 @@ fun MangaCoverDialog(
     onDismissRequest: () -> Unit,
 ) {
     val useNewRenderer = LocalContext.current.appGraph.basePreferences.highQualityRenderer.get()
+    val useComposeViewer = LocalContext.current.appGraph.readerPreferences.composeViewer.get()
     val view = LocalView.current
 
     Dialog(
@@ -170,6 +183,8 @@ fun MangaCoverDialog(
         ) { contentPadding ->
             if (useNewRenderer) {
                 val state = remember(manga) { ImageViewerState() }
+                    // A tap dismisses, as on the other renderer's cover.
+                    .apply { onTap = { onDismissRequest() } }
                 LaunchedEffect(manga) {
                     val request = ImageRequest.Builder(view.context)
                         .data(manga)
@@ -218,6 +233,41 @@ fun MangaCoverDialog(
                 }
 
                 ImageViewer(state = state)
+                return@Scaffold
+            }
+
+            if (useComposeViewer) {
+                val context = LocalContext.current
+                val source by produceState<PageImageSource?>(null, manga) {
+                    var opened: PageImageSource? = null
+                    try {
+                        withContext(Dispatchers.IO) {
+                            val loader = context.imageLoader
+                            val fetcher = loader.components
+                                .newFetcher(manga, Options(context, size = Size.ORIGINAL), loader)
+                                ?.first
+                            val result = fetcher?.fetch() as? SourceFetchResult ?: return@withContext
+                            val bytes = result.source.use { Buffer().apply { writeAll(it.source()) } }
+                            opened = PageImageSource.open(bytes, cropBorders = false, context.appGraph.appScope)
+                        }
+                        value = opened
+                    } catch (e: Exception) {
+                        opened?.close()
+                        if (e is CancellationException) throw e
+                        logcat(LogPriority.ERROR, e) { "Failed to open cover" }
+                    }
+                }
+                source?.let {
+                    val zoomableState = rememberZoomableState()
+                    SubSamplingImage(
+                        state = rememberSubSamplingImageState(it, zoomableState),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(contentPadding)
+                            .zoomable(zoomableState, onClick = { onDismissRequest() }),
+                    )
+                }
                 return@Scaffold
             }
 

@@ -1,14 +1,18 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
-import ca.mpreg.webgpuviewer.ImageViewContinuous
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import ca.mpreg.webgpuviewer.viewer.ImagePage
+import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuous
+import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuousState
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.viewer.mouseWheelPaging
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
 class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = false) :
-    WebGpuViewer(activity, isReversed = false, isVertical = true, pager = ImageViewContinuous(activity)) {
+    WebGpuViewer(activity, isReversed = false, isVertical = true, viewerState = ImageViewerContinuousState()) {
 
     override val isContinuous: Boolean get() = true
 
@@ -19,7 +23,12 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
 
     override val cacheSize get() = 2 + 2 * max(4, state.pagesAbove + state.pagesBelow)
 
-    private val state get() = (pager as ImageViewContinuous).state
+    private val state get() = viewerState as ImageViewerContinuousState
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        ImageViewerContinuous(modifier = modifier.mouseWheelPaging(this), state = state)
+    }
 
     init {
         state.backgroundColor = readerBackgroundColor()
@@ -31,9 +40,8 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
                 readThrough?.let { select(it) }
             }
 
-            val page0 = state.getPage(0)
-            val edge = (page0 is TransitionPage && page0.prevChapter == null) ||
-                (readThrough is TransitionPage && readThrough.nextChapter == null)
+            // Only past the last chapter, where the reader is likely to be closed, as the webtoon viewer did
+            val edge = readThrough is TransitionPage && readThrough.nextChapter == null
 
             val first = wasAtEdge == null
             val edgeChanged = edge != wasAtEdge
@@ -80,13 +88,14 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
         super.destroy()
     }
 
-    private fun scrollByHalfPage(direction: Int) {
-        state.animateScroll(direction * state.height / 2f)
+    // Three quarters of the screen, as the other long strips step.
+    private fun scrollByStep(direction: Int) {
+        state.animateScroll(direction * activity.resources.displayMetrics.heightPixels * 3 / 4f)
     }
 
-    override fun moveRight() = scrollByHalfPage(1)
+    override fun moveRight() = scrollByStep(1)
 
-    override fun moveLeft() = scrollByHalfPage(-1)
+    override fun moveLeft() = scrollByStep(-1)
 
     override fun moveToPage(page: ReaderPage) {
         super.moveToPage(page)

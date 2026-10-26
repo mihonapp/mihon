@@ -30,6 +30,10 @@ object SettingsReaderScreen : SearchableSettings {
         val readerPref = remember { context.appGraph.readerPreferences }
 
         return listOf(
+            Preference.PreferenceItem.SwitchPreference(
+                preference = readerPref.composeViewer,
+                title = stringResource(MR.strings.pref_compose_viewer),
+            ),
             Preference.PreferenceItem.ListPreference(
                 preference = readerPref.defaultReadingMode,
                 entries = ReadingMode.entries.drop(1)

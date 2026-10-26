@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.content.Context
 import android.net.Uri
-import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -913,10 +912,6 @@ class ReaderViewModel(
         mutableState.update { it.copy(menuVisible = visible) }
     }
 
-    fun showLoadingDialog() {
-        mutableState.update { it.copy(dialog = Dialog.Loading) }
-    }
-
     fun openReadingModeSelectDialog() {
         mutableState.update { it.copy(dialog = Dialog.ReadingModeSelect) }
     }
@@ -935,10 +930,6 @@ class ReaderViewModel(
 
     fun closeDialog() {
         mutableState.update { it.copy(dialog = null) }
-    }
-
-    fun setBrightnessOverlayValue(value: Int) {
-        mutableState.update { it.copy(brightnessOverlayValue = value) }
     }
 
     /**
@@ -1105,7 +1096,6 @@ class ReaderViewModel(
         val currentPage: Int = -1,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
-        @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
@@ -1115,7 +1105,6 @@ class ReaderViewModel(
     }
 
     sealed interface Dialog {
-        data object Loading : Dialog
         data object Settings : Dialog
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog

@@ -12,6 +12,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
+- Add a Compose based reader for the paged and long strip modes, also used to view manga covers (Settings → Reader → Use Compose based reader) ([@AntsyLich](https://github.com/AntsyLich))
 - Add experimental high quality reader renderer (Settings → Advanced → Use high quality renderer) with better image scaling, page transition animations, dual page view and display cutout handling ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3388](https://github.com/mihonapp/mihon/pull/3388))
   - Match background and transition page colors to the old reader ([@AntsyLich](https://github.com/AntsyLich)) ([#3765](https://github.com/mihonapp/mihon/pull/3765))
   - Support the Fit width, Fit height and Original size scale types and the zoom start position ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3801](https://github.com/mihonapp/mihon/pull/3801))
@@ -28,10 +29,12 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Show pages progressively while they download ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4023](https://github.com/mihonapp/mihon/pull/4023))
   - Lower memory use for animated images and support cropping borders in long strip ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4029](https://github.com/mihonapp/mihon/pull/4029))
   - Pair more wide pages in dual page view by comparing them with neighbouring pages ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4051](https://github.com/mihonapp/mihon/pull/4051))
+  - Match the other readers' page splitting and rotating, side padding, landscape zoom, scale types and key paging, use less memory, and keep pages' size while they reload ([@AntsyLich](https://github.com/AntsyLich))
 
 ### Changed
 - Use a new decoder for images Android can't decode itself, like AVIF, JPEG XL and HEIF, and support JPEG 2000 images ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 - Keep online chapters cached for a day instead of up to a size limit ([@AntsyLich](https://github.com/AntsyLich))
+- Apply the reader's grayscale and inverted colors to pages only, not to transition, loading and error pages ([@AntsyLich](https://github.com/AntsyLich))
 
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
