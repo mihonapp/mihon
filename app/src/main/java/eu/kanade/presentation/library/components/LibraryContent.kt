@@ -30,6 +30,7 @@ fun LibraryContent(
     categories: List<Category>,
     searchQuery: String?,
     selection: Set<Long>,
+    selectionMode: Boolean,
     contentPadding: PaddingValues,
     currentPage: Int,
     hasActiveFilters: Boolean,
@@ -78,7 +79,7 @@ fun LibraryContent(
 
         PullRefresh(
             refreshing = isRefreshing,
-            enabled = selection.isEmpty(),
+            enabled = !selectionMode,
             onRefresh = {
                 scope.launch {
                     if (!onRefresh()) return@launch
@@ -101,14 +102,15 @@ fun LibraryContent(
                 getColumnsForOrientation = getColumnsForOrientation,
                 getItemsForCategory = getItemsForCategory,
                 onClickManga = { category, manga ->
-                    if (selection.isNotEmpty()) {
+                    if (selectionMode) {
                         onToggleSelection(category, manga)
                     } else {
                         onClickManga(manga.manga.id)
                     }
                 },
                 onLongClickManga = onToggleRangeSelection,
-                onClickContinueReading = onContinueReadingClicked,
+                onToggleSelection = onToggleSelection.takeIf { selectionMode },
+                onClickContinueReading = onContinueReadingClicked.takeUnless { selectionMode },
             )
         }
 

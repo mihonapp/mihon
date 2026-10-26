@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_select_titles">Seleccionar títulos</string>
     <string name="name">Nombre</string>
     <string name="label_settings">Ajustes</string>
     <string name="label_download_queue">Cola de descargas</string>
@@ -251,6 +252,8 @@
     <string name="untrusted_extension_message">Una extensión maliciosa puede leer credenciales de inicio guardadas o ejecutar cualquier tipo de código en tu dispositivo. \n \nAl marcar al autor como de confianza aceptas estos riesgos.</string>
     <string name="double_tap_anim_speed_0">Sin animación</string>
     <string name="manga_added_library">Añadido a biblioteca</string>
+    <string name="bulk_add_to_library_success">Añadidos %d títulos a tu biblioteca</string>
+    <string name="bulk_add_to_library_error">No se pudo guardar la selección. Vuelve a intentarlo.</string>
     <string name="manga_removed_library">Quitado de biblioteca</string>
     <string name="copied_to_clipboard">Copiado en portapapeles: \n«%1$s»</string>
     <string name="source_not_installed">Fuente no instalada: %1$s</string>

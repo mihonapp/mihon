@@ -41,6 +41,7 @@ fun LibraryPager(
     getItemsForCategory: (Category) -> List<LibraryItem>,
     onClickManga: (Category, LibraryManga) -> Unit,
     onLongClickManga: (Category, LibraryManga) -> Unit,
+    onToggleSelection: ((Category, LibraryManga) -> Unit)?,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
 ) {
     HorizontalPager(
@@ -86,6 +87,7 @@ fun LibraryPager(
                     selection = selection,
                     onClick = onClickManga,
                     onLongClick = onLongClickManga,
+                    onToggleSelection = onToggleSelection?.let { toggle -> { toggle(category, it) } },
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
@@ -100,6 +102,7 @@ fun LibraryPager(
                     selection = selection,
                     onClick = onClickManga,
                     onLongClick = onLongClickManga,
+                    onToggleSelection = onToggleSelection?.let { toggle -> { toggle(category, it) } },
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
@@ -113,6 +116,7 @@ fun LibraryPager(
                     selection = selection,
                     onClick = onClickManga,
                     onLongClick = onLongClickManga,
+                    onToggleSelection = onToggleSelection?.let { toggle -> { toggle(category, it) } },
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,

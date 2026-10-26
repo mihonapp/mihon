@@ -116,10 +116,13 @@ data object LibraryTab : Tab {
                 LibraryToolbar(
                     hasActiveFilters = state.hasActiveFilters,
                     selectedCount = state.selection.size,
+                    selectionMode = state.selectionMode,
+                    onStartSelection = viewModel::startSelection,
                     title = title,
                     onClickUnselectAll = viewModel::clearSelection,
                     onClickSelectAll = viewModel::selectAll,
                     onClickInvertSelection = viewModel::invertSelection,
+                    onClickChangeCategory = viewModel::openChangeCategoryDialog,
                     onClickFilter = viewModel::showSettingsDialog,
                     onClickRefresh = { scope.launch { onClickRefresh(state.activeCategory) } },
                     onClickGlobalUpdate = { scope.launch { onClickRefresh(null) } },
@@ -143,7 +146,7 @@ data object LibraryTab : Tab {
             },
             bottomBar = {
                 LibraryBottomActionMenu(
-                    visible = state.selectionMode,
+                    visible = state.selection.isNotEmpty(),
                     onChangeCategoryClicked = viewModel::openChangeCategoryDialog,
                     onMarkAsReadClicked = { viewModel.markReadSelection(true) },
                     onMarkAsUnreadClicked = { viewModel.markReadSelection(false) },
@@ -182,6 +185,7 @@ data object LibraryTab : Tab {
                         categories = state.displayedCategories,
                         searchQuery = state.searchQuery,
                         selection = state.selection,
+                        selectionMode = state.selectionMode,
                         contentPadding = contentPadding,
                         currentPage = state.coercedActiveCategoryIndex,
                         hasActiveFilters = state.hasActiveFilters,
@@ -233,7 +237,6 @@ data object LibraryTab : Tab {
                     initialSelection = dialog.initialSelection,
                     onDismissRequest = onDismissRequest,
                     onEditCategories = {
-                        viewModel.clearSelection()
                         navigator.push(CategoryScreen())
                     },
                     onConfirm = { include, exclude ->
