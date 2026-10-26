@@ -29,6 +29,7 @@ import ca.mpreg.webgpuviewer.transition.TransitionStackLeft
 import ca.mpreg.webgpuviewer.transition.TransitionStackRight
 import ca.mpreg.webgpuviewer.transition.TransitionStackUp
 import ca.mpreg.webgpuviewer.viewer.AnimationFrame
+import ca.mpreg.webgpuviewer.viewer.ComposePageSize
 import ca.mpreg.webgpuviewer.viewer.ImagePage
 import ca.mpreg.webgpuviewer.viewer.ImageViewer
 import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuousState
@@ -78,6 +79,7 @@ import java.io.InputStream
 import java.lang.ref.WeakReference
 import java.nio.ByteBuffer
 import java.util.TreeSet
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -160,6 +162,19 @@ open class WebGpuViewer(
 
     private val pageCache = LinkedHashMap<PageKey, ViewerPage>()
 
+    /**
+     * The size each page's image came out at, so a page made again after leaving [pageCache] holds its place
+     * while it decodes: in the strip, and in a spread, which pairs by shape. Cleared with the cache on an image
+     * setting change, which can change it.
+     */
+    private val pageSizes = ConcurrentHashMap<PageKey, KnownSize>()
+
+    /** [size] for the spinner, [aspectRatio] as [ViewerReaderPage.aspectRatio] read it, trimmed. */
+    private class KnownSize(val size: ComposePageSize.Of, val aspectRatio: Float?)
+
+    /** A spinner standing in for [page], at the size it had. */
+    private fun progressPageFor(page: ViewerReaderPage): ProgressPage =
+        ProgressPage(this, pageSizes[pageKey(page)]?.size ?: ComposePageSize.Auto)
 
     // Processed LIFO - last added is highest priority.
     private val decodeQueue = ArrayDeque<ViewerReaderPage>()
@@ -637,8 +652,14 @@ open class WebGpuViewer(
         @Volatile
         internal var taggedSpreadPosition: SpreadPosition? = null
 
-        /** The decoded image's shape, or null while this page is still a placeholder. */
+        /**
+         * The decoded image's shape, or the one it had before it left the cache, or null while this page is a
+         * placeholder never decoded.
+         */
         internal val aspectRatio: Float?
+            get() = decodedAspectRatio ?: pageSizes[pageKey(this)]?.aspectRatio
+
+        val decodedAspectRatio: Float?
             get() = (imagePage as? ImagePage.ImageSingle)?.takeIf { it !is ImagePage.Compose }?.let {
                 val height = it.trimHeight
                 if (it.isDecoded && height > 0) it.trimWidth.toFloat() / height else null
@@ -662,7 +683,7 @@ open class WebGpuViewer(
         internal val standsAlone: Boolean
             get() = taggedSpreadPosition == SpreadPosition.SINGLE || (aspectRatio ?: 0f) > wideAspect
 
-        override var imagePage: ImagePage = ProgressPage(this@WebGpuViewer)
+        override var imagePage: ImagePage = progressPageFor(this)
 
         /** So a download streams once; weak, as it holds the whole download. Under [lock]. */
         internal var streamedFrom: WeakReference<DownloadStream>? = null
@@ -1042,6 +1063,7 @@ open class WebGpuViewer(
                 cleanupImage(it.imagePage)
             }
             pageCache.clear()
+            pageSizes.clear()
 
             currentPage =
                 (currentPage as? ViewerReaderPage)?.page?.let { getPage((it as? InsertPage)?.parent ?: it) }
@@ -1129,7 +1151,7 @@ open class WebGpuViewer(
         synchronized(lock) {
             if (!pageInCache(page) || page.imagePage !is ErrorPage) return
             val old = page.imagePage
-            page.imagePage = ProgressPage(this)
+            page.imagePage = progressPageFor(page)
             cleanupImage(old)
             if (page.state != PageState.LOADING) page.state = PageState.IDLE
         }
@@ -1634,6 +1656,10 @@ open class WebGpuViewer(
                 }
                 if (pageInCache(page)) page.state = PageState.IDLE
                 if (target != null) trimToTextureBudget(page)
+                target?.let {
+                    pageSizes[pageKey(page)] =
+                        KnownSize(ComposePageSize.Of(it.width, it.height), page.decodedAspectRatio)
+                }
                 target?.also { installedPage ->
                     if (animated) {
                         // The page takes the decoder, which loops, and the second frame decoded

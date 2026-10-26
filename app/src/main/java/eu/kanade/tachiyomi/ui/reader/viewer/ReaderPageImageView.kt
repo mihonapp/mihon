@@ -44,6 +44,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonStripImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
+import kotlin.math.roundToInt
 
 /**
  * A wrapper view for showing page image.
@@ -62,6 +63,27 @@ open class ReaderPageImageView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttrs, defStyleRes) {
 
     private var pageView: View? = null
+
+    /**
+     * Width over height to measure to while the page loads, once its size is known, so a page bound again after
+     * leaving the screen keeps its place. Null measures as usual.
+     */
+    var placeholderRatio: Float? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            requestLayout()
+        }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val ratio = placeholderRatio
+        if (ratio == null || MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            return
+        }
+        val height = (MeasureSpec.getSize(widthMeasureSpec) / ratio).roundToInt()
+        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
+    }
 
     /**
      * The reader's grayscale and inverted colours for the page image alone, so the transition and error views

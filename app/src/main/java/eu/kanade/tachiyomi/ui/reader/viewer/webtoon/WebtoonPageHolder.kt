@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
@@ -87,6 +88,7 @@ class WebtoonPageHolder(
     fun bind(page: ReaderPage) {
         this.page = page
         frame.pageColorFilter = viewer.pageColorFilter
+        frame.placeholderRatio = viewer.pageRatios[page]
         loadJob?.cancel()
         loadJob = scope.launch { loadPageAndProcessStatus() }
         refreshLayoutParams()
@@ -215,6 +217,7 @@ class WebtoonPageHolder(
      */
     private fun setError(error: Throwable?) {
         progressContainer.isVisible = false
+        frame.placeholderRatio = null
         initErrorLayout(error)
     }
 
@@ -224,6 +227,9 @@ class WebtoonPageHolder(
     private fun onImageDecoded() {
         progressContainer.isVisible = false
         removeErrorLayout()
+        val page = page ?: return
+        // Measured as the image decoded, for the next time this page is bound.
+        frame.doOnNextLayout { if (it.height > 0) viewer.pageRatios[page] = it.width.toFloat() / it.height }
     }
 
     /**

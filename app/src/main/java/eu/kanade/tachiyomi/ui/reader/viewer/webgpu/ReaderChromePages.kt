@@ -112,7 +112,10 @@ class ErrorPage internal constructor(
 }
 
 /** A page still downloading: the reader's progress ring. */
-class ProgressPage(viewer: WebGpuViewer) : ReaderComposePage(viewer) {
+class ProgressPage(
+    viewer: WebGpuViewer,
+    size: ComposePageSize = ComposePageSize.Auto,
+) : ReaderComposePage(viewer, size) {
 
     /**
      * 0 to 1. On the page, not in the composition, which is dropped when the page goes out of

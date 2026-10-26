@@ -173,6 +173,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         frame.addView(recycler)
     }
 
+    /**
+     * Each page's width over height, once decoded, so a page bound again after leaving the screen keeps its place
+     * while it loads. Weak: the chapters' pages go with them.
+     */
+    val pageRatios = WeakHashMap<ReaderPage, Float>()
+
     /** The page images' colours, for pages bound later - see [LocalPageColorFilter]. */
     var pageColorFilter: ColorFilter? = null
         private set
@@ -264,6 +270,8 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Used when an image configuration is changed.
      */
     private fun refreshAdapter() {
+        // The new settings can size the pages differently.
+        pageRatios.clear()
         val position = layoutManager.findLastEndVisibleItemPosition()
         adapter.refresh()
         adapter.notifyItemRangeChanged(
