@@ -28,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,7 +43,6 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Add
 import mihon.icons.materialsymbols.rounded.Delete
@@ -65,28 +65,21 @@ import java.text.NumberFormat
 internal fun WebGpuViewerSettings(viewModel: ReaderSettingsViewModel) {
     HeadingItem(MR.strings.pref_category_for_this_series)
     val manga by viewModel.mangaFlow.collectAsState()
-    val viewer by viewModel.viewerFlow.collectAsState()
 
     val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
     SettingsChipRow(MR.strings.pref_category_reading_mode) {
         ReadingMode.entries.map {
             FilterChip(
                 selected = it == readingMode,
-                onClick = { viewModel.onChangeReadingMode(it) },
+                onClick = { viewModel.setReadingMode(it) },
                 label = { Text(stringResource(it.stringRes)) },
             )
         }
     }
 
-    val default = LocalContext.current.appGraph.readerPreferences.defaultReadingMode.get()
-    val resolved = ReadingMode.fromPreference(
-        when {
-            readingMode == ReadingMode.DEFAULT -> default
-            else -> manga?.readingMode?.toInt() ?: default
-        },
-    )
+    val resolved by viewModel.readingMode.collectAsState()
+    val dualPageView by viewModel.preferences.dualPageView.collectAsState()
     if (resolved == ReadingMode.LEFT_TO_RIGHT || resolved == ReadingMode.RIGHT_TO_LEFT) {
-        val dualPageView by viewModel.preferences.dualPageView.collectAsState()
         SettingsChipRow(MR.strings.pref_dual_page_view) {
             ReaderPreferences.DualPageView.entries.map {
                 FilterChip(
@@ -137,7 +130,7 @@ internal fun WebGpuViewerSettings(viewModel: ReaderSettingsViewModel) {
         ReaderOrientation.entries.forEach {
             FilterChip(
                 selected = it == orientation,
-                onClick = { viewModel.onChangeOrientation(it) },
+                onClick = { viewModel.setOrientation(it) },
                 label = { Text(stringResource(it.stringRes)) },
             )
         }
@@ -145,7 +138,14 @@ internal fun WebGpuViewerSettings(viewModel: ReaderSettingsViewModel) {
 
     HeadingItem(MR.strings.webgpu_viewer)
 
-    val isDual = (viewer as? WebGpuViewer)?.isDualPageMode() == true
+    // As the viewer decides it, with the activity's window in place of the viewer's size. Not the sheet's own window.
+    val configuration = LocalConfiguration.current
+    val isDual = resolved.type is ReadingMode.ViewerType.Pager &&
+        when (dualPageView) {
+            ReaderPreferences.DualPageView.NEVER -> false
+            ReaderPreferences.DualPageView.ALWAYS -> true
+            ReaderPreferences.DualPageView.WIDE -> configuration.screenWidthDp > configuration.screenHeightDp
+        }
 
     val navigationModePager by viewModel.preferences.navigationModePager.collectAsState()
     val pagerNavInverted by viewModel.preferences.pagerNavInverted.collectAsState()

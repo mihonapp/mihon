@@ -39,7 +39,7 @@ fun ReadingModeSelectDialog(
         DialogContent(
             readingMode = readingMode,
             onChangeReadingMode = {
-                viewModel.onChangeReadingMode(it)
+                viewModel.setReadingMode(it)
                 onChange(it.stringRes)
                 onDismissRequest()
             },

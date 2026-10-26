@@ -18,6 +18,7 @@ import com.hippo.unifile.UniFile
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import logcat.LogPriority
 import mihon.app.di.appGraph
@@ -100,15 +101,15 @@ fun Context.createFileInCacheDir(name: String): File {
 private val ReaderGrayBackgroundColor = Color.rgb(0x20, 0x21, 0x25)
 
 /**
- * Background color of the reader for the given [readerTheme] preference value.
+ * Background color of the reader for the given [readerTheme].
  *
- * Automatic (3) resolves against the current night mode, matching the activity background.
+ * Automatic resolves against the current night mode, matching the activity background.
  */
-fun Context.readerBackgroundColor(readerTheme: Int): Int = when (readerTheme) {
-    0 -> Color.WHITE // White
-    2 -> ReaderGrayBackgroundColor // Gray
-    3 -> if (isNightMode()) ReaderGrayBackgroundColor else Color.WHITE // Automatic
-    else -> Color.BLACK // Black
+fun Context.readerBackgroundColor(readerTheme: ReaderPreferences.ReaderTheme): Int = when (readerTheme) {
+    ReaderPreferences.ReaderTheme.WHITE -> Color.WHITE
+    ReaderPreferences.ReaderTheme.BLACK -> Color.BLACK
+    ReaderPreferences.ReaderTheme.GRAY -> ReaderGrayBackgroundColor
+    ReaderPreferences.ReaderTheme.AUTOMATIC -> if (isNightMode()) ReaderGrayBackgroundColor else Color.WHITE
 }
 
 /**
@@ -122,13 +123,14 @@ fun Context.createReaderThemeContext(): Context {
     val preferences = graph.uiPreferences
     val readerPreferences = graph.readerPreferences
     val themeMode = preferences.themeMode.get()
-    val isDarkBackground = when (readerPreferences.readerTheme.get()) {
-        1, 2 -> true // Black, Gray
-        3 -> when (themeMode) { // Automatic bg uses activity background by default
+    val isDarkBackground = when (ReaderPreferences.ReaderTheme.fromValue(readerPreferences.readerTheme.get())) {
+        ReaderPreferences.ReaderTheme.BLACK, ReaderPreferences.ReaderTheme.GRAY -> true
+        // Automatic bg uses activity background by default
+        ReaderPreferences.ReaderTheme.AUTOMATIC -> when (themeMode) {
             ThemeMode.SYSTEM -> applicationContext.isNightMode()
             else -> themeMode == ThemeMode.DARK
         }
-        else -> false // White
+        ReaderPreferences.ReaderTheme.WHITE -> false
     }
     val expected = if (isDarkBackground) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
     if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != expected) {
