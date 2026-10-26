@@ -28,34 +28,47 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Show pages progressively while they download ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4023](https://github.com/mihonapp/mihon/pull/4023))
   - Lower memory use for animated images and support cropping borders in long strip ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4029](https://github.com/mihonapp/mihon/pull/4029))
   - Pair more wide pages in dual page view by comparing them with neighbouring pages ([@wwww-wwww](https://github.com/wwww-wwww)) ([#4051](https://github.com/mihonapp/mihon/pull/4051))
-- Add a Time Format setting to customize how times are displayed ([@MajorTanya](https://github.com/MajorTanya)) ([#4118](https://github.com/mihonapp/mihon/pull/4118))
 - Add an enable switch to installed extensions, which keeps them installed but stops their sources from loading ([@hamenot](https://github.com/hamenot))
 
 ### Changed
 - Use a new decoder for images Android can't decode itself, like AVIF, JPEG XL and HEIF, and support JPEG 2000 images ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
-- Update the sources with the most entries first during library updates ([@AntsyLich](https://github.com/AntsyLich))
 - Install extensions into the app's private extension directory instead of handing them to a system installer, so no package installation permission is needed ([@hamenot](https://github.com/hamenot))
 
 ### Improved
-- Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich)) ([`771ba33`](https://github.com/mihonapp/mihon/commit/771ba33))
 - Read what an extension declares before running any of its code, and load it once to validate it before it replaces a working version, keeping the previous one if anything fails ([@hamenot](https://github.com/hamenot))
 
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
-- Remove the "Split tall images" download setting ([@AntsyLich](https://github.com/AntsyLich))
 - Remove the Shizuku and PackageInstaller extension install methods and the settings to pick between them ([@hamenot](https://github.com/hamenot))
 - Remove the "Install unknown apps" permission prompt from onboarding and the extensions screen ([@hamenot](https://github.com/hamenot))
+
+### Fixed
+- Fixed extensions failing to load in release builds with `NoClassDefFoundError` because the classes they compile against were stripped by R8 ([@hamenot](https://github.com/hamenot))
+
+### Other
+- Replace `DelegateLastClassLoaderCompat` with `ChildFirstPathClassLoader` for loading extension code ([@hamenot](https://github.com/hamenot))
+
+## [v0.21.3] - 2026-10-26
+### Added
+- Add a Time Format setting to customize how times are displayed ([@MajorTanya](https://github.com/MajorTanya)) ([#4118](https://github.com/mihonapp/mihon/pull/4118))
+
+### Changed
+- Update the sources with the most entries first during library updates ([@AntsyLich](https://github.com/AntsyLich)) ([`b8070cd`](https://github.com/mihonapp/mihon/commit/b8070cd))
+
+### Improved
+- Create and restore backups faster and with less memory ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken), [@AntsyLich](https://github.com/AntsyLich)) ([`771ba33`](https://github.com/mihonapp/mihon/commit/771ba33))
+  - Read backups faster before restoring, and decode each entry only once while restoring ([@AntsyLich](https://github.com/AntsyLich)) ([`3ed83a8`](https://github.com/mihonapp/mihon/commit/3ed83a8))
+
+### Removed
+- Remove the "Split tall images" download setting ([@AntsyLich](https://github.com/AntsyLich)) ([`8b9faa3`](https://github.com/mihonapp/mihon/commit/8b9faa3))
 
 ### Fixed
 - Fixed WebView crashing for sources that set an Origin header ([@AntsyLich](https://github.com/AntsyLich)) ([`5f63c98`](https://github.com/mihonapp/mihon/commit/5f63c98))
 - Fixed WebView sending source headers to other sites ([@AntsyLich](https://github.com/AntsyLich)) ([`a01867d`](https://github.com/mihonapp/mihon/commit/a01867d))
 - Fixed downloads not showing for entries of a source sharing its name with another source ([@AntsyLich](https://github.com/AntsyLich)) ([`deeb9b2`](https://github.com/mihonapp/mihon/commit/deeb9b2))
-- Fixed covers reloading when removing an entry from the library ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed the More tab icon pausing and then bouncing back when leaving the tab ([@AntsyLich](https://github.com/AntsyLich))
-- Fixed extensions failing to load in release builds with `NoClassDefFoundError` because the classes they compile against were stripped by R8 ([@hamenot](https://github.com/hamenot))
-
-### Other
-- Replace `DelegateLastClassLoaderCompat` with `ChildFirstPathClassLoader` for loading extension code ([@hamenot](https://github.com/hamenot))
+- Fixed covers reloading when removing an entry from the library ([@AntsyLich](https://github.com/AntsyLich)) ([`a424282`](https://github.com/mihonapp/mihon/commit/a424282))
+- Fixed the More tab icon pausing and then bouncing back when leaving the tab ([@AntsyLich](https://github.com/AntsyLich)) ([`2ca6961`](https://github.com/mihonapp/mihon/commit/2ca6961))
+- Fixed Shizuku extension installer being unavailable with Sui ([@AntsyLich](https://github.com/AntsyLich)) ([`bd2ada2`](https://github.com/mihonapp/mihon/commit/bd2ada2))
 
 ## [v0.21.2] - 2026-10-13
 ### Fixed
@@ -831,7 +844,8 @@ Same as v0.19.6
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.21.2...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.21.3...main
+[v0.21.3]: https://github.com/mihonapp/mihon/compare/v0.21.2...v0.21.3
 [v0.21.2]: https://github.com/mihonapp/mihon/compare/v0.21.1...v0.21.2
 [v0.21.1]: https://github.com/mihonapp/mihon/compare/v0.21.0...v0.21.1
 [v0.21.0]: https://github.com/mihonapp/mihon/compare/v0.20.4...v0.21.0
