@@ -1,6 +1,7 @@
 package eu.kanade.presentation.more.settings.screen.about
 
 import android.content.Context
+import android.text.format.DateFormat
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +28,7 @@ import eu.kanade.presentation.more.LogoHeader
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.util.rememberIs24HourSystem
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.updater.RELEASE_URL
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
@@ -36,7 +38,9 @@ import eu.kanade.tachiyomi.util.system.isFossBuildType
 import eu.kanade.tachiyomi.util.system.isNightlyBuildType
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.updaterEnabled
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
@@ -50,8 +54,6 @@ import mihon.icons.simpleicons.Reddit
 import mihon.icons.simpleicons.SimpleIcons
 import mihon.icons.simpleicons.X
 import tachiyomi.core.common.Constants
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.release.interactor.GetApplicationRelease
 import tachiyomi.i18n.MR
@@ -61,6 +63,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.Locale
 import kotlin.time.Instant
 
 object AboutScreen : Screen() {
@@ -74,6 +77,7 @@ object AboutScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         var isCheckingUpdates by remember { mutableStateOf(false) }
         val crashLogUtil = remember { context.appGraph.crashLogUtil }
+        val is24HourSystem = rememberIs24HourSystem()
 
         Scaffold(
             topBar = { scrollBehavior ->
@@ -96,7 +100,9 @@ object AboutScreen : Screen() {
                 item {
                     TextPreferenceWidget(
                         title = stringResource(MR.strings.version),
-                        subtitle = getVersionName(withBuildDate = true),
+                        // Keyed on the system 12/24h setting, which can change while the app is backgrounded.
+                        // Date/time prefs only change in Appearance, which recreates this screen on return.
+                        subtitle = remember(is24HourSystem) { getVersionName(withBuildDate = true) },
                         onPreferenceClick = {
                             val deviceInfo = crashLogUtil.getDebugInfo()
                             context.copyToClipboard("Debug information", deviceInfo)
@@ -218,9 +224,9 @@ object AboutScreen : Screen() {
         onFinish: () -> Unit,
     ) {
         val updateChecker = context.appGraph.updateChecker
-        withUIContext {
+        withContext(Dispatchers.Main) {
             try {
-                when (val result = withIOContext { updateChecker.checkForUpdate(forceCheck = true) }) {
+                when (val result = updateChecker.checkForUpdate(forceCheck = true)) {
                     is GetApplicationRelease.Result.NewUpdate -> {
                         onAvailableUpdate(result)
                     }
@@ -275,11 +281,16 @@ object AboutScreen : Screen() {
 
     internal fun getFormattedBuildTime(): String {
         return try {
+            val context = Injekt.get<Context>()
+            val uiPreferences = context.appGraph.uiPreferences
             Instant.parse(BuildConfig.BUILD_TIME)
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .toDateTimestampString(
-                    UiPreferences.dateFormat(
-                        Injekt.get<Context>().appGraph.uiPreferences.dateFormat.get(),
+                    UiPreferences.dateTimeFormat(
+                        uiPreferences.dateFormat.get(),
+                        uiPreferences.timeFormat.get(),
+                        Locale.getDefault(),
+                        DateFormat.is24HourFormat(context),
                     ),
                 )
         } catch (_: Exception) {

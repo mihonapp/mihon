@@ -24,19 +24,3 @@ fun Context.activeNetworkState(): NetworkState {
         isWifi = wifiManager.isWifiEnabled && capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ?: false,
     )
 }
-
-fun Context.networkStateFlow() = callbackFlow {
-    val networkCallback = object : NetworkCallback() {
-        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
-            trySend(activeNetworkState())
-        }
-        override fun onLost(network: Network) {
-            trySend(activeNetworkState())
-        }
-    }
-
-    connectivityManager.registerDefaultNetworkCallback(networkCallback)
-    awaitClose {
-        connectivityManager.unregisterNetworkCallback(networkCallback)
-    }
-}

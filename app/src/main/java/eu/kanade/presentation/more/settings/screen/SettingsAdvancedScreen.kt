@@ -47,12 +47,12 @@ import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import okhttp3.Headers
-import tachiyomi.core.common.util.lang.launchNonCancellable
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
@@ -92,6 +92,15 @@ object SettingsAdvancedScreen : SearchableSettings {
                 preference = networkPreferences.verboseLogging,
                 title = stringResource(MR.strings.pref_verbose_logging),
                 subtitle = stringResource(MR.strings.pref_verbose_logging_summary),
+                onValueChanged = {
+                    context.toast(MR.strings.requires_app_restart)
+                    true
+                },
+            ),
+            Preference.PreferenceItem.SwitchPreference(
+                preference = networkPreferences.redactSensitiveHeaders,
+                title = stringResource(MR.strings.pref_redact_sensitive_headers),
+                subtitle = stringResource(MR.strings.pref_redact_sensitive_headers_summary),
                 onValueChanged = {
                     context.toast(MR.strings.requires_app_restart)
                     true
@@ -193,6 +202,7 @@ object SettingsAdvancedScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
         val networkHelper = remember { context.appGraph.networkHelper }
+        val scope = rememberCoroutineScope()
 
         val userAgentPref = networkPreferences.defaultUserAgent
         val userAgent by userAgentPref.collectAsState()
@@ -219,8 +229,10 @@ object SettingsAdvancedScreen : SearchableSettings {
                                 clearSslPreferences()
                             }
                             WebStorage.getInstance().deleteAllData()
-                            context.applicationInfo?.dataDir?.let { File("$it/app_webview/").deleteRecursively() }
-                            context.toast(MR.strings.webview_data_deleted)
+                            scope.launch(Dispatchers.IO) {
+                                context.applicationInfo?.dataDir?.let { File("$it/app_webview/").deleteRecursively() }
+                                withContext(Dispatchers.Main) { context.toast(MR.strings.webview_data_deleted) }
+                            }
                         } catch (e: Throwable) {
                             logcat(LogPriority.ERROR, e)
                             context.toast(MR.strings.cache_delete_error)
@@ -289,22 +301,20 @@ object SettingsAdvancedScreen : SearchableSettings {
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_refresh_library_covers),
-                    onClick = { MetadataUpdateWorker.startNow(context.workManager) },
+                    onClick = { scope.launch { MetadataUpdateWorker.startNow(context.workManager) } },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_reset_viewer_flags),
                     subtitle = stringResource(MR.strings.pref_reset_viewer_flags_summary),
                     onClick = {
-                        scope.launchNonCancellable {
+                        scope.launch {
                             val success = context.appGraph.resetViewerFlags.await()
-                            withUIContext {
-                                val message = if (success) {
-                                    MR.strings.pref_reset_viewer_flags_success
-                                } else {
-                                    MR.strings.pref_reset_viewer_flags_error
-                                }
-                                context.toast(message)
+                            val message = if (success) {
+                                MR.strings.pref_reset_viewer_flags_success
+                            } else {
+                                MR.strings.pref_reset_viewer_flags_error
                             }
+                            context.toast(message)
                         }
                     },
                 ),

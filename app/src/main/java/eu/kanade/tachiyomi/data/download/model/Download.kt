@@ -19,15 +19,15 @@ data class Download(
     val chapter: Chapter,
 ) {
     @Transient
-    private val pagesFlow = MutableStateFlow<List<Page>?>(null)
-    var pages: List<Page>?
-        get() = pagesFlow.value
-        set(pages) {
-            pagesFlow.value = pages
-        }
+    private val _pagesFlow = MutableStateFlow<List<Page>?>(null)
 
-    val totalProgress: Int
-        get() = pages?.sumOf(Page::progress) ?: 0
+    @Transient
+    val pagesFlow = _pagesFlow.asStateFlow()
+    var pages: List<Page>?
+        get() = _pagesFlow.value
+        set(pages) {
+            _pagesFlow.value = pages
+        }
 
     val downloadedImages: Int
         get() = pages?.count { it.status == Page.State.Ready } ?: 0
@@ -44,7 +44,7 @@ data class Download(
         }
 
     @Transient
-    val progressFlow = pagesFlow
+    val progressFlow = _pagesFlow
         .flatMapLatest { pages ->
             if (pages == null) {
                 flowOf(0)

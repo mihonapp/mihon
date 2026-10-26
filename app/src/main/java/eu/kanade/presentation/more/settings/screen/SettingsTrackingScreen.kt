@@ -46,20 +46,22 @@ import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.AnilistApi
 import eu.kanade.tachiyomi.data.track.bangumi.BangumiApi
+import eu.kanade.tachiyomi.data.track.comick.ComickApi
 import eu.kanade.tachiyomi.data.track.hikka.HikkaApi
 import eu.kanade.tachiyomi.data.track.mangabaka.MangaBakaApi
 import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeListApi
 import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import mihon.icons.materialsymbols.rounded.Close
-import mihon.icons.materialsymbols.rounded.Visibility
-import mihon.icons.materialsymbols.rounded.VisibilityOff
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.withUIContext
+import mihon.icons.materialsymbols.roundedfilled.Visibility
+import mihon.icons.materialsymbols.roundedfilled.VisibilityOff
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -177,6 +179,11 @@ object SettingsTrackingScreen : SearchableSettings {
                         login = { context.openInBrowser(HikkaApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackerManager.hikka) },
                     ),
+                    Preference.PreferenceItem.TrackerPreference(
+                        tracker = trackerManager.comick,
+                        login = { context.openInBrowser(ComickApi.authUrl(), forceDefaultBrowser = true) },
+                        logout = { dialog = LogoutDialog(trackerManager.comick) },
+                    ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.tracking_info)),
                 ),
             ),
@@ -250,9 +257,9 @@ object SettingsTrackingScreen : SearchableSettings {
                             IconButton(onClick = { hidePassword = !hidePassword }) {
                                 Icon(
                                     imageVector = if (hidePassword) {
-                                        MaterialSymbols.Rounded.Visibility
+                                        MaterialSymbols.RoundedFilled.Visibility
                                     } else {
-                                        MaterialSymbols.Rounded.VisibilityOff
+                                        MaterialSymbols.RoundedFilled.VisibilityOff
                                     },
                                     contentDescription = null,
                                 )
@@ -276,7 +283,7 @@ object SettingsTrackingScreen : SearchableSettings {
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !processing && username.text.isNotBlank() && password.text.isNotBlank(),
                     onClick = {
-                        scope.launchIO {
+                        scope.launch(Dispatchers.IO) {
                             processing = true
                             val result = checkLogin(
                                 context = context,
@@ -305,11 +312,11 @@ object SettingsTrackingScreen : SearchableSettings {
     ): Boolean {
         return try {
             tracker.login(username, password)
-            withUIContext { context.toast(MR.strings.login_success) }
+            withContext(Dispatchers.Main) { context.toast(MR.strings.login_success) }
             true
         } catch (e: Throwable) {
             tracker.logout()
-            withUIContext { context.toast(e.message.toString()) }
+            withContext(Dispatchers.Main) { context.toast(e.message.toString()) }
             false
         }
     }

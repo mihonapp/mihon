@@ -34,7 +34,6 @@
     <string name="ext_obsolete">অচল</string>
     <string name="ext_installer_pref">ইন্সটলাৰ</string>
     <string name="ext_installer_legacy">লিগাচি</string>
-    <string name="action_open_repo">উৎস ৰেপ\' খোলক</string>
     <string name="pref_show_navigation_mode_summary">পাঠক খোলোঁতে চমুকৈ দেখুৱাওক</string>
     <string name="pref_grayscale">গ্ৰেস্কেল</string>
     <string name="pref_inverted_colors">বিপৰীত ৰং</string>

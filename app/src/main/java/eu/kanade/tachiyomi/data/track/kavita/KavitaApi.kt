@@ -7,12 +7,13 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import okhttp3.Dns
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
@@ -145,7 +146,7 @@ class KavitaApi(
         return 0.0
     }
 
-    suspend fun getTrackSearch(url: String): TrackSearch = withIOContext {
+    suspend fun getTrackSearch(url: String): TrackSearch = withContext(Dispatchers.IO) {
         try {
             val seriesDto: SeriesDto = with(json) {
                 authClient.newCall(GET(url))
@@ -182,7 +183,7 @@ class KavitaApi(
         authClient.newCall(
             POST(requestUrl, body = EMPTY_JSON_BODY),
         )
-            .awaitSuccess()
+            .awaitSuccess().close()
         return getTrackSearch(track.tracking_url)
     }
 
