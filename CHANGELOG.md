@@ -35,6 +35,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 
+### Fixed
+- Fix extension settings showing duplicate entries after the app is restored from the background ([@AntsyLich](https://github.com/AntsyLich))
+
 ## [v0.21.3] - 2026-10-26
 ### Added
 - Add a Time Format setting to customize how times are displayed ([@MajorTanya](https://github.com/MajorTanya)) ([#4118](https://github.com/mihonapp/mihon/pull/4118))
