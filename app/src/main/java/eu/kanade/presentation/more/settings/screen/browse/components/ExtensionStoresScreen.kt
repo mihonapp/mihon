@@ -29,6 +29,7 @@ fun ExtensionStoresScreen(
     onCopy: (ExtensionStore) -> Unit,
     onOpenWebsite: (ExtensionStore) -> Unit,
     onOpenDiscord: (ExtensionStore) -> Unit,
+    onToggleStore: (ExtensionStore, Boolean) -> Unit,
     onClickDelete: (ExtensionStore) -> Unit,
     onClickRefresh: () -> Unit,
     navigateUp: () -> Unit,
@@ -67,12 +68,14 @@ fun ExtensionStoresScreen(
 
         ExtensionStoresContent(
             repos = state.stores,
+            enabledStoreUrls = state.enabledStoreUrls,
             lazyListState = lazyListState,
             paddingValues = paddingValues + topSmallPaddingValues +
                 PaddingValues(horizontal = MaterialTheme.padding.medium),
             onCopy = onCopy,
             onOpenWebsite = onOpenWebsite,
             onOpenDiscord = onOpenDiscord,
+            onToggleStore = onToggleStore,
             onClickDelete = onClickDelete,
         )
     }

@@ -11,6 +11,8 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.source.interactor.ToggleLanguage
 import eu.kanade.domain.source.service.SourcePreferences
+import eu.kanade.tachiyomi.extension.ExtensionManager
+import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +35,7 @@ class ExtensionFilterViewModel(
     private val preferences: SourcePreferences,
     private val getExtensionLanguages: GetExtensionLanguages,
     private val toggleLanguage: ToggleLanguage,
+    private val extensionManager: ExtensionManager,
 ) : ViewModel() {
 
     private val _events: Channel<ExtensionFilterEvent> = Channel()
@@ -41,10 +44,26 @@ class ExtensionFilterViewModel(
     val state: StateFlow<ExtensionFilterState> = combine(
         getExtensionLanguages.subscribe(),
         preferences.enabledLanguages.changes(),
-    ) { extensionLanguages, enabledLanguages ->
+        extensionManager.allAvailableExtensionsFlow,
+    ) { extensionLanguages, enabledLanguages, availableExtensions ->
         ExtensionFilterState.Success(
             languages = extensionLanguages,
             enabledLanguages = enabledLanguages,
+            // Only the stores that actually returned a listing count as loaded, and their languages are
+            // the ones their own extensions are written in
+            stores = availableExtensions
+                .groupBy { it.store.indexUrl }
+                .map { (indexUrl, listings) ->
+                    ExtensionFilterState.Success.StoreContents(
+                        name = listings.first().store.name,
+                        indexUrl = indexUrl,
+                        languages = listings
+                            .map { it.lang }
+                            .distinct()
+                            .sortedWith(LocaleHelper.comparator),
+                    )
+                }
+                .sortedBy { it.name.lowercase() },
         )
     }
         .catch { throwable ->
@@ -72,9 +91,20 @@ sealed interface ExtensionFilterState {
     data class Success(
         val languages: List<String>,
         val enabledLanguages: Set<String> = setOf(),
+        val stores: List<StoreContents> = emptyList(),
     ) : ExtensionFilterState {
 
         val isEmpty: Boolean
-            get() = languages.isEmpty()
+            get() = languages.isEmpty() && stores.isEmpty()
+
+        /**
+         * A store that returned a listing, with the languages its extensions are available in.
+         */
+        @Immutable
+        data class StoreContents(
+            val name: String,
+            val indexUrl: String,
+            val languages: List<String>,
+        )
     }
 }

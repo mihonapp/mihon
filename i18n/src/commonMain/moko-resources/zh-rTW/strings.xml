@@ -884,6 +884,7 @@
     <string name="donationCampaign.paragraph2">您可以透過 Patreon（建議優先使用）或 OpenCollective 進行贊助。如果有任何問題，或希望透過其他方式支持，歡迎透過 Mihon 的 Discord 伺服器與我聯繫。</string>
     <string name="donationCampaign.paragraph3">無論是否贊助，Mihon 都會持續由我與志工維護，並且維持開源。</string>
     <string name="donationCampaign.dismiss">關閉</string>
+    <string name="extension_filter_languages">語言</string>
     <string name="extensionStores">擴充套件商店</string>
     <string name="action.addExtensionStore">新增擴充套件商店</string>
     <string name="extensionStoresScreen.emptyLabel">你尚未新增任何擴充套件商店</string>
@@ -894,6 +895,9 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">你是否要新增下方的擴充套件商店？</string>
     <string name="extensionStoresScreen.deleteStore.title">刪除擴充套件商店</string>
     <string name="extensionStoresScreen.deleteStore.body">你是否要刪除擴充套件商店「%1$s」(%2$s)？</string>
+    <string name="extensionStoresScreen.deleteStore.extensionsWarning">該商店的 %1$d 個擴充套件將一併解除安裝：\n\n%2$s</string>
+    <string name="extensionStoresScreen.trustStore.title">信任擴充套件商店？</string>
+    <string name="extensionStoresScreen.trustStore.body">「%1$s」提供的擴充套件會在本應用程式內執行。惡意擴充套件可能讀取已儲存的登入憑證或執行任意程式碼。\n\n請僅在信任該商店來源時開啟。</string>
     <string name="pref_webtoon_vertical_navigator_on_left">將垂直導航器設於左側</string>
     <string name="considering">考慮中</string>
     <string name="theme_tokyonight">Tokyo Night</string>

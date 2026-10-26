@@ -884,6 +884,7 @@
     <string name="donationCampaign.paragraph3">无论如何，Mihon 仍将由我和志愿者们继续维护，并且会保持开源。</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">放弃</string>
+    <string name="extension_filter_languages">语言</string>
     <string name="extensionStores">插件商店</string>
     <string name="action.addExtensionStore">添加插件商店</string>
     <string name="extensionStoresScreen.emptyLabel">尚未添加插件商店</string>
@@ -894,6 +895,9 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">是否添加以下插件商店？</string>
     <string name="extensionStoresScreen.deleteStore.title">移除插件商店</string>
     <string name="extensionStoresScreen.deleteStore.body">是否移除插件商店 \"%1$s\" (%2$s)？</string>
+    <string name="extensionStoresScreen.deleteStore.extensionsWarning">该商店的 %1$d 个插件将一并卸载：\n\n%2$s</string>
+    <string name="extensionStoresScreen.trustStore.title">信任插件商店？</string>
+    <string name="extensionStoresScreen.trustStore.body">「%1$s」提供的插件会在本应用内运行。恶意插件可能读取已保存的登录凭据或执行任意代码。\n\n请仅在信任该商店来源时开启。</string>
     <string name="pref_webtoon_vertical_navigator_on_left">将垂直导航栏放在左侧</string>
     <string name="pref_vertical_navigator">使用垂直章节导航</string>
     <string name="pref_vertical_navigator_height">垂直导航栏高度</string>

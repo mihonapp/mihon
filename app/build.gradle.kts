@@ -37,8 +37,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 41
-        versionName = "0.21.3"
+        versionCode = 42
+        versionName = "0.21.3Beta3"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -74,6 +74,9 @@ android {
             isPseudoLocalesEnabled = true
         }
         val release = getByName("release") {
+            // Shipped as a beta build of the fork, installed next to the official app instead of over it
+            applicationIdSuffix = ".beta"
+
             isMinifyEnabled = true
             isShrinkResources = true
 

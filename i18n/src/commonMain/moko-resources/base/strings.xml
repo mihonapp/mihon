@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Mihon</string>
+    <string name="app_name" translatable="false">Mihon Beta</string>
 
     <!-- Generic strings -->
     <string name="on">On</string>
@@ -394,6 +394,9 @@
 
     <!-- Extension repos -->
 
+    <!-- Extension filter -->
+    <string name="extension_filter_languages">Languages</string>
+
     <!-- Extension store -->
     <string name="extensionStores">Extension stores</string>
     <string name="action.addExtensionStore">Add extension store</string>
@@ -405,6 +408,9 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Do you wish to add the extension store below?</string>
     <string name="extensionStoresScreen.deleteStore.title">Remove extension store</string>
     <string name="extensionStoresScreen.deleteStore.body">Do you wish to remove the extension store \"%1$s\" (%2$s)?</string>
+    <string name="extensionStoresScreen.deleteStore.extensionsWarning">%1$d extension(s) installed from this store will be uninstalled:\n\n%2$s</string>
+    <string name="extensionStoresScreen.trustStore.title">Trust extension store?</string>
+    <string name="extensionStoresScreen.trustStore.body">Extensions from \"%1$s\" run inside this app. Malicious extensions can read any stored login credentials or execute arbitrary code.\n\nOnly turn this store on if you trust where it comes from.</string>
 
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>

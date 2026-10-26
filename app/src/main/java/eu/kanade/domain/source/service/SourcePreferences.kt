@@ -45,6 +45,25 @@ class SourcePreferences(
         emptySet(),
     )
 
+    /**
+     * Extension stores the user turned on, by index url. A newly added store starts off: nothing is
+     * fetched from it and none of its listings are offered until the trust warning behind the switch
+     * has been accepted.
+     */
+    val enabledExtensionStores: Preference<Set<String>> = preferenceStore.getStringSet(
+        "enabled_extension_stores",
+        emptySet(),
+    )
+
+    /**
+     * Stores whose trust warning has already been accepted. Turning a store off doesn't withdraw the
+     * acceptance, so turning it back on doesn't ask again; only a store never turned on does.
+     */
+    val trustedExtensionStores: Preference<Set<String>> = preferenceStore.getStringSet(
+        "trusted_extension_stores",
+        emptySet(),
+    )
+
     val pinnedSources: Preference<Set<String>> = preferenceStore.getStringSet("pinned_catalogues", emptySet())
 
     val lastUsedSource: Preference<Long> = preferenceStore.getLong(

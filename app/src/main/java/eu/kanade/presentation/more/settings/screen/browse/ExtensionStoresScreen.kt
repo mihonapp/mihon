@@ -11,6 +11,7 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreConfirmDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreCreateDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreDeleteDialog
+import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoreTrustDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoresScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -46,7 +47,8 @@ class ExtensionStoresScreen(
             onCopy = { context.copyToClipboard(it.indexUrl, it.indexUrl) },
             onOpenWebsite = { it.contact.website.let(context::openInBrowser) },
             onOpenDiscord = { it.contact.discord?.let(context::openInBrowser) },
-            onClickDelete = { viewModel.showDialog(ExtensionStoreDialog.Delete(it)) },
+            onToggleStore = viewModel::setRepoEnabled,
+            onClickDelete = viewModel::requestDeleteRepo,
             onClickRefresh = { viewModel.refreshRepos() },
             navigateUp = navigator::pop,
         )
@@ -68,6 +70,14 @@ class ExtensionStoresScreen(
                     onDelete = { viewModel.deleteRepo(dialog.store.indexUrl) },
                     storeName = dialog.store.name,
                     storeIndexUrl = dialog.store.indexUrl,
+                    installedExtensions = dialog.installedExtensions,
+                )
+            }
+            is ExtensionStoreDialog.Trust -> {
+                ExtensionStoreTrustDialog(
+                    onDismissRequest = viewModel::dismissDialog,
+                    onTrust = { viewModel.confirmTrust(dialog.store) },
+                    storeName = dialog.store.name,
                 )
             }
             is ExtensionStoreDialog.Confirm -> {
