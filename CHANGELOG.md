@@ -24,7 +24,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 #### 变更
 
 - 插件改为安装到应用私有目录，不再交给系统安装器，因此不再需要「安装未知应用」权限。
-- 「插件 → 筛选」页的语言开关改为按在线源分组，折叠该源可收起它提供的语言；顶部不再带搜索框。
+- 「插件 → 筛选」页的语言开关改为按在线源分组，折叠该源可收起它提供的语言。
 - 关于页的 GitHub 链接改为本仓库 `https://github.com/hamenot/mihon`。
 - 版本号调整为 `0.21.3Beta3`（versionCode 42）；正式版包名加 `.beta` 后缀、应用名改为「Mihon Beta」，可与官方版共存安装。
 
