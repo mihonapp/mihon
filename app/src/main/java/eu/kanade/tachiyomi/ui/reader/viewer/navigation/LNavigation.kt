@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.navigation
 
-import android.graphics.RectF
+import androidx.compose.ui.geometry.Rect
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TappingInvertMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 
@@ -14,23 +14,23 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
  * | N | N | N |   N: Next
  * +---+---+---+
  */
-open class LNavigation(invertMode: TappingInvertMode) : ViewerNavigation(invertMode) {
+open class LNavigation(invertMode: TappingInvertMode, isReversed: Boolean) : ViewerNavigation(invertMode, isReversed) {
 
     override val regionList: List<Region> = listOf(
         Region(
-            rectF = RectF(0f, 0.33f, 0.33f, 0.66f),
+            rect = Rect(0f, 0.33f, 0.33f, 0.66f),
             type = NavigationRegion.PREV,
         ),
         Region(
-            rectF = RectF(0f, 0f, 1f, 0.33f),
+            rect = Rect(0f, 0f, 1f, 0.33f),
             type = NavigationRegion.PREV,
         ),
         Region(
-            rectF = RectF(0.66f, 0.33f, 1f, 0.66f),
+            rect = Rect(0.66f, 0.33f, 1f, 0.66f),
             type = NavigationRegion.NEXT,
         ),
         Region(
-            rectF = RectF(0f, 0.66f, 1f, 1f),
+            rect = Rect(0f, 0.66f, 1f, 1f),
             type = NavigationRegion.NEXT,
         ),
     )

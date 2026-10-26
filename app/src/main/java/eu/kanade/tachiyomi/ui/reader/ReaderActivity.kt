@@ -8,13 +8,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +30,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -39,9 +39,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.keepScreenOn
@@ -84,6 +94,8 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.LocalPageColorFilter
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.Action
+import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
@@ -184,16 +196,33 @@ class ReaderActivity : BaseActivity() {
             val colorOverlayEnabled by readerPreferences.colorFilter.collectAsState()
             val colorOverlay by readerPreferences.colorFilterValue.collectAsState()
             val colorOverlayMode by readerPreferences.colorFilterMode.collectAsState()
+            val brightness by settingsViewModel.brightness.collectAsState()
+            val navigation = settingsViewModel.navigation.collectAsState().value
 
             val backgroundColor = remember(general.theme) { Color(baseContext.readerBackgroundColor(general.theme)) }
             val colorOverlayBlendMode = remember(colorOverlayMode) {
                 ReaderPreferences.ColorFilterMode.getOrNull(colorOverlayMode)?.second
             }
 
+            LaunchedEffect(brightness) { setWindowBrightness(brightness) }
+
+            val forceNavigationOverlay = remember { settingsViewModel.takeNavigationOverlayForNewUser() }
+            LaunchedEffect(navigation) {
+                if (navigation == null) return@LaunchedEffect
+                val showOnStart = forceNavigationOverlay || settingsViewModel.general.value.navigationOverlayOnStart
+                navigationOverlayState.setNavigation(navigation, showOnStart)
+            }
+
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(Unit) { focusRequester.requestFocus() }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(backgroundColor)
+                    .onPreviewKeyEvent(::onKeyEvent)
+                    .focusRequester(focusRequester)
+                    .focusable()
                     .pointerInput(Unit) {
                         awaitEachGesture {
                             awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
@@ -210,7 +239,7 @@ class ReaderActivity : BaseActivity() {
                 }
 
                 ReaderContentOverlay(
-                    brightness = state.brightnessOverlayValue,
+                    brightness = brightness,
                     color = colorOverlay.takeIf { colorOverlayEnabled },
                     colorBlendMode = colorOverlayBlendMode,
                 )
@@ -234,23 +263,24 @@ class ReaderActivity : BaseActivity() {
                 AppBars(state = state)
             }
 
+            if (state.isLoadingAdjacentChapter) {
+                AlertDialog(
+                    onDismissRequest = {},
+                    confirmButton = {},
+                    text = {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            CircularProgressIndicator()
+                            Text(stringResource(MR.strings.loading))
+                        }
+                    },
+                )
+            }
+
             val onDismissRequest = viewModel::closeDialog
             when (state.dialog) {
-                is ReaderViewModel.Dialog.Loading -> {
-                    AlertDialog(
-                        onDismissRequest = {},
-                        confirmButton = {},
-                        text = {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                CircularProgressIndicator()
-                                Text(stringResource(MR.strings.loading))
-                            }
-                        },
-                    )
-                }
                 is ReaderViewModel.Dialog.Settings -> {
                     ReaderSettingsDialog(
                         onDismissRequest = onDismissRequest,
@@ -304,17 +334,6 @@ class ReaderActivity : BaseActivity() {
             Notifications.ID_NEW_CHAPTERS,
         )
 
-        settingsViewModel.brightness
-            .onEach(::setCustomBrightnessValue)
-            .launchIn(lifecycleScope)
-        val forceNavigationOverlay = settingsViewModel.takeNavigationOverlayForNewUser()
-        settingsViewModel.navigation
-            .filterNotNull()
-            .onEach { navigation ->
-                val showOnStart = forceNavigationOverlay || settingsViewModel.general.value.navigationOverlayOnStart
-                navigationOverlayState.setNavigation(navigation, showOnStart)
-            }
-            .launchIn(lifecycleScope)
         setMenuVisibility(viewModel.state.value.menuVisible)
 
         // Finish when incognito mode is disabled
@@ -328,12 +347,6 @@ class ReaderActivity : BaseActivity() {
             .distinctUntilChanged()
             .filterNotNull()
             .onEach(::setInitialChapterError)
-            .launchIn(lifecycleScope)
-
-        viewModel.state
-            .map { it.isLoadingAdjacentChapter }
-            .distinctUntilChanged()
-            .onEach(::setProgressDialog)
             .launchIn(lifecycleScope)
 
         viewModel.state
@@ -464,29 +477,66 @@ class ReaderActivity : BaseActivity() {
         }
     }
 
-    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_N) {
-            loadNextChapter()
-            return true
-        } else if (keyCode == KeyEvent.KEYCODE_P) {
-            loadPreviousChapter()
-            return true
+    /**
+     * Handles a key [event] before anything else in the reader. Movement happens on key up.
+     */
+    private fun onKeyEvent(event: KeyEvent): Boolean {
+        val viewer = viewer ?: return false
+        val navigation = settingsViewModel.navigation.value ?: return false
+        val isUp = event.type == KeyEventType.KeyUp
+        val action = when (event.key) {
+            Key.VolumeDown, Key.VolumeUp -> {
+                val general = settingsViewModel.general.value
+                if (!general.volumeKeysEnabled || viewModel.state.value.menuVisible) return false
+                if ((event.key == Key.VolumeDown) != general.volumeKeysInverted) Action.FORWARD else Action.BACKWARD
+            }
+            Key.DirectionRight -> if (event.isCtrlPressed) {
+                Action.FORWARD
+            } else {
+                navigation.actionOf(
+                    NavigationRegion.RIGHT,
+                )
+            }
+            Key.DirectionLeft -> if (event.isCtrlPressed) {
+                Action.BACKWARD
+            } else {
+                navigation.actionOf(
+                    NavigationRegion.LEFT,
+                )
+            }
+            Key.DirectionDown, Key.PageDown -> Action.FORWARD
+            Key.DirectionUp, Key.PageUp -> Action.BACKWARD
+            Key.Menu -> Action.MENU
+            Key.N -> {
+                if (isUp) loadNextChapter()
+                return true
+            }
+            Key.P -> {
+                if (isUp) loadPreviousChapter()
+                return true
+            }
+            else -> return false
         }
-        return super.onKeyUp(keyCode, event)
-    }
-
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        val handled = viewer?.handleKeyEvent(event) ?: false
-        return handled || super.dispatchKeyEvent(event)
+        if (isUp) {
+            when (action) {
+                Action.MENU -> toggleMenu()
+                Action.FORWARD -> viewer.moveForward()
+                Action.BACKWARD -> viewer.moveBackward()
+            }
+        }
+        return true
     }
 
     /**
-     * Dispatches a generic motion event. If the viewer doesn't handle it, call the default
-     * implementation.
+     * Called from the viewer when it's tapped at [pos], given as a fraction of its size.
      */
-    override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
-        val handled = viewer?.handleGenericMotionEvent(event) ?: false
-        return handled || super.dispatchGenericMotionEvent(event)
+    fun onViewerTap(pos: Offset) {
+        val action = settingsViewModel.navigation.value?.getAction(pos) ?: Action.MENU
+        when (action) {
+            Action.MENU -> toggleMenu()
+            Action.FORWARD -> viewer?.moveForward()
+            Action.BACKWARD -> viewer?.moveBackward()
+        }
     }
 
     @Composable
@@ -667,20 +717,6 @@ class ReaderActivity : BaseActivity() {
     }
 
     /**
-     * Called from the presenter whenever it's loading the next or previous chapter. It shows or
-     * dismisses a non-cancellable dialog to prevent user interaction according to the value of
-     * [show]. This is only used when the next/previous buttons on the toolbar are clicked; the
-     * other cases are handled with chapter transitions on the viewers and chapter preloading.
-     */
-    private fun setProgressDialog(show: Boolean) {
-        if (show) {
-            viewModel.showLoadingDialog()
-        } else {
-            viewModel.closeDialog()
-        }
-    }
-
-    /**
      * Moves the viewer to the given page [index]. It does nothing if the viewer is null or the
      * page is not found.
      */
@@ -825,11 +861,11 @@ class ReaderActivity : BaseActivity() {
 
     /**
      * Sets the brightness of the screen. Range is [-75, 100].
-     * From -75 to -1 a semi-transparent black view is overlaid with the minimum brightness.
+     * From -75 to -1 the minimum brightness is used, and the overlay darkens further.
      * From 1 to 100 it sets that value as brightness.
-     * 0 sets system brightness and hides the overlay.
+     * 0 sets system brightness.
      */
-    private fun setCustomBrightnessValue(value: Int) {
+    private fun setWindowBrightness(value: Int) {
         // Calculate and set reader brightness.
         val readerBrightness = when {
             value > 0 -> {
@@ -841,8 +877,6 @@ class ReaderActivity : BaseActivity() {
             else -> WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
         }
         window.attributes = window.attributes.apply { screenBrightness = readerBrightness }
-
-        viewModel.setBrightnessOverlayValue(value)
     }
 }
 
