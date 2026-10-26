@@ -79,10 +79,6 @@ AND EXISTS (
     AND (user_read = 1 OR user_last_page_read != 0)
 );
 
-getAllMangaSourceAndUrl:
-SELECT source_id, remote_url
-FROM manga;
-
 getSourceIdWithFavoriteCount:
 SELECT source_id, count(*)
 FROM manga

@@ -103,6 +103,10 @@ setFavoriteChangedAt:
 INSERT INTO sync_manga(manga_id, favorite_changed_at) VALUES (:mangaId, :favoriteChangedAt)
 ON CONFLICT(manga_id) DO UPDATE SET favorite_changed_at = excluded.favorite_changed_at;
 
+getMangaSourceAndUrl:
+SELECT source_id, remote_url
+FROM manga;
+
 getFavoriteChangedAt:
 SELECT favorite_changed_at
 FROM sync_manga

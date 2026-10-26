@@ -10,6 +10,9 @@ interface SyncRepository {
     /** The state of every entry the sync tracks anything about, by entry id. */
     suspend fun getStates(): Map<Long, SyncMangaState>
 
+    /** The url of every entry in the database, in the library or not, by source id. */
+    suspend fun getMangaUrlsBySourceId(): Map<Long, Set<String>>
+
     /** When the reading state of each chapter of [mangaId] was decided, by chapter url, in seconds. */
     suspend fun getReadChangedAt(mangaId: Long): Map<String, Long>
 

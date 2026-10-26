@@ -53,20 +53,17 @@
     <string name="action_settings">Settings</string>
     <string name="action_menu">Menu</string>
     <string name="action_filter">Filter</string>
-    <string name="action_set_interval">Set interval</string>
     <string name="action_filter_bookmarked">Bookmarked</string>
     <string name="action_filter_tracked">Tracked</string>
     <string name="action_filter_unread">Unread</string>
     <string name="action_filter_interval_custom">Customized update frequency</string>
     <!-- reserved for #4048 -->
-    <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
     <string name="action_sort_count">Total entries</string>
     <string name="action_sort_total">Total chapters</string>
     <string name="action_sort_last_read">Last read</string>
     <string name="action_sort_last_manga_update">Last update check</string>
     <string name="action_sort_unread_count">Unread count</string>
-    <string name="action_sort_next_updated">Next expected update</string>
     <string name="action_sort_latest_chapter">Latest chapter</string>
     <string name="action_sort_chapter_fetch_date">Chapter fetch date</string>
     <string name="action_sort_date_added">Date added</string>
@@ -156,9 +153,7 @@
     <string name="action_reset">Reset</string>
     <string name="action_revert_to_default">Revert to default</string>
     <!-- missing undo feature after Compose rewrite #7454 -->
-    <string name="action_undo">Undo</string>
     <string name="action_close">Close</string>
-    <string name="action_open_log">Open log</string>
     <string name="action_show_errors">Tap to see details</string>
     <string name="action_restore">Restore</string>
     <string name="action_webview_back">Back</string>
@@ -182,10 +177,8 @@
     <string name="onboarding_description">Let\'s set some things up first. You can always change these in the settings later too.</string>
     <string name="onboarding_action_next">Next</string>
     <string name="onboarding_action_finish">Get started</string>
-    <string name="onboarding_action_skip">Skip</string>
     <string name="onboarding_storage_info">Select a folder where %1$s will store chapter downloads, backups, and more.\n\nA dedicated folder is recommended.\n\nSelected folder: %2$s</string>
     <string name="onboarding_storage_action_select">Select a folder</string>
-    <string name="onboarding_storage_selection_required">A folder must be selected</string>
     <string name="onboarding_storage_help_info">Updating from an older version and not sure what to select? Refer to the storage guide for more information.</string>
     <string name="onboarding_storage_help_action">Storage guide</string>
     <string name="app_migrating_title">Finishing the update</string>
@@ -286,7 +279,6 @@
       <!-- Library section -->
     <string name="pref_category_display">Display</string>
     <string name="pref_library_columns">Items per row</string>
-    <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
 
     <string name="pref_category_library_update">Global update</string>
@@ -435,7 +427,6 @@
     <string name="pref_show_reading_mode">Show reading mode</string>
     <string name="pref_show_reading_mode_summary">Briefly show current mode when reader is opened</string>
     <string name="pref_high_quality_renderer">Use high quality renderer</string>
-    <string name="pref_display_profile">Custom display profile</string>
     <string name="pref_crop_borders">Crop borders</string>
     <string name="pref_custom_brightness">Custom brightness</string>
     <string name="pref_grayscale">Grayscale</string>
@@ -607,15 +598,12 @@
     <string name="pref_storage_location">Storage location</string>
     <string name="pref_storage_location_info">Used for automatic backups, chapter downloads, and local source.</string>
     <string name="pref_create_backup">Create backup</string>
-    <string name="pref_create_backup_summ">Can be used to restore current library</string>
     <string name="pref_restore_backup">Restore backup</string>
-    <string name="pref_restore_backup_summ">Restore library from backup file</string>
     <string name="pref_backup_interval">Automatic backup frequency</string>
     <string name="action_create">Create</string>
     <string name="backup_created">Backup created</string>
     <string name="invalid_backup_file">Invalid backup file:</string>
     <string name="invalid_backup_file_error">Full error:</string>
-    <string name="invalid_backup_file_missing_manga">Backup does not contain any library entries.</string>
     <string name="invalid_backup_file_json">JSON backup not supported</string>
     <string name="invalid_backup_file_unknown">Backup file is corrupted</string>
     <string name="backup_restore_missing_sources">Missing sources:</string>
@@ -624,14 +612,12 @@
     <string name="restore_completed">Restore completed</string>
     <string name="restore_duration">%1$02d min, %2$02d sec</string>
     <string name="backup_in_progress">Backup is already in progress</string>
-    <string name="backup_choice">What do you want to backup?</string>
     <string name="app_settings">App settings</string>
     <string name="source_settings">Source settings</string>
     <string name="private_settings">Include sensitive settings (e.g., tracker login tokens)</string>
     <string name="non_library_settings">All read entries</string>
     <string name="creating_backup">Creating backup</string>
     <string name="creating_backup_error">Backup failed</string>
-    <string name="missing_storage_permission">Storage permissions not granted</string>
     <string name="empty_backup_error">No library entries to back up</string>
     <string name="create_backup_file_error">Couldn\'t create a backup file</string>
     <string name="restore_miui_warning">Backup/restore may not function properly if MIUI Optimization is disabled.</string>
@@ -732,7 +718,6 @@
     <string name="pref_clear_cookies">Clear cookies</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_user_agent_string">Default user agent string</string>
-    <string name="error_user_agent_string_blank">User agent string can not be blank</string>
     <string name="error_user_agent_string_invalid">Invalid user agent string</string>
     <string name="pref_reset_user_agent_string">Reset default user agent string</string>
     <string name="requires_app_restart">Requires app restart to take effect</string>
@@ -776,18 +761,14 @@
     <string name="website">Website</string>
     <string name="version">Version</string>
     <string name="whats_new">What\'s new</string>
-    <string name="help_translate">Help translate</string>
     <string name="licenses">Open source licenses</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="check_for_updates">Check for updates</string>
 
     <!-- ACRA -->
-    <string name="pref_enable_acra">Send crash reports</string>
-    <string name="pref_acra_summary">Helps fix any bugs. No sensitive data will be sent</string>
 
 
     <!-- More -->
-    <string name="fdroid_warning">F-Droid builds are not officially supported.\nTap to learn more.</string>
     <string name="label_downloaded_only">Downloaded only</string>
     <string name="pref_incognito_mode">Incognito mode</string>
     <string name="pref_incognito_mode_summary">Pauses reading history</string>
@@ -813,14 +794,12 @@
     <string name="updating_category">Updating category</string>
     <string name="manga_from_library">From library</string>
     <string name="downloaded_chapters">Downloaded chapters</string>
-    <string name="intervals_header">Intervals</string>
     <!-- For badges/buttons on library covers. -->
     <string name="overlay_header">Overlay</string>
     <string name="tabs_header">Tabs</string>
 
     <!-- Browse source -->
     <!-- missing prompt after Compose rewrite #7901 -->
-    <string name="no_more_results">No more results</string>
     <string name="no_results_found">No results found</string>
     <string name="local_source">Local source</string>
     <string name="other_source">Other</string>
@@ -833,7 +812,6 @@
     <string name="browse">Browse</string>
     <string name="has_results">Has results</string>
     <string name="local_source_help_guide">Local source guide</string>
-    <string name="no_pinned_sources">You have no pinned sources</string>
     <string name="chapter_not_found">Chapter not found</string>
     <string name="local_invalid_format">Invalid chapter format</string>
     <string name="local_filter_order_by">Order by</string>
@@ -846,7 +824,6 @@
     <string name="author">Author</string>
     <string name="artist">Artist</string>
     <!-- reserved for #6163 -->
-    <string name="unknown_status">Unknown status</string>
     <string name="licensed">Licensed</string>
     <string name="publishing_finished">Publishing finished</string>
     <string name="cancelled">Cancelled</string>
@@ -854,16 +831,12 @@
     <string name="add_to_library">Add to library</string>
     <string name="in_library">In library</string>
     <!-- missing confirm menu after Compose rewrite #7901 -->
-    <string name="remove_from_library">Remove from library</string>
     <string name="unknown_title">Unknown title</string>
     <string name="possible_duplicates_title">Possible duplicates</string>
     <string name="possible_duplicates_summary">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
-    <string name="manga_added_library">Added to library</string>
-    <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_expand">More</string>
     <string name="manga_info_collapse">Less</string>
     <string name="delete_downloads_for_manga">Delete downloaded chapters?</string>
-    <string name="copied_to_clipboard_plain">Copied to clipboard</string>
     <string name="copied_to_clipboard">Copied to clipboard:\n%1$s</string>
     <string name="clipboard_copy_error">Failed to copy to clipboard</string>
     <string name="source_not_installed">Source not installed: %1$s</string>
@@ -872,8 +845,6 @@
 
     <!-- Manga chapters -->
     <string name="display_mode_chapter">Chapter %1$s</string>
-    <string name="manga_display_interval_title">Estimate every</string>
-    <string name="manga_display_modified_interval_title">Set to update every</string>
     <!-- "... around 2 days" -->
     <string name="manga_interval_expected_update">New chapters predicted to be released in around %1$s, checking around every %2$s.</string>
     <string name="manga_interval_expected_update_null">This manga is either completed, or there is no predicted release date.</string>
@@ -935,8 +906,6 @@
     <string name="action_toggle_private_on">Track privately</string>
     <string name="action_toggle_private_off">Track publicly</string>
     <string name="track_type">Type</string>
-    <string name="myanimelist_relogin">Please login to MAL again</string>
-    <string name="source_unsupported">Source is not supported</string>
     <string name="error_no_match">No match found</string>
     <string name="track_error">%1$s error: %2$s</string>
     <string name="track_remove_date_conf_title">Remove date?</string>
@@ -949,7 +918,6 @@
     <!-- Category activity -->
     <string name="error_category_exists">A category with this name already exists!</string>
     <!-- missing undo feature after Compose rewrite #7454 -->
-    <string name="snack_categories_deleted">Categories deleted</string>
 
     <!-- Dialog option with checkbox view -->
     <string name="dialog_with_checkbox_remove_description">This will remove the read date of this chapter. Are you sure?</string>
@@ -984,7 +952,6 @@
     <!-- Updates -->
     <string name="updating_library">Updating library</string>
     <string name="update_already_running">An update is already running</string>
-    <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
     <string name="updates_last_update_info">Library last updated: %s</string>
     <string name="updates_last_update_info_just_now">Just now</string>
     <string name="relative_time_span_never">Never</string>
@@ -1044,7 +1011,6 @@
     <string name="seconds_short">%ds</string>
 
     <!-- Downloads activity and service -->
-    <string name="download_queue_error">Couldn\'t download chapters. You can try again in the downloads section</string>
     <string name="download_insufficient_space">Couldn\'t download chapters due to low storage space</string>
     <string name="download_queue_size_warning">Warning: large bulk downloads may lead to sources becoming slower and/or blocking %s. Tap to learn more.</string>
 
@@ -1055,7 +1021,6 @@
     <string name="notification_chapters_single">Chapter %1$s</string>
     <string name="notification_chapters_single_and_more">Chapter %1$s and %2$d more</string>
     <string name="notification_chapters_multiple">Chapters %1$s</string>
-    <string name="learn_more">Tap to learn more</string>
     <string name="notification_cover_update_failed">Failed to update cover</string>
     <string name="notification_first_add_to_library">Please add the entry to your library before doing this</string>
     <string name="library_errors_help">For help on how to fix library update errors, see %1$s</string>
@@ -1066,8 +1031,6 @@
     <string name="skipped_reason_not_in_release_period">Skipped because no release was expected today</string>
 
     <!-- File Picker Titles -->
-    <string name="file_select_cover">Select cover image</string>
-    <string name="file_select_backup">Select backup file</string>
     <string name="file_picker_error">No file picker app found</string>
     <string name="file_picker_uri_permission_unsupported">Failed to acquire persistent folder access. The app may behave unexpectedly.</string>
     <string name="file_null_uri_error">No file selected</string>
@@ -1113,7 +1076,6 @@
     <string name="download_notifier_text_only_wifi">No Wi-Fi connection available</string>
     <string name="download_notifier_no_network">No network connection available</string>
     <string name="download_notifier_download_paused">Downloads paused</string>
-    <string name="download_notifier_split_page_path_not_found">Couldn\'t find file path of page %d</string>
     <string name="download_notifier_cache_renewal">Checking downloads</string>
 
     <!-- Notification channels -->

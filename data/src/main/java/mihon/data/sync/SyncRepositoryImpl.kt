@@ -52,6 +52,14 @@ class SyncRepositoryImpl(
             .associate { it.manga_id to SyncMangaState(it.favorite_changed_at, it.change_count) }
     }
 
+    override suspend fun getMangaUrlsBySourceId(): Map<Long, Set<String>> {
+        return database.sync_mangaQueries
+            .getMangaSourceAndUrl()
+            .awaitAsList()
+            .groupBy({ it.source_id }, { it.remote_url })
+            .mapValues { it.value.toSet() }
+    }
+
     override suspend fun getReadChangedAt(mangaId: Long): Map<String, Long> {
         return database.sync_chapterQueries
             .getReadChangedAtByMangaId(mangaId)

@@ -25,7 +25,6 @@ import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
-import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -47,7 +46,6 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
-import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.util.chapter.filterDownloaded
 import eu.kanade.tachiyomi.util.chapter.removeDuplicates
 import eu.kanade.tachiyomi.util.editCover
@@ -78,6 +76,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
+import mihon.data.cache.ChapterCache
 import mihon.sync.job.SyncJob
 import tachiyomi.core.common.preference.toggle
 import tachiyomi.core.common.util.system.logcat
@@ -545,12 +544,6 @@ class ReaderViewModel(
             return
         }
         eventChannel.trySend(Event.ReloadViewerChapters)
-    }
-
-    fun onViewerLoaded(viewer: Viewer?) {
-        mutableState.update {
-            it.copy(viewer = viewer)
-        }
     }
 
     /**
@@ -1137,11 +1130,6 @@ class ReaderViewModel(
         val bookmarked: Boolean = false,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
-
-        /**
-         * Viewer used to display the pages (pager, webtoon, ...).
-         */
-        val viewer: Viewer? = null,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
         @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,

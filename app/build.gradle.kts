@@ -55,8 +55,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 38
-        versionName = "0.21.2"
+        versionCode = 39
+        versionName = "0.21.3"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -293,7 +293,6 @@ dependencies {
     implementation(libs.jsoup)
 
     // Disk
-    implementation(libs.diskLruCache)
     implementation(libs.unifile)
 
     // Preferences

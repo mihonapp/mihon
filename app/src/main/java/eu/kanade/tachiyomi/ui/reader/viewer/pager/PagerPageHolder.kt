@@ -154,7 +154,7 @@ class PagerPageHolder(
             val (source, isAnimated, background) = withContext(Dispatchers.Default) {
                 val source = process(item, buffer)
                 val isAnimated = ImageUtil.isAnimatedAndSupported(source)
-                val background = if (!isAnimated && viewer.config.automaticBackground) {
+                val background = if (!isAnimated && viewer.general.automaticBackground) {
                     ImageUtil.chooseBackground(context, source.peek().inputStream())
                 } else {
                     null
@@ -166,11 +166,11 @@ class PagerPageHolder(
                     source,
                     isAnimated,
                     Config(
-                        zoomDuration = viewer.config.doubleTapAnimDuration,
-                        minimumScaleType = viewer.config.imageScaleType,
-                        cropBorders = viewer.config.imageCropBorders,
-                        zoomStartPosition = viewer.config.imageZoomType,
-                        landscapeZoom = viewer.config.landscapeZoom,
+                        zoomDuration = viewer.general.doubleTapAnimDuration,
+                        minimumScaleType = viewer.paged.page.imageScaleType.value,
+                        cropBorders = viewer.paged.page.cropBorders,
+                        zoomStartPosition = viewer.imageZoomType,
+                        landscapeZoom = viewer.paged.page.landscapeZoom,
                     ),
                 )
                 if (!isAnimated) {
@@ -187,11 +187,11 @@ class PagerPageHolder(
     }
 
     private fun process(page: ReaderPage, imageSource: BufferedSource): BufferedSource {
-        if (viewer.config.dualPageRotateToFit) {
+        if (viewer.simplePaged.dualPageRotateToFit) {
             return rotateDualPage(imageSource)
         }
 
-        if (!viewer.config.dualPageSplit) {
+        if (!viewer.simplePaged.dualPageSplit) {
             return imageSource
         }
 
@@ -212,7 +212,7 @@ class PagerPageHolder(
     private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
         val isDoublePage = ImageUtil.isWideImage(imageSource)
         return if (isDoublePage) {
-            val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
+            val rotation = if (viewer.simplePaged.dualPageRotateToFitInvert) -90f else 90f
             ImageUtil.rotateImage(imageSource, rotation)
         } else {
             imageSource
@@ -228,7 +228,7 @@ class PagerPageHolder(
             else -> error("We should choose a side!")
         }
 
-        if (viewer.config.dualPageInvert) {
+        if (viewer.simplePaged.dualPageInvert) {
             side = when (side) {
                 ImageUtil.Side.RIGHT -> ImageUtil.Side.LEFT
                 ImageUtil.Side.LEFT -> ImageUtil.Side.RIGHT

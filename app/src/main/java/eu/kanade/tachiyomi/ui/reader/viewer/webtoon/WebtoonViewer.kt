@@ -15,8 +15,12 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
+import eu.kanade.tachiyomi.ui.reader.setting.GeneralSettings
+import eu.kanade.tachiyomi.ui.reader.viewer.LongStripSettings
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
+import eu.kanade.tachiyomi.ui.reader.viewer.collectChanges
+import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import mihon.app.di.appGraph
@@ -55,10 +59,29 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private val layoutManager = WebtoonLayoutManager(activity, scrollDistance)
 
+    private val settingsViewModel = activity.settingsViewModel
+
     /**
-     * Configuration used by this viewer, like allow taps, or crop image borders.
+     * Settings every long strip viewer uses, like crop image borders.
      */
-    val config = WebtoonConfig(scope, readerPreferences)
+    val longStrip: LongStripSettings
+        get() = settingsViewModel.longStrip.value
+
+    /**
+     * Settings only the webtoon viewers use, like side padding or tap zones.
+     */
+    val simpleLongStrip: SimpleLongStripSettings
+        get() = settingsViewModel.simpleLongStrip.value
+
+    /**
+     * Settings shared by every viewer, like allow taps or page transitions.
+     */
+    val general: GeneralSettings
+        get() = settingsViewModel.general.value
+
+    private val forceNavigationOverlay = settingsViewModel.takeNavigationOverlayForNewUser()
+
+    private var navigator = simpleLongStrip.navigation.navigator(::LNavigation)
 
     /**
      * Adapter of the recycler view.
@@ -73,7 +96,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     private val threshold: Int by lazy { readerPreferences.readerHideThreshold.get().threshold }
 
     init {
-        recycler.sidePaddingPercent = config.sidePadding
+        recycler.sidePaddingPercent = simpleLongStrip.page.sidePadding
         recycler.setItemViewCacheSize(RECYCLER_VIEW_CACHE_SIZE)
         recycler.isVisible = false // Don't let the recycler layout yet
         recycler.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
@@ -115,14 +138,14 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                 (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / recycler.width,
                 (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / recycler.originalHeight,
             )
-            when (config.navigator.getAction(pos)) {
+            when (navigator.getAction(pos)) {
                 NavigationRegion.MENU -> activity.toggleMenu()
                 NavigationRegion.NEXT, NavigationRegion.RIGHT -> scrollDown()
                 NavigationRegion.PREV, NavigationRegion.LEFT -> scrollUp()
             }
         }
         recycler.longTapListener = f@{ event ->
-            if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
+            if (activity.viewModel.state.value.menuVisible || general.longTapEnabled) {
                 val child = recycler.findChildViewUnder(event.x, event.y)
                 if (child != null) {
                     val position = recycler.getChildAdapterPosition(child)
@@ -136,26 +159,32 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             false
         }
 
-        config.imagePropertyChangedListener = {
-            recycler.sidePaddingPercent = config.sidePadding
-            refreshAdapter()
+        settingsViewModel.general.collectChanges(scope) { old, new ->
+            if (old != null && old.theme != new.theme) {
+                ActivityCompat.recreate(activity)
+            }
         }
-
-        config.themeChangedListener = {
-            ActivityCompat.recreate(activity)
+        settingsViewModel.longStrip.collectChanges(scope) { old, new ->
+            if (old != null && old.cropBorders != new.cropBorders) {
+                refreshAdapter()
+            }
+            if (old?.zoomOutDisabled != new.zoomOutDisabled) {
+                frame.zoomOutDisabled = new.zoomOutDisabled
+            }
         }
-
-        config.doubleTapZoomChangedListener = {
-            frame.doubleTapZoom = it
-        }
-
-        config.zoomPropertyChangedListener = {
-            frame.zoomOutDisabled = it
-        }
-
-        config.navigationModeChangedListener = {
-            val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
-            activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)
+        settingsViewModel.simpleLongStrip.collectChanges(scope) { old, new ->
+            if (old != null && old.page != new.page) {
+                recycler.sidePaddingPercent = new.page.sidePadding
+                refreshAdapter()
+            }
+            if (old?.doubleTapZoom != new.doubleTapZoom) {
+                frame.doubleTapZoom = new.doubleTapZoom
+            }
+            if (old?.navigation != new.navigation) {
+                navigator = new.navigation.navigator(::LNavigation)
+                val showOnStart = general.navigationOverlayOnStart || forceNavigationOverlay
+                activity.binding.navigationOverlay.setNavigation(navigator, showOnStart)
+            }
         }
 
         frame.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
@@ -236,7 +265,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Tells this viewer to set the given [chapters] as active.
      */
     override fun setChapters(chapters: ViewerChapters) {
-        val forceTransition = config.alwaysShowChapterTransition || currentPage is ChapterTransition
+        val forceTransition = general.alwaysShowChapterTransition || currentPage is ChapterTransition
         adapter.setChapters(chapters, forceTransition)
 
         if (recycler.isGone) {
@@ -279,7 +308,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Scrolls up by [scrollDistance].
      */
     private fun scrollUp() {
-        if (config.usePageTransitions) {
+        if (general.usePageTransitions) {
             recycler.smoothScrollBy(0, -scrollDistance)
         } else {
             recycler.scrollBy(0, -scrollDistance)
@@ -290,7 +319,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Scrolls down by [scrollDistance].
      */
     private fun scrollDown() {
-        if (config.usePageTransitions) {
+        if (general.usePageTransitions) {
             recycler.smoothScrollBy(0, scrollDistance)
         } else {
             recycler.scrollBy(0, scrollDistance)
@@ -306,17 +335,17 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
 
         when (event.keyCode) {
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
+                if (!general.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
-                    if (!config.volumeKeysInverted) scrollDown() else scrollUp()
+                    if (!general.volumeKeysInverted) scrollDown() else scrollUp()
                 }
             }
             KeyEvent.KEYCODE_VOLUME_UP -> {
-                if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
+                if (!general.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
-                    if (!config.volumeKeysInverted) scrollUp() else scrollDown()
+                    if (!general.volumeKeysInverted) scrollUp() else scrollDown()
                 }
             }
             KeyEvent.KEYCODE_MENU -> if (isUp) activity.toggleMenu()

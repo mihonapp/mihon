@@ -34,7 +34,6 @@ import mihon.sync.model.SyncHistoryEntry
 import mihon.sync.model.SyncTally
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.model.RestoredHistory
-import tachiyomi.domain.backup.repository.RestoreRepository
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.manga.interactor.FetchInterval
@@ -70,7 +69,6 @@ class SyncManager(
     private val getFavorites: GetFavorites,
     private val getMangaByUrlAndSourceId: GetMangaByUrlAndSourceId,
     private val syncRepository: SyncRepository,
-    private val restoreRepository: RestoreRepository,
     private val mangaBackupCreator: MangaBackupCreator,
     private val fetchInterval: FetchInterval,
     private val backupCreatorFactory: BackupCreator.Factory,
@@ -449,7 +447,7 @@ class SyncManager(
      * of shards that actually went stale rather than the whole database.
      */
     private suspend fun prepareRemovals(round: PushRound, favouriteNames: Set<String>): List<PendingShard> {
-        val orphaned = restoreRepository.getMangaUrlsBySourceId()
+        val orphaned = syncRepository.getMangaUrlsBySourceId()
             .flatMap { (source, urls) ->
                 urls.map { url -> Triple(SyncLayout.mangaFileName(source, url), source, url) }
             }
