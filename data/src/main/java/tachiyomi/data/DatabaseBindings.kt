@@ -88,6 +88,9 @@ object DatabaseBindings {
                 start_dateAdapter = InstantColumnAdapter,
                 finish_dateAdapter = InstantColumnAdapter,
             ),
+            manga_update_errorAdapter = Manga_update_error.Adapter(
+                timestampAdapter = InstantColumnAdapter,
+            ),
         )
     }
 }

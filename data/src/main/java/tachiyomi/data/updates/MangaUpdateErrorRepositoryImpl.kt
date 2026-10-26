@@ -14,6 +14,7 @@ import tachiyomi.data.subscribeToOne
 import tachiyomi.domain.updates.model.MangaUpdateError
 import tachiyomi.domain.updates.model.MangaUpdateErrorWithManga
 import tachiyomi.domain.updates.repository.MangaUpdateErrorRepository
+import kotlin.time.Instant
 
 @Inject
 @SingleIn(AppScope::class)
@@ -34,7 +35,7 @@ class MangaUpdateErrorRepositoryImpl(
             .subscribeToList()
     }
 
-    override suspend fun insert(mangaId: Long, errorMessage: String?, timestamp: Long) {
+    override suspend fun insert(mangaId: Long, errorMessage: String?, timestamp: Instant) {
         database.manga_update_errorQueries.insert(
             errorMessage = errorMessage,
             timestamp = timestamp,
@@ -58,7 +59,7 @@ class MangaUpdateErrorRepositoryImpl(
     private fun mapMangaUpdateErrorWithManga(
         mangaId: Long,
         errorMessage: String?,
-        timestamp: Long,
+        timestamp: Instant,
         id: Long,
         sourceId: Long,
         remoteUrl: String,
@@ -71,14 +72,14 @@ class MangaUpdateErrorRepositoryImpl(
         remoteCover: String?,
         remoteUpdateStrategy: UpdateStrategy,
         remoteMemo: JsonObject,
-        userFavoriteAt: Long?,
+        userFavoriteAt: Instant?,
         userNotes: String,
         userReaderFlags: Long,
         userChapterFlags: Long,
-        stateChapterLastUpdate: Long?,
-        stateChapterNextUpdate: Long?,
+        stateChapterLastUpdate: Instant?,
+        stateChapterNextUpdate: Instant?,
         stateChapterFetchInterval: Long,
-        stateCoverLastModified: Long,
+        stateCoverLastModified: Instant?,
         stateInitialized: Boolean,
     ): MangaUpdateErrorWithManga = MangaUpdateErrorWithManga(
         error = MangaUpdateError(mangaId, errorMessage, timestamp),

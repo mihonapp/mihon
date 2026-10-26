@@ -114,7 +114,7 @@ class UpdateMangaFromRemote(
                     is SourceNotInstalledException -> context.stringResource(MR.strings.loader_not_implemented_error)
                     else -> error.message
                 }
-                insertMangaUpdateError.await(manga.id, message, Clock.System.now().toEpochMilliseconds())
+                insertMangaUpdateError.await(manga.id, message, Clock.System.now())
             }
         } catch (e: CancellationException) {
             throw e

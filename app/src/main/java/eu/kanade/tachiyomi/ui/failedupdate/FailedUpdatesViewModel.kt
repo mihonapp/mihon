@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import logcat.LogPriority
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
 import tachiyomi.domain.updates.interactor.GetMangaUpdateErrors
@@ -41,7 +41,7 @@ class FailedUpdatesViewModel(
     val events = _events.receiveAsFlow()
 
     init {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             getMangaUpdateErrors.subscribeWithManga()
                 .catch {
                     logcat(LogPriority.ERROR, it)
@@ -78,7 +78,7 @@ class FailedUpdatesViewModel(
     }
 
     private fun clearErrors(block: suspend () -> Unit) {
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             try {
                 block()
             } catch (e: CancellationException) {

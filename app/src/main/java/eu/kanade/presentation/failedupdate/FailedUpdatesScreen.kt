@@ -309,7 +309,7 @@ private fun FailedUpdateItem(
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                text = relativeTimeSpanString(item.error.timestamp),
+                text = relativeTimeSpanString(item.error.timestamp.toEpochMilliseconds()),
                 modifier = Modifier.padding(top = 2.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

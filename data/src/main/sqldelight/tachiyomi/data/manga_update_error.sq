@@ -1,7 +1,9 @@
+import kotlin.time.Instant;
+
 CREATE TABLE manga_update_error(
     manga_id INTEGER NOT NULL PRIMARY KEY,
     error_message TEXT,
-    timestamp INTEGER NOT NULL,
+    timestamp INTEGER AS Instant NOT NULL,
     FOREIGN KEY(manga_id) REFERENCES manga(id) ON DELETE CASCADE
 );
 
