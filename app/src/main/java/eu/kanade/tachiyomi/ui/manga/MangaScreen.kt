@@ -42,6 +42,7 @@ import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.LinkedSourceSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
@@ -114,7 +115,10 @@ class MangaScreen(
             chapterSwipeEndAction = viewModel.chapterSwipeEndAction,
             navigateUp = navigator::pop,
             onChapterClicked = { openChapter(context, it) },
-            onDownloadChapter = viewModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
+            onDownloadChapter = viewModel::runChapterDownloadActions.takeIf {
+                !successState.source.isLocalOrStub() ||
+                    successState.chapters.any { it.sourceName != null }
+            },
             downloadProgressProvider = viewModel::getDownloadProgress,
             onAddToLibraryClicked = {
                 if (successState.manga.favorite) {
@@ -152,7 +156,14 @@ class MangaScreen(
             onSearch = { query, global -> scope.launch { performSearch(navigator, query, global) } },
             onCoverClicked = viewModel::showCoverDialog,
             onShareClicked = { shareManga(context, viewModel.manga, viewModel.source) }.takeIf { isHttpSource },
-            onDownloadActionClicked = viewModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
+            onDownloadActionClicked = viewModel::runDownloadAction.takeIf {
+                !successState.source.isLocalOrStub() ||
+                    successState.chapters.any { it.sourceName != null }
+            },
+            onManageSourcesClicked = viewModel::showLinkedSourceSearch.takeIf {
+                successState.manga.favorite &&
+                    (successState.source is HttpSource || successState.chapters.any { it.sourceName != null })
+            },
             onEditCategoryClicked = viewModel::showChangeCategoryDialog.takeIf { successState.manga.favorite },
             onEditFetchIntervalClicked = viewModel::showSetFetchIntervalDialog.takeIf {
                 successState.manga.favorite
@@ -176,6 +187,12 @@ class MangaScreen(
         val onDismissRequest = { viewModel.dismissDialog() }
         when (val dialog = successState.dialog) {
             null -> {}
+            MangaViewModel.Dialog.LinkedSources -> {
+                LaunchedEffect(Unit) {
+                    viewModel.dismissDialog()
+                    navigator.push(LinkedSourceSearchScreen(successState.manga.id, successState.manga.title))
+                }
+            }
             MangaViewModel.Dialog.RemoveFromLibrary -> {
                 RemoveMangaDialog(
                     onDismissRequest = onDismissRequest,

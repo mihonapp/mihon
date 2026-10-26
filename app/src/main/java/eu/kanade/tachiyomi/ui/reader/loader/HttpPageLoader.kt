@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
-import eu.kanade.domain.chapter.model.toSChapter
+import eu.kanade.domain.chapter.model.toSourceChapter
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -47,7 +47,7 @@ internal class HttpPageLoader(
             if (e is CancellationException) {
                 throw e
             }
-            source.getPageList(chapter.chapter.toSChapter())
+            source.getPageList(chapter.chapter.toSourceChapter())
         }
         return pages.mapIndexed { index, page ->
             // Don't trust sources and use our own indexing
