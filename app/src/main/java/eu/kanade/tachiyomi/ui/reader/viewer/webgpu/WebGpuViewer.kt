@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
+import android.app.ActivityManager
 import android.content.Context
 import android.graphics.Rect
 import android.os.SystemClock
@@ -8,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toAndroidRect
+import androidx.core.content.getSystemService
 import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.closeTo
 import ca.mpreg.webgpuviewer.renderer.GainmapInput
@@ -387,6 +389,33 @@ open class WebGpuViewer(
      */
     open val cacheSize get() = 1 + preloadAhead + preloadBehind + if (isDualPageMode()) 3 else 1
 
+    /**
+     * What the cached pages' textures may hold, an eighth of the device's memory: [cacheSize] counts pages, and ten
+     * pages of 3413x4800 got a 4 GB phone's reader killed.
+     */
+    private val textureBudget = ActivityManager.MemoryInfo()
+        .also { activity.getSystemService<ActivityManager>()?.getMemoryInfo(it) }
+        .totalMem / 8
+
+    /** Roughly what [page]'s own image holds on the GPU: the full size plus a third for the smaller levels. */
+    private fun textureBytes(page: ViewerPage): Long {
+        val single = page.imagePage as? ImagePage.ImageSingle
+        val image = single?.takeIf { it.ownsImage }?.image ?: return 0
+        return image.width.toLong() * image.height * (if (image.isHdr) 8 else 4) * 4 / 3
+    }
+
+    /**
+     * Evicts the farthest pages while the cache is over [textureBudget], keeping what is on screen and one page
+     * past it. Call under [lock].
+     */
+    private fun trimToTextureBudget(keep: ViewerPage) {
+        if (textureBudget <= 0) return
+        while (pageCache.values.sumOf(::textureBytes) > textureBudget) {
+            if (pageCache.values.count { !it.imagePage.isOnScreen } <= 1) break
+            if (!evictFarthestPage(keep = keep, spareOnScreen = true)) break
+        }
+    }
+
     enum class PageState {
         IDLE,
         QUEUED,
@@ -402,11 +431,17 @@ open class WebGpuViewer(
      *
      * @param reference The page to use as reference (defaults to currentPage)
      * @param keep A page about to be handed out: evicted, it would be drawn destroyed.
+     * @param spareOnScreen Also never evicts a page on screen, which would only decode again.
      */
-    private fun evictFarthestPage(reference: ViewerPage? = null, keep: ViewerPage? = null): Boolean {
+    private fun evictFarthestPage(
+        reference: ViewerPage? = null,
+        keep: ViewerPage? = null,
+        spareOnScreen: Boolean = false,
+    ): Boolean {
         val current = reference ?: currentPage ?: return false
         val candidates = pageCache.values
             .filter { it !== current && it !== keep && it !== currentPage && !isPinned(it) }
+            .filter { !spareOnScreen || !it.imagePage.isOnScreen }
             .toMutableSet()
         if (candidates.isEmpty()) return false
 
@@ -983,7 +1018,9 @@ open class WebGpuViewer(
                     min(webgpuLongStrip.page.continuousMinWidth, 100 - 2 * webgpuLongStrip.page.sidePadding) / 100f
                 scale = homeScale
                 cropBorders = this@WebGpuViewer.cropBorders
-                minScale = if (longStrip.zoomOutDisabled) 0f else 0.1f
+                // The other long strips' limits, which their side padding scales with.
+                minScale = if (longStrip.zoomOutDisabled) 0f else homeScale * 0.5f
+                maxScale = homeScale * 3f
 
                 (this@WebGpuViewer as? WebGpuViewerContinuous)?.let {
                     if (this@WebGpuViewer.useGap) {
@@ -1509,7 +1546,8 @@ open class WebGpuViewer(
                     }
                 }
             }
-            val animated = if (streaming) secondFrame != null else dec.hasNext
+            // decode() for a sampled still leaves hasNext set, as only decodeNext() finds the end.
+            val animated = if (streaming) secondFrame != null else !sampled && dec.hasNext
 
             // A gain map belongs to a still; its headroom is the map's, not the decoder's.
             val gainmap = if (!animated && dec.hdrKind == ImageDecoder.HdrKind.GAINMAP) {
@@ -1595,6 +1633,7 @@ open class WebGpuViewer(
                     else -> null
                 }
                 if (pageInCache(page)) page.state = PageState.IDLE
+                if (target != null) trimToTextureBudget(page)
                 target?.also { installedPage ->
                     if (animated) {
                         // The page takes the decoder, which loops, and the second frame decoded
@@ -1647,6 +1686,8 @@ open class WebGpuViewer(
         backgroundColor: Int?,
     ) {
         val sample = ceil(sqrt(width.toDouble() * height / SAMPLED_PREVIEW_PIXELS)).toInt()
+        // Revisit: averaging while sampling (imagedecoder's decoder-experiments-sampling branch) keeps screentone in
+        // this preview from turning into moiré; left out of imagedecoder 18.
         val image = dec.decode(null, sample).use { f ->
             if (!synchronized(lock) { pageInCache(page) }) return
             val rect = content?.let {
