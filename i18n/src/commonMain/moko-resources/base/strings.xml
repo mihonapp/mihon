@@ -660,6 +660,7 @@
       <!-- Advanced section -->
     <string name="label_network">Networking</string>
     <string name="pref_clear_cookies">Clear cookies</string>
+    <string name="pref_cookie_manager">Cookie manager</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_user_agent_string">Default user agent string</string>
     <string name="error_user_agent_string_blank">User agent string can not be blank</string>
@@ -701,6 +702,33 @@
     <string name="pref_debug_info">Debug info</string>
     <string name="pref_update_library_manga_titles">Update library manga titles to match source</string>
     <string name="pref_update_library_manga_titles_summary">Warning: if a manga is renamed, it will be removed from the download queue (if present).</string>
+
+        <!-- Cookie manager screen -->
+    <string name="action_add_host">Add host</string>
+    <string name="no_hosts_indexed">No hosts indexed</string>
+    <string name="confirm_delete_host">Are you sure you want to delete the host %s</string>
+    <string name="action_import_cookies">Import cookies</string>
+    <string name="cookies_imported">Cookies imported: %1$d</string>
+    <string name="cookies_import_none">No valid cookies found in the file</string>
+    <string name="action_add_cookie">Add cookie</string>
+    <string name="action_edit_cookie">Edit cookie</string>
+    <string name="no_cookies_indexed">No cookies indexed</string>
+    <string name="action_clear">Clear</string>
+    <string name="time">Time</string>
+    <!-- Technical cookie attributes, disallow translating -->
+    <string name="cookie_name" translatable="false">Name</string>
+    <string name="cookie_value" translatable="false">Value</string>
+    <string name="cookie_path" translatable="false">Path</string>
+    <string name="cookie_host_only" translatable="false">HostOnly</string>
+    <string name="cookie_secure" translatable="false">Secure</string>
+    <string name="cookie_http_only" translatable="false">HttpOnly</string>
+    <string name="cookie_expires" translatable="false">Expires</string>
+    <string name="cookie_expires_session" translatable="false">Session</string>
+    <string name="cookie_same_site" translatable="false">SameSite</string>
+    <string name="cookie_same_site_unspecified" translatable="false">Unset</string>
+    <string name="cookie_same_site_none" translatable="false">None</string>
+    <string name="cookie_same_site_lax" translatable="false">Lax</string>
+    <string name="cookie_same_site_strict" translatable="false">Strict</string>
 
       <!-- About section -->
     <string name="website">Website</string>
