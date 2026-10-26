@@ -1,14 +1,17 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webgpu
 
-import ca.mpreg.webgpuviewer.ImageViewContinuous
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import ca.mpreg.webgpuviewer.viewer.ImagePage
+import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuous
+import ca.mpreg.webgpuviewer.viewer.ImageViewerContinuousState
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
 class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = false) :
-    WebGpuViewer(activity, isReversed = false, isVertical = true, pager = ImageViewContinuous(activity)) {
+    WebGpuViewer(activity, isReversed = false, isVertical = true, viewerState = ImageViewerContinuousState()) {
 
     override val isContinuous: Boolean get() = true
 
@@ -19,7 +22,12 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
 
     override val cacheSize get() = 2 + 2 * max(4, state.pagesAbove + state.pagesBelow)
 
-    private val state get() = (pager as ImageViewContinuous).state
+    private val state get() = viewerState as ImageViewerContinuousState
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        ImageViewerContinuous(modifier = modifier, state = state)
+    }
 
     init {
         state.backgroundColor = readerBackgroundColor()

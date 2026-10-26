@@ -1,11 +1,19 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.pager
 
+import android.content.Context
+import android.graphics.ColorFilter
 import android.graphics.PointF
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup.LayoutParams
+import android.widget.FrameLayout
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asAndroidColorFilter
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.children
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -17,14 +25,12 @@ import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.GeneralSettings
+import eu.kanade.tachiyomi.ui.reader.viewer.LocalPageColorFilter
 import eu.kanade.tachiyomi.ui.reader.viewer.PagedSettings
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView.ZoomStartPosition
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
-import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import eu.kanade.tachiyomi.ui.reader.viewer.collectChanges
-import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
-import eu.kanade.tachiyomi.ui.reader.viewer.navigation.RightAndLeftNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.position
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -68,10 +74,6 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      */
     val general: GeneralSettings
         get() = settingsViewModel.general.value
-
-    private val forceNavigationOverlay = settingsViewModel.takeNavigationOverlayForNewUser()
-
-    private var navigator = paged.navigation.navigator(::defaultNavigation)
 
     val imageZoomType: ZoomStartPosition
         get() = paged.page.zoomStart.position(
@@ -146,7 +148,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
                 (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / pager.width,
                 (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / pager.height,
             )
-            when (navigator.getAction(pos)) {
+            when (activity.settingsViewModel.navigation.value?.getAction(pos) ?: NavigationRegion.MENU) {
                 NavigationRegion.MENU -> activity.toggleMenu()
                 NavigationRegion.NEXT -> moveToNext()
                 NavigationRegion.PREV -> moveToPrevious()
@@ -182,18 +184,6 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             if (old != null && old.page != new.page) {
                 refreshAdapter()
             }
-            if (old?.navigation != new.navigation) {
-                navigator = new.navigation.navigator(::defaultNavigation)
-                val showOnStart = general.navigationOverlayOnStart || forceNavigationOverlay
-                activity.binding.navigationOverlay.setNavigation(navigator, showOnStart)
-            }
-        }
-    }
-
-    private fun defaultNavigation(): ViewerNavigation {
-        return when (this) {
-            is VerticalPagerViewer -> LNavigation()
-            else -> RightAndLeftNavigation()
         }
     }
 
@@ -207,11 +197,23 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
      */
     abstract fun createPager(): Pager
 
-    /**
-     * Returns the view this viewer uses.
-     */
-    override fun getView(): View {
-        return pager
+    /** The page images' colours, for holders made later - see [LocalPageColorFilter]. */
+    var pageColorFilter: ColorFilter? = null
+        private set
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val filter = LocalPageColorFilter.current
+        val pageFilter = remember(filter) { filter?.asAndroidColorFilter() }
+        SideEffect {
+            pageColorFilter = pageFilter
+            // The pager keeps every page it holds as a child.
+            pager.children.filterIsInstance<PagerPageHolder>().forEach { it.pageColorFilter = pageFilter }
+        }
+        AndroidView(
+            factory = { context -> DisallowInterceptBarrier(context).apply { addView(pager) } },
+            modifier = modifier,
+        )
     }
 
     /**
@@ -504,4 +506,13 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private fun cleanupPageSplit() {
         adapter.cleanupPageSplit()
     }
+}
+
+/**
+ * Keeps [requestDisallowInterceptTouchEvent] from reaching Compose. Its interop filter cancels the
+ * gesture when a child re-allows intercepting mid-drag, which stops a zoomed page from handing the
+ * drag to the pager at its edge.
+ */
+private class DisallowInterceptBarrier(context: Context) : FrameLayout(context) {
+    override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) = Unit
 }

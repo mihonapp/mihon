@@ -1,11 +1,17 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
+import android.graphics.ColorFilter
 import android.graphics.PointF
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asAndroidColorFilter
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -16,15 +22,18 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.GeneralSettings
+import eu.kanade.tachiyomi.ui.reader.viewer.LocalPageColorFilter
 import eu.kanade.tachiyomi.ui.reader.viewer.LongStripSettings
+import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import eu.kanade.tachiyomi.ui.reader.viewer.collectChanges
-import eu.kanade.tachiyomi.ui.reader.viewer.navigation.LNavigation
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import mihon.app.di.appGraph
 import tachiyomi.core.common.util.system.logcat
+import java.util.Collections
+import java.util.WeakHashMap
 import kotlin.math.max
 import kotlin.math.min
 
@@ -78,10 +87,6 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     val general: GeneralSettings
         get() = settingsViewModel.general.value
-
-    private val forceNavigationOverlay = settingsViewModel.takeNavigationOverlayForNewUser()
-
-    private var navigator = simpleLongStrip.navigation.navigator(::LNavigation)
 
     /**
      * Adapter of the recycler view.
@@ -138,7 +143,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                 (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / recycler.width,
                 (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / recycler.originalHeight,
             )
-            when (navigator.getAction(pos)) {
+            when (activity.settingsViewModel.navigation.value?.getAction(pos) ?: NavigationRegion.MENU) {
                 NavigationRegion.MENU -> activity.toggleMenu()
                 NavigationRegion.NEXT, NavigationRegion.RIGHT -> scrollDown()
                 NavigationRegion.PREV, NavigationRegion.LEFT -> scrollUp()
@@ -180,11 +185,6 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             if (old?.doubleTapZoom != new.doubleTapZoom) {
                 frame.doubleTapZoom = new.doubleTapZoom
             }
-            if (old?.navigation != new.navigation) {
-                navigator = new.navigation.navigator(::LNavigation)
-                val showOnStart = general.navigationOverlayOnStart || forceNavigationOverlay
-                activity.binding.navigationOverlay.setNavigation(navigator, showOnStart)
-            }
         }
 
         frame.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
@@ -211,11 +211,26 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         }
     }
 
-    /**
-     * Returns the view this viewer uses.
-     */
-    override fun getView(): View {
-        return frame
+    /** The page images' colours, for pages bound later - see [LocalPageColorFilter]. */
+    var pageColorFilter: ColorFilter? = null
+        private set
+
+    /** Every page view made, as the recycler's cached ones are neither children nor always bound again. */
+    private val pageViews = Collections.newSetFromMap(WeakHashMap<ReaderPageImageView, Boolean>())
+
+    fun onPageViewCreated(view: ReaderPageImageView) {
+        pageViews += view
+    }
+
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val filter = LocalPageColorFilter.current
+        val pageFilter = remember(filter) { filter?.asAndroidColorFilter() }
+        SideEffect {
+            pageColorFilter = pageFilter
+            pageViews.forEach { it.pageColorFilter = pageFilter }
+        }
+        AndroidView(factory = { frame }, modifier = modifier)
     }
 
     /**

@@ -19,16 +19,15 @@ data class NavigationSettings(
     val inverted: ReaderPreferences.TappingInvertMode,
 ) {
 
-    fun navigator(default: () -> ViewerNavigation): ViewerNavigation {
-        val navigation = when (mode) {
-            ReaderPreferences.NavigationMode.DEFAULT -> default()
-            ReaderPreferences.NavigationMode.L_SHAPED -> LNavigation()
-            ReaderPreferences.NavigationMode.KINDLISH -> KindlishNavigation()
-            ReaderPreferences.NavigationMode.EDGE -> EdgeNavigation()
-            ReaderPreferences.NavigationMode.RIGHT_AND_LEFT -> RightAndLeftNavigation()
-            ReaderPreferences.NavigationMode.DISABLED -> DisabledNavigation()
+    fun navigator(default: (ReaderPreferences.TappingInvertMode) -> ViewerNavigation): ViewerNavigation {
+        return when (mode) {
+            ReaderPreferences.NavigationMode.DEFAULT -> default(inverted)
+            ReaderPreferences.NavigationMode.L_SHAPED -> LNavigation(inverted)
+            ReaderPreferences.NavigationMode.KINDLISH -> KindlishNavigation(inverted)
+            ReaderPreferences.NavigationMode.EDGE -> EdgeNavigation(inverted)
+            ReaderPreferences.NavigationMode.RIGHT_AND_LEFT -> RightAndLeftNavigation(inverted)
+            ReaderPreferences.NavigationMode.DISABLED -> DisabledNavigation(inverted)
         }
-        return navigation.also { it.invertMode = inverted }
     }
 }
 
