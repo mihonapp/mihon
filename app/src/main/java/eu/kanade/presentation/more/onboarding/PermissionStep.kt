@@ -132,20 +132,6 @@ internal class PermissionStep : OnboardingStep {
     }
 
     @Composable
-    private fun SectionHeader(
-        text: String,
-        modifier: Modifier = Modifier,
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = modifier
-                .padding(horizontal = 16.dp)
-                .secondaryItemAlpha(),
-        )
-    }
-
-    @Composable
     private fun PermissionCheckbox(
         title: String,
         subtitle: String,

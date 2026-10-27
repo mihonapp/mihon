@@ -76,10 +76,15 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Changed
 
 - Use a new decoder for images Android can't decode itself, like AVIF, JPEG XL and HEIF, and support JPEG 2000 images ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
+- Keep online chapters cached for a day instead of up to a size limit ([@AntsyLich](https://github.com/AntsyLich))
+- Apply the reader's grayscale and inverted colors to pages only, not to transition, loading and error pages ([@AntsyLich](https://github.com/AntsyLich))
 
 ### Removed
 
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
+
+### Fixed
+- Fix extension settings showing duplicate entries after the app is restored from the background ([@AntsyLich](https://github.com/AntsyLich))
 
 ## [v0.21.3] - 2026-10-26
 
