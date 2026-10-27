@@ -97,7 +97,10 @@
     <string name="ext_untrusted">未信任</string>
     <string name="ext_uninstall">卸载</string>
     <string name="ext_enabled">启用插件</string>
-    <string name="ext_enabled_summary">插件保持安装状态，关闭后不再加载它提供的图源。</string>
+    <string name="ext_enabled_summary">插件保持安装状态，关闭后会从内存卸载，它提供的图源会从列表中消失。</string>
+    <string name="ext_disabled">已关闭</string>
+    <string name="ext_disabled_message">此插件已关闭，不会被加载。重新打开即可使用它提供的图源。</string>
+    <string name="ext_shared_install_warning">此插件由系统安装。卸载它之后，后续更新会改为安装到应用内；否则每次更新都会额外保留一份。</string>
     <string name="untrusted_extension">插件未受信任</string>
     <string name="untrusted_extension_message">恶意插件可能会读取所有登录的账号或执行任意代码。 \n \n信任此插件即代表你愿意承担上述风险。</string>
     <string name="pref_fullscreen">全屏</string>
@@ -518,10 +521,6 @@
     <string name="pref_remove_exclude_categories">排除的分类</string>
     <string name="help_translate">协助翻译</string>
     <string name="ext_app_info">应用信息</string>
-    <string name="ext_installer_legacy">旧式安装程序</string>
-    <string name="ext_installer_pref">安装程序</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">安装并启动 Shizuku 后才能设置 Shizuku 为插件安装程序。</string>
-    <string name="ext_installer_shizuku_stopped">Shizuku 未在运行</string>
     <string name="ext_install_service_notif">正在安装插件…</string>
     <string name="action_sort_count">作品总数</string>
     <string name="pref_verbose_logging_summary">将详细日志打印到系统日志（会降低应用性能）</string>
@@ -735,13 +734,10 @@
     <string name="no_location_set">未设置存储位置</string>
     <string name="invalid_backup_file_error">完整错误信息：</string>
     <string name="onboarding_permission_ignore_battery_opts">后台运行权限</string>
-    <string name="ext_permission_install_apps_warning">需要安装插件的权限，点击此处授权。</string>
     <string name="private_settings">包含敏感设置（例如进度记录平台的账号信息）</string>
     <string name="pref_storage_location_info">用于自动备份、章节下载、本地图源。</string>
     <string name="manga_interval_expected_update">预计 %1$s后更新，每 %2$s检查一次。</string>
     <string name="manga_interval_custom_amount">自定义更新频率：</string>
-    <string name="onboarding_permission_install_apps">应用安装权限</string>
-    <string name="onboarding_permission_install_apps_description">用来安装图源插件。</string>
     <string name="onboarding_permission_notifications">通知权限</string>
     <string name="onboarding_guides_new_user">如果你是第一次使用 %s，推荐查看入门指南。</string>
     <string name="onboarding_guides_returning_user">如果你是重新安装了 %s，可以使用以下功能。</string>

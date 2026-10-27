@@ -46,26 +46,45 @@ internal class ChildFirstPathClassLoader(
     parent: ClassLoader,
 ) : PathClassLoader(dexPath, null, parent) {
 
-    private val systemClassLoader: ClassLoader? = getSystemClassLoader()
+    // Platform classes (java.*, android.*) come from the boot class loader. Deliberately not
+    // getSystemClassLoader(), which on Android points at java.class.path and so depends on how the
+    // runtime was started rather than on what the platform provides.
+    private val bootClassLoader: ClassLoader? = Any::class.java.classLoader
 
     override fun loadClass(name: String?, resolve: Boolean): Class<*> {
-        val loaded = findLoadedClass(name)
-            ?: systemClassLoader?.runCatching { loadClass(name) }?.getOrNull()
-            ?: runCatching { findClass(name) }.getOrNull()
-            ?: super.loadClass(name, resolve)
-        if (resolve) resolveClass(loaded)
-        return loaded
+        findLoadedClass(name)?.let {
+            if (resolve) resolveClass(it)
+            return it
+        }
+
+        if (bootClassLoader != null) {
+            try {
+                return bootClassLoader.loadClass(name)
+            } catch (_: ClassNotFoundException) {
+                // Not a platform class, so look in the extension's own dex next
+            }
+        }
+
+        try {
+            val fromDex = findClass(name)
+            if (resolve) resolveClass(fromDex)
+            return fromDex
+        } catch (_: ClassNotFoundException) {
+            // Not one of its own either, so it has to be a class the host provides
+        }
+
+        return super.loadClass(name, resolve)
     }
 
     override fun getResource(name: String?): URL? {
-        return systemClassLoader?.getResource(name)
+        return bootClassLoader?.getResource(name)
             ?: findResource(name)
             ?: super.getResource(name)
     }
 
     override fun getResources(name: String?): Enumeration<URL> {
         val resources = buildList {
-            listOf(systemClassLoader?.getResources(name), findResources(name), parent?.getResources(name))
+            listOf(bootClassLoader?.getResources(name), findResources(name), parent?.getResources(name))
                 .forEach { found ->
                     while (found?.hasMoreElements() == true) add(found.nextElement())
                 }

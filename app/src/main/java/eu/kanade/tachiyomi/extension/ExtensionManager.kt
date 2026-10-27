@@ -322,7 +322,8 @@ class ExtensionManager(
 
     /**
      * Switches a deployed extension on or off. Nothing is installed or removed: the apk stays where
-     * it is, so switching it back on needs no download and no install step.
+     * it is. Switching it off unloads the extension, so it stops providing sources until it's
+     * switched back on, which needs no download and no install step.
      */
     fun setExtensionEnabled(pkgName: String, enabled: Boolean) {
         preferences.disabledExtensions.getAndSet { disabled ->
@@ -432,7 +433,10 @@ class ExtensionManager(
         }
 
         override suspend fun onPackageUninstalled(pkgName: String) = loadMutex.withLock {
-            ExtensionLoader.uninstallPrivateExtension(context, pkgName)
+            // Only clean up what this app deployed: the broadcast fires for every package
+            if (pkgName in loadedExtensionMapFlow.value || pkgName in notLoadedExtensionMapFlow.value) {
+                ExtensionLoader.uninstallPrivateExtension(context, pkgName)
+            }
             unregisterExtension(pkgName)
             updatePendingUpdatesCount()
         }

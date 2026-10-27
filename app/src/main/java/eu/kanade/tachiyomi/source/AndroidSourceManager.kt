@@ -52,8 +52,6 @@ class AndroidSourceManager(
                         mapOf(LocalSource.ID to localSource),
                     )
                     extensions.forEach { extension ->
-                        // A switched off extension keeps its apk deployed but contributes nothing
-                        if (!extension.isEnabled) return@forEach
                         extension.sources.forEach {
                             mutableMap[it.id] = it
                             registerStubSource(StubSource.from(it))

@@ -58,7 +58,11 @@ class ExtensionInstaller(
         activeSteps[downloadId] = step
 
         val job = scope.launch {
-            val tmpFile = File(context.cacheDir, "extension_${extension.pkgName}.apk")
+            // A cancel only asks the previous job to stop, so a fixed name would let the two overlap
+            val tmpFile = File(
+                context.cacheDir,
+                "extension_${extension.pkgName}_${System.nanoTime()}.apk",
+            )
             try {
                 step.value = InstallStep.Downloading
                 val request = Request.Builder().url(extension.apkUrl).build()
@@ -90,7 +94,9 @@ class ExtensionInstaller(
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 logcat(LogPriority.INFO, e)
-                step.value = InstallStep.Error
+                step.value = InstallStep.Error(e.message ?: e::class.java.simpleName)
+            } finally {
+                tmpFile.delete()
             }
         }
 
@@ -117,11 +123,10 @@ class ExtensionInstaller(
             ExtensionLoader.installPrivateExtensionFile(context, tempFile)
             updateInstallStep(downloadId, InstallStep.Installed)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             logcat(LogPriority.INFO, e) { "Failed to install extension privately" }
-            updateInstallStep(downloadId, InstallStep.Error)
+            updateInstallStep(downloadId, InstallStep.Error(e.message ?: e::class.java.simpleName))
         }
-
-        tempFile.delete()
     }
 
     /**
@@ -138,6 +143,10 @@ class ExtensionInstaller(
      */
     fun uninstallApk(pkgName: String) {
         if (context.isPackageInstalled(pkgName)) {
+            // A copy deployed here can sit next to one the system installed, so both are removed:
+            // the private file now, the package through the system uninstaller, whose removal
+            // broadcast refreshes the list
+            ExtensionLoader.uninstallPrivateExtension(context, pkgName)
             @Suppress("DEPRECATION")
             val intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE, "package:$pkgName".toUri())
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +36,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import tachiyomi.i18n.MR
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -163,11 +166,24 @@ class ExtensionsViewModel(
 
     fun updateAllExtensions() {
         viewModelScope.launch(Dispatchers.IO) {
-            state.value.items.values.flatten()
+            // Every install loads a dex to validate it before deploying, so a few at a time rather
+            // than all of them at once
+            val semaphore = Semaphore(3)
+            val extensions = state.value.items.values.flatten()
                 .map { it.extension }
                 .filterIsInstance<Extension.Installed>()
                 .filter { it.hasUpdate }
-                .forEach(::updateExtension)
+
+            coroutineScope {
+                extensions.forEach { extension ->
+                    launch {
+                        semaphore.withPermit {
+                            extensionManager.updateExtension(extension)
+                                .collectToInstallUpdate(extension)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -226,9 +242,9 @@ class ExtensionsViewModel(
 
     /**
      * Flips an already deployed extension on or off. The manager reloads, so the switch shows up
-     * everywhere at once and the extension's sources stop being registered.
+     * everywhere at once, and switching off unloads the extension and drops its sources.
      */
-    fun toggleExtensionEnabled(extension: Extension.Loaded, enabled: Boolean) {
+    fun toggleExtensionEnabled(extension: Extension.Installed, enabled: Boolean) {
         extensionManager.setExtensionEnabled(extension.pkgName, enabled)
     }
 

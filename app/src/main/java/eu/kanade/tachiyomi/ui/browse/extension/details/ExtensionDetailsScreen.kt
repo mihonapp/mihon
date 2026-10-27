@@ -44,7 +44,11 @@ data class ExtensionDetailsScreen(
                     onClickUninstall = viewModel::uninstallExtension,
                     onClickSource = viewModel::toggleSource,
                     onClickIncognito = viewModel::toggleIncognito,
-                    onClickToggleExtension = viewModel::toggleExtension,
+                    onClickToggleExtension = { enabled ->
+                        viewModel.toggleExtension(enabled)
+                        // A switched off extension is unloaded, so there's nothing left to show here
+                        if (!enabled) navigator.pop()
+                    },
                 )
             }
         }

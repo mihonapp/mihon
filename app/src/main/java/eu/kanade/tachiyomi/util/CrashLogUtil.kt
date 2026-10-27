@@ -83,6 +83,8 @@ class CrashLogUtil(
             }
 
         val notLoadedInfoList = extensionManager.getNotLoadedExtensions()
+            // Switched off by the user on purpose, so it says nothing about a crash
+            .filterNot { it.reason is Extension.NotLoaded.Reason.Disabled }
             .sortedBy { it.name }
             .map { extension ->
                 buildString {
@@ -113,6 +115,7 @@ private val Extension.NotLoaded.Reason.description: String
     get() = when (this) {
         is Extension.NotLoaded.Reason.Untrusted -> "Untrusted"
         Extension.NotLoaded.Reason.Filtered -> "Filtered by content warning"
+        Extension.NotLoaded.Reason.Disabled -> "Disabled by the user"
         Extension.NotLoaded.Reason.Unsigned -> "Unsigned"
         Extension.NotLoaded.Reason.UnsupportedLibVersion -> "Unsupported lib version"
         Extension.NotLoaded.Reason.Malformed -> "Malformed"

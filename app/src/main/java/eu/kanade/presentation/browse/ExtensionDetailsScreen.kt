@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
-import eu.kanade.presentation.browse.components.ExtensionPill
 import eu.kanade.presentation.browse.components.label
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
@@ -209,6 +208,12 @@ private fun DetailsHeader(
     val contentWarning = extension.contentWarning.label
 
     Column {
+        // A copy the system installed can't be updated by this app, so every update adds a private
+        // one next to it. Only uninstalling the old copy turns this into an in-app install.
+        if (extension.isShared) {
+            WarningBanner(MR.strings.ext_shared_install_warning)
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -279,13 +284,6 @@ private fun DetailsHeader(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
-                )
-            }
-
-            if ((extension as? Extension.Loaded)?.isShared == false) {
-                ExtensionPill(
-                    text = stringResource(MR.strings.ext_installer_private),
-                    modifier = Modifier.padding(top = MaterialTheme.padding.small),
                 )
             }
         }
@@ -359,7 +357,7 @@ private fun DetailsHeader(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Switch(
-                        checked = (extension as? Extension.Loaded)?.isEnabled ?: true,
+                        checked = extension.isEnabled,
                         onCheckedChange = onExtEnabledChange,
                         modifier = Modifier.padding(start = TrailingWidgetBuffer),
                     )

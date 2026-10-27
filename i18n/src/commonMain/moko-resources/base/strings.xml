@@ -190,8 +190,6 @@
     <string name="onboarding_storage_help_action">Storage guide</string>
     <string name="app_migrating_title">Finishing the update</string>
     <string name="app_migrating_summary">Getting things ready after the update. This can take a few minutes, so keep the app open.</string>
-    <string name="onboarding_permission_install_apps">Install apps permission</string>
-    <string name="onboarding_permission_install_apps_description">To install source extensions.</string>
     <string name="onboarding_permission_notifications">Notification permission</string>
     <string name="onboarding_permission_notifications_description">Get notified for library updates and more.</string>
     <string name="onboarding_permission_ignore_battery_opts">Background battery usage</string>
@@ -364,7 +362,10 @@
     <string name="ext_uninstall">Uninstall</string>
     <string name="ext_remove">Remove</string>
     <string name="ext_enabled">Extension enabled</string>
-    <string name="ext_enabled_summary">The extension stays installed. Switching it off stops its sources from loading.</string>
+    <string name="ext_enabled_summary">The extension stays installed. Switching it off unloads it, so its sources stop showing up.</string>
+    <string name="ext_disabled">Disabled</string>
+    <string name="ext_disabled_message">This extension is switched off, so it isn't loaded. Turn it back on to use its sources.</string>
+    <string name="ext_shared_install_warning">This copy was installed by the system. Uninstall it to let later updates install into the app instead.</string>
     <string name="ext_confirm_remove">Remove Extension?</string>
     <string name="ext_app_info">App info</string>
     <string name="untrusted_extension">Untrusted extension</string>
@@ -380,15 +381,7 @@
     <string name="ext_content_warning_nsfw">18+</string>
     <string name="ext_content_warning_mixed_description">Sources from this extension might contain both safe and 18+ content.</string>
     <string name="ext_content_warning_nsfw_description">Sources from this extension are primarily focused on 18+ content.</string>
-    <string name="ext_permission_install_apps_warning">Permissions are needed to install extensions. Tap here to grant.</string>
     <string name="ext_install_service_notif">Installing extension…</string>
-    <string name="ext_installer_pref">Installer</string>
-    <string name="ext_installer_legacy">Legacy</string>
-    <string name="ext_installer_packageinstaller" translatable="false">PackageInstaller</string>
-    <string name="ext_installer_shizuku" translatable="false">Shizuku</string>
-    <string name="ext_installer_private" translatable="false">Private</string>
-    <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
     <string name="ext_revoke_trust">Revoke trusted unknown extensions</string>
     <string name="downloading_with_progress">Downloading… (%d%%)</string>
 

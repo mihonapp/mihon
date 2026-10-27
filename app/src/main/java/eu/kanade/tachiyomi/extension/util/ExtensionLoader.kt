@@ -24,6 +24,7 @@ import mihon.domain.extension.model.ExtensionStore
 import tachiyomi.core.common.util.system.logcat
 import java.io.File
 import java.io.FileOutputStream
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Class that handles the loading of the extensions. Supports two kinds of extensions:
@@ -60,7 +61,37 @@ internal object ExtensionLoader {
 
     private const val PRIVATE_EXTENSION_EXTENSION = "ext"
 
+    /** One lock per package name, since the staged and target files are named after it. */
+    private val packageLocks = ConcurrentHashMap<String, Any>()
+
+    private fun packageLock(pkgName: String): Any {
+        // putIfAbsent keeps two concurrent installs of the same package on one lock
+        val candidate = Any()
+        return packageLocks.putIfAbsent(pkgName, candidate) ?: candidate
+    }
+
     private fun getPrivateExtensionDir(context: Context) = File(context.filesDir, "exts")
+
+    /**
+     * A process can die while an install is staged, so leftovers of an interrupted one are cleaned up
+     * (or, for a `.previous` file, restored) before the directory is read.
+     */
+    private fun recoverStagedExtensions(dir: File) {
+        dir.listFiles()?.forEach { file ->
+            val name = file.name
+            when {
+                name.endsWith(".$PRIVATE_EXTENSION_EXTENSION.part") -> file.delete()
+                name.endsWith(".$PRIVATE_EXTENSION_EXTENSION.previous") -> {
+                    val target = File(dir, name.removeSuffix(".previous"))
+                    if (target.exists()) {
+                        file.delete()
+                    } else if (!file.renameTo(target)) {
+                        logcat(LogPriority.WARN) { "Unable to recover ${file.name}" }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Reads what an extension declares without running any of its code: no class loader, no
@@ -70,10 +101,18 @@ internal object ExtensionLoader {
     fun inspect(context: Context, file: File): InspectResult {
         if (!file.isFile) return InspectResult.Rejected("The extension file doesn't exist")
 
-        val pkgManager = context.packageManager
-        val pkgInfo = pkgManager.getPackageArchiveInfo(file.absolutePath, PACKAGE_FLAGS)
+        val pkgInfo = context.packageManager.getPackageArchiveInfo(file.absolutePath, PACKAGE_FLAGS)
             ?.also { it.applicationInfo?.fixBasePaths(file.absolutePath) }
             ?: return InspectResult.Rejected("The file isn't a readable APK")
+
+        return inspect(context, pkgInfo)
+    }
+
+    /**
+     * The same checks, for a package that's already installed rather than read from a file.
+     */
+    private fun inspect(context: Context, pkgInfo: PackageInfo): InspectResult {
+        val pkgManager = context.packageManager
 
         if (!isPackageAnExtension(pkgInfo)) {
             return InspectResult.Rejected("${pkgInfo.packageName} isn't an extension")
@@ -133,9 +172,9 @@ internal object ExtensionLoader {
     /**
      * Installs [file] as a private extension, replacing whatever version is already there.
      *
-     * Every check runs against the staged copy instead of the incoming file, so a file swapped
-     * between validation and install can't slip through. Any failure rolls back, leaving either the
-     * previous extension or nothing at all, never a half written one.
+     * Every check runs against a staged copy instead of the incoming file, so a file swapped between
+     * validation and install can't slip through, and the swap itself is a single rename: either the
+     * previous extension or the new one, never a half written file in between.
      */
     fun installPrivateExtensionFile(context: Context, file: File) {
         val incoming = when (val result = inspect(context, file)) {
@@ -143,15 +182,33 @@ internal object ExtensionLoader {
             is InspectResult.Rejected -> throw IllegalStateException(result.reason)
         }
 
+        // A package name shares its staged and target files, so two installs of it must not overlap
+        synchronized(packageLock(incoming.pkgName)) {
+            deployPrivateExtensionFile(context, file, incoming)
+        }
+    }
+
+    private fun deployPrivateExtensionFile(
+        context: Context,
+        file: File,
+        incoming: ExtensionInspection,
+    ) {
         val dir = getPrivateExtensionDir(context).also { it.mkdirs() }
         val target = File(dir, "${incoming.pkgName}.$PRIVATE_EXTENSION_EXTENSION")
         val part = File(dir, "${target.name}.part")
-        val previous = File(dir, "${target.name}.previous")
+        val privateExisted = target.isFile
 
-        val installed = (inspect(context, target) as? InspectResult.Ok)?.inspection
+        // What the user actually runs is the newer of the private file and a copy installed by the
+        // system, so both are the baseline for the downgrade and signature checks
+        val (installedPkg, installedIsShared) = effectiveInstalled(context, dir, incoming.pkgName)
+        val installed = installedPkg?.let { (inspect(context, it) as? InspectResult.Ok)?.inspection }
         if (installed != null) {
             check(incoming.versionCode >= installed.versionCode) {
-                "The installed version is newer, and downgrading isn't allowed"
+                if (installedIsShared) {
+                    "A newer copy of ${incoming.pkgName} is installed by the system, uninstall it first"
+                } else {
+                    "The installed version is newer, and downgrading isn't allowed"
+                }
             }
             check(incoming.signatures.containsAll(installed.signatures)) {
                 "It isn't signed with the same key as the installed extension"
@@ -171,29 +228,45 @@ internal object ExtensionLoader {
 
             validate(context, part, incoming)
 
-            previous.delete()
-            if (target.exists() && !target.renameTo(previous)) {
-                throw IllegalStateException("Unable to stage the extension update")
+            // rename(2) replaces an existing target atomically, so there's no window where neither
+            // the old nor the new file is in place
+            if (!part.renameTo(target)) {
+                throw IllegalStateException("Unable to install the extension")
             }
-            try {
-                if (!part.renameTo(target)) {
-                    throw IllegalStateException("Unable to install the extension")
-                }
-                target.setReadOnly()
-                previous.delete()
-            } catch (e: Exception) {
-                target.delete()
-                if (previous.exists()) previous.renameTo(target)
-                throw e
-            }
+            target.setReadOnly()
         } finally {
             part.delete()
         }
 
-        if (installed != null) {
+        if (privateExisted) {
             ExtensionInstallReceiver.notifyReplaced(context, incoming.pkgName)
         } else {
             ExtensionInstallReceiver.notifyAdded(context, incoming.pkgName)
+        }
+    }
+
+    /**
+     * The copy the user actually runs: whatever [selectExtensionPackage] would pick between a private
+     * file and a package the system installed, plus which of the two it is.
+     */
+    private fun effectiveInstalled(
+        context: Context,
+        dir: File,
+        pkgName: String,
+    ): Pair<PackageInfo?, Boolean> {
+        val privatePkg = File(dir, "$pkgName.$PRIVATE_EXTENSION_EXTENSION")
+            .takeIf { it.isFile }
+            ?.let { context.packageManager.getPackageArchiveInfo(it.absolutePath, PACKAGE_FLAGS) }
+        val sharedPkg = runCatching {
+            context.packageManager.getPackageInfo(pkgName, PACKAGE_FLAGS)
+        }.getOrNull()
+
+        return when {
+            privatePkg == null -> sharedPkg to true
+            sharedPkg == null -> privatePkg to false
+            PackageInfoCompat.getLongVersionCode(sharedPkg) >=
+                PackageInfoCompat.getLongVersionCode(privatePkg) -> sharedPkg to true
+            else -> privatePkg to false
         }
     }
 
@@ -259,7 +332,10 @@ internal object ExtensionLoader {
             .filter { isPackageAnExtension(it) }
             .map { ExtensionInfo(packageInfo = it, isShared = true) }
 
-        val privateExtPkgs = getPrivateExtensionDir(context)
+        val privateDir = getPrivateExtensionDir(context)
+        recoverStagedExtensions(privateDir)
+
+        val privateExtPkgs = privateDir
             .listFiles()
             ?.asSequence()
             ?.filter { it.isFile && it.extension == PRIVATE_EXTENSION_EXTENSION }
@@ -457,6 +533,8 @@ internal object ExtensionLoader {
             else -> ContentWarning.SAFE
         }
 
+        val isEnabled = pkgName !in disabledExtensions
+
         fun notLoaded(
             reason: Extension.NotLoaded.Reason,
             libVersion: Double? = null,
@@ -470,6 +548,7 @@ internal object ExtensionLoader {
             signatures = signatures,
             store = store,
             libVersion = libVersion,
+            isEnabled = isEnabled,
             reason = reason,
         )
 
@@ -509,7 +588,11 @@ internal object ExtensionLoader {
             return notLoaded(Extension.NotLoaded.Reason.Filtered, libVersion)
         }
 
-        val isEnabled = pkgName !in disabledExtensions
+        // A switched off extension is deployed but deliberately not run: stop here, so neither the
+        // class loader nor any of its source instances are created while it stays off
+        if (!isEnabled) {
+            return notLoaded(Extension.NotLoaded.Reason.Disabled, libVersion)
+        }
 
         // Everything above is cheap to check again, everything below isn't. Nothing about this apk
         // changed and it still passes, so keep the sources that are already registered for it.
@@ -517,7 +600,7 @@ internal object ExtensionLoader {
             alreadyLoaded.versionCode == versionCode &&
             alreadyLoaded.isShared == extensionInfo.isShared
         ) {
-            return alreadyLoaded.copy(store = store, isEnabled = isEnabled)
+            return alreadyLoaded.copy(store = store)
         }
 
         val classLoader = try {
