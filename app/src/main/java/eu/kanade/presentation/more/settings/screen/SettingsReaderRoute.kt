@@ -20,7 +20,7 @@ import tachiyomi.presentation.core.util.collectAsState
 import java.text.NumberFormat
 
 @Serializable
-object SettingsReaderRoute : SearchableRoute {
+data object SettingsReaderRoute : SearchableRoute {
 
     @ReadOnlyComposable
     @Composable

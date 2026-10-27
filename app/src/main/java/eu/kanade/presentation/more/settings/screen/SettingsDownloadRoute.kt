@@ -23,7 +23,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
 @Serializable
-object SettingsDownloadRoute : SearchableRoute {
+data object SettingsDownloadRoute : SearchableRoute {
 
     @ReadOnlyComposable
     @Composable

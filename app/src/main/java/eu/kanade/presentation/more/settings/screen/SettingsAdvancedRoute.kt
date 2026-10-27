@@ -61,7 +61,7 @@ import tachiyomi.presentation.core.util.collectAsState
 import java.io.File
 
 @Serializable
-object SettingsAdvancedRoute : SearchableRoute {
+data object SettingsAdvancedRoute : SearchableRoute {
 
     @ReadOnlyComposable
     @Composable
