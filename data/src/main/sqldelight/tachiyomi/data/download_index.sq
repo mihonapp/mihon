@@ -1,0 +1,57 @@
+CREATE TABLE download_index (
+    source_id INTEGER NOT NULL,
+    source_dir TEXT NOT NULL,
+    manga_dir TEXT NOT NULL,
+    chapter_dir TEXT NOT NULL,
+    PRIMARY KEY(source_id, manga_dir, chapter_dir)
+);
+
+getChapterDirs:
+SELECT chapter_dir
+FROM download_index
+WHERE source_id = :sourceId
+AND manga_dir = :mangaDir;
+
+getAllChapterDirs:
+SELECT source_id, manga_dir, chapter_dir
+FROM download_index;
+
+getAllMangaChapterDirCounts:
+SELECT source_id, manga_dir, count(*) AS total
+FROM download_index
+GROUP BY source_id, manga_dir;
+
+getTotalChapterDirCount:
+SELECT count(*) AS total
+FROM (
+    SELECT DISTINCT source_dir, manga_dir, chapter_dir
+    FROM download_index
+);
+
+insertChapterDir:
+INSERT OR IGNORE INTO download_index(source_id, source_dir, manga_dir, chapter_dir)
+VALUES (:sourceId, :sourceDir, :mangaDir, :chapterDir);
+
+deleteChapterDirs:
+DELETE FROM download_index
+WHERE source_id = :sourceId
+AND manga_dir = :mangaDir
+AND chapter_dir IN :chapterDirs;
+
+renameMangaDir:
+UPDATE OR IGNORE download_index
+SET manga_dir = :newMangaDir
+WHERE source_id = :sourceId
+AND manga_dir = :mangaDir;
+
+deleteMangaDir:
+DELETE FROM download_index
+WHERE source_id = :sourceId
+AND manga_dir = :mangaDir;
+
+deleteBySource:
+DELETE FROM download_index
+WHERE source_id = :sourceId;
+
+deleteAll:
+DELETE FROM download_index;
