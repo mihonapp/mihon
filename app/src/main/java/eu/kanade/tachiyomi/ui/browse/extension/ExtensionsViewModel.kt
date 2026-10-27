@@ -10,7 +10,6 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -19,6 +18,7 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +36,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import tachiyomi.i18n.MR
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -45,7 +47,6 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class ExtensionsViewModel(
     private val preferences: SourcePreferences,
-    basePreferences: BasePreferences,
     private val extensionManager: ExtensionManager,
     private val getExtensions: GetExtensionsByType,
     private val context: Context,
@@ -113,14 +114,12 @@ class ExtensionsViewModel(
         searchQuery,
         isRefreshing,
         preferences.extensionUpdatesCount.changes(),
-        basePreferences.extensionInstaller.changes(),
-    ) { items, searchQuery, isRefreshing, updates, installer ->
+    ) { items, searchQuery, isRefreshing, updates ->
         State(
             isLoading = items == null,
             isRefreshing = isRefreshing,
             items = items.orEmpty(),
             updates = updates,
-            installer = installer,
             searchQuery = searchQuery,
         )
     }
@@ -167,11 +166,24 @@ class ExtensionsViewModel(
 
     fun updateAllExtensions() {
         viewModelScope.launch(Dispatchers.IO) {
-            state.value.items.values.flatten()
+            // Every install loads a dex to validate it before deploying, so a few at a time rather
+            // than all of them at once
+            val semaphore = Semaphore(3)
+            val extensions = state.value.items.values.flatten()
                 .map { it.extension }
                 .filterIsInstance<Extension.Installed>()
                 .filter { it.hasUpdate }
-                .forEach(::updateExtension)
+
+            coroutineScope {
+                extensions.forEach { extension ->
+                    launch {
+                        semaphore.withPermit {
+                            extensionManager.updateExtension(extension)
+                                .collectToInstallUpdate(extension)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -228,13 +240,20 @@ class ExtensionsViewModel(
         extensionManager.trust(extension)
     }
 
+    /**
+     * Flips an already deployed extension on or off. The manager reloads, so the switch shows up
+     * everywhere at once, and switching off unloads the extension and drops its sources.
+     */
+    fun toggleExtensionEnabled(extension: Extension.Installed, enabled: Boolean) {
+        extensionManager.setExtensionEnabled(extension.pkgName, enabled)
+    }
+
     @Immutable
     data class State(
         val isLoading: Boolean = true,
         val isRefreshing: Boolean = false,
         val items: ItemGroups = mutableMapOf(),
         val updates: Int = 0,
-        val installer: BasePreferences.ExtensionInstaller? = null,
         val searchQuery: String? = null,
     ) {
         val isEmpty = items.isEmpty()

@@ -1,7 +1,6 @@
 package eu.kanade.presentation.browse
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,16 +42,13 @@ import eu.kanade.presentation.browse.components.BaseBrowseItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
 import eu.kanade.presentation.browse.components.ExtensionPill
 import eu.kanade.presentation.browse.components.label
-import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
-import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsViewModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
-import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import mihon.domain.extension.model.ExtensionStore
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
@@ -89,6 +86,7 @@ fun ExtensionScreen(
     onOpenExtension: (Extension.Loaded) -> Unit,
     onClickUpdateAll: () -> Unit,
     onRefresh: () -> Unit,
+    onToggleExtensionEnabled: (Extension.Installed, Boolean) -> Unit,
 ) {
     val navigator = LocalNavigator.currentOrThrow
 
@@ -130,6 +128,7 @@ fun ExtensionScreen(
                     onTrustExtension = onTrustExtension,
                     onOpenExtension = onOpenExtension,
                     onClickUpdateAll = onClickUpdateAll,
+                    onToggleExtensionEnabled = onToggleExtensionEnabled,
                 )
             }
         }
@@ -149,25 +148,13 @@ private fun ExtensionContent(
     onTrustExtension: (Extension.NotLoaded) -> Unit,
     onOpenExtension: (Extension.Loaded) -> Unit,
     onClickUpdateAll: () -> Unit,
+    onToggleExtensionEnabled: (Extension.Installed, Boolean) -> Unit,
 ) {
-    val context = LocalContext.current
     var notLoadedState by remember { mutableStateOf<Extension.NotLoaded?>(null) }
-    val installGranted = rememberRequestPackageInstallsPermissionState(initialValue = true)
 
     FastScrollLazyColumn(
         contentPadding = contentPadding + topSmallPaddingValues,
     ) {
-        if (!installGranted && state.installer?.requiresSystemPermission == true) {
-            item(key = "extension-permissions-warning") {
-                WarningBanner(
-                    textRes = MR.strings.ext_permission_install_apps_warning,
-                    modifier = Modifier.clickable {
-                        context.launchRequestPackageInstallsPermission()
-                    },
-                )
-            }
-        }
-
         state.items.forEach { (header, items) ->
             item(
                 contentType = "header",
@@ -258,6 +245,7 @@ private fun ExtensionContent(
                             }
                         }
                     },
+                    onToggleExtensionEnabled = onToggleExtensionEnabled,
                 )
             }
         }
@@ -297,6 +285,7 @@ private fun ExtensionItem(
     onClickItemCancel: (Extension) -> Unit,
     onClickItemAction: (Extension) -> Unit,
     onClickItemSecondaryAction: (Extension) -> Unit,
+    onToggleExtensionEnabled: (Extension.Installed, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val (extension, installStep) = item
@@ -319,6 +308,7 @@ private fun ExtensionItem(
                 onClickItemCancel = onClickItemCancel,
                 onClickItemAction = onClickItemAction,
                 onClickItemSecondaryAction = onClickItemSecondaryAction,
+                onToggleExtensionEnabled = onToggleExtensionEnabled,
             )
         },
     ) {
@@ -435,15 +425,18 @@ private fun ExtensionItemMetadata(
             }?.let { it to MaterialTheme.colorScheme.primary },
             when {
                 extension is Extension.NotLoaded ->
-                    extension.reason.labelRes?.let { it to MaterialTheme.colorScheme.error }
+                    extension.reason.labelRes?.let {
+                        it to if (extension.reason is Extension.NotLoaded.Reason.Disabled) {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.error
+                        }
+                    }
                 extension is Extension.Loaded && extension.isObsolete ->
                     MR.strings.ext_obsolete to MaterialTheme.colorScheme.error
                 else -> null
             },
             extension.contentWarning.label?.let { it.title to it.color },
-            (extension as? Extension.Loaded)
-                ?.takeIf { !it.isShared }
-                ?.let { MR.strings.ext_installer_private to MaterialTheme.colorScheme.onSurfaceVariant },
         )
         notable.forEach { (label, color) ->
             ExtensionPill(text = stringResource(label), color = color)
@@ -459,6 +452,7 @@ private fun ExtensionItemActions(
     onClickItemCancel: (Extension) -> Unit = {},
     onClickItemAction: (Extension) -> Unit = {},
     onClickItemSecondaryAction: (Extension) -> Unit = {},
+    onToggleExtensionEnabled: (Extension.Installed, Boolean) -> Unit = { _, _ -> },
 ) {
     Row(
         modifier = modifier,
@@ -473,6 +467,15 @@ private fun ExtensionItemActions(
                 )
             }
             return@Row
+        }
+
+        // An installed extension is already deployed on the device, so flipping this is all it takes
+        // to start or stop it: it's loaded or unloaded locally, with no download and no install step.
+        if (extension is Extension.Installed) {
+            Switch(
+                checked = extension.isEnabled,
+                onCheckedChange = { onToggleExtensionEnabled(extension, it) },
+            )
         }
 
         val secondaryAction = when (extension) {
@@ -494,7 +497,7 @@ private fun ExtensionItemActions(
         }
 
         val action = when {
-            installStep == InstallStep.Error -> MaterialSymbols.Rounded.Refresh to MR.strings.action_retry
+            installStep is InstallStep.Error -> MaterialSymbols.Rounded.Refresh to MR.strings.action_retry
             extension is Extension.Available -> MaterialSymbols.Rounded.Download to MR.strings.ext_install
             extension is Extension.Installed && extension.hasUpdate -> {
                 MaterialSymbols.Rounded.Download to MR.strings.ext_update
@@ -551,6 +554,7 @@ private val Extension.NotLoaded.Reason.labelRes: StringResource?
     get() = when (this) {
         is Extension.NotLoaded.Reason.Untrusted -> MR.strings.ext_untrusted
         Extension.NotLoaded.Reason.Filtered -> MR.strings.ext_filtered
+        Extension.NotLoaded.Reason.Disabled -> MR.strings.ext_disabled
         // The section header already says these aren't loaded; the dialog says why
         Extension.NotLoaded.Reason.Unsigned,
         Extension.NotLoaded.Reason.UnsupportedLibVersion,
@@ -563,6 +567,7 @@ private val Extension.NotLoaded.Reason.descriptionRes: StringResource
     get() = when (this) {
         is Extension.NotLoaded.Reason.Untrusted -> MR.strings.untrusted_extension_message
         Extension.NotLoaded.Reason.Filtered -> MR.strings.ext_filtered_message
+        Extension.NotLoaded.Reason.Disabled -> MR.strings.ext_disabled_message
         Extension.NotLoaded.Reason.Unsigned -> MR.strings.ext_unsigned_message
         Extension.NotLoaded.Reason.UnsupportedLibVersion -> MR.strings.ext_unsupported_message
         Extension.NotLoaded.Reason.Malformed -> MR.strings.ext_malformed_message

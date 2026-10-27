@@ -90,6 +90,11 @@
     <string name="ext_installing">安裝中</string>
     <string name="ext_installed">已安裝</string>
     <string name="ext_uninstall">解除安裝</string>
+    <string name="ext_enabled">啟用插件</string>
+    <string name="ext_enabled_summary">插件會保持安裝狀態，關閉後會從記憶體卸載，它提供的圖源會從清單中消失。</string>
+    <string name="ext_disabled">已停用</string>
+    <string name="ext_disabled_message">此外掛已停用，不會被載入。重新開啟即可使用它提供的圖源。</string>
+    <string name="ext_shared_install_warning">此外掛由系統安裝。解除安裝後，後續更新會改為安裝到應用程式內；否則每次更新都會額外保留一份。</string>
     <string name="pref_fullscreen">全螢幕</string>
     <string name="pref_double_tap_anim_speed">輕觸兩下動畫速度</string>
     <string name="pref_show_page_number">顯示頁碼</string>
@@ -516,10 +521,6 @@
     <string name="help_translate">協助翻譯</string>
     <string name="pref_remove_exclude_categories">排除的類別</string>
     <string name="ext_app_info">程式資訊</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">若要使用 Shizuku 來安裝擴充套件，請先安裝 Shizuku 並開啟</string>
-    <string name="ext_installer_legacy">傳統</string>
-    <string name="ext_installer_shizuku_stopped">Shizuku 未執行</string>
-    <string name="ext_installer_pref">套件安裝程式</string>
     <string name="ext_install_service_notif">正在安裝擴充套件…</string>
     <string name="action_sort_count">作品總數</string>
     <string name="action_display_language_badge">語言</string>
@@ -737,14 +738,11 @@
     <string name="no_location_set">未設定儲存位置</string>
     <string name="onboarding_storage_info">選擇供 %1$s 存放下載的章節、備份檔等內容的資料夾 \n \n建議使用專屬的資料夾 \n \n選擇的資料夾：%2$s</string>
     <string name="onboarding_permission_notifications">通知權限</string>
-    <string name="onboarding_permission_install_apps">安裝應用程式權限</string>
     <string name="onboarding_permission_ignore_battery_opts_description">避免中斷書櫃更新、章節下載和還原備份等較為費時的作業</string>
     <string name="onboarding_permission_ignore_battery_opts">背景耗電量</string>
-    <string name="onboarding_permission_install_apps_description">用以安裝來源擴充套件</string>
     <string name="onboarding_permission_notifications_description">用以傳送書櫃更新等通知</string>
     <string name="onboarding_permission_action_grant">授予</string>
     <string name="available_disk_space_info">可用：%1$s / 總計：%2$s</string>
-    <string name="ext_permission_install_apps_warning">缺少安裝擴充套件所需的權限，輕觸此處以授予</string>
     <string name="private_settings">包含敏感設定 (如：歷程平臺登入權杖)</string>
     <string name="manga_interval_expected_update">預計 %1$s後更新，每 %2$s檢查一次</string>
     <string name="invalid_backup_file_error">完整錯誤訊息：</string>
@@ -882,6 +880,7 @@
     <string name="donationCampaign.paragraph2">您可以透過 Patreon（建議優先使用）或 OpenCollective 進行贊助。如果有任何問題，或希望透過其他方式支持，歡迎透過 Mihon 的 Discord 伺服器與我聯繫。</string>
     <string name="donationCampaign.paragraph3">無論是否贊助，Mihon 都會持續由我與志工維護，並且維持開源。</string>
     <string name="donationCampaign.dismiss">關閉</string>
+    <string name="extension_filter_languages">語言</string>
     <string name="extensionStores">擴充套件商店</string>
     <string name="action.addExtensionStore">新增擴充套件商店</string>
     <string name="extensionStoresScreen.emptyLabel">你尚未新增任何擴充套件商店</string>
@@ -892,6 +891,9 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">你是否要新增下方的擴充套件商店？</string>
     <string name="extensionStoresScreen.deleteStore.title">刪除擴充套件商店</string>
     <string name="extensionStoresScreen.deleteStore.body">你是否要刪除擴充套件商店「%1$s」(%2$s)？</string>
+    <string name="extensionStoresScreen.deleteStore.extensionsWarning">該商店的 %1$d 個擴充套件將一併解除安裝：\n\n%2$s</string>
+    <string name="extensionStoresScreen.trustStore.title">信任擴充套件商店？</string>
+    <string name="extensionStoresScreen.trustStore.body">「%1$s」提供的擴充套件會在本應用程式內執行。惡意擴充套件可能讀取已儲存的登入憑證或執行任意程式碼。\n\n請僅在信任該商店來源時開啟。</string>
     <string name="pref_webtoon_vertical_navigator_on_left">將垂直導航器設於左側</string>
     <string name="considering">考慮中</string>
     <string name="theme_tokyonight">Tokyo Night</string>

@@ -21,6 +21,12 @@ sealed interface Extension {
     sealed interface Installed : Extension {
         val isShared: Boolean
 
+        /**
+         * False when the user switched the extension off. Its apk stays deployed, but it's not loaded,
+         * so it provides no sources until it's switched back on.
+         */
+        val isEnabled: Boolean
+
         /** SHA-256 digests of the certificates its apk is signed with. */
         val signatures: List<String>
 
@@ -94,6 +100,7 @@ sealed interface Extension {
         override val signatures: List<String>,
         val pkgFactory: String?,
         val sources: List<Source>,
+        override val isEnabled: Boolean = true,
         override val hasUpdate: Boolean = false,
         val isObsolete: Boolean = false,
         override val store: ExtensionStore? = null,
@@ -115,6 +122,7 @@ sealed interface Extension {
         override val lang: String? = null,
         override val hasUpdate: Boolean = false,
         override val store: ExtensionStore? = null,
+        override val isEnabled: Boolean = true,
         val reason: Reason,
     ) : Installed {
 
@@ -124,6 +132,9 @@ sealed interface Extension {
 
             /** Its [contentWarning] isn't one the user chose to load. */
             data object Filtered : Reason
+
+            /** The user switched it off, so it isn't loaded at all. */
+            data object Disabled : Reason
 
             /** No signature to check against at all. */
             data object Unsigned : Reason

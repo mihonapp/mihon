@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.presentation.browse.components.ExtensionIcon
-import eu.kanade.presentation.browse.components.ExtensionPill
 import eu.kanade.presentation.browse.components.label
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
@@ -74,6 +73,7 @@ fun ExtensionDetailsScreen(
     onClickUninstall: () -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
     onClickIncognito: (Boolean) -> Unit,
+    onClickToggleExtension: (Boolean) -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -118,6 +118,7 @@ fun ExtensionDetailsScreen(
             onClickUninstall = onClickUninstall,
             onClickSource = onClickSource,
             onClickIncognito = onClickIncognito,
+            onClickToggleExtension = onClickToggleExtension,
         )
     }
 }
@@ -133,6 +134,7 @@ private fun ExtensionDetails(
     onClickUninstall: () -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
     onClickIncognito: (Boolean) -> Unit,
+    onClickToggleExtension: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     var showContentWarning by remember { mutableStateOf(false) }
@@ -164,6 +166,7 @@ private fun ExtensionDetails(
                     showContentWarning = true
                 },
                 onExtIncognitoChange = onClickIncognito,
+                onExtEnabledChange = onClickToggleExtension,
             )
         }
 
@@ -199,11 +202,18 @@ private fun DetailsHeader(
     onClickUninstall: () -> Unit,
     onClickAppInfo: (() -> Unit)?,
     onExtIncognitoChange: (Boolean) -> Unit,
+    onExtEnabledChange: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     val contentWarning = extension.contentWarning.label
 
     Column {
+        // A copy the system installed can't be updated by this app, so every update adds a private
+        // one next to it. Only uninstalling the old copy turns this into an in-app install.
+        if (extension.isShared) {
+            WarningBanner(MR.strings.ext_shared_install_warning)
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -276,13 +286,6 @@ private fun DetailsHeader(
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
-
-            if ((extension as? Extension.Loaded)?.isShared == false) {
-                ExtensionPill(
-                    text = stringResource(MR.strings.ext_installer_private),
-                    modifier = Modifier.padding(top = MaterialTheme.padding.small),
-                )
-            }
         }
 
         Row(
@@ -344,6 +347,23 @@ private fun DetailsHeader(
                 }
             }
         }
+
+        TextPreferenceWidget(
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small),
+            title = stringResource(MR.strings.ext_enabled),
+            subtitle = stringResource(MR.strings.ext_enabled_summary),
+            widget = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Switch(
+                        checked = extension.isEnabled,
+                        onCheckedChange = onExtEnabledChange,
+                        modifier = Modifier.padding(start = TrailingWidgetBuffer),
+                    )
+                }
+            },
+        )
 
         TextPreferenceWidget(
             modifier = Modifier.padding(horizontal = MaterialTheme.padding.small),

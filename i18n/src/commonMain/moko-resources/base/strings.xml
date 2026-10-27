@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Mihon</string>
+    <string name="app_name" translatable="false">Mihon Beta</string>
 
     <!-- Generic strings -->
     <string name="on">On</string>
@@ -183,8 +183,6 @@
     <string name="onboarding_storage_help_action">Storage guide</string>
     <string name="app_migrating_title">Finishing the update</string>
     <string name="app_migrating_summary">Getting things ready after the update. This can take a few minutes, so keep the app open.</string>
-    <string name="onboarding_permission_install_apps">Install apps permission</string>
-    <string name="onboarding_permission_install_apps_description">To install source extensions.</string>
     <string name="onboarding_permission_notifications">Notification permission</string>
     <string name="onboarding_permission_notifications_description">Get notified for library updates and more.</string>
     <string name="onboarding_permission_ignore_battery_opts">Background battery usage</string>
@@ -355,6 +353,11 @@
     <string name="ext_load_failed_message">This extension threw an error while loading, so none of its sources are available.</string>
     <string name="ext_uninstall">Uninstall</string>
     <string name="ext_remove">Remove</string>
+    <string name="ext_enabled">Extension enabled</string>
+    <string name="ext_enabled_summary">The extension stays installed. Switching it off unloads it, so its sources stop showing up.</string>
+    <string name="ext_disabled">Disabled</string>
+    <string name="ext_disabled_message">This extension is switched off, so it isn't loaded. Turn it back on to use its sources.</string>
+    <string name="ext_shared_install_warning">This copy was installed by the system. Uninstall it to let later updates install into the app instead.</string>
     <string name="ext_confirm_remove">Remove Extension?</string>
     <string name="ext_app_info">App info</string>
     <string name="untrusted_extension">Untrusted extension</string>
@@ -370,19 +373,14 @@
     <string name="ext_content_warning_nsfw">18+</string>
     <string name="ext_content_warning_mixed_description">Sources from this extension might contain both safe and 18+ content.</string>
     <string name="ext_content_warning_nsfw_description">Sources from this extension are primarily focused on 18+ content.</string>
-    <string name="ext_permission_install_apps_warning">Permissions are needed to install extensions. Tap here to grant.</string>
     <string name="ext_install_service_notif">Installing extension…</string>
-    <string name="ext_installer_pref">Installer</string>
-    <string name="ext_installer_legacy">Legacy</string>
-    <string name="ext_installer_packageinstaller" translatable="false">PackageInstaller</string>
-    <string name="ext_installer_shizuku" translatable="false">Shizuku</string>
-    <string name="ext_installer_private" translatable="false">Private</string>
-    <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
     <string name="ext_revoke_trust">Revoke trusted unknown extensions</string>
     <string name="downloading_with_progress">Downloading… (%d%%)</string>
 
     <!-- Extension repos -->
+
+    <!-- Extension filter -->
+    <string name="extension_filter_languages">Languages</string>
 
     <!-- Extension store -->
     <string name="extensionStores">Extension stores</string>
@@ -395,6 +393,9 @@
     <string name="extensionStoresScreen.addStoreDeeplink.bodyText">Do you wish to add the extension store below?</string>
     <string name="extensionStoresScreen.deleteStore.title">Remove extension store</string>
     <string name="extensionStoresScreen.deleteStore.body">Do you wish to remove the extension store \"%1$s\" (%2$s)?</string>
+    <string name="extensionStoresScreen.deleteStore.extensionsWarning">%1$d extension(s) installed from this store will be uninstalled:\n\n%2$s</string>
+    <string name="extensionStoresScreen.trustStore.title">Trust extension store?</string>
+    <string name="extensionStoresScreen.trustStore.body">Extensions from \"%1$s\" run inside this app. Malicious extensions can read any stored login credentials or execute arbitrary code.\n\nOnly turn this store on if you trust where it comes from.</string>
 
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>

@@ -18,6 +18,18 @@
 -keep,allowoptimization class uy.kohesive.injekt.** { public protected *; }
 -keep,allowoptimization class com.squareup.zstd.** { public protected *; }
 
+# The ABI an extension is compiled against. Extensions are built on their own and treat the host
+# as compileOnly, so their bytecode names these classes exactly as written here. Anything R8
+# shrinks away becomes a NoClassDefFoundError when the extension loads, and debug builds never
+# show it because minification is off there.
+-keep,allowoptimization class eu.kanade.tachiyomi.source.** { public protected *; }
+-keep,allowoptimization class eu.kanade.tachiyomi.network.** { public protected *; }
+-keep,allowoptimization class eu.kanade.tachiyomi.util.** { public protected *; }
+-keep,allowoptimization class tachiyomi.core.common.util.lang.** { public protected *; }
+-keep,allowoptimization class mihon.core.common.extensions.** { public protected *; }
+# Kotlin resolves top level extension functions and anonymous classes through these attributes.
+-keepattributes *Annotation*, Signature, InnerClasses, EnclosingMethod
+
 -keepclassmembers class * implements java.io.Serializable {
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
@@ -85,9 +97,3 @@
 
 # KotlinX Datetime
 -keep,allowoptimization class kotlinx.datetime.** { public protected *; }
-
-# Methods called by Shizuku only
--keepclassmembers class mihon.app.shizuku.ShellInterface {
-    public <init>();
-    public void destroy();
-}

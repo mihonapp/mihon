@@ -20,6 +20,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import eu.kanade.tachiyomi.extension.model.Extension
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -102,6 +103,7 @@ fun ExtensionStoreDeleteDialog(
     onDelete: () -> Unit,
     storeName: String,
     storeIndexUrl: String,
+    installedExtensions: List<Extension.Installed>,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -109,7 +111,19 @@ fun ExtensionStoreDeleteDialog(
             Text(text = stringResource(MR.strings.extensionStoresScreen_deleteStore_title))
         },
         text = {
-            Text(text = stringResource(MR.strings.extensionStoresScreen_deleteStore_body, storeName, storeIndexUrl))
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(text = stringResource(MR.strings.extensionStoresScreen_deleteStore_body, storeName, storeIndexUrl))
+                if (installedExtensions.isNotEmpty()) {
+                    // Removing the store removes what it put on the device, so say what that is up front
+                    Text(
+                        text = stringResource(
+                            MR.strings.extensionStoresScreen_deleteStore_extensionsWarning,
+                            installedExtensions.size,
+                            installedExtensions.joinToString("\n") { it.name },
+                        ),
+                    )
+                }
+            }
         },
         confirmButton = {
             TextButton(onClick = {
@@ -117,6 +131,36 @@ fun ExtensionStoreDeleteDialog(
                 onDismissRequest()
             }) {
                 Text(text = stringResource(MR.strings.action_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_cancel))
+            }
+        },
+    )
+}
+
+@Composable
+fun ExtensionStoreTrustDialog(
+    onDismissRequest: () -> Unit,
+    onTrust: () -> Unit,
+    storeName: String,
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(text = stringResource(MR.strings.extensionStoresScreen_trustStore_title))
+        },
+        text = {
+            Text(text = stringResource(MR.strings.extensionStoresScreen_trustStore_body, storeName))
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onTrust()
+                onDismissRequest()
+            }) {
+                Text(text = stringResource(MR.strings.ext_trust))
             }
         },
         dismissButton = {

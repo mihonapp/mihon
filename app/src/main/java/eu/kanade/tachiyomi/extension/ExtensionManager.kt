@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -38,6 +39,7 @@ import mihon.core.metro.AppCoroutineScope
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.model.ExtensionStore
 import mihon.domain.extension.repository.ExtensionStoreRepository
+import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
@@ -90,6 +92,12 @@ class ExtensionManager(
         }
         .stateIn(scope, SharingStarted.Lazily, emptyList())
 
+    /**
+     * Every listing of every enabled store, before the dedupe above, so what a single store offers can
+     * still be shown even when another store carries a newer build of the same extension.
+     */
+    val allAvailableExtensionsFlow = availableExtensionListFlow.asStateFlow()
+
     private val notLoadedExtensionMapFlow = MutableStateFlow(emptyMap<String, Extension.NotLoaded>())
     val notLoadedExtensionsFlow = notLoadedExtensionMapFlow.mapExtensionsWhenInitialized()
 
@@ -103,6 +111,7 @@ class ExtensionManager(
                 trustExtension.changes(),
                 preferences.enabledContentWarnings.changes().distinctUntilChanged().drop(1).map {},
                 preferences.applyContentWarningsToInstalled.changes().distinctUntilChanged().drop(1).map {},
+                preferences.disabledExtensions.changes().distinctUntilChanged().drop(1).map {},
             )
                 .collectLatest { loadExtensions() }
         }
@@ -221,7 +230,7 @@ class ExtensionManager(
     }
 
     private suspend fun fetchExtensions(): List<Extension.Available> {
-        return extensionStoreRepository.fetchExtensions()
+        return extensionStoreRepository.fetchExtensions(preferences.enabledExtensionStores.get())
     }
 
     private fun setAvailableExtensions(extensions: List<Extension.Available>) {
@@ -282,8 +291,7 @@ class ExtensionManager(
      */
     fun updateExtension(extension: Extension.Installed): Flow<InstallStep> {
         val update = extension.findUpdate(availableExtensionListFlow.value) ?: return emptyFlow()
-        val isUpdateForPrivatelyInstalled = !extension.isShared
-        return installer.downloadAndInstall(update, isUpdateForPrivatelyInstalled)
+        return installer.downloadAndInstall(update)
     }
 
     fun cancelInstallUpdateExtension(extension: Extension) {
@@ -310,6 +318,67 @@ class ExtensionManager(
      */
     fun uninstallExtension(extension: Extension.Installed) {
         installer.uninstallApk(extension.pkgName)
+    }
+
+    /**
+     * Switches a deployed extension on or off. Nothing is installed or removed: the apk stays where
+     * it is. Switching it off unloads the extension, so it stops providing sources until it's
+     * switched back on, which needs no download and no install step.
+     */
+    fun setExtensionEnabled(pkgName: String, enabled: Boolean) {
+        preferences.disabledExtensions.getAndSet { disabled ->
+            if (enabled) disabled - pkgName else disabled + pkgName
+        }
+    }
+
+    /**
+     * Switches an extension store on or off. Only an enabled store is queried for its listings, so
+     * switching one off keeps its extensions out of the browse list and out of update checks.
+     * Extensions already installed keep working: they have their own switch.
+     *
+     * @param indexUrl The index url of the store.
+     * @param enabled Whether the store should be queried.
+     */
+    fun setExtensionStoreEnabled(indexUrl: String, enabled: Boolean) {
+        preferences.enabledExtensionStores.getAndSet { enabledStores ->
+            if (enabled) enabledStores + indexUrl else enabledStores - indexUrl
+        }
+    }
+
+    /**
+     * Whether the trust warning of the store at [indexUrl] has been accepted before, so it doesn't
+     * need to be shown again when the user turns the store back on.
+     */
+    fun isExtensionStoreTrusted(indexUrl: String): Boolean {
+        return indexUrl in preferences.trustedExtensionStores.get()
+    }
+
+    /**
+     * Accepts the trust warning of the store at [indexUrl] and turns it on. What the warning guards
+     * is the store being able to install extensions at all, so both happen together.
+     */
+    fun trustExtensionStore(indexUrl: String) {
+        preferences.trustedExtensionStores.getAndSet { trusted -> trusted + indexUrl }
+        setExtensionStoreEnabled(indexUrl, enabled = true)
+    }
+
+    /**
+     * Forgets a store that's being removed, so adding it again later starts from a store that's off
+     * and still unknown to the user rather than silently trusted.
+     */
+    fun forgetExtensionStore(indexUrl: String) {
+        preferences.enabledExtensionStores.getAndSet { enabled -> enabled - indexUrl }
+        preferences.trustedExtensionStores.getAndSet { trusted -> trusted - indexUrl }
+    }
+
+    /**
+     * The extensions deployed on the device that came from the store at [indexUrl], whether they load
+     * or not. Used to warn about, and then uninstall, what removing that store leaves behind.
+     */
+    suspend fun getInstalledExtensionsOfStore(indexUrl: String): List<Extension.Installed> {
+        initialized.await()
+        return (loadedExtensionMapFlow.value.values + notLoadedExtensionMapFlow.value.values)
+            .filter { it.store?.indexUrl == indexUrl }
     }
 
     /**
@@ -364,7 +433,10 @@ class ExtensionManager(
         }
 
         override suspend fun onPackageUninstalled(pkgName: String) = loadMutex.withLock {
-            ExtensionLoader.uninstallPrivateExtension(context, pkgName)
+            // Only clean up what this app deployed: the broadcast fires for every package
+            if (pkgName in loadedExtensionMapFlow.value || pkgName in notLoadedExtensionMapFlow.value) {
+                ExtensionLoader.uninstallPrivateExtension(context, pkgName)
+            }
             unregisterExtension(pkgName)
             updatePendingUpdatesCount()
         }

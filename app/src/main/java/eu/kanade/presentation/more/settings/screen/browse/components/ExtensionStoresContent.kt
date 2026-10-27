@@ -11,6 +11,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,11 +31,13 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun ExtensionStoresContent(
     repos: List<ExtensionStore>,
+    enabledStoreUrls: Set<String>,
     lazyListState: LazyListState,
     paddingValues: PaddingValues,
     onCopy: (ExtensionStore) -> Unit,
     onOpenWebsite: (ExtensionStore) -> Unit,
     onOpenDiscord: (ExtensionStore) -> Unit,
+    onToggleStore: (ExtensionStore, Boolean) -> Unit,
     onClickDelete: (ExtensionStore) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -49,6 +52,8 @@ fun ExtensionStoresContent(
                 ExtensionStoresListItem(
                     modifier = Modifier.animateItem(),
                     store = it,
+                    enabled = it.indexUrl in enabledStoreUrls,
+                    onToggle = { enabled -> onToggleStore(it, enabled) },
                     onOpenWebsite = { onOpenWebsite(it) },
                     onOpenDiscord = { onOpenDiscord(it) },
                     onCopy = { onCopy(it) },
@@ -62,6 +67,8 @@ fun ExtensionStoresContent(
 @Composable
 private fun ExtensionStoresListItem(
     store: ExtensionStore,
+    enabled: Boolean,
+    onToggle: (Boolean) -> Unit,
     onOpenWebsite: () -> Unit,
     onOpenDiscord: () -> Unit,
     onCopy: () -> Unit,
@@ -84,8 +91,16 @@ private fun ExtensionStoresListItem(
             Icon(imageVector = MaterialSymbols.AutoMirroredRounded.Label, contentDescription = null)
             Text(
                 text = store.name,
-                modifier = Modifier.padding(start = MaterialTheme.padding.medium),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = MaterialTheme.padding.medium),
                 style = MaterialTheme.typography.titleMedium,
+            )
+
+            // A store starts off. The first time it's turned on, the warning behind it is shown.
+            Switch(
+                checked = enabled,
+                onCheckedChange = onToggle,
             )
         }
 
