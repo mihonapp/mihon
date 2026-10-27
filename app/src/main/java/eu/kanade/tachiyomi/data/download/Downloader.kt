@@ -437,7 +437,7 @@ class Downloader(
         // on disk that is still queued, and downloading it again would save a second copy next to it
         if (mangaDir.findFile("$chapterDirname.cbz") != null || mangaDir.findFile(chapterDirname) != null) {
             mangaDir.findFile(chapterDirname + TMP_DIR_SUFFIX)?.delete()
-            cache.addChapter(chapterDirname, mangaDir, download.manga)
+            cache.addChapter(chapterDirname, download.manga)
             download.status = Download.State.DOWNLOADED
             return
         }
@@ -504,7 +504,7 @@ class Downloader(
             } else {
                 tmpDir.renameTo(chapterDirname)
             }
-            cache.addChapter(chapterDirname, mangaDir, download.manga)
+            cache.addChapter(chapterDirname, download.manga)
 
             DiskUtil.createNoMediaFile(tmpDir, context)
 
