@@ -100,11 +100,10 @@ class MangaRepositoryImpl(
         includedCategories: List<Long>,
     ): Flow<List<Manga>> {
         val timeZone = TimeZone.currentSystemDefault()
-        val epochMillis =
-            Clock.System.now().toLocalDateTime(timeZone).date.atStartOfDayIn(timeZone).toEpochMilliseconds()
+        val startOfDay = Clock.System.now().toLocalDateTime(timeZone).date.atStartOfDayIn(timeZone)
         return database.mangaQueries
             .getUpcomingManga(
-                startOfDay = epochMillis,
+                startOfDay = startOfDay,
                 statuses = statuses,
                 includedEmpty = includedCategories.isEmpty(),
                 includedCategories = includedCategories,
@@ -143,6 +142,13 @@ class MangaRepositoryImpl(
             .getExcludedScanlatorsByMangaId(mangaId)
             .awaitAsList()
             .toSet()
+    }
+
+    override suspend fun getExcludedScanlatorsByMangaIds(mangaIds: List<Long>): Map<Long, List<String>> {
+        return database.excluded_scanlatorQueries
+            .getExcludedScanlatorsByMangaIds(mangaIds)
+            .awaitAsList()
+            .groupBy({ it.manga_id }, { it.scanlator })
     }
 
     override fun getExcludedScanlatorsAsFlow(mangaId: Long): Flow<Set<String>> {

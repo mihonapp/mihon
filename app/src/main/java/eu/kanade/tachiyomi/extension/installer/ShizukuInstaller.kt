@@ -19,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.shizuku.IShellInterface
 import mihon.app.shizuku.ShellInterface
@@ -71,8 +72,8 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             if (status == PackageInstaller.STATUS_SUCCESS) {
                 continueQueue(InstallStep.Installed)
             } else {
-                logcat(LogPriority.ERROR) { "Failed to install extension $packageName: $message" }
-                continueQueue(InstallStep.Error(message ?: "Shizuku failed to install it ($status)"))
+                logcat(LogPriority.INFO) { "Shizuku failed to install $packageName ($status): $message" }
+                continueQueue(InstallStep.Error)
             }
         }
     }
@@ -117,14 +118,16 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
 
     override fun processEntry(entry: Entry) {
         super.processEntry(entry)
-        try {
-            service.contentResolver.openAssetFileDescriptor(entry.uri, "r").use {
-                shellInterface?.install(it, statusIntent.intentSender)
+        scope.launch {
+            try {
+                service.contentResolver.openAssetFileDescriptor(entry.uri, "r").use {
+                    shellInterface?.install(it, statusIntent.intentSender)
+                }
+                service.contentResolver.delete(entry.uri, null, null)
+            } catch (e: Exception) {
+                logcat(LogPriority.INFO, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
+                continueQueue(InstallStep.Error)
             }
-            service.contentResolver.delete(entry.uri, null, null)
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e) { "Failed to install extension ${entry.downloadId} ${entry.uri}" }
-            continueQueue(InstallStep.Error.from(e))
         }
     }
 

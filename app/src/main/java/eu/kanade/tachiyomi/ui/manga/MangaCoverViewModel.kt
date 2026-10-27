@@ -31,11 +31,9 @@ import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
@@ -87,7 +85,7 @@ class MangaCoverViewModel(
         viewModelScope.launch {
             try {
                 val uri = saveCoverInternal(context, temp = true) ?: return@launch
-                withUIContext {
+                withContext(Dispatchers.Main) {
                     context.startActivity(uri.toShareIntent(context))
                 }
             } catch (e: Throwable) {
@@ -113,11 +111,11 @@ class MangaCoverViewModel(
             .size(Size.ORIGINAL)
             .build()
 
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val result = context.imageLoader.execute(req).image?.asDrawable(context.resources)
 
             // TODO: Handle animated cover
-            val bitmap = result?.getBitmapOrNull() ?: return@withIOContext null
+            val bitmap = result?.getBitmapOrNull() ?: return@withContext null
             imageSaver.save(
                 Image.Cover(
                     bitmap = bitmap,
@@ -136,7 +134,7 @@ class MangaCoverViewModel(
      */
     fun editCover(context: Context, data: Uri) {
         val manga = state.value ?: return
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             context.contentResolver.openInputStream(data)?.use {
                 try {
                     manga.editCover(coverManager, it, updateManga, coverCache)
@@ -149,7 +147,7 @@ class MangaCoverViewModel(
     }
 
     fun deleteCustomCover(context: Context) {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 coverCache.deleteCustomCover(mangaId)
                 updateManga.awaitUpdateCoverLastModified(mangaId)
@@ -157,6 +155,15 @@ class MangaCoverViewModel(
             } catch (e: Exception) {
                 notifyFailedCoverUpdate(context, e)
             }
+        }
+    }
+
+    fun addToLibraryWarning(context: Context) {
+        viewModelScope.launch {
+            snackbarHostState.showSnackbar(
+                context.stringResource(MR.strings.notification_first_add_to_library),
+                withDismissAction = true,
+            )
         }
     }
 

@@ -751,7 +751,6 @@
     <string name="manga_interval_custom_amount">Prilagođena učestalost aktualiziranja:</string>
     <string name="pref_library_update_smart_update">Pametno aktualiziranje</string>
     <string name="ext_revoke_trust">Opozovi pouzdana nepoznata proširenja</string>
-    <string name="action_open_repo">Otvori repozitorij izvora</string>
     <string name="private_settings">Uključi osjetljive postavke (kao što su tokeni za prijavu za usluge praćenja)</string>
     <string name="manga_interval_expected_update">Predviđa se da će nova poglavlja biti izdana za oko %1$s, provjera se svakih %2$s.</string>
     <string name="manga_interval_expected_update_soon">Uskoro</string>

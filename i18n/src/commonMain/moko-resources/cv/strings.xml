@@ -610,7 +610,6 @@
     <string name="remove_private_extension_message">«%s» хушмана катертесшӗн-и?</string>
     <string name="ext_permission_install_apps_warning">Хушмасене лартма ирӗксем кирлӗ. Ирӗксене пама кунта пус.</string>
     <string name="ext_revoke_trust">Шанчӑклӑ мар хушмасенчен шанчӑк туртса илмелле</string>
-    <string name="action_open_repo">Хушмасен ҫӳпҫин ҫӑл куҫне уҫ</string>
     <string name="pref_double_tap_zoom">Пысӑклатма икӗ хут пусмалла</string>
     <string name="pref_flash_duration_summary">%1$s мҫ</string>
     <string name="pref_flash_style_black">Хура</string>
