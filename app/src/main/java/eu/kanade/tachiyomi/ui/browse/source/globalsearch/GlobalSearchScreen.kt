@@ -9,26 +9,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.GlobalSearchScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
+import eu.kanade.tachiyomi.ui.library.LibraryTab
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class GlobalSearchScreen(
     val searchQuery: String = "",
     private val extensionFilter: String? = null,
+    private val inSearchTab: Boolean = false,
 ) : Screen() {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val tabNavigator = LocalTabNavigator.current
 
         val viewModel =
             assistedMetroViewModel<GlobalSearchViewModel, GlobalSearchViewModel.Factory> {
                 create(initialQuery = searchQuery, initialExtensionFilter = extensionFilter)
             }
+        LaunchedEffect(inSearchTab) {
+            if (inSearchTab) viewModel.setSourceFilter(SourceFilter.All)
+        }
         val state by viewModel.state.collectAsState()
         var showSingleLoadingScreen by remember {
             mutableStateOf(searchQuery.isNotEmpty() && !extensionFilter.isNullOrEmpty() && state.total == 1)
@@ -43,7 +50,11 @@ class GlobalSearchScreen(
                     is SearchItemResult.Success -> {
                         val manga = result.result.singleOrNull()
                         if (manga != null) {
-                            navigator.replace(MangaScreen(manga.id, true))
+                            if (inSearchTab) {
+                                navigator.push(MangaScreen(manga.id, true))
+                            } else {
+                                navigator.replace(MangaScreen(manga.id, true))
+                            }
                         } else {
                             // Backoff to result screen
                             showSingleLoadingScreen = false
@@ -55,7 +66,14 @@ class GlobalSearchScreen(
         } else {
             GlobalSearchScreen(
                 state = state,
-                navigateUp = navigator::pop,
+                navigateUp = {
+                    if (inSearchTab) {
+                        tabNavigator.current = LibraryTab
+                    } else {
+                        navigator.pop()
+                    }
+                    Unit
+                },
                 onChangeSearchQuery = viewModel::updateSearchQuery,
                 onSearch = { viewModel.search() },
                 getManga = { viewModel.getManga(it) },
