@@ -1,0 +1,62 @@
+name: KuramiX APK
+
+on:
+  push:
+    branches:
+      - kuramix/development
+    paths:
+      - '.github/workflows/kuramix-apk.yml'
+      - 'app/**'
+      - 'i18n/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout KuramiX branch
+        uses: actions/checkout@v4
+
+      - name: Set up JDK required by Mihon
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version-file: .github/.java-version
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Apply independent KuramiX identity
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          def change(file, before, after):
+              p = Path(file)
+              value = p.read_text(encoding='utf-8')
+              if value.count(before) != 1:
+                  raise SystemExit(f'Expected one match for {before!r} in {file}, got {value.count(before)}')
+              p.write_text(value.replace(before, after), encoding='utf-8')
+          change('app/build.gradle.kts', 'applicationId = "app.mihon"', 'applicationId = "app.kuramix"')
+          change('app/build.gradle.kts', 'versionName = "0.21.3"', 'versionName = "0.1.0"')
+          change('app/build.gradle.kts', 'buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")', 'buildConfigField("boolean", "UPDATER_ENABLED", "false")')
+          change('i18n/src/commonMain/moko-resources/base/strings.xml', '<string name="app_name" translatable="false">Mihon</string>', '<string name="app_name" translatable="false">KuramiX</string>')
+          PY
+
+      - name: Build native debug APK
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Upload KuramiX APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: KuramiX-debug-APK
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
