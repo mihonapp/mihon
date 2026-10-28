@@ -7,7 +7,6 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.model.getComicInfo
-import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
@@ -50,6 +49,7 @@ import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.archive.ZipWriter
 import mihon.core.metro.AppCoroutineScope
+import mihon.data.cache.ChapterCache
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
@@ -64,7 +64,6 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
-import java.io.File
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration.Companion.seconds
@@ -544,10 +543,8 @@ class Downloader(
             // If the image is already downloaded, do nothing. Otherwise download from network
             val file = when {
                 imageFile != null -> imageFile
-                chapterCache.isImageInCache(
-                    page.imageUrl!!,
-                ) -> copyImageFromCache(chapterCache.getImageFile(page.imageUrl!!), tmpDir, filename)
-                else -> downloadImage(page, download.source, tmpDir, filename)
+                else -> copyImageFromCache(page.imageUrl!!, tmpDir, filename)
+                    ?: downloadImage(page, download.source, tmpDir, filename)
             }
 
             // When the page is ready, set page path, progress (just in case) and status
@@ -610,24 +607,25 @@ class Downloader(
     }
 
     /**
-     * Copies the image from cache to file in tmpDir.
+     * Copies the image from cache to file in tmpDir, or returns null when it isn't cached.
      *
-     * @param cacheFile the file from cache.
+     * @param imageUrl the url of the image.
      * @param tmpDir the temporary directory of the download.
      * @param filename the filename of the image.
      */
-    private fun copyImageFromCache(cacheFile: File, tmpDir: UniFile, filename: String): UniFile {
-        // Delete temp file if it exists
-        tmpDir.findFile("$filename.tmp")?.delete()
-        val tmpFile = tmpDir.createFile("$filename.tmp")!!
-        cacheFile.inputStream().use { input ->
-            tmpFile.openOutputStream().use { output ->
-                input.copyTo(output)
+    private suspend fun copyImageFromCache(imageUrl: String, tmpDir: UniFile, filename: String): UniFile? {
+        val tmpFile = chapterCache.openImage(imageUrl)?.use { input ->
+            // Delete temp file if it exists
+            tmpDir.findFile("$filename.tmp")?.delete()
+            tmpDir.createFile("$filename.tmp")!!.also { tmpFile ->
+                tmpFile.openOutputStream().use { output ->
+                    input.copyTo(output)
+                }
             }
-        }
-        val extension = ImageUtil.findImageType(cacheFile.inputStream()) ?: return tmpFile
+        } ?: return null
+        chapterCache.removeImage(imageUrl)
+        val extension = tmpFile.openInputStream().use { ImageUtil.findImageType(it) } ?: return tmpFile
         tmpFile.renameTo("$filename.${extension.extension}")
-        cacheFile.delete()
         return tmpFile
     }
 
