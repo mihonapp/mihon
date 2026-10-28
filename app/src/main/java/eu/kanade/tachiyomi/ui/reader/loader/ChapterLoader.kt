@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.content.Context
+import com.hippo.unifile.UniFile
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
+import eu.kanade.tachiyomi.data.download.Downloader
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -106,9 +108,28 @@ class ChapterLoader(
                     is Format.Epub -> EpubPageLoader(format.file.epubReader(context))
                 }
             }
-            source is HttpSource -> HttpPageLoader(chapter, source, chapterCache, appScope, canLoadAhead)
+            source is HttpSource -> HttpPageLoader(
+                chapter,
+                source,
+                chapterCache,
+                appScope,
+                canLoadAhead,
+                findPartialDownloadDir(chapter),
+            )
             source is StubSource -> error(context.stringResource(MR.strings.source_not_installed, source.toString()))
             else -> error(context.stringResource(MR.strings.loader_not_implemented_error))
         }
+    }
+
+    /**
+     * Returns the temporary directory of an unfinished download for [chapter], if there is one.
+     */
+    private suspend fun findPartialDownloadDir(chapter: ReaderChapter): UniFile? {
+        val dbChapter = chapter.chapter
+        val mangaDir = downloadProvider.findMangaDir(manga.title, source) ?: return null
+        return downloadProvider.getValidChapterDirNames(dbChapter.name, dbChapter.scanlator, dbChapter.url)
+            .asSequence()
+            .mapNotNull { mangaDir.findFile(it + Downloader.TMP_DIR_SUFFIX) }
+            .firstOrNull { it.isDirectory }
     }
 }
