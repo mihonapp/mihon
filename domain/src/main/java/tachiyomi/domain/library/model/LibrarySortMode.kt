@@ -31,6 +31,9 @@ data class LibrarySort(
         data object ChapterFetchDate : Type(0b00011000)
         data object DateAdded : Type(0b00011100)
         data object TrackerMean : Type(0b00100000)
+        data object SourceRating : Type(0b00100100)
+        data object SourceRatingCount : Type(0b00101000)
+        data object UpdateError : Type(0b00101100)
         data object Random : Type(0b00111100)
 
         companion object {
@@ -78,6 +81,9 @@ data class LibrarySort(
                 Type.ChapterFetchDate,
                 Type.DateAdded,
                 Type.TrackerMean,
+                Type.SourceRating,
+                Type.SourceRatingCount,
+                Type.UpdateError,
                 Type.Random,
             )
         }
@@ -106,6 +112,9 @@ data class LibrarySort(
                     "CHAPTER_FETCH_DATE" -> Type.ChapterFetchDate
                     "DATE_ADDED" -> Type.DateAdded
                     "TRACKER_MEAN" -> Type.TrackerMean
+                    "SOURCE_RATING" -> Type.SourceRating
+                    "SOURCE_RATING_COUNT" -> Type.SourceRatingCount
+                    "UPDATE_ERROR" -> Type.UpdateError
                     "RANDOM" -> Type.Random
                     else -> Type.Alphabetical
                 }
@@ -128,6 +137,9 @@ data class LibrarySort(
             Type.ChapterFetchDate -> "CHAPTER_FETCH_DATE"
             Type.DateAdded -> "DATE_ADDED"
             Type.TrackerMean -> "TRACKER_MEAN"
+            Type.SourceRating -> "SOURCE_RATING"
+            Type.SourceRatingCount -> "SOURCE_RATING_COUNT"
+            Type.UpdateError -> "UPDATE_ERROR"
             Type.Random -> "RANDOM"
         }
         val direction = if (direction == Direction.Ascending) "ASCENDING" else "DESCENDING"

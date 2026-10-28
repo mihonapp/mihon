@@ -5,11 +5,14 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.produceState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +51,10 @@ abstract class SearchViewModel(
     }
 
     private val coroutineDispatcher = Dispatchers.IO.limitedParallelism(5)
+    private val chapterCountDispatcher = Dispatchers.IO.limitedParallelism(3)
     private var searchJob: Job? = null
+    private var chapterCountJob: Job? = null
+    private val chapterCountRequested = java.util.concurrent.ConcurrentHashMap.newKeySet<Long>()
 
     private val enabledLanguages = sourcePreferences.enabledLanguages.get()
     private val disabledSources = sourcePreferences.disabledSources.get()
@@ -124,6 +130,10 @@ abstract class SearchViewModel(
         preferences.globalSearchFilterState.toggle()
     }
 
+    fun toggleChapterCountSort() {
+        state.update { it.copy(sortByChapterCount = !it.sortByChapterCount) }
+    }
+
     fun search() {
         val query = state.value.searchQuery
         val sourceFilter = state.value.sourceFilter
@@ -137,6 +147,14 @@ abstract class SearchViewModel(
         this.lastSourceFilter = sourceFilter
 
         searchJob?.cancel()
+        if (!sameQuery) {
+            chapterCountJob?.cancel()
+            chapterCountRequested.clear()
+            chapterCountJob = SupervisorJob(viewModelScope.coroutineContext[Job])
+            state.update { it.copy(chapterCounts = emptyMap()) }
+        } else if (chapterCountJob == null) {
+            chapterCountJob = SupervisorJob(viewModelScope.coroutineContext[Job])
+        }
 
         searchJob = viewModelScope.launch(Dispatchers.IO) {
             val sources = getSelectedSources()
@@ -173,6 +191,7 @@ abstract class SearchViewModel(
 
                         if (isActive) {
                             updateItem(source, SearchItemResult.Success(titles))
+                            fetchChapterCounts(titles)
                         }
                     } catch (e: Exception) {
                         if (isActive) {
@@ -182,6 +201,37 @@ abstract class SearchViewModel(
                 }
             }
                 .awaitAll()
+        }
+    }
+
+    private fun fetchChapterCounts(titles: List<Manga>) {
+        val parent = chapterCountJob ?: return
+        titles.forEach { manga ->
+            if (!chapterCountRequested.add(manga.id)) return@forEach
+            viewModelScope.launch(chapterCountDispatcher + parent) {
+                val count = try {
+                    val source = sourceManager.get(manga.source)
+                    if (source == null) {
+                        -1
+                    } else {
+                        val updated = source.getMangaUpdate(
+                            manga = manga.toSManga(),
+                            chapters = emptyList(),
+                            fetchDetails = false,
+                            fetchChapters = true,
+                        )
+                        updated.chapters.size
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    -1
+                }
+                if (!isActive) return@launch
+                state.update { current ->
+                    current.copy(chapterCounts = current.chapterCounts + (manga.id to count))
+                }
+            }
         }
     }
 
@@ -220,6 +270,8 @@ abstract class SearchViewModel(
         val searchQuery: String? = null,
         val sourceFilter: SourceFilter = SourceFilter.PinnedOnly,
         val onlyShowHasResults: Boolean = false,
+        val sortByChapterCount: Boolean = false,
+        val chapterCounts: Map<Long, Int> = emptyMap(),
         val items: Map<Source, SearchItemResult> = mapOf(),
         val dialog: Dialog? = null,
     ) {

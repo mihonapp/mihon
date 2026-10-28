@@ -68,6 +68,9 @@
     <string name="action_sort_chapter_fetch_date">Chapter fetch date</string>
     <string name="action_sort_date_added">Date added</string>
     <string name="action_sort_tracker_score">Tracker score</string>
+    <string name="action_sort_source_rating">Source rating</string>
+    <string name="action_sort_source_rating_count">Rating count</string>
+    <string name="action_sort_update_error">Update errors</string>
     <string name="action_sort_random">Random</string>
     <string name="action_search">Search</string>
     <string name="action_search_hint">Search…</string>
@@ -123,6 +126,8 @@
     <string name="action_display_unread_badge">Unread chapters</string>
     <string name="action_display_local_badge">Local source</string>
     <string name="action_display_language_badge">Language</string>
+    <string name="action_display_update_errors">Show errors</string>
+    <string name="action_display_source_rating">Rating and rating count</string>
     <string name="action_display_show_tabs">Show category tabs</string>
     <string name="action_display_show_number_of_items">Show number of items</string>
     <string name="action_display_show_continue_reading_button">Continue reading button</string>
@@ -568,6 +573,8 @@
     <string name="pref_category_auto_download">Auto-download</string>
     <string name="pref_download_new">Download new chapters</string>
     <string name="pref_download_new_unread_chapters_only">Skip downloading duplicate read chapters</string>
+    <string name="pref_download_new_reading_window">Only while reading</string>
+    <string name="pref_download_new_reading_window_info">Downloads a new chapter only when it is within this many unread chapters after the furthest chapter you have read or started.</string>
     <string name="pref_download_new_categories_details">Entries in excluded categories will not be downloaded even if they are also in included categories.</string>
     <string name="download_ahead">Download ahead</string>
     <string name="auto_download_while_reading">Auto download while reading</string>
@@ -741,6 +748,7 @@
     <string name="popular">Popular</string>
     <string name="browse">Browse</string>
     <string name="has_results">Has results</string>
+    <string name="search_sort_by_chapter_count">By chapter count</string>
     <string name="local_source_help_guide">Local source guide</string>
     <string name="chapter_not_found">Chapter not found</string>
     <string name="local_invalid_format">Invalid chapter format</string>

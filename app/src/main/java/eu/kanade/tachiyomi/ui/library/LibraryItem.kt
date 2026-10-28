@@ -10,6 +10,7 @@ data class LibraryItem(
     val sourceName: String,
     val sourceLanguage: String,
     val badges: Badges,
+    val hasUpdateError: Boolean = false,
 ) {
     val id: Long = libraryManga.id
 

@@ -52,6 +52,15 @@ class DownloadPreferences(
         false,
     )
 
+    /**
+     * How many unread chapters after the current reading position may be auto-downloaded.
+     * `0` disables the limit.
+     */
+    val downloadNewReadingWindow: Preference<Int> = preferenceStore.getInt(
+        "download_new_reading_window",
+        5,
+    )
+
     val parallelSourceLimit: Preference<Int> = preferenceStore.getInt("download_parallel_source_limit", 5)
 
     val parallelPageLimit: Preference<Int> = preferenceStore.getInt("download_parallel_page_limit", 5)

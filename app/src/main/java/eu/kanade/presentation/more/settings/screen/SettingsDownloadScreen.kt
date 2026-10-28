@@ -122,6 +122,7 @@ object SettingsDownloadScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val downloadNewChaptersPref = downloadPreferences.downloadNewChapters
         val downloadNewUnreadChaptersOnlyPref = downloadPreferences.downloadNewUnreadChaptersOnly
+        val downloadNewReadingWindowPref = downloadPreferences.downloadNewReadingWindow
         val downloadNewChapterCategoriesPref = downloadPreferences.downloadNewChapterCategories
         val downloadNewChapterCategoriesExcludePref = downloadPreferences.downloadNewChapterCategoriesExclude
 
@@ -149,27 +150,55 @@ object SettingsDownloadScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_auto_download),
-            preferenceItems = listOf(
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = downloadNewChaptersPref,
-                    title = stringResource(MR.strings.pref_download_new),
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    preference = downloadNewUnreadChaptersOnlyPref,
-                    title = stringResource(MR.strings.pref_download_new_unread_chapters_only),
-                    visible = downloadNewChapters,
-                ),
-                Preference.PreferenceItem.TextPreference(
-                    title = stringResource(MR.strings.categories),
-                    subtitle = getCategoriesLabel(
-                        allCategories = allCategories,
-                        included = included,
-                        excluded = excluded,
+            preferenceItems = buildList {
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = downloadNewChaptersPref,
+                        title = stringResource(MR.strings.pref_download_new),
                     ),
-                    visible = downloadNewChapters,
-                    onClick = { showDialog = true },
-                ),
-            ),
+                )
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = downloadNewUnreadChaptersOnlyPref,
+                        title = stringResource(MR.strings.pref_download_new_unread_chapters_only),
+                        visible = downloadNewChapters,
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.ListPreference(
+                        preference = downloadNewReadingWindowPref,
+                        entries = listOf(0, 2, 3, 5, 10)
+                            .associateWith {
+                                if (it == 0) {
+                                    stringResource(MR.strings.disabled)
+                                } else {
+                                    pluralStringResource(MR.plurals.next_unread_chapters, count = it, it)
+                                }
+                            },
+                        title = stringResource(MR.strings.pref_download_new_reading_window),
+                        visible = downloadNewChapters,
+                    ),
+                )
+                if (downloadNewChapters) {
+                    add(
+                        Preference.PreferenceItem.InfoPreference(
+                            stringResource(MR.strings.pref_download_new_reading_window_info),
+                        ),
+                    )
+                }
+                add(
+                    Preference.PreferenceItem.TextPreference(
+                        title = stringResource(MR.strings.categories),
+                        subtitle = getCategoriesLabel(
+                            allCategories = allCategories,
+                            included = included,
+                            excluded = excluded,
+                        ),
+                        visible = downloadNewChapters,
+                        onClick = { showDialog = true },
+                    ),
+                )
+            },
         )
     }
 
