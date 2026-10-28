@@ -164,6 +164,8 @@ class MainActivity : BaseActivity() {
 
     internal var libraryKeyHandler: ((KeyEvent) -> Boolean)? = null
 
+    internal var chapterKeyHandler: ((KeyEvent) -> Boolean)? = null
+
     init {
         registerSecureActivity(this)
     }
@@ -333,6 +335,7 @@ class MainActivity : BaseActivity() {
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (navigator?.lastItem == HomeScreen && libraryKeyHandler?.invoke(event) == true) return true
+        if (navigator?.lastItem is MangaScreen && chapterKeyHandler?.invoke(event) == true) return true
         return super.dispatchKeyEvent(event)
     }
 
