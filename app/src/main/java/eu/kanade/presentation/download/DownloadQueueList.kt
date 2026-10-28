@@ -333,7 +333,7 @@ private fun ReorderableCollectionItemScope.DownloadQueueItem(
             ) {
                 Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)) {
                     Text(
-                        text = download.manga.title,
+                        text = download.manga.customTitle?.takeIf { it.isNotBlank() } ?: download.manga.title,
                         modifier = Modifier.weight(1f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,

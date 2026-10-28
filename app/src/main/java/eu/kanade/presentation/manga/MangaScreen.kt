@@ -112,6 +112,7 @@ fun MangaScreen(
     onEditFetchIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onEditCustomTitleClicked: () -> Unit,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -162,6 +163,7 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onEditNotesClicked = onEditNotesClicked,
+            onEditCustomTitleClicked = onEditCustomTitleClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
             onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -199,6 +201,7 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onEditNotesClicked = onEditNotesClicked,
+            onEditCustomTitleClicked = onEditCustomTitleClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
             onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -246,6 +249,7 @@ private fun MangaScreenSmallImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onEditCustomTitleClicked: () -> Unit,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -292,7 +296,7 @@ private fun MangaScreenSmallImpl(
                 label = "Top Bar Background",
             )
             MangaToolbar(
-                title = state.manga.title,
+                title = state.manga.customTitle?.takeIf { it.isNotBlank() } ?: state.manga.title,
                 hasFilters = state.filterActive,
                 navigateUp = navigateUp,
                 onClickFilter = onFilterClicked,
@@ -302,6 +306,7 @@ private fun MangaScreenSmallImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
+                onClickEditCustomTitle = onEditCustomTitleClicked,
                 actionModeCounter = state.selectedChapters.size,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 onSelectAll = { onAllChapterSelected(true) },
@@ -405,6 +410,7 @@ private fun MangaScreenSmallImpl(
                         ExpandableMangaDescription(
                             defaultExpandState = state.isFromSource,
                             description = state.manga.description,
+                            originalTitle = state.manga.title.takeIf { !state.manga.customTitle.isNullOrBlank() },
                             tagsProvider = { state.manga.genre },
                             notes = state.manga.notes,
                             onTagSearch = onTagSearch,
@@ -478,6 +484,7 @@ fun MangaScreenLargeImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onEditCustomTitleClicked: () -> Unit,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -517,7 +524,7 @@ fun MangaScreenLargeImpl(
         topBar = {
             MangaToolbar(
                 modifier = Modifier.onSizeChanged { topBarHeight = it.height },
-                title = state.manga.title,
+                title = state.manga.customTitle?.takeIf { it.isNotBlank() } ?: state.manga.title,
                 hasFilters = state.filterActive,
                 navigateUp = navigateUp,
                 onClickFilter = onFilterButtonClicked,
@@ -527,6 +534,7 @@ fun MangaScreenLargeImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
+                onClickEditCustomTitle = onEditCustomTitleClicked,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 actionModeCounter = state.selectedChapters.size,
                 onSelectAll = { onAllChapterSelected(true) },
@@ -617,6 +625,7 @@ fun MangaScreenLargeImpl(
                         ExpandableMangaDescription(
                             defaultExpandState = true,
                             description = state.manga.description,
+                            originalTitle = state.manga.title.takeIf { !state.manga.customTitle.isNullOrBlank() },
                             tagsProvider = { state.manga.genre },
                             notes = state.manga.notes,
                             onTagSearch = onTagSearch,
