@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
+import com.hippo.unifile.UniFile
 import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.data.cache.ChapterCache
 import java.io.FileNotFoundException
+import java.io.InputStream
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -28,12 +30,27 @@ internal class HttpPageLoader(
     private val chapterCache: ChapterCache,
     private val appScope: CoroutineScope,
     private val canLoadAhead: () -> Boolean,
+    /** Temporary directory of a chapter download that hasn't finished yet, if there is one. */
+    private val partialChapterDir: UniFile? = null,
 ) : PageLoader() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val chunkProcessLock = Any()
     private var chunkProcessJob: Job? = null
     private val downloadJobs = ConcurrentHashMap<Int, Job>()
+
+    /**
+     * Pages the downloader already saved, keyed by their zero-based index. Images split into
+     * multiple files are skipped, because a reader page is a single image.
+     */
+    private val downloadedPages: Map<Int, UniFile> by lazy {
+        partialChapterDir?.listFiles().orEmpty()
+            .mapNotNull { file ->
+                val index = pageIndexFromFileName(file.name.orEmpty()) ?: return@mapNotNull null
+                if (file.isFile) index to file else null
+            }
+            .toMap()
+    }
 
     override var isLocal: Boolean = false
 
@@ -63,7 +80,9 @@ internal class HttpPageLoader(
         val imageUrl = page.imageUrl
 
         // Check if the image has been deleted
-        if (page.status == Page.State.Ready && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
+        if (page.status == Page.State.Ready && imageUrl != null &&
+            !chapterCache.isImageInCache(imageUrl) && !isDownloaded(page)
+        ) {
             page.status = Page.State.Queue
         }
 
@@ -213,12 +232,23 @@ internal class HttpPageLoader(
 
     /**
      * Loads the page, retrieving the image URL and downloading the image if necessary.
-     * Downloaded images are stored in the chapter cache.
+     * Pages already saved by the downloader are used from disk; the rest are stored in the
+     * chapter cache.
      *
      * @param page the page whose source image has to be downloaded.
      */
     private suspend fun internalLoadPage(page: ReaderPage, force: Boolean = false) {
         try {
+            // Pages the downloader already saved don't need an image URL or a network request
+            if (!force) {
+                downloadedPages[page.index]?.takeIf { it.exists() }?.let { file ->
+                    page.downloadStream = null
+                    page.stream = { page.openStream { file.openInputStream() } }
+                    page.status = Page.State.Ready
+                    return
+                }
+            }
+
             if (page.imageUrl.isNullOrEmpty()) {
                 page.status = Page.State.LoadPage
                 page.imageUrl = source.getImageUrl(page)
@@ -238,16 +268,7 @@ internal class HttpPageLoader(
             }
 
             page.downloadStream = null
-            page.stream = {
-                try {
-                    file.inputStream()
-                } catch (e: FileNotFoundException) {
-                    // Gone from the cache since, so it's fetched again and shown once it's back
-                    page.status = Page.State.Queue
-                    launchLoadOnce(page)
-                    throw e
-                }
-            }
+            page.stream = { page.openStream { file.inputStream() } }
             page.status = Page.State.Ready
         } catch (e: Throwable) {
             page.downloadStream = null
@@ -260,6 +281,32 @@ internal class HttpPageLoader(
             page.status = Page.State.Error(e)
         }
     }
+
+    private fun isDownloaded(page: ReaderPage): Boolean = downloadedPages[page.index]?.exists() == true
+
+    /**
+     * Opens a page's image, queueing the page again if its file disappeared since it was loaded.
+     */
+    private fun ReaderPage.openStream(open: () -> InputStream): InputStream {
+        return try {
+            open()
+        } catch (e: FileNotFoundException) {
+            status = Page.State.Queue
+            launchLoadOnce(this)
+            throw e
+        }
+    }
+}
+
+/**
+ * Returns the zero-based page index encoded in a downloaded page's file name (`001.jpg` is page
+ * 0), or null when the file isn't a whole page (an in-progress, split, or metadata file).
+ */
+internal fun pageIndexFromFileName(fileName: String): Int? {
+    if (fileName.endsWith(".tmp")) return null
+    val number = fileName.takeWhile { it in '0'..'9' }
+    if (number.isEmpty() || fileName.getOrNull(number.length) != '.') return null
+    return number.toIntOrNull()?.minus(1)
 }
 
 private const val LIMITED_PAGES_AHEAD = 4
