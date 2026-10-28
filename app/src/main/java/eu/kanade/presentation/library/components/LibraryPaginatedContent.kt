@@ -1,14 +1,22 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -29,6 +38,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
@@ -38,7 +48,11 @@ import eu.kanade.tachiyomi.ui.library.LibraryItem
 import eu.kanade.tachiyomi.ui.library.LibraryNavigation
 import eu.kanade.tachiyomi.ui.library.LibraryPageInfo
 import kotlinx.coroutines.flow.filterNotNull
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.KeyboardArrowDown
+import mihon.icons.materialsymbols.rounded.KeyboardArrowUp
 import tachiyomi.domain.library.model.LibraryDisplayMode
+import tachiyomi.domain.library.model.LibraryPageButtons
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import kotlin.math.abs
@@ -56,6 +70,8 @@ internal fun LibraryPaginatedContent(
     requestedRows: Int,
     onPageRowsChange: (Int) -> Unit,
     stretchPageSpacing: Boolean,
+    buttons: LibraryPageButtons,
+    showSlider: Boolean,
     contentPadding: PaddingValues,
     searchQuery: String?,
     hasActiveFilters: Boolean,
@@ -64,10 +80,10 @@ internal fun LibraryPaginatedContent(
 ) {
     val isList = displayMode == LibraryDisplayMode.List
     var anchorIndex by rememberSaveable(searchQuery, hasActiveFilters) { mutableIntStateOf(0) }
-    var pageSize by remember(displayMode, columns, requestedRows) { mutableIntStateOf(0) }
+    var pageSize by remember(displayMode, columns, requestedRows, buttons) { mutableIntStateOf(0) }
     var rowsPerPage by remember { mutableIntStateOf(0) }
-    var maximumRows by remember(displayMode, columns, requestedRows) { mutableIntStateOf(1) }
-    var canStretchSpacing by remember(displayMode, columns, requestedRows) { mutableStateOf(false) }
+    var maximumRows by remember(displayMode, columns, requestedRows, buttons) { mutableIntStateOf(1) }
+    var canStretchSpacing by remember(displayMode, columns, requestedRows, buttons) { mutableStateOf(false) }
     val density = LocalDensity.current
     var viewport by remember { mutableStateOf(IntSize.Zero) }
     var maxItemWidth by remember(viewport, displayMode, columns, requestedRows, density) { mutableStateOf(Dp.Infinity) }
@@ -85,7 +101,7 @@ internal fun LibraryPaginatedContent(
     }
     val minimumCoverHeight = with(density) { 48.dp.roundToPx() }
 
-    LaunchedEffect(viewport, displayMode, columns, requestedRows, density) {
+    LaunchedEffect(viewport, displayMode, columns, requestedRows, buttons, density) {
         if (isList) listState.scrollToItem(0) else gridState.scrollToItem(0)
         snapshotFlow {
             if (isList) {
@@ -146,6 +162,8 @@ internal fun LibraryPaginatedContent(
         val next = libraryPageStart(currentPageStart() + direction * size, size, items.size)
         anchorIndex = next
     }
+    val currentOnPageChange by rememberUpdatedState(onPageChange)
+    val handler: (Int) -> Unit = remember { { currentOnPageChange(it) } }
     SideEffect {
         if (active && pageSize > 0) {
             navigation.pageInfo = LibraryPageInfo(page, pageCount, maximumRows, canStretchSpacing)
@@ -154,41 +172,129 @@ internal fun LibraryPaginatedContent(
         }
     }
     DisposableEffect(navigation, active) {
+        if (active) navigation.onPageChange = handler
         onDispose {
-            if (active) navigation.pageInfo = null
+            if (navigation.onPageChange === handler) {
+                navigation.onPageChange = null
+                navigation.pageInfo = null
+            }
         }
     }
 
+    val onClickPageNumber = { navigation.showPageDialog = true }
     val swipeThreshold = with(density) { 48.dp.toPx() }
     Column(Modifier.fillMaxSize().padding(contentPadding)) {
         if (!searchQuery.isNullOrEmpty()) {
             GlobalSearchItem(searchQuery = searchQuery, onClick = onGlobalSearchClicked)
         }
-        Box(
-            Modifier.weight(1f)
-                .onSizeChanged { viewport = it }
-                .alpha(if (pageSize == 0) 0f else 1f)
-                .pointerInput(swipeThreshold, size, items) {
-                    var distance = 0f
-                    detectVerticalDragGestures(
-                        onDragStart = { distance = 0f },
-                        onVerticalDrag = { change, amount ->
-                            change.consume()
-                            distance += amount
+        Row(Modifier.weight(1f)) {
+            if (buttons == LibraryPageButtons.Left) {
+                LibraryPageControls(page, pageCount, true, showSlider, onPageChange, onClickPageNumber)
+            }
+            Column(Modifier.weight(1f).fillMaxHeight()) {
+                if (buttons == LibraryPageButtons.Top) {
+                    LibraryPageControls(page, pageCount, false, showSlider, onPageChange, onClickPageNumber)
+                }
+                Box(
+                    Modifier.weight(1f)
+                        .onSizeChanged { viewport = it }
+                        .alpha(if (pageSize == 0) 0f else 1f)
+                        .pointerInput(swipeThreshold) {
+                            var distance = 0f
+                            detectVerticalDragGestures(
+                                onDragStart = { distance = 0f },
+                                onVerticalDrag = { change, amount ->
+                                    change.consume()
+                                    distance += amount
+                                },
+                                onDragEnd = {
+                                    if (abs(distance) >= swipeThreshold) {
+                                        currentOnPageChange(if (distance < 0) 1 else -1)
+                                    }
+                                },
+                            )
                         },
-                        onDragEnd = {
-                            if (abs(distance) >= swipeThreshold) {
-                                onPageChange(if (distance < 0) 1 else -1)
-                            }
-                        },
+                ) {
+                    content(
+                        items.subList(start, (start + size).coerceAtMost(items.size)),
+                        maxItemWidth,
+                        if (stretchPageSpacing && canStretchSpacing) rowsPerPage else 0,
                     )
-                },
+                }
+                if (buttons == LibraryPageButtons.Bottom) {
+                    LibraryPageControls(page, pageCount, false, showSlider, onPageChange, onClickPageNumber)
+                }
+            }
+            if (buttons == LibraryPageButtons.Right) {
+                LibraryPageControls(page, pageCount, true, showSlider, onPageChange, onClickPageNumber)
+            }
+        }
+    }
+}
+
+@Composable
+private fun LibraryPageControls(
+    page: Int,
+    pageCount: Int,
+    vertical: Boolean,
+    showSlider: Boolean,
+    onPageChange: (Int) -> Unit,
+    onClickPageNumber: () -> Unit,
+) {
+    var selectedPage by remember(page, pageCount) { mutableIntStateOf(page) }
+    val modifier = if (vertical) {
+        Modifier.fillMaxHeight().width(72.dp).padding(horizontal = 4.dp)
+    } else {
+        Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+    }
+    if (showSlider) {
+        LibraryPageSlider(
+            page = selectedPage,
+            pageCount = pageCount,
+            onValueChange = { selectedPage = it },
+            onValueChangeFinished = { onPageChange(selectedPage - page) },
+            vertical = vertical,
+            modifier = modifier.padding(
+                if (vertical) PaddingValues(vertical = 16.dp) else PaddingValues(horizontal = 24.dp),
+            ),
+        )
+        return
+    }
+    val previous: @Composable () -> Unit = {
+        IconButton(
+            onClick = { onPageChange(-1) },
+            enabled = page > 0,
+            modifier = Modifier.size(56.dp),
         ) {
-            content(
-                items.subList(start, (start + size).coerceAtMost(items.size)),
-                maxItemWidth,
-                if (stretchPageSpacing && canStretchSpacing) rowsPerPage else 0,
-            )
+            Icon(MaterialSymbols.Rounded.KeyboardArrowUp, stringResource(MR.strings.spen_previous_page))
+        }
+    }
+    val next: @Composable () -> Unit = {
+        IconButton(
+            onClick = { onPageChange(1) },
+            enabled = page < pageCount - 1,
+            modifier = Modifier.size(56.dp),
+        ) {
+            Icon(MaterialSymbols.Rounded.KeyboardArrowDown, stringResource(MR.strings.spen_next_page))
+        }
+    }
+    if (vertical) {
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) { previous() }
+            LibraryPageNumber(page, pageCount, onClick = onClickPageNumber)
+            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) { next() }
+        }
+    } else {
+        Row(
+            modifier = modifier.height(56.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) { previous() }
+            LibraryPageNumber(page, pageCount, onClick = onClickPageNumber)
+            Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) { next() }
         }
     }
 }
@@ -199,9 +305,11 @@ internal fun LibraryPageNumber(
     pageCount: Int,
     compact: Boolean = false,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
 ) {
     val description = stringResource(MR.strings.library_page_number, page + 1, pageCount)
-    val textModifier = if (compact) Modifier.padding(horizontal = 8.dp, vertical = 4.dp) else modifier
+    val numberModifier = if (onClick != null) modifier.clickable(role = Role.Button, onClick = onClick) else modifier
+    val textModifier = if (compact) Modifier.padding(horizontal = 8.dp, vertical = 4.dp) else numberModifier
     val number: @Composable () -> Unit = {
         Text(
             text = "${page + 1} / $pageCount",
@@ -212,7 +320,7 @@ internal fun LibraryPageNumber(
     }
     if (compact) {
         Surface(
-            modifier = modifier,
+            modifier = numberModifier,
             shape = MaterialTheme.shapes.small,
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
         ) {

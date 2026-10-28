@@ -32,6 +32,8 @@ import mihon.icons.materialsymbols.rounded.Refresh
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
+import tachiyomi.domain.library.model.LibraryNavigationMode
+import tachiyomi.domain.library.model.LibraryPageButtons
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -39,6 +41,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.BaseSortItem
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
+import tachiyomi.presentation.core.components.SelectItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.components.SortItem
@@ -335,8 +338,17 @@ private fun PaginationSettings(
 ) {
     val paginated by preferences.paginated.collectAsState()
     val rows by preferences.pageRows.collectAsState()
+    val buttons by preferences.pageButtons.collectAsState()
+    val navigation by preferences.pageNavigation.collectAsState()
     val maximum = maxPageRows.coerceAtLeast(1)
     val rowValue = if (rows < 0) maximum else rows.coerceAtMost(maximum)
+    val buttonLabels = listOf(
+        MR.strings.library_page_buttons_bottom,
+        MR.strings.library_page_buttons_top,
+        MR.strings.nav_zone_left,
+        MR.strings.nav_zone_right,
+    ).map { stringResource(it) }
+
     AdaptiveSheet(onDismissRequest = onDismissRequest) {
         Column(Modifier.verticalScroll(rememberScrollState())) {
             HeadingItem(MR.strings.library_pagination)
@@ -354,6 +366,24 @@ private fun PaginationSettings(
                     pref = preferences.stretchPageSpacing,
                     enabled = canStretchPageSpacing,
                 )
+                SelectItem(
+                    label = stringResource(MR.strings.pref_reader_navigation),
+                    options = arrayOf(
+                        stringResource(MR.strings.library_page_buttons_hidden),
+                        stringResource(MR.strings.library_page_indicator_bar),
+                        stringResource(MR.strings.library_page_buttons),
+                    ),
+                    selectedIndex = navigation.ordinal,
+                    onSelect = { preferences.pageNavigation.set(LibraryNavigationMode.entries[it]) },
+                )
+                if (navigation != LibraryNavigationMode.Hidden) {
+                    SelectItem(
+                        label = stringResource(MR.strings.library_page_position),
+                        options = buttonLabels.toTypedArray(),
+                        selectedIndex = buttons.takeUnless { it == LibraryPageButtons.Hidden }?.ordinal ?: 0,
+                        onSelect = { preferences.pageButtons.set(LibraryPageButtons.entries[it]) },
+                    )
+                }
                 Text(
                     text = stringResource(MR.strings.library_pagination_summary),
                     style = MaterialTheme.typography.bodySmall,

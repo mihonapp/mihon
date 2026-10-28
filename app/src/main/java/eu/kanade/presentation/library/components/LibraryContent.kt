@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.library.model.LibraryPageButtons
 import tachiyomi.presentation.core.components.material.PullRefresh
 import kotlin.time.Duration.Companion.seconds
 
@@ -36,6 +37,8 @@ fun LibraryContent(
     pageRows: Int,
     stretchPageSpacing: Boolean,
     onPageRowsChange: (Int) -> Unit,
+    pageButtons: LibraryPageButtons,
+    pageSlider: Boolean,
     categories: List<Category>,
     searchQuery: String?,
     selection: Set<Long>,
@@ -85,12 +88,13 @@ fun LibraryContent(
                         }
                     },
                 )
-                if (paginated) {
+                if (paginated && pageButtons == LibraryPageButtons.Hidden) {
                     navigation.pageInfo?.let {
                         LibraryPageNumber(
                             it.index,
                             it.count,
                             compact = true,
+                            onClick = { navigation.showPageDialog = true },
                             modifier = Modifier.padding(horizontal = 8.dp),
                         )
                     }
@@ -117,6 +121,8 @@ fun LibraryContent(
                 pageRows = pageRows,
                 stretchPageSpacing = stretchPageSpacing,
                 onPageRowsChange = onPageRowsChange,
+                pageButtons = pageButtons,
+                pageSlider = pageSlider,
                 state = pagerState,
                 contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
                 hasActiveFilters = hasActiveFilters,

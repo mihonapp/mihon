@@ -1,5 +1,6 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.LocalContentColor
@@ -40,11 +41,14 @@ fun LibraryToolbar(
     searchQuery: String?,
     onSearchQueryChange: (String?) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
+    searchInteractionSource: MutableInteractionSource,
+    onClickPageNumber: () -> Unit,
     pagination: LibraryPageInfo? = null,
 ) = when {
     selectedCount > 0 -> LibrarySelectionToolbar(
         selectedCount = selectedCount,
         pagination = pagination,
+        onClickPageNumber = onClickPageNumber,
         onClickUnselectAll = onClickUnselectAll,
         onClickSelectAll = onClickSelectAll,
         onClickInvertSelection = onClickInvertSelection,
@@ -59,7 +63,9 @@ fun LibraryToolbar(
         onClickGlobalUpdate = onClickGlobalUpdate,
         onClickOpenRandomManga = onClickOpenRandomManga,
         scrollBehavior = scrollBehavior,
+        searchInteractionSource = searchInteractionSource,
         pagination = pagination,
+        onClickPageNumber = onClickPageNumber,
     )
 }
 
@@ -74,10 +80,13 @@ private fun LibraryRegularToolbar(
     onClickGlobalUpdate: () -> Unit,
     onClickOpenRandomManga: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
+    searchInteractionSource: MutableInteractionSource,
     pagination: LibraryPageInfo?,
+    onClickPageNumber: () -> Unit,
 ) {
     val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
     SearchToolbar(
+        interactionSource = searchInteractionSource,
         titleContent = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -93,7 +102,7 @@ private fun LibraryRegularToolbar(
                         fontSize = 14.sp,
                     )
                 }
-                pagination?.let { LibraryPageNumber(it.index, it.count, compact = true) }
+                pagination?.let { LibraryPageNumber(it.index, it.count, compact = true, onClick = onClickPageNumber) }
             }
         },
         searchQuery = searchQuery,
@@ -131,6 +140,7 @@ private fun LibraryRegularToolbar(
 private fun LibrarySelectionToolbar(
     selectedCount: Int,
     pagination: LibraryPageInfo?,
+    onClickPageNumber: () -> Unit,
     onClickUnselectAll: () -> Unit,
     onClickSelectAll: () -> Unit,
     onClickInvertSelection: () -> Unit,
@@ -139,7 +149,7 @@ private fun LibrarySelectionToolbar(
         titleContent = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "$selectedCount")
-                pagination?.let { LibraryPageNumber(it.index, it.count, compact = true) }
+                pagination?.let { LibraryPageNumber(it.index, it.count, compact = true, onClick = onClickPageNumber) }
             }
         },
         actions = {

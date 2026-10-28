@@ -27,6 +27,7 @@ import eu.kanade.tachiyomi.ui.library.LibraryNavigation
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.library.model.LibraryPageButtons
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.util.plus
@@ -38,6 +39,8 @@ fun LibraryPager(
     pageRows: Int,
     stretchPageSpacing: Boolean,
     onPageRowsChange: (Int) -> Unit,
+    pageButtons: LibraryPageButtons,
+    pageSlider: Boolean,
     state: PagerState,
     contentPadding: PaddingValues,
     hasActiveFilters: Boolean,
@@ -90,6 +93,15 @@ fun LibraryPager(
 
         val listState = rememberLazyListState()
         val gridState = rememberLazyGridState()
+        if (!paginated) {
+            LibraryScrollNavigation(
+                navigation = navigation,
+                listState = listState,
+                gridState = gridState,
+                isList = displayMode == LibraryDisplayMode.List,
+                active = state.currentPage == page,
+            )
+        }
 
         val content: @Composable (List<LibraryItem>, Dp, Int) -> Unit = {
                 displayedItems,
@@ -163,6 +175,8 @@ fun LibraryPager(
                 requestedRows = pageRows,
                 onPageRowsChange = onPageRowsChange,
                 stretchPageSpacing = stretchPageSpacing,
+                buttons = pageButtons,
+                showSlider = pageSlider,
                 contentPadding = contentPadding,
                 searchQuery = searchQuery,
                 hasActiveFilters = hasActiveFilters,

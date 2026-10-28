@@ -6,6 +6,19 @@ import org.junit.jupiter.api.Test
 class LibraryPaginationTest {
 
     @Test
+    fun `jump input accepts only existing page numbers`() {
+        libraryPageIndex("1", 24) shouldBe 0
+        libraryPageIndex("24", 24) shouldBe 23
+        libraryPageIndex("0", 24) shouldBe null
+        libraryPageIndex("25", 24) shouldBe null
+        libraryPageIndex("", 24) shouldBe null
+        libraryPageIndex("-1", 24) shouldBe null
+        libraryPageIndex("page 2", 24) shouldBe null
+        libraryPageIndex("99999999999999999999", 24) shouldBe null
+        libraryPageIndex("1", 1) shouldBe 0
+    }
+
+    @Test
     fun `automatic capacity excludes partial rows and includes spacing`() {
         libraryPageCapacity(height = 350, rowHeight = 100, spacing = 4, columns = 3, requestedRows = 0) shouldBe 9
         libraryPageCapacity(height = 308, rowHeight = 100, spacing = 4, columns = 3, requestedRows = 0) shouldBe 9

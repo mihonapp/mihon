@@ -375,6 +375,7 @@ object SettingsReaderScreen : SearchableSettings {
 
     @Composable
     private fun getNavigationGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val libraryPreferences = LocalContext.current.appGraph.libraryPreferences
         val readWithVolumeKeysPref = readerPreferences.readWithVolumeKeys
         val readWithVolumeKeys by readWithVolumeKeysPref.collectAsState()
 
@@ -391,6 +392,10 @@ object SettingsReaderScreen : SearchableSettings {
                     preference = readerPreferences.readWithVolumeKeysInverted,
                     title = stringResource(MR.strings.pref_read_with_volume_keys_inverted),
                     visible = readWithVolumeKeys,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = libraryPreferences.scrollWithVolumeKeys,
+                    title = stringResource(MR.strings.pref_library_volume_keys),
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
                     preference = readerPreferences.verticalNavigator,
