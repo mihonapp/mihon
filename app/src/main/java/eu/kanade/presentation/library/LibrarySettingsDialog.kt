@@ -9,17 +9,25 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.library.LibrarySettingsViewModel
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.KeyboardArrowRight
 import mihon.icons.materialsymbols.rounded.Refresh
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.category.model.Category
@@ -43,6 +51,8 @@ fun LibrarySettingsDialog(
     onDismissRequest: () -> Unit,
     viewModel: LibrarySettingsViewModel,
     category: Category?,
+    maxPageRows: Int = 10,
+    canStretchPageSpacing: Boolean = false,
 ) {
     TabbedDialog(
         onDismissRequest = onDismissRequest,
@@ -67,6 +77,8 @@ fun LibrarySettingsDialog(
                 )
                 2 -> DisplayPage(
                     viewModel = viewModel,
+                    maxPageRows = maxPageRows,
+                    canStretchPageSpacing = canStretchPageSpacing,
                 )
             }
         }
@@ -227,6 +239,8 @@ private val displayModes = listOf(
 @Composable
 private fun ColumnScope.DisplayPage(
     viewModel: LibrarySettingsViewModel,
+    maxPageRows: Int,
+    canStretchPageSpacing: Boolean,
 ) {
     val displayMode by viewModel.libraryPreferences.displayMode.collectAsState()
     SettingsChipRow(MR.strings.action_display_mode) {
@@ -295,4 +309,63 @@ private fun ColumnScope.DisplayPage(
         label = stringResource(MR.strings.action_display_show_number_of_items),
         pref = viewModel.libraryPreferences.categoryNumberOfItems,
     )
+
+    var showPagination by rememberSaveable { mutableStateOf(false) }
+    BaseSortItem(
+        label = stringResource(MR.strings.library_pagination),
+        icon = MaterialSymbols.Rounded.KeyboardArrowRight,
+        onClick = { showPagination = true },
+    )
+    if (showPagination) {
+        PaginationSettings(
+            viewModel.libraryPreferences,
+            maxPageRows,
+            canStretchPageSpacing,
+            onDismissRequest = { showPagination = false },
+        )
+    }
+}
+
+@Composable
+private fun PaginationSettings(
+    preferences: LibraryPreferences,
+    maxPageRows: Int,
+    canStretchPageSpacing: Boolean,
+    onDismissRequest: () -> Unit,
+) {
+    val paginated by preferences.paginated.collectAsState()
+    val rows by preferences.pageRows.collectAsState()
+    val maximum = maxPageRows.coerceAtLeast(1)
+    val rowValue = if (rows < 0) maximum else rows.coerceAtMost(maximum)
+    AdaptiveSheet(onDismissRequest = onDismissRequest) {
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            HeadingItem(MR.strings.library_pagination)
+            CheckboxItem(stringResource(MR.strings.library_paginated), preferences.paginated)
+            if (paginated) {
+                SliderItem(
+                    value = rowValue,
+                    valueRange = 0..maximum,
+                    label = stringResource(MR.strings.library_page_rows),
+                    valueString = if (rowValue == 0) stringResource(MR.strings.label_auto) else rowValue.toString(),
+                    onChange = preferences.pageRows::set,
+                )
+                CheckboxItem(
+                    label = stringResource(MR.strings.library_stretch_page_spacing),
+                    pref = preferences.stretchPageSpacing,
+                    enabled = canStretchPageSpacing,
+                )
+                Text(
+                    text = stringResource(MR.strings.library_pagination_summary),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                )
+            }
+            TextButton(
+                onClick = onDismissRequest,
+                modifier = Modifier.align(Alignment.End).padding(horizontal = 16.dp, vertical = 8.dp),
+            ) {
+                Text(stringResource(MR.strings.action_close))
+            }
+        }
+    }
 }

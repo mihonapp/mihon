@@ -2,15 +2,22 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.MangaCover
 
 @Composable
 internal fun LibraryCompactGrid(
+    state: LazyGridState,
+    userScrollEnabled: Boolean = true,
+    stretchRows: Int = 0,
+    stretchColumns: Boolean = false,
+    maxItemWidth: Dp = Dp.Infinity,
     items: List<LibraryItem>,
     showTitle: Boolean,
     columns: Int,
@@ -23,6 +30,10 @@ internal fun LibraryCompactGrid(
     onGlobalSearchClicked: () -> Unit,
 ) {
     LazyLibraryGrid(
+        state = state,
+        userScrollEnabled = userScrollEnabled,
+        stretchRows = stretchRows,
+        stretchColumns = stretchColumns,
         modifier = Modifier.fillMaxSize(),
         columns = columns,
         contentPadding = contentPadding,
@@ -35,6 +46,7 @@ internal fun LibraryCompactGrid(
         ) { libraryItem ->
             val manga = libraryItem.libraryManga.manga
             MangaCompactGridItem(
+                maxWidth = maxItemWidth,
                 isSelected = manga.id in selection,
                 title = manga.title.takeIf { showTitle },
                 coverData = MangaCover(

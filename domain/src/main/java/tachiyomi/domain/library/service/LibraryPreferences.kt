@@ -37,6 +37,12 @@ class LibraryPreferences(
 
     val landscapeColumns: Preference<Int> = preferenceStore.getInt("pref_library_columns_landscape_key", 0)
 
+    val paginated: Preference<Boolean> = preferenceStore.getBoolean("library_paginated", false)
+
+    val pageRows: Preference<Int> = preferenceStore.getInt("library_page_rows", 0)
+
+    val stretchPageSpacing: Preference<Boolean> = preferenceStore.getBoolean("library_stretch_page_spacing", false)
+
     val lastUpdatedTimestamp: Preference<Long> = preferenceStore.getLong(
         Preference.appStateKey("library_update_last_timestamp"),
         0L,

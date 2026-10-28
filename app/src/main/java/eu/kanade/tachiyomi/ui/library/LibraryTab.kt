@@ -60,6 +60,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.source.local.isLocal
 
 data object LibraryTab : Tab {
@@ -91,7 +92,13 @@ data object LibraryTab : Tab {
         val settingsViewModel = metroViewModel<LibrarySettingsViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
+        val libraryNavigation = remember { LibraryNavigation() }
+        val paginated by settingsViewModel.libraryPreferences.paginated.collectAsState()
+        val pageRows by settingsViewModel.libraryPreferences.pageRows.collectAsState()
+        val stretchPageSpacing by settingsViewModel.libraryPreferences.stretchPageSpacing.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }
+        val showCategoryTabs = (state.showCategoryTabs || !state.searchQuery.isNullOrEmpty()) &&
+            state.displayedCategories.let { it.isNotEmpty() && (it.size > 1 || !it.first().isSystemCategory) }
 
         val onClickRefresh: suspend (Category?) -> Boolean = { category ->
             val started = LibraryUpdateWorker.startNow(context.workManager, category)
@@ -114,6 +121,9 @@ data object LibraryTab : Tab {
                     page = state.coercedActiveCategoryIndex,
                 )
                 LibraryToolbar(
+                    pagination = libraryNavigation.pageInfo.takeIf {
+                        paginated && !showCategoryTabs
+                    },
                     hasActiveFilters = state.hasActiveFilters,
                     selectedCount = state.selection.size,
                     title = title,
@@ -179,13 +189,18 @@ data object LibraryTab : Tab {
                 }
                 else -> {
                     LibraryContent(
+                        navigation = libraryNavigation,
+                        paginated = paginated,
+                        pageRows = pageRows,
+                        stretchPageSpacing = stretchPageSpacing,
+                        onPageRowsChange = settingsViewModel.libraryPreferences.pageRows::set,
                         categories = state.displayedCategories,
                         searchQuery = state.searchQuery,
                         selection = state.selection,
                         contentPadding = contentPadding,
                         currentPage = state.coercedActiveCategoryIndex,
                         hasActiveFilters = state.hasActiveFilters,
-                        showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
+                        showPageTabs = showCategoryTabs,
                         onChangeCurrentPage = viewModel::updateActiveCategoryIndex,
                         onClickManga = { navigator.push(MangaScreen(it)) },
                         onContinueReadingClicked = { it: LibraryManga ->
@@ -223,6 +238,8 @@ data object LibraryTab : Tab {
         when (val dialog = state.dialog) {
             is LibraryViewModel.Dialog.SettingsSheet -> run {
                 LibrarySettingsDialog(
+                    maxPageRows = libraryNavigation.pageInfo?.maxRows ?: 10,
+                    canStretchPageSpacing = libraryNavigation.pageInfo?.canStretchSpacing == true,
                     onDismissRequest = onDismissRequest,
                     viewModel = settingsViewModel,
                     category = state.activeCategory,
