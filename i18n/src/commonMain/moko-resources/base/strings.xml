@@ -593,6 +593,9 @@
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
+    <string name="action_hide_started_items">Hide started</string>
+    <string name="action_hide_finished_items">Hide finished</string>
+    <string name="action_show_read_progress">Show reading progress</string>
 
       <!-- Data and storage section -->
     <string name="pref_storage_location">Storage location</string>

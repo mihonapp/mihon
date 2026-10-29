@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -254,6 +255,9 @@ fun AppBarActions(
                         showMenu = false
                     },
                     text = { Text(it.title, fontWeight = FontWeight.Normal) },
+                    trailingIcon = it.checked?.let { checked ->
+                        { Checkbox(checked = checked, onCheckedChange = null) }
+                    },
                 )
             }
         }
@@ -445,5 +449,6 @@ sealed interface AppBar {
     data class OverflowAction(
         val title: String,
         val onClick: () -> Unit,
+        val checked: Boolean? = null,
     ) : AppBarAction
 }
