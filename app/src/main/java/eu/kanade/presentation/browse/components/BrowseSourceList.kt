@@ -10,6 +10,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import eu.kanade.presentation.library.components.CommonMangaItemDefaults
 import eu.kanade.presentation.library.components.MangaListItem
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaCover
@@ -21,6 +22,7 @@ fun BrowseSourceList(
     contentPadding: PaddingValues,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
+    readProgress: ((Manga) -> Flow<ReadProgress>)?,
 ) {
     LazyColumn(
         contentPadding = contentPadding + PaddingValues(vertical = 8.dp),
@@ -37,6 +39,7 @@ fun BrowseSourceList(
                 manga = manga,
                 onClick = { onMangaClick(manga) },
                 onLongClick = { onMangaLongClick(manga) },
+                readProgress = readProgress,
             )
         }
 
@@ -53,6 +56,7 @@ private fun BrowseSourceListItem(
     manga: Manga,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = onClick,
+    readProgress: ((Manga) -> Flow<ReadProgress>)? = null,
 ) {
     MangaListItem(
         title = manga.title,
@@ -66,6 +70,7 @@ private fun BrowseSourceListItem(
         coverAlpha = if (manga.favorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,
         badge = {
             InLibraryBadge(enabled = manga.favorite)
+            ReadProgressBadge(manga, readProgress)
         },
         onLongClick = onLongClick,
         onClick = onClick,
