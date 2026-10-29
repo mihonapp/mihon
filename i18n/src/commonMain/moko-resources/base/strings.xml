@@ -149,6 +149,11 @@
     <string name="action_move_to_top">Move to top</string>
     <string name="action_move_to_top_all_for_series">Move series to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
+    <string name="action_force_download">Force</string>
+    <string name="action_open_manga">Open series</string>
+    <string name="action_show_download_errors">Show errors</string>
+    <string name="download_attempt">Attempt %1$d</string>
+    <string name="download_attempt_error">Attempt %1$d · %2$s</string>
     <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
     <string name="action_notes">Notes</string>
     <string name="action_edit_notes">Edit notes</string>
@@ -573,6 +578,8 @@
     <string name="pref_category_auto_download">Auto-download</string>
     <string name="pref_download_new">Download new chapters</string>
     <string name="pref_download_new_unread_chapters_only">Skip downloading duplicate read chapters</string>
+    <string name="pref_download_retry_interval">Retry downloads</string>
+    <string name="download_retry_minutes">%1$d min</string>
     <string name="pref_download_new_reading_window">Only while reading</string>
     <string name="pref_download_new_reading_window_info">Downloads a new chapter only when it is within this many unread chapters after the furthest chapter you have read or started.</string>
     <string name="pref_download_new_categories_details">Entries in excluded categories will not be downloaded even if they are also in included categories.</string>

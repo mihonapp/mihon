@@ -79,6 +79,11 @@ class SourcePreferences(
         false,
     )
 
+    val searchSortByChapterCount: Preference<Boolean> = preferenceStore.getBoolean(
+        "search_show_chapter_counts",
+        false,
+    )
+
     val migrationSources: Preference<List<Long>> = preferenceStore.getLongArray("migration_sources", emptyList())
 
     val migrationFlags: Preference<Set<MigrationFlag>> = preferenceStore.getObjectFromInt(

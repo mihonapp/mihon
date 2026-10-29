@@ -74,6 +74,7 @@ abstract class SearchViewModel(
     }
 
     init {
+        state.update { it.copy(sortByChapterCount = preferences.searchSortByChapterCount.get()) }
         viewModelScope.launch {
             preferences.globalSearchFilterState.changes().collectLatest { onlyShowHasResults ->
                 state.update { it.copy(onlyShowHasResults = onlyShowHasResults) }
@@ -131,7 +132,20 @@ abstract class SearchViewModel(
     }
 
     fun toggleChapterCountSort() {
-        state.update { it.copy(sortByChapterCount = !it.sortByChapterCount) }
+        preferences.searchSortByChapterCount.toggle()
+        val enabled = preferences.searchSortByChapterCount.get()
+        state.update { it.copy(sortByChapterCount = enabled) }
+        if (!enabled) {
+            chapterCountJob?.cancel()
+            chapterCountJob = null
+            val known = state.value.chapterCounts.keys
+            chapterCountRequested.removeAll { it !in known }
+            return
+        }
+        ensureChapterCountJob()
+        state.value.items.values.forEach { result ->
+            if (result is SearchItemResult.Success) fetchChapterCounts(result.result)
+        }
     }
 
     fun search() {
@@ -150,10 +164,11 @@ abstract class SearchViewModel(
         if (!sameQuery) {
             chapterCountJob?.cancel()
             chapterCountRequested.clear()
-            chapterCountJob = SupervisorJob(viewModelScope.coroutineContext[Job])
-            state.update { it.copy(chapterCounts = emptyMap()) }
-        } else if (chapterCountJob == null) {
-            chapterCountJob = SupervisorJob(viewModelScope.coroutineContext[Job])
+            chapterCountJob = null
+            state.update { it.copy(chapterCounts = emptyMap(), chapterCountIds = emptySet()) }
+        }
+        if (preferences.searchSortByChapterCount.get()) {
+            ensureChapterCountJob()
         }
 
         searchJob = viewModelScope.launch(Dispatchers.IO) {
@@ -204,9 +219,23 @@ abstract class SearchViewModel(
         }
     }
 
+    private fun ensureChapterCountJob() {
+        val current = chapterCountJob
+        if (current == null || !current.isActive) {
+            chapterCountJob = SupervisorJob(viewModelScope.coroutineContext[Job])
+        }
+    }
+
     private fun fetchChapterCounts(titles: List<Manga>) {
+        if (!preferences.searchSortByChapterCount.get()) return
         val parent = chapterCountJob ?: return
-        titles.forEach { manga ->
+        // The row shows the source order from the left, so only its first items are fetched
+        val targets = titles.take(CHAPTER_COUNT_LIMIT)
+        if (targets.isEmpty()) return
+        state.update { current ->
+            current.copy(chapterCountIds = current.chapterCountIds + targets.map { it.id })
+        }
+        targets.forEach { manga ->
             if (!chapterCountRequested.add(manga.id)) return@forEach
             viewModelScope.launch(chapterCountDispatcher + parent) {
                 val count = try {
@@ -272,6 +301,7 @@ abstract class SearchViewModel(
         val onlyShowHasResults: Boolean = false,
         val sortByChapterCount: Boolean = false,
         val chapterCounts: Map<Long, Int> = emptyMap(),
+        val chapterCountIds: Set<Long> = emptySet(),
         val items: Map<Source, SearchItemResult> = mapOf(),
         val dialog: Dialog? = null,
     ) {
@@ -284,6 +314,8 @@ abstract class SearchViewModel(
         data class Migrate(val target: Manga, val current: Manga) : Dialog
     }
 }
+
+private const val CHAPTER_COUNT_LIMIT = 10
 
 enum class SourceFilter {
     All,

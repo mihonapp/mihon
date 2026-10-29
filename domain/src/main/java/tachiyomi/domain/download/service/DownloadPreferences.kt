@@ -61,6 +61,10 @@ class DownloadPreferences(
         5,
     )
 
+    val downloadRetryInterval: Preference<Int> = preferenceStore.getInt("download_retry_interval", 0)
+
+    val showDownloadErrors: Preference<Boolean> = preferenceStore.getBoolean("download_show_errors", false)
+
     val parallelSourceLimit: Preference<Int> = preferenceStore.getInt("download_parallel_source_limit", 5)
 
     val parallelPageLimit: Preference<Int> = preferenceStore.getInt("download_parallel_page_limit", 5)

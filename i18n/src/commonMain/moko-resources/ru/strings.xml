@@ -125,6 +125,8 @@
     <string name="pref_custom_brightness">Пользовательская яркость</string>
     <string name="pref_custom_color_filter">Пользовательский светофильтр</string>
     <string name="pref_download_new">Загружать новые главы</string>
+    <string name="pref_download_retry_interval">Повторение попыток загрузки</string>
+    <string name="download_retry_minutes">%1$d мин</string>
     <string name="pref_download_new_reading_window">Только читаемые</string>
     <string name="pref_download_new_reading_window_info">Новая глава загружается, только если она входит в выбранное число непрочитанных глав после самой дальней прочитанной или начатой главы.</string>
     <string name="pref_enable_acra">Отправлять отчёты об сбоях</string>
@@ -704,6 +706,11 @@
     <string name="exception_unknown_host">Не удалось достичь %s</string>
     <string name="unlock_app_title">Разблокировать %s</string>
     <string name="action_move_to_bottom_all_for_series">Переместить серию в конец</string>
+    <string name="action_force_download">Принудительно</string>
+    <string name="action_open_manga">Перейти в карточку</string>
+    <string name="action_show_download_errors">Показывать ошибки</string>
+    <string name="download_attempt">Попытка %1$d</string>
+    <string name="download_attempt_error">Попытка %1$d · %2$s</string>
     <string name="pref_relative_format">Относительные временные метки</string>
     <string name="pref_relative_format_summary">\"%1$s\" вместо \"%2$s\"</string>
     <string name="app_settings">Настройки приложения</string>

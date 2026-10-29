@@ -55,6 +55,7 @@ fun GlobalSearchScreen(
         GlobalSearchContent(
             items = state.filteredItems,
             chapterCounts = state.chapterCounts,
+            chapterCountIds = state.chapterCountIds,
             sortByChapterCount = state.sortByChapterCount,
             contentPadding = paddingValues,
             getManga = getManga,
@@ -69,6 +70,7 @@ fun GlobalSearchScreen(
 internal fun GlobalSearchContent(
     items: Map<Source, SearchItemResult>,
     chapterCounts: Map<Long, Int>,
+    chapterCountIds: Set<Long>,
     sortByChapterCount: Boolean,
     contentPadding: PaddingValues,
     getManga: @Composable (Manga) -> State<Manga>,
@@ -119,6 +121,8 @@ internal fun GlobalSearchContent(
                             GlobalSearchCardRow(
                                 titles = titles,
                                 chapterCounts = chapterCounts,
+                                chapterCountIds = chapterCountIds,
+                                showChapterCounts = sortByChapterCount,
                                 getManga = getManga,
                                 onClick = onClickItem,
                                 onLongClick = onLongClickItem,
@@ -146,7 +150,7 @@ private fun List<Manga>.sortedByChapterCount(chapterCounts: Map<Long, Int>): Lis
         val leftCount = chapterCounts[left.id]?.takeIf { it >= 0 }
         val rightCount = chapterCounts[right.id]?.takeIf { it >= 0 }
         when {
-            leftCount == null && rightCount == null -> left.title.compareTo(right.title)
+            leftCount == null && rightCount == null -> 0
             leftCount == null -> 1
             rightCount == null -> -1
             leftCount != rightCount -> rightCount.compareTo(leftCount)

@@ -48,6 +48,7 @@ fun MigrateSearchScreen(
             fromSourceId = fromSourceId,
             items = state.filteredItems,
             chapterCounts = state.chapterCounts,
+            chapterCountIds = state.chapterCountIds,
             sortByChapterCount = state.sortByChapterCount,
             contentPadding = paddingValues,
             getManga = getManga,

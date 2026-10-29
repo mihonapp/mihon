@@ -39,6 +39,17 @@ object SettingsDownloadScreen : SearchableSettings {
                 preference = downloadPreferences.downloadOnlyOverWifi,
                 title = stringResource(MR.strings.connected_to_wifi),
             ),
+            Preference.PreferenceItem.ListPreference(
+                preference = downloadPreferences.downloadRetryInterval,
+                entries = listOf(0, 5, 10, 15, 30, 60).associateWith { minutes ->
+                    if (minutes == 0) {
+                        stringResource(MR.strings.disabled)
+                    } else {
+                        stringResource(MR.strings.download_retry_minutes, minutes)
+                    }
+                },
+                title = stringResource(MR.strings.pref_download_retry_interval),
+            ),
             Preference.PreferenceItem.SwitchPreference(
                 preference = downloadPreferences.saveChaptersAsCBZ,
                 title = stringResource(MR.strings.save_chapter_as_cbz),

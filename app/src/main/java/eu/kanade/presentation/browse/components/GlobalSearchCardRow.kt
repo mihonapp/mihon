@@ -28,6 +28,8 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun GlobalSearchCardRow(
     titles: List<Manga>,
     chapterCounts: Map<Long, Int>,
+    chapterCountIds: Set<Long>,
+    showChapterCounts: Boolean,
     getManga: @Composable (Manga) -> State<Manga>,
     onClick: (Manga) -> Unit,
     onLongClick: (Manga) -> Unit,
@@ -41,13 +43,14 @@ fun GlobalSearchCardRow(
         contentPadding = PaddingValues(MaterialTheme.padding.small),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
     ) {
-        items(titles) {
+        items(titles, key = { it.id }) {
             val title by getManga(it)
             MangaItem(
                 title = title.title,
                 cover = title.asMangaCover(),
                 isFavorite = title.favorite,
                 chapterCount = chapterCounts[title.id],
+                showChapterCount = showChapterCounts && title.id in chapterCountIds,
                 onClick = { onClick(title) },
                 onLongClick = { onLongClick(title) },
             )
@@ -61,6 +64,7 @@ private fun MangaItem(
     cover: MangaCover,
     isFavorite: Boolean,
     chapterCount: Int?,
+    showChapterCount: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
@@ -73,13 +77,15 @@ private fun MangaItem(
                 InLibraryBadge(enabled = isFavorite)
             },
             coverBadgeEnd = {
-                Badge(
-                    text = when (chapterCount) {
-                        null -> "…"
-                        -1 -> "—"
-                        else -> chapterCount.toString()
-                    },
-                )
+                if (showChapterCount) {
+                    Badge(
+                        text = when (chapterCount) {
+                            null -> "…"
+                            -1 -> "—"
+                            else -> chapterCount.toString()
+                        },
+                    )
+                }
             },
             coverAlpha = if (isFavorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,
             onClick = onClick,
