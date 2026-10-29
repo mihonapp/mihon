@@ -14,7 +14,9 @@ import eu.kanade.tachiyomi.data.backup.models.BooleanPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoBuf
+import kotlinx.serialization.protobuf.ProtoNumber
 import okio.Buffer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -59,6 +61,21 @@ class BackupStreamTest {
         }
 
         count shouldBe backup.backupManga.size
+        encode(reader.readMetadata()) shouldBe encode(backup.copy(backupManga = emptyList()))
+    }
+
+    @Test
+    fun `reader decodes only the fields an entry class declares`() {
+        val backup = backup()
+        val reader = BackupReader(Buffer().write(encode(backup)), parser)
+
+        val entries = buildList {
+            while (reader.nextEntry()) add(reader.readEntry(PartialManga.serializer()))
+        }
+
+        entries.map { Triple(it.source, it.url, it.tracking.map(::encode)) } shouldBe backup.backupManga.map {
+            Triple(it.source, it.url, it.tracking.map(::encode))
+        }
         encode(reader.readMetadata()) shouldBe encode(backup.copy(backupManga = emptyList()))
     }
 
@@ -148,6 +165,15 @@ class BackupStreamTest {
     private fun encode(backup: Backup) = parser.encodeToByteArray(Backup.serializer(), backup)
 
     private fun encode(manga: BackupManga) = parser.encodeToByteArray(BackupManga.serializer(), manga)
+
+    private fun encode(tracking: BackupTracking) = parser.encodeToByteArray(BackupTracking.serializer(), tracking)
+
+    @Serializable
+    private class PartialManga(
+        @ProtoNumber(1) val source: Long,
+        @ProtoNumber(2) val url: String,
+        @ProtoNumber(18) val tracking: List<BackupTracking> = emptyList(),
+    )
 
     private fun backup() = Backup(
         backupManga = listOf(
