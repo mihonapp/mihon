@@ -64,6 +64,7 @@ class ChapterRepositoryImpl(
                     remoteScanlator = chapter.scanlator,
                     userRead = chapter.read,
                     userBookmark = chapter.bookmark,
+                    userHidden = chapter.hidden,
                     userLastPageRead = chapter.lastPageRead,
                     remoteChapterNumber = chapter.chapterNumber,
                     remoteOrder = chapter.sourceOrder,
@@ -95,6 +96,7 @@ class ChapterRepositoryImpl(
                 database.chapterQueries.update(
                     userRead = chapterUpdate.read,
                     userBookmark = chapterUpdate.bookmark,
+                    userHidden = chapterUpdate.hidden,
                     userLastPageRead = chapterUpdate.lastPageRead,
                     stateDateFetch = chapterUpdate.dateFetch,
                     id = chapterUpdate.id,
@@ -162,6 +164,12 @@ class ChapterRepositoryImpl(
             .subscribeToList()
     }
 
+    override fun getHiddenChaptersByMangaIdAsFlow(mangaId: Long): Flow<List<Chapter>> {
+        return database.chapterQueries
+            .getHiddenChaptersByMangaId(mangaId, ::mapChapter)
+            .subscribeToList()
+    }
+
     override suspend fun getChapterByUrlAndMangaId(url: String, mangaId: Long): Chapter? {
         return database.chapterQueries
             .getChapterByUrlAndMangaId(mangaId = mangaId, remoteUrl = url, mapper = ::mapChapter)
@@ -182,11 +190,13 @@ class ChapterRepositoryImpl(
         userBookmark: Boolean,
         userLastPageRead: Int,
         stateDateFetch: Instant,
+        userHidden: Boolean,
     ): Chapter = Chapter(
         id = id,
         mangaId = mangaId,
         read = userRead,
         bookmark = userBookmark,
+        hidden = userHidden,
         lastPageRead = userLastPageRead,
         dateFetch = stateDateFetch,
         sourceOrder = remoteOrder,

@@ -106,6 +106,7 @@ class DownloadStore(
                 } ?: continue
                 val source = sourceManager.get(manga.source) as? HttpSource ?: continue
                 val chapter = getChapter.await(chapterId) ?: continue
+                if (chapter.hidden) continue
                 downloads.add(Download(source, manga, chapter))
             }
         }

@@ -139,6 +139,79 @@ class DownloadProvider(
         mangaDir to findChapterDirs(chapters, mangaDir).values.toList()
     }
 
+    /** Resolve ownership by storage identity, including colliding source names and sanitized manga titles. */
+    suspend fun findMangaIdsSharingDownloadDirectory(
+        manga: Manga,
+        source: Source,
+        candidates: List<Pair<Manga, Source>>,
+    ): Set<Long> = withContext(Dispatchers.IO) {
+        val root = downloadsDir ?: throw IOException("Download storage is unavailable")
+        root.requireReadableDirectory()
+        val sourceName = getSourceDirName(source)
+        val mangaName = getMangaDirName(manga.title)
+        val sourceDir = root.findReadableDirectory(sourceName) ?: return@withContext emptySet()
+        val targetDir = sourceDir.findReadableDirectory(mangaName) ?: return@withContext emptySet()
+        val targetIdentity = targetDir.directoryIdentity()
+        val sourceDirectories = mutableMapOf<String, UniFile?>(sourceName to sourceDir)
+        candidates.mapNotNullTo(HashSet()) { (candidate, candidateSource) ->
+            val candidateSourceName = getSourceDirName(candidateSource)
+            val candidateMangaName = getMangaDirName(candidate.title)
+            val sameNames = sourceName.equals(candidateSourceName, ignoreCase = true) &&
+                mangaName.equals(candidateMangaName, ignoreCase = true)
+            if (sameNames) return@mapNotNullTo candidate.id
+
+            // Cache absent sources too. Resolve aliases before requiring unrelated directories to be readable.
+            if (candidateSourceName !in sourceDirectories) {
+                sourceDirectories[candidateSourceName] = root.findDirectoryForOwnership(candidateSourceName)
+            }
+            val directory = sourceDirectories[candidateSourceName]?.findDirectoryForOwnership(candidateMangaName)
+            if (directory == null || directory.directoryIdentity() != targetIdentity) return@mapNotNullTo null
+            directory.requireReadableDirectory()
+            candidate.id
+        }.also { root.requireReadableDirectory() }
+    }
+
+    private fun UniFile.findDirectoryForOwnership(name: String): UniFile? {
+        val child = findFile(name)
+        // An unreadable parent cannot establish absence: it could conceal an alias of the target.
+        if (child == null) requireReadableDirectory()
+        return child
+    }
+
+    /**
+     * All compatible completed and unfinished paths owned only by the selected chapters.
+     * Ambiguous names belong to other chapters sharing the directory until ownership can be established.
+     */
+    suspend fun findChapterPathsForHide(
+        chapters: List<Chapter>,
+        mangaChapters: List<Chapter>,
+        manga: Manga,
+        source: Source,
+    ): List<UniFile> = withContext(Dispatchers.IO) {
+        val root = downloadsDir ?: throw IOException("Download storage is unavailable")
+        root.requireReadableDirectory()
+        val sourceDir = root.findReadableDirectory(getSourceDirName(source)) ?: return@withContext emptyList()
+        val mangaDir = sourceDir.findReadableDirectory(getMangaDirName(manga.title)) ?: return@withContext emptyList()
+        val selectedIds = chapters.mapTo(HashSet()) { it.id }
+        // SAF lookups ignore case. Protect the same names on every storage backend.
+        val siblingNames = mangaChapters.asSequence()
+            .filter { it.id !in selectedIds }
+            .flatMap { it.hidePathNames() }
+            .toCollection(sortedSetOf(String.CASE_INSENSITIVE_ORDER))
+        chapters.asSequence()
+            .flatMap { it.hidePathNames() }
+            .filterNot { it in siblingNames }
+            .distinct()
+            .mapNotNull(mangaDir::findFile)
+            .distinctBy { it.uri }
+            .toList()
+            .also { mangaDir.requireReadableDirectory() }
+    }
+
+    private fun Chapter.hidePathNames(): Sequence<String> =
+        getValidChapterDirNames(name, scanlator, url).asSequence()
+            .flatMap { sequenceOf(it, it + Downloader.TMP_DIR_SUFFIX) }
+
     /**
      * Returns the ids of the chapters whose download directory exists.
      *

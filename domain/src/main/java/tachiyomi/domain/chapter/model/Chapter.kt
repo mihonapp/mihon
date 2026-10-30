@@ -18,6 +18,7 @@ data class Chapter(
     val chapterNumber: Double,
     val scanlator: String?,
     val memo: JsonObject,
+    val hidden: Boolean = false,
 ) {
     val isRecognizedNumber: Boolean
         get() = chapterNumber >= 0f

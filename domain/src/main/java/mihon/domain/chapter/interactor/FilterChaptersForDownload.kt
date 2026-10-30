@@ -37,7 +37,8 @@ class FilterChaptersForDownload(
             return emptyList()
         }
 
-        if (!downloadPreferences.downloadNewUnreadChaptersOnly.get()) return newChapters
+        val visibleChapters = newChapters.filterNot { it.hidden }
+        if (!downloadPreferences.downloadNewUnreadChaptersOnly.get()) return visibleChapters
 
         val readChapterNumbers = getChaptersByMangaId.await(manga.id)
             .asSequence()
@@ -45,7 +46,7 @@ class FilterChaptersForDownload(
             .map { it.chapterNumber }
             .toSet()
 
-        return newChapters.filterNot { it.chapterNumber in readChapterNumbers }
+        return visibleChapters.filterNot { it.chapterNumber in readChapterNumbers }
     }
 
     /**

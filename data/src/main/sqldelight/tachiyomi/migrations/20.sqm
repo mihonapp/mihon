@@ -1,0 +1,88 @@
+import kotlin.Boolean;
+
+ALTER TABLE chapter ADD COLUMN user_hidden INTEGER AS Boolean NOT NULL DEFAULT 0;
+
+DROP VIEW libraryView;
+DROP VIEW updatesView;
+
+CREATE VIEW libraryView AS
+SELECT
+    M.*,
+    coalesce(C.total, 0) AS totalCount,
+    coalesce(C.readCount, 0) AS readCount,
+    C.latestUpload AS latestUpload,
+    C.fetchedAt AS chapterFetchedAt,
+    -- Joining history to every chapter is the slowest part of the query, and only entries with excluded
+    -- scanlators need the chapters to leave theirs out
+    CASE WHEN EXISTS (SELECT 0 FROM excluded_scanlator WHERE excluded_scanlator.manga_id = M.id)
+    THEN (
+        SELECT max(history.read_at)
+        FROM history
+        JOIN chapter
+        ON chapter.id = history.chapter_id
+        WHERE history.manga_id = M.id
+        AND NOT EXISTS (
+            SELECT 0 FROM excluded_scanlator
+            WHERE excluded_scanlator.manga_id = M.id
+            AND excluded_scanlator.scanlator = chapter.remote_scanlator
+        )
+    )
+    ELSE (SELECT max(history.read_at) FROM history WHERE history.manga_id = M.id)
+    END AS lastRead,
+    coalesce(C.bookmarkCount, 0) AS bookmarkCount,
+    coalesce(MC.categories, '0') AS categories
+FROM manga M
+LEFT JOIN (
+    SELECT
+        chapter.manga_id,
+        count(*) AS total,
+        sum(user_read) AS readCount,
+        max(chapter.remote_date_upload) AS latestUpload,
+        max(chapter.state_date_fetch) AS fetchedAt,
+        sum(chapter.user_bookmark) AS bookmarkCount
+    FROM chapter
+    LEFT JOIN excluded_scanlator
+    ON chapter.manga_id = excluded_scanlator.manga_id
+    AND chapter.remote_scanlator = excluded_scanlator.scanlator
+    WHERE chapter.user_hidden = 0
+    AND excluded_scanlator.scanlator IS NULL
+    AND chapter.manga_id IN (SELECT id FROM manga WHERE user_favorite_at IS NOT NULL)
+    GROUP BY chapter.manga_id
+) AS C
+ON M.id = C.manga_id
+LEFT JOIN (
+    SELECT manga_id, group_concat(category_id) AS categories
+    FROM manga_category
+    WHERE manga_id IN (SELECT id FROM manga WHERE user_favorite_at IS NOT NULL)
+    GROUP BY manga_id
+) AS MC
+ON MC.manga_id = M.id
+WHERE M.user_favorite_at IS NOT NULL;
+
+CREATE VIEW updatesView AS
+SELECT
+    manga.id AS mangaId,
+    manga.remote_title AS mangaTitle,
+    chapter.id AS chapterId,
+    chapter.remote_name AS chapterName,
+    chapter.remote_scanlator AS scanlator,
+    chapter.remote_url AS chapterUrl,
+    chapter.user_read AS read,
+    chapter.user_bookmark AS bookmark,
+    chapter.user_last_page_read AS lastPageRead,
+    manga.source_id AS sourceId,
+    manga.user_favorite_at IS NOT NULL AS favorite,
+    manga.remote_cover AS thumbnailUrl,
+    manga.state_cover_last_modified AS coverLastModified,
+    chapter.remote_date_upload AS dateUpload,
+    chapter.state_date_fetch AS dateFetch,
+    excluded_scanlator.scanlator AS excludedScanlator
+FROM manga JOIN chapter
+ON manga.id = chapter.manga_id
+LEFT JOIN excluded_scanlator
+ON manga.id = excluded_scanlator.manga_id
+AND chapter.remote_scanlator = excluded_scanlator.scanlator
+WHERE chapter.user_hidden = 0
+AND user_favorite_at IS NOT NULL
+AND state_date_fetch > user_favorite_at
+ORDER BY state_date_fetch DESC;
