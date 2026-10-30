@@ -1,9 +1,12 @@
 package eu.kanade.tachiyomi.network
 
+import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.dnsoverhttps.DnsOverHttps
 import java.net.InetAddress
+import java.net.UnknownHostException
 
 /**
  * Based on https://github.com/square/okhttp/blob/ef5d0c83f7bbd3a0c0534e7ca23cbc4ee7550f3b/okhttp-dnsoverhttps/src/test/java/okhttp3/dnsoverhttps/DohProviders.java
@@ -21,6 +24,7 @@ const val PREF_DOH_MULLVAD = 9
 const val PREF_DOH_CONTROLD = 10
 const val PREF_DOH_NJALLA = 11
 const val PREF_DOH_SHECAN = 12
+const val PREF_DOH_CUSTOM = 100
 
 fun OkHttpClient.Builder.dohCloudflare() = dns(
     DnsOverHttps.Builder().client(build())
@@ -183,3 +187,19 @@ fun OkHttpClient.Builder.dohShecan() = dns(
         )
         .build(),
 )
+
+fun parseDohCustomUrl(raw: String): HttpUrl? {
+    return raw.trim().toHttpUrlOrNull()?.takeIf { it.isHttps }
+}
+
+// The DoH server's own hostname is resolved by the system DNS
+fun OkHttpClient.Builder.dohCustom(url: HttpUrl) = dns(
+    DnsOverHttps.Builder().client(build())
+        .url(url)
+        .build(),
+)
+
+// Only used for custom DoH: fail every lookup rather than falling back to the system DNS when the URL is invalid
+fun OkHttpClient.Builder.dohBlocked() = dns { hostname ->
+    throw UnknownHostException("Custom DNS over HTTPS URL is invalid, cannot resolve $hostname")
+}

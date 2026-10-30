@@ -4,6 +4,7 @@ import androidx.annotation.IntRange
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
+import eu.kanade.presentation.more.settings.widget.ListPreferenceInput
 import eu.kanade.tachiyomi.data.track.Tracker
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -75,6 +76,7 @@ sealed class Preference {
             override val icon: ImageVector? = null,
             override val visible: Boolean = true,
             override val onValueChanged: suspend (value: T) -> Boolean = { true },
+            val input: ListPreferenceInput? = null,
         ) : PreferenceItem<T, Boolean>() {
             internal fun internalSet(value: Any) = preference.set(value as T)
             internal suspend fun internalOnValueChanged(value: Any) = onValueChanged(value as T)
