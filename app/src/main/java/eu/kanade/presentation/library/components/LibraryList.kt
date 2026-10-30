@@ -1,10 +1,13 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.ui.library.LibraryItem
@@ -15,6 +18,9 @@ import tachiyomi.presentation.core.util.plus
 
 @Composable
 internal fun LibraryList(
+    state: LazyListState,
+    userScrollEnabled: Boolean = true,
+    stretchRows: Int = 0,
     items: List<LibraryItem>,
     contentPadding: PaddingValues,
     selection: Set<Long>,
@@ -25,11 +31,16 @@ internal fun LibraryList(
     onGlobalSearchClicked: () -> Unit,
 ) {
     FastScrollLazyColumn(
+        state = state,
+        userScrollEnabled = userScrollEnabled,
+        verticalArrangement = remember(stretchRows) {
+            if (stretchRows > 0) LibraryPageArrangement(slots = stretchRows) else Arrangement.Top
+        },
         modifier = Modifier.fillMaxSize(),
         contentPadding = contentPadding + PaddingValues(vertical = 8.dp),
     ) {
-        item {
-            if (!searchQuery.isNullOrEmpty()) {
+        if (!searchQuery.isNullOrEmpty()) {
+            item {
                 GlobalSearchItem(
                     modifier = Modifier.fillMaxWidth(),
                     searchQuery = searchQuery,
