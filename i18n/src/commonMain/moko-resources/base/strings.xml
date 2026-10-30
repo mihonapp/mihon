@@ -116,6 +116,9 @@
     <string name="action_open_in_web_view">Open in WebView</string>
     <string name="action_web_view" translatable="false">WebView</string>
     <string name="action_migrate">Migrate</string>
+    <string name="action_source_titles">Title list</string>
+    <string name="action_source_migrate">Migrate</string>
+    <string name="source_no_library_titles">No titles from this source</string>
     <string name="action_display_mode">Display mode</string>
     <string name="action_display">Display</string>
     <string name="action_display_grid">Compact grid</string>

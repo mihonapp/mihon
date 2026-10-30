@@ -372,6 +372,9 @@
     <string name="pref_library_update_refresh_metadata">Обновлять метаданные</string>
     <string name="action_display_comfortable_grid">Удобная сетка</string>
     <string name="action_migrate">Перенести</string>
+    <string name="action_source_titles">Список тайтлов</string>
+    <string name="action_source_migrate">Миграция</string>
+    <string name="source_no_library_titles">Нет тайтлов из этого источника</string>
     <string name="tabs_header">Вкладки</string>
     <string name="action_display_show_tabs">Показать вкладки категорий</string>
     <string name="page_list_empty_error">Страницы не найдены</string>
