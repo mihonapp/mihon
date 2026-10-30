@@ -8,7 +8,10 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.drop
@@ -20,6 +23,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.core.metro.AppCoroutineScope
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
 import tachiyomi.core.common.util.system.ImageUtil
@@ -32,6 +36,7 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * This class is used to manage chapter downloads in the application. It must be instantiated once
@@ -51,7 +56,26 @@ class DownloadManager(
     private val downloadPreferences: DownloadPreferences,
     private val downloader: Downloader,
     private val pendingDeleter: DownloadPendingDeleter,
+    @AppCoroutineScope private val scope: CoroutineScope,
 ) {
+
+    private var retryJob: Job? = null
+    private var downloaderWasRunning = false
+
+    init {
+        scope.launch {
+            isDownloaderRunning.collect { running ->
+                if (running) {
+                    downloaderWasRunning = true
+                    retryJob?.cancel()
+                    retryJob = null
+                } else if (downloaderWasRunning) {
+                    downloaderWasRunning = false
+                    scheduleRetry()
+                }
+            }
+        }
+    }
 
     val queueState
         get() = downloader.queueState
@@ -73,6 +97,28 @@ class DownloadManager(
      */
     suspend fun pauseDownloads() {
         downloader.pause()
+    }
+
+    /**
+     * Puts [download] ahead of the queue and starts it even if downloads are paused.
+     */
+    suspend fun forceDownload(download: Download) {
+        downloader.forceDownload(download)
+    }
+
+    private fun scheduleRetry() {
+        retryJob?.cancel()
+        val minutes = downloadPreferences.downloadRetryInterval.get()
+        if (minutes <= 0 || !hasPendingDownloads()) return
+        retryJob = scope.launch {
+            delay(minutes.minutes)
+            if (!hasPendingDownloads() || downloader.isRunning) return@launch
+            startDownloads()
+        }
+    }
+
+    private fun hasPendingDownloads(): Boolean {
+        return downloader.queueState.value.any { it.status != Download.State.DOWNLOADED }
     }
 
     /**

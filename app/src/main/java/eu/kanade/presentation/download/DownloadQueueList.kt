@@ -72,6 +72,9 @@ fun DownloadQueueList(
     onMoveSeries: (Download, toTop: Boolean) -> Unit,
     onCancel: (Download) -> Unit,
     onCancelSeries: (Download) -> Unit,
+    showDownloadErrors: Boolean,
+    onForce: (Download) -> Unit,
+    onOpenManga: (Download) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val sectionsState = remember { sections.toMutableStateList() }
@@ -190,6 +193,9 @@ fun DownloadQueueList(
                             onMoveSeries = { toTop -> onMoveSeries(download, toTop) },
                             onCancel = { onCancel(download) },
                             onCancelSeries = { onCancelSeries(download) },
+                            showDownloadErrors = showDownloadErrors,
+                            onForce = { onForce(download) },
+                            onOpenManga = { onOpenManga(download) },
                         )
                     }
                 }
@@ -307,10 +313,15 @@ private fun ReorderableCollectionItemScope.DownloadQueueItem(
     onMoveSeries: (toTop: Boolean) -> Unit,
     onCancel: () -> Unit,
     onCancelSeries: () -> Unit,
+    showDownloadErrors: Boolean,
+    onForce: () -> Unit,
+    onOpenManga: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val progress by remember(download) { download.pagesProgressFlow() }.collectAsState(null)
     val animatedProgress by animateFloatAsState(progress?.fraction ?: 0f, label = "progress")
+    val failure by download.failureFlow.collectAsState()
+    val status by download.statusFlow.collectAsState()
 
     Surface(
         modifier = modifier,
@@ -353,6 +364,26 @@ private fun ReorderableCollectionItemScope.DownloadQueueItem(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodySmall,
                 )
+                val currentFailure = failure
+                if (showDownloadErrors && currentFailure != null && currentFailure.hasVisibleError(status)) {
+                    Text(
+                        text = currentFailure.message?.let { message ->
+                            stringResource(
+                                MR.strings.download_attempt_error,
+                                currentFailure.attempts,
+                                message,
+                            )
+                        } ?: stringResource(MR.strings.download_attempt, currentFailure.attempts),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        color = if (status == Download.State.ERROR) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
                 LinearProgressIndicator(
                     progress = { animatedProgress },
                     modifier = Modifier
@@ -367,6 +398,8 @@ private fun ReorderableCollectionItemScope.DownloadQueueItem(
                 onMoveSeries = onMoveSeries,
                 onCancel = onCancel,
                 onCancelSeries = onCancelSeries,
+                onForce = onForce,
+                onOpenManga = onOpenManga,
             )
         }
     }
@@ -394,6 +427,8 @@ private fun DownloadQueueItemMenu(
     onMoveSeries: (toTop: Boolean) -> Unit,
     onCancel: () -> Unit,
     onCancelSeries: () -> Unit,
+    onForce: () -> Unit,
+    onOpenManga: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val closeMenu = { expanded = false }
@@ -438,6 +473,20 @@ private fun DownloadQueueItemMenu(
                 },
             )
             DropdownMenuItem(
+                text = { Text(stringResource(MR.strings.action_force_download)) },
+                onClick = {
+                    closeMenu()
+                    onForce()
+                },
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(MR.strings.action_open_manga)) },
+                onClick = {
+                    closeMenu()
+                    onOpenManga()
+                },
+            )
+            DropdownMenuItem(
                 text = { Text(stringResource(MR.strings.action_cancel)) },
                 onClick = {
                     closeMenu()
@@ -478,6 +527,10 @@ private class PagesProgress(
 /**
  * Progress of the pages of this download, or null until its pages are known.
  */
+private fun Download.Failure.hasVisibleError(status: Download.State): Boolean {
+    return message != null || status == Download.State.ERROR
+}
+
 private fun Download.pagesProgressFlow() = pagesFlow.flatMapLatest { pages ->
     when {
         pages == null -> flowOf(null)

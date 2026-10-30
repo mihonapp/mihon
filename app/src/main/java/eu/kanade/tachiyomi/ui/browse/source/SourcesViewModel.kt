@@ -12,6 +12,7 @@ import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
 import eu.kanade.presentation.browse.SourceUiModel
+import eu.kanade.tachiyomi.data.library.LibraryUpdateErrors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.source.model.Pin
 import tachiyomi.domain.source.model.Source
 import java.util.TreeMap
@@ -39,6 +41,8 @@ class SourcesViewModel(
     private val getEnabledSources: GetEnabledSources,
     private val toggleSource: ToggleSource,
     private val toggleSourcePin: ToggleSourcePin,
+    getLibraryManga: GetLibraryManga,
+    private val libraryUpdateErrors: LibraryUpdateErrors,
 ) : ViewModel() {
 
     private val _events = Channel<Event>(Int.MAX_VALUE)
@@ -53,11 +57,26 @@ class SourcesViewModel(
         }
         .map(::toSourceUiModels)
 
+    private val libraryBySource = combine(
+        getLibraryManga.subscribe(),
+        libraryUpdateErrors.errors.changes(),
+    ) { library, rawErrors ->
+        val errorIds = libraryUpdateErrors.ids(rawErrors)
+        library.groupBy { it.manga.source }.mapValues { (_, items) ->
+            val mangaIds = items.map { it.manga.id }
+            SourceLibraryInfo(
+                mangaIds = mangaIds,
+                errorCount = mangaIds.count { it in errorIds },
+            )
+        }
+    }
+
     val state: StateFlow<State> = combine(
         enabledSources,
         dialog,
-    ) { items, dialog ->
-        State(dialog = dialog, isLoading = false, items = items)
+        libraryBySource,
+    ) { items, dialog, library ->
+        State(dialog = dialog, isLoading = false, items = items, library = library)
     }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
@@ -109,6 +128,10 @@ class SourcesViewModel(
         dialog.update { null }
     }
 
+    fun libraryMangaIds(sourceId: Long): List<Long> {
+        return state.value.library[sourceId]?.mangaIds.orEmpty()
+    }
+
     sealed interface Event {
         data object FailedFetchingSources : Event
     }
@@ -116,10 +139,19 @@ class SourcesViewModel(
     data class Dialog(val source: Source)
 
     @Immutable
+    data class SourceLibraryInfo(
+        val mangaIds: List<Long>,
+        val errorCount: Int,
+    ) {
+        val titleCount: Int get() = mangaIds.size
+    }
+
+    @Immutable
     data class State(
         val dialog: Dialog? = null,
         val isLoading: Boolean = true,
         val items: List<SourceUiModel> = listOf(),
+        val library: Map<Long, SourceLibraryInfo> = emptyMap(),
     ) {
         val isEmpty = items.isEmpty()
     }

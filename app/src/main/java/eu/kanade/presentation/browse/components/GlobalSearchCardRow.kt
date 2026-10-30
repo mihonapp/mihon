@@ -20,12 +20,16 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.manga.model.asMangaCover
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.Badge
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun GlobalSearchCardRow(
     titles: List<Manga>,
+    chapterCounts: Map<Long, Int>,
+    chapterCountIds: Set<Long>,
+    showChapterCounts: Boolean,
     getManga: @Composable (Manga) -> State<Manga>,
     onClick: (Manga) -> Unit,
     onLongClick: (Manga) -> Unit,
@@ -39,12 +43,14 @@ fun GlobalSearchCardRow(
         contentPadding = PaddingValues(MaterialTheme.padding.small),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
     ) {
-        items(titles) {
+        items(titles, key = { it.id }) {
             val title by getManga(it)
             MangaItem(
                 title = title.title,
                 cover = title.asMangaCover(),
                 isFavorite = title.favorite,
+                chapterCount = chapterCounts[title.id],
+                showChapterCount = showChapterCounts && title.id in chapterCountIds,
                 onClick = { onClick(title) },
                 onLongClick = { onLongClick(title) },
             )
@@ -57,6 +63,8 @@ private fun MangaItem(
     title: String,
     cover: MangaCover,
     isFavorite: Boolean,
+    chapterCount: Int?,
+    showChapterCount: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
@@ -67,6 +75,17 @@ private fun MangaItem(
             coverData = cover,
             coverBadgeStart = {
                 InLibraryBadge(enabled = isFavorite)
+            },
+            coverBadgeEnd = {
+                if (showChapterCount) {
+                    Badge(
+                        text = when (chapterCount) {
+                            null -> "…"
+                            -1 -> "—"
+                            else -> chapterCount.toString()
+                        },
+                    )
+                }
             },
             coverAlpha = if (isFavorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,
             onClick = onClick,
