@@ -108,6 +108,9 @@ private fun LibraryRegularToolbar(
         searchQuery = searchQuery,
         onChangeSearchQuery = onSearchQueryChange,
         actions = {
+            if (searchQuery != null) {
+                pagination?.let { LibraryPageNumber(it.index, it.count, compact = true, onClick = onClickPageNumber) }
+            }
             val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
             AppBarActions(
                 listOf(
