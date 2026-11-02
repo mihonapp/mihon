@@ -428,6 +428,7 @@
     <string name="pref_show_reading_mode_summary">Briefly show current mode when reader is opened</string>
     <string name="pref_high_quality_renderer">Use high quality renderer</string>
     <string name="pref_crop_borders">Crop borders</string>
+    <string name="pref_crop_instead_of_zoom">Crop instead of zoom</string>
     <string name="pref_custom_brightness">Custom brightness</string>
     <string name="pref_grayscale">Grayscale</string>
     <string name="pref_inverted_colors">Inverted</string>
@@ -548,6 +549,9 @@
     <string name="pref_disable_double_tap_gestures">Disable double tap gestures</string>
     <string name="action_add_shader">Add shader</string>
     <string name="image_filter_invalid">Couldn\'t add shader</string>
+    <string name="shader_parameters">Parameters</string>
+    <string name="shader_param_range">%1$s to %2$s, default %3$s</string>
+    <string name="shader_param_default">Default %1$s</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
