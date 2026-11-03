@@ -13,7 +13,9 @@ fun DelegateLastClassLoaderCompat(
     librarySearchPath: String?,
     parent: ClassLoader,
 ): ClassLoader {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+    // ART recognizes the built-in loader and maps app images compiled for this app's class loader chain, and before
+    // Android 17 a damaged one crashes every launch until the app is updated. ART doesn't recognize the backport.
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN) {
         DelegateLastClassLoader(dexPath, librarySearchPath, parent)
     } else {
         DelegateLastPathClassLoader(dexPath, librarySearchPath, parent)
@@ -21,7 +23,8 @@ fun DelegateLastClassLoaderCompat(
 }
 
 /**
- * Backport of [DelegateLastClassLoader], which was added in API 27.
+ * A [PathClassLoader] that looks up classes like [DelegateLastClassLoader]: the boot class loader first, then its own
+ * dex path, then the parent.
  */
 private class DelegateLastPathClassLoader(
     dexPath: String,

@@ -741,7 +741,6 @@
     <string name="pref_storage_location_info">Використовується для автоматичних бекапів, завантажень розділів, та локальних джерел.</string>
     <string name="manga_interval_expected_update_soon">Незабаром</string>
     <string name="ext_revoke_trust">Скинути довірені невідомі розширення</string>
-    <string name="action_open_repo">Репозиторій з відкритим початковим кодом</string>
     <string name="selected">Обрано</string>
     <string name="not_selected">Не обрано</string>
     <string name="action_menu_overflow_description">Більше опцій</string>

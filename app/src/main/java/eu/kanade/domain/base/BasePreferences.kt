@@ -45,4 +45,9 @@ class BasePreferences(
         Preference.appStateKey("donation_campaign_shown"),
         false,
     )
+
+    val skippedAppUpdate: Preference<String> = preferenceStore.getString(
+        Preference.appStateKey("skipped_app_update"),
+        "",
+    )
 }

@@ -619,7 +619,6 @@
     <string name="onboarding_action_finish">شروع کنید</string>
     <string name="onboarding_action_skip">پرش</string>
     <string name="ext_permission_install_apps_warning">مجوز برای نصب افزونه ها لازم است. به اینجا ضربه بزنید تا اعطا کنید.</string>
-    <string name="action_open_repo">مخزن منبع باز</string>
     <string name="pref_flash_page_summ">مقدار رد باقی مانده در نمایش گر های E-ink کاهش میابد</string>
     <string name="onboarding_storage_action_select">انتخاب یک پوشه</string>
     <string name="onboarding_storage_selection_required">یک پوشه باید انتخاب شود</string>

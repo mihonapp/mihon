@@ -7,15 +7,10 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.isLocal
 import java.io.InputStream
-import kotlin.time.Clock
 
-fun Manga.removeCovers(coverCache: CoverCache): Manga {
-    if (isLocal()) return this
-    return if (coverCache.deleteFromCache(this, true) > 0) {
-        copy(coverLastModified = Clock.System.now().toEpochMilliseconds())
-    } else {
-        this
-    }
+fun Manga.removeCovers(coverCache: CoverCache) {
+    if (isLocal()) return
+    coverCache.deleteFromCache(this, true)
 }
 
 suspend fun Manga.editCover(

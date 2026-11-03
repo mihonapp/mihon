@@ -24,7 +24,6 @@ import mihon.domain.extension.interactor.GetExtensionStores
 import mihon.domain.extension.interactor.RemoveExtensionStore
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.model.ExtensionStore
-import tachiyomi.core.common.util.lang.launchIO
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
@@ -90,7 +89,7 @@ class ExtensionStoresViewModel(
      * Refreshes information for each repository.
      */
     fun refreshRepos() {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             updateExtensionStores()
         }
     }
@@ -99,14 +98,14 @@ class ExtensionStoresViewModel(
      * Deletes the given repo from the database
      */
     fun deleteRepo(baseUrl: String) {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             removeExtensionStore(baseUrl)
             extensionManager.findAvailableExtensions()
         }
     }
 
     fun addFromDeeplink(storeIndexUrl: String) {
-        viewModelScope.launchIO {
+        viewModelScope.launch(Dispatchers.IO) {
             val alreadyExists = getExtensionStores.get().any { it.indexUrl == storeIndexUrl }
             dialog.update { ExtensionStoreDialog.Confirm(url = storeIndexUrl, alreadyExists = alreadyExists) }
         }

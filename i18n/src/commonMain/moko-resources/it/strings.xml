@@ -279,7 +279,7 @@
     <string name="action_webview_forward">Avanti</string>
     <string name="action_webview_refresh">Aggiorna</string>
     <string name="pref_category_library">Libreria</string>
-    <string name="ext_obsolete">Obsoleta</string>
+    <string name="ext_obsolete">Orfana</string>
     <string name="obsolete_extension_message">Questa estensione non è più disponibile. Potrebbe non funzionare correttamente e causare problemi con l\'app. Si consiglia di disinstallarla.</string>
     <string name="pref_date_format">Formato data</string>
     <string name="pref_category_library_update">Aggiornamenti globali</string>
@@ -747,7 +747,6 @@
     <string name="onboarding_permission_action_grant">Consenti</string>
     <string name="exclude_scanlators">Escludi scanlator</string>
     <string name="onboarding_storage_help_action">Guida all\'archiviazione</string>
-    <string name="action_open_repo">Repository open source</string>
     <string name="manga_interval_expected_update_soon">Presto</string>
     <string name="manga_interval_custom_amount">Frequenza di aggiornamento personalizzata:</string>
     <string name="onboarding_storage_help_info">Sti aggiornando da una vecchia versione e non sai cosa selezionare? Consulta la guida all\'archiviazione per info.</string>
@@ -882,5 +881,15 @@
     <string name="pref_category_extensions">Estensioni</string>
     <string name="ext_content_warning_mixed">Misto</string>
     <string name="ext_content_warning_safe">Sicuro</string>
-    <string name="content_warnings_info">Per rendere effettive le modifiche è necessario riavviare l\'app. Le estensioni che non sono caricate non forniranno le loro fonti in nessuna parte dell\'app. Ciò non impedisce alle estensioni non ufficiali o potenzialmente contrassegnate in modo errato di mostrare contenuti 18+ all\'interno dell\'app.</string>
+    <string name="content_warnings_info">Le estensioni installate ma non caricate restano nell\'elenco senza le loro sorgenti; quelle non installate vengono nascoste. Questo non impedisce che estensioni non ufficiali o segnalate in modo errato mostrino contenuti 18+ nell\'app.</string>
+    <string name="pref_apply_content_warnings_to_installed_summary">Quando è disattivata, le estensioni già installate continuano a caricarsi e ad aggiornarsi a prescindere dal loro avviso</string>
+    <string name="app_migrating_title">Completamento dell\'aggiornamento</string>
+    <string name="app_migrating_summary">Stiamo completando i preparativi dopo l\'aggiornamento. Può richiedere qualche minuto, quindi tieni l\'app aperta.</string>
+    <string name="pref_apply_content_warnings_to_installed">Applica anche alle estensioni installate</string>
+    <string name="pref_enable_chapter_name_hash">Attiva il suffisso hash nei nomi dei capitoli</string>
+    <string name="ext_filtered">Filtrata</string>
+    <string name="ext_not_loaded">Non caricata</string>
+    <string name="ext_not_loaded_dialog">Impossibile da caricare</string>
+    <string name="ext_not_loaded_details">Perché non è caricata</string>
+    <string name="ext_copy_stacktrace">Copia traccia di stack</string>
 </resources>

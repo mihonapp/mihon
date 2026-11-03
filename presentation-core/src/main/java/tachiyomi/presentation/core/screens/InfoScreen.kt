@@ -1,9 +1,12 @@
 package tachiyomi.presentation.core.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,6 +45,7 @@ fun InfoScreen(
     canAccept: Boolean = true,
     rejectText: String? = null,
     onRejectClick: (() -> Unit)? = null,
+    rejectAction: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Scaffold(
@@ -73,11 +77,14 @@ fun InfoScreen(
                     Text(text = acceptText)
                 }
                 if (rejectText != null && onRejectClick != null) {
-                    OutlinedButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = onRejectClick,
-                    ) {
-                        Text(text = rejectText)
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall)) {
+                        OutlinedButton(
+                            modifier = Modifier.weight(1f),
+                            onClick = onRejectClick,
+                        ) {
+                            Text(text = rejectText)
+                        }
+                        rejectAction?.invoke(this)
                     }
                 }
             }

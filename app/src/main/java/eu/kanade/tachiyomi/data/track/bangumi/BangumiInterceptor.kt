@@ -15,6 +15,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
     /**
      * OAuth object used for authenticated requests.
      */
+    @Volatile
     private var oauth: BGMOAuth? = bangumi.restoreToken()
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -23,15 +24,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
         var currAuth: BGMOAuth = oauth ?: throw Exception("Not authenticated with Bangumi")
 
         if (currAuth.isExpired()) {
-            val response = chain.proceed(BangumiApi.refreshTokenRequest(currAuth.refreshToken!!))
-            if (response.isSuccessful) {
-                currAuth = with(json) {
-                    response.parseAs<BGMOAuth>()
-                }
-                newAuth(currAuth)
-            } else {
-                response.close()
-            }
+            currAuth = refreshToken(chain, currAuth)
         }
 
         return originalRequest.newBuilder()
@@ -42,6 +35,18 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
             .addHeader("Authorization", "Bearer ${currAuth.accessToken}")
             .build()
             .let(chain::proceed)
+    }
+
+    private fun refreshToken(chain: Interceptor.Chain, expired: BGMOAuth): BGMOAuth = synchronized(this) {
+        val current = oauth ?: expired
+        if (!current.isExpired()) return@synchronized current
+
+        val response = chain.proceed(BangumiApi.refreshTokenRequest(current.refreshToken!!))
+        if (!response.isSuccessful) {
+            response.close()
+            return@synchronized current
+        }
+        with(json) { response.parseAs<BGMOAuth>() }.also(::newAuth)
     }
 
     fun newAuth(oauth: BGMOAuth?) {

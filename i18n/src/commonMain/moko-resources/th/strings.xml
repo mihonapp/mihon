@@ -755,7 +755,6 @@
     <string name="manga_interval_expected_update_soon">เร็ว ๆ นี้</string>
     <string name="onboarding_storage_help_info">กำลังอัปเดตจากเวอร์ชันเก่าและไม่แน่ใจว่าจะเลือกอะไรใช่ไหม? โปรดดูคู่มือการจัดเก็บข้อมูลสำหรับข้อมูลเพิ่มเติม</string>
     <string name="theme_nord">นอร์ด</string>
-    <string name="action_open_repo">เปิดที่มาของรีโพ</string>
     <string name="action_copy_link">คัดลอกลิงก์</string>
     <string name="action_sort_random">สุ่ม</string>
     <string name="onboarding_permission_analytics">อนุญาตให้เก็บข้อมูลไปวิเคราะห์</string>

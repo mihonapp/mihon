@@ -32,6 +32,7 @@ dependencies {
     implementation(projects.sourceApi)
     implementation(projects.domain)
     implementation(projects.core.common)
+    implementation(projects.core.metro)
 
     implementation(libs.metro.runtime)
     implementation(libs.kotlinx.serialization.json)

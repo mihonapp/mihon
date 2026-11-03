@@ -19,6 +19,7 @@ import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.i18n.MR
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
+import mihon.icons.materialsymbols.R as MaterialSymbolsR
 
 @Inject
 class BackupNotifier(
@@ -79,7 +80,7 @@ class BackupNotifier(
 
             clearActions()
             addAction(
-                R.drawable.ic_share_24dp,
+                MaterialSymbolsR.drawable.rounded_share,
                 context.stringResource(MR.strings.action_share),
                 NotificationReceiver.shareBackupPendingActivity(context, file.uri),
             )
@@ -111,7 +112,7 @@ class BackupNotifier(
 
             clearActions()
             addAction(
-                R.drawable.ic_close_24dp,
+                MaterialSymbolsR.drawable.rounded_close,
                 context.stringResource(MR.strings.action_cancel),
                 NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
             )
@@ -173,7 +174,7 @@ class BackupNotifier(
                 val errorLogIntent = NotificationReceiver.openErrorLogPendingActivity(context, uri)
                 setContentIntent(errorLogIntent)
                 addAction(
-                    R.drawable.ic_folder_24dp,
+                    MaterialSymbolsR.drawable.rounded_filled_folder,
                     context.stringResource(MR.strings.action_show_errors),
                     errorLogIntent,
                 )

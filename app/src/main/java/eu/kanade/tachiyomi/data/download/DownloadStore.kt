@@ -30,7 +30,7 @@ class DownloadStore(
     /**
      * Preference file where active downloads are stored.
      */
-    private val preferences = context.getSharedPreferences("active_downloads", Context.MODE_PRIVATE)
+    private val preferences by lazy { context.getSharedPreferences("active_downloads", Context.MODE_PRIVATE) }
 
     /**
      * Counter used to keep the queue order.

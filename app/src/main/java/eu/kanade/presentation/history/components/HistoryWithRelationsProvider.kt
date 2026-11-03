@@ -2,7 +2,7 @@ package eu.kanade.presentation.history.components
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import tachiyomi.domain.history.model.HistoryWithRelations
-import java.util.Date
+import kotlin.time.Instant
 
 internal class HistoryWithRelationsProvider : PreviewParameterProvider<HistoryWithRelations> {
 
@@ -12,14 +12,14 @@ internal class HistoryWithRelationsProvider : PreviewParameterProvider<HistoryWi
         mangaId = 3L,
         title = "Test Title",
         chapterNumber = 10.2,
-        readAt = Date(1697247357L),
+        readAt = Instant.fromEpochMilliseconds(1697247357L),
         readDuration = 123L,
         coverData = tachiyomi.domain.manga.model.MangaCover(
             mangaId = 3L,
             sourceId = 4L,
             isMangaFavorite = false,
             url = "https://example.com/cover.png",
-            lastModified = 5L,
+            lastModified = Instant.fromEpochMilliseconds(5L),
         ),
     )
 
@@ -36,7 +36,7 @@ internal class HistoryWithRelationsProvider : PreviewParameterProvider<HistoryWi
             sourceId = 4L,
             isMangaFavorite = false,
             url = "https://example.com/cover.png",
-            lastModified = 5L,
+            lastModified = Instant.fromEpochMilliseconds(5L),
         ),
     )
 
@@ -46,14 +46,14 @@ internal class HistoryWithRelationsProvider : PreviewParameterProvider<HistoryWi
         mangaId = 3L,
         title = "Test Title",
         chapterNumber = -2.0,
-        readAt = Date(1697247357L),
+        readAt = Instant.fromEpochMilliseconds(1697247357L),
         readDuration = 123L,
         coverData = tachiyomi.domain.manga.model.MangaCover(
             mangaId = 3L,
             sourceId = 4L,
             isMangaFavorite = false,
             url = "https://example.com/cover.png",
-            lastModified = 5L,
+            lastModified = Instant.fromEpochMilliseconds(5L),
         ),
     )
 

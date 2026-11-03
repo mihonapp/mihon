@@ -9,8 +9,8 @@ import eu.kanade.tachiyomi.data.backup.BackupDecoder
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionStore
-import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
+import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import eu.kanade.tachiyomi.data.backup.restore.restorers.CategoriesRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.ExtensionStoreRestorer
@@ -22,10 +22,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.chunked
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.source.repository.StubSourceRepository
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import java.io.File
 import java.text.SimpleDateFormat
@@ -48,6 +51,8 @@ class BackupRestorer(
     private val extensionStoreRestorer: ExtensionStoreRestorer,
     private val mangaRestorer: MangaRestorer,
     private val backupDecoder: BackupDecoder,
+    private val sourceManager: SourceManager,
+    private val stubSourceRepository: StubSourceRepository,
 ) {
 
     @AssistedFactory
@@ -92,14 +97,15 @@ class BackupRestorer(
     }
 
     private suspend fun restoreFromFile(uri: Uri, options: RestoreOptions) {
-        val backup = backupDecoder.decode(uri)
+        val (entryCount, backup) = backupDecoder.decodeMetadata(uri)
 
         // Store source mapping for error messages
         val backupMaps = backup.backupSources
         sourceMapping = backupMaps.associate { it.sourceId to it.name }
 
         if (options.libraryEntries) {
-            restoreAmount += backup.backupManga.size
+            restoreSourceNames(backupMaps)
+            restoreAmount += entryCount
         }
         if (options.categories) {
             restoreAmount += 1
@@ -132,7 +138,7 @@ class BackupRestorer(
             }
             if (options.libraryEntries) {
                 restoreManga(
-                    backup.backupManga,
+                    uri,
                     if (options.categories) backup.backupCategories else emptyList(),
                     restoreCategoriesJob,
                 )
@@ -143,6 +149,16 @@ class BackupRestorer(
 
             // TODO: optionally trigger online library + tracker update
         }
+    }
+
+    // Without a stub, a source that isn't installed has no name for the next backup to write
+    private suspend fun restoreSourceNames(backupSources: List<BackupSource>) {
+        backupSources
+            .filter { it.name.isNotBlank() }
+            .filter {
+                sourceManager.get(it.sourceId) == null && stubSourceRepository.getStubSource(it.sourceId) == null
+            }
+            .forEach { stubSourceRepository.upsertStubSource(it.sourceId, lang = "", name = it.name) }
     }
 
     private fun CoroutineScope.restoreCategories(backupCategories: List<BackupCategory>) = launch {
@@ -159,14 +175,15 @@ class BackupRestorer(
     }
 
     private fun CoroutineScope.restoreManga(
-        backupMangas: List<BackupManga>,
+        uri: Uri,
         backupCategories: List<BackupCategory>,
         categoriesRestoreJob: Job?,
     ) = launch {
         categoriesRestoreJob?.join()
-        mangaRestorer.sortByNew(backupMangas)
+
+        backupDecoder.decodeEntries(uri)
             .chunked(100)
-            .forEach { chunk ->
+            .collect { chunk ->
                 val restoredAsBatch = try {
                     ensureActive()
                     mangaRestorer.restore(chunk, backupCategories)

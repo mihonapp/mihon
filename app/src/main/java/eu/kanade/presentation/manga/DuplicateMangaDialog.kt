@@ -58,14 +58,14 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Add
 import mihon.icons.materialsymbols.rounded.AttachMoney
 import mihon.icons.materialsymbols.rounded.Block
-import mihon.icons.materialsymbols.rounded.Brush
+import mihon.icons.materialsymbols.rounded.Check
 import mihon.icons.materialsymbols.rounded.Close
-import mihon.icons.materialsymbols.rounded.Done
 import mihon.icons.materialsymbols.rounded.DoneAll
-import mihon.icons.materialsymbols.rounded.Pause
 import mihon.icons.materialsymbols.rounded.Person
 import mihon.icons.materialsymbols.rounded.Schedule
-import mihon.icons.materialsymbols.rounded.Warning
+import mihon.icons.materialsymbols.roundedfilled.Brush
+import mihon.icons.materialsymbols.roundedfilled.Pause
+import mihon.icons.materialsymbols.roundedfilled.Warning
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.source.model.StubSource
@@ -238,7 +238,7 @@ private fun DuplicateMangaListItem(
         if (!manga.artist.isNullOrBlank() && manga.author != manga.artist) {
             MangaDetailRow(
                 text = manga.artist!!,
-                iconImageVector = MaterialSymbols.Rounded.Brush,
+                iconImageVector = MaterialSymbols.RoundedFilled.Brush,
                 maxLines = 2,
             )
         }
@@ -257,9 +257,9 @@ private fun DuplicateMangaListItem(
                 SManga.ONGOING.toLong() -> MaterialSymbols.Rounded.Schedule
                 SManga.COMPLETED.toLong() -> MaterialSymbols.Rounded.DoneAll
                 SManga.LICENSED.toLong() -> MaterialSymbols.Rounded.AttachMoney
-                SManga.PUBLISHING_FINISHED.toLong() -> MaterialSymbols.Rounded.Done
+                SManga.PUBLISHING_FINISHED.toLong() -> MaterialSymbols.Rounded.Check
                 SManga.CANCELLED.toLong() -> MaterialSymbols.Rounded.Close
-                SManga.ON_HIATUS.toLong() -> MaterialSymbols.Rounded.Pause
+                SManga.ON_HIATUS.toLong() -> MaterialSymbols.RoundedFilled.Pause
                 else -> MaterialSymbols.Rounded.Block
             },
         )
@@ -272,7 +272,7 @@ private fun DuplicateMangaListItem(
         ) {
             if (source is StubSource) {
                 Icon(
-                    imageVector = MaterialSymbols.Rounded.Warning,
+                    imageVector = MaterialSymbols.RoundedFilled.Warning,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
                     tint = MaterialTheme.colorScheme.error,

@@ -68,4 +68,12 @@
         <item quantity="one">Hurrengo kapitulua</item>
         <item quantity="other">Hurrengo %d kapituluak</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Sarrera %1$d migratu?</item>
+        <item quantity="other">%1$d sarrera migratu?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Sarrera %1$d kopiatu?</item>
+        <item quantity="other">%1$d sarrera kopiatu?</item>
+    </plurals>
 </resources>

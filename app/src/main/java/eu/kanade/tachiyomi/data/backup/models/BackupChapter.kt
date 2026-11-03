@@ -4,8 +4,11 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.core.common.extensions.JsonObjectEmptyBytes
 import mihon.core.common.extensions.toByteArray
+import mihon.core.common.extensions.toEpochMillisOrZero
+import mihon.core.common.extensions.toInstantOrNull
 import mihon.core.common.extensions.toJsonObject
 import tachiyomi.domain.chapter.model.Chapter
+import kotlin.time.Instant
 
 @Serializable
 class BackupChapter(
@@ -35,9 +38,10 @@ class BackupChapter(
             scanlator = this@BackupChapter.scanlator,
             read = this@BackupChapter.read,
             bookmark = this@BackupChapter.bookmark,
-            lastPageRead = this@BackupChapter.lastPageRead,
-            dateFetch = this@BackupChapter.dateFetch,
-            dateUpload = this@BackupChapter.dateUpload,
+            // Only untrusted source of this value, and a truncating narrow can land negative
+            lastPageRead = this@BackupChapter.lastPageRead.coerceIn(0L, Int.MAX_VALUE.toLong()).toInt(),
+            dateFetch = Instant.fromEpochMilliseconds(this@BackupChapter.dateFetch),
+            dateUpload = this@BackupChapter.dateUpload.toInstantOrNull(),
             sourceOrder = this@BackupChapter.sourceOrder,
             memo = this@BackupChapter.memo.toJsonObject(),
         )
@@ -51,9 +55,9 @@ fun Chapter.toBackupChapter() = BackupChapter(
     scanlator = scanlator,
     read = read,
     bookmark = bookmark,
-    lastPageRead = lastPageRead,
-    dateFetch = dateFetch,
-    dateUpload = dateUpload,
+    lastPageRead = lastPageRead.toLong(),
+    dateFetch = dateFetch.toEpochMilliseconds(),
+    dateUpload = dateUpload.toEpochMillisOrZero(),
     sourceOrder = sourceOrder,
     memo = memo.toByteArray(),
 )

@@ -4,7 +4,6 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
-import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.category.repository.CategoryRepository
@@ -15,26 +14,24 @@ class ReorderCategory(
 ) {
     private val mutex = Mutex()
 
-    suspend fun await(category: Category, newIndex: Int) = withNonCancellableContext {
-        mutex.withLock {
-            val categories = categoryRepository.getAll()
-                .filterNot(Category::isSystemCategory)
-                .toMutableList()
+    suspend fun await(category: Category, newIndex: Int) = mutex.withLock {
+        val categories = categoryRepository.getAll()
+            .filterNot(Category::isSystemCategory)
+            .toMutableList()
 
-            val currentIndex = categories.indexOfFirst { it.id == category.id }
-            if (currentIndex == -1) {
-                return@withNonCancellableContext Result.Unchanged
-            }
+        val currentIndex = categories.indexOfFirst { it.id == category.id }
+        if (currentIndex == -1) {
+            return@withLock Result.Unchanged
+        }
 
-            try {
-                categories.add(newIndex, categories.removeAt(currentIndex))
+        try {
+            categories.add(newIndex, categories.removeAt(currentIndex))
 
-                categoryRepository.updateAllOrders(orderedIds = categories.map { it.id })
-                Result.Success
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e)
-                Result.InternalError(e)
-            }
+            categoryRepository.updateAllOrders(orderedIds = categories.map { it.id })
+            Result.Success
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            Result.InternalError(e)
         }
     }
 
