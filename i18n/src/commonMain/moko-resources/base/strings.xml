@@ -453,6 +453,13 @@
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_both">Both</string>
+    <string name="pref_vertical_brightness_gesture">Vertical brightness gesture</string>
+    <string name="pref_vertical_brightness_gesture_off">Off</string>
+    <string name="pref_vertical_brightness_gesture_left">Left edge</string>
+    <string name="pref_vertical_brightness_gesture_right">Right edge</string>
+    <string name="pref_vertical_brightness_gesture_width">Edge width</string>
+    <string name="pref_custom_brightness_enabled_by_gesture">Custom brightness enabled</string>
+    <string name="reader_brightness_toast">Brightness: %1$d%%</string>
     <string name="pref_reader_actions">Actions</string>
     <string name="pref_read_with_long_tap">Show actions on long tap</string>
     <string name="pref_create_folder_per_manga">Save pages into separate folders</string>

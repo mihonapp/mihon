@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -92,6 +94,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.util.ReaderBrightnessGesture
 import eu.kanade.tachiyomi.ui.reader.viewer.LocalPageColorFilter
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.Action
@@ -120,6 +123,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.collectAsState
+import kotlin.math.roundToInt
 
 class ReaderActivity : BaseActivity() {
 
@@ -197,6 +201,8 @@ class ReaderActivity : BaseActivity() {
             val colorOverlay by readerPreferences.colorFilterValue.collectAsState()
             val colorOverlayMode by readerPreferences.colorFilterMode.collectAsState()
             val brightness by settingsViewModel.brightness.collectAsState()
+            val verticalBrightnessGesture by readerPreferences.verticalBrightnessGesture.collectAsState()
+            val verticalBrightnessGestureWidth by readerPreferences.verticalBrightnessGestureWidth.collectAsState()
             val navigation = settingsViewModel.navigation.collectAsState().value
 
             val backgroundColor = remember(general.theme) { Color(baseContext.readerBackgroundColor(general.theme)) }
@@ -219,14 +225,107 @@ class ReaderActivity : BaseActivity() {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .then(
+                        if (verticalBrightnessGesture != ReaderPreferences.VerticalBrightnessGesture.OFF) {
+                            Modifier.systemGestureExclusion { layoutCoordinates ->
+                                val width = layoutCoordinates.size.width.toFloat()
+                                val height = layoutCoordinates.size.height.toFloat()
+                                // systemGestureExclusion is evaluated during Compose layout pass, so collectAsState is used
+                                val edgeWidth = width * (verticalBrightnessGestureWidth / 100f)
+                                when (verticalBrightnessGesture) {
+                                    ReaderPreferences.VerticalBrightnessGesture.LEFT -> {
+                                        androidx.compose.ui.geometry.Rect(0f, 0f, edgeWidth, height)
+                                    }
+                                    ReaderPreferences.VerticalBrightnessGesture.RIGHT -> {
+                                        androidx.compose.ui.geometry.Rect(width - edgeWidth, 0f, width, height)
+                                    }
+                                    else -> androidx.compose.ui.geometry.Rect.Zero
+                                }
+                            }
+                        } else {
+                            Modifier
+                        },
+                    )
                     .background(backgroundColor)
                     .onPreviewKeyEvent(::onKeyEvent)
                     .focusRequester(focusRequester)
                     .focusable()
-                    .pointerInput(Unit) {
+                    .pointerInput(verticalBrightnessGesture) {
+                        if (verticalBrightnessGesture == ReaderPreferences.VerticalBrightnessGesture.OFF) {
+                            awaitEachGesture {
+                                awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                                navigationOverlayState.hide()
+                            }
+                            return@pointerInput
+                        }
+
                         awaitEachGesture {
-                            awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                            val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
                             navigationOverlayState.hide()
+
+                            val width = size.width.toFloat()
+                            val height = size.height.toFloat()
+
+                            // Read widthPercent directly from preference inside gesture scope so gesture always uses latest setting
+                            val widthPercent = readerPreferences.verticalBrightnessGestureWidth.get()
+                            val edgeFraction = widthPercent / 100f
+
+                            if (!ReaderBrightnessGesture.isInEdgeZone(
+                                    down.position.x,
+                                    width,
+                                    verticalBrightnessGesture,
+                                    edgeFraction,
+                                )
+                            ) {
+                                return@awaitEachGesture
+                            }
+
+                            var isGestureLocked = false
+                            var initialBrightness = 0
+                            var gestureInitialPos = down.position
+                            val touchSlop = viewConfiguration.touchSlop
+                            val initialPosition = down.position
+
+                            do {
+                                val event = awaitPointerEvent(pass = PointerEventPass.Initial)
+                                val change = event.changes.firstOrNull() ?: break
+                                val currentPos = change.position
+                                val dx = currentPos.x - initialPosition.x
+                                val dy = currentPos.y - initialPosition.y
+
+                                if (!isGestureLocked && change.pressed) {
+                                    if (ReaderBrightnessGesture.isVerticalGesture(dx, dy, touchSlop)) {
+                                        isGestureLocked = true
+                                        gestureInitialPos = currentPos
+                                        if (!readerPreferences.customBrightness.get()) {
+                                            val currentScreenBrightness = getCurrentScreenBrightness()
+                                            readerPreferences.customBrightnessValue.set(currentScreenBrightness)
+                                            readerPreferences.customBrightness.set(true)
+                                            toast(MR.strings.pref_custom_brightness_enabled_by_gesture)
+                                        }
+                                        initialBrightness = readerPreferences.customBrightnessValue.get()
+                                    }
+                                }
+
+                                if (isGestureLocked) {
+                                    change.consume()
+                                    val dragY = currentPos.y - gestureInitialPos.y
+                                    val newBrightness = ReaderBrightnessGesture.calculateBrightnessValue(
+                                        initialBrightness = initialBrightness,
+                                        deltaYPixels = dragY,
+                                        screenHeightPixels = height,
+                                    )
+                                    readerPreferences.customBrightnessValue.set(newBrightness)
+                                    if (newBrightness != initialBrightness) {
+                                        showBrightnessToast(newBrightness)
+                                    }
+                                }
+                            } while (event.changes.any { it.pressed })
+
+                            brightnessToast?.cancel()
+                            brightnessToast = null
+                            lastBrightnessToastAt = 0L
+                            lastBrightnessToastValue = Int.MIN_VALUE
                         }
                     }
                     .then(if (general.keepScreenOn) Modifier.keepScreenOn() else Modifier),
@@ -849,6 +948,24 @@ class ReaderActivity : BaseActivity() {
         )
     }
 
+    private var brightnessToast: Toast? = null
+    private var lastBrightnessToastAt = 0L
+    private var lastBrightnessToastValue = Int.MIN_VALUE
+
+    private fun showBrightnessToast(value: Int) {
+        val now = SystemClock.elapsedRealtime()
+        if (now - lastBrightnessToastAt < 100) return
+        if (value == lastBrightnessToastValue) return
+        lastBrightnessToastAt = now
+        lastBrightnessToastValue = value
+        brightnessToast?.cancel()
+        brightnessToast = Toast.makeText(
+            this,
+            stringResource(MR.strings.reader_brightness_toast, value),
+            Toast.LENGTH_SHORT,
+        ).also { it.show() }
+    }
+
     /**
      * Forces the user preferred [orientation] on the activity.
      */
@@ -856,6 +973,25 @@ class ReaderActivity : BaseActivity() {
         val newOrientation = ReaderOrientation.fromPreference(orientation)
         if (newOrientation.flag != requestedOrientation) {
             requestedOrientation = newOrientation.flag
+        }
+    }
+
+    /**
+     * Reads current window or system screen brightness as percentage (1..100).
+     */
+    private fun getCurrentScreenBrightness(): Int {
+        val windowBrightness = window.attributes.screenBrightness
+        if (windowBrightness in 0f..1f) {
+            return (windowBrightness * 100).roundToInt().coerceIn(1, 100)
+        }
+        return try {
+            val sysBrightness = android.provider.Settings.System.getInt(
+                contentResolver,
+                android.provider.Settings.System.SCREEN_BRIGHTNESS,
+            )
+            (sysBrightness / 255f * 100).roundToInt().coerceIn(1, 100)
+        } catch (_: Exception) {
+            50
         }
     }
 
