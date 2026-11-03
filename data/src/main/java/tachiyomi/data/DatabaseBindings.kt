@@ -11,6 +11,7 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteConcurrencyModel.MultipleReadersSingleWriter
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteConfiguration
+import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteConfigurableDriver
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteConnectionFactory
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteDatabaseType
 import com.eygraber.sqldelight.androidx.driver.AndroidxSqliteDriver
@@ -34,24 +35,9 @@ object DatabaseBindings {
     @Provides
     @SingleIn(AppScope::class)
     fun providesSqlDriver(context: Context, databaseRepository: DatabaseRepositoryImpl): SqlDriver {
-        val isLowRam = context.getSystemService<ActivityManager>()?.isLowRamDevice == true
-        return AndroidxSqliteDriver(
-            connectionFactory = object : AndroidxSqliteConnectionFactory {
-                override val driver: SQLiteDriver = BundledSQLiteDriver()
-
-                override fun createConnection(name: String): SQLiteConnection {
-                    return driver.open(name).apply {
-                        execSQL("PRAGMA busy_timeout = 3000")
-                    }
-                }
-            },
-            databaseType = AndroidxSqliteDatabaseType.FileProvider(context, ProfileManager.databaseName(context)),
-            schema = Database.Schema,
-            configuration = AndroidxSqliteConfiguration(
-                isForeignKeyConstraintsEnabled = true,
-                concurrencyModel = MultipleReadersSingleWriter(isWal = true, walCount = if (isLowRam) 1 else 4),
-            ),
-            // Runs before the driver compares the schema version, and onOpen once the schema is ready
+        return createSqlDriver(
+            context = context,
+            name = ProfileManager.databaseName(context),
             onConfigure = {
                 val version = executePragmaQuery("user_version", { QueryResult.Value(it.apply { next() }.getLong(0)) })
                 databaseRepository.isMigrating.value = version in 1..<Database.Schema.version
@@ -62,9 +48,19 @@ object DatabaseBindings {
         )
     }
 
+    /**
+     * Extension stores decide which installed extensions are trusted, and extensions are installed on the whole
+     * device, so every profile reads and writes the stores of the default profile's database.
+     */
+    fun createSharedExtensionDatabase(context: Context): Database {
+        return createDatabase(createSqlDriver(context, ProfileManager.DEFAULT_DATABASE_NAME))
+    }
+
     @Provides
     @SingleIn(AppScope::class)
-    fun providesDatabase(driver: SqlDriver): Database {
+    fun providesDatabase(driver: SqlDriver): Database = createDatabase(driver)
+
+    private fun createDatabase(driver: SqlDriver): Database {
         return Database(
             driver = driver,
             historyAdapter = History.Adapter(
@@ -89,6 +85,35 @@ object DatabaseBindings {
                 start_dateAdapter = InstantColumnAdapter,
                 finish_dateAdapter = InstantColumnAdapter,
             ),
+        )
+    }
+
+    private fun createSqlDriver(
+        context: Context,
+        name: String,
+        onConfigure: suspend AndroidxSqliteConfigurableDriver.() -> Unit = {},
+        onOpen: suspend SqlDriver.() -> Unit = {},
+    ): SqlDriver {
+        val isLowRam = context.getSystemService<ActivityManager>()?.isLowRamDevice == true
+        return AndroidxSqliteDriver(
+            connectionFactory = object : AndroidxSqliteConnectionFactory {
+                override val driver: SQLiteDriver = BundledSQLiteDriver()
+
+                override fun createConnection(name: String): SQLiteConnection {
+                    return driver.open(name).apply {
+                        execSQL("PRAGMA busy_timeout = 3000")
+                    }
+                }
+            },
+            databaseType = AndroidxSqliteDatabaseType.FileProvider(context, name),
+            schema = Database.Schema,
+            configuration = AndroidxSqliteConfiguration(
+                isForeignKeyConstraintsEnabled = true,
+                concurrencyModel = MultipleReadersSingleWriter(isWal = true, walCount = if (isLowRam) 1 else 4),
+            ),
+            // Runs before the driver compares the schema version, and onOpen once the schema is ready
+            onConfigure = onConfigure,
+            onOpen = onOpen,
         )
     }
 }

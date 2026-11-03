@@ -1,5 +1,6 @@
 package eu.kanade.domain.source.service
 
+import android.content.Context
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -8,7 +9,9 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 import mihon.domain.extension.model.ContentWarning
 import mihon.domain.migration.models.MigrationFlag
 import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.AndroidPreferenceStore
 import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.profile.ProfileManager
 import tachiyomi.core.common.preference.getEnum
 import tachiyomi.core.common.preference.getEnumSet
 import tachiyomi.core.common.preference.getLongArray
@@ -18,7 +21,11 @@ import tachiyomi.domain.library.model.LibraryDisplayMode
 @SingleIn(AppScope::class)
 class SourcePreferences(
     preferenceStore: PreferenceStore,
+    context: Context,
 ) {
+
+    // Extensions are installed on the whole device, so their repositories and trust are shared by every profile
+    private val deviceStore: PreferenceStore = AndroidPreferenceStore(ProfileManager.devicePreferences(context))
 
     val sourceDisplayMode: Preference<LibraryDisplayMode> = preferenceStore.getObjectFromString(
         "pref_display_mode_catalogue",
@@ -65,11 +72,18 @@ class SourcePreferences(
 
     val hideInLibraryItems: Preference<Boolean> = preferenceStore.getBoolean("browse_hide_in_library_items", false)
 
-    val extensionRepos: Preference<Set<String>> = preferenceStore.getStringSet("extension_repos", emptySet())
+    val extensionRepos: Preference<Set<String>> = deviceStore.getStringSet("extension_repos", emptySet())
+
+    /**
+     * Package names of the extensions that belong to the active profile. Extensions are installed on the whole
+     * device, but each profile only shows and uses the sources of its own. Not set yet means the profile has never
+     * had a list: the default profile then takes every installed extension, any other profile starts empty.
+     */
+    val profileExtensions: Preference<Set<String>> = preferenceStore.getStringSet("profile_extensions", emptySet())
 
     val extensionUpdatesCount: Preference<Int> = preferenceStore.getInt("ext_updates_count", 0)
 
-    val trustedExtensions: Preference<Set<String>> = preferenceStore.getStringSet(
+    val trustedExtensions: Preference<Set<String>> = deviceStore.getStringSet(
         Preference.appStateKey("trusted_extensions"),
         emptySet(),
     )

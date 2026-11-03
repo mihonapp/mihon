@@ -37,6 +37,8 @@ import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.model.ExtensionStore
+import tachiyomi.core.common.preference.getAndSet
+import tachiyomi.core.common.profile.ProfileManager
 import mihon.domain.extension.repository.ExtensionStoreRepository
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
@@ -161,7 +163,9 @@ class ExtensionManager(
      */
     private suspend fun loadExtensions() = loadMutex.withLock {
         try {
-            val extensions = ExtensionLoader.loadExtensions(context, loadedExtensionMapFlow.value)
+            val installed = ExtensionLoader.loadExtensions(context, loadedExtensionMapFlow.value)
+            val belonging = belongingPackages(installed)
+            val extensions = installed.filter { it.pkgName in belonging }
 
             loadedExtensionMapFlow.value = extensions
                 .filterIsInstance<Extension.Loaded>()
@@ -179,6 +183,22 @@ class ExtensionManager(
             // Release anything waiting on the extensions whether or not the load worked
             initialized.complete(Unit)
         }
+    }
+
+    /**
+     * Extensions are installed on the whole device, but a profile only uses the ones in its own list. The default
+     * profile, which existed before the lists, takes everything installed the first time.
+     */
+    private fun belongingPackages(all: List<Extension>): Set<String> {
+        val list = preferences.profileExtensions
+        if (!list.isSet() && ProfileManager.isDefault(context)) {
+            list.set(all.mapTo(HashSet()) { it.pkgName })
+        }
+        return list.get()
+    }
+
+    private fun addToProfile(pkgName: String) {
+        preferences.profileExtensions.getAndSet { it + pkgName }
     }
 
     /**
@@ -309,6 +329,12 @@ class ExtensionManager(
      * @param extension The extension to uninstall.
      */
     fun uninstallExtension(extension: Extension.Installed) {
+        // Another profile still using it keeps the apk, this profile just stops using it
+        if (ProfileManager.otherProfileHasExtension(context, extension.pkgName)) {
+            preferences.profileExtensions.getAndSet { it - extension.pkgName }
+            unregisterExtension(extension.pkgName)
+            return
+        }
         installer.uninstallApk(extension.pkgName)
     }
 
@@ -351,13 +377,16 @@ class ExtensionManager(
      */
     private inner class InstallationListener : ExtensionInstallReceiver.Listener {
 
+        // An install happening while this profile is open belongs to this profile
         override suspend fun onExtensionLoaded(extension: Extension.Loaded) = loadMutex.withLock {
+            addToProfile(extension.pkgName)
             registerExtension(extension)
             notLoadedExtensionMapFlow.update { it - extension.pkgName }
             refreshStatuses()
         }
 
         override suspend fun onExtensionNotLoaded(extension: Extension.NotLoaded) = loadMutex.withLock {
+            addToProfile(extension.pkgName)
             loadedExtensionMapFlow.update { it - extension.pkgName }
             notLoadedExtensionMapFlow.update { it + extension }
             refreshStatuses()
@@ -365,6 +394,7 @@ class ExtensionManager(
 
         override suspend fun onPackageUninstalled(pkgName: String) = loadMutex.withLock {
             ExtensionLoader.uninstallPrivateExtension(context, pkgName)
+            preferences.profileExtensions.getAndSet { it - pkgName }
             unregisterExtension(pkgName)
             updatePendingUpdatesCount()
         }

@@ -56,7 +56,7 @@ object ProfileManager {
     }
 
     private fun save(context: Context, profiles: List<Profile>) {
-        store(context).edit { putString(KEY_PROFILES, json.encodeToString(profiles)) }
+        store(context).edit(commit = true) { putString(KEY_PROFILES, json.encodeToString(profiles)) }
     }
 
     fun activeId(context: Context): String {
@@ -108,7 +108,8 @@ object ProfileManager {
 
     /** Makes [id] the active profile on the next process start. */
     fun setActive(context: Context, id: String) {
-        store(context).edit {
+        // commit = true: the process is killed right after this, so the write has to reach the disk first
+        store(context).edit(commit = true) {
             putString(KEY_ACTIVE, id)
             putBoolean(KEY_SKIP_PICKER, true)
         }
@@ -123,7 +124,7 @@ object ProfileManager {
         pickedThisProcess = true
         val store = store(context)
         if (store.getBoolean(KEY_SKIP_PICKER, false)) {
-            store.edit { remove(KEY_SKIP_PICKER) }
+            store.edit(commit = true) { remove(KEY_SKIP_PICKER) }
             return false
         }
         return profiles(context).size > 1
@@ -133,7 +134,9 @@ object ProfileManager {
 
     fun databaseName(context: Context): String = databaseName(activeId(context))
 
-    private fun databaseName(id: String) = if (id == DEFAULT_ID) "tachiyomi.db" else "tachiyomi_$id.db"
+    const val DEFAULT_DATABASE_NAME = "tachiyomi.db"
+
+    private fun databaseName(id: String) = if (id == DEFAULT_ID) DEFAULT_DATABASE_NAME else "tachiyomi_$id.db"
 
     private fun preferencesName(id: String) = "profile_${id}_preferences"
 
@@ -145,6 +148,32 @@ object ProfileManager {
         } else {
             context.applicationContext.getSharedPreferences(preferencesName(id), Context.MODE_PRIVATE)
         }
+    }
+
+    /** The main preferences of any profile, not only the active one. */
+    fun preferencesOf(context: Context, id: String): SharedPreferences {
+        return if (id == DEFAULT_ID) {
+            PreferenceManager.getDefaultSharedPreferences(context)
+        } else {
+            context.applicationContext.getSharedPreferences(preferencesName(id), Context.MODE_PRIVATE)
+        }
+    }
+
+    /** Whether a profile other than the active one has [pkgName] in its list of extensions. */
+    fun otherProfileHasExtension(context: Context, pkgName: String): Boolean {
+        val active = activeId(context)
+        return profiles(context).any { profile ->
+            profile.id != active &&
+                preferencesOf(context, profile.id).getStringSet("profile_extensions", null)?.contains(pkgName) == true
+        }
+    }
+
+    /**
+     * Preferences shared by every profile. Extensions are installed on the whole device, so which repositories and
+     * signatures are trusted can't differ per profile. This is the file the default profile uses.
+     */
+    fun devicePreferences(context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
     }
 
     /** Name for an extra preferences file that has to be kept per profile. */

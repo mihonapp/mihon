@@ -2,6 +2,7 @@ package mihon.data.extension.repository
 
 import app.cash.sqldelight.async.coroutines.awaitAsList
 import app.cash.sqldelight.async.coroutines.awaitAsOne
+import android.content.Context
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -23,7 +24,9 @@ import mihon.data.extension.service.ExtensionStoreService
 import mihon.domain.extension.model.ExtensionStore
 import mihon.domain.extension.repository.ExtensionStoreRepository
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.core.common.profile.ProfileManager
 import tachiyomi.data.Database
+import tachiyomi.data.DatabaseBindings
 import tachiyomi.data.subscribeToList
 import tachiyomi.data.subscribeToOne
 import kotlin.time.Duration
@@ -35,8 +38,17 @@ import kotlin.time.Duration.Companion.seconds
 class ExtensionStoreRepositoryImpl(
     @AppCoroutineScope scope: CoroutineScope,
     private val service: ExtensionStoreService,
-    private val database: Database,
+    context: Context,
+    mainDatabase: Database,
 ) : ExtensionStoreRepository {
+
+    // Shared by every profile, see DatabaseBindings.createSharedExtensionDatabase
+    private val database: Database = if (ProfileManager.isDefault(context)) {
+        mainDatabase
+    } else {
+        DatabaseBindings.createSharedExtensionDatabase(context)
+    }
+
 
     private val stores = database.extension_storeQueries.getAll(::extensionStoreMapper)
         .subscribeToList()
