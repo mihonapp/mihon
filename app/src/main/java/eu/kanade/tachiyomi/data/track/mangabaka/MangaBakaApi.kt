@@ -124,6 +124,7 @@ class MangaBakaApi(
                         remote_id = track.remote_id
                         title = additionalData.chooseBestTitle()
                         status = userData.getStatus()
+                        total_chapters = additionalData.totalChapters()
                         score = userData.rating?.toDouble() ?: 0.0
                         started_reading_date = parseIsoDateAsLocalStartOfDay(userData.startDate) ?: 0
                         finished_reading_date = parseIsoDateAsLocalStartOfDay(userData.finishDate) ?: 0
@@ -210,6 +211,7 @@ class MangaBakaApi(
             }
             authors = item.authors.orEmpty()
             artists = item.artists.orEmpty()
+            total_chapters = item.totalChapters()
         }
     }
 

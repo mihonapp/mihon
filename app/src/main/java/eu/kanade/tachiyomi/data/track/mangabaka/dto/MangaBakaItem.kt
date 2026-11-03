@@ -27,6 +27,8 @@ data class MangaBakaItem(
     val type: String,
     val rating: Double?,
     val titles: List<MangaBakaItemTitle>?,
+    @SerialName("total_chapters")
+    private val totalChapters: String?,
 ) {
     fun chooseBestTitle(): String {
         // based on https://mangabaka.org/pages/announcements/15-titles-v2#finding-the-title-you-want
@@ -48,6 +50,11 @@ data class MangaBakaItem(
             ?: titles?.firstOrNull()?.title
             ?: "ID: $id - Could not find name! (report on the MangaBaka Discord)"
     }
+    fun totalChapters(): Long = this
+        .takeIf { it.status == "completed" }
+        ?.totalChapters
+        ?.toLongOrNull()
+        ?: 0L
 }
 
 @Serializable
