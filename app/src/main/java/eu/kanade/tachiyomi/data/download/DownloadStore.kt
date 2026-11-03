@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import tachiyomi.core.common.profile.ProfileManager
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
@@ -30,7 +31,7 @@ class DownloadStore(
     /**
      * Preference file where active downloads are stored.
      */
-    private val preferences by lazy { context.getSharedPreferences("active_downloads", Context.MODE_PRIVATE) }
+    private val preferences by lazy { context.getSharedPreferences(ProfileManager.scopedPreferencesName(context, "active_downloads"), Context.MODE_PRIVATE) }
 
     /**
      * Counter used to keep the queue order.

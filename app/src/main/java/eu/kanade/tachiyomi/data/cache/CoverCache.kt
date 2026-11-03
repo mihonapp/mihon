@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import mihon.core.metro.AppCoroutineScope
+import tachiyomi.core.common.profile.ProfileManager
 import tachiyomi.domain.manga.model.Manga
 import java.io.File
 import java.io.IOException
@@ -144,7 +145,8 @@ class CoverCache(
     }
 
     private fun getCacheDir(dir: String): File {
-        return context.getExternalFilesDir(dir)
-            ?: File(context.filesDir, dir).also { it.mkdirs() }
+        val scoped = ProfileManager.scopedDirectory(context, dir)
+        return context.getExternalFilesDir(scoped)
+            ?: File(context.filesDir, scoped).also { it.mkdirs() }
     }
 }

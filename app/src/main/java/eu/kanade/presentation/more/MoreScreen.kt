@@ -14,6 +14,7 @@ import mihon.icons.materialsymbols.automirroredrounded.Label
 import mihon.icons.materialsymbols.rounded.CloudOff
 import mihon.icons.materialsymbols.rounded.Download
 import mihon.icons.materialsymbols.rounded.Eyeglasses2
+import mihon.icons.materialsymbols.rounded.Group
 import mihon.icons.materialsymbols.rounded.Info
 import mihon.icons.materialsymbols.rounded.QueryStats
 import mihon.icons.materialsymbols.rounded.Settings
@@ -34,6 +35,8 @@ fun MoreScreen(
     incognitoMode: Boolean,
     onIncognitoModeChange: (Boolean) -> Unit,
     onClickDownloadQueue: () -> Unit,
+    profileName: String,
+    onClickProfiles: () -> Unit,
     onClickCategories: () -> Unit,
     onClickStats: () -> Unit,
     onClickDataAndStorage: () -> Unit,
@@ -66,6 +69,15 @@ fun MoreScreen(
                     icon = MaterialSymbols.Rounded.Eyeglasses2,
                     checked = incognitoMode,
                     onCheckedChanged = onIncognitoModeChange,
+                )
+            }
+
+            item {
+                TextPreferenceWidget(
+                    title = stringResource(MR.strings.profile_switch),
+                    subtitle = stringResource(MR.strings.profile_switch_summary, profileName),
+                    icon = MaterialSymbols.Rounded.Group,
+                    onPreferenceClick = onClickProfiles,
                 )
             }
 

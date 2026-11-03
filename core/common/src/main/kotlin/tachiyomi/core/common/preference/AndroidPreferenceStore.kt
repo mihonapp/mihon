@@ -2,7 +2,6 @@ package tachiyomi.core.common.preference
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -18,12 +17,13 @@ import tachiyomi.core.common.preference.AndroidPreference.ObjectAsString
 import tachiyomi.core.common.preference.AndroidPreference.ObjectSetAsStringSet
 import tachiyomi.core.common.preference.AndroidPreference.StringPrimitive
 import tachiyomi.core.common.preference.AndroidPreference.StringSetPrimitive
+import tachiyomi.core.common.profile.ProfileManager
 
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 class AndroidPreferenceStore(private val sharedPreferences: SharedPreferences) : PreferenceStore {
 
-    @Inject constructor(context: Context) : this(PreferenceManager.getDefaultSharedPreferences(context))
+    @Inject constructor(context: Context) : this(ProfileManager.preferences(context))
 
     private val keyFlow = sharedPreferences.keyFlow
 

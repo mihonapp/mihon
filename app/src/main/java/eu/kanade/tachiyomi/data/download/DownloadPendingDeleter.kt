@@ -7,6 +7,7 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import tachiyomi.core.common.profile.ProfileManager
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 
@@ -25,7 +26,7 @@ class DownloadPendingDeleter(
     /**
      * Preferences used to store the list of chapters to delete.
      */
-    private val preferences by lazy { context.getSharedPreferences("chapters_to_delete", Context.MODE_PRIVATE) }
+    private val preferences by lazy { context.getSharedPreferences(ProfileManager.scopedPreferencesName(context, "chapters_to_delete"), Context.MODE_PRIVATE) }
 
     /**
      * Last added chapter, used to avoid decoding from the preference too often.

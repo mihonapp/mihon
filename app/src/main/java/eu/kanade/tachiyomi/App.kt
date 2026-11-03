@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.preference.PreferenceManager
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.memory.MemoryCache
@@ -68,6 +67,7 @@ import org.conscrypt.Conscrypt
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.profile.ProfileManager
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -125,7 +125,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
         // The graph and the code after it read the default preferences straight away. Loading them takes a disk
         // read, so start it on another thread while the graph is built; the first read then waits less or not at all
-        thread(name = "PreferencesPreload") { PreferenceManager.getDefaultSharedPreferences(this) }
+        thread(name = "PreferencesPreload") { ProfileManager.preferences(this) }
         // The first use of Dispatchers.Main finds its factory with a ServiceLoader, which reads the APK
         thread(name = "MainDispatcherPreload") { Dispatchers.Main }
 

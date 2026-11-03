@@ -1086,4 +1086,18 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+
+    <!-- Profiles -->
+    <string name="profile_picker_title">Who\'s reading?</string>
+    <string name="profile_manage_title">Manage profiles</string>
+    <string name="profile_manage">Manage profiles</string>
+    <string name="profile_done">Done</string>
+    <string name="profile_add">Add profile</string>
+    <string name="profile_edit">Edit profile</string>
+    <string name="profile_name">Name</string>
+    <string name="profile_delete">Delete profile</string>
+    <string name="profile_delete_confirm">Delete %1$s and everything in it (library, history, settings and downloads)? This can\'t be undone.</string>
+    <string name="profile_active_note">This is the profile you are using now.</string>
+    <string name="profile_switch">Switch profile</string>
+    <string name="profile_switch_summary">Current: %1$s</string>
 </resources>

@@ -21,6 +21,7 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import mihon.data.database.DatabaseRepositoryImpl
+import tachiyomi.core.common.profile.ProfileManager
 
 @ContributesTo(AppScope::class)
 @BindingContainer
@@ -44,7 +45,7 @@ object DatabaseBindings {
                     }
                 }
             },
-            databaseType = AndroidxSqliteDatabaseType.FileProvider(context, "tachiyomi.db"),
+            databaseType = AndroidxSqliteDatabaseType.FileProvider(context, ProfileManager.databaseName(context)),
             schema = Database.Schema,
             configuration = AndroidxSqliteConfiguration(
                 isForeignKeyConstraintsEnabled = true,

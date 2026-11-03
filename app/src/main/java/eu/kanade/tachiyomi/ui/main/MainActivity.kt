@@ -119,7 +119,9 @@ import mihon.feature.support.SupportUsScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.materialsymbols.roundedfilled.VolunteerActivism
+import mihon.ui.profile.ProfilePickerActivity
 import tachiyomi.core.common.Constants
+import tachiyomi.core.common.profile.ProfileManager
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.release.interactor.GetApplicationRelease
@@ -173,6 +175,12 @@ class MainActivity : BaseActivity() {
         val splashScreen = if (isLaunch) installSplashScreen() else null
 
         super.onCreate(savedInstanceState)
+
+        if (isLaunch && ProfileManager.shouldShowPicker(this)) {
+            ProfilePickerActivity.show(this)
+            finish()
+            return
+        }
 
         lifecycleScope.launch {
             Migrator.awaitAndRelease()
