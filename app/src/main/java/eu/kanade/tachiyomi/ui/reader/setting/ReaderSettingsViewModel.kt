@@ -210,6 +210,7 @@ class ReaderSettingsViewModel(
         preferences.disableDoubleTapGestures,
         preferences.imageFilters,
         preferences.tileFilters,
+        preferences.cropInsteadOfZoom,
     ) {
         WebGpuPagedSettings(
             page = WebGpuPagedSettings.Page(
@@ -218,6 +219,7 @@ class ReaderSettingsViewModel(
                 transitionAnimationDual = transitionAnimationDual.get(),
                 cutoutMode = cutoutMode.get(),
                 cutoutModeDual = cutoutModeDual.get(),
+                cropInsteadOfZoom = cropInsteadOfZoom.get(),
             ),
             common = WebGpuSettings(
                 doubleTapGesturesDisabled = disableDoubleTapGestures.get(),

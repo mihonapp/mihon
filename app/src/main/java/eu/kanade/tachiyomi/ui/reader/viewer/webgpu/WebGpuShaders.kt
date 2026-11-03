@@ -7,12 +7,17 @@ import ca.mpreg.webgpuviewer.renderer.ImageFilterWgsl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
+import logcat.LogPriority
 import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.util.system.logcat
 import java.io.File
 import java.util.UUID
 
-/** A user's shader: [file] in [WebGpuShaders.dir], shown as [name]. */
-data class WebGpuShader(val file: String, val name: String)
+/**
+ * A user's shader: [file] in [WebGpuShaders.dir], shown as [name], with [values] for the `//!PARAM`s
+ * the user moved off their defaults.
+ */
+data class WebGpuShader(val file: String, val name: String, val values: Map<String, Float> = emptyMap())
 
 /** Picked shaders are copied in, so they outlive the picker's URI permission. */
 object WebGpuShaders {
@@ -26,18 +31,52 @@ object WebGpuShaders {
 
     private fun dir(context: Context) = File(context.filesDir, "webgpu_shaders")
 
-    fun serialize(shaders: List<WebGpuShader>): String =
-        shaders.joinToString("\n") { "${it.file}\t${it.name}" }
+    // Param names are WGSL identifiers, so `=` and `;` can't occur in them.
+    fun serialize(shaders: List<WebGpuShader>): String = shaders.joinToString("\n") { shader ->
+        val values = shader.values.entries.joinToString(";") { "${it.key}=${it.value}" }
+        if (values.isEmpty()) "${shader.file}\t${shader.name}" else "${shader.file}\t${shader.name}\t$values"
+    }
 
     fun deserialize(text: String): List<WebGpuShader> = text.lineSequence()
         .mapNotNull { line ->
-            val tab = line.indexOf('\t')
-            if (tab <= 0) return@mapNotNull null
-            val file = line.substring(0, tab)
-            if (FILE.matches(file)) WebGpuShader(file, line.substring(tab + 1)) else null
+            val fields = line.split('\t', limit = 3)
+            if (fields.size < 2 || !FILE.matches(fields[0])) return@mapNotNull null
+            val values = fields.getOrNull(2).orEmpty().split(';').mapNotNull { entry ->
+                val (name, value) = entry.split('=', limit = 2).takeIf { it.size == 2 && it[0].isNotEmpty() }
+                    ?: return@mapNotNull null
+                value.toFloatOrNull()?.let { name to it }
+            }.toMap()
+            WebGpuShader(fields[0], fields[1], values)
         }
         .distinctBy { it.file }
         .toList()
+
+    /** Sets [shader]'s [param] in [pref]; null goes back to the default. */
+    fun setValue(pref: Preference<List<WebGpuShader>>, shader: WebGpuShader, param: String, value: Float?) {
+        synchronized(lock) {
+            pref.set(
+                pref.get().map {
+                    if (it.file != shader.file) {
+                        it
+                    } else {
+                        it.copy(values = if (value == null) it.values - param else it.values + (param to value))
+                    }
+                },
+            )
+        }
+    }
+
+    fun applyValues(filter: ImageFilterWgsl, shader: WebGpuShader) {
+        for (param in filter.params) {
+            val value = shader.values[param.name] ?: param.default
+            if (filter[param.name] == value) continue
+            try {
+                filter[param.name] = value
+            } catch (e: IllegalArgumentException) {
+                logcat(LogPriority.WARN, e) { "${shader.name} ${param.name}" }
+            }
+        }
+    }
 
     /**
      * Copies [uri] in and appends it to [pref]. Throws [IllegalArgumentException], with the reason, if
@@ -109,5 +148,16 @@ object WebGpuShaders {
 
     /** Throws if the file is gone or no longer parses. */
     fun load(context: Context, shader: WebGpuShader): ImageFilterWgsl =
-        ImageFilterWgsl(File(dir(context), shader.file).readText(), shader.name)
+        ImageFilterWgsl(File(dir(context), shader.file).readText(), shader.name).also { applyValues(it, shader) }
+
+    // Touches no GPU state.
+    suspend fun params(context: Context, shader: WebGpuShader): List<ImageFilterWgsl.Param> =
+        withContext(Dispatchers.IO) {
+            try {
+                ImageFilterWgsl(File(dir(context), shader.file).readText(), shader.name).params
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { shader.name }
+                emptyList()
+            }
+        }
 }

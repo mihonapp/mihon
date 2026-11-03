@@ -9,6 +9,7 @@ import ca.mpreg.imagedecoder.ImageDecoder
 import ca.mpreg.webgpuviewer.closeTo
 import ca.mpreg.webgpuviewer.renderer.GainmapInput
 import ca.mpreg.webgpuviewer.renderer.Image
+import ca.mpreg.webgpuviewer.renderer.ImageFilterWgsl
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
 import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
@@ -78,6 +79,8 @@ private const val STREAM_WAIT_MS = 1000L
 
 /** Least time between feeds, so a trickle of small reads decodes and uploads in batches. */
 private const val STREAM_BATCH_MS = 33L
+
+private const val RETUNE_DELAY_MS = 150L
 
 open class WebGpuViewer(
     val activity: ReaderActivity,
@@ -851,15 +854,8 @@ open class WebGpuViewer(
             if (old?.doubleTapGesturesDisabled != new.doubleTapGesturesDisabled) {
                 viewerState.doubleTapGesturesEnabled = !new.doubleTapGesturesDisabled
             }
-            if (old?.imageFilters != new.imageFilters) {
-                // Else an older, slower load could land last.
-                imageFiltersJob?.cancel()
-                imageFiltersJob = scope.launch { viewerState.imageFilters = loadFilters(new.imageFilters) }
-            }
-            if (old?.tileFilters != new.tileFilters) {
-                tileFiltersJob?.cancel()
-                tileFiltersJob = scope.launch { viewerState.tileFilters = loadFilters(new.tileFilters) }
-            }
+            if (old?.imageFilters != new.imageFilters) imageFilters.update(new.imageFilters)
+            if (old?.tileFilters != new.tileFilters) tileFilters.update(new.tileFilters)
         }
         settingsViewModel.paged.collectChanges(scope) { old, new ->
             if (old != null && old.page != new.page) {
@@ -948,17 +944,46 @@ open class WebGpuViewer(
         viewerState.invalidate()
     }
 
-    private var imageFiltersJob: Job? = null
-    private var tileFiltersJob: Job? = null
+    private val imageFilters = FilterSlot { viewerState.imageFilters = it }
+    private val tileFilters = FilterSlot { viewerState.tileFilters = it }
 
-    /** Fresh instances: one belongs to one viewer and one chain. Skips any that fail to load. */
-    private suspend fun loadFilters(shaders: List<WebGpuShader>) = withContext(Dispatchers.IO) {
-        shaders.mapNotNull { shader ->
-            try {
-                WebGpuShaders.load(activity, shader)
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "filter ${shader.name}" }
-                null
+    // Main thread only.
+    private inner class FilterSlot(private val assign: (List<ImageFilterWgsl>) -> Unit) {
+        private var job: Job? = null
+        private var retune: Job? = null
+        private var loaded: List<Pair<WebGpuShader, ImageFilterWgsl>> = emptyList()
+
+        fun update(shaders: List<WebGpuShader>) {
+            retune?.cancel()
+            if (job?.isActive != true && loaded.map { it.first.file } == shaders.map { it.file }) {
+                // Each value rebuilds pipelines on the render thread; a slider sends one per step.
+                retune = scope.launch {
+                    delay(RETUNE_DELAY_MS.milliseconds)
+                    loaded = loaded.zip(shaders) { (_, filter), shader ->
+                        WebGpuShaders.applyValues(filter, shader)
+                        shader to filter
+                    }
+                }
+                return
+            }
+            // Else an older, slower load could land last.
+            job?.cancel()
+            job = scope.launch {
+                val fresh = load(shaders)
+                loaded = fresh
+                assign(fresh.map { it.second })
+            }
+        }
+
+        /** Fresh instances: one belongs to one viewer and one chain. Skips any that fail to load. */
+        private suspend fun load(shaders: List<WebGpuShader>) = withContext(Dispatchers.IO) {
+            shaders.mapNotNull { shader ->
+                try {
+                    shader to WebGpuShaders.load(activity, shader)
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e) { "filter ${shader.name}" }
+                    null
+                }
             }
         }
     }
@@ -1416,16 +1441,18 @@ open class WebGpuViewer(
             } else {
                 null
             }
+            val crop = trimColors != null && !isContinuous && webgpuPaged.page.cropInsteadOfZoom
 
             // The preview's textures become the image, or frame 0; one since replaced or freed
             // (a settings reset) leaves a fresh image to install instead.
             val shown = preview?.takeIf { synchronized(lock) { page.imagePage === it && !it.destroyed } }
-            // Only a page the reader hasn't moved re-homes for its trim.
+            // Only a page the reader hasn't moved re-homes for its trim, unless a crop resizes it.
             val wasHome = shown?.atHome == true
             val firstImage = shown?.image?.also {
                 it.update(firstFrame.image)
                 if (!animated) it.createMipMaps(firstFrame.image)
                 it.measure(firstFrame.image, trimColors, trimThreshold = 0.15f, backgroundColor = backgroundColor)
+                it.crop = crop
             } ?: Image(
                 firstFrame.image,
                 firstFrame.width,
@@ -1437,7 +1464,10 @@ open class WebGpuViewer(
                 hdr = dec.isHdr,
                 hdrHeadroom = hdrHeadroom,
                 gainmap = gainmap?.toInput(),
-            ).also { orphan = it }
+            ).also {
+                it.crop = crop
+                orphan = it
+            }
             val firstDuration = firstFrame.duration
             firstFrame.close()
 
@@ -1452,7 +1482,8 @@ open class WebGpuViewer(
                         page.preview = null
                         // Tiles for a still; an animation swaps images every frame.
                         it.highQuality = !animated
-                        if (wasHome && firstImage.trim != null && !isDualPageMode()) rehome(it)
+                        // Else a crop's new size would keep the old size's home and limits.
+                        if ((wasHome || crop) && firstImage.trim != null && !isDualPageMode()) rehome(it)
                         // Bumps frameVersion, so a transition's cached render of the preview is stale.
                         it.invalidate()
                     }

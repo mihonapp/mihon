@@ -222,6 +222,8 @@ class ReaderPreferences(
 
     val continuousGap: Preference<Int> = preferenceStore.getInt("webgpu_continuous_gap", 10)
 
+    val cropInsteadOfZoom: Preference<Boolean> = preferenceStore.getBoolean("webgpu_crop_instead_of_zoom", false)
+
     val disableDoubleTapGestures: Preference<Boolean> =
         preferenceStore.getBoolean("webgpu_disable_double_tap_gestures", false)
 
