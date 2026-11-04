@@ -48,6 +48,7 @@ import kotlinx.coroutines.withContext
 import mihon.core.common.utils.mutate
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.library.model.search.QueryNode
+import mihon.domain.source.interactor.UpdateMangaFromRemote
 import mihon.feature.library.matches
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -90,6 +91,7 @@ class LibraryViewModel(
     private val getBookmarkedChaptersByMangaId: GetBookmarkedChaptersByMangaId,
     private val setReadStatus: SetReadStatus,
     private val updateManga: UpdateManga,
+    private val updateMangaFromRemote: UpdateMangaFromRemote,
     private val setMangaCategories: SetMangaCategories,
     private val preferences: BasePreferences,
     private val libraryPreferences: LibraryPreferences,
@@ -512,6 +514,8 @@ class LibraryViewModel(
         val mangas = selectedManga
         appScope.launch {
             mangas.forEach { manga ->
+                fetchChaptersIfNeeded(manga)
+
                 val chapters = getNextChapters.await(manga.id)
                     .filterNotQueuedOrDownloaded(manga)
                     .let { if (amount != null) it.take(amount) else it }
@@ -536,6 +540,21 @@ class LibraryViewModel(
         val queuedDownloads = downloadManager.getQueuedDownloadsByChapterId()
         val downloadedChapterIds = downloadManager.getDownloadedChapterIds(this, manga)
         return fastFilterNot { it.id in queuedDownloads || it.id in downloadedChapterIds }
+    }
+
+    /**
+     * Fetches the chapter list from the source for a manga that has never had its chapters fetched
+     * (i.e. there are no chapters in the database yet), so batch downloads include manga that have
+     * not been opened in the app before.
+     */
+    private suspend fun fetchChaptersIfNeeded(manga: Manga) {
+        if (manga.isLocal() || getChaptersByMangaId.await(manga.id).isNotEmpty()) return
+
+        updateMangaFromRemote(
+            manga = manga,
+            fetchDetails = !manga.initialized,
+            fetchChapters = true,
+        )
     }
 
     /**
