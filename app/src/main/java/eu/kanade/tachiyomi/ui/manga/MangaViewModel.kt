@@ -363,6 +363,7 @@ class MangaViewModel(
 
             if (manualFetch) {
                 downloadNewChapters(update.newChapters)
+                refreshTrackers()
             }
         } catch (_: CancellationException) {
             // ignore
