@@ -222,6 +222,10 @@ class ReaderPreferences(
 
     val continuousGap: Preference<Int> = preferenceStore.getInt("webgpu_continuous_gap", 10)
 
+    val fastRenderingOnly: Preference<Boolean> = preferenceStore.getBoolean("webgpu_fast_rendering_only", false)
+
+    val holdUntilFinal: Preference<Boolean> = preferenceStore.getBoolean("webgpu_hold_until_final", false)
+
     val cropInsteadOfZoom: Preference<Boolean> = preferenceStore.getBoolean("webgpu_crop_instead_of_zoom", false)
 
     val disableDoubleTapGestures: Preference<Boolean> =
@@ -238,6 +242,22 @@ class ReaderPreferences(
     /** In run order. */
     val tileFilters: Preference<List<WebGpuShader>> = preferenceStore.getObjectFromString(
         "webgpu_tile_filters",
+        emptyList(),
+        WebGpuShaders::serialize,
+        WebGpuShaders::deserialize,
+    )
+
+    /** At most one; none for the default. */
+    val upscaler: Preference<List<WebGpuShader>> = preferenceStore.getObjectFromString(
+        "webgpu_upscaler",
+        emptyList(),
+        WebGpuShaders::serialize,
+        WebGpuShaders::deserialize,
+    )
+
+    /** At most one; none for the default. */
+    val downscaler: Preference<List<WebGpuShader>> = preferenceStore.getObjectFromString(
+        "webgpu_downscaler",
         emptyList(),
         WebGpuShaders::serialize,
         WebGpuShaders::deserialize,
