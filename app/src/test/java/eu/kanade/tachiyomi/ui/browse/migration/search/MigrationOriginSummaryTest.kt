@@ -9,7 +9,7 @@ class MigrationOriginSummaryTest {
 
     private fun chapter(number: Double, uploadMillis: Long? = null) = Chapter.create().copy(
         chapterNumber = number,
-        dateUpload = uploadMillis?.let(Instant::fromEpochMilliseconds),
+        dateUpload = uploadMillis?.let { Instant.fromEpochMilliseconds(it) },
     )
 
     @Test
