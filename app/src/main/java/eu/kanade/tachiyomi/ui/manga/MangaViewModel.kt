@@ -34,15 +34,21 @@ import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.domain.track.service.TrackPreferences
+import eu.kanade.domain.translation.AiProvider
+import eu.kanade.domain.translation.TranslationOptions
+import eu.kanade.domain.translation.TranslationPreferences
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
+import eu.kanade.tachiyomi.data.translation.TranslationPaths
+import eu.kanade.tachiyomi.data.translation.TranslationWorker
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
@@ -72,9 +78,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.core.archive.archiveReader
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
+import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -96,6 +104,7 @@ import tachiyomi.domain.chapter.service.missingChaptersCount
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
+import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
@@ -103,9 +112,13 @@ import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
+import tachiyomi.source.local.LocalSource
+import tachiyomi.source.local.io.LocalSourceFileSystem
 import tachiyomi.source.local.isLocal
 import kotlin.math.floor
 import kotlin.time.Duration.Companion.seconds
+
+private const val MAX_EXTRA_CHAPTERS = 10
 
 @AssistedInject
 class MangaViewModel(
@@ -139,6 +152,10 @@ class MangaViewModel(
     private val sourceManager: SourceManager,
     private val refreshTracks: RefreshTracks,
     private val coverCache: CoverCache,
+    private val translationPreferences: TranslationPreferences,
+    private val downloadProvider: DownloadProvider,
+    private val localSourceFileSystem: LocalSourceFileSystem,
+    private val networkToLocalManga: NetworkToLocalManga,
 ) : ViewModel() {
 
     private val subscriberGate = SubscriberGate()
@@ -183,6 +200,8 @@ class MangaViewModel(
     private val selectedChapterIds = MutableStateFlow(emptySet<Long>())
 
     private val dialog = MutableStateFlow<Dialog?>(null)
+    private val translatedChapterIds = MutableStateFlow(emptySet<Long>())
+    private val translationEnabled = translationPreferences.enabled().stateIn(viewModelScope)
 
     private val isRefreshingData = MutableStateFlow(false)
 
@@ -249,19 +268,25 @@ class MangaViewModel(
         .distinctUntilChanged()
         .onStart { emit(0 to false) }
 
+    private val translationState = combine(
+        dialog,
+        isRefreshingData,
+        translationEnabled,
+        translatedChapterIds,
+    ) { dialog, isRefreshingData, translationEnabled, translatedChapterIds ->
+        TranslationState(dialog, isRefreshingData, translationEnabled, translatedChapterIds)
+    }
+
     val state: StateFlow<State> = combine(
         mangaAndChapters,
         scanlators,
         trackers,
         combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
-        combine(dialog, isRefreshingData, ::Pair),
-    ) {
-            mangaAndChapters,
-            (availableScanlators, excludedScanlators),
-            (trackingCount, hasLoggedInTrackers),
-            (selectedIds, downloads),
-            (dialog, isRefreshingData),
-        ->
+        translationState,
+    ) { mangaAndChapters, scanlatorState, trackerState, selectionState, translationState ->
+        val (availableScanlators, excludedScanlators) = scanlatorState
+        val (trackingCount, hasLoggedInTrackers) = trackerState
+        val (selectedIds, downloads) = selectionState
         State.Success(
             manga = mangaAndChapters.manga,
             source = mangaAndChapters.source,
@@ -279,21 +304,13 @@ class MangaViewModel(
             excludedScanlators = excludedScanlators,
             trackingCount = trackingCount,
             hasLoggedInTrackers = hasLoggedInTrackers,
-            isRefreshingData = isRefreshingData,
-            dialog = dialog,
+            isRefreshingData = translationState.isRefreshingData,
+            dialog = translationState.dialog,
             hideMissingChapters = hideMissingChapters,
+            translationEnabled = translationState.translationEnabled,
+            translatedChapterIds = translationState.translatedChapterIds,
         )
     }
-        // Composition would otherwise build these on first read, on the main thread, for every new state
-        .onEach {
-            it.processedChapters
-            it.chapterListItems
-            it.isAnySelected
-            it.selectedChapters
-            it.hasUnreadChapters
-            it.hasReadChapters
-            it.missingChapterCount
-        }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State.Loading)
 
@@ -309,6 +326,12 @@ class MangaViewModel(
                 .filter { it.manga.id == mangaId }
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect { downloadProgress[it.chapter.id] = it.progress }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            state.filterIsInstance<State.Success>().first()
+            refreshTranslatedChapters()
+            TranslationWorker.workInfos(context).collect { refreshTranslatedChapters() }
         }
 
         viewModelScope.launch {
@@ -414,7 +437,10 @@ class MangaViewModel(
             if (isFavorited) {
                 // Remove from library
                 if (updateManga.awaitUpdateFavorite(manga.id, false)) {
-                    manga.removeCovers(coverCache)
+                    // Remove covers and update last modified in db
+                    if (manga.removeCovers(coverCache) != manga) {
+                        updateManga.awaitUpdateCoverLastModified(manga.id)
+                    }
                     onRemoved()
                 }
             } else {
@@ -754,6 +780,223 @@ class MangaViewModel(
         }
     }
 
+    // Chapter translation - start
+
+    /**
+     * Entry point of the Translate button. Checks the API key, counts the downloaded pages and
+     * asks for confirmation through [Dialog.TranslateChapter].
+     */
+    fun translateChapter(item: ChapterList.Item) {
+        val state = successState ?: return
+
+        val provider = AiProvider.fromId(translationPreferences.provider().get())
+        if (translationPreferences.apiKey(provider).get().isBlank()) {
+            viewModelScope.launch {
+                snackbarHostState.showSnackbar(message = context.stringResource(MR.strings.translation_api_key_missing))
+            }
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val pageCount = countDownloadedPages(item.chapter, state.manga, state.source)
+            if (pageCount == 0) {
+                snackbarHostState.showSnackbar(message = context.stringResource(MR.strings.translation_no_pages))
+                return@launch
+            }
+            val next = nextDownloadedChapters(item.chapter, state)
+                .map { it to countDownloadedPages(it, state.manga, state.source) }
+                .filter { (_, pages) -> pages > 0 }
+            dialog.value = Dialog.TranslateChapter(
+                chapter = item.chapter,
+                pageCount = pageCount,
+                next = next.map { (chapter, _) -> chapter },
+                nextPageCounts = next.map { (_, pages) -> pages },
+            )
+        }
+    }
+
+    /** Downloaded chapters after [current] (by chapter number) that have no translated copy yet. */
+    private fun nextDownloadedChapters(current: Chapter, state: State.Success): List<Chapter> {
+        if (current.chapterNumber < 0) return emptyList()
+        return state.chapters
+            .filter {
+                it.isDownloaded &&
+                    it.chapter.id !in state.translatedChapterIds &&
+                    it.chapter.chapterNumber > current.chapterNumber
+            }
+            .map { it.chapter }
+            .sortedBy { it.chapterNumber }
+            .distinctBy { it.chapterNumber }
+            .take(MAX_EXTRA_CHAPTERS)
+    }
+
+    /** Queues one job per chapter. They run one at a time, in this order. */
+    fun confirmTranslateChapters(chapters: List<Chapter>, onlyWhenIdle: Boolean) {
+        translationPreferences.onlyWhenIdle().set(onlyWhenIdle)
+        chapters.forEach { TranslationWorker.start(context, it.id, onlyWhenIdle) }
+        viewModelScope.launch {
+            val message = when {
+                onlyWhenIdle -> context.pluralStringResource(
+                    MR.plurals.translation_queued_idle,
+                    chapters.size,
+                    chapters.size,
+                )
+                chapters.size > 1 -> context.pluralStringResource(
+                    MR.plurals.translation_queued,
+                    chapters.size,
+                    chapters.size,
+                )
+                else -> context.stringResource(MR.strings.translation_started)
+            }
+            snackbarHostState.showSnackbar(message = message)
+        }
+    }
+
+    // region Translated chapters in the Local source
+
+    private fun translatedSeriesName(manga: Manga): String = TranslationPaths.seriesName(
+        manga.title,
+        translationPreferences.targetLanguage().get(),
+        libraryPreferences.disallowNonAsciiFilenames.get(),
+    )
+
+    private fun translatedChapterFolder(chapter: Chapter): String = TranslationPaths.chapterFolder(
+        chapter.name,
+        libraryPreferences.disallowNonAsciiFilenames.get(),
+    )
+
+    /** Looks in the Local source for translated copies (in the language that is currently selected). */
+    private suspend fun refreshTranslatedChapters() {
+        val state = successState ?: return
+        if (state.manga.isLocal()) return
+
+        val ids = withContext(Dispatchers.IO) {
+            try {
+                val series = localSourceFileSystem.getBaseDirectory()
+                    ?.findFile(translatedSeriesName(state.manga))
+                    ?.takeIf { it.isDirectory }
+                    ?: return@withContext emptySet()
+                val folders = series.listFiles().orEmpty()
+                    .filter { it.isDirectory }
+                    .mapNotNull { it.name }
+                    .toSet()
+                state.chapters
+                    .filter { translatedChapterFolder(it.chapter) in folders }
+                    .map { it.chapter.id }
+                    .toSet()
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { "Could not look for translated chapters" }
+                emptySet()
+            }
+        }
+        if (ids != successState?.translatedChapterIds) {
+            translatedChapterIds.value = ids
+        }
+    }
+
+    /**
+     * Finds the translated copy of [chapter] as a chapter of the Local source, ready for the reader. The translated
+     * series is added to the database and its chapter list is read from the folder first if that has not happened
+     * yet, so the reader can open the chapter without going through the library.
+     */
+    suspend fun getTranslatedChapter(chapter: Chapter): Chapter? {
+        val manga = successState?.manga ?: return null
+        val seriesName = translatedSeriesName(manga)
+        val folderName = translatedChapterFolder(chapter)
+        return withContext(Dispatchers.IO) {
+            try {
+                val exists = localSourceFileSystem.getBaseDirectory()
+                    ?.findFile(seriesName)
+                    ?.findFile(folderName)
+                    ?.isDirectory == true
+                if (!exists) return@withContext null
+
+                val localManga = networkToLocalManga(
+                    Manga.create().copy(source = LocalSource.ID, url = seriesName, title = seriesName),
+                )
+                updateMangaFromRemote(manga = localManga, fetchDetails = true, fetchChapters = true).getOrThrow()
+
+                val expectedUrl = "$seriesName/$folderName"
+                val chapters = getMangaAndChapters.awaitChapters(localManga.id)
+                chapters.firstOrNull { it.url == expectedUrl } ?: chapters.firstOrNull { it.name == folderName }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Could not open translated chapter" }
+                null
+            }
+        }
+    }
+
+    fun requestDeleteTranslatedChapter(item: ChapterList.Item) {
+        dialog.value = Dialog.DeleteTranslatedChapter(item.chapter)
+    }
+
+    /** Deletes the translated copy of one chapter (and an empty series folder). The original is never touched. */
+    fun confirmDeleteTranslatedChapter(chapter: Chapter) {
+        val manga = successState?.manga ?: return
+        viewModelScope.launch(Dispatchers.IO) {
+            val deleted = try {
+                val series = localSourceFileSystem.getBaseDirectory()
+                    ?.findFile(translatedSeriesName(manga))
+                    ?.takeIf { it.isDirectory }
+                val folder = translatedChapterFolder(chapter)
+                series?.findFile(folder)?.delete()
+                series?.findFile(TranslationPaths.STAGING_PREFIX + folder)?.delete()
+                val remaining = series?.listFiles().orEmpty()
+                    .count { it.isDirectory && it.name?.startsWith(".") != true }
+                if (series != null && remaining == 0) series.delete()
+                true
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Could not delete translated chapter" }
+                false
+            }
+            refreshTranslatedChapters()
+            snackbarHostState.showSnackbar(
+                message = context.stringResource(
+                    if (deleted) MR.strings.translation_deleted else MR.strings.translation_delete_failed,
+                ),
+            )
+        }
+    }
+
+    // endregion
+
+    /**
+     * Counts the image pages of a downloaded chapter, which is stored either as a folder or as a .cbz archive.
+     */
+    private suspend fun countDownloadedPages(chapter: Chapter, manga: Manga, source: Source): Int {
+        val chapterDir = downloadProvider.findChapterDir(
+            chapter.name,
+            chapter.scanlator,
+            chapter.url,
+            manga.title,
+            source,
+        ) ?: return 0
+
+        return try {
+            if (chapterDir.isFile) {
+                chapterDir.archiveReader(context).use { reader ->
+                    reader.useEntries { entries ->
+                        entries.count { it.isFile && it.name.hasPageExtension() }
+                    }
+                }
+            } else {
+                chapterDir.listFiles().orEmpty().count { it.isFile && it.name.hasPageExtension() }
+            }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to count pages of downloaded chapter" }
+            0
+        }
+    }
+
+    private fun String?.hasPageExtension(): Boolean {
+        val extension = this?.substringAfterLast('.', "")?.lowercase() ?: return false
+        return extension in TranslationOptions.PAGE_EXTENSIONS
+    }
+
+    // Chapter translation - end
+
     fun markPreviousChapterRead(pointer: Chapter) {
         val manga = successState?.manga ?: return
         val chapters = filteredChapters.orEmpty().map { it.chapter }
@@ -1051,6 +1294,13 @@ class MangaViewModel(
             val initialSelection: List<CheckboxState<Category>>,
         ) : Dialog
         data class DeleteChapters(val chapters: List<Chapter>) : Dialog
+        data class TranslateChapter(
+            val chapter: Chapter,
+            val pageCount: Int,
+            val next: List<Chapter>,
+            val nextPageCounts: List<Int>,
+        ) : Dialog
+        data class DeleteTranslatedChapter(val chapter: Chapter) : Dialog
         data class DuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
@@ -1092,6 +1342,12 @@ class MangaViewModel(
     }
 
     private data class MangaAndChapters(val manga: Manga, val source: Source, val chapters: List<ChapterList.Item>)
+    private data class TranslationState(
+        val dialog: Dialog?,
+        val isRefreshingData: Boolean,
+        val translationEnabled: Boolean,
+        val translatedChapterIds: Set<Long>,
+    )
 
     sealed interface State {
         @Immutable
@@ -1110,6 +1366,8 @@ class MangaViewModel(
             val isRefreshingData: Boolean = false,
             val dialog: Dialog? = null,
             val hideMissingChapters: Boolean = false,
+            val translationEnabled: Boolean = false,
+            val translatedChapterIds: Set<Long> = emptySet(),
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()

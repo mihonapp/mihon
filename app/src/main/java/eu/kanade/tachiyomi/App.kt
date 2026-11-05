@@ -133,6 +133,10 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         graph.inject(this)
 
         TelemetryConfig.init(applicationContext)
+        eu.kanade.tachiyomi.data.translation.overlay.PageOverlayFontManager.init(applicationContext)
+        eu.kanade.tachiyomi.data.translation.overlay.PageOverlayFontManager.customFontPath =
+            preferenceStore.getString("pref_translation_custom_font_path", "").get()
+        eu.kanade.tachiyomi.data.translation.TranslatedPageCache.init(applicationContext)
 
         GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
 

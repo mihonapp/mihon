@@ -1,12 +1,8 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.pointerInput
+import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.View
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 
@@ -16,10 +12,9 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 interface Viewer {
 
     /**
-     * Draws this viewer.
+     * Returns the view this viewer uses.
      */
-    @Composable
-    fun Content(modifier: Modifier)
+    fun getView(): View
 
     /**
      * Destroys this viewer. Called when leaving the reader or swapping viewers.
@@ -37,37 +32,19 @@ interface Viewer {
     fun moveToPage(page: ReaderPage)
 
     /**
-     * Moves forward through the pages.
+     * Tells this viewer to reload/refresh the display of the given [page].
      */
-    fun moveForward()
+    fun refreshPage(page: ReaderPage) {}
 
     /**
-     * Moves backward through the pages.
+     * Called from the containing activity when a key [event] is received. It should return true
+     * if the event was handled, false otherwise.
      */
-    fun moveBackward()
-}
+    fun handleKeyEvent(event: KeyEvent): Boolean
 
-/**
- * The reader's grayscale and inverted colours, for page images only: transition, loading and error pages keep
- * theirs. Null when both are off.
- */
-val LocalPageColorFilter = compositionLocalOf<ColorFilter?> { null }
-
-/**
- * Turns pages with the mouse wheel instead of letting the content scroll.
- */
-fun Modifier.mouseWheelPaging(viewer: Viewer): Modifier = pointerInput(viewer) {
-    awaitPointerEventScope {
-        while (true) {
-            val event = awaitPointerEvent(PointerEventPass.Initial)
-            if (event.type != PointerEventType.Scroll) continue
-            val delta = event.changes.first().scrollDelta.y
-            when {
-                delta > 0 -> viewer.moveForward()
-                delta < 0 -> viewer.moveBackward()
-                else -> continue
-            }
-            event.changes.forEach { it.consume() }
-        }
-    }
+    /**
+     * Called from the containing activity when a generic motion [event] is received. It should
+     * return true if the event was handled, false otherwise.
+     */
+    fun handleGenericMotionEvent(event: MotionEvent): Boolean
 }

@@ -57,6 +57,7 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -286,7 +287,7 @@ object SettingsDataScreen : SearchableSettings {
         val chapterCache = remember { context.appGraph.chapterCache }
         var cacheReadableSizeSema by remember { mutableIntStateOf(0) }
         val cacheReadableSize by produceState("", cacheReadableSizeSema) {
-            value = chapterCache.readableSize()
+            value = withContext(Dispatchers.IO) { chapterCache.readableSize }
         }
 
         return Preference.PreferenceGroup(
@@ -310,7 +311,7 @@ object SettingsDataScreen : SearchableSettings {
                     onClick = {
                         scope.launch {
                             try {
-                                val deletedFiles = chapterCache.clear()
+                                val deletedFiles = withContext(Dispatchers.IO) { chapterCache.clear() }
                                 context.toast(context.stringResource(MR.strings.cache_deleted, deletedFiles))
                                 cacheReadableSizeSema++
                             } catch (e: Exception) {

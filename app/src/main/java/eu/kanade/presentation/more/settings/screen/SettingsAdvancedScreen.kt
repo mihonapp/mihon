@@ -6,13 +6,28 @@ import android.content.Intent
 import android.provider.Settings
 import android.webkit.WebStorage
 import android.webkit.WebView
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import tachiyomi.presentation.core.components.material.padding
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -23,6 +38,11 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.domain.translation.AiCapability
+import eu.kanade.domain.translation.AiModelCatalog
+import eu.kanade.domain.translation.AiProvider
+import eu.kanade.domain.translation.TranslationOptions
+import eu.kanade.domain.translation.TranslationPreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
@@ -56,6 +76,7 @@ import okhttp3.Headers
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
+import tachiyomi.core.common.i18n.stringResource as getContextString
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import java.io.File
@@ -76,6 +97,7 @@ object SettingsAdvancedScreen : SearchableSettings {
         val basePreferences = remember { graph.basePreferences }
         val networkPreferences = remember { graph.networkPreferences }
         val libraryPreferences = remember { graph.libraryPreferences }
+        val translationPreferences = remember { graph.translationPreferences }
         val crashLogUtil = remember { graph.crashLogUtil }
 
         return listOf(
@@ -92,15 +114,6 @@ object SettingsAdvancedScreen : SearchableSettings {
                 preference = networkPreferences.verboseLogging,
                 title = stringResource(MR.strings.pref_verbose_logging),
                 subtitle = stringResource(MR.strings.pref_verbose_logging_summary),
-                onValueChanged = {
-                    context.toast(MR.strings.requires_app_restart)
-                    true
-                },
-            ),
-            Preference.PreferenceItem.SwitchPreference(
-                preference = networkPreferences.redactSensitiveHeaders,
-                title = stringResource(MR.strings.pref_redact_sensitive_headers),
-                subtitle = stringResource(MR.strings.pref_redact_sensitive_headers_summary),
                 onValueChanged = {
                     context.toast(MR.strings.requires_app_restart)
                     true
@@ -128,6 +141,10 @@ object SettingsAdvancedScreen : SearchableSettings {
             getNetworkGroup(networkPreferences = networkPreferences),
             getLibraryGroup(libraryPreferences = libraryPreferences),
             getReaderGroup(basePreferences = basePreferences),
+            getTranslationGroup(
+                translationPreferences = translationPreferences,
+                modelDiscovery = graph.aiModelDiscovery,
+            ),
             getExtensionsGroup(basePreferences = basePreferences),
         )
     }
@@ -354,6 +371,416 @@ object SettingsAdvancedScreen : SearchableSettings {
     }
 
     @Composable
+    private fun getTranslationGroup(
+        translationPreferences: TranslationPreferences,
+        modelDiscovery: eu.kanade.tachiyomi.data.translation.AiModelDiscovery,
+    ): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+        val enabledPref = remember { translationPreferences.enabled() }
+        val providerPref = remember { translationPreferences.provider() }
+        val targetLanguagePref = remember { translationPreferences.targetLanguage() }
+        val targetLanguage by targetLanguagePref.collectAsState()
+        val arabicStylePref = remember { translationPreferences.arabicStyle() }
+        val isTargetArabic = TranslationOptions.isArabic(targetLanguage) ||
+            java.util.Locale.getDefault().language == "ar"
+        val modePref = remember { translationPreferences.mode() }
+        val sfxPref = remember { translationPreferences.translateSfx() }
+        val delayPref = remember { translationPreferences.requestDelaySeconds() }
+        val fontPref = remember { translationPreferences.fontStyle() }
+        val customFontPathPref = remember { translationPreferences.customFontPath() }
+        val fontStyle by fontPref.collectAsState()
+        val customFontPath by customFontPathPref.collectAsState()
+        val textSizePref = remember { translationPreferences.textSizePercent() }
+        val placementPref = remember { translationPreferences.placement() }
+        val saveLogPref = remember { translationPreferences.saveLog() }
+
+        val fontPickerLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.OpenDocument(),
+        ) { uri ->
+            if (uri != null) {
+                scope.launch(Dispatchers.IO) {
+                    try {
+                        val fontsDir = java.io.File(context.filesDir, "custom_fonts").apply { mkdirs() }
+                        val destFile = java.io.File(fontsDir, "custom_font.ttf")
+                        context.contentResolver.openInputStream(uri)?.use { input ->
+                            destFile.outputStream().use { output -> input.copyTo(output) }
+                        }
+                        customFontPathPref.set(destFile.absolutePath)
+                        eu.kanade.tachiyomi.data.translation.overlay.PageOverlayFontManager.customFontPath = destFile.absolutePath
+                        withContext(Dispatchers.Main) {
+                            context.toast(context.getContextString(MR.strings.pref_translation_custom_font_selected, destFile.name))
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            context.toast("Failed to load font: ${e.message}")
+                        }
+                    }
+                }
+            }
+        }
+
+        val providerId by providerPref.collectAsState()
+        val mode by modePref.collectAsState()
+        val provider = AiProvider.fromId(providerId)
+        val modelPref = remember(provider) { translationPreferences.model(provider) }
+        val textModelPref = remember(provider) { translationPreferences.textModel(provider) }
+        val apiKeyPref = remember(provider) { translationPreferences.apiKey(provider) }
+        val customBaseUrlPref = remember { translationPreferences.customBaseUrl() }
+        val catalogPref = remember(provider) { translationPreferences.modelCatalog(provider) }
+        val apiKey by apiKeyPref.collectAsState()
+        val catalogJson by catalogPref.collectAsState()
+        val overlay = mode == TranslationOptions.MODE_OVERLAY
+        val localOcr = mode == TranslationOptions.MODE_LOCAL_OCR
+        val isOverlayOrLocalOcr = overlay || localOcr
+
+        val discoveredModels = remember(catalogJson) { AiModelCatalog.decode(catalogJson) }
+        val modelEntries = remember(discoveredModels, overlay, localOcr) {
+            val required = when {
+                localOcr -> setOf(AiCapability.TEXT_GENERATION)
+                overlay -> setOf(AiCapability.TEXT_GENERATION, AiCapability.IMAGE_INPUT)
+                else -> setOf(AiCapability.IMAGE_GENERATION)
+            }
+            discoveredModels.filter { required.all(it::supports) }
+                .associate { it.id to "${it.name} (${it.id})" }
+        }
+
+        val modeEntries = buildMap {
+            put(TranslationOptions.MODE_LOCAL_OCR, stringResource(MR.strings.pref_translation_mode_local_ocr))
+            put(TranslationOptions.MODE_OVERLAY, stringResource(MR.strings.pref_translation_mode_overlay))
+            if (provider.supportsImageGeneration) {
+                put(TranslationOptions.MODE_REDRAW, stringResource(MR.strings.pref_translation_mode_redraw))
+            }
+        }
+        val ocrScriptPref = remember { translationPreferences.ocrScript() }
+        val ocrScriptEntries = mapOf(
+            TranslationOptions.OCR_SCRIPT_JAPANESE to stringResource(MR.strings.pref_translation_ocr_script_japanese),
+            TranslationOptions.OCR_SCRIPT_LATIN to stringResource(MR.strings.pref_translation_ocr_script_latin),
+            TranslationOptions.OCR_SCRIPT_KOREAN to stringResource(MR.strings.pref_translation_ocr_script_korean),
+            TranslationOptions.OCR_SCRIPT_CHINESE to stringResource(MR.strings.pref_translation_ocr_script_chinese),
+            TranslationOptions.OCR_SCRIPT_AUTO to stringResource(MR.strings.pref_translation_ocr_script_auto),
+        )
+        val fontEntries = mapOf(
+            "arabic_manga" to stringResource(MR.strings.translation_font_arabic_manga),
+            "arabic_ruqaa" to stringResource(MR.strings.translation_font_arabic_ruqaa),
+            "bold" to stringResource(MR.strings.translation_font_bold),
+            "regular" to stringResource(MR.strings.translation_font_regular),
+            "serif" to stringResource(MR.strings.translation_font_serif),
+            "comic" to stringResource(MR.strings.translation_font_comic),
+            "custom" to stringResource(MR.strings.translation_font_custom),
+        )
+        val placementEntries = mapOf(
+            "replace" to stringResource(MR.strings.translation_placement_replace),
+            "below" to stringResource(MR.strings.translation_placement_below),
+        )
+        val delayEntries = TranslationOptions.REQUEST_DELAYS.associateWith {
+            if (it == 0) {
+                stringResource(MR.strings.translation_delay_none)
+            } else {
+                stringResource(MR.strings.translation_delay_seconds, it)
+            }
+        }
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_category_translation),
+            preferenceItems = buildList {
+                add(
+                    Preference.PreferenceItem.CustomPreference(
+                        title = stringResource(MR.strings.translation_dashboard_title),
+                        content = {
+                            TranslationDashboardCard(
+                                translationPreferences = translationPreferences,
+                                onClearCache = {
+                                    eu.kanade.tachiyomi.data.translation.TranslatedPageCache.clearAll()
+                                    context.toast(context.getContextString(MR.strings.pref_translation_clear_cache_done))
+                                },
+                            )
+                        },
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = enabledPref,
+                        title = stringResource(MR.strings.pref_translation_enable),
+                        subtitle = stringResource(MR.strings.pref_translation_enable_summary),
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.ListPreference(
+                        preference = providerPref,
+                        entries = AiProvider.entries.associate { it.id to it.displayName },
+                        title = "AI provider",
+                        onValueChanged = {
+                            if (!AiProvider.fromId(it).supportsImageGeneration &&
+                                modePref.get() == TranslationOptions.MODE_REDRAW
+                            ) {
+                                modePref.set(TranslationOptions.MODE_OVERLAY)
+                            }
+                            true
+                        },
+                    ),
+                )
+                if (provider == AiProvider.CUSTOM) {
+                    add(
+                        Preference.PreferenceItem.EditTextPreference(
+                            preference = customBaseUrlPref,
+                            title = "Custom API base URL",
+                            subtitle = "%s",
+                        ),
+                    )
+                }
+                add(
+                    Preference.PreferenceItem.EditTextPreference(
+                        preference = apiKeyPref,
+                        title = "${provider.displayName} API key",
+                        // Fixed subtitle without "%s" so the stored key is never shown in the list.
+                        subtitle = if (apiKey.isBlank()) {
+                            stringResource(MR.strings.pref_translation_api_key_not_set)
+                        } else {
+                            stringResource(MR.strings.pref_translation_api_key_set)
+                        },
+                        onValueChanged = { value ->
+                            if (value.trim().isNotEmpty() && !enabledPref.get()) {
+                                enabledPref.set(true)
+                            }
+                            try {
+                                val models = modelDiscovery.listModels(
+                                    provider,
+                                    value,
+                                    customBaseUrlPref.get().takeIf { provider == AiProvider.CUSTOM },
+                                )
+                                catalogPref.set(AiModelCatalog.encode(models))
+                            } catch (_: Exception) {
+                                // Keep the key saved; the explicit refresh action exposes retryable failures.
+                            }
+                            true
+                        },
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.TextPreference(
+                        title = "Refresh available models",
+                        subtitle = if (discoveredModels.isEmpty()) {
+                            "Fetch the models supported by this API key"
+                        } else {
+                            "${discoveredModels.size} model(s) discovered; filtered by capability"
+                        },
+                        onClick = {
+                            scope.launch {
+                                try {
+                                    val models = modelDiscovery.listModels(
+                                        provider,
+                                        apiKey,
+                                        customBaseUrlPref.get().takeIf { provider == AiProvider.CUSTOM },
+                                    )
+                                    catalogPref.set(AiModelCatalog.encode(models))
+                                } catch (_: Exception) {
+                                    // The key remains usable; users can retry after fixing the endpoint/network.
+                                }
+                            }
+                        },
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.TextPreference(
+                        title = "Test connection",
+                        subtitle = "Check the API key and provider endpoint",
+                        onClick = {
+                            scope.launch {
+                                try {
+                                    val models = modelDiscovery.listModels(
+                                        provider,
+                                        apiKey,
+                                        customBaseUrlPref.get().takeIf { provider == AiProvider.CUSTOM },
+                                    )
+                                    catalogPref.set(AiModelCatalog.encode(models))
+                                    context.toast(
+                                        "${provider.displayName} connection successful (${models.size} models found)",
+                                    )
+                                } catch (error: Exception) {
+                                    context.toast("Connection failed: ${error.message ?: "unknown error"}")
+                                }
+                            }
+                        },
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.ListPreference(
+                        preference = modePref,
+                        entries = modeEntries,
+                        title = stringResource(MR.strings.pref_translation_mode),
+                    ),
+                )
+                if (localOcr) {
+                    add(
+                        Preference.PreferenceItem.ListPreference(
+                            preference = ocrScriptPref,
+                            entries = ocrScriptEntries,
+                            title = stringResource(MR.strings.pref_translation_ocr_script),
+                        ),
+                    )
+                }
+                if (isOverlayOrLocalOcr) {
+                    if (modelEntries.isEmpty()) {
+                        add(
+                            Preference.PreferenceItem.InfoPreference(
+                                "No compatible text models discovered. Add an API key and refresh available models.",
+                            ),
+                        )
+                    } else {
+                        add(
+                            Preference.PreferenceItem.ListPreference(
+                                preference = textModelPref,
+                                entries = modelEntries,
+                                title = stringResource(MR.strings.pref_translation_text_model),
+                            ),
+                        )
+                    }
+                    if (overlay) {
+                        add(
+                            Preference.PreferenceItem.SwitchPreference(
+                                preference = sfxPref,
+                                title = stringResource(MR.strings.pref_translation_sfx),
+                                subtitle = stringResource(MR.strings.pref_translation_sfx_summary),
+                            ),
+                        )
+                        add(
+                            Preference.PreferenceItem.ListPreference(
+                                preference = delayPref,
+                                entries = delayEntries,
+                                title = stringResource(MR.strings.pref_translation_delay),
+                            ),
+                        )
+                    }
+                    add(
+                        Preference.PreferenceItem.ListPreference(
+                            preference = fontPref,
+                            entries = fontEntries,
+                            title = stringResource(MR.strings.pref_translation_font),
+                        ),
+                    )
+                    if (fontStyle == "custom") {
+                        add(
+                            Preference.PreferenceItem.TextPreference(
+                                title = stringResource(MR.strings.pref_translation_custom_font),
+                                subtitle = if (customFontPath.isNotBlank()) {
+                                    stringResource(
+                                        MR.strings.pref_translation_custom_font_selected,
+                                        java.io.File(customFontPath).name,
+                                    )
+                                } else {
+                                    stringResource(MR.strings.pref_translation_custom_font_none)
+                                },
+                                onClick = {
+                                    try {
+                                        fontPickerLauncher.launch(arrayOf("font/*", "application/octet-stream", "*/*"))
+                                    } catch (_: Exception) {
+                                        context.toast("File picker unavailable")
+                                    }
+                                },
+                            ),
+                        )
+                    }
+                    add(
+                        Preference.PreferenceItem.SliderPreference(
+                            preference = textSizePref,
+                            valueRange = 60..100 step 10,
+                            title = stringResource(MR.strings.pref_translation_text_size),
+                            valueText = { stringResource(MR.strings.translation_text_size_value, it) },
+                        ),
+                    )
+                    add(
+                        Preference.PreferenceItem.ListPreference(
+                            preference = placementPref,
+                            entries = placementEntries,
+                            title = stringResource(MR.strings.pref_translation_placement),
+                        ),
+                    )
+                } else {
+                    if (modelEntries.isEmpty()) {
+                        add(
+                            Preference.PreferenceItem.InfoPreference(
+                                "No compatible image models discovered for this provider.",
+                            ),
+                        )
+                    } else {
+                        add(
+                            Preference.PreferenceItem.ListPreference(
+                                preference = modelPref,
+                                entries = modelEntries,
+                                title = stringResource(MR.strings.pref_translation_model),
+                            ),
+                        )
+                    }
+                }
+                add(
+                    Preference.PreferenceItem.ListPreference(
+                        preference = targetLanguagePref,
+                        entries = TranslationOptions.LANGUAGES.associateWith { it },
+                        title = stringResource(MR.strings.pref_translation_target_language),
+                    ),
+                )
+                if (isTargetArabic) {
+                    add(
+                        Preference.PreferenceItem.ListPreference(
+                            preference = arabicStylePref,
+                            entries = mapOf(
+                                TranslationOptions.ARABIC_STYLE_BALADI to stringResource(MR.strings.translation_arabic_style_baladi),
+                                TranslationOptions.ARABIC_STYLE_MODERN to stringResource(MR.strings.translation_arabic_style_modern),
+                                TranslationOptions.ARABIC_STYLE_CLASSIC to stringResource(MR.strings.translation_arabic_style_classic),
+                            ),
+                            title = stringResource(MR.strings.pref_translation_arabic_style),
+                        ),
+                    )
+                }
+                if (overlay) {
+                    add(
+                        Preference.PreferenceItem.InfoPreference(
+                            stringResource(MR.strings.pref_translation_free_privacy),
+                        ),
+                    )
+                    add(
+                        Preference.PreferenceItem.InfoPreference(
+                            stringResource(MR.strings.pref_translation_style_info),
+                        ),
+                    )
+                }
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = saveLogPref,
+                        title = stringResource(MR.strings.pref_translation_save_log),
+                        subtitle = stringResource(MR.strings.pref_translation_save_log_summary),
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = remember { translationPreferences.autoPreTranslate() },
+                        title = stringResource(MR.strings.pref_translation_auto_pre_translate),
+                        subtitle = stringResource(MR.strings.pref_translation_auto_pre_translate_summary),
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = remember { translationPreferences.autoApplyTranslation() },
+                        title = stringResource(MR.strings.pref_translation_auto_apply),
+                        subtitle = stringResource(MR.strings.pref_translation_auto_apply_summary),
+                    ),
+                )
+                add(
+                    Preference.PreferenceItem.TextPreference(
+                        title = stringResource(MR.strings.pref_translation_clear_cache),
+                        subtitle = stringResource(MR.strings.pref_translation_clear_cache_summary),
+                        onClick = {
+                            eu.kanade.tachiyomi.data.translation.TranslatedPageCache.clearAll()
+                            context.toast(context.getContextString(MR.strings.pref_translation_clear_cache_done))
+                        },
+                    ),
+                )
+            },
+        )
+    }
+
+    @Composable
     private fun getExtensionsGroup(
         basePreferences: BasePreferences,
     ): Preference.PreferenceGroup {
@@ -419,5 +846,125 @@ object SettingsAdvancedScreen : SearchableSettings {
                 ),
             ),
         )
+    }
+}
+
+@Composable
+private fun TranslationDashboardCard(
+    translationPreferences: TranslationPreferences,
+    onClearCache: () -> Unit,
+) {
+    val pagesCount by translationPreferences.statsPagesCount().collectAsState()
+    val totalMs by translationPreferences.statsTotalTimeMs().collectAsState()
+    var cacheVersion by remember { mutableIntStateOf(0) }
+
+    val savedDataMb = remember(pagesCount) { translationPreferences.getEstimatedSavedDataMB() }
+    val avgLatency = remember(pagesCount, totalMs) { translationPreferences.getAverageLatencySeconds() }
+    val diskCacheMb = remember(pagesCount, cacheVersion) { eu.kanade.tachiyomi.data.translation.TranslatedPageCache.getDiskCacheSizeMB() }
+    val cachedCount = remember(pagesCount, cacheVersion) { eu.kanade.tachiyomi.data.translation.TranslatedPageCache.getCachedPagesCount() }
+
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.padding.medium),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = stringResource(MR.strings.translation_dashboard_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    text = "Local OCR",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            ) {
+                StatBox(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(MR.strings.translation_dashboard_pages),
+                    value = "$pagesCount",
+                )
+                StatBox(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(MR.strings.translation_dashboard_saved_data),
+                    value = String.format(java.util.Locale.US, "~%.1f MB", savedDataMb),
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            ) {
+                StatBox(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(MR.strings.translation_dashboard_speed),
+                    value = String.format(java.util.Locale.US, "%.2fs", avgLatency),
+                )
+                StatBox(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(MR.strings.translation_dashboard_cache),
+                    value = "$cachedCount (" + String.format(java.util.Locale.US, "%.1f MB", diskCacheMb) + ")",
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                OutlinedButton(
+                    onClick = {
+                        onClearCache()
+                        cacheVersion++
+                    },
+                ) {
+                    Text(text = stringResource(MR.strings.pref_translation_clear_cache))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatBox(
+    title: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+    ) {
+        Column(
+            modifier = Modifier.padding(MaterialTheme.padding.small),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
     }
 }

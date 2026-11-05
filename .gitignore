@@ -11,6 +11,8 @@ build
 
 # Configuration files
 keystore.properties
+*.keystore
+*.jks
 local.properties
 
 # macOS specific files

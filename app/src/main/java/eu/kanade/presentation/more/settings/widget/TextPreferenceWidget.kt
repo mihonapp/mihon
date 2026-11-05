@@ -24,7 +24,6 @@ fun TextPreferenceWidget(
     icon: ImageVector? = null,
     iconTint: Color = MaterialTheme.colorScheme.primary,
     widget: @Composable (() -> Unit)? = null,
-    enabled: Boolean = true,
     onPreferenceClick: (() -> Unit)? = null,
 ) {
     BasePreferenceWidget(
@@ -57,7 +56,6 @@ fun TextPreferenceWidget(
         },
         onClick = onPreferenceClick,
         widget = widget,
-        enabled = enabled,
     )
 }
 

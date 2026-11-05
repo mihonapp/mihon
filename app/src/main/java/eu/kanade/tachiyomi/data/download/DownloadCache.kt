@@ -186,8 +186,7 @@ class DownloadCache(
     fun getTotalDownloadCount(): Int {
         renewCache()
 
-        // The disk index stores a folder shared by several ids once per id
-        return rootDownloadsDir.sourceDirs.values.distinctBy { it.dir?.uri }.sumOf { sourceDir ->
+        return rootDownloadsDir.sourceDirs.values.sumOf { sourceDir ->
             sourceDir.mangaDirs.values.sumOf { mangaDir ->
                 mangaDir.chapterDirs.size
             }
@@ -391,21 +390,20 @@ class DownloadCache(
                 sources = getSources()
             }
 
-            // A stored stub can share its name with an installed source, so a folder can belong to several ids
-            val sourceIdsByDirName = sources.groupBy({ provider.getSourceDirName(it).lowercase() }, { it.id })
+            val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
 
             rootDownloadsDirMutex.withLock {
                 val updatedRootDir = RootDirectory(storageManager.getDownloadsDirectory())
 
                 updatedRootDir.sourceDirs = updatedRootDir.dir?.listFiles().orEmpty()
                     .filter { it.isDirectory && !it.name.isNullOrBlank() }
-                    .flatMap { dir ->
-                        val sourceDir = SourceDirectory(dir)
-                        sourceIdsByDirName[dir.name!!.lowercase()].orEmpty().map { it to sourceDir }
+                    .mapNotNull { dir ->
+                        val sourceId = sourceMap[dir.name!!.lowercase()]
+                        sourceId?.let { it to SourceDirectory(dir) }
                     }
                     .toMap()
 
-                updatedRootDir.sourceDirs.values.distinct().map { sourceDir ->
+                updatedRootDir.sourceDirs.values.map { sourceDir ->
                     async {
                         sourceDir.mangaDirs = sourceDir.dir?.listFiles().orEmpty()
                             .filter { it.isDirectory && !it.name.isNullOrBlank() }

@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -43,32 +42,27 @@ internal fun BasePreferenceWidget(
     icon: @Composable (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
     widget: @Composable (() -> Unit)? = null,
-    enabled: Boolean = true,
 ) {
-    val contentAlpha = if (enabled) 1f else DisabledAlpha
     val highlighted = LocalPreferenceHighlighted.current
     val minHeight = LocalPreferenceMinHeight.current
     Row(
         modifier = modifier
             .highlightBackground(highlighted)
             .sizeIn(minHeight = minHeight)
-            .clickable(enabled = enabled && onClick != null, onClick = { onClick?.invoke() })
+            .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (icon != null) {
             Box(
-                modifier = Modifier
-                    .padding(start = PrefsHorizontalPadding, end = 8.dp)
-                    .alpha(contentAlpha),
+                modifier = Modifier.padding(start = PrefsHorizontalPadding, end = 8.dp),
                 content = { icon() },
             )
         }
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = PrefsVerticalPadding)
-                .alpha(contentAlpha),
+                .padding(vertical = PrefsVerticalPadding),
         ) {
             if (!title.isNullOrBlank()) {
                 Text(
@@ -129,4 +123,3 @@ internal val TrailingWidgetBuffer = 16.dp
 internal val PrefsHorizontalPadding = 16.dp
 internal val PrefsVerticalPadding = 16.dp
 internal val TitleFontSize = 16.sp
-internal val DisabledAlpha = 0.38f

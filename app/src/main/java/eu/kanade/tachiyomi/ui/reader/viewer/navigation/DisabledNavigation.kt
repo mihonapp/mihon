@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.navigation
 
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.TappingInvertMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 
 /**
@@ -13,10 +12,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
  * | M | M | M |   N: Next
  * +---+---+---+
 */
-class DisabledNavigation(
-    invertMode: TappingInvertMode,
-    isReversed: Boolean,
-) : ViewerNavigation(invertMode, isReversed) {
+class DisabledNavigation : ViewerNavigation() {
 
-    override val regionList: List<Region> = emptyList()
+    override var regionList: List<Region> = emptyList()
 }

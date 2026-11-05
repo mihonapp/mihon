@@ -7,7 +7,6 @@ import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.protobuf.ProtoBuf
 import okio.BufferedSource
 import okio.buffer
@@ -39,27 +38,17 @@ class BackupDecoder(
     }
 
     /**
-     * Like [decodeMetadata], but hands each entry to [onEntry] decoded as [entry], which can declare only the fields
-     * it needs so the rest are skipped.
+     * Decode the entries of a potentially-gzipped backup one at a time, skipping those whose index [include] rejects.
      */
-    fun <T> decodeMetadata(uri: Uri, entry: DeserializationStrategy<T>, onEntry: (T) -> Unit): Metadata {
-        return read(uri) { reader ->
-            var entryCount = 0
-            while (orInvalid { reader.nextEntry() }) {
-                onEntry(orInvalid { reader.readEntry(entry) })
-                entryCount++
-            }
-            Metadata(entryCount, orInvalid { reader.readMetadata() })
-        }
-    }
-
-    /**
-     * Decode the entries of a potentially-gzipped backup one at a time.
-     */
-    fun decodeEntries(uri: Uri): Flow<BackupManga> = flow {
+    fun decodeEntries(uri: Uri, include: (index: Int) -> Boolean = { true }): Flow<BackupManga> = flow {
         read(uri) { reader ->
+            var index = 0
             while (orInvalid { reader.nextEntry() }) {
-                emit(orInvalid { reader.readEntry() })
+                if (include(index++)) {
+                    emit(orInvalid { reader.readEntry() })
+                } else {
+                    orInvalid { reader.skipEntry() }
+                }
             }
         }
     }

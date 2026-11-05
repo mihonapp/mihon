@@ -1,11 +1,15 @@
 package eu.kanade.presentation.manga.components
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -13,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -24,8 +29,11 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import me.saket.swipe.SwipeableActionsBox
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -41,6 +49,7 @@ import mihon.icons.materialsymbols.roundedfilled.Circle
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
+import tachiyomi.presentation.core.components.material.IconButtonTokens
 import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
@@ -62,6 +71,11 @@ fun MangaChapterListItem(
     onLongClick: () -> Unit,
     onClick: () -> Unit,
     onDownloadClick: ((ChapterDownloadAction) -> Unit)?,
+    translateButtonVisible: Boolean,
+    onTranslateClick: () -> Unit,
+    translatedAvailable: Boolean,
+    onOpenTranslatedClick: () -> Unit,
+    onDeleteTranslatedClick: () -> Unit,
     onChapterSwipe: (LibraryPreferences.ChapterSwipeAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -171,6 +185,32 @@ fun MangaChapterListItem(
                 }
             }
 
+            if (translateButtonVisible && translatedAvailable) {
+                // A translated copy exists in the Local source: open it or delete it.
+                ChapterIconButton(
+                    iconRes = R.drawable.ic_open_translated_24dp,
+                    contentDescription = stringResource(MR.strings.action_open_translated_chapter),
+                    enabled = downloadIndicatorEnabled,
+                    modifier = Modifier.padding(start = 4.dp),
+                    onClick = onOpenTranslatedClick,
+                )
+                ChapterIconButton(
+                    iconRes = R.drawable.ic_delete_translated_24dp,
+                    contentDescription = stringResource(MR.strings.action_delete_translated_chapter),
+                    enabled = downloadIndicatorEnabled,
+                    modifier = Modifier.padding(start = 4.dp),
+                    onClick = onDeleteTranslatedClick,
+                )
+            } else if (translateButtonVisible && downloadStateProvider() == Download.State.DOWNLOADED) {
+                ChapterIconButton(
+                    iconRes = R.drawable.ic_translate_24dp,
+                    contentDescription = stringResource(MR.strings.action_translate_chapter),
+                    enabled = downloadIndicatorEnabled,
+                    modifier = Modifier.padding(start = 4.dp),
+                    onClick = onTranslateClick,
+                )
+            }
+
             ChapterDownloadIndicator(
                 enabled = downloadIndicatorEnabled,
                 modifier = Modifier.padding(start = 4.dp),
@@ -179,6 +219,38 @@ fun MangaChapterListItem(
                 onClick = { onDownloadClick?.invoke(it) },
             )
         }
+    }
+}
+
+@Composable
+private fun ChapterIconButton(
+    @DrawableRes iconRes: Int,
+    contentDescription: String,
+    enabled: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .size(IconButtonTokens.StateLayerSize)
+            .clickable(
+                enabled = enabled,
+                role = Role.Button,
+                interactionSource = null,
+                indication = ripple(
+                    bounded = false,
+                    radius = IconButtonTokens.StateLayerSize / 2,
+                ),
+                onClick = onClick,
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = contentDescription,
+            modifier = Modifier.size(24.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
 

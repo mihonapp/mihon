@@ -239,8 +239,11 @@ class BrowseSourceViewModel(
     fun changeMangaFavorite(manga: Manga) {
         appScope.launch {
             val update = if (manga.favorite) {
-                manga.removeCovers(coverCache)
-                MangaUpdate(manga.id) { favoriteAt = null }
+                val coverLastModified = manga.removeCovers(coverCache).coverLastModified
+                MangaUpdate(manga.id) {
+                    favoriteAt = null
+                    if (coverLastModified != manga.coverLastModified) this.coverLastModified = coverLastModified
+                }
             } else {
                 setMangaDefaultChapterFlags.await(manga)
                 addTracks.bindEnhancedTrackers(manga, sourceManager.getOrStub(manga.source))

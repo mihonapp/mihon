@@ -13,3 +13,13 @@ fun DotSeparatorText(
         modifier = modifier,
     )
 }
+
+@Composable
+fun DotSeparatorNoSpaceText(
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = "•",
+        modifier = modifier,
+    )
+}

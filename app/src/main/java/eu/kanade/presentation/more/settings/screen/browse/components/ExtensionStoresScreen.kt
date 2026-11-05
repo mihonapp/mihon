@@ -22,10 +22,15 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.util.plus
 
+import tachiyomi.presentation.core.screens.EmptyScreenAction
+import mihon.icons.materialsymbols.rounded.Add
+import mihon.icons.materialsymbols.rounded.Download
+
 @Composable
 fun ExtensionStoresScreen(
     state: ExtensionStoreScreenState.Success,
     onClickCreate: () -> Unit,
+    onAddKeiyoushi: () -> Unit = {},
     onCopy: (ExtensionStore) -> Unit,
     onOpenWebsite: (ExtensionStore) -> Unit,
     onOpenDiscord: (ExtensionStore) -> Unit,
@@ -59,8 +64,20 @@ fun ExtensionStoresScreen(
     ) { paddingValues ->
         if (state.isEmpty) {
             EmptyScreen(
-                MR.strings.extensionStoresScreen_emptyLabel,
+                stringRes = MR.strings.extensionStoresScreen_emptyLabel,
                 modifier = Modifier.padding(paddingValues),
+                actions = listOf(
+                    EmptyScreenAction(
+                        stringRes = MR.strings.extension_store_add_keiyoushi,
+                        icon = MaterialSymbols.Rounded.Download,
+                        onClick = onAddKeiyoushi,
+                    ),
+                    EmptyScreenAction(
+                        stringRes = MR.strings.extensionStoresScreen_addStore_title,
+                        icon = MaterialSymbols.Rounded.Add,
+                        onClick = onClickCreate,
+                    ),
+                ),
             )
             return@Scaffold
         }
@@ -74,6 +91,7 @@ fun ExtensionStoresScreen(
             onOpenWebsite = onOpenWebsite,
             onOpenDiscord = onOpenDiscord,
             onClickDelete = onClickDelete,
+            onAddKeiyoushi = onAddKeiyoushi,
         )
     }
 }

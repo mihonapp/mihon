@@ -27,6 +27,13 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import mihon.icons.materialsymbols.rounded.Add
+import mihon.icons.materialsymbols.rounded.Download
+
 @Composable
 fun ExtensionStoresContent(
     repos: List<ExtensionStore>,
@@ -36,6 +43,7 @@ fun ExtensionStoresContent(
     onOpenWebsite: (ExtensionStore) -> Unit,
     onOpenDiscord: (ExtensionStore) -> Unit,
     onClickDelete: (ExtensionStore) -> Unit,
+    onAddKeiyoushi: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -44,6 +52,49 @@ fun ExtensionStoresContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         modifier = modifier,
     ) {
+        if (repos.none { it.indexUrl.contains("keiyoushi") }) {
+            item(key = "recommendation_keiyoushi") {
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(MaterialTheme.padding.medium),
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = MaterialSymbols.Rounded.Download,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Spacer(Modifier.width(MaterialTheme.padding.small))
+                            Text(
+                                text = stringResource(MR.strings.extension_store_keiyoushi_title),
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+                        }
+                        Text(
+                            text = stringResource(MR.strings.extension_store_keiyoushi_desc),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Button(
+                            onClick = onAddKeiyoushi,
+                            modifier = Modifier.align(Alignment.End),
+                        ) {
+                            Icon(imageVector = MaterialSymbols.Rounded.Add, contentDescription = null)
+                            Spacer(Modifier.width(MaterialTheme.padding.extraSmall))
+                            Text(text = stringResource(MR.strings.extension_store_add_keiyoushi))
+                        }
+                    }
+                }
+            }
+        }
+
         repos.forEach {
             item {
                 ExtensionStoresListItem(

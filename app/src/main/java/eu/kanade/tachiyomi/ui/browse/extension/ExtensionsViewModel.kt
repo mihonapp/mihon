@@ -228,6 +228,15 @@ class ExtensionsViewModel(
         extensionManager.trust(extension)
     }
 
+    fun trustAllExtensions() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val notLoaded = state.value.items.values.flatten()
+                .map { it.extension }
+                .filterIsInstance<Extension.NotLoaded>()
+            extensionManager.trustAll(notLoaded)
+        }
+    }
+
     @Immutable
     data class State(
         val isLoading: Boolean = true,

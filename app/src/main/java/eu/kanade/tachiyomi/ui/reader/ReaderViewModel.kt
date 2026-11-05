@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -24,7 +25,11 @@ import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
+import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.domain.translation.AiProvider
+import eu.kanade.domain.translation.TranslationOptions
+import eu.kanade.domain.translation.TranslationPreferences
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
@@ -32,6 +37,20 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.data.translation.NanoBananaClient
+import eu.kanade.tachiyomi.data.translation.context.Glossary
+import eu.kanade.tachiyomi.data.translation.context.PromptContext
+import eu.kanade.tachiyomi.data.translation.TranslatedPageCache
+import eu.kanade.tachiyomi.data.translation.TranslationException
+import eu.kanade.tachiyomi.data.translation.ocr.LocalOcrClient
+import eu.kanade.tachiyomi.data.translation.overlay.PageOverlayFontManager
+import eu.kanade.tachiyomi.data.translation.overlay.PageOverlayRenderer
+import eu.kanade.tachiyomi.data.translation.overlay.RenderStyle
+import eu.kanade.tachiyomi.data.translation.overlay.TextOverlayClient
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.i18n.MR
+import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.withTimeoutOrNull
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -45,6 +64,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.util.chapter.filterDownloaded
 import eu.kanade.tachiyomi.util.chapter.removeDuplicates
 import eu.kanade.tachiyomi.util.editCover
@@ -72,10 +92,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
-import mihon.data.cache.ChapterCache
 import tachiyomi.core.common.preference.toggle
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
@@ -127,6 +147,10 @@ class ReaderViewModel(
     private val coverCache: CoverCache,
     private val chapterCache: ChapterCache,
     private val downloadCache: DownloadCache,
+    private val translationPreferences: TranslationPreferences,
+    private val overlayClient: TextOverlayClient,
+    private val nanoBananaClient: NanoBananaClient,
+    private val localOcrClient: LocalOcrClient,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -196,6 +220,8 @@ class ReaderViewModel(
 
     // Serializes the progress writes, which outlive the reader, so they are applied in order
     private val progressWrites = Mutex()
+
+    private val pretranslatingPages = ConcurrentHashMap.newKeySet<String>()
 
     // Set on Main, flushed from the chapter load too
     @Volatile
@@ -319,6 +345,8 @@ class ReaderViewModel(
     }
 
     override fun onCleared() {
+        chapterTranslationJob?.cancel()
+        chapterTranslationJob = null
         val currentChapters = state.value.viewerChapters
         if (currentChapters != null) {
             currentChapters.unref()
@@ -525,6 +553,12 @@ class ReaderViewModel(
         eventChannel.trySend(Event.ReloadViewerChapters)
     }
 
+    fun onViewerLoaded(viewer: Viewer?) {
+        mutableState.update {
+            it.copy(viewer = viewer)
+        }
+    }
+
     /**
      * Called every time a page changes on the reader. Used to mark the flag of chapters being
      * read, update tracking services, enqueue downloaded chapter deletion, and updating the active chapter if this
@@ -551,6 +585,9 @@ class ReaderViewModel(
         if (inDownloadRange) {
             downloadNextChapters()
         }
+
+        checkAndApplyCachedTranslation(page)
+        checkAndTriggerPreTranslate(page)
 
         eventChannel.trySend(Event.PageChanged)
     }
@@ -912,6 +949,10 @@ class ReaderViewModel(
         mutableState.update { it.copy(menuVisible = visible) }
     }
 
+    fun showLoadingDialog() {
+        mutableState.update { it.copy(dialog = Dialog.Loading) }
+    }
+
     fun openReadingModeSelectDialog() {
         mutableState.update { it.copy(dialog = Dialog.ReadingModeSelect) }
     }
@@ -930,6 +971,10 @@ class ReaderViewModel(
 
     fun closeDialog() {
         mutableState.update { it.copy(dialog = null) }
+    }
+
+    fun setBrightnessOverlayValue(value: Int) {
+        mutableState.update { it.copy(brightnessOverlayValue = value) }
     }
 
     /**
@@ -1037,6 +1082,606 @@ class ReaderViewModel(
         }
     }
 
+    fun getCurrentPage(): ReaderPage? {
+        val chapter = getCurrentChapter() ?: return null
+        val pages = chapter.pages ?: return null
+        val pageIndex = (state.value.currentPage - 1).coerceIn(0, pages.lastIndex)
+        return pages.getOrNull(pageIndex)
+    }
+
+    fun translateCurrentPage() {
+        val page = getCurrentPage()
+        if (page == null) {
+            viewModelScope.launch {
+                eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_no_pages)))
+            }
+            return
+        }
+        translatePage(page)
+    }
+
+    fun translatePage(page: ReaderPage) {
+        var provider = AiProvider.fromId(translationPreferences.provider().get())
+        var apiKey = translationPreferences.apiKey(provider).get().trim()
+
+        // Auto-detect: if active provider has no API key, check if another provider has a configured key
+        if (apiKey.isEmpty()) {
+            val configuredProvider = AiProvider.entries.firstOrNull {
+                translationPreferences.apiKey(it).get().trim().isNotEmpty()
+            }
+            if (configuredProvider != null) {
+                translationPreferences.provider().set(configuredProvider.id)
+                provider = configuredProvider
+                apiKey = translationPreferences.apiKey(configuredProvider).get().trim()
+            }
+        }
+
+        if (apiKey.isEmpty()) {
+            viewModelScope.launch {
+                eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_api_key_missing)))
+            }
+            return
+        }
+
+        // Auto-enable if user has key and manually clicked translate in reader
+        if (!translationPreferences.enabled().get()) {
+            translationPreferences.enabled().set(true)
+        }
+
+        if (page.status != Page.State.Ready || page.stream == null) {
+            viewModelScope.launch {
+                eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_page_loading)))
+            }
+            return
+        }
+
+        val originalBytes = try {
+            page.stream!!.invoke().use { it.readBytes() }
+        } catch (e: Exception) {
+            viewModelScope.launch {
+                eventChannel.send(
+                    Event.ShowToast(
+                        context.stringResource(MR.strings.translation_error_unexpected, e.message ?: ""),
+                    ),
+                )
+            }
+            return
+        }
+
+        if (originalBytes.isEmpty()) {
+            viewModelScope.launch {
+                eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_no_pages)))
+            }
+            return
+        }
+
+        val mangaId = manga?.id ?: 0L
+        val chapterId = page.chapter.chapter.id
+        val language = translationPreferences.targetLanguage().get()
+        val arabicStyle = translationPreferences.arabicStyle().get()
+
+        // 1. Instant Fast Path: Check persistent & RAM cache
+        val cachedBytes = TranslatedPageCache.get(mangaId, chapterId, page.index, language, arabicStyle)
+        if (cachedBytes != null) {
+            mutableState.update {
+                it.copy(
+                    isTranslatingPage = false,
+                    dialog = Dialog.LiveTranslation(
+                        page = page,
+                        originalBytes = originalBytes,
+                        translatedBytes = cachedBytes,
+                        mimeType = "image/jpeg",
+                    ),
+                )
+            }
+            return
+        }
+
+        mutableState.update { it.copy(dialog = null, isTranslatingPage = true) }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val translatedImageBytes = executePageTranslation(
+                    originalBytes = originalBytes,
+                    pageNumber = page.number,
+                    language = language,
+                    provider = provider,
+                    apiKey = apiKey,
+                )
+
+                TranslatedPageCache.put(mangaId, chapterId, page.index, language, translatedImageBytes, arabicStyle)
+
+                mutableState.update {
+                    it.copy(
+                        isTranslatingPage = false,
+                        dialog = Dialog.LiveTranslation(
+                            page = page,
+                            originalBytes = originalBytes,
+                            translatedBytes = translatedImageBytes,
+                            mimeType = "image/jpeg",
+                        ),
+                    )
+                }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Live translation error" }
+                mutableState.update { it.copy(isTranslatingPage = false) }
+                val errorMsg = when (e) {
+                    is eu.kanade.tachiyomi.data.translation.TranslationException.InvalidApiKey ->
+                        context.stringResource(MR.strings.translation_error_invalid_key)
+                    is eu.kanade.tachiyomi.data.translation.TranslationException.QuotaExceeded ->
+                        context.stringResource(MR.strings.translation_error_quota)
+                    is eu.kanade.tachiyomi.data.translation.TranslationException.RateLimited ->
+                        context.stringResource(MR.strings.translation_reason_rate_limited, 1)
+                    else -> e.message ?: context.stringResource(
+                        MR.strings.translation_error_unexpected,
+                        e.javaClass.simpleName,
+                    )
+                }
+                eventChannel.send(Event.ShowToast(errorMsg))
+            }
+        }
+    }
+
+    private fun checkAndApplyCachedTranslation(page: ReaderPage) {
+        if (!translationPreferences.enabled().get() || !translationPreferences.autoApplyTranslation().get()) return
+        val mangaId = manga?.id ?: return
+        val chapterId = page.chapter.chapter.id
+        val language = translationPreferences.targetLanguage().get()
+        val arabicStyle = translationPreferences.arabicStyle().get()
+
+        val cachedBytes = TranslatedPageCache.get(mangaId, chapterId, page.index, language, arabicStyle)
+        if (cachedBytes != null) {
+            page.stream = { java.io.ByteArrayInputStream(cachedBytes) }
+        }
+    }
+
+    private fun checkAndTriggerPreTranslate(page: ReaderPage) {
+        if (!translationPreferences.enabled().get() || !translationPreferences.autoPreTranslate().get()) return
+        val mangaId = manga?.id ?: return
+        val chapterId = page.chapter.chapter.id
+        val language = translationPreferences.targetLanguage().get()
+        val arabicStyle = translationPreferences.arabicStyle().get()
+        val pages = page.chapter.pages ?: return
+
+        val nextPage = pages.getOrNull(page.index + 1) ?: return
+        triggerPreTranslate(nextPage, mangaId, chapterId, language, arabicStyle)
+    }
+
+    private fun triggerPreTranslate(
+        nextPage: ReaderPage,
+        mangaId: Long,
+        chapterId: Long,
+        language: String,
+        arabicStyle: String,
+    ) {
+        val key = "${chapterId}_${nextPage.index}"
+        if (TranslatedPageCache.has(mangaId, chapterId, nextPage.index, language, arabicStyle)) return
+        if (!pretranslatingPages.add(key)) return
+
+        val provider = AiProvider.fromId(translationPreferences.provider().get())
+        val apiKey = translationPreferences.apiKey(provider).get().trim()
+        if (apiKey.isEmpty()) {
+            pretranslatingPages.remove(key)
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val isReady = withTimeoutOrNull(12_000L) {
+                    while (nextPage.status != Page.State.Ready || nextPage.stream == null) {
+                        delay(250)
+                    }
+                    true
+                } ?: false
+
+                if (!isReady) return@launch
+
+                val originalBytes = try {
+                    nextPage.stream!!.invoke().use { it.readBytes() }
+                } catch (e: Exception) {
+                    return@launch
+                }
+
+                if (originalBytes.isEmpty()) return@launch
+
+                val translatedBytes = executePageTranslation(
+                    originalBytes = originalBytes,
+                    pageNumber = nextPage.number,
+                    language = language,
+                    provider = provider,
+                    apiKey = apiKey,
+                )
+
+                TranslatedPageCache.put(mangaId, chapterId, nextPage.index, language, translatedBytes, arabicStyle)
+
+                if (translationPreferences.autoApplyTranslation().get()) {
+                    nextPage.stream = { java.io.ByteArrayInputStream(translatedBytes) }
+                }
+                logcat(LogPriority.INFO) { "Pre-translated page ${nextPage.number} successfully" }
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { "Failed to pre-translate page ${nextPage.number}: ${e.message}" }
+            } finally {
+                pretranslatingPages.remove(key)
+            }
+        }
+    }
+
+    private suspend fun executePageTranslation(
+        originalBytes: ByteArray,
+        pageNumber: Int,
+        language: String,
+        provider: AiProvider,
+        apiKey: String,
+    ): ByteArray {
+        val mode = translationPreferences.mode().get()
+        val isTextMode = mode == TranslationOptions.MODE_OVERLAY || mode == TranslationOptions.MODE_LOCAL_OCR
+        val rawModel = if (isTextMode) {
+            translationPreferences.textModel(provider).get()
+        } else {
+            translationPreferences.model(provider).get()
+        }
+        val model = rawModel.ifBlank {
+            if (provider == AiProvider.GEMINI) {
+                if (isTextMode) TranslationOptions.DEFAULT_TEXT_MODEL else TranslationOptions.DEFAULT_MODEL
+            } else {
+                "gpt-4o-mini"
+            }
+        }
+        val glossary = Glossary.parse(translationPreferences.glossary(manga?.id ?: 0L).get())
+        val promptContext = PromptContext.build(glossary)
+
+        PageOverlayFontManager.init(context)
+        PageOverlayFontManager.customFontPath = translationPreferences.customFontPath().get()
+        val style = RenderStyle.from(
+            translationPreferences.fontStyle().get(),
+            translationPreferences.textSizePercent().get(),
+            translationPreferences.placement().get(),
+        )
+
+        val arabicStyle = translationPreferences.arabicStyle().get()
+        val startTime = System.currentTimeMillis()
+        val resultBytes = when (mode) {
+            TranslationOptions.MODE_LOCAL_OCR -> {
+                try {
+                    localOcrClient.translatePageWithLocalOcr(
+                        image = originalBytes,
+                        language = language,
+                        apiKey = apiKey,
+                        model = model,
+                        provider = provider,
+                        baseUrl = translationPreferences.customBaseUrl().get(),
+                        ocrScript = translationPreferences.ocrScript().get(),
+                        promptContext = promptContext,
+                        style = style,
+                        label = "reader page $pageNumber",
+                        arabicStyle = arabicStyle,
+                    )
+                } catch (e: Exception) {
+                    if (provider.supportsImageGeneration) {
+                        logcat(LogPriority.WARN, e) { "Local OCR failed, falling back to redraw translation: ${e.message}" }
+                        val result = nanoBananaClient.translatePage(
+                            image = originalBytes,
+                            mimeType = "image/jpeg",
+                            apiKey = apiKey,
+                            model = translationPreferences.model(provider).get().ifBlank { TranslationOptions.DEFAULT_MODEL },
+                            language = language,
+                            promptContext = promptContext,
+                            provider = provider,
+                            baseUrl = translationPreferences.customBaseUrl().get(),
+                            arabicStyle = arabicStyle,
+                        )
+                        result.bytes
+                    } else {
+                        throw e
+                    }
+                }
+            }
+            TranslationOptions.MODE_OVERLAY -> {
+                val boxes = overlayClient.detectAndTranslate(
+                    image = originalBytes,
+                    mimeType = "image/jpeg",
+                    apiKey = apiKey,
+                    model = model,
+                    language = language,
+                    baseIntervalMillis = 0L,
+                    promptContext = promptContext,
+                    provider = provider,
+                    baseUrl = translationPreferences.customBaseUrl().get(),
+                    label = "reader page $pageNumber",
+                    arabicStyle = arabicStyle,
+                )
+                if (boxes.isEmpty()) {
+                    originalBytes
+                } else {
+                    val result = PageOverlayRenderer.render(originalBytes, boxes, style)
+                    result.bytes
+                }
+            }
+            else -> {
+                val result = nanoBananaClient.translatePage(
+                    image = originalBytes,
+                    mimeType = "image/jpeg",
+                    apiKey = apiKey,
+                    model = model,
+                    language = language,
+                    promptContext = promptContext,
+                    provider = provider,
+                    baseUrl = translationPreferences.customBaseUrl().get(),
+                    arabicStyle = arabicStyle,
+                )
+                result.bytes
+            }
+        }
+        val durationMs = System.currentTimeMillis() - startTime
+        translationPreferences.recordTranslationStats(pages = 1, durationMs = durationMs)
+        return resultBytes
+    }
+
+    fun applyTranslatedPage(page: ReaderPage, translatedBytes: ByteArray) {
+        val mangaId = manga?.id ?: 0L
+        val chapterId = page.chapter.chapter.id
+        val language = translationPreferences.targetLanguage().get()
+        val arabicStyle = translationPreferences.arabicStyle().get()
+        TranslatedPageCache.put(mangaId, chapterId, page.index, language, translatedBytes, arabicStyle)
+
+        page.stream = { java.io.ByteArrayInputStream(translatedBytes) }
+
+        // Also update chapter cache file on disk if available so loaders read translated bytes
+        val imageUrl = page.imageUrl
+        if (!imageUrl.isNullOrBlank()) {
+            try {
+                val file = chapterCache.getImageFile(imageUrl)
+                file.parentFile?.mkdirs()
+                file.writeBytes(translatedBytes)
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { "Failed to write translated bytes to chapterCache" }
+            }
+        }
+
+        viewModelScope.launch {
+            eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_live_applied)))
+            eventChannel.send(Event.RefreshPage(page))
+        }
+    }
+
+    private var chapterTranslationJob: Job? = null
+
+    fun translateCurrentChapter() {
+        var provider = AiProvider.fromId(translationPreferences.provider().get())
+        var apiKey = translationPreferences.apiKey(provider).get().trim()
+
+        if (apiKey.isEmpty()) {
+            val configuredProvider = AiProvider.entries.firstOrNull {
+                translationPreferences.apiKey(it).get().trim().isNotEmpty()
+            }
+            if (configuredProvider != null) {
+                translationPreferences.provider().set(configuredProvider.id)
+                provider = configuredProvider
+                apiKey = translationPreferences.apiKey(configuredProvider).get().trim()
+            }
+        }
+
+        if (apiKey.isEmpty()) {
+            viewModelScope.launch {
+                eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_api_key_missing)))
+            }
+            return
+        }
+
+        if (!translationPreferences.enabled().get()) {
+            translationPreferences.enabled().set(true)
+        }
+
+        val chapter = getCurrentChapter()
+        val allPages = chapter?.pages
+        if (allPages.isNullOrEmpty()) {
+            viewModelScope.launch {
+                eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_no_pages)))
+            }
+            return
+        }
+
+        val mangaId = manga?.id ?: 0L
+        val chapterId = chapter.chapter.id
+        val language = translationPreferences.targetLanguage().get()
+
+        val currentIndex = (state.value.currentPage - 1).coerceIn(0, allPages.lastIndex)
+        val orderedPages = allPages.sortedWith(
+            compareBy<ReaderPage> { if (it.index >= currentIndex) 0 else 1 }
+                .thenBy { if (it.index >= currentIndex) it.index else -it.index },
+        )
+
+        chapterTranslationJob?.cancel()
+        mutableState.update {
+            it.copy(
+                isTranslatingChapter = true,
+                chapterTranslationProgress = Pair(0, allPages.size),
+                dialog = null,
+            )
+        }
+
+        chapterTranslationJob = viewModelScope.launch(Dispatchers.IO) {
+            val total = allPages.size
+            var completed = 0
+            val arabicStyle = translationPreferences.arabicStyle().get()
+
+            try {
+                for (page in allPages) {
+                    val cached = TranslatedPageCache.get(mangaId, chapterId, page.index, language, arabicStyle)
+                    if (cached != null) {
+                        applyTranslatedPageSilent(page, cached)
+                        completed++
+                    }
+                }
+                mutableState.update { it.copy(chapterTranslationProgress = Pair(completed, total)) }
+
+                val pagesToTranslate = orderedPages.filter { page ->
+                    !TranslatedPageCache.has(mangaId, chapterId, page.index, language, arabicStyle)
+                }
+
+                for (page in pagesToTranslate) {
+                    ensureActive()
+
+                    val isReady = withTimeoutOrNull(20_000L) {
+                        while (page.status != Page.State.Ready || page.stream == null) {
+                            delay(200)
+                        }
+                        true
+                    } ?: false
+
+                    if (!isReady) {
+                        logcat(LogPriority.WARN) { "Page ${page.number} was not ready in time, skipping" }
+                        continue
+                    }
+
+                    val originalBytes = try {
+                        page.stream!!.invoke().use { it.readBytes() }
+                    } catch (e: Exception) {
+                        null
+                    }
+
+                    if (originalBytes == null || originalBytes.isEmpty()) continue
+
+                    try {
+                        val translatedBytes = executePageTranslation(
+                            originalBytes = originalBytes,
+                            pageNumber = page.number,
+                            language = language,
+                            provider = provider,
+                            apiKey = apiKey,
+                        )
+
+                        applyTranslatedPageSilent(page, translatedBytes)
+                        completed++
+                        mutableState.update { it.copy(chapterTranslationProgress = Pair(completed, total)) }
+
+                        delay(400)
+                    } catch (e: Exception) {
+                        if (e is CancellationException) throw e
+                        logcat(LogPriority.ERROR, e) { "Failed to translate page ${page.number} during chapter batch" }
+                        if (e is TranslationException.QuotaExceeded || e is TranslationException.InvalidApiKey) {
+                            throw e
+                        }
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_chapter_completed)))
+                }
+            } catch (e: CancellationException) {
+                logcat(LogPriority.INFO) { "Chapter translation was cancelled" }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Chapter translation error" }
+                val errorMsg = when (e) {
+                    is TranslationException.InvalidApiKey -> context.stringResource(MR.strings.translation_error_invalid_key)
+                    is TranslationException.QuotaExceeded -> context.stringResource(MR.strings.translation_error_quota)
+                    else -> e.message ?: "Translation error"
+                }
+                withContext(Dispatchers.Main) {
+                    eventChannel.send(Event.ShowToast(errorMsg))
+                }
+            } finally {
+                mutableState.update {
+                    it.copy(
+                        isTranslatingChapter = false,
+                        chapterTranslationProgress = null,
+                    )
+                }
+            }
+        }
+    }
+
+    fun cancelChapterTranslation() {
+        chapterTranslationJob?.cancel()
+        chapterTranslationJob = null
+        mutableState.update {
+            it.copy(
+                isTranslatingChapter = false,
+                chapterTranslationProgress = null,
+            )
+        }
+        viewModelScope.launch {
+            eventChannel.send(Event.ShowToast(context.stringResource(MR.strings.translation_cancelled)))
+        }
+    }
+
+    private fun applyTranslatedPageSilent(page: ReaderPage, translatedBytes: ByteArray) {
+        val mangaId = manga?.id ?: 0L
+        val chapterId = page.chapter.chapter.id
+        val language = translationPreferences.targetLanguage().get()
+        val arabicStyle = translationPreferences.arabicStyle().get()
+        TranslatedPageCache.put(mangaId, chapterId, page.index, language, translatedBytes, arabicStyle)
+
+        page.stream = { java.io.ByteArrayInputStream(translatedBytes) }
+
+        val imageUrl = page.imageUrl
+        if (!imageUrl.isNullOrBlank()) {
+            try {
+                val file = chapterCache.getImageFile(imageUrl)
+                file.parentFile?.mkdirs()
+                file.writeBytes(translatedBytes)
+            } catch (e: Exception) {
+                logcat(LogPriority.WARN, e) { "Failed to write translated bytes to chapterCache" }
+            }
+        }
+
+        viewModelScope.launch {
+            eventChannel.send(Event.RefreshPage(page))
+        }
+    }
+
+    fun saveTranslatedImage(page: ReaderPage, bytes: ByteArray, mimeType: String) {
+        val manga = manga ?: return
+        val notifier = SaveImageNotifier(context)
+        notifier.onClear()
+        val filename = generateFilename(manga, page) + "_translated"
+        val relativePath = if (readerPreferences.folderPerManga.get()) {
+            DiskUtil.buildValidFilename(manga.title)
+        } else {
+            ""
+        }
+        viewModelScope.launch {
+            val result = appScope.async {
+                try {
+                    val uri = imageSaver.save(
+                        image = Image.Page(
+                            inputStream = { java.io.ByteArrayInputStream(bytes) },
+                            name = filename,
+                            location = Location.Pictures.create(relativePath),
+                        ),
+                    )
+                    withContext(Dispatchers.Main) { notifier.onComplete(uri) }
+                    SaveImageResult.Success(uri)
+                } catch (e: Throwable) {
+                    notifier.onError(e.message)
+                    SaveImageResult.Error(e)
+                }
+            }.await()
+            eventChannel.send(Event.SavedImage(result))
+        }
+    }
+
+    fun shareTranslatedImage(bytes: ByteArray, mimeType: String) {
+        val destDir = context.cacheImageDir
+        val filename = "translated_page_${System.currentTimeMillis()}"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                destDir.deleteRecursively()
+                val uri = imageSaver.save(
+                    image = Image.Page(
+                        inputStream = { java.io.ByteArrayInputStream(bytes) },
+                        name = filename,
+                        location = Location.Cache,
+                    ),
+                )
+                val page = getCurrentPage() ?: return@launch
+                eventChannel.send(Event.ShareImage(uri, page))
+            } catch (e: Throwable) {
+                eventChannel.send(Event.ShowToast(e.message ?: "Failed to share image"))
+            }
+        }
+    }
+
     enum class SetAsCoverResult {
         Success,
         AddToLibraryFirst,
@@ -1094,8 +1739,17 @@ class ReaderViewModel(
         val bookmarked: Boolean = false,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
+
+        /**
+         * Viewer used to display the pages (pager, webtoon, ...).
+         */
+        val viewer: Viewer? = null,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
+        val isTranslatingPage: Boolean = false,
+        val isTranslatingChapter: Boolean = false,
+        val chapterTranslationProgress: Pair<Int, Int>? = null,
+        @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
@@ -1105,10 +1759,17 @@ class ReaderViewModel(
     }
 
     sealed interface Dialog {
+        data object Loading : Dialog
         data object Settings : Dialog
         data object ReadingModeSelect : Dialog
         data object OrientationModeSelect : Dialog
         data class PageActions(val page: ReaderPage) : Dialog
+        data class LiveTranslation(
+            val page: ReaderPage,
+            val originalBytes: ByteArray,
+            val translatedBytes: ByteArray,
+            val mimeType: String,
+        ) : Dialog
     }
 
     sealed interface Event {
@@ -1120,6 +1781,8 @@ class ReaderViewModel(
         data class SavedImage(val result: SaveImageResult) : Event
         data class ShareImage(val uri: Uri, val page: ReaderPage) : Event
         data class CopyImage(val uri: Uri) : Event
+        data class ShowToast(val message: String) : Event
+        data class RefreshPage(val page: ReaderPage) : Event
     }
 }
 

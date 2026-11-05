@@ -39,7 +39,7 @@ fun OrientationSelectDialog(
         DialogContent(
             orientation = orientation,
             onChangeOrientation = {
-                viewModel.setOrientation(it)
+                viewModel.onChangeOrientation(it)
                 onChange(it.stringRes)
                 onDismissRequest()
             },

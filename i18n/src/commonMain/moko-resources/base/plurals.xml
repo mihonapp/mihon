@@ -114,4 +114,19 @@
         <item quantity="one">%1$d update failed</item>
         <item quantity="other">%1$d updates failed</item>
     </plurals>
+
+    <plurals name="translation_confirm_pages">
+        <item quantity="one">%1$d page will be sent for translation.</item>
+        <item quantity="other">%1$d pages will be sent for translation.</item>
+    </plurals>
+
+    <plurals name="translation_queued">
+        <item quantity="one">Translation queued (%1$d chapter). You\'ll be notified when it finishes.</item>
+        <item quantity="other">Translation queued (%1$d chapters). You\'ll be notified as each one finishes.</item>
+    </plurals>
+
+    <plurals name="translation_queued_idle">
+        <item quantity="one">%1$d chapter queued. It starts when the phone is charging and on Wi-Fi.</item>
+        <item quantity="other">%1$d chapters queued. They start when the phone is charging and on Wi-Fi.</item>
+    </plurals>
 </resources>

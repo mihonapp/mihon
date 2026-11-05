@@ -97,6 +97,11 @@ object SettingsBrowseScreen : SearchableSettings {
                             }
                         },
                     ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = sourcePreferences.autoTrustExtensions,
+                        title = stringResource(MR.strings.pref_auto_trust_extensions),
+                        subtitle = stringResource(MR.strings.pref_auto_trust_extensions_summary),
+                    ),
                     Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.content_warnings_info)),
                 ),
             ),

@@ -23,6 +23,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.domain.translation.TranslationOptions
 import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.NavigatorAdaptiveSheet
@@ -31,9 +32,11 @@ import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
+import eu.kanade.presentation.manga.components.DeleteTranslatedChapterDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
+import eu.kanade.presentation.manga.components.TranslateChapterDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
@@ -56,11 +59,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.app.di.appGraph
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.dialog.MigrateMangaDialog
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class MangaScreen(
@@ -82,6 +88,8 @@ class MangaScreen(
             assistedMetroViewModel<MangaViewModel, MangaViewModel.Factory> {
                 create(mangaId = mangaId, isFromSource = fromSource)
             }
+
+        val translationPreferences = remember { context.appGraph.translationPreferences }
 
         val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -115,6 +123,20 @@ class MangaScreen(
             navigateUp = navigator::pop,
             onChapterClicked = { openChapter(context, it) },
             onDownloadChapter = viewModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
+            onTranslateChapter = viewModel::translateChapter,
+            onOpenTranslatedChapter = { item ->
+                scope.launch {
+                    val translated = viewModel.getTranslatedChapter(item.chapter)
+                    if (translated != null) {
+                        openChapter(context, translated)
+                    } else {
+                        viewModel.snackbarHostState.showSnackbar(
+                            context.stringResource(MR.strings.translation_open_failed),
+                        )
+                    }
+                }
+            },
+            onDeleteTranslatedChapter = viewModel::requestDeleteTranslatedChapter,
             downloadProgressProvider = viewModel::getDownloadProgress,
             onAddToLibraryClicked = {
                 if (successState.manga.favorite) {
@@ -277,6 +299,33 @@ class MangaScreen(
                 } else {
                     LoadingScreen(Modifier.systemBarsPadding())
                 }
+            }
+            is MangaViewModel.Dialog.DeleteTranslatedChapter -> {
+                DeleteTranslatedChapterDialog(
+                    chapterName = dialog.chapter.name,
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { viewModel.confirmDeleteTranslatedChapter(dialog.chapter) },
+                )
+            }
+            is MangaViewModel.Dialog.TranslateChapter -> {
+                TranslateChapterDialog(
+                    pageCount = dialog.pageCount,
+                    nextPageCounts = dialog.nextPageCounts,
+                    targetLanguage = remember { translationPreferences.targetLanguage().get() },
+                    glossaryText = remember { translationPreferences.glossary(dialog.chapter.mangaId).get() },
+                    onGlossarySave = { translationPreferences.glossary(dialog.chapter.mangaId).set(it.trim()) },
+                    overlayMode = remember {
+                        translationPreferences.mode().get() == TranslationOptions.MODE_OVERLAY
+                    },
+                    onDismissRequest = onDismissRequest,
+                    onlyWhenIdleDefault = remember { translationPreferences.onlyWhenIdle().get() },
+                    onConfirm = { extra, onlyWhenIdle ->
+                        viewModel.confirmTranslateChapters(
+                            listOf(dialog.chapter) + dialog.next.take(extra),
+                            onlyWhenIdle,
+                        )
+                    },
+                )
             }
             is MangaViewModel.Dialog.SetFetchInterval -> {
                 SetIntervalDialog(

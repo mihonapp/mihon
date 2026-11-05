@@ -74,6 +74,8 @@ class SourcePreferences(
         emptySet(),
     )
 
+    val autoTrustExtensions: Preference<Boolean> = preferenceStore.getBoolean("pref_auto_trust_extensions", false)
+
     val globalSearchFilterState: Preference<Boolean> = preferenceStore.getBoolean(
         Preference.appStateKey("has_filters_toggle_state"),
         false,

@@ -91,3 +91,19 @@
     public <init>();
     public void destroy();
 }
+
+##---------------Begin: proguard configuration for Google ML Kit ----------
+-keep class com.google.mlkit.** { *; }
+-keep interface com.google.mlkit.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_text.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_text_japanese.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_text_korean.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_text_chinese.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_common.** { *; }
+-keep class com.google.android.datatransport.** { *; }
+-keep class * implements com.google.mlkit.common.sdkinternal.ComponentRegistrar { *; }
+-keep class * extends com.google.mlkit.common.sdkinternal.ComponentRegistrar { *; }
+-dontwarn com.google.mlkit.**
+-dontwarn com.google.android.gms.internal.mlkit_vision_text.**
+-dontwarn com.google.android.gms.internal.mlkit_vision_common.**
+##---------------End: proguard configuration for Google ML Kit ----------

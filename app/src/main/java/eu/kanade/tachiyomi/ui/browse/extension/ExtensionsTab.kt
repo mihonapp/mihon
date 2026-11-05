@@ -73,6 +73,7 @@ fun extensionsTab(
                 },
                 onClickItemCancel = extensionsViewModel::cancelInstallUpdateExtension,
                 onClickUpdateAll = extensionsViewModel::updateAllExtensions,
+                onClickTrustAll = extensionsViewModel::trustAllExtensions,
                 onOpenWebView = { extension ->
                     extension.sources.getOrNull(0)?.let {
                         navigator.push(

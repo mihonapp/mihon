@@ -60,6 +60,17 @@ object Notifications {
     const val ID_RESTORE_COMPLETE = -504
 
     /**
+     * Notification channel and ids used by the chapter translation worker.
+     */
+    private const val GROUP_TRANSLATION = "group_translation"
+    const val CHANNEL_TRANSLATION_PROGRESS = "translation_progress_channel"
+    const val ID_TRANSLATION_PROGRESS = -801
+    const val CHANNEL_TRANSLATION_RESULT = "translation_result_channel"
+
+    /** Result notifications use this base minus a per-chapter offset so each chapter keeps its own. */
+    const val ID_TRANSLATION_RESULT_BASE = -10_000
+
+    /**
      * Notification channel used for Incognito Mode
      */
     const val CHANNEL_INCOGNITO_MODE = "incognito_mode_channel"
@@ -109,6 +120,9 @@ object Notifications {
                 buildNotificationChannelGroup(GROUP_LIBRARY) {
                     setName(context.stringResource(MR.strings.label_library))
                 },
+                buildNotificationChannelGroup(GROUP_TRANSLATION) {
+                    setName(context.stringResource(MR.strings.pref_category_translation))
+                },
                 buildNotificationChannelGroup(GROUP_APK_UPDATES) {
                     setName(context.stringResource(MR.strings.label_recent_updates))
                 },
@@ -153,6 +167,16 @@ object Notifications {
                     setGroup(GROUP_BACKUP_RESTORE)
                     setShowBadge(false)
                     setSound(null, null)
+                },
+                buildNotificationChannel(CHANNEL_TRANSLATION_PROGRESS, IMPORTANCE_LOW) {
+                    setName(context.stringResource(MR.strings.channel_progress))
+                    setGroup(GROUP_TRANSLATION)
+                    setShowBadge(false)
+                },
+                buildNotificationChannel(CHANNEL_TRANSLATION_RESULT, IMPORTANCE_DEFAULT) {
+                    setName(context.stringResource(MR.strings.channel_complete))
+                    setGroup(GROUP_TRANSLATION)
+                    setShowBadge(false)
                 },
                 buildNotificationChannel(CHANNEL_INCOGNITO_MODE, IMPORTANCE_LOW) {
                     setName(context.stringResource(MR.strings.pref_incognito_mode))

@@ -35,10 +35,10 @@ android {
     namespace = "eu.kanade.tachiyomi"
 
     defaultConfig {
-        applicationId = "app.mihon"
+        applicationId = "app.mihon.translate"
 
-        versionCode = 39
-        versionName = "0.21.3"
+        versionCode = 38
+        versionName = "0.21.2"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -273,6 +273,7 @@ dependencies {
     implementation(libs.jsoup)
 
     // Disk
+    implementation(libs.diskLruCache)
     implementation(libs.unifile)
 
     // Preferences
@@ -295,6 +296,7 @@ dependencies {
 
     // UI libraries
     implementation(libs.material)
+    implementation(libs.flexibleAdapter)
     implementation(libs.photoView)
     implementation(libs.directionalViewPager) {
         exclude(group = "androidx.viewpager", module = "viewpager")
@@ -309,6 +311,10 @@ dependencies {
     implementation(libs.reorderable)
     implementation(libs.bundles.markdown)
     implementation(libs.materialKolor)
+    implementation(libs.mlkitTextRecognition)
+    implementation(libs.mlkitTextRecognitionJapanese)
+    implementation(libs.mlkitTextRecognitionKorean)
+    implementation(libs.mlkitTextRecognitionChinese)
 
     // Logging
     implementation(libs.logcat)

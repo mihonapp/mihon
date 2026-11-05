@@ -14,7 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import eu.kanade.presentation.components.AdaptiveSheet
+import eu.kanade.tachiyomi.R
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.ContentCopy
 import mihon.icons.materialsymbols.rounded.Photo
@@ -31,6 +34,8 @@ fun ReaderPageActionsDialog(
     onSetAsCover: () -> Unit,
     onShare: (Boolean) -> Unit,
     onSave: () -> Unit,
+    onTranslate: (() -> Unit)? = null,
+    onTranslateChapter: (() -> Unit)? = null,
 ) {
     var showSetCoverDialog by remember { mutableStateOf(false) }
 
@@ -39,6 +44,28 @@ fun ReaderPageActionsDialog(
             modifier = Modifier.padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         ) {
+            if (onTranslate != null) {
+                ActionButton(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(MR.strings.action_translate_page),
+                    icon = ImageVector.vectorResource(R.drawable.ic_translate_24dp),
+                    onClick = {
+                        onDismissRequest()
+                        onTranslate()
+                    },
+                )
+            }
+            if (onTranslateChapter != null) {
+                ActionButton(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(MR.strings.action_translate_chapter),
+                    icon = ImageVector.vectorResource(R.drawable.ic_translate_24dp),
+                    onClick = {
+                        onDismissRequest()
+                        onTranslateChapter()
+                    },
+                )
+            }
             ActionButton(
                 modifier = Modifier.weight(1f),
                 title = stringResource(MR.strings.set_as_cover),

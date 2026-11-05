@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.material3.SuggestionChip
+
 @Composable
 fun ExtensionStoreCreateDialog(
     onDismissRequest: () -> Unit,
@@ -47,26 +50,38 @@ fun ExtensionStoreCreateDialog(
             Text(text = stringResource(MR.strings.extensionStoresScreen_addStore_title))
         },
         text = {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                state = state,
-                label = {
-                    Text(text = stringResource(MR.strings.extensionStoresScreen_addStoreInput_inputLabel))
-                },
-                supportingText = {
-                    val msgRes = if (storeAlreadyExists) {
-                        MR.strings.extensionStoresScreen_addStore_alreadyExists
-                    } else {
-                        MR.strings.information_required_plain
-                    }
-                    Text(text = errorMessage ?: stringResource(msgRes))
-                },
-                isError = errorMessage != null || storeAlreadyExists,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-                lineLimits = TextFieldLineLimits.SingleLine,
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
+                    state = state,
+                    label = {
+                        Text(text = stringResource(MR.strings.extensionStoresScreen_addStoreInput_inputLabel))
+                    },
+                    supportingText = {
+                        val msgRes = if (storeAlreadyExists) {
+                            MR.strings.extensionStoresScreen_addStore_alreadyExists
+                        } else {
+                            MR.strings.information_required_plain
+                        }
+                        Text(text = errorMessage ?: stringResource(msgRes))
+                    },
+                    isError = errorMessage != null || storeAlreadyExists,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+                    lineLimits = TextFieldLineLimits.SingleLine,
+                )
+                if (!storeIndexUrls.any { it.contains("keiyoushi") }) {
+                    SuggestionChip(
+                        onClick = {
+                            state.setTextAndPlaceCursorAtEnd("https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json")
+                        },
+                        label = {
+                            Text(text = stringResource(MR.strings.extension_store_keiyoushi_title))
+                        },
+                    )
+                }
+            }
         },
         confirmButton = {
             TextButton(

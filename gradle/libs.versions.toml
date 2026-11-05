@@ -1,14 +1,14 @@
 [versions]
-aboutLibraries = "15.3.0"
+aboutLibraries = "15.2.0"
 android-desugar = "2.1.5"
-android-gradle = "9.5.0"
+android-gradle = "9.4.1"
 androidx-activity-compose = "1.13.0"
 androidx-annotation = "1.11.0"
 androidx-appCompat = "1.8.0"
 androidx-baselineProfile = "1.5.0"
 androidx-benchmark = "1.5.0"
 androidx-biometric = "1.2.0-alpha05"
-androidx-compose-bom = "2026.10.01"
+androidx-compose-bom = "2026.10.00"
 androidx-constraintLayout = "2.2.2"
 androidx-core = "1.19.1"
 androidx-coreSplashScreen = "1.2.0"
@@ -25,7 +25,7 @@ androidx-test-espresso = "3.7.0"
 androidx-test-junit = "1.3.0"
 androidx-test-uiautomator = "2.4.0"
 androidx-viewPager = "1.1.0"
-androidx-webkit = "1.18.0"
+androidx-webkit = "1.17.1"
 androidx-work = "2.12.0"
 apollo = "5.2.0"
 apollo-adapters = "0.8.0"
@@ -35,47 +35,49 @@ composeGrid = "2.9.0"
 composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.2.1"
 composeWebview = "0.33.6"
-conscrypt = "2.8.0"
+conscrypt = "2.7.0"
 directionalViewPager = "1.0.0"
-firebase-bom = "35.1.0"
+diskLruCache = "2.0.2"
+firebase-bom = "35.0.0"
 firebase-crashlytics = "3.0.8"
+flexibleAdapter = "5.1.0"
 google-services = "4.5.0"
-image-decoder = "18"
+image-decoder = "16"
 injekt = "1.16.1"
-jsoup = "1.24.1"
+jsoup = "1.23.2"
 junit = "6.1.3"
-kotest-assertions = "6.2.6"
+kotest-assertions = "6.2.5"
 kotlin-gradle = "2.4.21"
 kotlinx-coroutines = "1.11.0"
 kotlinx-datetime = "0.8.0"
-kotlinx-serialization = "1.12.0"
+kotlinx-serialization = "1.11.0"
 ktlint = "1.8.0"
 leakCanary = "2.14"
 logcat = "0.4"
-markdown = "0.46.0"
+markdown = "0.45.0"
 material = "1.14.0"
 materialKolor = "5.0.1"
-metro = "1.5.2"
+metro = "1.4.5"
 mockk = "1.14.11"
 moko-resources = "0.26.4"
-okhttp = "5.5.1"
+okhttp = "5.5.0"
 okio = "3.18.2"
 photoView = "2.3.0"
 quickJs = "547f5b1597"
 reorderable = "3.1.0"
 rxJava = "1.3.8"
 shizuku = "13.1.5"
-spotless = "8.11.0"
+spotless = "8.10.4"
 sqldelight = "2.4.1"
 sqldelight-androidx-driver = "0.2.2"
 stringSimilarity = "0.1.0"
-subsamplingScaleImageView = "72a0537151"
+subsamplingScaleImageView = "1b283e2bc4"
 swipe = "1.3.0"
-tapmoc = "0.5.0"
+tapmoc = "0.4.2"
 unifile = "08f224c8f9"
 valkyrie = "0.5.2"
 voyager = "2.2.21-1.10.3"
-webgpuviewer = "57"
+webgpuviewer = "52"
 xmlutil = "1.0.2"
 
 [libraries]
@@ -135,9 +137,11 @@ composeRichEditor = { module = "com.mohamedrejeb.richeditor:richeditor-compose",
 composeWebview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
 conscrypt = { module = "org.conscrypt:conscrypt-android", version.ref = "conscrypt" }
 directionalViewPager = { module = "com.github.tachiyomiorg:DirectionalViewPager", version.ref = "directionalViewPager" }
+diskLruCache = { module = "com.jakewharton:disklrucache", version.ref = "diskLruCache" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+flexibleAdapter = { module = "eu.davidea:flexible-adapter", version.ref = "flexibleAdapter" }
 image-decoder = { module = "ca.mpreg:imagedecoder", version.ref = "image-decoder" }
 injekt = { module = "uy.kohesive.injekt:injekt-core", version.ref = "injekt" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
@@ -163,6 +167,10 @@ markdown-coil = { module = "com.mikepenz:multiplatform-markdown-renderer-coil3",
 markdown-core = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "markdown" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+mlkitTextRecognition = { module = "com.google.mlkit:text-recognition", version = "16.0.1" }
+mlkitTextRecognitionJapanese = { module = "com.google.mlkit:text-recognition-japanese", version = "16.0.1" }
+mlkitTextRecognitionKorean = { module = "com.google.mlkit:text-recognition-korean", version = "16.0.1" }
+mlkitTextRecognitionChinese = { module = "com.google.mlkit:text-recognition-chinese", version = "16.0.1" }
 metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
 metrox-viewmodel = { module = "dev.zacsweers.metro:metrox-viewmodel", version.ref = "metro" }
 metrox-viewmodel-compose = { module = "dev.zacsweers.metro:metrox-viewmodel-compose", version.ref = "metro" }

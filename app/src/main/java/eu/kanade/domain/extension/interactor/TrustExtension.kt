@@ -20,6 +20,7 @@ class TrustExtension(
 ) {
 
     fun isTrusted(pkgInfo: PackageInfo, fingerprints: List<String>, stores: List<ExtensionStore>): Boolean {
+        if (preferences.autoTrustExtensions.get()) return true
         val trustedFingerprints = stores.mapTo(HashSet()) { it.signingKey }
         val key = "${pkgInfo.packageName}:${PackageInfoCompat.getLongVersionCode(pkgInfo)}:${fingerprints.last()}"
         return trustedFingerprints.any { fingerprints.contains(it) } || key in preferences.trustedExtensions.get()
@@ -31,6 +32,19 @@ class TrustExtension(
             val removed = exts.filterNot { it.startsWith("$pkgName:") }.toMutableSet()
 
             removed.also { it += "$pkgName:$versionCode:$signatureHash" }
+        }
+    }
+
+    fun trustAll(untrustedList: List<Triple<String, Long, String>>) {
+        if (untrustedList.isEmpty()) return
+        preferences.trustedExtensions.getAndSet { exts ->
+            val set = exts.toMutableSet()
+            val pkgs = untrustedList.map { it.first }.toSet()
+            set.removeAll { entry -> pkgs.any { entry.startsWith("$it:") } }
+            for ((pkg, ver, sig) in untrustedList) {
+                set += "$pkg:$ver:$sig"
+            }
+            set
         }
     }
 
@@ -51,6 +65,9 @@ class TrustExtension(
                 .distinctUntilChanged()
                 .drop(1),
             preferences.trustedExtensions.changes()
+                .distinctUntilChanged()
+                .drop(1),
+            preferences.autoTrustExtensions.changes()
                 .distinctUntilChanged()
                 .drop(1),
         )

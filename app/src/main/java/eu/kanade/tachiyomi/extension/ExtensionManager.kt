@@ -326,6 +326,16 @@ class ExtensionManager(
         trustExtension.trust(extension.pkgName, extension.versionCode, reason.signatureHash)
     }
 
+    fun trustAll(extensions: List<Extension.NotLoaded>) {
+        val untrusted = extensions.mapNotNull { ext ->
+            val reason = ext.reason as? Extension.NotLoaded.Reason.Untrusted ?: return@mapNotNull null
+            Triple(ext.pkgName, ext.versionCode, reason.signatureHash)
+        }
+        if (untrusted.isNotEmpty()) {
+            trustExtension.trustAll(untrusted)
+        }
+    }
+
     /**
      * Registers the given extension in this and the source managers.
      *

@@ -43,6 +43,7 @@ class ExtensionStoresScreen(
         ExtensionStoresScreen(
             state = successState,
             onClickCreate = { viewModel.showDialog(ExtensionStoreDialog.Create()) },
+            onAddKeiyoushi = { viewModel.createRepo("https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json") },
             onCopy = { context.copyToClipboard(it.indexUrl, it.indexUrl) },
             onOpenWebsite = { it.contact.website.let(context::openInBrowser) },
             onOpenDiscord = { it.contact.discord?.let(context::openInBrowser) },
