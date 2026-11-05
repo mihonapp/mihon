@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import ca.mpreg.webgpuviewer.renderer.ImageFilterWgsl
+import ca.mpreg.webgpuviewer.renderer.Sampler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -79,10 +80,15 @@ object WebGpuShaders {
     }
 
     /**
-     * Copies [uri] in and appends it to [pref]. Throws [IllegalArgumentException], with the reason, if
-     * it is not a filter this device runs.
+     * Copies [uri] in and appends it to [pref]; with [sampler], replaces what [pref] holds. Throws
+     * [IllegalArgumentException], with the reason, if this device can't run it.
      */
-    suspend fun import(context: Context, uri: Uri, pref: Preference<List<WebGpuShader>>) =
+    suspend fun import(
+        context: Context,
+        uri: Uri,
+        pref: Preference<List<WebGpuShader>>,
+        sampler: Boolean = false,
+    ) =
         withContext(Dispatchers.IO) {
             val resolver = context.contentResolver
             val name = resolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use {
@@ -99,20 +105,23 @@ object WebGpuShaders {
                 require(size <= MAX_BYTES) { "$name is over ${MAX_BYTES shr 20} MB" }
                 buffer.decodeToString(0, size)
             } ?: throw IllegalArgumentException("cannot open $name")
-            ImageFilterWgsl(source, name).validate()
+            if (sampler) Sampler(source, name).validate() else ImageFilterWgsl(source, name).validate()
 
             val shader = WebGpuShader("${UUID.randomUUID()}.wgsl", name.replace(Regex("""[\t\r\n]"""), " "))
             // Past validation, the copy and its entry land together or not at all.
             withContext(NonCancellable) {
                 synchronized(lock) {
-                    val file = File(dir(context).apply { mkdirs() }, shader.file)
+                    val dir = dir(context).apply { mkdirs() }
+                    val file = File(dir, shader.file)
+                    val replaced = if (sampler) pref.get() else emptyList()
                     try {
                         file.writeText(source)
-                        pref.set(pref.get() + shader)
+                        pref.set(if (sampler) listOf(shader) else pref.get() + shader)
                     } catch (e: Exception) {
                         file.delete()
                         throw e
                     }
+                    replaced.forEach { File(dir, it.file).delete() }
                 }
             }
         }
@@ -149,6 +158,9 @@ object WebGpuShaders {
     /** Throws if the file is gone or no longer parses. */
     fun load(context: Context, shader: WebGpuShader): ImageFilterWgsl =
         ImageFilterWgsl(File(dir(context), shader.file).readText(), shader.name).also { applyValues(it, shader) }
+
+    fun loadSampler(context: Context, shader: WebGpuShader): Sampler =
+        Sampler(File(dir(context), shader.file).readText(), shader.name)
 
     // Touches no GPU state.
     suspend fun params(context: Context, shader: WebGpuShader): List<ImageFilterWgsl.Param> =

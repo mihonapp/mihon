@@ -10,6 +10,7 @@ import ca.mpreg.webgpuviewer.closeTo
 import ca.mpreg.webgpuviewer.renderer.GainmapInput
 import ca.mpreg.webgpuviewer.renderer.Image
 import ca.mpreg.webgpuviewer.renderer.ImageFilterWgsl
+import ca.mpreg.webgpuviewer.renderer.Sampler
 import ca.mpreg.webgpuviewer.transition.TransitionBasic
 import ca.mpreg.webgpuviewer.transition.TransitionCube
 import ca.mpreg.webgpuviewer.transition.TransitionCubeOuter
@@ -854,8 +855,14 @@ open class WebGpuViewer(
             if (old?.doubleTapGesturesDisabled != new.doubleTapGesturesDisabled) {
                 viewerState.doubleTapGesturesEnabled = !new.doubleTapGesturesDisabled
             }
+            if (old?.fastRenderingOnly != new.fastRenderingOnly) {
+                viewerState.enableTiles = !new.fastRenderingOnly
+            }
+            if (old?.holdUntilFinal != new.holdUntilFinal) viewerState.holdUntilFinal = new.holdUntilFinal
             if (old?.imageFilters != new.imageFilters) imageFilters.update(new.imageFilters)
             if (old?.tileFilters != new.tileFilters) tileFilters.update(new.tileFilters)
+            if (old?.upscaler != new.upscaler) upscaler.update(new.upscaler)
+            if (old?.downscaler != new.downscaler) downscaler.update(new.downscaler)
         }
         settingsViewModel.paged.collectChanges(scope) { old, new ->
             if (old != null && old.page != new.page) {
@@ -946,6 +953,32 @@ open class WebGpuViewer(
 
     private val imageFilters = FilterSlot { viewerState.imageFilters = it }
     private val tileFilters = FilterSlot { viewerState.tileFilters = it }
+    private val upscaler = SamplerSlot(Sampler::catmullRom) { viewerState.upscaler = it }
+    private val downscaler = SamplerSlot(Sampler::box) { viewerState.downscaler = it }
+
+    // Main thread only.
+    private inner class SamplerSlot(private val default: () -> Sampler, private val assign: (Sampler) -> Unit) {
+        private var job: Job? = null
+
+        fun update(shader: WebGpuShader?) {
+            // Else an older, slower load could land last.
+            job?.cancel()
+            job = scope.launch {
+                // default() reads a resource.
+                val sampler = withContext(Dispatchers.IO) {
+                    shader?.let {
+                        try {
+                            WebGpuShaders.loadSampler(activity, it)
+                        } catch (e: Exception) {
+                            logcat(LogPriority.ERROR, e) { "sampler ${it.name}" }
+                            null
+                        }
+                    } ?: default()
+                }
+                assign(sampler)
+            }
+        }
+    }
 
     // Main thread only.
     private inner class FilterSlot(private val assign: (List<ImageFilterWgsl>) -> Unit) {
@@ -1370,6 +1403,7 @@ open class WebGpuViewer(
                 ).apply {
                     // The tile cache would go stale.
                     highQuality = false
+                    isPlaceholder = true
                 }
                 val installed = synchronized(lock) {
                     val old = page.imagePage
@@ -1423,6 +1457,8 @@ open class WebGpuViewer(
                 }
             }
             val animated = if (streaming) secondFrame != null else dec.hasNext
+            // Image filters draw only base levels. Pages already made keep what they have.
+            val mipMaps = !animated && viewerState.imageFilters.isEmpty()
 
             // A gain map belongs to a still; its headroom is the map's, not the decoder's.
             val gainmap = if (!animated && dec.hdrKind == ImageDecoder.HdrKind.GAINMAP) {
@@ -1450,14 +1486,14 @@ open class WebGpuViewer(
             val wasHome = shown?.atHome == true
             val firstImage = shown?.image?.also {
                 it.update(firstFrame.image)
-                if (!animated) it.createMipMaps(firstFrame.image)
+                if (mipMaps) it.createMipMaps(firstFrame.image)
                 it.measure(firstFrame.image, trimColors, trimThreshold = 0.15f, backgroundColor = backgroundColor)
                 it.crop = crop
             } ?: Image(
                 firstFrame.image,
                 firstFrame.width,
                 firstFrame.height,
-                createMipMaps = !animated,
+                createMipMaps = mipMaps,
                 trimColors = trimColors,
                 trimThreshold = 0.15f,
                 backgroundColor = backgroundColor,
@@ -1480,6 +1516,7 @@ open class WebGpuViewer(
                     // something replaced it meanwhile.
                     shown != null -> shown.takeIf { page.imagePage === it && !it.destroyed }?.also {
                         page.preview = null
+                        it.isPlaceholder = false
                         // Tiles for a still; an animation swaps images every frame.
                         it.highQuality = !animated
                         // Else a crop's new size would keep the old size's home and limits.
