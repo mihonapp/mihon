@@ -1095,4 +1095,6 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+    <string name="migration_origin_label">Migrating from</string>
+    <string name="migration_origin_latest_upload">Uploaded: %1$s</string>
 </resources>
