@@ -416,9 +416,23 @@ object SettingsReaderScreen : SearchableSettings {
 
     @Composable
     private fun getActionsGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val verticalBrightnessGesture by readerPreferences.verticalBrightnessGesture.collectAsState()
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_reader_actions),
             preferenceItems = listOf(
+                Preference.PreferenceItem.ListPreference(
+                    preference = readerPreferences.verticalBrightnessGesture,
+                    entries = ReaderPreferences.VerticalBrightnessGesture.entries
+                        .associateWith { stringResource(it.titleRes) },
+                    title = stringResource(MR.strings.pref_vertical_brightness_gesture),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    preference = readerPreferences.verticalBrightnessGestureWidth,
+                    valueRange = 5..25,
+                    title = stringResource(MR.strings.pref_vertical_brightness_gesture_width),
+                    valueText = { "$it%" },
+                    visible = verticalBrightnessGesture != ReaderPreferences.VerticalBrightnessGesture.OFF,
+                ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.readWithLongTap,
                     title = stringResource(MR.strings.pref_read_with_long_tap),

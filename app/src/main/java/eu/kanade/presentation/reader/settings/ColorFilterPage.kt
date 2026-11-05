@@ -10,6 +10,7 @@ import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.Companion.ColorFilterMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import tachiyomi.core.common.preference.getAndSet
@@ -22,6 +23,29 @@ import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
 internal fun ColumnScope.ColorFilterPage(viewModel: ReaderSettingsViewModel) {
+    val verticalBrightnessGesture by viewModel.preferences.verticalBrightnessGesture.collectAsState()
+    SettingsChipRow(MR.strings.pref_vertical_brightness_gesture) {
+        ReaderPreferences.VerticalBrightnessGesture.entries.forEach { mode ->
+            FilterChip(
+                selected = verticalBrightnessGesture == mode,
+                onClick = { viewModel.preferences.verticalBrightnessGesture.set(mode) },
+                label = { Text(stringResource(mode.titleRes)) },
+            )
+        }
+    }
+    if (verticalBrightnessGesture != ReaderPreferences.VerticalBrightnessGesture.OFF) {
+        val verticalBrightnessGestureWidth by viewModel.preferences.verticalBrightnessGestureWidth.collectAsState()
+        SliderItem(
+            value = verticalBrightnessGestureWidth,
+            valueRange = 5..25,
+            steps = 0,
+            label = stringResource(MR.strings.pref_vertical_brightness_gesture_width),
+            valueString = "$verticalBrightnessGestureWidth%",
+            onChange = { viewModel.preferences.verticalBrightnessGestureWidth.set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+    }
+
     val customBrightness by viewModel.preferences.customBrightness.collectAsState()
     CheckboxItem(
         label = stringResource(MR.strings.pref_custom_brightness),

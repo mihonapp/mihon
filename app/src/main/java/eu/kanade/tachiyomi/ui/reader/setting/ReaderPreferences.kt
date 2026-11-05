@@ -204,6 +204,16 @@ class ReaderPreferences(
         false,
     )
 
+    val verticalBrightnessGesture: Preference<VerticalBrightnessGesture> = preferenceStore.getEnum(
+        "pref_vertical_brightness_gesture",
+        VerticalBrightnessGesture.OFF,
+    )
+
+    val verticalBrightnessGestureWidth: Preference<Int> = preferenceStore.getInt(
+        "pref_vertical_brightness_gesture_width",
+        10,
+    )
+
     // endregion
 
     // region WebGpu
@@ -394,6 +404,12 @@ class ReaderPreferences(
         NEVER(MR.strings.dual_page_view_never),
         ALWAYS(MR.strings.dual_page_view_always),
         WIDE(MR.strings.dual_page_view_wide),
+    }
+
+    enum class VerticalBrightnessGesture(val titleRes: StringResource) {
+        OFF(MR.strings.pref_vertical_brightness_gesture_off),
+        LEFT(MR.strings.pref_vertical_brightness_gesture_left),
+        RIGHT(MR.strings.pref_vertical_brightness_gesture_right),
     }
 
     companion object {
