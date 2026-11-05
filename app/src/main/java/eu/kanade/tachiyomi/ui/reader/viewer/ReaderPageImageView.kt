@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PointF
@@ -266,10 +267,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
         if (pageView is SubsamplingScaleImageView) return
         removeView(pageView)
 
-        pageView = SubsamplingScaleImageView(context).apply {
+        pageView = ResamplingScaleImageView(context).apply {
             setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
             setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
-            setMinimumTileDpi(180)
+            setMinimumTileDpi(ResamplingScaleImageView.DEFAULT_TILE_DPI)
             setOnStateChangedListener(
                 object : SubsamplingScaleImageView.OnStateChangedListener {
                     override fun onScaleChanged(newScale: Float, origin: Int) {
@@ -304,6 +305,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         data: Any,
         config: Config,
     ) = (pageView as? SubsamplingScaleImageView)?.apply {
+        (this as? ResamplingScaleImageView)?.setResampling(config.highQualityUpscaling, isShrunk(data))
         setDoubleTapZoomDuration(config.zoomDuration.getSystemScaledDuration())
         setMinimumScaleType(config.minimumScaleType)
         setMinimumDpi(1) // Just so that very small image will be fit for initial load
@@ -335,6 +337,16 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 throw IllegalArgumentException("Not implemented for class ${data::class.simpleName}")
             }
         }
+    }
+
+    /** Whether the page won't fit the screen at its own size. One of a size this can't read counts. */
+    private fun isShrunk(data: Any): Boolean {
+        if (data !is BufferedSource) return true
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeStream(data.peek().inputStream(), null, options)
+        val screen = resources.displayMetrics
+        return options.outWidth <= 0 || options.outHeight <= 0 ||
+            options.outWidth > screen.widthPixels || options.outHeight > screen.heightPixels
     }
 
     private fun prepareStripImageView() {
@@ -467,6 +479,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         val cropBorders: Boolean = false,
         val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
         val landscapeZoom: Boolean = false,
+        val highQualityUpscaling: Boolean = false,
     )
 
     enum class ZoomStartPosition {

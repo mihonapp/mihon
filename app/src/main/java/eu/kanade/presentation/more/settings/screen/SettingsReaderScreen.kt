@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more.settings.screen
 
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
@@ -112,6 +113,12 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.showPageNumber,
                     title = stringResource(MR.strings.pref_show_page_number),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.highQualityUpscaling,
+                    title = stringResource(MR.strings.pref_high_quality_upscaling),
+                    subtitle = stringResource(MR.strings.pref_high_quality_upscaling_summary),
+                    visible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU,
                 ),
             ),
         )

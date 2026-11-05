@@ -198,6 +198,7 @@ class WebtoonPageHolder(
                         zoomDuration = viewer.general.doubleTapAnimDuration,
                         minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
                         cropBorders = viewer.longStrip.cropBorders,
+                        highQualityUpscaling = viewer.general.highQualityUpscaling,
                     ),
                 )
                 removeErrorLayout()
