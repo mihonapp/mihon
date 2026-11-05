@@ -429,6 +429,8 @@
     <string name="pref_high_quality_renderer">Use high quality renderer</string>
     <string name="pref_crop_borders">Crop borders</string>
     <string name="pref_crop_instead_of_zoom">Crop instead of zoom</string>
+    <string name="pref_fast_rendering_only">Disable tiles</string>
+    <string name="pref_hold_until_final">Show all tiles together</string>
     <string name="pref_custom_brightness">Custom brightness</string>
     <string name="pref_grayscale">Grayscale</string>
     <string name="pref_inverted_colors">Inverted</string>
@@ -546,6 +548,9 @@
     <string name="pref_continuous_gap">Gap</string>
     <string name="pref_image_filters">Image filters</string>
     <string name="pref_tile_filters">Tile filters</string>
+    <string name="pref_upscaler">Upscaler</string>
+    <string name="pref_downscaler">Downscaler</string>
+    <string name="action_choose_shader">Choose shader</string>
     <string name="pref_disable_double_tap_gestures">Disable double tap gestures</string>
     <string name="action_add_shader">Add shader</string>
     <string name="image_filter_invalid">Couldn\'t add shader</string>
