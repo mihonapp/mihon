@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,13 +13,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
 import eu.kanade.presentation.util.formatChapterNumber
-import eu.kanade.tachiyomi.ui.browse.migration.search.MigrationOriginSummary
-import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrationOriginSummary
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
+import eu.kanade.tachiyomi.util.lang.toLocalDate
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -99,19 +100,27 @@ private fun MigrationOriginBanner(origin: MigrationOriginSummary) {
         Text(
             text = origin.sourceName,
             style = MaterialTheme.typography.bodyMedium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             val latestChapter = origin.latestChapter?.let(::formatChapterNumber)
                 ?: stringResource(MR.strings.migrationListScreen_unknownLatestChapter)
             Text(
                 text = stringResource(MR.strings.migrationListScreen_latestChapterLabel, latestChapter),
+                modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             val latestDate = origin.latestUpload?.toLocalDate()?.toString()
                 ?: stringResource(MR.strings.migrationListScreen_unknownLatestChapter)
             Text(
                 text = stringResource(MR.strings.migration_origin_latest_upload, latestDate),
+                modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
