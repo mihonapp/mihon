@@ -30,12 +30,7 @@ object SettingsReaderScreen : SearchableSettings {
         val readerPref = remember { context.appGraph.readerPreferences }
 
         return listOf(
-            Preference.PreferenceItem.ListPreference(
-                preference = readerPref.defaultReadingMode,
-                entries = ReadingMode.entries.drop(1)
-                    .associate { it.flagValue to stringResource(it.stringRes) },
-                title = stringResource(MR.strings.pref_viewer_type),
-            ),
+            // Mekuri: long strip only, so there is no default reading mode setting
             Preference.PreferenceItem.ListPreference(
                 preference = readerPref.doubleTapAnimSpeed,
                 entries = mapOf(

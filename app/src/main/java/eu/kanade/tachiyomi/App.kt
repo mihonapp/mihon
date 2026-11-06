@@ -63,6 +63,7 @@ import mihon.core.metro.AppCoroutineScope
 import mihon.core.metro.GraphProvider
 import mihon.core.migration.Migration
 import mihon.core.migration.Migrator
+import mihon.feature.mekuri.MekuriSetup
 import mihon.telemetry.TelemetryConfig
 import org.conscrypt.Conscrypt
 import tachiyomi.core.common.i18n.stringResource
@@ -183,6 +184,9 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
             .changes()
             .onEach(TelemetryConfig::setCrashlyticsEnabled)
             .launchIn(scope)
+
+        // Mekuri: one-time Mekuri defaults (theme, English-only sources)
+        MekuriSetup.run(preferenceStore, uiPreferences, graph.sourcePreferences, graph.readerPreferences)
 
         setAppCompatDelegateThemeMode(uiPreferences.themeMode.get())
 

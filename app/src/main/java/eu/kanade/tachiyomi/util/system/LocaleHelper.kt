@@ -82,6 +82,7 @@ object LocaleHelper {
      * Return the default languages enabled for the sources.
      */
     fun getDefaultEnabledLanguages(): Set<String> {
-        return setOf("all", "en", Locale.getDefault().language)
+        // Mekuri: English only by default (no multi-language or device-language sources)
+        return setOf("en")
     }
 }

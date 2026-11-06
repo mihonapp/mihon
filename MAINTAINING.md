@@ -22,12 +22,19 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `app/src/main/java/eu/kanade/presentation/more/settings/screen/about/AboutScreen.kt` | only a GitHub link to this repo; Mihon website/social/privacy links removed |
 | `app/src/main/java/eu/kanade/presentation/more/MoreScreen.kt` | "Support us" (Mihon donations) hidden |
 | `app/src/main/java/eu/kanade/tachiyomi/ui/main/MainActivity.kt` | donation campaign dialog disabled |
+| `app/src/main/java/mihon/feature/mekuri/**` | Mekuri-only code: `MekuriSetup` (one-time defaults), `autoscroll/` (AutoScroller, AutoScrollBar) |
+| `App.kt` | calls `MekuriSetup.run(...)` on startup |
+| `ReaderActivity.kt`, `ReaderAppBars.kt`, `ReaderPreferences.kt` | auto-scroll wiring, speed pref `mekuri_auto_scroll_speed` |
+| `ReaderViewModel.kt`, `ReaderSettingsViewModel.kt`, `ReadingModePage.kt`, `ReaderBottomBar.kt`, `SettingsReaderScreen.kt` | long strip only (mode always WEBTOON; pickers removed) |
+| `TachiyomiColorScheme.kt`, `presentation-core/.../colors_tachiyomi.xml` (values + values-night) | Mekuri colours in the Default theme |
+| `AppThemePreferenceWidget.kt` | theme picker shows only the Mekuri theme |
+| `LocaleHelper.kt` | default source languages = English only |
 | `.github/workflows/build.yml` | PR = debug-signed build; push to main = signed APK artifact; telemetry excluded |
 | `.github/workflows/release.yml` | tag `v*` → signed APKs → GitHub Release in this repo |
 | `.github/workflows/update_website.yml`, `.github/FUNDING.yml` | deleted (Mihon-only) |
 | `.gitignore` | keystores, `signing.properties` |
 | `README.md`, `.github/assets/logo.png`, `.idea/icon.svg` | fork notice at top, Mekuri logo |
-| `MAINTAINING.md`, `CLAUDE.md` | these docs |
+| `MAINTAINING.md`, `CLAUDE.md`, `ROADMAP.md` | these docs |
 
 Intentionally **unchanged**: Kotlin namespace (`eu.kanade.tachiyomi`), tracker OAuth schemes (`mihon://…-auth`,
 `app.mihon://comick-auth`: they are registered with the trackers, and changing them breaks tracker login),

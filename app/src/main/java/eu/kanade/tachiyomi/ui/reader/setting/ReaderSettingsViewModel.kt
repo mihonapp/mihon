@@ -50,10 +50,9 @@ class ReaderSettingsViewModel(
     /**
      * The reading mode the viewer is made for, with the default resolved.
      */
-    val readingMode = combine(mangaFlow, preferences.defaultReadingMode.changes()) { manga, default ->
-        ReadingMode.fromPreference(manga?.readingMode?.toInt())
-            .takeIf { it != ReadingMode.DEFAULT }
-            ?: ReadingMode.fromPreference(default)
+    // Mekuri: long strip only
+    val readingMode = combine(mangaFlow, preferences.defaultReadingMode.changes()) { _, _ ->
+        ReadingMode.WEBTOON
     }
         .stateIn(
             viewModelScope,

@@ -37,6 +37,7 @@ import eu.kanade.presentation.reader.components.ChapterNavigator
 import eu.kanade.presentation.reader.components.ChapterNavigatorType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import mihon.feature.mekuri.autoscroll.AutoScrollBar
 import tachiyomi.presentation.core.components.material.padding
 
 private val readerBarsSlideAnimationSpec = tween<IntOffset>(200)
@@ -74,6 +75,12 @@ fun ReaderAppBars(
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
+
+    // Mekuri: auto-scroll (null when the current viewer can't auto-scroll)
+    autoScrollPlaying: Boolean? = null,
+    onToggleAutoScroll: () -> Unit = {},
+    autoScrollSpeed: Int = 4,
+    onAutoScrollSpeedChange: (Int) -> Unit = {},
 ) {
     val backgroundColor = MaterialTheme.colorScheme
         .surfaceColorAtElevation(3.dp)
@@ -158,6 +165,17 @@ fun ReaderAppBars(
                         totalPages = totalPages,
                         onPageIndexChange = onPageIndexChange,
                         onPageIndexChangeFinished = onPageIndexChangeFinished,
+                    )
+                }
+                if (autoScrollPlaying != null) {
+                    AutoScrollBar(
+                        playing = autoScrollPlaying,
+                        onTogglePlaying = onToggleAutoScroll,
+                        speed = autoScrollSpeed,
+                        onSpeedChange = onAutoScrollSpeedChange,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(backgroundColor),
                     )
                 }
                 ReaderBottomBar(
