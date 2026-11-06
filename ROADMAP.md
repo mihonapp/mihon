@@ -10,11 +10,12 @@ Motion level 4 of 5. Every release is installable on its own.
 - English-only sources by default
 - Mekuri theme (Default theme recoloured). Light / Dark / System and Pure black stay; the other themes are hidden.
 
-## v1.2.0: navigation
+## v1.2.0: navigation (done)
 - Floating, icons-only nav pill: Library · Updates · Offline · Browse · You
 - **Offline** tab: the download queue at the top (only while active), then downloaded manga grouped by series
-- **You** hub: History (swipeable row), Vault, Settings, Stats, Backup, the incognito switch
-- Browse tabs relabelled: Sources (sites you read) · Add-ons (extensions) · Move (migrate)
+- **You** hub: tiles for History, Settings, Stats, Backup and data, Categories and About, plus the Incognito and Downloaded-only switches (Vault tile comes in v1.4; a swipeable History row comes later)
+- Browse tabs relabelled: Sources · Add-ons (extensions) · Move (migrate)
+- Tablets keep the side navigation rail (with the same 5 tabs)
 
 ## v1.3.0: bookshelf library ("Library D")
 - The home screen is a full-screen bookshelf, one spine per category
