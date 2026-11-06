@@ -1,6 +1,6 @@
 # CLAUDE.md — Mekuri (personal Mihon fork)
 
-Read `MAINTAINING.md` first. It has the full list of changes from upstream, the variants, signing, releases and upstream syncing.
+Read `MAINTAINING.md` first, then `ROADMAP.md` (the agreed redesign plan and its decisions). It has the full list of changes from upstream, the variants, signing, releases and upstream syncing.
 
 ## Facts
 - Repo `vsrksaketh-dev/mekuri` (public fork). Remotes: `origin` = my repo, `upstream` = `mihonapp/mihon` (push disabled).
@@ -14,5 +14,6 @@ Read `MAINTAINING.md` first. It has the full list of changes from upstream, the 
 - Don't rename the Kotlin namespace/packages (`eu.kanade.tachiyomi`, `tachiyomi.*`, `mihon.*`). That's huge diffs and upstream conflicts.
 - Keep upstream-file edits minimal and tagged `// Mekuri:`. Prefer new files for features.
 - Never break extensions, extension repos, backup/restore compatibility with Mihon, trackers (keep OAuth schemes), or DB migrations.
+- One-time defaults for existing installs go in `MekuriSetup` (bump `CURRENT`), never in upstream's versionCode migrations.
 - `versionCode` must track upstream's (migrations depend on it). Only change `versionName` for Mekuri releases; release tag = `v<versionName>`.
 - One branch and one PR per feature. Ask the owner before anything destructive or anything that publishes outside this repo.
