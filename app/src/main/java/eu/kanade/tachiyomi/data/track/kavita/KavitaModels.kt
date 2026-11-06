@@ -8,20 +8,10 @@ import kotlinx.serialization.Serializable
 data class SeriesDto(
     val id: Int,
     val name: String,
-    val originalName: String = "",
     @SerialName("thumbnailUrl")
     val thumbnailUrl: String? = "",
-    val localizedName: String? = "",
-    val sortName: String? = "",
     val pages: Int,
-    val coverImageLocked: Boolean = true,
     val pagesRead: Int,
-    val userRating: Int? = 0,
-    val userReview: String? = "",
-    val format: Int,
-    val created: String? = "",
-    val libraryId: Int,
-    val libraryName: String? = "",
 ) {
     fun toTrack(trackerId: Long): TrackSearch = TrackSearch.create(trackerId).also {
         it.title = name
