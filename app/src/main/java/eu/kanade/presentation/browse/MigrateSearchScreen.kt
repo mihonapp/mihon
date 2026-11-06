@@ -18,6 +18,7 @@ fun MigrateSearchScreen(
     onSearch: (String) -> Unit,
     onChangeSearchFilter: (SourceFilter) -> Unit,
     onToggleResults: () -> Unit,
+    onToggleChapterCountSort: () -> Unit,
     getManga: @Composable (Manga) -> State<Manga>,
     onClickSource: (Source) -> Unit,
     onClickItem: (Manga) -> Unit,
@@ -37,6 +38,8 @@ fun MigrateSearchScreen(
                 onChangeSearchFilter = onChangeSearchFilter,
                 onlyShowHasResults = state.onlyShowHasResults,
                 onToggleResults = onToggleResults,
+                sortByChapterCount = state.sortByChapterCount,
+                onToggleChapterCountSort = onToggleChapterCountSort,
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -44,6 +47,9 @@ fun MigrateSearchScreen(
         GlobalSearchContent(
             fromSourceId = fromSourceId,
             items = state.filteredItems,
+            chapterCounts = state.chapterCounts,
+            chapterCountIds = state.chapterCountIds,
+            sortByChapterCount = state.sortByChapterCount,
             contentPadding = paddingValues,
             getManga = getManga,
             onClickSource = onClickSource,

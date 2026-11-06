@@ -26,6 +26,7 @@ fun GlobalSearchScreen(
     onSearch: (String) -> Unit,
     onChangeSearchFilter: (SourceFilter) -> Unit,
     onToggleResults: () -> Unit,
+    onToggleChapterCountSort: () -> Unit,
     getManga: @Composable (Manga) -> State<Manga>,
     onClickSource: (Source) -> Unit,
     onClickItem: (Manga) -> Unit,
@@ -45,12 +46,17 @@ fun GlobalSearchScreen(
                 onChangeSearchFilter = onChangeSearchFilter,
                 onlyShowHasResults = state.onlyShowHasResults,
                 onToggleResults = onToggleResults,
+                sortByChapterCount = state.sortByChapterCount,
+                onToggleChapterCountSort = onToggleChapterCountSort,
                 scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->
         GlobalSearchContent(
             items = state.filteredItems,
+            chapterCounts = state.chapterCounts,
+            chapterCountIds = state.chapterCountIds,
+            sortByChapterCount = state.sortByChapterCount,
             contentPadding = paddingValues,
             getManga = getManga,
             onClickSource = onClickSource,
@@ -63,6 +69,9 @@ fun GlobalSearchScreen(
 @Composable
 internal fun GlobalSearchContent(
     items: Map<Source, SearchItemResult>,
+    chapterCounts: Map<Long, Int>,
+    chapterCountIds: Set<Long>,
+    sortByChapterCount: Boolean,
     contentPadding: PaddingValues,
     getManga: @Composable (Manga) -> State<Manga>,
     onClickSource: (Source) -> Unit,
@@ -70,10 +79,26 @@ internal fun GlobalSearchContent(
     onLongClickItem: (Manga) -> Unit,
     fromSourceId: Long? = null,
 ) {
+    val orderedItems = if (sortByChapterCount) {
+        items.entries.sortedWith { left, right ->
+            val leftMax = left.value.maxChapterCount(chapterCounts)
+            val rightMax = right.value.maxChapterCount(chapterCounts)
+            when {
+                leftMax == null && rightMax == null -> 0
+                leftMax == null -> 1
+                rightMax == null -> -1
+                leftMax != rightMax -> rightMax.compareTo(leftMax)
+                else -> 0
+            }
+        }
+    } else {
+        items.entries.toList()
+    }
+
     LazyColumn(
         contentPadding = contentPadding,
     ) {
-        items.forEach { (source, result) ->
+        orderedItems.forEach { (source, result) ->
             item(key = source.id) {
                 GlobalSearchResultItem(
                     title = fromSourceId?.let {
@@ -88,8 +113,16 @@ internal fun GlobalSearchContent(
                             GlobalSearchLoadingResultItem()
                         }
                         is SearchItemResult.Success -> {
+                            val titles = if (sortByChapterCount) {
+                                result.result.sortedByChapterCount(chapterCounts)
+                            } else {
+                                result.result
+                            }
                             GlobalSearchCardRow(
-                                titles = result.result,
+                                titles = titles,
+                                chapterCounts = chapterCounts,
+                                chapterCountIds = chapterCountIds,
+                                showChapterCounts = sortByChapterCount,
                                 getManga = getManga,
                                 onClick = onClickItem,
                                 onLongClick = onLongClickItem,
@@ -101,6 +134,27 @@ internal fun GlobalSearchContent(
                     }
                 }
             }
+        }
+    }
+}
+
+private fun SearchItemResult.maxChapterCount(chapterCounts: Map<Long, Int>): Int? {
+    val success = this as? SearchItemResult.Success ?: return null
+    return success.result.mapNotNull { manga ->
+        chapterCounts[manga.id]?.takeIf { count -> count >= 0 }
+    }.maxOrNull()
+}
+
+private fun List<Manga>.sortedByChapterCount(chapterCounts: Map<Long, Int>): List<Manga> {
+    return sortedWith { left, right ->
+        val leftCount = chapterCounts[left.id]?.takeIf { it >= 0 }
+        val rightCount = chapterCounts[right.id]?.takeIf { it >= 0 }
+        when {
+            leftCount == null && rightCount == null -> 0
+            leftCount == null -> 1
+            rightCount == null -> -1
+            leftCount != rightCount -> rightCount.compareTo(leftCount)
+            else -> left.title.compareTo(right.title)
         }
     }
 }

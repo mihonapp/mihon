@@ -125,6 +125,10 @@
     <string name="pref_custom_brightness">Пользовательская яркость</string>
     <string name="pref_custom_color_filter">Пользовательский светофильтр</string>
     <string name="pref_download_new">Загружать новые главы</string>
+    <string name="pref_download_retry_interval">Повторение попыток загрузки</string>
+    <string name="download_retry_minutes">%1$d мин</string>
+    <string name="pref_download_new_reading_window">Только читаемые</string>
+    <string name="pref_download_new_reading_window_info">Новая глава загружается, только если она входит в выбранное число непрочитанных глав после самой дальней прочитанной или начатой главы.</string>
     <string name="pref_enable_acra">Отправлять отчёты об сбоях</string>
     <string name="pref_page_transitions">Анимированные переходы страниц</string>
     <string name="pref_fullscreen">Полноэкранный режим</string>
@@ -368,6 +372,9 @@
     <string name="pref_library_update_refresh_metadata">Обновлять метаданные</string>
     <string name="action_display_comfortable_grid">Удобная сетка</string>
     <string name="action_migrate">Перенести</string>
+    <string name="action_source_titles">Список тайтлов</string>
+    <string name="action_source_migrate">Миграция</string>
+    <string name="source_no_library_titles">Нет тайтлов из этого источника</string>
     <string name="tabs_header">Вкладки</string>
     <string name="action_display_show_tabs">Показать вкладки категорий</string>
     <string name="page_list_empty_error">Страницы не найдены</string>
@@ -525,6 +532,8 @@
     <string name="pref_verbose_logging">Подробное ведение журнала</string>
     <string name="pref_verbose_logging_summary">Записывать подробный журнал в системный журнал (Снижает производительность приложения)</string>
     <string name="action_display_language_badge">Язык</string>
+    <string name="action_display_update_errors">Отображать ошибки</string>
+    <string name="action_display_source_rating">Оценка и количество оценок</string>
     <string name="label_warning">Предупреждение</string>
     <string name="notification_size_warning">Большое количество обновлений может привести к замедлению работы источников и увеличению расхода батареи. Нажмите для подробностей.</string>
     <string name="backup_info">Настоятельно рекомендуется хранить резервные копии в других местах или сервисах. Резервные копии могут содержать конфиденциальную информацию, как, например, пароли. Будьте осторожны при их отправке.</string>
@@ -688,6 +697,7 @@
     <string name="action_ok">ОК</string>
     <string name="delete_downloaded">Удалить загруженное</string>
     <string name="has_results">Имеет результаты</string>
+    <string name="search_sort_by_chapter_count">По количеству глав</string>
     <string name="library_sync_complete">Синхронизация библиотеки завершена</string>
     <string name="syncing_library">Синхронизация библиотеки</string>
     <string name="information_cloudflare_help">Нажмите здесь, чтобы получить помощь с Cloudflare</string>
@@ -699,6 +709,11 @@
     <string name="exception_unknown_host">Не удалось достичь %s</string>
     <string name="unlock_app_title">Разблокировать %s</string>
     <string name="action_move_to_bottom_all_for_series">Переместить серию в конец</string>
+    <string name="action_force_download">Принудительно</string>
+    <string name="action_open_manga">Перейти в карточку</string>
+    <string name="action_show_download_errors">Показывать ошибки</string>
+    <string name="download_attempt">Попытка %1$d</string>
+    <string name="download_attempt_error">Попытка %1$d · %2$s</string>
     <string name="pref_relative_format">Относительные временные метки</string>
     <string name="pref_relative_format_summary">\"%1$s\" вместо \"%2$s\"</string>
     <string name="app_settings">Настройки приложения</string>
@@ -712,6 +727,9 @@
     <string name="pref_flash_page">Мигать при смене страницы</string>
     <string name="pref_storage_usage">Использование хранилища</string>
     <string name="action_sort_tracker_score">Оценка сервиса отслеживания</string>
+    <string name="action_sort_source_rating">Оценка источника</string>
+    <string name="action_sort_source_rating_count">Количество оценок</string>
+    <string name="action_sort_update_error">Ошибки обновления</string>
     <string name="action_create">Создать</string>
     <string name="action_apply">Применить</string>
     <string name="action_revert_to_default">Сбросить настройки</string>

@@ -38,6 +38,7 @@ import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.download.DownloadQueueList
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Sort
 import mihon.icons.materialsymbols.roundedfilled.Pause
@@ -58,6 +59,7 @@ object DownloadQueueScreen : Screen() {
         val downloadCount by remember {
             derivedStateOf { downloadList.sumOf { it.downloads.size } }
         }
+        val showDownloadErrors by viewModel.showDownloadErrors.collectAsStateWithLifecycle()
 
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
         var fabExpanded by remember { mutableStateOf(true) }
@@ -175,6 +177,11 @@ object DownloadQueueScreen : Screen() {
                                         onClick = { sortExpanded = true },
                                     ),
                                     AppBar.OverflowAction(
+                                        title = stringResource(MR.strings.action_show_download_errors),
+                                        checked = showDownloadErrors,
+                                        onClick = viewModel::toggleShowDownloadErrors,
+                                    ),
+                                    AppBar.OverflowAction(
                                         title = stringResource(MR.strings.action_cancel_all),
                                         onClick = { viewModel.clearQueue() },
                                     ),
@@ -236,6 +243,9 @@ object DownloadQueueScreen : Screen() {
                 onMoveSeries = viewModel::moveSeries,
                 onCancel = { viewModel.cancel(listOf(it)) },
                 onCancelSeries = viewModel::cancelSeries,
+                showDownloadErrors = showDownloadErrors,
+                onForce = viewModel::force,
+                onOpenManga = { navigator.push(MangaScreen(it.manga.id)) },
                 modifier = Modifier.nestedScroll(nestedScrollConnection),
             )
         }
