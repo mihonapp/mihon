@@ -64,6 +64,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
@@ -164,6 +166,9 @@ class ReaderActivity : BaseActivity() {
     private val viewerFlow = MutableStateFlow<Viewer?>(null)
     private val viewer: Viewer? inline get() = viewerFlow.value
 
+    // Mekuri: frosted glass for the reader bars
+    private val readerHazeState = HazeState()
+
     // Mekuri: hands-free scrolling for the long strip viewer
     private val autoScrollerFlow = MutableStateFlow<AutoScroller?>(null)
 
@@ -239,7 +244,10 @@ class ReaderActivity : BaseActivity() {
                     }
                     .then(if (general.keepScreenOn) Modifier.keepScreenOn() else Modifier),
             ) {
-                ReaderViewer()
+                // Mekuri: the pages are the backdrop the frosted reader bars blur
+                Box(modifier = Modifier.fillMaxSize().hazeSource(readerHazeState)) {
+                    ReaderViewer()
+                }
 
                 if (isLoadingViewer) {
                     LoadingScreen()
@@ -662,6 +670,7 @@ class ReaderActivity : BaseActivity() {
             },
             autoScrollSpeed = autoScrollSpeed,
             onAutoScrollSpeedChange = ::setMekuriSpeed,
+            hazeState = readerHazeState,
             autoScrollTimeLeft = timeLeft,
             autoScrollStopAtChapterEnd = stopAtChapterEnd,
             onAutoScrollStopAtChapterEndChange = readerPreferences.autoScrollStopAtChapterEnd::set,

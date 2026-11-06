@@ -1,0 +1,46 @@
+name: Check for Mihon updates
+
+# Mekuri: once a month (or on demand), see whether Mihon has published a newer release than the one recorded in
+# .github/upstream-version, and open an issue in this repo with a merge checklist if so. Never pushes code.
+on:
+  schedule:
+    - cron: '0 9 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    if: github.repository == 'vsrksaketh-dev/mekuri'
+    runs-on: 'ubuntu-26.04'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Compare with Mihon's latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          current=$(cat .github/upstream-version)
+          latest=$(gh api repos/mihonapp/mihon/releases/latest --jq .tag_name)
+          echo "Mekuri is based on $current; Mihon's latest release is $latest"
+          if [ "$latest" = "$current" ]; then
+            echo "Up to date."
+            exit 0
+          fi
+          title="Mihon $latest is out (Mekuri is based on $current)"
+          if gh issue list --state open --search "\"$title\" in:title" --json number --jq 'length' | grep -qv '^0$'; then
+            echo "Issue already open."
+            exit 0
+          fi
+          gh issue create --title "$title" --body "Mihon released **$latest**: https://github.com/mihonapp/mihon/releases/tag/$latest
+
+          Merge checklist (details in MAINTAINING.md):
+          - [ ] \`git fetch upstream --tags && git switch -c sync/upstream-$latest main && git merge $latest\`
+          - [ ] Resolve conflicts (hotspots: app/build.gradle.kts, LibraryTab.kt, HomeScreen.kt, ReaderActivity.kt, ReaderAppBars.kt, workflows, translated strings.xml)
+          - [ ] Keep Mekuri's applicationId and versionName; take Mihon's versionCode
+          - [ ] Build, install, run the phone checklist
+          - [ ] Update .github/upstream-version to $latest, open a PR, wait for green CI, merge, tag a new Mekuri version"

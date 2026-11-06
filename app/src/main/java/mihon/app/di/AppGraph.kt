@@ -50,6 +50,7 @@ import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.ResetCategoryFlags
 import tachiyomi.domain.download.service.DownloadPreferences
+import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
@@ -93,6 +94,9 @@ interface AppGraph : ViewModelGraph {
     val privacyPreferences: PrivacyPreferences
     val securityPreferences: SecurityPreferences
     val downloadPreferences: DownloadPreferences
+
+    // Mekuri: used by the Continue reading widget
+    val getHistory: GetHistory
 
     val crashLogUtil: CrashLogUtil
 

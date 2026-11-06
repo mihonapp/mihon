@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mekuri: "Continue reading" home-screen widget -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/mekuri_widget_continue_description"
+    android:initialLayout="@layout/appwidget_loading"
+    android:minWidth="180dp"
+    android:minHeight="80dp"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="80dp"
+    android:maxResizeWidth="600dp"
+    android:maxResizeHeight="240dp"
+    android:targetCellWidth="3"
+    android:targetCellHeight="1"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen" />
