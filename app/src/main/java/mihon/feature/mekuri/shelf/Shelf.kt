@@ -42,6 +42,8 @@ data class Shelf(
     val mangaIds: List<Long> = emptyList(),
     /** Chapters arrived (in a library update) since you last read something on this shelf, and are still unread. */
     val hasUpdates: Boolean = false,
+    /** Up to three covers to show on the shelf's card, most recently read first. */
+    val covers: List<Manga> = emptyList(),
 ) {
     enum class Kind {
         Normal,

@@ -79,3 +79,9 @@ Motion level 4 of 5. Every release is installable on its own.
 - Orange marker only for shelves with chapters fetched in an update in the last 7 days and still unread
 - Inside a shelf: run a finger across the small shelf (title follows) and let go to switch; tap still works
 - Tapping Updates again opens History (Offline's reselect opens the download queue)
+
+## v2.0.0: card deck home (done)
+- Library home is now a 3D card deck (design A2): each shelf is a card with a fan of its last-read covers, "New" tag for this week's updates, dashed vault card
+- Momentum: a gentle push moves one card, a hard swipe flies through many and settles on a card; tap any visible card to open it; ⋯ opens the focused shelf's menu
+- Compact "Continue reading" card above the deck (last read manga, chapter progress, play to resume, History link)
+- Old spine shelf (`BookshelfHome`) kept in the code but no longer used

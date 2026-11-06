@@ -44,6 +44,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
+import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -54,10 +55,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import mihon.app.di.appGraph
-import mihon.feature.mekuri.shelf.BookshelfHome
 import mihon.feature.mekuri.shelf.CompactShelf
+import mihon.feature.mekuri.shelf.ResumeInfo
 import mihon.feature.mekuri.shelf.Shelf
 import mihon.feature.mekuri.shelf.ShelfActionsViewModel
+import mihon.feature.mekuri.shelf.ShelfDeck
 import mihon.feature.mekuri.shelf.ShelfMenuSheet
 import mihon.feature.mekuri.shelf.ShelfPrefs
 import mihon.feature.mekuri.shelf.SmartShelf
@@ -137,6 +139,10 @@ data object LibraryTab : Tab {
                     coverManga = items
                         .maxByOrNull { it.libraryManga.lastRead?.toEpochMilliseconds() ?: 0L }
                         ?.libraryManga?.manga,
+                    covers = items
+                        .sortedByDescending { it.libraryManga.lastRead?.toEpochMilliseconds() ?: 0L }
+                        .take(3)
+                        .map { it.libraryManga.manga },
                     categoryIndex = index,
                     kind = if (category.id in vault.categories) Shelf.Kind.Hidden else Shelf.Kind.Normal,
                     // Recently updated: new chapters fetched by an update in the last 7 days (not when the manga was
@@ -175,6 +181,28 @@ data object LibraryTab : Tab {
                     mangaIds = ids,
                 )
             }
+        }
+        // Continue reading: the library manga read most recently (vault manga left out while locked)
+        val resume = remember(state.libraryData, vault) {
+            state.libraryData.favorites
+                .filter { it.libraryManga.lastRead != null && !vault.hides(it.id, it.libraryManga.manga.source) }
+                .maxByOrNull { it.libraryManga.lastRead!! }
+                ?.let { item ->
+                    val lastRead = item.libraryManga.lastRead!!
+                    val ago = kotlin.time.Clock.System.now() - lastRead
+                    ResumeInfo(
+                        manga = item.libraryManga.manga,
+                        readCount = item.libraryManga.readCount,
+                        totalChapters = item.libraryManga.totalChapters,
+                        lastReadLabel = when {
+                            ago.inWholeMinutes < 1 -> "just now"
+                            ago.inWholeHours < 1 -> "${ago.inWholeMinutes} min ago"
+                            ago.inWholeDays < 1 -> "${ago.inWholeHours} h ago"
+                            ago.inWholeDays == 1L -> "yesterday"
+                            else -> "${ago.inWholeDays} days ago"
+                        },
+                    )
+                }
         }
         // The big shelf: smart shelves, regular shelves, vault shelves (only while unlocked), then the vault spine
         val vaultSpineName = "Vault"
@@ -295,8 +323,23 @@ data object LibraryTab : Tab {
                 }
                 showBookshelf -> {
                     val firstHidden = bigShelves.indexOfFirst { it.kind == Shelf.Kind.Hidden }
-                    BookshelfHome(
+                    ShelfDeck(
                         shelves = bigShelves,
+                        resume = resume,
+                        onResume = {
+                            val manga = resume?.manga ?: return@ShelfDeck
+                            scope.launch {
+                                val chapter = viewModel.getNextUnreadChapter(manga)
+                                if (chapter != null) {
+                                    context.startActivity(
+                                        ReaderActivity.newIntent(context, chapter.mangaId, chapter.id),
+                                    )
+                                } else {
+                                    navigator.push(MangaScreen(manga.id))
+                                }
+                            }
+                        },
+                        onHistory = { navigator.push(HistoryTab) },
                         lastOpenedIndex = if (focusFirstHidden && firstHidden >= 0) {
                             firstHidden
                         } else {
