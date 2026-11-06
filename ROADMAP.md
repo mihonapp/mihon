@@ -73,3 +73,9 @@ Motion level 4 of 5. Every release is installable on its own.
 - Auto-scroll up to 10× (0.25× … 10×), eases in when it starts; coral hairline shows chapter progress while reading
 - Library card styles: "Mekuri cards" (rounded covers, unread count, progress bar) and "Wide cards" (one row each: cover, chapters read, unread, progress, source, resume). In the shelf's Filter → Display.
 - Statistics: streak card and section titles centred
+
+## v1.9.1: shelf fixes (done)
+- Bookshelf: every spine (first three, the vault) can reach the middle and be highlighted; drags and flings settle the nearest spine into the middle; clipping at the screen edge (vault spine no longer cut off)
+- Orange marker only for shelves with chapters fetched in an update in the last 7 days and still unread
+- Inside a shelf: run a finger across the small shelf (title follows) and let go to switch; tap still works
+- Tapping Updates again opens History (Offline's reselect opens the download queue)

@@ -136,10 +136,22 @@ fun BookshelfHome(
             old - offset
         }
         val moving = scrollState.isScrollInProgress
-        val active = if (moving) nearestTo(offset + viewportPx / 2) else lastIndex
+        // The highlighted spine is whichever sits in the middle (the last-opened one is centred on arrival)
+        val active = if (fits) lastIndex else nearestTo(offset + viewportPx / 2)
         val activeShelf = shelves[active]
-        LaunchedEffect(active, moving) {
+        LaunchedEffect(active) {
             if (moving) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        }
+        // When a drag or fling ends, settle the nearest spine into the middle so nothing stops half-way
+        LaunchedEffect(moving, fits) {
+            if (moving || fits) return@LaunchedEffect
+            val target = centerOn(nearestTo(offset + viewportPx / 2))
+            if (kotlin.math.abs(target - offset) < 0.5f) return@LaunchedEffect
+            androidx.compose.animation.core.animate(
+                initialValue = offset,
+                targetValue = target,
+                animationSpec = androidx.compose.animation.core.spring(dampingRatio = 0.9f, stiffness = 400f),
+            ) { value, _ -> offset = value }
         }
         val activeColor by animateColorAsState(
             colors[activeShelf.key] ?: fallbackColor(activeShelf.key),
@@ -172,9 +184,9 @@ fun BookshelfHome(
                 val onVaultSpine = activeShelf.kind == Shelf.Kind.Vault
                 Text(
                     text = when {
-                        moving -> "TAP TO OPEN"
                         onVaultSpine -> "VAULT"
-                        else -> "LAST OPENED"
+                        active == lastIndex && !moving -> "LAST OPENED"
+                        else -> "TAP TO OPEN"
                     },
                     style = MaterialTheme.typography.labelMedium,
                     color = if (moving) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,

@@ -2,7 +2,8 @@ package mihon.feature.mekuri.shelf
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -29,7 +34,8 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Mekuri: the small overview shelf shown at the top of a category, in place of Mihon's category tabs.
- * Tap a spine to switch shelves (swiping the covers works too).
+ * Run a finger across it (the toolbar title follows) and let go to switch to that shelf; a tap works too, and so does
+ * swiping the covers.
  */
 @Composable
 fun CompactShelf(
@@ -37,6 +43,8 @@ fun CompactShelf(
     currentIndex: Int,
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    /** The shelf under the finger while sliding, or null when not sliding (shown in the toolbar title). */
+    onPreview: (Int?) -> Unit = {},
 ) {
     if (shelves.isEmpty()) return
     val haptic = LocalHapticFeedback.current
@@ -45,7 +53,9 @@ fun CompactShelf(
     // Slim spines: about half the bookshelf width, centred, shrunk to fit when there are many shelves
     val baseWidths = shelves.map { SpineMetrics.width(it.count).value * 0.5f }
     val gapDp = 4f
-    val active = currentIndex.coerceIn(0, shelves.lastIndex)
+    var scrubbing by remember { mutableStateOf(false) }
+    var hover by remember { mutableIntStateOf(currentIndex) }
+    val active = (if (scrubbing) hover else currentIndex).coerceIn(0, shelves.lastIndex)
 
     BoxWithConstraints(
         modifier = modifier
@@ -61,11 +71,9 @@ fun CompactShelf(
             .map { with(density) { it.dp.toPx() } + startPx }
         val widthsPx = spineWidths.map { with(density) { it.dp.toPx() } }
         val halfGapPx = with(density) { (gapDp * fit / 2).dp.toPx() }
-        fun indexAt(x: Float): Int? {
-            leftsPx.forEachIndexed { i, left ->
-                if (x >= left - halfGapPx && x <= left + widthsPx[i] + halfGapPx) return i
-            }
-            return null
+        fun indexAt(x: Float): Int {
+            leftsPx.forEachIndexed { i, left -> if (x <= left + widthsPx[i] + halfGapPx) return i }
+            return shelves.lastIndex
         }
 
         Row(
@@ -73,10 +81,35 @@ fun CompactShelf(
                 .fillMaxWidth()
                 .height(52.dp)
                 .pointerInput(shelves, maxWidth) {
-                    detectTapGestures { position ->
-                        val i = indexAt(position.x) ?: return@detectTapGestures
+                    awaitEachGesture {
+                        val down = awaitFirstDown(requireUnconsumed = false)
+                        down.consume()
+                        scrubbing = true
+                        hover = indexAt(down.position.x)
+                        onPreview(hover)
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        onSelect(i)
+                        var cancelled = false
+                        while (true) {
+                            val change = awaitPointerEvent().changes.firstOrNull { it.id == down.id }
+                            if (change == null) {
+                                cancelled = true
+                                break
+                            }
+                            if (!change.pressed) {
+                                change.consume()
+                                break
+                            }
+                            val i = indexAt(change.position.x)
+                            if (i != hover) {
+                                hover = i
+                                onPreview(i)
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            }
+                            change.consume()
+                        }
+                        scrubbing = false
+                        onPreview(null)
+                        if (!cancelled) onSelect(hover)
                     }
                 },
             horizontalArrangement = Arrangement.spacedBy((gapDp * fit).dp, Alignment.CenterHorizontally),
@@ -84,7 +117,7 @@ fun CompactShelf(
         ) {
             shelves.forEachIndexed { i, shelf ->
                 val on = i == active
-                val lift by animateDpAsState(if (on) 4.dp else 0.dp, label = "lift")
+                val lift by animateDpAsState(if (on) (if (scrubbing) 10.dp else 4.dp) else 0.dp, label = "lift")
                 val alpha by animateFloatAsState(if (on) 1f else 0.4f, label = "alpha")
                 Spine(
                     name = shelf.name,
