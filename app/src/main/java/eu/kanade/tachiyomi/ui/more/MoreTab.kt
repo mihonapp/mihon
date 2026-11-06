@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.more
 
 import androidx.compose.animation.graphics.res.animatedVectorResource
-import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,16 +8,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
 import eu.kanade.presentation.util.Tab
+import eu.kanade.presentation.util.rememberAnimatedVectorPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
@@ -30,12 +34,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import mihon.feature.support.SupportUsScreen
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 data object MoreTab : Tab {
 
@@ -43,11 +45,12 @@ data object MoreTab : Tab {
         @Composable
         get() {
             val isSelected = LocalTabNavigator.current.current.key == key
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_more_enter)
+            val enter = AnimatedImageVector.animatedVectorResource(R.drawable.animated_more_enter)
+            val exit = AnimatedImageVector.animatedVectorResource(R.drawable.animated_more_exit)
             return TabOptions(
                 index = 4u,
                 title = stringResource(MR.strings.label_more),
-                icon = rememberAnimatedVectorPainter(image, isSelected),
+                icon = rememberAnimatedVectorPainter(enter, exit, isSelected),
             )
         }
 
@@ -58,7 +61,7 @@ data object MoreTab : Tab {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<MoreViewModel>()
+        val viewModel = metroViewModel<MoreViewModel>()
         val downloadQueueState by viewModel.downloadQueueState.collectAsState()
         MoreScreen(
             downloadQueueStateProvider = { downloadQueueState },
@@ -77,9 +80,12 @@ data object MoreTab : Tab {
     }
 }
 
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
 class MoreViewModel(
-    private val downloadManager: DownloadManager = Injekt.get(),
-    preferences: BasePreferences = Injekt.get(),
+    private val downloadManager: DownloadManager,
+    preferences: BasePreferences,
 ) : ViewModel() {
 
     var downloadedOnly by preferences.downloadedOnly.asState(viewModelScope)
@@ -90,7 +96,7 @@ class MoreViewModel(
 
     init {
         // Handle running/paused status change and queue progress updating
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             combine(
                 downloadManager.isDownloaderRunning,
                 downloadManager.queueState,

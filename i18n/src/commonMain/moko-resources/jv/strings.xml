@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="update_check_notification_download_in_progress">Ndonlot…</string>
     <string name="update_check_confirm">Donlot</string>
     <string name="track_type">Jinis</string>
     <string name="title">Judhul</string>
@@ -174,13 +173,10 @@
     <string name="pref_app_theme">Tema aplikasi</string>
     <string name="theme_monet">Dinamis</string>
     <string name="theme_greenapple">Ijo apel</string>
-    <string name="parental_controls_info">Iki ora nyegah ekstensi kang ora resmi utawa salah dilabeli kanggo nampilake konten NSFW (18+) ing aplikasi.</string>
     <string name="relative_time_today">Dinten puniki</string>
     <string name="update_never">Mati</string>
     <string name="pref_category_security">Kaamanan</string>
     <string name="lock_always">Tansah</string>
-    <string name="pref_category_nsfw_content">Sumber NSFW (18+)</string>
-    <string name="pref_show_nsfw_source">Tampilaken ing sumber lan dhaptar ekstensi</string>
     <string name="pref_update_only_completely_read">Karo bab durung diwaca</string>
     <string name="pref_manage_notifications">Kelola notifikasi</string>
     <string name="secure_screen_summary">Amanaken layar sembunikan konten aplikasi wektu ngaleh aplikasi lan blokir tangkapan layar</string>
@@ -220,8 +216,6 @@
     <string name="ext_uninstall">Ucul</string>
     <string name="obsolete_extension_message">Ekstensi iki ora kasedhiya maneh.</string>
     <string name="extension_api_error">Gagal kanggo entuk dhaptar ekstensi</string>
-    <string name="ext_nsfw_short">18+</string>
-    <string name="ext_nsfw_warning">Sumber saka ekstensi iki bisa ngemot konten NSFW (18+)</string>
     <string name="ext_install_service_notif">Masang ekstensi…</string>
     <string name="ext_installer_pref">Pemasang</string>
     <string name="ext_installer_shizuku_stopped">Shizuku ora lumaku</string>
@@ -252,7 +246,6 @@
     <string name="ext_pending">Ketunda</string>
     <string name="ext_info_version">Versine</string>
     <string name="ext_info_language">Bohoso</string>
-    <string name="ext_info_age_rating">Rating umur</string>
     <string name="ext_app_info">Infone aplikasi</string>
     <string name="pref_show_navigation_mode_summary">Tampilake kanthi ringkes nalika maca dibukak</string>
     <string name="pref_dual_page_split">Pamisahan kaca kaping pindho</string>

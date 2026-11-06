@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
-import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewerSettings
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
@@ -26,15 +26,20 @@ import java.text.NumberFormat
 
 @Composable
 internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
+    val isWebGpu by viewModel.isWebGpu.collectAsState()
+    if (isWebGpu) {
+        WebGpuViewerSettings(viewModel)
+        return
+    }
+
     HeadingItem(MR.strings.pref_category_for_this_series)
     val manga by viewModel.mangaFlow.collectAsState()
-
     val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
     SettingsChipRow(MR.strings.pref_category_reading_mode) {
         ReadingMode.entries.map {
             FilterChip(
                 selected = it == readingMode,
-                onClick = { viewModel.onChangeReadingMode(it) },
+                onClick = { viewModel.setReadingMode(it) },
                 label = { Text(stringResource(it.stringRes)) },
             )
         }
@@ -45,14 +50,14 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
         ReaderOrientation.entries.map {
             FilterChip(
                 selected = it == orientation,
-                onClick = { viewModel.onChangeOrientation(it) },
+                onClick = { viewModel.setOrientation(it) },
                 label = { Text(stringResource(it.stringRes)) },
             )
         }
     }
 
-    val viewer by viewModel.viewerFlow.collectAsState()
-    if (viewer is WebtoonViewer) {
+    val resolvedReadingMode by viewModel.readingMode.collectAsState()
+    if (resolvedReadingMode.type is ReadingMode.ViewerType.Webtoon) {
         WebtoonViewerSettings(viewModel)
     } else {
         PagerViewerSettings(viewModel)
@@ -205,7 +210,7 @@ private fun ColumnScope.WebtoonViewerSettings(viewModel: ReaderSettingsViewModel
 }
 
 @Composable
-private fun ColumnScope.TapZonesItems(
+internal fun TapZonesItems(
     selected: Int,
     onSelect: (Int) -> Unit,
     invertMode: ReaderPreferences.TappingInvertMode,

@@ -1,8 +1,8 @@
 -dontobfuscate
 
--keep,allowoptimization class eu.kanade.**
--keep,allowoptimization class tachiyomi.**
--keep,allowoptimization class mihon.**
+# Injekt reads the injected type from the generic superclass of its type tokens
+-keepattributes Signature
+-keep,allowshrinking class * extends uy.kohesive.injekt.api.FullTypeReference
 
 # Keep common dependencies used in extensions
 -keep,allowoptimization class androidx.preference.** { public protected *; }
@@ -18,18 +18,14 @@
 -keep,allowoptimization class uy.kohesive.injekt.** { public protected *; }
 -keep,allowoptimization class com.squareup.zstd.** { public protected *; }
 
-# From extensions-lib
--keep,allowoptimization class eu.kanade.tachiyomi.network.interceptor.RateLimitInterceptorKt { public protected *; }
--keep,allowoptimization class eu.kanade.tachiyomi.network.interceptor.SpecificHostRateLimitInterceptorKt { public protected *; }
--keep,allowoptimization class eu.kanade.tachiyomi.network.NetworkHelper { public protected *; }
--keep,allowoptimization class eu.kanade.tachiyomi.network.OkHttpExtensionsKt { public protected *; }
--keep,allowoptimization class eu.kanade.tachiyomi.network.RequestsKt { public protected *; }
--keep,allowoptimization class eu.kanade.tachiyomi.AppInfo { public protected *; }
-
 -keepclassmembers class * implements java.io.Serializable {
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
+# Provided by the OEM at runtime when supported
+-dontwarn androidx.window.extensions.**
+-dontwarn androidx.window.sidecar.**
 
 ##---------------Begin: proguard configuration for RxJava 1.x  ----------
 -dontwarn sun.misc.**
@@ -86,3 +82,12 @@
 # Firebase
 -keep class com.google.firebase.installations.** { *; }
 -keep interface com.google.firebase.installations.** { *; }
+
+# KotlinX Datetime
+-keep,allowoptimization class kotlinx.datetime.** { public protected *; }
+
+# Methods called by Shizuku only
+-keepclassmembers class mihon.app.shizuku.ShellInterface {
+    public <init>();
+    public void destroy();
+}

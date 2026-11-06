@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.track.mangabaka
 
 import eu.kanade.tachiyomi.data.database.models.Track
 
-fun Track.toApiStatus() = when (status) {
+internal fun Track.toApiStatus() = when (status) {
     MangaBaka.CONSIDERING -> "considering"
     MangaBaka.COMPLETED -> "completed"
     MangaBaka.DROPPED -> "dropped"

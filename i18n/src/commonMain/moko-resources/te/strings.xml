@@ -133,8 +133,6 @@
     <string name="secure_screen">తెరను సంరక్షించుము</string>
     <string name="secure_screen_summary">అనువర్తనములను మారునపుడు వర్తక విషయములను దాయుము మరియు తెర యొక్క చిత్రములను తీయుటను నిరోధించుము</string>
     <string name="hide_notification_content">సూచన విషయములను దాయుము</string>
-    <string name="pref_category_nsfw_content">పెద్దలకు మాత్రమే (+18) మూలాలు</string>
-    <string name="pref_show_nsfw_source">మూలాలు మరియు పొడిగింపుల జాబితాలలో చూపుము</string>
     <string name="theme_strawberrydaiquiri">తుప్పపండు</string>
     <string name="theme_tako">టాకో</string>
     <string name="theme_tealturquoise">టీల్ మరియు మణి</string>

@@ -1,0 +1,22 @@
+mutation SuwayomiMarkAndDeleteChapters(
+  $chapters: [Int!]!,
+) {
+  updateChapters(
+    input: {
+      ids: $chapters,
+      patch: {
+        isRead: true,
+      },
+    },
+  ) {
+    __typename
+  }
+
+  deleteDownloadedChapters(
+    input: {
+      ids: $chapters,
+    },
+  ) {
+    __typename
+  }
+}

@@ -2,8 +2,6 @@ package eu.kanade.presentation.more.settings.widget
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Preview
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
@@ -11,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Preview
 
 @Composable
 fun SwitchPreferenceWidget(
@@ -19,6 +19,7 @@ fun SwitchPreferenceWidget(
     subtitle: String? = null,
     icon: ImageVector? = null,
     checked: Boolean = false,
+    enabled: Boolean = true,
     onCheckedChanged: (Boolean) -> Unit,
 ) {
     TextPreferenceWidget(
@@ -30,9 +31,11 @@ fun SwitchPreferenceWidget(
             Switch(
                 checked = checked,
                 onCheckedChange = null,
+                enabled = enabled,
                 modifier = Modifier.padding(start = TrailingWidgetBuffer),
             )
         },
+        enabled = enabled,
         onPreferenceClick = { onCheckedChanged(!checked) },
     )
 }
@@ -46,7 +49,7 @@ private fun SwitchPreferenceWidgetPreview() {
                 SwitchPreferenceWidget(
                     title = "Text preference with icon",
                     subtitle = "Text preference summary",
-                    icon = Icons.Filled.Preview,
+                    icon = MaterialSymbols.Rounded.Preview,
                     checked = true,
                     onCheckedChanged = {},
                 )

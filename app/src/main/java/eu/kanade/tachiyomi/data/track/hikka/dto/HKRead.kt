@@ -24,8 +24,8 @@ data class HKRead(
     val endDate: Long? = null,
     val content: HKManga? = null,
 ) {
-    fun toTrack(trackId: Long): TrackSearch {
-        return TrackSearch.create(trackId).apply {
+    fun toTrack(trackerId: Long): TrackSearch {
+        return TrackSearch.create(trackerId).apply {
             val mangaContent = this@HKRead.content
             if (mangaContent != null) {
                 title = mangaContent.titleUa ?: mangaContent.titleEn ?: mangaContent.titleOriginal

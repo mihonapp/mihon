@@ -26,6 +26,9 @@ fun SManga.getComicInfo() = ComicInfo(
     letterer = null,
     coverArtist = null,
     tags = null,
+    year = null,
+    month = null,
+    day = null,
     categories = null,
     source = null,
 )
@@ -80,6 +83,9 @@ data class ComicInfo(
     val genre: Genre?,
     val tags: Tags?,
     val web: Web?,
+    val year: Year?,
+    val month: Month?,
+    val day: Day?,
     val publishingStatus: PublishingStatusTachiyomi?,
     val categories: CategoriesTachiyomi?,
     val source: SourceMihon?,
@@ -147,6 +153,18 @@ data class ComicInfo(
     @Serializable
     @XmlSerialName("Web", "", "")
     data class Web(@XmlValue(true) val value: String = "")
+
+    @Serializable
+    @XmlSerialName("Year", "", "")
+    data class Year(@XmlValue(true) val value: Int = -1)
+
+    @Serializable
+    @XmlSerialName("Month", "", "")
+    data class Month(@XmlValue(true) val value: Int = -1)
+
+    @Serializable
+    @XmlSerialName("Day", "", "")
+    data class Day(@XmlValue(true) val value: Int = -1)
 
     // The spec doesn't have a good field for this
     @Serializable

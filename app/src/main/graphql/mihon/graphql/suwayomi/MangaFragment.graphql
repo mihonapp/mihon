@@ -1,0 +1,15 @@
+fragment MangaFragment on MangaType {
+  description
+  id
+  status
+  thumbnailUrl
+  title
+  url
+  chapters {
+    totalCount
+  }
+  latestReadChapter {
+    chapterNumber
+  }
+  unreadCount
+}

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
@@ -14,19 +15,18 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
-import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.lang.truncateCenter
 import logcat.LogPriority
+import mihon.app.di.appGraph
 import rikka.shizuku.ShizukuProvider
+import rikka.sui.Sui
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.File
 
 /**
@@ -98,6 +98,20 @@ fun Context.createFileInCacheDir(name: String): File {
     return file
 }
 
+private val ReaderGrayBackgroundColor = Color.rgb(0x20, 0x21, 0x25)
+
+/**
+ * Background color of the reader for the given [readerTheme].
+ *
+ * Automatic resolves against the current night mode, matching the activity background.
+ */
+fun Context.readerBackgroundColor(readerTheme: ReaderPreferences.ReaderTheme): Int = when (readerTheme) {
+    ReaderPreferences.ReaderTheme.WHITE -> Color.WHITE
+    ReaderPreferences.ReaderTheme.BLACK -> Color.BLACK
+    ReaderPreferences.ReaderTheme.GRAY -> ReaderGrayBackgroundColor
+    ReaderPreferences.ReaderTheme.AUTOMATIC -> if (isNightMode()) ReaderGrayBackgroundColor else Color.WHITE
+}
+
 /**
  * Creates night mode Context depending on reader theme/background
  *
@@ -105,16 +119,18 @@ fun Context.createFileInCacheDir(name: String): File {
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:appcompat/appcompat/src/main/java/androidx/appcompat/app/AppCompatDelegateImpl.java;l=348;drc=e28752c96fc3fb4d3354781469a1af3dbded4898
  */
 fun Context.createReaderThemeContext(): Context {
-    val preferences = Injekt.get<UiPreferences>()
-    val readerPreferences = Injekt.get<ReaderPreferences>()
+    val graph = appGraph
+    val preferences = graph.uiPreferences
+    val readerPreferences = graph.readerPreferences
     val themeMode = preferences.themeMode.get()
-    val isDarkBackground = when (readerPreferences.readerTheme.get()) {
-        1, 2 -> true // Black, Gray
-        3 -> when (themeMode) { // Automatic bg uses activity background by default
+    val isDarkBackground = when (ReaderPreferences.ReaderTheme.fromValue(readerPreferences.readerTheme.get())) {
+        ReaderPreferences.ReaderTheme.BLACK, ReaderPreferences.ReaderTheme.GRAY -> true
+        // Automatic bg uses activity background by default
+        ReaderPreferences.ReaderTheme.AUTOMATIC -> when (themeMode) {
             ThemeMode.SYSTEM -> applicationContext.isNightMode()
             else -> themeMode == ThemeMode.DARK
         }
-        else -> false // White
+        ReaderPreferences.ReaderTheme.WHITE -> false
     }
     val expected = if (isDarkBackground) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
     if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != expected) {
@@ -155,12 +171,13 @@ fun Context.isPackageInstalled(packageName: String): Boolean {
 val Context.hasMiuiPackageInstaller get() = isPackageInstalled("com.miui.packageinstaller")
 
 val Context.isShizukuInstalled: Boolean
-    get() = try {
-        packageManager.getPermissionInfo(ShizukuProvider.PERMISSION, 0)
-        true
-    } catch (e: PackageManager.NameNotFoundException) {
-        false
-    }
+    get() = Sui.isSui() ||
+        try {
+            packageManager.getPermissionInfo(ShizukuProvider.PERMISSION, 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
 
 fun Context.launchRequestPackageInstallsPermission() {
     Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {

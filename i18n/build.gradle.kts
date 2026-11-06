@@ -32,7 +32,13 @@ androidComponents {
         val resSource = variant.sources.res ?: return@onVariants
 
         val variantName = variant.name.replaceFirstChar { it.uppercase() }
-        val task = tasks.register<GenerateLocalesConfigTask>("generate${variantName}LocalesConfig")
+        val task = tasks.register<GenerateLocalesConfigTask>("generate${variantName}LocalesConfig") {
+            localeFiles.from(
+                layout.projectDirectory.dir("src/commonMain/moko-resources").asFileTree.matching {
+                    include("**/strings.xml", "**/plurals.xml")
+                },
+            )
+        }
         resSource.addGeneratedSourceDirectory(task) { it.outputDir }
     }
 }

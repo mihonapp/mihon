@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.data.backup.models
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
+import mihon.core.common.extensions.toEpochMillisOrZero
+import mihon.core.common.extensions.toInstantOrNull
 import tachiyomi.domain.track.model.Track
 
 @Serializable
@@ -46,43 +48,26 @@ data class BackupTracking(
             totalChapters = this@BackupTracking.totalChapters.toLong(),
             score = this@BackupTracking.score.toDouble(),
             status = this@BackupTracking.status.toLong(),
-            startDate = this@BackupTracking.startedReadingDate,
-            finishDate = this@BackupTracking.finishedReadingDate,
+            startDate = this@BackupTracking.startedReadingDate.toInstantOrNull(),
+            finishDate = this@BackupTracking.finishedReadingDate.toInstantOrNull(),
             remoteUrl = this@BackupTracking.trackingUrl,
             private = this@BackupTracking.private,
         )
     }
 }
 
-val backupTrackMapper = {
-        _: Long,
-        _: Long,
-        syncId: Long,
-        mediaId: Long,
-        libraryId: Long?,
-        title: String,
-        lastChapterRead: Double,
-        totalChapters: Long,
-        status: Long,
-        score: Double,
-        remoteUrl: String,
-        startDate: Long,
-        finishDate: Long,
-        private: Boolean,
-    ->
-    BackupTracking(
-        syncId = syncId.toInt(),
-        mediaId = mediaId,
-        // forced not null so its compatible with 1.x backup system
-        libraryId = libraryId ?: 0,
-        title = title,
-        lastChapterRead = lastChapterRead.toFloat(),
-        totalChapters = totalChapters.toInt(),
-        score = score.toFloat(),
-        status = status.toInt(),
-        startedReadingDate = startDate,
-        finishedReadingDate = finishDate,
-        trackingUrl = remoteUrl,
-        private = private,
-    )
-}
+fun Track.toBackupTracking() = BackupTracking(
+    syncId = trackerId.toInt(),
+    mediaId = remoteId,
+    // forced not null so its compatible with 1.x backup system
+    libraryId = libraryId ?: 0,
+    title = title,
+    lastChapterRead = lastChapterRead.toFloat(),
+    totalChapters = totalChapters.toInt(),
+    score = score.toFloat(),
+    status = status.toInt(),
+    startedReadingDate = startDate.toEpochMillisOrZero(),
+    finishedReadingDate = finishDate.toEpochMillisOrZero(),
+    trackingUrl = remoteUrl,
+    private = private,
+)

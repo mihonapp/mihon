@@ -65,8 +65,8 @@
         <item quantity="other">%d Tage</item>
     </plurals>
     <plurals name="num_repos">
-        <item quantity="one">%d Repository</item>
-        <item quantity="other">%d Repositorys</item>
+        <item quantity="one">%d Depot</item>
+        <item quantity="other">%d Depots</item>
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">Morgen</item>

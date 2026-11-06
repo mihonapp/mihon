@@ -1,14 +1,21 @@
 package eu.kanade.domain.source.service
 
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import mihon.domain.extension.model.ContentWarning
 import mihon.domain.migration.models.MigrationFlag
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.core.common.preference.getEnumSet
 import tachiyomi.core.common.preference.getLongArray
 import tachiyomi.domain.library.model.LibraryDisplayMode
 
+@Inject
+@SingleIn(AppScope::class)
 class SourcePreferences(
     preferenceStore: PreferenceStore,
 ) {
@@ -36,7 +43,15 @@ class SourcePreferences(
         -1,
     )
 
-    val showNsfwSource: Preference<Boolean> = preferenceStore.getBoolean("show_nsfw_source", true)
+    val enabledContentWarnings: Preference<Set<ContentWarning>> = preferenceStore.getEnumSet(
+        "enabled_content_warnings",
+        setOf(ContentWarning.SAFE, ContentWarning.MIXED, ContentWarning.NSFW),
+    )
+
+    val applyContentWarningsToInstalled: Preference<Boolean> = preferenceStore.getBoolean(
+        "apply_content_warnings_to_installed",
+        true,
+    )
 
     val migrationSortingMode: Preference<SetMigrateSorting.Mode> = preferenceStore.getEnum(
         "pref_migration_sorting",

@@ -19,8 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
-import java.time.LocalDate
+import kotlin.time.Clock
 
 private const val MAX_EVENTS = 3
 
@@ -31,7 +34,7 @@ fun CalendarDay(
     onDayClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val today = remember { LocalDate.now() }
+    val today = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date }
 
     Box(
         modifier = modifier
@@ -54,10 +57,10 @@ fun CalendarDay(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = date.dayOfMonth.toString(),
+            text = date.day.toString(),
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
-            color = if (date.isBefore(today)) {
+            color = if (date < today) {
                 MaterialTheme.colorScheme.onBackground.copy(alpha = DISABLED_ALPHA)
             } else {
                 MaterialTheme.colorScheme.onBackground

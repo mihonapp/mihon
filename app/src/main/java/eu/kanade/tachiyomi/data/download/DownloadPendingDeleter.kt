@@ -2,27 +2,30 @@ package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
 import androidx.core.content.edit
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 /**
  * Class used to keep a list of chapters for future deletion.
  *
  * @param context the application context.
  */
+@Inject
+@SingleIn(AppScope::class)
 class DownloadPendingDeleter(
     context: Context,
-    private val json: Json = Injekt.get(),
+    private val json: Json,
 ) {
 
     /**
      * Preferences used to store the list of chapters to delete.
      */
-    private val preferences = context.getSharedPreferences("chapters_to_delete", Context.MODE_PRIVATE)
+    private val preferences by lazy { context.getSharedPreferences("chapters_to_delete", Context.MODE_PRIVATE) }
 
     /**
      * Last added chapter, used to avoid decoding from the preference too often.

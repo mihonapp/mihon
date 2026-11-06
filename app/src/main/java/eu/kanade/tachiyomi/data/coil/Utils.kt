@@ -34,11 +34,19 @@ val Options.cropBorders: Boolean
 
 private val cropBordersKey = Extras.Key(default = false)
 
-fun ImageRequest.Builder.customDecoder(enable: Boolean) = apply {
-    extras[customDecoderKey] = enable
+fun ImageRequest.Builder.webtoonStrips(enable: Boolean) = apply {
+    extras[webtoonStripsKey] = enable
 }
 
-val Options.customDecoder: Boolean
-    get() = getExtra(customDecoderKey)
+val Options.webtoonStrips: Boolean
+    get() = getExtra(webtoonStripsKey)
 
-private val customDecoderKey = Extras.Key(default = false)
+private val webtoonStripsKey = Extras.Key(default = false)
+
+fun ImageRequest.Builder.newDecoder(enable: Boolean) = apply {
+    extras[newDecoderKey] = enable
+}
+val Options.newDecoder: Boolean
+    get() = getExtra(newDecoderKey)
+
+private val newDecoderKey = Extras.Key(default = false)

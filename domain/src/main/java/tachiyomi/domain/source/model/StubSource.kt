@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.SMangaUpdate
 
-class StubSource(
+data class StubSource(
     override val id: Long,
     override val lang: String,
     override val name: String,

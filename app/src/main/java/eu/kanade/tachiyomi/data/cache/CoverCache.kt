@@ -1,7 +1,13 @@
 package eu.kanade.tachiyomi.data.cache
 
 import android.content.Context
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.util.storage.DiskUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import mihon.core.metro.AppCoroutineScope
 import tachiyomi.domain.manga.model.Manga
 import java.io.File
 import java.io.IOException
@@ -15,7 +21,12 @@ import java.io.InputStream
  * @param context the application context.
  * @constructor creates an instance of the cover cache.
  */
-class CoverCache(private val context: Context) {
+@Inject
+@SingleIn(AppScope::class)
+class CoverCache(
+    @AppCoroutineScope private val scope: CoroutineScope,
+    private val context: Context,
+) {
 
     companion object {
         private const val COVERS_DIR = "covers"
@@ -25,9 +36,28 @@ class CoverCache(private val context: Context) {
     /**
      * Cache directory used for cache management.
      */
-    private val cacheDir = getCacheDir(COVERS_DIR)
+    private val cacheDir by lazy { getCacheDir(COVERS_DIR) }
 
-    private val customCoverCacheDir = getCacheDir(CUSTOM_COVERS_DIR)
+    private val customCoverCacheDir by lazy { getCacheDir(CUSTOM_COVERS_DIR) }
+
+    private val customCoverNames = mutableSetOf<String>()
+
+    // Deleted while the directory was being listed, so the listing may still contain them
+    private val deletedWhileIndexing = mutableSetOf<String>()
+
+    @Volatile
+    private var customCoversIndexed = false
+
+    init {
+        scope.launch {
+            val names = customCoverCacheDir.list().orEmpty()
+            synchronized(customCoverNames) {
+                names.filterNotTo(customCoverNames) { it in deletedWhileIndexing }
+                deletedWhileIndexing.clear()
+                customCoversIndexed = true
+            }
+        }
+    }
 
     /**
      * Returns the cover from cache.
@@ -51,6 +81,12 @@ class CoverCache(private val context: Context) {
         return File(customCoverCacheDir, DiskUtil.hashKeyForDisk(mangaId.toString()))
     }
 
+    fun hasCustomCover(mangaId: Long?): Boolean {
+        val file = getCustomCoverFile(mangaId)
+        if (!customCoversIndexed) return file.exists()
+        return synchronized(customCoverNames) { file.name in customCoverNames }
+    }
+
     /**
      * Saves the given stream as the manga's custom cover to cache.
      *
@@ -60,8 +96,13 @@ class CoverCache(private val context: Context) {
      */
     @Throws(IOException::class)
     fun setCustomCoverToCache(manga: Manga, inputStream: InputStream) {
-        getCustomCoverFile(manga.id).outputStream().use {
+        val file = getCustomCoverFile(manga.id)
+        file.outputStream().use {
             inputStream.copyTo(it)
+        }
+        synchronized(customCoverNames) {
+            customCoverNames.add(file.name)
+            deletedWhileIndexing.remove(file.name)
         }
     }
 
@@ -93,9 +134,13 @@ class CoverCache(private val context: Context) {
      * @return whether the cover was deleted.
      */
     fun deleteCustomCover(mangaId: Long?): Boolean {
-        return getCustomCoverFile(mangaId).let {
-            it.exists() && it.delete()
+        val file = getCustomCoverFile(mangaId)
+        val deleted = file.exists() && file.delete()
+        synchronized(customCoverNames) {
+            customCoverNames.remove(file.name)
+            if (!customCoversIndexed) deletedWhileIndexing.add(file.name)
         }
+        return deleted
     }
 
     private fun getCacheDir(dir: String): File {

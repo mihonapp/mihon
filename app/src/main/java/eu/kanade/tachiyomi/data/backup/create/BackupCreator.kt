@@ -3,8 +3,12 @@ package eu.kanade.tachiyomi.data.backup.create
 import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
+import eu.kanade.tachiyomi.data.backup.BackupWriter
 import eu.kanade.tachiyomi.data.backup.create.creators.CategoriesBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.ExtensionStoresBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.MangaBackupCreator
@@ -17,6 +21,8 @@ import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
 import okio.buffer
@@ -29,29 +35,31 @@ import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
-import java.time.Instant
 import java.util.Date
 import java.util.Locale
+import kotlin.time.Clock
 
+@AssistedInject
 class BackupCreator(
+    @Assisted private val isAutoBackup: Boolean,
     private val context: Context,
-    private val isAutoBackup: Boolean,
-
-    private val parser: ProtoBuf = Injekt.get(),
-    private val getFavorites: GetFavorites = Injekt.get(),
-    private val backupPreferences: BackupPreferences = Injekt.get(),
-    private val mangaRepository: MangaRepository = Injekt.get(),
-
-    private val categoriesBackupCreator: CategoriesBackupCreator = CategoriesBackupCreator(),
-    private val mangaBackupCreator: MangaBackupCreator = MangaBackupCreator(),
-    private val preferenceBackupCreator: PreferenceBackupCreator = PreferenceBackupCreator(),
-    private val extensionStoresBackupCreator: ExtensionStoresBackupCreator = ExtensionStoresBackupCreator(),
-    private val sourcesBackupCreator: SourcesBackupCreator = SourcesBackupCreator(),
+    private val parser: ProtoBuf,
+    private val getFavorites: GetFavorites,
+    private val backupPreferences: BackupPreferences,
+    private val mangaRepository: MangaRepository,
+    private val categoriesBackupCreator: CategoriesBackupCreator,
+    private val mangaBackupCreator: MangaBackupCreator,
+    private val preferenceBackupCreator: PreferenceBackupCreator,
+    private val extensionStoresBackupCreator: ExtensionStoresBackupCreator,
+    private val sourcesBackupCreator: SourcesBackupCreator,
+    private val backupFileValidator: BackupFileValidator,
 ) {
+    @AssistedFactory
+    fun interface Factory {
+        fun create(isAutoBackup: Boolean): BackupCreator
+    }
 
     suspend fun backup(uri: Uri, options: BackupOptions): String {
         var file: UniFile? = null
@@ -80,35 +88,39 @@ class BackupCreator(
             val nonFavoriteManga = if (options.readEntries) mangaRepository.getReadMangaNotInLibrary() else emptyList()
             val backupManga = backupMangas(getFavorites.await() + nonFavoriteManga, options)
 
-            val backup = Backup(
-                backupManga = backupManga,
-                backupCategories = backupCategories(options),
-                backupSources = backupSources(backupManga),
-                backupPreferences = backupAppPreferences(options),
-                backupExtensionStores = backupExtensionStores(options),
-                backupSourcePreferences = backupSourcePreferences(options),
-            )
-
-            val byteArray = parser.encodeToByteArray(Backup.serializer(), backup)
-            if (byteArray.isEmpty()) {
-                throw IllegalStateException(context.stringResource(MR.strings.empty_backup_error))
-            }
-
             file.openOutputStream()
                 .also {
                     // Force overwrite old file
                     (it as? FileOutputStream)?.channel?.truncate(0)
                 }
                 .sink().gzip().buffer().use {
-                    it.write(byteArray)
+                    val writer = BackupWriter(it, parser)
+                    val sourceIds = mutableSetOf<Long>()
+                    backupManga.collect { manga ->
+                        writer.writeEntry(manga)
+                        sourceIds += manga.source
+                    }
+                    writer.writeMetadata(
+                        Backup(
+                            backupManga = emptyList(),
+                            backupCategories = backupCategories(options),
+                            backupSources = backupSources(sourceIds),
+                            backupPreferences = backupAppPreferences(options),
+                            backupExtensionStores = backupExtensionStores(options),
+                            backupSourcePreferences = backupSourcePreferences(options),
+                        ),
+                    )
+                    if (writer.isEmpty) {
+                        throw IllegalStateException(context.stringResource(MR.strings.empty_backup_error))
+                    }
                 }
             val fileUri = file.uri
 
             // Make sure it's a valid backup file
-            BackupFileValidator(context).validate(fileUri)
+            backupFileValidator.validate(fileUri)
 
             if (isAutoBackup) {
-                backupPreferences.lastAutoBackupTimestamp.set(Instant.now().toEpochMilli())
+                backupPreferences.lastAutoBackupTimestamp.set(Clock.System.now().toEpochMilliseconds())
             }
 
             return fileUri.toString()
@@ -125,14 +137,14 @@ class BackupCreator(
         return categoriesBackupCreator()
     }
 
-    private suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
-        if (!options.libraryEntries) return emptyList()
+    private fun backupMangas(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> {
+        if (!options.libraryEntries) return emptyFlow()
 
         return mangaBackupCreator(mangas, options)
     }
 
-    private fun backupSources(mangas: List<BackupManga>): List<BackupSource> {
-        return sourcesBackupCreator(mangas)
+    private suspend fun backupSources(sourceIds: Set<Long>): List<BackupSource> {
+        return sourcesBackupCreator(sourceIds)
     }
 
     private fun backupAppPreferences(options: BackupOptions): List<BackupPreference> {
@@ -147,7 +159,7 @@ class BackupCreator(
         return extensionStoresBackupCreator()
     }
 
-    private fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
+    private suspend fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
         if (!options.sourceSettings) return emptyList()
 
         return preferenceBackupCreator.createSource(includePrivatePreferences = options.privateSettings)

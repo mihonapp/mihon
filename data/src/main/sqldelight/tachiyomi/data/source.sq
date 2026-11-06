@@ -1,0 +1,21 @@
+CREATE TABLE source(
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    language TEXT NOT NULL
+);
+
+findAll:
+SELECT id, name, language
+FROM source;
+
+findOne:
+SELECT id, name, language
+FROM source
+WHERE id = :id;
+
+upsert:
+INSERT INTO source(id, name, language)
+VALUES (:id, :name, :language)
+ON CONFLICT(id) DO UPDATE SET
+    name = excluded.name,
+    language = excluded.language;

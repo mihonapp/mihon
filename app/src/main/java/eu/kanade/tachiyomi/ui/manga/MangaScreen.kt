@@ -6,7 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,14 +17,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.core.util.ifSourcesLoaded
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.NavigatorAdaptiveSheet
 import eu.kanade.presentation.manga.ChapterSettingsDialog
@@ -54,11 +52,12 @@ import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.dialog.MigrateMangaDialog
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
@@ -75,22 +74,14 @@ class MangaScreen(
 
     @Composable
     override fun Content() {
-        if (!ifSourcesLoaded()) {
-            LoadingScreen()
-            return
-        }
-
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
         val haptic = LocalHapticFeedback.current
         val scope = rememberCoroutineScope()
-        val viewModel = viewModel<MangaViewModel>(
-            factory = MangaViewModel.Factory,
-            extras = CreationExtras {
-                set(MangaViewModel.MANGA_ID_KEY, mangaId)
-                set(MangaViewModel.IS_FROM_SOURCE_KEY, fromSource)
-            },
-        )
+        val viewModel =
+            assistedMetroViewModel<MangaViewModel, MangaViewModel.Factory> {
+                create(mangaId = mangaId, isFromSource = fromSource)
+            }
 
         val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -105,7 +96,7 @@ class MangaScreen(
         LaunchedEffect(successState.manga, viewModel.source) {
             if (isHttpSource) {
                 try {
-                    withIOContext {
+                    withContext(Dispatchers.IO) {
                         assistUrl = getMangaUrl(viewModel.manga, viewModel.source)
                     }
                 } catch (e: Exception) {
@@ -124,8 +115,13 @@ class MangaScreen(
             navigateUp = navigator::pop,
             onChapterClicked = { openChapter(context, it) },
             onDownloadChapter = viewModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
+            downloadProgressProvider = viewModel::getDownloadProgress,
             onAddToLibraryClicked = {
-                viewModel.toggleFavorite()
+                if (successState.manga.favorite) {
+                    viewModel.showRemoveFromLibraryDialog()
+                } else {
+                    viewModel.toggleFavorite()
+                }
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             },
             onWebViewClicked = {
@@ -180,6 +176,15 @@ class MangaScreen(
         val onDismissRequest = { viewModel.dismissDialog() }
         when (val dialog = successState.dialog) {
             null -> {}
+            MangaViewModel.Dialog.RemoveFromLibrary -> {
+                RemoveMangaDialog(
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = {
+                        if (successState.manga.favorite) viewModel.toggleFavorite()
+                    },
+                    mangaToRemove = successState.manga,
+                )
+            }
             is MangaViewModel.Dialog.ChangeCategory -> {
                 ChangeCategoryDialog(
                     initialSelection = dialog.initialSelection,
@@ -244,28 +249,27 @@ class MangaScreen(
                 )
             }
             MangaViewModel.Dialog.FullCover -> {
-                val sm = viewModel<MangaCoverViewModel>(
-                    factory = MangaCoverViewModel.Factory,
-                    extras = CreationExtras {
-                        set(MangaCoverViewModel.MANGA_ID_KEY, successState.manga.id)
-                    },
-                )
-                val manga by sm.state.collectAsState()
+                val vm =
+                    assistedMetroViewModel<MangaCoverViewModel, MangaCoverViewModel.Factory> {
+                        create(mangaId = mangaId)
+                    }
+                val manga by vm.state.collectAsStateWithLifecycle()
                 if (manga != null) {
                     val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
                         if (it == null) return@rememberLauncherForActivityResult
-                        sm.editCover(context, it)
+                        vm.editCover(context, it)
                     }
                     MangaCoverDialog(
                         manga = manga!!,
-                        snackbarHostState = sm.snackbarHostState,
+                        snackbarHostState = vm.snackbarHostState,
                         isCustomCover = remember(manga) { manga!!.hasCustomCover() },
-                        onShareClick = { sm.shareCover(context) },
-                        onSaveClick = { sm.saveCover(context) },
+                        onShareClick = { vm.shareCover(context) },
+                        onSaveClick = { vm.saveCover(context) },
                         onEditClick = {
                             when (it) {
                                 EditCoverAction.EDIT -> getContent.launch("image/*")
-                                EditCoverAction.DELETE -> sm.deleteCustomCover(context)
+                                EditCoverAction.DELETE -> vm.deleteCustomCover(context)
+                                EditCoverAction.ADD_TO_LIBRARY -> vm.addToLibraryWarning(context)
                             }
                         },
                         onDismissRequest = onDismissRequest,

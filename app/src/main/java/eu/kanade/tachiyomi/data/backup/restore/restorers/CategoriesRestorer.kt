@@ -1,42 +1,34 @@
 package eu.kanade.tachiyomi.data.backup.restore.restorers
 
+import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
-import tachiyomi.data.Database
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.NewCategory
+import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.library.service.LibraryPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
+@Inject
 class CategoriesRestorer(
-    private val database: Database = Injekt.get(),
-    private val getCategories: GetCategories = Injekt.get(),
-    private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val categoryRepository: CategoryRepository,
+    private val getCategories: GetCategories,
+    private val libraryPreferences: LibraryPreferences,
 ) {
 
     suspend operator fun invoke(backupCategories: List<BackupCategory>) {
-        if (backupCategories.isNotEmpty()) {
-            val dbCategories = getCategories.await()
-            val dbCategoriesByName = dbCategories.associateBy { it.name }
-            var nextOrder = dbCategories.maxOfOrNull { it.order }?.plus(1) ?: 0
+        if (backupCategories.isEmpty()) return
 
-            val categories = database.transactionWithResult {
-                backupCategories
-                    .sortedBy { it.order }
-                    .map {
-                        val dbCategory = dbCategoriesByName[it.name]
-                        if (dbCategory != null) return@map dbCategory
-                        val order = nextOrder++
-                        database.categoriesQueries
-                            .insert(it.name, order, it.flags)
-                            .let { id -> it.toCategory(id).copy(order = order) }
-                    }
-            }
+        val dbCategories = getCategories.await()
+        val dbCategoryNames = dbCategories.mapTo(HashSet()) { it.name }
 
-            libraryPreferences.categorizedDisplaySettings.set(
-                (dbCategories + categories)
-                    .distinctBy { it.flags }
-                    .size > 1,
-            )
+        val newCategories = backupCategories
+            .filter { it.name !in dbCategoryNames }
+            .sortedBy { it.order }
+        categoryRepository.insertAll(newCategories.map { NewCategory(name = it.name, flags = it.flags) })
+
+        val flags = buildSet {
+            dbCategories.mapTo(this) { it.flags }
+            newCategories.mapTo(this) { it.flags }
         }
+        libraryPreferences.categorizedDisplaySettings.set(flags.size > 1)
     }
 }

@@ -6,6 +6,8 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import okhttp3.Headers
@@ -13,14 +15,13 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 
 private const val READLIST_API = "/api/v1/readlists"
 
 class KomgaApi(
-    private val trackId: Long,
+    private val trackerId: Long,
     private val client: OkHttpClient,
 ) {
 
@@ -33,7 +34,7 @@ class KomgaApi(
     private val json: Json by injectLazy()
 
     suspend fun getTrackSearch(url: String): TrackSearch =
-        withIOContext {
+        withContext(Dispatchers.IO) {
             try {
                 val track = with(json) {
                     if (url.contains(READLIST_API)) {
@@ -93,17 +94,17 @@ class KomgaApi(
                 .put(payload.toRequestBody("application/json".toMediaType()))
                 .build(),
         )
-            .awaitSuccess()
+            .awaitSuccess().close()
         return getTrackSearch(track.tracking_url)
     }
 
-    private fun SeriesDto.toTrack(): TrackSearch = TrackSearch.create(trackId).also {
+    private fun SeriesDto.toTrack(): TrackSearch = TrackSearch.create(trackerId).also {
         it.title = metadata.title
         it.summary = metadata.summary
         it.publishing_status = metadata.status
     }
 
-    private fun ReadListDto.toTrack(): TrackSearch = TrackSearch.create(trackId).also {
+    private fun ReadListDto.toTrack(): TrackSearch = TrackSearch.create(trackerId).also {
         it.title = name
     }
 }

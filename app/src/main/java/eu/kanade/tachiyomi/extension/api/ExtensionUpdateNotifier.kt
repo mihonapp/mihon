@@ -2,7 +2,9 @@ package eu.kanade.tachiyomi.extension.api
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import eu.kanade.tachiyomi.R
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -10,12 +12,13 @@ import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import mihon.icons.materialsymbols.R as MaterialSymbolsR
 
+@Inject
+@SingleIn(AppScope::class)
 class ExtensionUpdateNotifier(
     private val context: Context,
-    private val securityPreferences: SecurityPreferences = Injekt.get(),
+    private val securityPreferences: SecurityPreferences,
 ) {
     fun promptUpdates(names: List<String>) {
         context.notify(
@@ -34,7 +37,7 @@ class ExtensionUpdateNotifier(
                 setContentText(extNames)
                 setStyle(NotificationCompat.BigTextStyle().bigText(extNames))
             }
-            setSmallIcon(R.drawable.ic_extension_24dp)
+            setSmallIcon(MaterialSymbolsR.drawable.rounded_filled_extension)
             setContentIntent(NotificationReceiver.openExtensionsPendingActivity(context))
             setAutoCancel(true)
         }

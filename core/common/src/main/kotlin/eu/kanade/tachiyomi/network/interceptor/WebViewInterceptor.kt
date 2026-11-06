@@ -8,19 +8,21 @@ import android.widget.Toast
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
+import eu.kanade.tachiyomi.util.system.setUserAgent
 import eu.kanade.tachiyomi.util.system.toast
-import okhttp3.Headers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.i18n.MR
-import java.util.Locale
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 abstract class WebViewInterceptor(
     private val context: Context,
+    private val scope: CoroutineScope,
     private val defaultUserAgentProvider: () -> String,
 ) : Interceptor {
 
@@ -55,25 +57,23 @@ abstract class WebViewInterceptor(
             return response
         }
 
-        if (!WebViewUtil.supportsWebView(context)) {
-            launchUI {
-                context.toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
-            }
-            return response
-        }
-        initWebView
+        if (!prepareWebView()) return response
 
         return intercept(chain, request, response)
     }
 
-    fun parseHeaders(headers: Headers): Map<String, String> {
-        return headers
-            // Keeping unsafe header makes webview throw [net::ERR_INVALID_ARGUMENT]
-            .filter { (name, value) ->
-                isRequestHeaderSafe(name, value)
+    /**
+     * Returns whether a WebView can be used, initializing it if so.
+     */
+    protected fun prepareWebView(): Boolean {
+        if (!WebViewUtil.supportsWebView(context)) {
+            scope.launch(Dispatchers.Main) {
+                context.toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
             }
-            .groupBy(keySelector = { (name, _) -> name }) { (_, value) -> value }
-            .mapValues { it.value.getOrNull(0).orEmpty() }
+            return false
+        }
+        initWebView
+        return true
     }
 
     fun CountDownLatch.awaitFor30Seconds() {
@@ -84,20 +84,7 @@ abstract class WebViewInterceptor(
         return WebView(context).apply {
             setDefaultSettings()
             // Avoid sending empty User-Agent, Chromium WebView will reset to default if empty
-            settings.userAgentString = request.header("User-Agent") ?: defaultUserAgentProvider()
+            setUserAgent(request.header("User-Agent") ?: defaultUserAgentProvider())
         }
     }
 }
-
-// Based on [IsRequestHeaderSafe] in
-// https://source.chromium.org/chromium/chromium/src/+/main:services/network/public/cpp/header_util.cc
-private fun isRequestHeaderSafe(_name: String, _value: String): Boolean {
-    val name = _name.lowercase(Locale.ENGLISH)
-    val value = _value.lowercase(Locale.ENGLISH)
-    if (name in unsafeHeaderNames || name.startsWith("proxy-")) return false
-    if (name == "connection" && value == "upgrade") return false
-    return true
-}
-private val unsafeHeaderNames = listOf(
-    "content-length", "host", "trailer", "te", "upgrade", "cookie2", "keep-alive", "transfer-encoding", "set-cookie",
-)

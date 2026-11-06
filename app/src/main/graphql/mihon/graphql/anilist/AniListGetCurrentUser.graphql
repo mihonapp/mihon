@@ -1,0 +1,9 @@
+query AniListGetCurrentUser {
+  Viewer {
+    id
+    name
+    mediaListOptions {
+      scoreFormat
+    }
+  }
+}

@@ -12,9 +12,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,11 +21,19 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.toJavaYearMonth
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.yearMonth
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.KeyboardArrowLeft
+import mihon.icons.materialsymbols.rounded.KeyboardArrowRight
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.time.Clock
 
 @Composable
 fun CalenderHeader(
@@ -55,11 +60,11 @@ fun CalenderHeader(
         Row {
             IconButton(onClick = onPreviousClick) {
                 @Suppress("DEPRECATION")
-                Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
+                Icon(MaterialSymbols.Rounded.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
             }
             IconButton(onClick = onNextClick) {
                 @Suppress("DEPRECATION")
-                Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
+                Icon(MaterialSymbols.Rounded.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
             }
         }
     }
@@ -88,14 +93,14 @@ private fun AnimatedContentTransitionScope<YearMonth>.getAnimation(): ContentTra
 @ReadOnlyComposable
 private fun getTitleText(monthYear: YearMonth): String {
     val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
-    return formatter.format(monthYear)
+    return formatter.format(monthYear.toJavaYearMonth())
 }
 
 @Preview
 @Composable
 private fun CalenderHeaderPreview() {
     CalenderHeader(
-        yearMonth = YearMonth.now(),
+        yearMonth = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.yearMonth,
         onNextClick = {},
         onPreviousClick = {},
     )

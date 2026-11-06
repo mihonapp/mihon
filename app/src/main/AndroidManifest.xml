@@ -198,6 +198,17 @@
                 <data android:host="shikimori-auth" />
                 <data android:host="hikka-auth" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Comick requires native reverse-domain schemes  -->
+                <data android:scheme="app.mihon" />
+                <data android:host="comick-auth" />
+            </intent-filter>
         </activity>
 
         <receiver

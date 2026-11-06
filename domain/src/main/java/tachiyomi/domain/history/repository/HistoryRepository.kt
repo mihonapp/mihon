@@ -15,11 +15,15 @@ interface HistoryRepository {
 
     suspend fun getHistoryByMangaId(mangaId: Long): List<History>
 
+    suspend fun getHistoryByMangaIds(mangaIds: List<Long>): Map<Long, List<History>>
+
     suspend fun resetHistory(historyId: Long)
 
     suspend fun resetHistoryByMangaId(mangaId: Long)
 
     suspend fun deleteAllHistory(): Boolean
+
+    suspend fun deleteResetHistory()
 
     suspend fun upsertHistory(historyUpdate: HistoryUpdate)
 }

@@ -3,6 +3,7 @@ plugins {
     alias(mihonx.plugins.spotless)
 
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.metro)
 }
 
 android {
@@ -18,13 +19,17 @@ kotlin {
 dependencies {
     implementation(projects.sourceApi)
     implementation(projects.core.common)
+    implementation(projects.core.metro)
 
+    implementation(libs.metro.runtime)
     implementation(libs.bundles.kotlinx.coroutines)
     implementation(libs.bundles.serialization)
 
+    implementation(libs.kotlinx.datetime)
+
     implementation(libs.unifile)
 
-    api(libs.sqldelight.androidxPaging)
+    api(libs.androidx.paging.runtime)
 
     compileOnly(platform(libs.androidx.compose.bom))
     compileOnly(libs.androidx.compose.runtimeAnnotation)
