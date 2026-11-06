@@ -15,6 +15,7 @@ import eu.kanade.presentation.theme.colorscheme.LavenderColorScheme
 import eu.kanade.presentation.theme.colorscheme.MidnightDuskColorScheme
 import eu.kanade.presentation.theme.colorscheme.MonetColorScheme
 import eu.kanade.presentation.theme.colorscheme.MonochromeColorScheme
+import eu.kanade.presentation.theme.colorscheme.NeonColorScheme
 import eu.kanade.presentation.theme.colorscheme.NordColorScheme
 import eu.kanade.presentation.theme.colorscheme.StrawberryColorScheme
 import eu.kanade.presentation.theme.colorscheme.TachiyomiColorScheme
@@ -65,6 +66,8 @@ private fun BaseTachiyomiTheme(
                 isAmoled = isAmoled,
             )
         },
+        shapes = NeonShapes,
+        typography = NeonTypography,
         content = content,
     )
 }
@@ -89,6 +92,7 @@ private fun getThemeColorScheme(
 
 private val colorSchemes: Map<AppTheme, BaseColorScheme> = mapOf(
     AppTheme.DEFAULT to TachiyomiColorScheme,
+    AppTheme.NEON to NeonColorScheme,
     AppTheme.CATPPUCCIN to CatppuccinColorScheme,
     AppTheme.TOKYONIGHT to TokyoNightColorScheme,
     AppTheme.GREEN_APPLE to GreenAppleColorScheme,

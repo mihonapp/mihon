@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -60,18 +57,14 @@ fun TabbedScreen(
                 end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
             ),
         ) {
-            PrimaryTabRow(
+            NeonTabRow(
                 selectedTabIndex = state.currentPage,
+                tabCount = tabs.size,
+                onTabClick = { index -> scope.launch { state.animateScrollToPage(index) } },
                 modifier = Modifier.zIndex(1f),
-            ) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = state.currentPage == index,
-                        onClick = { scope.launch { state.animateScrollToPage(index) } },
-                        text = { TabText(text = stringResource(tab.titleRes), badgeCount = tab.badgeNumber) },
-                        unselectedContentColor = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
+            ) { index, _ ->
+                val tab = tabs[index]
+                TabText(text = stringResource(tab.titleRes), badgeCount = tab.badgeNumber)
             }
 
             HorizontalPager(

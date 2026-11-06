@@ -151,6 +151,19 @@ class ReaderPreferences(
 
     // endregion
 
+    // region Book
+
+    val bookPageLayout: Preference<BookPageLayout> = preferenceStore.getEnum(
+        "pref_book_page_layout",
+        BookPageLayout.AUTOMATIC,
+    )
+
+    val bookFirstPageAlone: Preference<Boolean> = preferenceStore.getBoolean("pref_book_first_page_alone", true)
+
+    val bookPageShadows: Preference<Boolean> = preferenceStore.getBoolean("pref_book_page_shadows", true)
+
+    // endregion
+
     // region Color filter
 
     val customBrightness: Preference<Boolean> = preferenceStore.getBoolean("pref_custom_brightness_key", false)
@@ -388,6 +401,15 @@ class ReaderPreferences(
         IGNORE(MR.strings.cutout_mode_ignore),
         AVOID(MR.strings.cutout_mode_avoid),
         SHIFT(MR.strings.cutout_mode_shift),
+    }
+
+    /**
+     * How many pages the book viewer shows at once. Automatic shows two on foldables, tablets and landscape screens.
+     */
+    enum class BookPageLayout(val titleRes: StringResource) {
+        AUTOMATIC(MR.strings.book_layout_automatic),
+        SINGLE(MR.strings.book_layout_single),
+        DOUBLE(MR.strings.book_layout_double),
     }
 
     enum class DualPageView(val titleRes: StringResource) {

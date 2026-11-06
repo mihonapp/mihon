@@ -178,6 +178,19 @@ data object LibraryTab : Tab {
                     )
                 }
                 else -> {
+                    val resumeReading = { it: LibraryManga ->
+                        scope.launch {
+                            val chapter = viewModel.getNextUnreadChapter(it.manga)
+                            if (chapter != null) {
+                                context.startActivity(
+                                    ReaderActivity.newIntent(context, chapter.mangaId, chapter.id),
+                                )
+                            } else {
+                                snackbarHostState.showSnackbar(context.stringResource(MR.strings.no_next_chapter))
+                            }
+                        }
+                        Unit
+                    }
                     LibraryContent(
                         categories = state.displayedCategories,
                         searchQuery = state.searchQuery,
@@ -188,19 +201,8 @@ data object LibraryTab : Tab {
                         showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
                         onChangeCurrentPage = viewModel::updateActiveCategoryIndex,
                         onClickManga = { navigator.push(MangaScreen(it)) },
-                        onContinueReadingClicked = { it: LibraryManga ->
-                            scope.launch {
-                                val chapter = viewModel.getNextUnreadChapter(it.manga)
-                                if (chapter != null) {
-                                    context.startActivity(
-                                        ReaderActivity.newIntent(context, chapter.mangaId, chapter.id),
-                                    )
-                                } else {
-                                    snackbarHostState.showSnackbar(context.stringResource(MR.strings.no_next_chapter))
-                                }
-                            }
-                            Unit
-                        }.takeIf { state.showMangaContinueButton },
+                        onContinueReadingClicked = resumeReading.takeIf { state.showMangaContinueButton },
+                        onResumeReading = resumeReading,
                         onToggleSelection = viewModel::toggleSelection,
                         onToggleRangeSelection = { category, manga ->
                             viewModel.toggleRangeSelection(category, manga)

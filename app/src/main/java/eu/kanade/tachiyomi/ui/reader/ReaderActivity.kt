@@ -568,7 +568,7 @@ class ReaderActivity : BaseActivity() {
             onShare = ::shareChapter.takeIf { isHttpSource },
 
             chapterNavigatorType = if (!verticalNavigator) {
-                if (readingMode == ReadingMode.RIGHT_TO_LEFT) {
+                if (readingMode.isRightToLeft) {
                     ChapterNavigatorType.HORIZONTAL_RTL
                 } else {
                     ChapterNavigatorType.HORIZONTAL_LTR

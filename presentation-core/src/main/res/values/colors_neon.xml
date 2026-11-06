@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Colors for Neon Day: black surfaces with an electric blue accent.
+-->
+<resources>
+    <color name="neon_primary">#0B6BFF</color>
+    <color name="neon_onPrimary">#FFFFFF</color>
+    <color name="neon_primaryContainer">#D6E4FF</color>
+    <color name="neon_onPrimaryContainer">#001A43</color>
+    <color name="neon_secondary">#1E7BE0</color>
+    <color name="neon_onSecondary">#FFFFFF</color>
+    <color name="neon_secondaryContainer">#D3E6FF</color>
+    <color name="neon_onSecondaryContainer">#001C38</color>
+    <color name="neon_tertiary">#5B4BD6</color>
+    <color name="neon_onTertiary">#FFFFFF</color>
+    <color name="neon_tertiaryContainer">#E4DFFF</color>
+    <color name="neon_onTertiaryContainer">#170B5C</color>
+    <color name="neon_error">#BA1A1A</color>
+    <color name="neon_onError">#FFFFFF</color>
+    <color name="neon_errorContainer">#FFDAD6</color>
+    <color name="neon_onErrorContainer">#410002</color>
+    <color name="neon_background">#F7F9FF</color>
+    <color name="neon_onBackground">#0B1220</color>
+    <color name="neon_surface">#F7F9FF</color>
+    <color name="neon_onSurface">#0B1220</color>
+    <color name="neon_surfaceVariant">#E1E8F5</color>
+    <color name="neon_onSurfaceVariant">#424C5E</color>
+    <color name="neon_outline">#7FA6E6</color>
+    <color name="neon_outlineVariant">#C5D5F0</color>
+    <color name="neon_scrim">#000000</color>
+    <color name="neon_inverseSurface">#1C2433</color>
+    <color name="neon_inverseOnSurface">#EEF2FB</color>
+    <color name="neon_inversePrimary">#A9C7FF</color>
+    <color name="neon_surfaceContainerLowest">#FFFFFF</color>
+    <color name="neon_surfaceDim">#D7DEEA</color>
+    <color name="neon_surfaceContainerLow">#F0F4FC</color>
+    <color name="neon_surfaceContainer">#EAF0FA</color>
+    <color name="neon_surfaceContainerHigh">#E4EBF7</color>
+    <color name="neon_surfaceContainerHighest">#DEE6F4</color>
+    <color name="neon_surfaceBright">#F7F9FF</color>
+</resources>

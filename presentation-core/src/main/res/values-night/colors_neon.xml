@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Colors for Neon Night: black surfaces with an electric blue accent.
+-->
+<resources>
+    <color name="neon_primary">#3D8BFF</color>
+    <color name="neon_onPrimary">#FFFFFF</color>
+    <color name="neon_primaryContainer">#0A2F66</color>
+    <color name="neon_onPrimaryContainer">#CFE1FF</color>
+    <color name="neon_secondary">#66B2FF</color>
+    <color name="neon_onSecondary">#001C3A</color>
+    <color name="neon_secondaryContainer">#0E2A4D</color>
+    <color name="neon_onSecondaryContainer">#CFE5FF</color>
+    <color name="neon_tertiary">#8C7BFF</color>
+    <color name="neon_onTertiary">#140A4D</color>
+    <color name="neon_tertiaryContainer">#2A1F73</color>
+    <color name="neon_onTertiaryContainer">#E2DCFF</color>
+    <color name="neon_error">#FF6B7A</color>
+    <color name="neon_onError">#2D0007</color>
+    <color name="neon_errorContainer">#7A1424</color>
+    <color name="neon_onErrorContainer">#FFD9DC</color>
+    <color name="neon_background">#000000</color>
+    <color name="neon_onBackground">#F2F6FF</color>
+    <color name="neon_surface">#000000</color>
+    <color name="neon_onSurface">#F2F6FF</color>
+    <color name="neon_surfaceVariant">#101827</color>
+    <color name="neon_onSurfaceVariant">#A7B4CC</color>
+    <color name="neon_outline">#2B5CA8</color>
+    <color name="neon_outlineVariant">#16294A</color>
+    <color name="neon_scrim">#000000</color>
+    <color name="neon_inverseSurface">#E6EEFF</color>
+    <color name="neon_inverseOnSurface">#0A0F1A</color>
+    <color name="neon_inversePrimary">#0B5BD3</color>
+    <color name="neon_surfaceContainerLowest">#000000</color>
+    <color name="neon_surfaceDim">#000000</color>
+    <color name="neon_surfaceContainerLow">#060A12</color>
+    <color name="neon_surfaceContainer">#0A101C</color>
+    <color name="neon_surfaceContainerHigh">#101828</color>
+    <color name="neon_surfaceContainerHighest">#172235</color>
+    <color name="neon_surfaceBright">#1C2940</color>
+</resources>

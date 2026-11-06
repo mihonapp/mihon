@@ -1,9 +1,13 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -51,6 +55,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import eu.kanade.presentation.theme.NeonDefaults
+import eu.kanade.presentation.theme.neonOutline
 import kotlinx.coroutines.flow.drop
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowBack
@@ -327,7 +333,7 @@ fun SearchToolbar(
                 textStyle = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 onKeyboardAction = { searchAndClearFocus() },
@@ -347,12 +353,27 @@ fun SearchToolbar(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.titleMedium.copy(
-                                fontSize = 18.sp,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
                             ),
                         )
                     },
-                    container = {},
+                    leadingIcon = {
+                        Icon(
+                            imageVector = MaterialSymbols.Rounded.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    },
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
+                    container = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.surfaceContainerLow, NeonDefaults.PillShape)
+                                .neonOutline(NeonDefaults.PillShape, NeonDefaults.outlineColor),
+                        )
+                    },
                 ),
             )
         },

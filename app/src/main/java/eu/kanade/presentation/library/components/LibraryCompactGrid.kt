@@ -12,6 +12,7 @@ import tachiyomi.domain.manga.model.MangaCover
 @Composable
 internal fun LibraryCompactGrid(
     items: List<LibraryItem>,
+    continueReading: List<LibraryItem>,
     showTitle: Boolean,
     columns: Int,
     contentPadding: PaddingValues,
@@ -19,6 +20,7 @@ internal fun LibraryCompactGrid(
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
+    onResumeReading: (LibraryManga) -> Unit,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
 ) {
@@ -28,6 +30,7 @@ internal fun LibraryCompactGrid(
         contentPadding = contentPadding,
     ) {
         globalSearchItem(searchQuery, onGlobalSearchClicked)
+        continueReadingHero(continueReading, onClick, onResumeReading)
 
         items(
             items = items,

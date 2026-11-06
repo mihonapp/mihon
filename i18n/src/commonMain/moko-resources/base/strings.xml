@@ -238,6 +238,9 @@
     <string name="theme_yinyang">Yin &amp; Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_tidalwave">Tidal Wave</string>
+    <string name="theme_neon">Neon</string>
+    <string name="library_continue_reading">Continue reading</string>
+    <string name="library_unread_count">%d unread</string>
     <string name="pref_dark_theme_pure_black">Pure black dark mode</string>
     <string name="pref_relative_format">Relative timestamps</string>
     <!-- "Today" instead of "2023-12-31" -->
@@ -478,6 +481,15 @@
     <string name="webtoon_viewer">Long strip</string>
     <string name="vertical_plus_viewer">Long strip with gaps</string>
     <string name="pager_viewer">Paged</string>
+    <string name="book_left_to_right_viewer">Book (left to right)</string>
+    <string name="book_right_to_left_viewer">Book (right to left)</string>
+    <string name="book_viewer">Book</string>
+    <string name="pref_book_page_layout">Pages at once</string>
+    <string name="book_layout_automatic">Automatic</string>
+    <string name="book_layout_single">One</string>
+    <string name="book_layout_double">Two</string>
+    <string name="pref_book_first_page_alone">Show first page alone</string>
+    <string name="pref_book_page_shadows">Page shadows</string>
     <string name="pref_viewer_nav">Tap zones</string>
     <string name="pref_image_scale_type">Scale type</string>
     <string name="scale_type_fit_screen">Fit screen</string>

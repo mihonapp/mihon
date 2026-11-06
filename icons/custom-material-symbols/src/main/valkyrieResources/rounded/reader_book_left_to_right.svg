@@ -1,0 +1,6 @@
+<!--
+  Custom Material Symbols Rounded 'reader_book_left_to_right'.
+  An open book drawn at the Material Symbols stroke weight, with a chevron on the page turned next.
+  SPDX-License-Identifier: Apache-2.0
+-->
+<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160 -800L800 -800Q880 -800 880 -720L880 -240Q880 -160 800 -160L160 -160Q80 -160 80 -240L80 -720Q80 -800 160 -800ZM160 -720L160 -240L440 -240L440 -720ZM520 -720L520 -240L800 -240L800 -720ZM615 -600L735 -480L615 -360L570 -405L645 -480L570 -555Z"/></svg>

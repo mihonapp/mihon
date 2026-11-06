@@ -12,12 +12,14 @@ import tachiyomi.domain.manga.model.MangaCover
 @Composable
 internal fun LibraryComfortableGrid(
     items: List<LibraryItem>,
+    continueReading: List<LibraryItem>,
     columns: Int,
     contentPadding: PaddingValues,
     selection: Set<Long>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
+    onResumeReading: (LibraryManga) -> Unit,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
 ) {
@@ -27,6 +29,7 @@ internal fun LibraryComfortableGrid(
         contentPadding = contentPadding,
     ) {
         globalSearchItem(searchQuery, onGlobalSearchClicked)
+        continueReadingHero(continueReading, onClick, onResumeReading)
 
         items(
             items = items,

@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.viewer.book.BookViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
@@ -12,6 +13,8 @@ import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuViewerContinuous
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import mihon.app.di.appGraph
 import mihon.icons.custommaterialsymbols.CustomMaterialSymbols
+import mihon.icons.custommaterialsymbols.rounded.ReaderBookLeftToRight
+import mihon.icons.custommaterialsymbols.rounded.ReaderBookRightToLeft
 import mihon.icons.custommaterialsymbols.rounded.ReaderLeftToRight
 import mihon.icons.custommaterialsymbols.rounded.ReaderLongStrip
 import mihon.icons.custommaterialsymbols.rounded.ReaderLongStripGaps
@@ -64,7 +67,33 @@ enum class ReadingMode(
         Direction.Vertical,
         ViewerType.Webtoon,
     ),
+
+    /** Pages laid out like a book, two at a time on wide screens, turned with a page curl. Western comics. */
+    BOOK_LEFT_TO_RIGHT(
+        MR.strings.book_left_to_right_viewer,
+        CustomMaterialSymbols.Rounded.ReaderBookLeftToRight,
+        0x00000006,
+        Direction.Horizontal,
+        ViewerType.Pager,
+    ),
+
+    /** [BOOK_LEFT_TO_RIGHT] bound on the right, as manga are. */
+    BOOK_RIGHT_TO_LEFT(
+        MR.strings.book_right_to_left_viewer,
+        CustomMaterialSymbols.Rounded.ReaderBookRightToLeft,
+        0x00000007,
+        Direction.Horizontal,
+        ViewerType.Pager,
+    ),
     ;
+
+    /** Whether this mode shows pages as a book, with [BookViewer]. */
+    val isBook: Boolean
+        get() = this == BOOK_LEFT_TO_RIGHT || this == BOOK_RIGHT_TO_LEFT
+
+    /** Whether pages run right to left. */
+    val isRightToLeft: Boolean
+        get() = this == RIGHT_TO_LEFT || this == BOOK_RIGHT_TO_LEFT
 
     companion object {
         const val MASK = 0x00000007
@@ -77,6 +106,12 @@ enum class ReadingMode(
         }
 
         fun toViewer(preference: Int?, activity: ReaderActivity): Viewer {
+            // The book viewer draws its own pages, whichever renderer is chosen.
+            when (fromPreference(preference)) {
+                BOOK_LEFT_TO_RIGHT -> return BookViewer(activity, isRightToLeft = false)
+                BOOK_RIGHT_TO_LEFT -> return BookViewer(activity, isRightToLeft = true)
+                else -> {}
+            }
             if (activity.appGraph.basePreferences.highQualityRenderer.get()) {
                 return when (fromPreference(preference)) {
                     LEFT_TO_RIGHT -> WebGpuViewer(activity, isReversed = false, isVertical = false)
@@ -84,6 +119,7 @@ enum class ReadingMode(
                     VERTICAL -> WebGpuViewer(activity, isReversed = false, isVertical = true)
                     WEBTOON -> WebGpuViewerContinuous(activity, useGap = false)
                     CONTINUOUS_VERTICAL -> WebGpuViewerContinuous(activity, useGap = true)
+                    BOOK_LEFT_TO_RIGHT, BOOK_RIGHT_TO_LEFT -> error("Handled above")
                     DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
                 }
             }
@@ -93,6 +129,7 @@ enum class ReadingMode(
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
+                BOOK_LEFT_TO_RIGHT, BOOK_RIGHT_TO_LEFT -> error("Handled above")
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }
         }

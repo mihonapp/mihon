@@ -37,6 +37,7 @@ fun LibraryContent(
     onChangeCurrentPage: (Int) -> Unit,
     onClickManga: (Long) -> Unit,
     onContinueReadingClicked: ((LibraryManga) -> Unit)?,
+    onResumeReading: (LibraryManga) -> Unit,
     onToggleSelection: (Category, LibraryManga) -> Unit,
     onToggleRangeSelection: (Category, LibraryManga) -> Unit,
     onRefresh: suspend () -> Boolean,
@@ -109,6 +110,7 @@ fun LibraryContent(
                 },
                 onLongClickManga = onToggleRangeSelection,
                 onClickContinueReading = onContinueReadingClicked,
+                onResumeReading = onResumeReading,
             )
         }
 

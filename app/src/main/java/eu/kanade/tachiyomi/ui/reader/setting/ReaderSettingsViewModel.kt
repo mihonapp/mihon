@@ -285,7 +285,7 @@ class ReaderSettingsViewModel(
             } else {
                 paged.map { it.navigation }
             }
-            val isReversed = viewerMode.readingMode == ReadingMode.RIGHT_TO_LEFT
+            val isReversed = viewerMode.readingMode.isRightToLeft
             val defaultNavigation: (ReaderPreferences.TappingInvertMode, Boolean) -> ViewerNavigation =
                 if (viewerMode.readingMode.direction == ReadingMode.Direction.Vertical) {
                     ::LNavigation

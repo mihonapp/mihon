@@ -27,7 +27,9 @@ import java.text.NumberFormat
 @Composable
 internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
     val isWebGpu by viewModel.isWebGpu.collectAsState()
-    if (isWebGpu) {
+    val resolvedReadingMode by viewModel.readingMode.collectAsState()
+    // The book viewer draws its own pages whichever renderer is chosen, so it has the same settings either way.
+    if (isWebGpu && !resolvedReadingMode.isBook) {
         WebGpuViewerSettings(viewModel)
         return
     }
@@ -56,12 +58,46 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
         }
     }
 
-    val resolvedReadingMode by viewModel.readingMode.collectAsState()
-    if (resolvedReadingMode.type is ReadingMode.ViewerType.Webtoon) {
-        WebtoonViewerSettings(viewModel)
-    } else {
-        PagerViewerSettings(viewModel)
+    when {
+        resolvedReadingMode.isBook -> BookViewerSettings(viewModel)
+        resolvedReadingMode.type is ReadingMode.ViewerType.Webtoon -> WebtoonViewerSettings(viewModel)
+        else -> PagerViewerSettings(viewModel)
     }
+}
+
+@Composable
+private fun ColumnScope.BookViewerSettings(viewModel: ReaderSettingsViewModel) {
+    HeadingItem(MR.strings.book_viewer)
+
+    val navigationModePager by viewModel.preferences.navigationModePager.collectAsState()
+    val pagerNavInverted by viewModel.preferences.pagerNavInverted.collectAsState()
+    TapZonesItems(
+        selected = navigationModePager,
+        onSelect = viewModel.preferences.navigationModePager::set,
+        invertMode = pagerNavInverted,
+        onSelectInvertMode = viewModel.preferences.pagerNavInverted::set,
+    )
+
+    val bookPageLayout by viewModel.preferences.bookPageLayout.collectAsState()
+    SettingsChipRow(MR.strings.pref_book_page_layout) {
+        ReaderPreferences.BookPageLayout.entries.map {
+            FilterChip(
+                selected = it == bookPageLayout,
+                onClick = { viewModel.preferences.bookPageLayout.set(it) },
+                label = { Text(stringResource(it.titleRes)) },
+            )
+        }
+    }
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_book_first_page_alone),
+        pref = viewModel.preferences.bookFirstPageAlone,
+    )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_book_page_shadows),
+        pref = viewModel.preferences.bookPageShadows,
+    )
 }
 
 @Composable

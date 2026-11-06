@@ -17,26 +17,27 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.presentation.theme.NeonDefaults
+import eu.kanade.presentation.theme.neonGlow
+import eu.kanade.presentation.theme.neonOutline
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.roundedfilled.PlayArrow
 import tachiyomi.i18n.MR
@@ -46,8 +47,8 @@ import tachiyomi.presentation.core.util.selectedBackground
 import tachiyomi.domain.manga.model.MangaCover as MangaCoverModel
 
 object CommonMangaItemDefaults {
-    val GridHorizontalSpacer = 4.dp
-    val GridVerticalSpacer = 4.dp
+    val GridHorizontalSpacer = 8.dp
+    val GridVerticalSpacer = 10.dp
 
     @Suppress("ConstPropertyName")
     const val BrowseFavoriteCoverAlpha = 0.34f
@@ -92,6 +93,7 @@ fun MangaCompactGridItem(
                         .fillMaxWidth()
                         .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                     data = coverData,
+                    shape = NeonDefaults.CoverShape,
                 )
             },
             badgesStart = coverBadgeStart,
@@ -127,14 +129,14 @@ private fun BoxScope.CoverTextOverlay(
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp))
+            .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
             .background(
                 Brush.verticalGradient(
                     0f to Color.Transparent,
-                    1f to Color(0xAA000000),
+                    1f to Color(0xE6000000),
                 ),
             )
-            .fillMaxHeight(0.33f)
+            .fillMaxHeight(0.45f)
             .fillMaxWidth()
             .align(Alignment.BottomCenter),
     )
@@ -199,6 +201,7 @@ fun MangaComfortableGridItem(
                             .fillMaxWidth()
                             .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                         data = coverData,
+                        shape = NeonDefaults.CoverShape,
                     )
                 },
                 badgesStart = coverBadgeStart,
@@ -217,9 +220,9 @@ fun MangaComfortableGridItem(
                 },
             )
             GridItemTitle(
-                modifier = Modifier.padding(4.dp),
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 2.dp),
                 title = title,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                 minLines = 2,
                 maxLines = titleMaxLines,
             )
@@ -241,7 +244,8 @@ private fun MangaGridCover(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(MangaCover.Book.ratio),
+            .aspectRatio(MangaCover.Book.ratio)
+            .neonGlow(NeonDefaults.CoverShape, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f), 6.dp),
     ) {
         cover()
         content?.invoke(this)
@@ -276,7 +280,7 @@ private fun GridItemTitle(
     Text(
         modifier = modifier,
         text = title,
-        fontSize = 12.sp,
+        fontSize = 13.sp,
         lineHeight = 18.sp,
         minLines = minLines,
         maxLines = maxLines,
@@ -296,34 +300,32 @@ private fun GridItemSelectable(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+    val shape = NeonDefaults.CardShape
+    val primary = MaterialTheme.colorScheme.primary
     Box(
         modifier = modifier
-            .clip(MaterialTheme.shapes.small)
+            .clip(shape)
+            .background(
+                if (isSelected) {
+                    primary.copy(alpha = 0.22f)
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainerLow
+                },
+            )
+            .neonOutline(
+                shape = shape,
+                color = if (isSelected) primary else primary.copy(alpha = 0.28f),
+                width = if (isSelected) 2.dp else 1.dp,
+            )
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
             )
-            .selectedOutline(isSelected = isSelected, color = MaterialTheme.colorScheme.secondary)
-            .padding(4.dp),
+            .padding(6.dp),
     ) {
-        val contentColor = if (isSelected) {
-            MaterialTheme.colorScheme.onSecondary
-        } else {
-            LocalContentColor.current
-        }
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
-            content()
-        }
+        content()
     }
 }
-
-/**
- * @see GridItemSelectable
- */
-private fun Modifier.selectedOutline(
-    isSelected: Boolean,
-    color: Color,
-) = drawBehind { if (isSelected) drawRect(color = color) }
 
 /**
  * Layout of list item.

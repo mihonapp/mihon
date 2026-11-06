@@ -16,11 +16,13 @@ import tachiyomi.presentation.core.util.plus
 @Composable
 internal fun LibraryList(
     items: List<LibraryItem>,
+    continueReading: List<LibraryItem>,
     contentPadding: PaddingValues,
     selection: Set<Long>,
     onClick: (LibraryManga) -> Unit,
     onLongClick: (LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
+    onResumeReading: (LibraryManga) -> Unit,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
 ) {
@@ -37,6 +39,8 @@ internal fun LibraryList(
                 )
             }
         }
+
+        continueReadingHero(continueReading, onClick, onResumeReading)
 
         items(
             items = items,

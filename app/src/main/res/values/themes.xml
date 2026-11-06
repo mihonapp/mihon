@@ -165,6 +165,46 @@
         <item name="colorSurfaceContainerLowest">@color/tokyonight_surfaceContainerLowest</item>
     </style>
 
+    <!--== Neon Theme ==-->
+    <style name="Theme.Tachiyomi.Neon">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/neon_primary</item>
+        <item name="colorOnPrimary">@color/neon_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/neon_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/neon_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/neon_inversePrimary</item>
+        <item name="colorSecondary">@color/neon_secondary</item>
+        <item name="colorOnSecondary">@color/neon_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/neon_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/neon_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/neon_tertiary</item>
+        <item name="colorOnTertiary">@color/neon_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/neon_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/neon_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/neon_background</item>
+        <item name="colorOnBackground">@color/neon_onBackground</item>
+        <item name="colorSurface">@color/neon_surface</item>
+        <item name="colorOnSurface">@color/neon_onSurface</item>
+        <item name="colorSurfaceVariant">@color/neon_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/neon_onSurfaceVariant</item>
+        <item name="colorSurfaceInverse">@color/neon_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/neon_inverseOnSurface</item>
+        <item name="colorError">@color/neon_error</item>
+        <item name="colorOnError">@color/neon_onError</item>
+        <item name="colorErrorContainer">@color/neon_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/neon_onErrorContainer</item>
+        <item name="colorOutline">@color/neon_outline</item>
+        <item name="colorOutlineVariant">@color/neon_outlineVariant</item>
+        <item name="scrimBackground">@color/neon_scrim</item>
+        <item name="colorSurfaceBright">@color/neon_surfaceBright</item>
+        <item name="colorSurfaceDim">@color/neon_surfaceDim</item>
+        <item name="colorSurfaceContainer">@color/neon_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/neon_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/neon_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/neon_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/neon_surfaceContainerLowest</item>
+    </style>
+
     <!--== Green Apple Theme ==-->
     <style name="Theme.Tachiyomi.GreenApple">
         <!-- Theme Colors -->
