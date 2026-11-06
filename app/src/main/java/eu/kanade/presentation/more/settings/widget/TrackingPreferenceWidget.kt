@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import eu.kanade.presentation.track.components.TrackLogoIcon
-import eu.kanade.tachiyomi.data.track.EnhancedTracker
+import eu.kanade.tachiyomi.data.track.RefreshableProfileTracker
 import eu.kanade.tachiyomi.data.track.Tracker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,7 +83,7 @@ fun TrackingPreferenceWidget(
                 }
             }
             if (isLoggedIn) {
-                if (tracker !is EnhancedTracker) {
+                if (tracker is RefreshableProfileTracker) {
                     IconButton(
                         enabled = !isRefreshing,
                         onClick = {

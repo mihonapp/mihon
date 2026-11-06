@@ -140,6 +140,4 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
         }
         authentications = oauth
     }
-
-    override suspend fun updateUserConfig() = Unit
 }
