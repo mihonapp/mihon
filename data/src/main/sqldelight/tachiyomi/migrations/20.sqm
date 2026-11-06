@@ -1,0 +1,7 @@
+CREATE TABLE download_index (
+    source_id INTEGER NOT NULL,
+    source_dir TEXT NOT NULL,
+    manga_dir TEXT NOT NULL,
+    chapter_dir TEXT NOT NULL,
+    PRIMARY KEY(source_id, manga_dir, chapter_dir)
+);

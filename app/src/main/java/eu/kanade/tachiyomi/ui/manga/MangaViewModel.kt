@@ -38,7 +38,6 @@ import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
@@ -52,7 +51,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -63,6 +61,7 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -119,7 +118,6 @@ class MangaViewModel(
     private val trackerManager: TrackerManager,
     private val trackChapter: TrackChapter,
     private val downloadManager: DownloadManager,
-    private val downloadCache: DownloadCache,
     private val getMangaAndChapters: GetMangaWithChapters,
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga,
     private val getAvailableScanlators: GetAvailableScanlators,
@@ -210,22 +208,29 @@ class MangaViewModel(
         }
     }
 
-    private val mangaAndChapters = combine(
-        flow {
-            // So an entry outside the library isn't shown with its old chapter settings first
-            defaultChapterFlagsJob.join()
-            emitAll(getMangaAndChapters.subscribe(mangaId, applyScanlatorFilter = true))
-        }
-            .distinctUntilChanged(),
-        downloadCache.changes.pausedWhileUnsubscribed(),
-        downloadManager.queueState.pausedWhileUnsubscribed(),
-    ) { (manga, chapters), _, _ ->
-        MangaAndChapters(
-            manga = manga,
-            source = sourceManager.getOrStub(manga.source),
-            chapters = chapters.toChapterListItems(manga),
-        )
+    private val mangaAndChapters = flow {
+        // So an entry outside the library isn't shown with its old chapter settings first
+        defaultChapterFlagsJob.join()
+        emitAll(getMangaAndChapters.subscribe(mangaId, applyScanlatorFilter = true))
     }
+        .distinctUntilChanged()
+        .flatMapLatest { (manga, chapters) ->
+            val downloadedChapterIdsFlow = if (manga.isLocal()) {
+                flowOf(emptySet())
+            } else {
+                downloadManager.getDownloadedChapterIdsFlow(chapters, manga).pausedWhileUnsubscribed()
+            }
+            combine(
+                downloadedChapterIdsFlow,
+                downloadManager.queueState.pausedWhileUnsubscribed(),
+            ) { downloadedChapterIds, _ ->
+                MangaAndChapters(
+                    manga = manga,
+                    source = sourceManager.getOrStub(manga.source),
+                    chapters = chapters.toChapterListItems(manga, downloadedChapterIds),
+                )
+            }
+        }
 
     private val scanlators = combine(
         getAvailableScanlators.subscribe(mangaId).distinctUntilChanged(),
@@ -584,10 +589,12 @@ class MangaViewModel(
         return downloadProgress[chapterId] ?: 0
     }
 
-    private fun List<Chapter>.toChapterListItems(manga: Manga): List<ChapterList.Item> {
+    private fun List<Chapter>.toChapterListItems(
+        manga: Manga,
+        downloadedChapterIds: Set<Long>,
+    ): List<ChapterList.Item> {
         val isLocal = manga.isLocal()
         val queuedDownloads = if (isLocal) emptyMap() else downloadManager.getQueuedDownloadsByChapterId()
-        val downloadedChapterIds = if (isLocal) emptySet() else downloadManager.getDownloadedChapterIds(this, manga)
         return map { chapter ->
             val activeDownload = queuedDownloads[chapter.id]
             val downloaded = isLocal || chapter.id in downloadedChapterIds

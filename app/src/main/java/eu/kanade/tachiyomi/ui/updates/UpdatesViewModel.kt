@@ -55,6 +55,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
+import tachiyomi.domain.download.model.DownloadIndexMangaKey
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.applyFilter
@@ -175,15 +176,15 @@ class UpdatesViewModel(
                     excludedCategories = it.filterExcludedCategories,
                 ).distinctUntilChanged()
             },
-        downloadCache.changes.pausedWhileUnsubscribed(),
+        downloadCache.getAllChapterDirsAsFlow().pausedWhileUnsubscribed(),
         downloadManager.queueState.pausedWhileUnsubscribed(),
         // needed for Kotlin filters (downloaded)
         getUpdatesItemPreferenceFlow().distinctUntilChanged { old, new ->
             old.filterDownloaded == new.filterDownloaded
         },
-    ) { updates, _, _, itemPreferences ->
+    ) { updates, chapterDirsMap, _, itemPreferences ->
         updates
-            .toUpdateItems()
+            .toUpdateItems(chapterDirsMap)
             .applyFilters(itemPreferences)
     }
         .flowOn(Dispatchers.Default)
@@ -232,29 +233,38 @@ class UpdatesViewModel(
         }
     }
 
-    private fun List<UpdatesWithRelations>.toUpdateItems(): List<UpdatesItem> {
+    private fun List<UpdatesWithRelations>.toUpdateItems(
+        chapterDirsMap: Map<DownloadIndexMangaKey, Set<String>>,
+    ): List<UpdatesItem> {
         val queuedDownloads = downloadManager.getQueuedDownloadsByChapterId()
-        return this
-            .map { update ->
-                val activeDownload = queuedDownloads[update.chapterId]
-                val downloaded = downloadManager.isChapterDownloaded(
-                    update.chapterName,
-                    update.scanlator,
-                    update.chapterUrl,
-                    update.mangaTitle,
-                    update.sourceId,
-                )
-                val downloadState = when {
-                    activeDownload != null -> activeDownload.status
-                    downloaded -> Download.State.DOWNLOADED
-                    else -> Download.State.NOT_DOWNLOADED
+        val sourcesWithDownloads = chapterDirsMap.keys.mapTo(HashSet()) { it.sourceId }
+        val dirsByManga = HashMap<Pair<Long, String>, Set<String>>()
+        return map { update ->
+            val activeDownload = queuedDownloads[update.chapterId]
+            val chapterDirs = if (update.sourceId !in sourcesWithDownloads) {
+                emptySet()
+            } else {
+                dirsByManga.getOrPut(update.sourceId to update.mangaTitle) {
+                    chapterDirsMap[downloadCache.getMangaKey(update.sourceId, update.mangaTitle)].orEmpty()
                 }
-                UpdatesItem(
-                    update = update,
-                    downloadStateProvider = { downloadState },
-                    downloadProgressProvider = { downloadProgress[update.chapterId] ?: 0 },
-                )
             }
+            val downloaded = downloadCache.isChapterInDirs(
+                update.chapterName,
+                update.scanlator,
+                update.chapterUrl,
+                chapterDirs,
+            )
+            val downloadState = when {
+                activeDownload != null -> activeDownload.status
+                downloaded -> Download.State.DOWNLOADED
+                else -> Download.State.NOT_DOWNLOADED
+            }
+            UpdatesItem(
+                update = update,
+                downloadStateProvider = { downloadState },
+                downloadProgressProvider = { downloadProgress[update.chapterId] ?: 0 },
+            )
+        }
     }
 
     suspend fun updateLibrary(): Boolean {
