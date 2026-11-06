@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -35,6 +37,9 @@ data class Shelf(
     /** Index into the library's displayed categories; -1 for the vault spine. */
     val categoryIndex: Int = -1,
     val kind: Kind = Kind.Normal,
+    /** For [Kind.Smart]: which smart shelf, and the manga on it in order. */
+    val smart: SmartShelf? = null,
+    val mangaIds: List<Long> = emptyList(),
 ) {
     enum class Kind {
         Normal,
@@ -44,8 +49,14 @@ data class Shelf(
 
         /** The vault itself, always the last spine. */
         Vault,
+
+        /** A smart shelf that fills itself (Recently read, Unread, ...); not a category. */
+        Smart,
     }
 }
+
+/** Key of the vault spine; distinct from category ids, smart shelf keys and the "nothing opened yet" marker. */
+const val VAULT_SPINE_KEY = -1000L
 
 internal object SpineMetrics {
     val MinWidth: Dp = 48.dp
@@ -63,7 +74,7 @@ internal object SpineMetrics {
 }
 
 /** Fallback spine colours (Mekuri palette), picked by shelf key until a cover colour is known. */
-private val FallbackColors = listOf(
+internal val ShelfPalette = listOf(
     Color(0xFF5B3FD9),
     Color(0xFFC2477A),
     Color(0xFF2F6FD6),
@@ -74,7 +85,7 @@ private val FallbackColors = listOf(
     Color(0xFFB8892A),
 )
 
-internal fun fallbackColor(key: Long): Color = FallbackColors[abs(key % FallbackColors.size).toInt()]
+internal fun fallbackColor(key: Long): Color = ShelfPalette[abs(key % ShelfPalette.size).toInt()]
 
 /**
  * Colours for each shelf, taken from its [Shelf.coverManga] cover (average colour, kept rich and dark enough for
@@ -98,7 +109,8 @@ internal fun rememberShelfColors(shelves: List<Shelf>): Map<Long, Color> {
             colors[shelf.key] = spineColorFrom(bitmap)
         }
     }
-    return shelves.associate { it.key to (colors[it.key] ?: fallbackColor(it.key)) }
+    val pinned by ShelfPrefs.pinnedColors.collectAsState()
+    return shelves.associate { it.key to (pinned[it.key]?.let(::Color) ?: colors[it.key] ?: fallbackColor(it.key)) }
 }
 
 private fun spineColorFrom(bitmap: Bitmap): Color {
@@ -116,7 +128,7 @@ private fun spineColorFrom(bitmap: Bitmap): Color {
             n++
         }
     }
-    if (n == 0L) return FallbackColors.first()
+    if (n == 0L) return ShelfPalette.first()
     val hsl = FloatArray(3)
     ColorUtils.RGBToHSL((r / n).toInt(), (g / n).toInt(), (b / n).toInt(), hsl)
     // Rich but not neon, and dark enough for white spine text

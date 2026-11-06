@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,6 +66,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Lock
+import mihon.icons.materialsymbols.rounded.MoreVert
+import mihon.icons.materialsymbols.rounded.Sparkle
 import kotlin.math.roundToInt
 
 /**
@@ -82,6 +86,9 @@ fun BookshelfHome(
     modifier: Modifier = Modifier,
     vaultUnlocked: Boolean = false,
     onVault: () -> Unit = {},
+    onShelfMenu: ((Int) -> Unit)? = null,
+    showDemo: Boolean = false,
+    onDemoDone: () -> Unit = {},
 ) {
     if (shelves.isEmpty()) return
     val density = LocalDensity.current
@@ -95,6 +102,8 @@ fun BookshelfHome(
     var edge by remember { mutableIntStateOf(0) }
     var lastX by remember { mutableFloatStateOf(0f) }
     var offset by remember { mutableFloatStateOf(0f) }
+    var demoGhost by remember { mutableStateOf(false) }
+    var demoX by remember { mutableFloatStateOf(0f) }
 
     val active = if (scrubbing) hover else lastIndex
     val activeShelf = shelves[active.coerceIn(0, shelves.lastIndex)]
@@ -134,6 +143,26 @@ fun BookshelfHome(
 
         LaunchedEffect(shelves.size, viewportPx, lastIndex) {
             offset = centerOn(lastIndex)
+        }
+        // First run: a ghost finger slides across a few spines once, so the gesture is obvious
+        LaunchedEffect(showDemo) {
+            if (!showDemo) return@LaunchedEffect
+            kotlinx.coroutines.delay(700)
+            val visible = (0..shelves.lastIndex).filter { i ->
+                val x = lefts[i] - offset
+                x >= 0f && x + widthsPx[i] <= viewportPx
+            }.ifEmpty { listOf(lastIndex) }.take(4)
+            demoGhost = true
+            scrubbing = true
+            for (i in visible) {
+                hover = i
+                demoX = lefts[i] - offset + widthsPx[i] / 2
+                kotlinx.coroutines.delay(420)
+            }
+            kotlinx.coroutines.delay(300)
+            scrubbing = false
+            demoGhost = false
+            onDemoDone()
         }
         // Edge glide while the finger rests near either end of the shelf
         LaunchedEffect(scrubbing) {
@@ -185,18 +214,40 @@ fun BookshelfHome(
                     style = MaterialTheme.typography.labelMedium,
                     color = if (scrubbing) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
                 )
-                Text(
-                    text = if (onVaultSpine && vaultUnlocked) "Lock vault" else activeShelf.name,
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center,
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = if (onVaultSpine && vaultUnlocked) "Lock vault" else activeShelf.name,
+                        style = MaterialTheme.typography.displaySmall,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    val menuShown = onShelfMenu != null && !scrubbing &&
+                        (activeShelf.kind == Shelf.Kind.Normal || activeShelf.kind == Shelf.Kind.Hidden)
+                    if (menuShown) {
+                        IconButton(onClick = { onShelfMenu?.invoke(active) }) {
+                            Icon(
+                                imageVector = MaterialSymbols.Rounded.MoreVert,
+                                contentDescription = "Shelf options for ${activeShelf.name}",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
                 Text(
                     text = when {
                         onVaultSpine && vaultUnlocked -> "Hidden shelves are showing"
                         onVaultSpine -> "Fingerprint or PIN"
+                        activeShelf.kind == Shelf.Kind.Smart ->
+                            if (activeShelf.count ==
+                                1
+                            ) {
+                                "1 title · smart shelf"
+                            } else {
+                                "${activeShelf.count} titles · smart shelf"
+                            }
                         else -> buildString {
                             append(if (activeShelf.count == 1) "1 title" else "${activeShelf.count} titles")
                             if (activeShelf.unread > 0) append(" · ${activeShelf.unread} unread")
@@ -310,6 +361,19 @@ fun BookshelfHome(
                             },
                     )
                 }
+                if (demoGhost) {
+                    val ghostX by androidx.compose.animation.core.animateFloatAsState(demoX, label = "ghost")
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .offset {
+                                IntOffset((ghostX - 26.dp.toPx()).roundToInt(), -(shelfHeight * 0.35f).roundToPx())
+                            }
+                            .size(52.dp)
+                            .clip(androidx.compose.foundation.shape.CircleShape)
+                            .background(Color.White.copy(alpha = 0.28f)),
+                    )
+                }
             }
 
             Box(
@@ -366,14 +430,22 @@ internal fun Spine(
 ) {
     val accent = MaterialTheme.colorScheme.secondary
     val isVault = kind == Shelf.Kind.Vault
+    val isSmart = kind == Shelf.Kind.Smart
+    val primary = MaterialTheme.colorScheme.primary
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
-            .background(if (isVault) MaterialTheme.colorScheme.surfaceContainerHigh else color)
+            .background(
+                when {
+                    isVault -> MaterialTheme.colorScheme.surfaceContainerHigh
+                    isSmart -> MaterialTheme.colorScheme.surfaceContainerHighest
+                    else -> color
+                },
+            )
             .drawWithContent {
                 drawContent()
                 // Vault: dashed coral outline. Hidden shelves: solid coral outline.
-                if (kind != Shelf.Kind.Normal) {
+                if (kind == Shelf.Kind.Vault || kind == Shelf.Kind.Hidden) {
                     val stroke = 1.5.dp.toPx()
                     drawRoundRect(
                         color = accent.copy(alpha = if (isVault) 0.7f else 0.9f),
@@ -399,7 +471,11 @@ internal fun Spine(
             if (showText) {
                 Text(
                     text = name,
-                    color = if (isVault) accent else Color.White,
+                    color = when {
+                        isVault -> accent
+                        isSmart -> primary
+                        else -> Color.White
+                    },
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
@@ -408,7 +484,15 @@ internal fun Spine(
                 )
             }
         }
-        if (showText && isVault) {
+        if (showText && isSmart) {
+            Icon(
+                imageVector = MaterialSymbols.Rounded.Sparkle,
+                contentDescription = null,
+                tint = primary,
+                modifier = Modifier.size(16.dp),
+            )
+            Text(text = count.toString(), color = primary, style = MaterialTheme.typography.labelSmall)
+        } else if (showText && isVault) {
             Icon(
                 imageVector = MaterialSymbols.Rounded.Lock,
                 contentDescription = null,

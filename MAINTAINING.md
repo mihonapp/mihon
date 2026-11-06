@@ -22,7 +22,7 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `app/src/main/java/eu/kanade/presentation/more/settings/screen/about/AboutScreen.kt` | only a GitHub link to this repo; Mihon website/social/privacy links removed |
 | `app/src/main/java/eu/kanade/presentation/more/MoreScreen.kt` | "Support us" (Mihon donations) hidden |
 | `app/src/main/java/eu/kanade/tachiyomi/ui/main/MainActivity.kt` | donation campaign dialog disabled |
-| `app/src/main/java/mihon/feature/mekuri/**` | Mekuri-only code: `MekuriSetup` (one-time defaults), `autoscroll/`, `nav/FloatingNavPill`, `offline/OfflineTab`, `you/YouTab`, `shelf/` (BookshelfHome, CompactShelf, Shelf), `vault/` (MekuriVault, VaultScreen, VaultAuth, VaultRow, VaultPrivacy), `settings/MekuriSettingsHome` |
+| `app/src/main/java/mihon/feature/mekuri/**` | Mekuri-only code: `MekuriSetup` (one-time defaults), `autoscroll/`, `nav/FloatingNavPill`, `offline/OfflineTab`, `you/YouTab`, `shelf/` (BookshelfHome, CompactShelf, Shelf, ShelfPrefs, ShelfMenuSheet, SmartShelves), `vault/` (MekuriVault, VaultScreen, VaultAuth, VaultRow, VaultPrivacy), `settings/MekuriSettingsHome` |
 | `App.kt` | calls `MekuriSetup.run(...)` on startup |
 | `HomeScreen.kt` | tabs Library · Updates · Offline · Browse · You; floating pill on phones (`MekuriPhoneHome`) |
 | `ExtensionsTab.kt`, `MigrateSourceTab.kt` | tab titles Add-ons / Move |
@@ -35,7 +35,9 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `LibraryUpdateNotifier.kt` | vault manga never appear in update notifications |
 | `ReaderActivity.kt` | also `VaultScreenPrivacy()` |
 | `.github/workflows/release.yml` | `generate_release_notes` so the in-app update dialog lists what changed |
-| `LibraryPreferences.kt` | also `mekuri_last_shelf_id` (last-opened shelf by id) |
+| `LibraryPreferences.kt` | also `mekuri_last_shelf_id` (last-opened shelf by id), `mekuri_smart_shelves` |
+| prefs `mekuri_shelf_colors`, `mekuri_shelf_demo_done` | pinned spine colours, first-run demo |
+| `icons/.../rounded/sparkle.svg` | smart shelf icon |
 | `icons/material-symbols/.../rounded/lock.svg`, `lock_open.svg` | added icons |
 | prefs `mekuri_vault_categories`, `mekuri_vault_sources` | what's in the vault (ids) |
 | `i18n/.../base/strings.xml` | `mekuri.*` strings at the end |

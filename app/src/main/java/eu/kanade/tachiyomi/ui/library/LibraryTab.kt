@@ -57,6 +57,12 @@ import mihon.app.di.appGraph
 import mihon.feature.mekuri.shelf.BookshelfHome
 import mihon.feature.mekuri.shelf.CompactShelf
 import mihon.feature.mekuri.shelf.Shelf
+import mihon.feature.mekuri.shelf.ShelfActionsViewModel
+import mihon.feature.mekuri.shelf.ShelfMenuSheet
+import mihon.feature.mekuri.shelf.ShelfPrefs
+import mihon.feature.mekuri.shelf.SmartShelf
+import mihon.feature.mekuri.shelf.SmartShelfScreen
+import mihon.feature.mekuri.shelf.VAULT_SPINE_KEY
 import mihon.feature.mekuri.vault.MekuriVault
 import mihon.feature.mekuri.vault.unlockMekuriVault
 import mihon.feature.migration.config.MigrationConfigScreen
@@ -133,13 +139,37 @@ data object LibraryTab : Tab {
                 )
             }
         }
-        // The big shelf: regular shelves, then vault shelves (only present while unlocked), then the vault spine
+        // Smart shelves (Recently read, New this week, Unread, Downloaded) fill themselves from the library
+        val smartEnabled by ShelfPrefs.smartShelves.collectAsState()
+        val smartShelves = remember(state.libraryData, vault, smartEnabled) {
+            if (!smartEnabled) return@remember emptyList()
+            val items = state.libraryData.favorites
+                .distinctBy { it.id }
+                .filterNot { vault.hides(it.id, it.libraryManga.manga.source) }
+            SmartShelf.entries.mapNotNull { smart ->
+                val ids = smart.select(items)
+                if (ids.isEmpty()) return@mapNotNull null
+                val cover = items.firstOrNull { it.id == ids.first() }?.libraryManga?.manga
+                Shelf(
+                    key = smart.key,
+                    name = smart.title,
+                    count = ids.size,
+                    unread = 0,
+                    coverManga = cover,
+                    kind = Shelf.Kind.Smart,
+                    smart = smart,
+                    mangaIds = ids,
+                )
+            }
+        }
+        // The big shelf: smart shelves, regular shelves, vault shelves (only while unlocked), then the vault spine
         val vaultSpineName = "Vault"
-        val bigShelves = remember(shelves, vaultSpineName) {
-            shelves.filter { it.kind == Shelf.Kind.Normal } +
+        val bigShelves = remember(shelves, smartShelves, vaultSpineName) {
+            smartShelves +
+                shelves.filter { it.kind == Shelf.Kind.Normal } +
                 shelves.filter { it.kind == Shelf.Kind.Hidden } +
                 Shelf(
-                    key = Long.MIN_VALUE,
+                    key = VAULT_SPINE_KEY,
                     name = vaultSpineName,
                     count = 0,
                     unread = 0,
@@ -148,6 +178,9 @@ data object LibraryTab : Tab {
                 )
         }
         var focusFirstHidden by remember { mutableStateOf(false) }
+        var menuShelf by remember { mutableStateOf<Shelf?>(null) }
+        val shelfDemoDone by ShelfPrefs.demoDone.collectAsState()
+        val shelfActions = metroViewModel<ShelfActionsViewModel>()
         val lastShelfIdPref = context.appGraph.libraryPreferences.mekuriLastShelfId
         val lastShelfId by lastShelfIdPref.collectAsState()
         val useBookshelf = !classicLibrary && (shelves.size > 1 || vault.categories.isNotEmpty())
@@ -259,11 +292,23 @@ data object LibraryTab : Tab {
                                     .coerceAtLeast(0)
                         },
                         onOpen = {
+                            val shelf = bigShelves[it]
                             focusFirstHidden = false
-                            lastShelfIdPref.set(bigShelves[it].key)
-                            viewModel.updateActiveCategoryIndex(bigShelves[it].categoryIndex)
-                            onBookshelf = false
+                            lastShelfIdPref.set(shelf.key)
+                            val smart = shelf.smart
+                            if (smart != null) {
+                                navigator.push(SmartShelfScreen(smart, shelf.mangaIds))
+                            } else {
+                                viewModel.updateActiveCategoryIndex(shelf.categoryIndex)
+                                onBookshelf = false
+                            }
                         },
+                        onShelfMenu = {
+                            menuShelf = bigShelves[it]
+                            lastShelfIdPref.set(bigShelves[it].key)
+                        },
+                        showDemo = !shelfDemoDone,
+                        onDemoDone = ShelfPrefs::markDemoDone,
                         contentPadding = contentPadding,
                         vaultUnlocked = vault.unlocked,
                         onVault = {
@@ -366,6 +411,19 @@ data object LibraryTab : Tab {
                 state.selectionMode -> viewModel.clearSelection()
                 state.searchQuery != null -> viewModel.search(null)
             }
+        }
+
+        // Mekuri: shelf options sheet
+        menuShelf?.let { shelf ->
+            val userShelves = shelves.filter { it.key > 0 }
+            val position = userShelves.indexOfFirst { it.key == shelf.key }
+            ShelfMenuSheet(
+                shelf = shelves.firstOrNull { it.key == shelf.key } ?: shelf,
+                canMoveLeft = position > 0,
+                canMoveRight = position in 0 until userShelves.lastIndex,
+                onDismiss = { menuShelf = null },
+                actions = shelfActions,
+            )
         }
 
         // Mekuri: Back inside a shelf returns to the bookshelf

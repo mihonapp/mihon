@@ -136,6 +136,9 @@ class LibraryPreferences(
     // Mekuri: show Mihon's classic tabbed library instead of the bookshelf
     val mekuriClassicLibrary: Preference<Boolean> = preferenceStore.getBoolean("mekuri_classic_library", false)
 
+    // Mekuri: smart shelves at the start of the bookshelf (same key ShelfPrefs reads)
+    val mekuriSmartShelves: Preference<Boolean> = preferenceStore.getBoolean("mekuri_smart_shelves", true)
+
     // Mekuri: the shelf (category id) opened last, so hiding/unhiding shelves doesn't move the highlight
     val mekuriLastShelfId: Preference<Long> = preferenceStore.getLong("mekuri_last_shelf_id", Long.MIN_VALUE)
 
