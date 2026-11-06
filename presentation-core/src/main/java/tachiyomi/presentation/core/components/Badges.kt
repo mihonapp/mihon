@@ -21,6 +21,7 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun BadgeGroup(
@@ -40,6 +41,7 @@ fun Badge(
     color: Color = MaterialTheme.colorScheme.secondary,
     textColor: Color = MaterialTheme.colorScheme.onSecondary,
     shape: Shape = RectangleShape,
+    textStyle: TextStyle = MaterialTheme.typography.bodySmall,
 ) {
     Text(
         text = text,
@@ -50,7 +52,7 @@ fun Badge(
         color = textColor,
         fontWeight = FontWeight.Medium,
         maxLines = 1,
-        style = MaterialTheme.typography.bodySmall,
+        style = textStyle,
     )
 }
 

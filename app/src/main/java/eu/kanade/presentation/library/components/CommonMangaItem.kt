@@ -79,6 +79,7 @@ fun MangaCompactGridItem(
     coverAlpha: Float = 1f,
     coverBadgeStart: @Composable (RowScope.() -> Unit)? = null,
     coverBadgeEnd: @Composable (RowScope.() -> Unit)? = null,
+    coverSourceName: String = "",
 ) {
     GridItemSelectable(
         isSelected = isSelected,
@@ -96,6 +97,7 @@ fun MangaCompactGridItem(
             },
             badgesStart = coverBadgeStart,
             badgesEnd = coverBadgeEnd,
+            coverSourceName = coverSourceName,
             content = {
                 if (title != null) {
                     CoverTextOverlay(
@@ -184,6 +186,7 @@ fun MangaComfortableGridItem(
     coverAlpha: Float = 1f,
     coverBadgeStart: (@Composable RowScope.() -> Unit)? = null,
     coverBadgeEnd: (@Composable RowScope.() -> Unit)? = null,
+    coverSourceName: String = "",
     onClickContinueReading: (() -> Unit)? = null,
 ) {
     GridItemSelectable(
@@ -203,6 +206,7 @@ fun MangaComfortableGridItem(
                 },
                 badgesStart = coverBadgeStart,
                 badgesEnd = coverBadgeEnd,
+                coverSourceName = coverSourceName,
                 content = {
                     if (onClickContinueReading != null) {
                         ContinueReadingButton(
@@ -236,6 +240,7 @@ private fun MangaGridCover(
     cover: @Composable BoxScope.() -> Unit = {},
     badgesStart: (@Composable RowScope.() -> Unit)? = null,
     badgesEnd: (@Composable RowScope.() -> Unit)? = null,
+    coverSourceName: String = "",
     content: @Composable (BoxScope.() -> Unit)? = null,
 ) {
     Box(
@@ -254,7 +259,19 @@ private fun MangaGridCover(
             )
         }
 
-        if (badgesEnd != null) {
+        if (coverSourceName.isNotEmpty()) {
+            Column(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.TopEnd),
+                horizontalAlignment = Alignment.End,
+            ) {
+                SourceNameBadge(sourceName = coverSourceName)
+                if (badgesEnd != null) {
+                    BadgeGroup(content = badgesEnd)
+                }
+            }
+        } else if (badgesEnd != null) {
             BadgeGroup(
                 modifier = Modifier
                     .padding(4.dp)
@@ -262,6 +279,7 @@ private fun MangaGridCover(
                 content = badgesEnd,
             )
         }
+
     }
 }
 

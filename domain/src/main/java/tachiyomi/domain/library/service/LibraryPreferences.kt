@@ -117,6 +117,7 @@ class LibraryPreferences(
 
     val languageBadge: Preference<Boolean> = preferenceStore.getBoolean("display_language_badge", false)
 
+    val sourceNameBadge: Preference<Boolean> = preferenceStore.getBoolean("display_source_name_badge", false)
     val newShowUpdatesCount: Preference<Boolean> = preferenceStore.getBoolean("library_show_updates_count", true)
     val newUpdatesCount: Preference<Int> = preferenceStore.getInt(
         Preference.appStateKey("library_unseen_updates_count"),
