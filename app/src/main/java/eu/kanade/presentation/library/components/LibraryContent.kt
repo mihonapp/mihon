@@ -45,6 +45,8 @@ fun LibraryContent(
     getDisplayMode: (Int) -> PreferenceMutableState<LibraryDisplayMode>,
     getColumnsForOrientation: (Boolean) -> PreferenceMutableState<Int>,
     getItemsForCategory: (Category) -> List<LibraryItem>,
+    // Mekuri: replaces the category tabs (used for the compact bookshelf)
+    tabsOverride: (@Composable (currentPage: Int, scrollTo: (Int) -> Unit) -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier.padding(
@@ -64,16 +66,20 @@ fun LibraryContent(
                     pagerState.scrollToPage(categories.size - 1)
                 }
             }
-            LibraryTabs(
-                categories = categories,
-                pagerState = pagerState,
-                getItemCountForCategory = getItemCountForCategory,
-                onTabItemClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(it)
-                    }
-                },
-            )
+            if (tabsOverride != null) {
+                tabsOverride(pagerState.currentPage) { scope.launch { pagerState.animateScrollToPage(it) } }
+            } else {
+                LibraryTabs(
+                    categories = categories,
+                    pagerState = pagerState,
+                    getItemCountForCategory = getItemCountForCategory,
+                    onTabItemClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(it)
+                        }
+                    },
+                )
+            }
         }
 
         PullRefresh(

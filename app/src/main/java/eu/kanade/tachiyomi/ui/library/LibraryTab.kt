@@ -10,9 +10,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +35,7 @@ import eu.kanade.presentation.library.DeleteLibraryMangaDialog
 import eu.kanade.presentation.library.LibrarySettingsDialog
 import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
+import eu.kanade.presentation.library.components.LibraryToolbarTitle
 import eu.kanade.presentation.manga.components.LibraryBottomActionMenu
 import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
 import eu.kanade.presentation.util.Tab
@@ -47,6 +52,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import mihon.app.di.appGraph
+import mihon.feature.mekuri.shelf.BookshelfHome
+import mihon.feature.mekuri.shelf.CompactShelf
+import mihon.feature.mekuri.shelf.Shelf
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
@@ -60,6 +69,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.source.local.isLocal
 
 data object LibraryTab : Tab {
@@ -77,8 +87,14 @@ data object LibraryTab : Tab {
         }
 
     override suspend fun onReselect(navigator: Navigator) {
-        requestOpenSettingsSheet()
+        // Mekuri: inside a shelf, the Library button goes back to the bookshelf
+        if (inShelfCategory) showBookshelfEvent.send(Unit) else requestOpenSettingsSheet()
     }
+
+    // Mekuri: bookshelf state shared with onReselect
+    @Volatile
+    private var inShelfCategory = false
+    private val showBookshelfEvent = Channel<Unit>()
 
     @Composable
     override fun Content() {
@@ -92,6 +108,28 @@ data object LibraryTab : Tab {
         val state by viewModel.state.collectAsStateWithLifecycle()
 
         val snackbarHostState = remember { SnackbarHostState() }
+
+        // Mekuri: the bookshelf home (Settings > Library > Classic library turns it off)
+        val classicLibrary by context.appGraph.libraryPreferences.mekuriClassicLibrary.collectAsState()
+        var onBookshelf by rememberSaveable { mutableStateOf(true) }
+        val defaultCategoryName = stringResource(MR.strings.label_default)
+        val shelves = remember(state.displayedCategories, state.libraryData, defaultCategoryName) {
+            state.displayedCategories.map { category ->
+                val items = state.getItemsForCategory(category)
+                Shelf(
+                    key = category.id,
+                    name = if (category.isSystemCategory) defaultCategoryName else category.name,
+                    count = items.size,
+                    unread = items.count { it.unreadCount > 0 },
+                    coverManga = items
+                        .maxByOrNull { it.libraryManga.lastRead?.toEpochMilliseconds() ?: 0L }
+                        ?.libraryManga?.manga,
+                )
+            }
+        }
+        val useBookshelf = !classicLibrary && shelves.size > 1
+        val showBookshelf = useBookshelf && onBookshelf && state.searchQuery.isNullOrEmpty() && !state.selectionMode
+        SideEffect { inShelfCategory = useBookshelf && !onBookshelf }
 
         val onClickRefresh: suspend (Category?) -> Boolean = { category ->
             val started = LibraryUpdateWorker.startNow(context.workManager, category)
@@ -108,11 +146,19 @@ data object LibraryTab : Tab {
 
         Scaffold(
             topBar = { scrollBehavior ->
-                val title = state.getToolbarTitle(
-                    defaultTitle = stringResource(MR.strings.label_library),
-                    defaultCategoryTitle = stringResource(MR.strings.label_default),
-                    page = state.coercedActiveCategoryIndex,
-                )
+                val title = when {
+                    // Mekuri: "Library" on the bookshelf, the shelf's name inside it
+                    showBookshelf -> LibraryToolbarTitle(stringResource(MR.strings.label_library))
+                    useBookshelf -> LibraryToolbarTitle(
+                        shelves.getOrNull(state.coercedActiveCategoryIndex)?.name
+                            ?: stringResource(MR.strings.label_library),
+                    )
+                    else -> state.getToolbarTitle(
+                        defaultTitle = stringResource(MR.strings.label_library),
+                        defaultCategoryTitle = stringResource(MR.strings.label_default),
+                        page = state.coercedActiveCategoryIndex,
+                    )
+                }
                 LibraryToolbar(
                     hasActiveFilters = state.hasActiveFilters,
                     selectedCount = state.selection.size,
@@ -138,7 +184,7 @@ data object LibraryTab : Tab {
                     searchQuery = state.searchQuery,
                     onSearchQueryChange = viewModel::search,
                     // For scroll overlay when no tab
-                    scrollBehavior = scrollBehavior.takeIf { !state.showCategoryTabs },
+                    scrollBehavior = scrollBehavior.takeIf { !state.showCategoryTabs && !useBookshelf },
                 )
             },
             bottomBar = {
@@ -177,6 +223,17 @@ data object LibraryTab : Tab {
                         ),
                     )
                 }
+                showBookshelf -> {
+                    BookshelfHome(
+                        shelves = shelves,
+                        lastOpenedIndex = state.coercedActiveCategoryIndex,
+                        onOpen = {
+                            viewModel.updateActiveCategoryIndex(it)
+                            onBookshelf = false
+                        },
+                        contentPadding = contentPadding,
+                    )
+                }
                 else -> {
                     LibraryContent(
                         categories = state.displayedCategories,
@@ -185,7 +242,7 @@ data object LibraryTab : Tab {
                         contentPadding = contentPadding,
                         currentPage = state.coercedActiveCategoryIndex,
                         hasActiveFilters = state.hasActiveFilters,
-                        showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
+                        showPageTabs = useBookshelf || state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
                         onChangeCurrentPage = viewModel::updateActiveCategoryIndex,
                         onClickManga = { navigator.push(MangaScreen(it)) },
                         onContinueReadingClicked = { it: LibraryManga ->
@@ -214,6 +271,13 @@ data object LibraryTab : Tab {
                         getDisplayMode = { viewModel.getDisplayMode() },
                         getColumnsForOrientation = { viewModel.getColumnsForOrientation(it) },
                         getItemsForCategory = { state.getItemsForCategory(it) },
+                        tabsOverride = if (useBookshelf) {
+                            { page, scrollTo ->
+                                CompactShelf(shelves = shelves, currentIndex = page, onSelect = scrollTo)
+                            }
+                        } else {
+                            null
+                        },
                     )
                 }
             }
@@ -262,6 +326,11 @@ data object LibraryTab : Tab {
             }
         }
 
+        // Mekuri: Back inside a shelf returns to the bookshelf
+        BackHandler(enabled = useBookshelf && !onBookshelf && !state.selectionMode && state.searchQuery == null) {
+            onBookshelf = true
+        }
+
         LaunchedEffect(state.selectionMode, state.dialog) {
             HomeScreen.showBottomNav(!state.selectionMode)
         }
@@ -277,6 +346,7 @@ data object LibraryTab : Tab {
         LaunchedEffect(Unit) {
             launch { queryEvent.receiveAsFlow().collect(viewModel::search) }
             launch { requestSettingsSheetEvent.receiveAsFlow().collectLatest { viewModel.showSettingsDialog() } }
+            launch { showBookshelfEvent.receiveAsFlow().collectLatest { onBookshelf = true } } // Mekuri
         }
     }
 

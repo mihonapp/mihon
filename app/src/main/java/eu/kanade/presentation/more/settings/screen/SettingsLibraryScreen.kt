@@ -77,6 +77,12 @@ object SettingsLibraryScreen : SearchableSettings {
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.categories),
             preferenceItems = listOf(
+                // Mekuri: bookshelf vs Mihon's tabbed library
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = libraryPreferences.mekuriClassicLibrary,
+                    title = stringResource(MR.strings.mekuri_classic_library),
+                    subtitle = stringResource(MR.strings.mekuri_classic_library_summary),
+                ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.action_edit_categories),
                     subtitle = pluralStringResource(

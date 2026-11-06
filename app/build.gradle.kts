@@ -38,7 +38,7 @@ android {
         applicationId = "com.vsrksaketh.mekuri"
 
         versionCode = 39
-        versionName = "1.2.0"
+        versionName = "1.3.0"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")

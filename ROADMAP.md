@@ -17,7 +17,7 @@ Motion level 4 of 5. Every release is installable on its own.
 - Browse tabs relabelled: Sources · Add-ons (extensions) · Move (migrate)
 - Tablets keep the side navigation rail (with the same 5 tabs)
 
-## v1.3.0: bookshelf library ("Library D")
+## v1.3.0: bookshelf library ("Library D") (done; not yet: first-run ghost hint, pinning a spine colour, ⋯ category menu on the shelf)
 - The home screen is a full-screen bookshelf, one spine per category
   - Spine **width** grows with the title count: min 48 dp, max about 108 dp
   - Spine colour comes from the last-read cover in that category (Palette API); the user can pin a colour
