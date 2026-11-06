@@ -1,6 +1,8 @@
 package eu.kanade.presentation.browse.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.components.glassSurface
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
 import mihon.icons.materialsymbols.roundedfilled.Error
@@ -35,27 +39,55 @@ fun GlobalSearchResultItem(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .animateContentSize()
+            .glassSurface(
+                shape = RoundedCornerShape(24.dp),
+                tint = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.78f),
+                border = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.42f),
+                glow = MaterialTheme.colorScheme.primary,
+                cornerRadius = 24.dp,
+            ),
+    ) {
         Row(
             modifier = Modifier
-                .padding(
-                    start = MaterialTheme.padding.medium,
-                    end = MaterialTheme.padding.extraSmall,
-                )
                 .fillMaxWidth()
-                .clickable(onClick = onClick),
+                .clickable(onClick = onClick)
+                .padding(start = 18.dp, end = 8.dp, top = 12.dp, bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column {
+            Box(
+                modifier = Modifier
+                    .size(width = 4.dp, height = 34.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(4.dp),
+                    ),
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 12.dp),
+            ) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                 )
-                Text(text = subtitle)
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
             IconButton(onClick = onClick) {
-                Icon(imageVector = MaterialSymbols.AutoMirroredRounded.ArrowForward, contentDescription = null)
+                Icon(
+                    imageVector = MaterialSymbols.AutoMirroredRounded.ArrowForward,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
             }
         }
         content()
