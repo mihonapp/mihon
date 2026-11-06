@@ -193,6 +193,9 @@ class RestoreRepositoryImpl(
                 stateDateFetch = chapter.dateFetch,
                 remoteDateUpload = chapter.dateUpload,
                 remoteMemo = chapter.memo,
+                remoteThumbnailUrl = chapter.thumbnailUrl,
+                remoteThumbnailAspectRatio = chapter.thumbnailAspectRatio,
+                remoteThumbnailLastModified = chapter.thumbnailLastModified,
             )
                 .awaitAsOneOrNull()
         }

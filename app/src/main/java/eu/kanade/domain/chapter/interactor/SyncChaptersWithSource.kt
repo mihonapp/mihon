@@ -140,6 +140,9 @@ class SyncChaptersWithSource(
                             sourceOrder = chapter.sourceOrder,
                             dateUpload = chapter.dateUpload,
                             memo = chapter.memo,
+                            thumbnailUrl = chapter.thumbnailUrl,
+                            thumbnailAspectRatio = chapter.thumbnailAspectRatio,
+                            thumbnailLastModified = chapter.thumbnailLastModified, // TODO(thumbnail): use actual value
                         ),
                     )
                 }

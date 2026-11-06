@@ -29,6 +29,8 @@ class BackupChapter(
     // @ProtoNumber(11) var lastModifiedAt: Long, artifact of the abandoned sync attempt
     // @ProtoNumber(12) var version: Long, artifact of the abandoned sync attempt
     @ProtoNumber(13) var memo: ByteArray = JsonObjectEmptyBytes,
+    @ProtoNumber(14) var thumbnailUrl: String? = null,
+    @ProtoNumber(15) var thumbnailAspectRatio: Double = 1.0,
 ) {
     fun toChapterImpl(): Chapter {
         return Chapter.create().copy(
@@ -44,6 +46,8 @@ class BackupChapter(
             dateUpload = this@BackupChapter.dateUpload.toInstantOrNull(),
             sourceOrder = this@BackupChapter.sourceOrder,
             memo = this@BackupChapter.memo.toJsonObject(),
+            thumbnailUrl = this@BackupChapter.thumbnailUrl,
+            thumbnailAspectRatio = this@BackupChapter.thumbnailAspectRatio,
         )
     }
 }
@@ -60,4 +64,6 @@ fun Chapter.toBackupChapter() = BackupChapter(
     dateUpload = dateUpload.toEpochMillisOrZero(),
     sourceOrder = sourceOrder,
     memo = memo.toByteArray(),
+    thumbnailUrl = thumbnailUrl,
+    thumbnailAspectRatio = thumbnailAspectRatio,
 )

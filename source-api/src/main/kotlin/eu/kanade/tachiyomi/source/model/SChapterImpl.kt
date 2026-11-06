@@ -18,4 +18,6 @@ class SChapterImpl : SChapter {
     override var date_upload: Long = 0
 
     override var memo: JsonObject = JsonObject.EMPTY
+
+    override var thumbnail: ThumbnailInfo? = null
 }

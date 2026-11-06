@@ -30,6 +30,8 @@ interface SChapter : Serializable {
      */
     var memo: JsonObject
 
+    var thumbnail: ThumbnailInfo?
+
     fun copyFrom(other: SChapter) {
         name = other.name
         url = other.url
@@ -37,6 +39,7 @@ interface SChapter : Serializable {
         chapter_number = other.chapter_number
         scanlator = other.scanlator
         memo = other.memo
+        thumbnail = other.thumbnail
     }
 
     companion object {

@@ -70,6 +70,9 @@ class ChapterRepositoryImpl(
                     stateDateFetch = chapter.dateFetch,
                     remoteDateUpload = chapter.dateUpload,
                     remoteMemo = chapter.memo,
+                    remoteThumbnailUrl = chapter.thumbnailUrl,
+                    remoteThumbnailAspectRatio = chapter.thumbnailAspectRatio,
+                    remoteThumbnailLastModified = chapter.thumbnailLastModified,
                 )
                     .awaitAsOne()
                 chapter.copy(id = chapterId)
@@ -83,6 +86,9 @@ class ChapterRepositoryImpl(
                     remoteDateUpload = chapterUpdate.dateUpload,
                     id = chapterUpdate.id,
                     remoteMemo = chapterUpdate.memo,
+                    remoteThumbnailUrl = chapterUpdate.thumbnailUrl,
+                    remoteThumbnailAspectRatio = chapterUpdate.thumbnailAspectRatio,
+                    remoteThumbnailLastModified = chapterUpdate.thumbnailLastModified,
                 )
             }
             stored
@@ -178,6 +184,9 @@ class ChapterRepositoryImpl(
         remoteDateUpload: Instant?,
         remoteOrder: Long,
         remoteMemo: JsonObject,
+        remoteThumbnailUrl: String?,
+        remoteThumbnailAspectRatio: Double,
+        remoteThumbnailLastModified: Instant?,
         userRead: Boolean,
         userBookmark: Boolean,
         userLastPageRead: Int,
@@ -196,5 +205,8 @@ class ChapterRepositoryImpl(
         chapterNumber = remoteChapterNumber,
         scanlator = remoteScanlator,
         memo = remoteMemo,
+        thumbnailUrl = remoteThumbnailUrl,
+        thumbnailAspectRatio = remoteThumbnailAspectRatio,
+        thumbnailLastModified = remoteThumbnailLastModified,
     )
 }

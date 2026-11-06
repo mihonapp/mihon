@@ -1,6 +1,7 @@
 package eu.kanade.domain.chapter.model
 
 import eu.kanade.tachiyomi.source.model.SChapter
+import eu.kanade.tachiyomi.source.model.ThumbnailInfo
 import mihon.core.common.extensions.toEpochMillisOrZero
 import mihon.core.common.extensions.toInstantOrNull
 import tachiyomi.domain.chapter.model.Chapter
@@ -13,6 +14,7 @@ fun Chapter.toSChapter(): SChapter {
         it.chapter_number = chapterNumber.toFloat()
         it.scanlator = scanlator
         it.memo = memo
+        it.thumbnail = thumbnailUrl?.let { t -> ThumbnailInfo(t, thumbnailAspectRatio) }
     }
 }
 
@@ -24,5 +26,7 @@ fun Chapter.copyFromSChapter(sChapter: SChapter): Chapter {
         chapterNumber = sChapter.chapter_number.toDouble(),
         scanlator = sChapter.scanlator?.ifBlank { null }?.trim(),
         memo = sChapter.memo,
+        thumbnailUrl = sChapter.thumbnail?.url,
+        thumbnailAspectRatio = sChapter.thumbnail?.aspectRatio ?: 1.0,
     )
 }
