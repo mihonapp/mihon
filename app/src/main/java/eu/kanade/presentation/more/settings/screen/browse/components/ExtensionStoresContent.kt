@@ -11,10 +11,13 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import mihon.domain.extension.model.ExtensionStore
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Label
@@ -36,6 +39,7 @@ fun ExtensionStoresContent(
     onOpenWebsite: (ExtensionStore) -> Unit,
     onOpenDiscord: (ExtensionStore) -> Unit,
     onClickDelete: (ExtensionStore) -> Unit,
+    onSetEnabled: (ExtensionStore, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -53,6 +57,7 @@ fun ExtensionStoresContent(
                     onOpenDiscord = { onOpenDiscord(it) },
                     onCopy = { onCopy(it) },
                     onDelete = { onClickDelete(it) },
+                    onSetEnabled = { enabled -> onSetEnabled(it, enabled) },
                 )
             }
         }
@@ -66,8 +71,13 @@ private fun ExtensionStoresListItem(
     onOpenDiscord: () -> Unit,
     onCopy: () -> Unit,
     onDelete: () -> Unit,
+    onSetEnabled: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val toggleContentDescription = stringResource(
+        MR.strings.extensionStoresScreen_toggleEnabled,
+        store.name,
+    )
     ElevatedCard(
         modifier = modifier,
     ) {
@@ -122,6 +132,16 @@ private fun ExtensionStoresListItem(
                     contentDescription = stringResource(MR.strings.action_delete),
                 )
             }
+
+            Switch(
+                checked = store.isEnabled,
+                onCheckedChange = onSetEnabled,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .semantics {
+                        contentDescription = toggleContentDescription
+                    },
+            )
         }
     }
 }

@@ -388,6 +388,7 @@
     <string name="extensionStores">Extension stores</string>
     <string name="action.addExtensionStore">Add extension store</string>
     <string name="extensionStoresScreen.emptyLabel">You haven\'t added an extension store yet</string>
+    <string name="extensionStoresScreen.toggleEnabled">Enable %1$s</string>
     <string name="extensionStoresScreen.addStore.title">Add extension store</string>
     <string name="extensionStoresScreen.addStore.alreadyExists">This extension store already exists</string>
     <string name="extensionStoresScreen.addStore.processing">Processing…</string>

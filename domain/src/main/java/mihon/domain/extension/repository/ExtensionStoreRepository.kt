@@ -15,6 +15,8 @@ interface ExtensionStoreRepository {
 
     suspend fun fetchExtensions(): List<Extension.Available>
 
+    suspend fun setEnabled(indexUrl: String, isEnabled: Boolean)
+
     suspend fun getAll(): List<ExtensionStore>
 
     fun getAllAsFlow(): Flow<List<ExtensionStore>>
