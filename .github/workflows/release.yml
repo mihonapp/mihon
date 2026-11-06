@@ -59,11 +59,9 @@ jobs:
           set -e
           T=${{ steps.tag.outputs.tag }}
           D=app/build/outputs/apk/release
+          # Mekuri: publish just two APKs - universal (any device) and arm64 (smaller, most phones).
           mv $D/app-universal-release.apk   mekuri-$T.apk
           mv $D/app-arm64-v8a-release.apk   mekuri-arm64-v8a-$T.apk
-          mv $D/app-armeabi-v7a-release.apk mekuri-armeabi-v7a-$T.apk
-          mv $D/app-x86-release.apk         mekuri-x86-$T.apk
-          mv $D/app-x86_64-release.apk      mekuri-x86_64-$T.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
@@ -74,13 +72,10 @@ jobs:
             Personal build of Mekuri, a fork of [Mihon](https://github.com/mihonapp/mihon).
 
             > [!TIP]
-            > Not sure which file to download? Use `mekuri-${{ steps.tag.outputs.tag }}.apk` (works on every device).
+            > Not sure which file to download? Use `mekuri-${{ steps.tag.outputs.tag }}.apk` (works on every device). `arm64-v8a` is a smaller build for most modern phones.
           files: |
             mekuri-${{ steps.tag.outputs.tag }}.apk
             mekuri-arm64-v8a-${{ steps.tag.outputs.tag }}.apk
-            mekuri-armeabi-v7a-${{ steps.tag.outputs.tag }}.apk
-            mekuri-x86-${{ steps.tag.outputs.tag }}.apk
-            mekuri-x86_64-${{ steps.tag.outputs.tag }}.apk
           draft: false
           prerelease: false
           make_latest: true

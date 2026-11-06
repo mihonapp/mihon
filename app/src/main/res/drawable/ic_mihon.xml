@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Mekuri: logo used by the About header and splash screen (file name kept to avoid upstream code changes). -->
+<!-- Mekuri logo (About header, splash, notification icon). File name kept to avoid upstream code changes. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="256dp"
     android:height="256dp"
-    android:viewportWidth="160"
-    android:viewportHeight="160">
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M0,22h20v118h84v20h-104z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:fillType="evenOdd"
-        android:pathData="M30,0h70l40,40v120h-110zM50,60v10h70v-10zM50,86v10h70v-10zM50,112v10h46v-10z" />
+    android:viewportWidth="56"
+    android:viewportHeight="56">
+    <group
+        android:translateX="-29"
+        android:translateY="-25">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:fillType="evenOdd"
+            android:pathData="M40,27H74Q78,27 78,31V60L60,79H40Q36,79 36,75V31Q36,27 40,27ZM41,32V49L73,46V32ZM41,52.5V74H54V51.4ZM57.5,51.1V69H62.6L73,58V49.7Z" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M78,60C69,60.5 61.5,66 60,79C65.5,71.5 70.5,65 78,60Z" />
+    </group>
 </vector>
