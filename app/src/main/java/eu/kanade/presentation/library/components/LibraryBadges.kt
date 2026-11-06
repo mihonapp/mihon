@@ -3,6 +3,7 @@ package eu.kanade.presentation.library.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -16,6 +17,7 @@ internal fun DownloadsBadge(count: Int) {
             text = "$count",
             color = MaterialTheme.colorScheme.tertiary,
             textColor = MaterialTheme.colorScheme.onTertiary,
+            fontWeight = FontWeight.Normal,
         )
     }
 }
@@ -23,7 +25,10 @@ internal fun DownloadsBadge(count: Int) {
 @Composable
 internal fun UnreadBadge(count: Long) {
     if (count > 0) {
-        Badge(text = "$count")
+        Badge(
+            text = "$count",
+            fontWeight = FontWeight.Normal,
+        )
     }
 }
 
@@ -43,6 +48,7 @@ internal fun LanguageBadge(
             text = sourceLanguage.uppercase(),
             color = MaterialTheme.colorScheme.tertiary,
             textColor = MaterialTheme.colorScheme.onTertiary,
+            fontWeight = FontWeight.Normal,
         )
     }
 }
