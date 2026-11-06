@@ -144,7 +144,8 @@ fun CompactShelf(
                             this.alpha = alpha
                         }
                         .clearAndSetSemantics {
-                            contentDescription = "${shelf.name}, ${shelf.count} titles"
+                            contentDescription =
+                                "${shelf.name}, ${shelf.count} " + if (shelf.count == 1) "title" else "titles"
                             role = Role.Tab
                             selected = i == currentIndex
                             onClick {

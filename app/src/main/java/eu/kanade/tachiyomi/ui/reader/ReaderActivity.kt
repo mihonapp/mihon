@@ -117,6 +117,7 @@ import logcat.LogPriority
 import mihon.app.di.AppGraph
 import mihon.core.metro.metroGraph
 import mihon.feature.mekuri.autoscroll.AutoScroller
+import mihon.feature.mekuri.vault.VaultScreenPrivacy
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
@@ -195,6 +196,7 @@ class ReaderActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setComposeContent {
+            VaultScreenPrivacy() // Mekuri: no screenshots or recent-apps preview while the vault is open
             val state by viewModel.state.collectAsState()
             val general by settingsViewModel.general.collectAsState()
             val showPageNumber by readerPreferences.showPageNumber.collectAsState()

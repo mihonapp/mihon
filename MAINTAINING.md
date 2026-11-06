@@ -32,6 +32,9 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `LibraryViewModel.kt`, `UpdatesViewModel.kt`, `HistoryViewModel.kt`, `SearchViewModel.kt`, `SourcesViewModel.kt`, `SourcesScreen.kt`, `SourcesTab.kt` | vault filtering (hidden while locked), Vault section/row, Move to vault |
 | `GetIncognitoState.kt` | vault sources always incognito |
 | `SettingsMainScreen.kt` | phones show `MekuriSettingsHome` |
+| `LibraryUpdateNotifier.kt` | vault manga never appear in update notifications |
+| `ReaderActivity.kt` | also `VaultScreenPrivacy()` |
+| `.github/workflows/release.yml` | `generate_release_notes` so the in-app update dialog lists what changed |
 | `LibraryPreferences.kt` | also `mekuri_last_shelf_id` (last-opened shelf by id) |
 | `icons/material-symbols/.../rounded/lock.svg`, `lock_open.svg` | added icons |
 | prefs `mekuri_vault_categories`, `mekuri_vault_sources` | what's in the vault (ids) |

@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.getBitmapOrNull
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
+import mihon.feature.mekuri.vault.MekuriVault
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.pluralStringResource
 import tachiyomi.core.common.i18n.stringResource
@@ -100,6 +101,7 @@ class LibraryUpdateNotifier(
      */
     @Synchronized
     fun showProgressNotification(manga: List<Manga>, current: Int, total: Int) {
+        val manga = manga.filterNot { MekuriVault.keepsPrivate(it.id, it.source) } // Mekuri: no vault titles
         val now = SystemClock.elapsedRealtime()
         if (current < total && now - lastProgressNotificationTime < NOTIF_PROGRESS_INTERVAL_MS) return
         lastProgressNotificationTime = now
@@ -181,6 +183,9 @@ class LibraryUpdateNotifier(
      * @param updates a list of manga with new updates.
      */
     suspend fun showUpdateNotifications(updates: List<Pair<Manga, Array<Chapter>>>) {
+        // Mekuri: vault manga never show up in notifications
+        val updates = updates.filterNot { (manga, _) -> MekuriVault.keepsPrivate(manga.id, manga.source) }
+        if (updates.isEmpty()) return
         // Parent group notification
         context.notify(
             Notifications.ID_NEW_CHAPTERS,

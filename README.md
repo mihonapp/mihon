@@ -1,5 +1,7 @@
 > [!NOTE]
-> **Mekuri** is a personal fork of [Mihon](https://github.com/mihonapp/mihon) by [vsrksaketh-dev](https://github.com/vsrksaketh-dev), built as a separate app (`com.vsrksaketh.mekuri`). It is not affiliated with or supported by the Mihon team. Please don't report issues with this fork to Mihon. Download APKs from this repo's [Releases](https://github.com/vsrksaketh-dev/mekuri/releases). See [MAINTAINING.md](MAINTAINING.md).
+> **Mekuri** is a personal fork of [Mihon](https://github.com/mihonapp/mihon) by [vsrksaketh-dev](https://github.com/vsrksaketh-dev), built as a separate app (`com.vsrksaketh.mekuri`). It is not affiliated with or supported by the Mihon team, so please don't report issues with it to Mihon. Download APKs from this repo's [Releases](https://github.com/vsrksaketh-dev/mekuri/releases). See [MAINTAINING.md](MAINTAINING.md) and [ROADMAP.md](ROADMAP.md).
+>
+> **What Mekuri adds:** a bookshelf library (hold and slide across the spines, let go to open a shelf) · a fingerprint-locked vault for private shelves and sources (always incognito) · auto-scroll in a long-strip-only reader · a floating nav pill with Offline and You tabs · search-first settings · English-only sources · the Mekuri colour theme.
 
 <div align="center">
 
