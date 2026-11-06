@@ -35,7 +35,7 @@ fun extensionsTab(
     var privateExtensionToUninstall by remember { mutableStateOf<Extension.Installed?>(null) }
 
     return TabContent(
-        titleRes = MR.strings.label_extensions,
+        titleRes = MR.strings.mekuri_browse_addons, // Mekuri: clearer than "Extensions"
         badgeNumber = updatesCount.takeIf { it > 0 },
         searchEnabled = true,
         actions = listOf(

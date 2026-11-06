@@ -1095,4 +1095,16 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+
+    <!-- Mekuri -->
+    <string name="mekuri.tab.offline">Offline</string>
+    <string name="mekuri.tab.you">You</string>
+    <string name="mekuri.browse.addons">Add-ons</string>
+    <string name="mekuri.browse.move">Move</string>
+    <string name="mekuri.offline.downloading">Downloading</string>
+    <string name="mekuri.offline.ready">Ready to read offline</string>
+    <string name="mekuri.offline.chapters">%d downloaded</string>
+    <string name="mekuri.offline.empty">Nothing downloaded yet. Download chapters from any manga to read them without internet.</string>
+    <string name="mekuri.you.summary">%1$d titles in your library</string>
+    <string name="mekuri.you.backup">Backup and data</string>
 </resources>

@@ -25,7 +25,7 @@ fun Screen.migrateSourceTab(): TabContent {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     return TabContent(
-        titleRes = MR.strings.label_migration,
+        titleRes = MR.strings.mekuri_browse_move, // Mekuri: clearer than "Migrate"
         actions = listOf(
             AppBar.Action(
                 title = stringResource(MR.strings.migration_help_guide),

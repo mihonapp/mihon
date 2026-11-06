@@ -2,8 +2,17 @@ package eu.kanade.tachiyomi.ui.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,8 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
@@ -38,7 +51,6 @@ import eu.kanade.tachiyomi.ui.download.DownloadQueueScreen
 import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTab
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
-import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -46,6 +58,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import mihon.app.di.appGraph
+import mihon.feature.mekuri.nav.FloatingNavItem
+import mihon.feature.mekuri.nav.FloatingNavPill
+import mihon.feature.mekuri.nav.FloatingNavPillHeight
+import mihon.feature.mekuri.nav.FloatingNavPillMargin
+import mihon.feature.mekuri.offline.OfflineTab
+import mihon.feature.mekuri.you.YouTab
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.i18n.MR
@@ -63,12 +81,13 @@ object HomeScreen : Screen() {
     @Suppress("ConstPropertyName")
     private const val TabNavigatorKey = "HomeTabs"
 
+    // Mekuri: History and More moved into the "You" hub; Offline gets its own tab
     private val TABS = listOf(
         LibraryTab,
         UpdatesTab,
-        HistoryTab,
+        OfflineTab,
         BrowseTab,
-        MoreTab,
+        YouTab,
     )
 
     @Composable
@@ -87,9 +106,11 @@ object HomeScreen : Screen() {
                     NavigationSuiteType.NavigationBar
                 }
                 val navigationSuiteState = rememberNavigationSuiteScaffoldState()
+                var pillVisible by remember { mutableStateOf(true) } // Mekuri
                 LaunchedEffect(navigationSuiteState, tabletUi) {
                     if (tabletUi) navigationSuiteState.show()
                     showBottomNavEvent.receiveAsFlow().collectLatest { show ->
+                        pillVisible = show // Mekuri
                         if (tabletUi || show) {
                             navigationSuiteState.show()
                         } else {
@@ -98,18 +119,7 @@ object HomeScreen : Screen() {
                     }
                 }
 
-                NavigationSuiteScaffold(
-                    navigationSuiteType = navigationSuiteType,
-                    state = navigationSuiteState,
-                    navigationSuiteColors = NavigationSuiteDefaults.colors(
-                        navigationRailContainerColor = MaterialTheme.colorScheme
-                            .surfaceColorAtElevation(3.dp),
-                    ),
-                    navigationItemVerticalArrangement = Arrangement.Center,
-                    navigationItems = {
-                        TABS.fastForEach { NavigationSuiteItem(it, navigationSuiteType) }
-                    },
-                ) {
+                val tabContent: @Composable () -> Unit = {
                     AnimatedContent(
                         targetState = tabNavigator.current,
                         transitionSpec = {
@@ -124,6 +134,27 @@ object HomeScreen : Screen() {
                             it.Content()
                         }
                     }
+                }
+
+                // Mekuri: phones get the floating icons-only pill; tablets keep the navigation rail
+                if (!tabletUi) {
+                    MekuriPhoneHome(pillVisible = pillVisible, content = tabContent)
+                    return@CompositionLocalProvider
+                }
+
+                NavigationSuiteScaffold(
+                    navigationSuiteType = navigationSuiteType,
+                    state = navigationSuiteState,
+                    navigationSuiteColors = NavigationSuiteDefaults.colors(
+                        navigationRailContainerColor = MaterialTheme.colorScheme
+                            .surfaceColorAtElevation(3.dp),
+                    ),
+                    navigationItemVerticalArrangement = Arrangement.Center,
+                    navigationItems = {
+                        TABS.fastForEach { NavigationSuiteItem(it, navigationSuiteType) }
+                    },
+                ) {
+                    tabContent()
                 }
             }
 
@@ -143,14 +174,18 @@ object HomeScreen : Screen() {
                         tabNavigator.current = when (it) {
                             is Tab.Library -> LibraryTab
                             Tab.Updates -> UpdatesTab
-                            Tab.History -> HistoryTab
+                            Tab.History -> YouTab // Mekuri: History lives in the You hub
                             is Tab.Browse -> {
                                 if (it.toExtensions) {
                                     BrowseTab.showExtension()
                                 }
                                 BrowseTab
                             }
-                            is Tab.More -> MoreTab
+                            is Tab.More -> if (it.toDownloads) OfflineTab else YouTab // Mekuri
+                        }
+
+                        if (it == Tab.History) {
+                            navigator.push(HistoryTab) // Mekuri
                         }
 
                         if (it is Tab.Library && it.mangaIdToOpen != null) {
@@ -163,6 +198,79 @@ object HomeScreen : Screen() {
                 }
             }
         }
+    }
+
+    // Mekuri: content above a floating pill on phones
+    @Composable
+    private fun MekuriPhoneHome(pillVisible: Boolean, content: @Composable () -> Unit) {
+        val tabNavigator = LocalTabNavigator.current
+        val navigator = LocalNavigator.currentOrThrow
+        val scope = rememberCoroutineScope()
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (pillVisible) {
+                            Modifier
+                                .navigationBarsPadding()
+                                .padding(bottom = FloatingNavPillHeight + FloatingNavPillMargin)
+                        } else {
+                            Modifier
+                        },
+                    ),
+            ) {
+                content()
+            }
+            AnimatedVisibility(
+                visible = pillVisible,
+                enter = slideInVertically { it * 2 } + fadeIn(),
+                exit = slideOutVertically { it * 2 } + fadeOut(),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+                    .padding(bottom = FloatingNavPillMargin / 2),
+            ) {
+                FloatingNavPill(
+                    items = TABS.map { tab ->
+                        val selected = tabNavigator.current::class == tab::class
+                        FloatingNavItem(
+                            key = tab.key,
+                            title = tab.options.title,
+                            icon = tab.options.icon!!,
+                            selected = selected,
+                            badge = mekuriBadgeCount(tab),
+                            onClick = {
+                                if (!selected) {
+                                    tabNavigator.current = tab
+                                } else {
+                                    scope.launch { tab.onReselect(navigator) }
+                                }
+                            },
+                        )
+                    },
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun mekuriBadgeCount(tab: eu.kanade.presentation.util.Tab): Int {
+        val context = LocalContext.current
+        val count by produceState(initialValue = 0, tab) {
+            val graph = context.appGraph
+            when (tab) {
+                is UpdatesTab -> combine(
+                    graph.libraryPreferences.newShowUpdatesCount.changes(),
+                    graph.libraryPreferences.newUpdatesCount.changes(),
+                ) { show, count -> if (show) count else 0 }
+                    .collectLatest { value = it }
+                is BrowseTab -> graph.sourcePreferences.extensionUpdatesCount.changes()
+                    .collectLatest { value = it }
+                else -> value = 0
+            }
+        }
+        return count
     }
 
     @Composable
