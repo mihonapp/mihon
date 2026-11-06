@@ -814,13 +814,10 @@ class ReaderViewModel(
     /**
      * Returns the viewer position used by this manga or the default one.
      */
+    @Suppress("UNUSED_PARAMETER")
     fun getMangaReadingMode(resolveDefault: Boolean = true): Int {
-        val default = readerPreferences.defaultReadingMode.get()
-        val readingMode = ReadingMode.fromPreference(manga?.readingMode?.toInt())
-        return when {
-            resolveDefault && readingMode == ReadingMode.DEFAULT -> default
-            else -> manga?.readingMode?.toInt() ?: default
-        }
+        // Mekuri: long strip only. The manga's stored mode is left untouched so backups stay compatible.
+        return ReadingMode.WEBTOON.flagValue
     }
 
     private var readingModeJob: Job? = null

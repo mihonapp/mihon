@@ -59,11 +59,11 @@ import logcat.LogPriority
 import logcat.LogcatLogger
 import mihon.app.di.AppGraph
 import mihon.app.di.injekt.MetroInjektRegistrar
-import mihon.feature.mekuri.MekuriSetup
 import mihon.core.metro.AppCoroutineScope
 import mihon.core.metro.GraphProvider
 import mihon.core.migration.Migration
 import mihon.core.migration.Migrator
+import mihon.feature.mekuri.MekuriSetup
 import mihon.telemetry.TelemetryConfig
 import org.conscrypt.Conscrypt
 import tachiyomi.core.common.i18n.stringResource
@@ -186,7 +186,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
             .launchIn(scope)
 
         // Mekuri: one-time Mekuri defaults (theme, English-only sources)
-        MekuriSetup.run(preferenceStore, uiPreferences, graph.sourcePreferences)
+        MekuriSetup.run(preferenceStore, uiPreferences, graph.sourcePreferences, graph.readerPreferences)
 
         setAppCompatDelegateThemeMode(uiPreferences.themeMode.get())
 

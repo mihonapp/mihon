@@ -58,6 +58,9 @@ class ReaderPreferences(
 
     val showReadingMode: Preference<Boolean> = preferenceStore.getBoolean("pref_show_reading_mode", true)
 
+    // Mekuri: auto-scroll speed, 1 (slowest) to 10 (fastest)
+    val autoScrollSpeed: Preference<Int> = preferenceStore.getInt("mekuri_auto_scroll_speed", 4)
+
     val fullscreen: Preference<Boolean> = preferenceStore.getBoolean("fullscreen", true)
 
     val drawUnderCutout: Preference<Boolean> = preferenceStore.getBoolean("cutout_short", true)

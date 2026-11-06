@@ -35,13 +35,7 @@ fun ReaderBottomBar(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = onClickReadingMode) {
-            Icon(
-                imageVector = readingMode.icon,
-                contentDescription = stringResource(MR.strings.viewer),
-            )
-        }
-
+        // Mekuri: long strip only, so there is no reading mode button
         IconButton(onClick = onClickOrientation) {
             Icon(
                 imageVector = orientation.icon,

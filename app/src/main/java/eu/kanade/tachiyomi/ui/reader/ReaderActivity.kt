@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -96,6 +97,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.LocalPageColorFilter
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.Action
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
@@ -114,6 +116,7 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.AppGraph
 import mihon.core.metro.metroGraph
+import mihon.feature.mekuri.autoscroll.AutoScroller
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
@@ -159,6 +162,9 @@ class ReaderActivity : BaseActivity() {
      */
     private val viewerFlow = MutableStateFlow<Viewer?>(null)
     private val viewer: Viewer? inline get() = viewerFlow.value
+
+    // Mekuri: hands-free scrolling for the long strip viewer
+    private val autoScrollerFlow = MutableStateFlow<AutoScroller?>(null)
 
     var isScrollingThroughPages = false
         private set
@@ -397,12 +403,14 @@ class ReaderActivity : BaseActivity() {
      */
     override fun onDestroy() {
         super.onDestroy()
+        autoScrollerFlow.value?.stop() // Mekuri
         viewer?.destroy()
         menuToggleToast?.cancel()
         readingModeToast?.cancel()
     }
 
     override fun onPause() {
+        autoScrollerFlow.value?.stop() // Mekuri
         viewModel.saveHistory()
         super.onPause()
     }
@@ -554,6 +562,12 @@ class ReaderActivity : BaseActivity() {
         val verticalNavigatorOnLeft by readerPreferences.verticalNavigatorOnLeft.collectAsState()
         val verticalNavigatorHeight by readerPreferences.verticalNavigatorHeight.collectAsState()
 
+        // Mekuri: auto-scroll state
+        val autoScroller by autoScrollerFlow.collectAsState()
+        val autoScrollPlayingFlow = remember(autoScroller) { autoScroller?.playing ?: MutableStateFlow(false) }
+        val autoScrollPlaying by autoScrollPlayingFlow.collectAsState()
+        val autoScrollSpeed by readerPreferences.autoScrollSpeed.collectAsState()
+
         ReaderAppBars(
             visible = state.menuVisible,
 
@@ -610,7 +624,26 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
+
+            autoScrollPlaying = autoScrollPlaying.takeIf { autoScroller != null },
+            onToggleAutoScroll = {
+                autoScroller?.let {
+                    it.toggle()
+                    if (it.playing.value) setMenuVisibility(false)
+                }
+            },
+            autoScrollSpeed = autoScrollSpeed,
+            onAutoScrollSpeedChange = {
+                readerPreferences.autoScrollSpeed.set(it)
+                autoScroller?.speed = it
+            },
         )
+    }
+
+    // Mekuri: a finger on the screen holds auto-scroll still; lifting it lets it carry on
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        autoScrollerFlow.value?.onTouch(ev)
+        return super.dispatchTouchEvent(ev)
     }
 
     /**
@@ -639,6 +672,12 @@ class ReaderActivity : BaseActivity() {
         // Destroy previous viewer if there was one
         prevViewer?.destroy()
         viewerFlow.value = newViewer
+
+        // Mekuri: auto-scroll works with the long strip viewer
+        autoScrollerFlow.value?.stop()
+        autoScrollerFlow.value = (newViewer as? WebtoonViewer)?.let {
+            AutoScroller(it.recycler, window).apply { speed = readerPreferences.autoScrollSpeed.get() }
+        }
 
         if (readerPreferences.showReadingMode.get()) {
             showReadingModeToast(viewModel.getMangaReadingMode())

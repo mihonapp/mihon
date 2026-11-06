@@ -34,16 +34,7 @@ internal fun ColumnScope.ReadingModePage(viewModel: ReaderSettingsViewModel) {
 
     HeadingItem(MR.strings.pref_category_for_this_series)
     val manga by viewModel.mangaFlow.collectAsState()
-    val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
-    SettingsChipRow(MR.strings.pref_category_reading_mode) {
-        ReadingMode.entries.map {
-            FilterChip(
-                selected = it == readingMode,
-                onClick = { viewModel.setReadingMode(it) },
-                label = { Text(stringResource(it.stringRes)) },
-            )
-        }
-    }
+    // Mekuri: long strip only, so there is no reading mode picker
 
     val orientation = remember(manga) { ReaderOrientation.fromPreference(manga?.readerOrientation?.toInt()) }
     SettingsChipRow(MR.strings.rotation_type) {
