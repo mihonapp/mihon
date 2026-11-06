@@ -39,6 +39,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix extension settings showing duplicate entries after the app is restored from the background ([@AntsyLich](https://github.com/AntsyLich))
+- Fixed settings search highlighting every entry with the same title instead of only the selected one ([@mliem2k](https://github.com/mliem2k)) ([#4258](https://github.com/mihonapp/mihon/pull/4258))
 
 ## [v0.21.3] - 2026-10-26
 ### Added
