@@ -41,13 +41,15 @@ class GetApplicationRelease(
             // tagged as something like "v0.1.2"
             val oldVersion = versionName.replace("[^\\d.]".toRegex(), "")
 
-            val newSemVer = newVersion.split(".").map { it.toInt() }
-            val oldSemVer = oldVersion.split(".").map { it.toInt() }
+            // Mekuri: compare component by component (the first difference decides), so e.g. 1.6.0 is not
+            // "older" than 1.5.1 just because 1 > 0 in the last place
+            val newSemVer = newVersion.split(".").map { it.toIntOrNull() ?: 0 }
+            val oldSemVer = oldVersion.split(".").map { it.toIntOrNull() ?: 0 }
 
-            oldSemVer.mapIndexed { index, i ->
-                if (newSemVer[index] > i) {
-                    return true
-                }
+            for (index in 0 until maxOf(newSemVer.size, oldSemVer.size)) {
+                val new = newSemVer.getOrElse(index) { 0 }
+                val old = oldSemVer.getOrElse(index) { 0 }
+                if (new != old) return new > old
             }
 
             false

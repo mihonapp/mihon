@@ -371,6 +371,22 @@ class ReaderActivity : BaseActivity() {
             .onEach(::setChapters)
             .launchIn(lifecycleScope)
 
+        // Mekuri: optionally stop auto-scroll when a new chapter starts
+        viewModel.state
+            .map { it.currentChapter?.chapter?.id }
+            .distinctUntilChanged()
+            .filterNotNull()
+            .drop(1)
+            .onEach {
+                val scroller = autoScrollerFlow.value ?: return@onEach
+                if (scroller.playing.value && readerPreferences.autoScrollStopAtChapterEnd.get()) {
+                    scroller.stop()
+                    menuToggleToast?.cancel()
+                    menuToggleToast = toast("Auto-scroll stopped at the end of the chapter")
+                }
+            }
+            .launchIn(lifecycleScope)
+
         viewModel.eventFlow
             .onEach { event ->
                 when (event) {
@@ -568,7 +584,17 @@ class ReaderActivity : BaseActivity() {
         val autoScroller by autoScrollerFlow.collectAsState()
         val autoScrollPlayingFlow = remember(autoScroller) { autoScroller?.playing ?: MutableStateFlow(false) }
         val autoScrollPlaying by autoScrollPlayingFlow.collectAsState()
-        val autoScrollSpeed by readerPreferences.autoScrollSpeed.collectAsState()
+        val autoScrollSpeedFlow = remember(autoScroller) { autoScroller?.speedState ?: MutableStateFlow(4) }
+        val autoScrollSpeed by autoScrollSpeedFlow.collectAsState()
+        val stopAtChapterEnd by readerPreferences.autoScrollStopAtChapterEnd.collectAsState()
+        val pagesLeft = (state.totalPages - state.currentPage).coerceAtLeast(0)
+        val timeLeft = autoScroller?.estimateSecondsLeft(pagesLeft)?.let { seconds ->
+            when {
+                pagesLeft == 0 -> null
+                seconds < 60 -> "< 1 min left in chapter"
+                else -> "≈ ${(seconds + 30) / 60} min left in chapter"
+            }
+        }
 
         ReaderAppBars(
             visible = state.menuVisible,
@@ -635,17 +661,55 @@ class ReaderActivity : BaseActivity() {
                 }
             },
             autoScrollSpeed = autoScrollSpeed,
-            onAutoScrollSpeedChange = {
-                readerPreferences.autoScrollSpeed.set(it)
-                autoScroller?.speed = it
-            },
+            onAutoScrollSpeedChange = ::setMekuriSpeed,
+            autoScrollTimeLeft = timeLeft,
+            autoScrollStopAtChapterEnd = stopAtChapterEnd,
+            onAutoScrollStopAtChapterEndChange = readerPreferences.autoScrollStopAtChapterEnd::set,
         )
+    }
+
+    // Mekuri: while auto-scrolling, volume keys change the speed (and never the media volume)
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        val scroller = autoScrollerFlow.value
+        val code = event.keyCode
+        val isVolume =
+            code == android.view.KeyEvent.KEYCODE_VOLUME_UP || code == android.view.KeyEvent.KEYCODE_VOLUME_DOWN
+        if (scroller != null && scroller.playing.value && isVolume) {
+            if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                setMekuriSpeed(scroller.speed + if (code == android.view.KeyEvent.KEYCODE_VOLUME_UP) 1 else -1)
+                menuToggleToast?.cancel()
+                menuToggleToast = toast("Auto-scroll ${AutoScroller.label(scroller.speed)}")
+            }
+            return true
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     // Mekuri: a finger on the screen holds auto-scroll still; lifting it lets it carry on
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         autoScrollerFlow.value?.onTouch(ev)
         return super.dispatchTouchEvent(ev)
+    }
+
+    // Mekuri: auto-scroll speed is remembered per manga (falls back to the last speed used anywhere)
+    private fun mekuriSpeedFor(mangaId: Long?): Int {
+        val saved = mangaId?.let { id ->
+            readerPreferences.autoScrollSpeeds.get()
+                .firstNotNullOfOrNull { entry ->
+                    entry.split(':').takeIf { it.size == 2 && it[0] == id.toString() }?.get(1)?.toIntOrNull()
+                }
+        }
+        return saved ?: readerPreferences.autoScrollSpeed.get()
+    }
+
+    private fun setMekuriSpeed(speed: Int) {
+        val scroller = autoScrollerFlow.value
+        scroller?.speed = speed
+        val value = scroller?.speed ?: speed.coerceIn(AutoScroller.SPEED_RANGE)
+        readerPreferences.autoScrollSpeed.set(value)
+        val id = viewModel.manga?.id ?: return
+        val others = readerPreferences.autoScrollSpeeds.get().filterNot { it.startsWith("$id:") }.toSet()
+        readerPreferences.autoScrollSpeeds.set(others + "$id:$value")
     }
 
     /**
@@ -678,7 +742,7 @@ class ReaderActivity : BaseActivity() {
         // Mekuri: auto-scroll works with the long strip viewer
         autoScrollerFlow.value?.stop()
         autoScrollerFlow.value = (newViewer as? WebtoonViewer)?.let {
-            AutoScroller(it.recycler, window).apply { speed = readerPreferences.autoScrollSpeed.get() }
+            AutoScroller(it.recycler, window).apply { speed = mekuriSpeedFor(viewModel.manga?.id) }
         }
 
         if (readerPreferences.showReadingMode.get()) {

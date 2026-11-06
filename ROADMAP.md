@@ -56,8 +56,9 @@ Motion level 4 of 5. Every release is installable on its own.
 - Smart shelves at the start of the shelf (sparkle spines): Recently read (14 days), New this week, Unread, Downloaded. Each opens a cover grid; vault manga are left out while locked. Settings → Library → Smart shelves turns them off.
 - First-run demo: a ghost finger slides across a few spines once
 
-## v1.7.0: reader (planned)
-- Auto-scroll speed remembered per manga, volume keys change speed while auto-scrolling, optional pause at chapter end, "≈ N min left" estimate
+## v1.7.0: reader (done)
+- Auto-scroll speed remembered per manga; volume keys change the speed while auto-scrolling (never the media volume); "Stop at chapter end" chip; "≈ N min left in chapter" estimate
+- Updater: version comparison fixed (first differing number decides), with tests
 
 ## v1.8.0: look and home (planned)
 - Real frosted glass on Android 12+ (nav pill, sheets), "Continue reading" home-screen widget, reading streaks in Stats

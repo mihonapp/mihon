@@ -1,12 +1,14 @@
 package mihon.feature.mekuri.autoscroll
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,41 +32,63 @@ fun AutoScrollBar(
     speed: Int,
     onSpeedChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    timeLeft: String? = null,
+    stopAtChapterEnd: Boolean = false,
+    onStopAtChapterEndChange: (Boolean) -> Unit = {},
 ) {
-    Row(
-        modifier = modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        FilledIconButton(
-            onClick = onTogglePlaying,
-            shape = CircleShape,
-            colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary,
-            ),
-            modifier = Modifier.size(48.dp),
+    Column(modifier = modifier.padding(horizontal = 12.dp, vertical = 6.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Icon(
-                imageVector = if (playing) {
-                    MaterialSymbols.RoundedFilled.Pause
-                } else {
-                    MaterialSymbols.RoundedFilled.PlayArrow
-                },
-                contentDescription = if (playing) "Pause auto-scroll" else "Start auto-scroll",
+            FilledIconButton(
+                onClick = onTogglePlaying,
+                shape = CircleShape,
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                ),
+                modifier = Modifier.size(48.dp),
+            ) {
+                Icon(
+                    imageVector = if (playing) {
+                        MaterialSymbols.RoundedFilled.Pause
+                    } else {
+                        MaterialSymbols.RoundedFilled.PlayArrow
+                    },
+                    contentDescription = if (playing) "Pause auto-scroll" else "Start auto-scroll",
+                )
+            }
+            Slider(
+                value = speed.toFloat(),
+                onValueChange = { onSpeedChange(it.toInt()) },
+                valueRange = AutoScroller.SPEED_RANGE.first.toFloat()..AutoScroller.SPEED_RANGE.last.toFloat(),
+                steps = AutoScroller.SPEED_RANGE.last - AutoScroller.SPEED_RANGE.first - 1,
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                text = AutoScroller.label(speed),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.widthIn(min = 44.dp),
             )
         }
-        Slider(
-            value = speed.toFloat(),
-            onValueChange = { onSpeedChange(it.toInt()) },
-            valueRange = AutoScroller.SPEED_RANGE.first.toFloat()..AutoScroller.SPEED_RANGE.last.toFloat(),
-            steps = AutoScroller.SPEED_RANGE.last - AutoScroller.SPEED_RANGE.first - 1,
-            modifier = Modifier.weight(1f),
-        )
-        Text(
-            text = AutoScroller.label(speed),
-            style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.widthIn(min = 44.dp),
-        )
+        Row(
+            modifier = Modifier.padding(start = 60.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            FilterChip(
+                selected = stopAtChapterEnd,
+                onClick = { onStopAtChapterEndChange(!stopAtChapterEnd) },
+                label = { Text("Stop at chapter end") },
+            )
+            if (timeLeft != null) {
+                Text(
+                    text = timeLeft,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
     }
 }
