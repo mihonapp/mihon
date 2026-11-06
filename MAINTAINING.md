@@ -108,6 +108,9 @@ upstream code, the same versionCode still installs as an update.
 
 ## Pulling in upstream updates
 
+`.github/workflows/upstream-check.yml` runs on the 1st of every month (or from the Actions tab → "Check for Mihon updates" → Run workflow). If Mihon has a newer release than `.github/upstream-version`, it opens an issue with this checklist. Mekuri main already includes Mihon's main up to the commit noted at the top, which is newer than that tag.
+
+
 ```bash
 git fetch upstream --tags
 git switch -c sync/upstream-v0.22.0 main
@@ -130,3 +133,12 @@ download a chapter · create a backup and restore it.
 - Put new code in new files where possible. Keep edits to upstream files small and mark them with a `// Mekuri:` comment.
 - Never change: the backup format (protobuf), the extension API/loader, the DB schema without a migration, or anything that breaks
   restoring a Mihon backup.
+
+## Backups to the cloud
+
+Mekuri (like Mihon) writes automatic backups to `<storage folder>/autobackup` (Settings → Backup → Automatic backups; choose daily or weekly). Android doesn't let apps pick a Google Drive folder as storage, so to get them off the phone use one of:
+- **Syncthing** (free, open source): sync the `autobackup` folder to your laptop
+- **Autosync for Google Drive** / **FolderSync**: sync that folder to Drive or another cloud
+- Or once in a while: Settings → Backup → Create backup → share the file to Drive
+
+Keep at least one backup off the phone. It holds your library, categories, history, tracking and settings, including the vault's hidden shelves and sources.
