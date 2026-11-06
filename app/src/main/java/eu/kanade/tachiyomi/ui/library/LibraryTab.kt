@@ -148,6 +148,8 @@ data object LibraryTab : Tab {
                 )
         }
         var focusFirstHidden by remember { mutableStateOf(false) }
+        val lastShelfIdPref = context.appGraph.libraryPreferences.mekuriLastShelfId
+        val lastShelfId by lastShelfIdPref.collectAsState()
         val useBookshelf = !classicLibrary && (shelves.size > 1 || vault.categories.isNotEmpty())
         val showBookshelf = useBookshelf && onBookshelf && state.searchQuery.isNullOrEmpty() && !state.selectionMode
         SideEffect { inShelfCategory = useBookshelf && !onBookshelf }
@@ -251,11 +253,14 @@ data object LibraryTab : Tab {
                         lastOpenedIndex = if (focusFirstHidden && firstHidden >= 0) {
                             firstHidden
                         } else {
-                            bigShelves.indexOfFirst { it.categoryIndex == state.coercedActiveCategoryIndex }
-                                .coerceAtLeast(0)
+                            bigShelves.indexOfFirst { it.key == lastShelfId }
+                                .takeIf { it >= 0 }
+                                ?: bigShelves.indexOfFirst { it.categoryIndex == state.coercedActiveCategoryIndex }
+                                    .coerceAtLeast(0)
                         },
                         onOpen = {
                             focusFirstHidden = false
+                            lastShelfIdPref.set(bigShelves[it].key)
                             viewModel.updateActiveCategoryIndex(bigShelves[it].categoryIndex)
                             onBookshelf = false
                         },

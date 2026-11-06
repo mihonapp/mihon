@@ -43,8 +43,8 @@ Motion level 4 of 5. Every release is installable on its own.
 - While locked, hidden items never appear in search, Updates, History, notifications, widgets or the recent-apps preview (FLAG_SECURE)
 - Hidden items are still included in backups
 
-## v1.5.0: settings
-- Search-first settings, quick switches (incognito, dark, Wi-Fi-only downloads, English only), 8 clear groups
+## v1.5.0: settings (done)
+- Search-first settings home on phones (opens Mihon's full-text settings search), quick switches (Incognito, Dark mode, Pure black, Wi-Fi-only downloads), 8 tiles (Look, Reading, Library, Downloads, Sources, Privacy, Trackers, Backup) opening Mihon's pages, then Vault / Advanced / About. Tablets keep the two-pane list.
 
 ## Rules for all of this
 - New code goes in `app/src/main/java/mihon/feature/mekuri/...`; edits to upstream files are small and marked `// Mekuri:`

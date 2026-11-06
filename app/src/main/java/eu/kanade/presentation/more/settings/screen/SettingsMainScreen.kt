@@ -32,6 +32,7 @@ import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
+import mihon.feature.mekuri.settings.MekuriSettingsHome
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ChromeReaderMode
 import mihon.icons.materialsymbols.rounded.Code
@@ -76,6 +77,11 @@ object SettingsMainScreen : Screen() {
     fun Content(twoPane: Boolean) {
         val navigator = LocalNavigator.currentOrThrow
         val backPress = LocalBackPress.currentOrThrow
+        // Mekuri: phones get the search-first settings home; tablets keep the two-pane list
+        if (!twoPane) {
+            MekuriSettingsHome(onOpen = { navigator.push(it) }, onBack = backPress::invoke)
+            return
+        }
         val containerColor = if (twoPane) getPalerSurface() else MaterialTheme.colorScheme.surface
         val topBarState = rememberTopAppBarState()
 

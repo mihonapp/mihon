@@ -3,6 +3,7 @@ package mihon.feature.mekuri.you
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -106,6 +107,7 @@ data object YouTab : Tab {
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             row.forEach { tile -> TileCard(tile, Modifier.weight(1f)) }
+                            if (row.size == 1) Spacer(Modifier.weight(1f))
                         }
                     }
                 }
