@@ -20,11 +20,6 @@ concurrency:
 permissions:
   contents: read
 
-# Mekuri: pushes to main are signed with the release key (secrets below);
-# pull requests are built with the default debug key and never publish anything.
-env:
-  MIHON_GITHUB_RELEASE: ${{ github.event_name == 'push' }}
-
 jobs:
   build:
     name: Build & Test App
@@ -75,6 +70,10 @@ jobs:
       - name: Build app
         run: ./gradlew assembleRelease -Pinclude-telemetry=false -Penable-updater=true
         env:
+          # Mekuri: pushes to main are signed with the release key; pull requests use the
+          # default debug key and never publish. Only set for this step: Gradle reads the
+          # signing env vars at configuration time, so earlier Gradle steps must not see it.
+          MIHON_GITHUB_RELEASE: ${{ github.event_name == 'push' }}
           storeFile: ${{ runner.temp }}/release.keystore
           storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyAlias: ${{ secrets.ALIAS }}
