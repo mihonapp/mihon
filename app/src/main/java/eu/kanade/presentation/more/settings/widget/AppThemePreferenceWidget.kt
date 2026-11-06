@@ -43,7 +43,6 @@ import androidx.core.app.ActivityCompat
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.presentation.theme.TachiyomiTheme
-import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.roundedfilled.CheckCircle
@@ -78,7 +77,8 @@ private fun AppThemesList(
     val context = LocalContext.current
     val appThemes = remember {
         AppTheme.entries
-            .filterNot { it.titleRes == null || (it == AppTheme.MONET && !DeviceUtil.isDynamicColorAvailable) }
+            // Mekuri: only the Mekuri (Default) theme is offered; use Light/Dark/System + Pure black instead
+            .filter { it == AppTheme.DEFAULT }
     }
     LazyRow(
         contentPadding = PaddingValues(horizontal = PrefsHorizontalPadding),
