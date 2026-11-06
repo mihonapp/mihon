@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import mihon.feature.mekuri.vault.MekuriVault
 
 @Inject
 class GetIncognitoState(
@@ -17,6 +18,7 @@ class GetIncognitoState(
     suspend fun await(sourceId: Long?): Boolean {
         if (basePreferences.incognitoMode.get()) return true
         if (sourceId == null) return false
+        if (MekuriVault.isSourceInVault(sourceId)) return true // Mekuri: vault sources are always incognito
         val extensionPackage = extensionManager.getExtensionPackage(sourceId) ?: return false
 
         return extensionPackage in sourcePreferences.incognitoExtensions.get()
@@ -29,8 +31,10 @@ class GetIncognitoState(
             basePreferences.incognitoMode.changes(),
             sourcePreferences.incognitoExtensions.changes(),
             extensionManager.getExtensionPackageAsFlow(sourceId),
-        ) { incognito, incognitoExtensions, extensionPackage ->
-            incognito || (extensionPackage in incognitoExtensions)
+            MekuriVault.filter,
+        ) { incognito, incognitoExtensions, extensionPackage, vault ->
+            // Mekuri: vault sources are always incognito
+            incognito || (extensionPackage in incognitoExtensions) || sourceId in vault.sources
         }
             .distinctUntilChanged()
     }

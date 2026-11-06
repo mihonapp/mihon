@@ -21,11 +21,11 @@ import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import logcat.LogPriority
+import mihon.feature.mekuri.vault.MekuriVault
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.Pin
 import tachiyomi.domain.source.model.Source
@@ -46,26 +46,34 @@ class SourcesViewModel(
 
     private val dialog = MutableStateFlow<Dialog?>(null)
 
-    private val enabledSources = getEnabledSources.subscribe()
-        .catch {
-            logcat(LogPriority.ERROR, it)
-            _events.send(Event.FailedFetchingSources)
-        }
-        .map(::toSourceUiModels)
+    // Mekuri: vault sources are left out while locked and grouped under "Vault" when unlocked
+    private val enabledSources = combine(
+        getEnabledSources.subscribe()
+            .catch {
+                logcat(LogPriority.ERROR, it)
+                _events.send(Event.FailedFetchingSources)
+            },
+        MekuriVault.filter,
+    ) { sources, vault ->
+        val visible = sources.filterNot { vault.hidesSource(it.id) }
+        toSourceUiModels(visible, vault.sources) to sources.count { vault.hidesSource(it.id) }
+    }
 
     val state: StateFlow<State> = combine(
         enabledSources,
         dialog,
-    ) { items, dialog ->
-        State(dialog = dialog, isLoading = false, items = items)
+    ) { (items, vaultLocked), dialog ->
+        State(dialog = dialog, isLoading = false, items = items, vaultLockedCount = vaultLocked)
     }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), State())
 
-    private fun toSourceUiModels(sources: List<Source>): List<SourceUiModel> {
+    private fun toSourceUiModels(sources: List<Source>, vaultSources: Set<Long>): List<SourceUiModel> {
         val map = TreeMap<String, MutableList<Source>> { d1, d2 ->
             // Sources without a lang defined will be placed at the end
             when {
+                d1 == VAULT_KEY && d2 != VAULT_KEY -> -1
+                d2 == VAULT_KEY && d1 != VAULT_KEY -> 1
                 d1 == LAST_USED_KEY && d2 != LAST_USED_KEY -> -1
                 d2 == LAST_USED_KEY && d1 != LAST_USED_KEY -> 1
                 d1 == PINNED_KEY && d2 != PINNED_KEY -> -1
@@ -77,6 +85,7 @@ class SourcesViewModel(
         }
         val byLang = sources.groupByTo(map) {
             when {
+                it.id in vaultSources -> VAULT_KEY
                 it.isUsedLast -> LAST_USED_KEY
                 Pin.Actual in it.pin -> PINNED_KEY
                 else -> it.lang
@@ -120,6 +129,7 @@ class SourcesViewModel(
         val dialog: Dialog? = null,
         val isLoading: Boolean = true,
         val items: List<SourceUiModel> = listOf(),
+        val vaultLockedCount: Int = 0,
     ) {
         val isEmpty = items.isEmpty()
     }
@@ -127,5 +137,6 @@ class SourcesViewModel(
     companion object {
         const val PINNED_KEY = "pinned"
         const val LAST_USED_KEY = "last_used"
+        const val VAULT_KEY = "mekuri_vault"
     }
 }

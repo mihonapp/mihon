@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,8 +36,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
@@ -55,6 +62,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Lock
 import kotlin.math.roundToInt
 
 /**
@@ -71,6 +80,8 @@ fun BookshelfHome(
     onOpen: (Int) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    vaultUnlocked: Boolean = false,
+    onVault: () -> Unit = {},
 ) {
     if (shelves.isEmpty()) return
     val density = LocalDensity.current
@@ -163,17 +174,19 @@ fun BookshelfHome(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
+                val onVaultSpine = activeShelf.kind == Shelf.Kind.Vault
                 Text(
                     text = when {
-                        !scrubbing -> "LAST OPENED"
+                        !scrubbing -> if (onVaultSpine) "VAULT" else "LAST OPENED"
                         cancelling -> "LET GO TO CANCEL"
+                        onVaultSpine -> if (vaultUnlocked) "LET GO TO LOCK" else "LET GO TO UNLOCK"
                         else -> "LET GO TO OPEN"
                     },
                     style = MaterialTheme.typography.labelMedium,
                     color = if (scrubbing) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
                 )
                 Text(
-                    text = activeShelf.name,
+                    text = if (onVaultSpine && vaultUnlocked) "Lock vault" else activeShelf.name,
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
@@ -181,9 +194,14 @@ fun BookshelfHome(
                     textAlign = TextAlign.Center,
                 )
                 Text(
-                    text = buildString {
-                        append(if (activeShelf.count == 1) "1 title" else "${activeShelf.count} titles")
-                        if (activeShelf.unread > 0) append(" · ${activeShelf.unread} unread")
+                    text = when {
+                        onVaultSpine && vaultUnlocked -> "Hidden shelves are showing"
+                        onVaultSpine -> "Fingerprint or PIN"
+                        else -> buildString {
+                            append(if (activeShelf.count == 1) "1 title" else "${activeShelf.count} titles")
+                            if (activeShelf.unread > 0) append(" · ${activeShelf.unread} unread")
+                            if (activeShelf.kind == Shelf.Kind.Hidden) append(" · in the vault")
+                        }
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -238,7 +256,7 @@ fun BookshelfHome(
                             edge = 0
                             if (open) {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onOpen(target)
+                                if (shelves[target].kind == Shelf.Kind.Vault) onVault() else onOpen(target)
                             }
                         }
                     },
@@ -265,9 +283,10 @@ fun BookshelfHome(
                     )
                     val scale by animateFloatAsState(if (on && scrubbing) 1.06f else 1f, label = "scale")
                     Spine(
-                        name = shelf.name,
+                        name = if (shelf.kind == Shelf.Kind.Vault && vaultUnlocked) "Lock" else shelf.name,
                         count = shelf.count,
                         color = colors[shelf.key] ?: fallbackColor(shelf.key),
+                        kind = shelf.kind,
                         modifier = Modifier
                             .align(Alignment.BottomStart)
                             .offset { IntOffset((lefts[i] - offset).roundToInt(), 0) }
@@ -284,7 +303,7 @@ fun BookshelfHome(
                                 contentDescription = "${shelf.name}, ${shelf.count} titles"
                                 role = Role.Button
                                 onClick {
-                                    onOpen(i)
+                                    if (shelf.kind == Shelf.Kind.Vault) onVault() else onOpen(i)
                                     true
                                 }
                             },
@@ -342,11 +361,31 @@ internal fun Spine(
     color: Color,
     modifier: Modifier = Modifier,
     showText: Boolean = true,
+    kind: Shelf.Kind = Shelf.Kind.Normal,
 ) {
+    val accent = MaterialTheme.colorScheme.secondary
+    val isVault = kind == Shelf.Kind.Vault
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
-            .background(color)
+            .background(if (isVault) MaterialTheme.colorScheme.surfaceContainerHigh else color)
+            .drawWithContent {
+                drawContent()
+                // Vault: dashed coral outline. Hidden shelves: solid coral outline.
+                if (kind != Shelf.Kind.Normal) {
+                    val stroke = 1.5.dp.toPx()
+                    drawRoundRect(
+                        color = accent.copy(alpha = if (isVault) 0.7f else 0.9f),
+                        topLeft = Offset(stroke / 2, stroke / 2),
+                        size = Size(size.width - stroke, size.height - stroke),
+                        cornerRadius = CornerRadius(10.dp.toPx()),
+                        style = Stroke(
+                            width = stroke,
+                            pathEffect = if (isVault) PathEffect.dashPathEffect(floatArrayOf(14f, 10f)) else null,
+                        ),
+                    )
+                }
+            }
             .padding(top = 14.dp, bottom = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -359,7 +398,7 @@ internal fun Spine(
             if (showText) {
                 Text(
                     text = name,
-                    color = Color.White,
+                    color = if (isVault) accent else Color.White,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
@@ -368,7 +407,14 @@ internal fun Spine(
                 )
             }
         }
-        if (showText) {
+        if (showText && isVault) {
+            Icon(
+                imageVector = MaterialSymbols.Rounded.Lock,
+                contentDescription = null,
+                tint = accent,
+                modifier = Modifier.size(18.dp),
+            )
+        } else if (showText) {
             Text(
                 text = count.toString(),
                 color = Color.White.copy(alpha = 0.85f),

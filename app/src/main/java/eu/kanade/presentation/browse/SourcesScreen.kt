@@ -45,6 +45,7 @@ fun SourcesScreen(
     onClickItem: (Source, Listing) -> Unit,
     onClickPin: (Source) -> Unit,
     onLongClickItem: (Source) -> Unit,
+    footer: (@Composable () -> Unit)? = null, // Mekuri: the vault row
 ) {
     when {
         state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
@@ -87,6 +88,9 @@ fun SourcesScreen(
                         )
                     }
                 }
+                if (footer != null) {
+                    item(key = "mekuri-footer") { footer() }
+                }
             }
         }
     }
@@ -99,7 +103,12 @@ private fun SourceHeader(
 ) {
     val context = LocalContext.current
     Text(
-        text = LocaleHelper.getSourceDisplayName(language, context),
+        // Mekuri: the vault section
+        text = if (language == SourcesViewModel.VAULT_KEY) {
+            "Vault · always incognito"
+        } else {
+            LocaleHelper.getSourceDisplayName(language, context)
+        },
         modifier = modifier
             .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         style = MaterialTheme.typography.header,
@@ -167,6 +176,7 @@ fun SourceOptionsDialog(
     onClickPin: () -> Unit,
     onClickDisable: () -> Unit,
     onDismiss: () -> Unit,
+    extraOptions: @Composable () -> Unit = {}, // Mekuri: "Move to vault"
 ) {
     AlertDialog(
         title = {
@@ -191,6 +201,7 @@ fun SourceOptionsDialog(
                             .padding(vertical = 16.dp),
                     )
                 }
+                extraOptions()
             }
         },
         onDismissRequest = onDismiss,

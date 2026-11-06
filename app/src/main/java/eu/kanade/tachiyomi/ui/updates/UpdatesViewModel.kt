@@ -48,6 +48,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
+import mihon.feature.mekuri.vault.MekuriVault
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.util.lang.SubscriberGate
 import tachiyomi.core.common.util.lang.pausedWhileUnsubscribed
@@ -181,8 +182,10 @@ class UpdatesViewModel(
         getUpdatesItemPreferenceFlow().distinctUntilChanged { old, new ->
             old.filterDownloaded == new.filterDownloaded
         },
-    ) { updates, _, _, itemPreferences ->
+        MekuriVault.filter,
+    ) { updates, _, _, itemPreferences, vault ->
         updates
+            .filterNot { vault.hides(it.mangaId, it.sourceId) } // Mekuri: vault items stay hidden while locked
             .toUpdateItems()
             .applyFilters(itemPreferences)
     }

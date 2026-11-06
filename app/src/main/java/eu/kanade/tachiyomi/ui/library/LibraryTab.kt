@@ -11,6 +11,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +57,8 @@ import mihon.app.di.appGraph
 import mihon.feature.mekuri.shelf.BookshelfHome
 import mihon.feature.mekuri.shelf.CompactShelf
 import mihon.feature.mekuri.shelf.Shelf
+import mihon.feature.mekuri.vault.MekuriVault
+import mihon.feature.mekuri.vault.unlockMekuriVault
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
@@ -113,8 +116,9 @@ data object LibraryTab : Tab {
         val classicLibrary by context.appGraph.libraryPreferences.mekuriClassicLibrary.collectAsState()
         var onBookshelf by rememberSaveable { mutableStateOf(true) }
         val defaultCategoryName = stringResource(MR.strings.label_default)
-        val shelves = remember(state.displayedCategories, state.libraryData, defaultCategoryName) {
-            state.displayedCategories.map { category ->
+        val vault by MekuriVault.filter.collectAsState()
+        val shelves = remember(state.displayedCategories, state.libraryData, defaultCategoryName, vault.categories) {
+            state.displayedCategories.mapIndexed { index, category ->
                 val items = state.getItemsForCategory(category)
                 Shelf(
                     key = category.id,
@@ -124,10 +128,27 @@ data object LibraryTab : Tab {
                     coverManga = items
                         .maxByOrNull { it.libraryManga.lastRead?.toEpochMilliseconds() ?: 0L }
                         ?.libraryManga?.manga,
+                    categoryIndex = index,
+                    kind = if (category.id in vault.categories) Shelf.Kind.Hidden else Shelf.Kind.Normal,
                 )
             }
         }
-        val useBookshelf = !classicLibrary && shelves.size > 1
+        // The big shelf: regular shelves, then vault shelves (only present while unlocked), then the vault spine
+        val vaultSpineName = "Vault"
+        val bigShelves = remember(shelves, vaultSpineName) {
+            shelves.filter { it.kind == Shelf.Kind.Normal } +
+                shelves.filter { it.kind == Shelf.Kind.Hidden } +
+                Shelf(
+                    key = Long.MIN_VALUE,
+                    name = vaultSpineName,
+                    count = 0,
+                    unread = 0,
+                    coverManga = null,
+                    kind = Shelf.Kind.Vault,
+                )
+        }
+        var focusFirstHidden by remember { mutableStateOf(false) }
+        val useBookshelf = !classicLibrary && (shelves.size > 1 || vault.categories.isNotEmpty())
         val showBookshelf = useBookshelf && onBookshelf && state.searchQuery.isNullOrEmpty() && !state.selectionMode
         SideEffect { inShelfCategory = useBookshelf && !onBookshelf }
 
@@ -224,14 +245,30 @@ data object LibraryTab : Tab {
                     )
                 }
                 showBookshelf -> {
+                    val firstHidden = bigShelves.indexOfFirst { it.kind == Shelf.Kind.Hidden }
                     BookshelfHome(
-                        shelves = shelves,
-                        lastOpenedIndex = state.coercedActiveCategoryIndex,
+                        shelves = bigShelves,
+                        lastOpenedIndex = if (focusFirstHidden && firstHidden >= 0) {
+                            firstHidden
+                        } else {
+                            bigShelves.indexOfFirst { it.categoryIndex == state.coercedActiveCategoryIndex }
+                                .coerceAtLeast(0)
+                        },
                         onOpen = {
-                            viewModel.updateActiveCategoryIndex(it)
+                            focusFirstHidden = false
+                            viewModel.updateActiveCategoryIndex(bigShelves[it].categoryIndex)
                             onBookshelf = false
                         },
                         contentPadding = contentPadding,
+                        vaultUnlocked = vault.unlocked,
+                        onVault = {
+                            if (vault.unlocked) {
+                                focusFirstHidden = false
+                                MekuriVault.lock()
+                            } else {
+                                scope.launch { if (context.unlockMekuriVault()) focusFirstHidden = true }
+                            }
+                        },
                     )
                 }
                 else -> {

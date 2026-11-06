@@ -28,12 +28,14 @@ import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.more.MoreViewModel
 import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import eu.kanade.tachiyomi.ui.stats.StatsScreen
+import mihon.feature.mekuri.vault.VaultScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Label
 import mihon.icons.materialsymbols.rounded.Book
 import mihon.icons.materialsymbols.rounded.CloudOff
 import mihon.icons.materialsymbols.rounded.Eyeglasses2
 import mihon.icons.materialsymbols.rounded.Info
+import mihon.icons.materialsymbols.rounded.Lock
 import mihon.icons.materialsymbols.rounded.Person
 import mihon.icons.materialsymbols.rounded.QueryStats
 import mihon.icons.materialsymbols.rounded.Settings
@@ -77,6 +79,7 @@ data object YouTab : Tab {
             Tile(stringResource(MR.strings.mekuri_you_backup), MaterialSymbols.Rounded.Storage) {
                 navigator.push(SettingsScreen(SettingsScreen.Destination.DataAndStorage))
             },
+            Tile("Vault", MaterialSymbols.Rounded.Lock) { navigator.push(VaultScreen()) },
             Tile(stringResource(MR.strings.categories), MaterialSymbols.AutoMirroredRounded.Label) {
                 navigator.push(CategoryScreen())
             },

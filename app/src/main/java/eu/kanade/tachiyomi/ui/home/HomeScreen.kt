@@ -63,6 +63,7 @@ import mihon.feature.mekuri.nav.FloatingNavPill
 import mihon.feature.mekuri.nav.FloatingNavPillHeight
 import mihon.feature.mekuri.nav.FloatingNavPillMargin
 import mihon.feature.mekuri.offline.OfflineTab
+import mihon.feature.mekuri.vault.VaultScreenPrivacy
 import mihon.feature.mekuri.you.YouTab
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
@@ -93,6 +94,7 @@ object HomeScreen : Screen() {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        VaultScreenPrivacy() // Mekuri
         TabNavigator(
             tab = LibraryTab,
             key = TabNavigatorKey,
