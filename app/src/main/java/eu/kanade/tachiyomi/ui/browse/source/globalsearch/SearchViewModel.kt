@@ -21,6 +21,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.domain.manga.model.toDomainManga
+import mihon.feature.mekuri.vault.MekuriVault
 import tachiyomi.core.common.preference.toggle
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
@@ -89,6 +90,7 @@ abstract class SearchViewModel(
     open suspend fun getEnabledSources(): List<Source> {
         return sourceManager.getAll()
             .filter { (it.lang in enabledLanguages || it.isLocal()) && "${it.id}" !in disabledSources }
+            .filterNot { MekuriVault.filter.value.hidesSource(it.id) } // Mekuri
             .sortedWith(
                 compareBy(
                     { "${it.id}" !in pinnedSources },

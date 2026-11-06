@@ -135,6 +135,7 @@ fun CompactShelf(
                     count = shelf.count,
                     color = colors[shelf.key] ?: fallbackColor(shelf.key),
                     showText = false,
+                    kind = shelf.kind,
                     modifier = Modifier
                         .width(spineWidths[i].dp)
                         .height(height * SpineMetrics.heightFraction(shelf.key, shelf.name))

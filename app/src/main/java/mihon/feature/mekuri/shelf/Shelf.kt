@@ -32,7 +32,20 @@ data class Shelf(
     val unread: Int,
     /** The cover the spine colour is taken from: the most recently read manga in the shelf. */
     val coverManga: Manga?,
-)
+    /** Index into the library's displayed categories; -1 for the vault spine. */
+    val categoryIndex: Int = -1,
+    val kind: Kind = Kind.Normal,
+) {
+    enum class Kind {
+        Normal,
+
+        /** A shelf that lives in the vault (only shown while it's unlocked). */
+        Hidden,
+
+        /** The vault itself, always the last spine. */
+        Vault,
+    }
+}
 
 internal object SpineMetrics {
     val MinWidth: Dp = 48.dp

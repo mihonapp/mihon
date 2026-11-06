@@ -34,7 +34,7 @@ Motion level 4 of 5. Every release is installable on its own.
 - First-run hint: a ghost finger slides across the shelf once
 - Settings switch **Classic library** returns to Mihon's own library screen (safety net; also keeps upstream merges easy)
 
-## v1.4.0: vault
+## v1.4.0: vault (done; still to do: hiding vault manga from library-update notifications and widgets, FLAG_SECURE in the reader, a ⋯ menu to move a shelf into the vault from the shelf itself)
 - One vault, unlocked with fingerprint or the phone's PIN (androidx.biometric), shared by:
   - **Hidden shelves:** the last spine on the bookshelf is the Vault (dashed coral, lock icon). Releasing on it unlocks, and the hidden shelves appear just before it. Releasing on it again locks.
   - **Hidden sources:** Browse → ⋯ on a source → Move to vault. Hidden sources leave Sources, global search and Updates. A dashed "Vault · N hidden sources" row at the bottom unlocks; unlocked, they show at the top in coral.

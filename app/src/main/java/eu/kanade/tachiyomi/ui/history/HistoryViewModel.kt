@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
+import mihon.feature.mekuri.vault.MekuriVault
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.core.common.util.lang.SubscriberGate
@@ -90,6 +91,10 @@ class HistoryViewModel(
                 .catch { error ->
                     logcat(LogPriority.ERROR, error)
                     _events.send(Event.InternalError)
+                }
+                // Mekuri: vault items stay hidden while locked
+                .combine(MekuriVault.filter) { list, vault ->
+                    list.filterNot { vault.hides(it.mangaId, it.coverData.sourceId) }
                 }
                 .map { it.toHistoryUiModels() }
                 .flowOn(Dispatchers.Default)

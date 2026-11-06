@@ -49,6 +49,7 @@ import mihon.core.common.utils.mutate
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.library.model.search.QueryNode
 import mihon.feature.library.matches
+import mihon.feature.mekuri.vault.MekuriVault
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.util.lang.SubscriberGate
@@ -174,12 +175,22 @@ class LibraryViewModel(
         )
     }
         .distinctUntilChanged()
-        .map { data ->
+        // Mekuri: vault shelves stay out of the library until the vault is unlocked
+        .combine(MekuriVault.filter) { data, vault ->
+            MekuriVault.updateHiddenManga(
+                data.favorites
+                    .filter { item ->
+                        val categories = item.libraryManga.categories
+                        categories.isNotEmpty() && categories.all { it in vault.categories }
+                    }
+                    .mapTo(HashSet()) { it.id },
+            )
             Library(
                 data = data,
                 groupedFavorites = data.favorites
                     .applyGrouping(data.categories, data.showSystemCategory)
-                    .applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds),
+                    .applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds)
+                    .filterKeys { !vault.hidesCategory(it.id) },
             )
         }
         .flowOn(Dispatchers.Default)
