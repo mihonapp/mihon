@@ -50,3 +50,14 @@ Motion level 4 of 5. Every release is installable on its own.
 - New code goes in `app/src/main/java/mihon/feature/mekuri/...`; edits to upstream files are small and marked `// Mekuri:`
 - Glass blur only on Android 12+ (RenderEffect); translucent solid colour below that. No blur on large scrolling areas.
 - TalkBack labels and slider semantics on the shelf; respect the system "remove animations" setting
+
+## v1.6.0: bookshelf, part 2 (done)
+- ⋯ next to the shelf name on the bookshelf: rename, spine colour (8 colours or "from cover"), move left/right, move to/out of the vault
+- Smart shelves at the start of the shelf (sparkle spines): Recently read (14 days), New this week, Unread, Downloaded. Each opens a cover grid; vault manga are left out while locked. Settings → Library → Smart shelves turns them off.
+- First-run demo: a ghost finger slides across a few spines once
+
+## v1.7.0: reader (planned)
+- Auto-scroll speed remembered per manga, volume keys change speed while auto-scrolling, optional pause at chapter end, "≈ N min left" estimate
+
+## v1.8.0: look and home (planned)
+- Real frosted glass on Android 12+ (nav pill, sheets), "Continue reading" home-screen widget, reading streaks in Stats
