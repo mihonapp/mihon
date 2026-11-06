@@ -106,11 +106,14 @@ fun BookshelfHome(
         val widthsPx = shelves.map { with(density) { SpineMetrics.width(it.count).toPx() } }
         val lefts = widthsPx.runningFold(0f) { acc, w -> acc + w + gapPx }.dropLast(1)
         val totalPx = (lefts.lastOrNull() ?: 0f) + (widthsPx.lastOrNull() ?: 0f)
-        // When every spine fits, the shelf sits centred (a fixed negative offset); otherwise it scrolls
-        val minOffset = if (totalPx < viewportPx) -(viewportPx - totalPx) / 2 else 0f
-        val maxOffset = if (totalPx < viewportPx) minOffset else totalPx - viewportPx
+        val sidePx = with(density) { sidePadding.toPx() }
+        // When every spine fits, the shelf sits centred (a fixed negative offset). Otherwise it scrolls far enough
+        // that either end spine (the vault included) can reach the middle and be highlighted.
+        val fits = totalPx < viewportPx
+        val minOffset = if (fits) -(viewportPx - totalPx) / 2 else widthsPx.first() / 2 - viewportPx / 2
+        val maxOffset = if (fits) minOffset else lefts.last() + widthsPx.last() / 2 - viewportPx / 2
         val shelfHeight = (maxHeight * 0.42f).coerceIn(200.dp, 340.dp)
-        val liftRoom = 24.dp
+        val liftRoom = 32.dp
 
         fun indexAt(trackX: Float): Int? {
             lefts.forEachIndexed { i, left -> if (trackX >= left && trackX <= left + widthsPx[i]) return i }
@@ -121,7 +124,7 @@ fun BookshelfHome(
             return shelves.lastIndex
         }
         fun centerOn(i: Int): Float =
-            if (minOffset < 0f) minOffset else (lefts[i] + widthsPx[i] / 2 - viewportPx / 2).coerceIn(0f, maxOffset)
+            if (fits) minOffset else (lefts[i] + widthsPx[i] / 2 - viewportPx / 2).coerceIn(minOffset, maxOffset)
 
         LaunchedEffect(shelves.size, viewportPx, lastIndex) {
             offset = centerOn(lastIndex)
@@ -133,10 +136,22 @@ fun BookshelfHome(
             old - offset
         }
         val moving = scrollState.isScrollInProgress
-        val active = if (moving) nearestTo(offset + viewportPx / 2) else lastIndex
+        // The highlighted spine is whichever sits in the middle (the last-opened one is centred on arrival)
+        val active = if (fits) lastIndex else nearestTo(offset + viewportPx / 2)
         val activeShelf = shelves[active]
-        LaunchedEffect(active, moving) {
+        LaunchedEffect(active) {
             if (moving) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        }
+        // When a drag or fling ends, settle the nearest spine into the middle so nothing stops half-way
+        LaunchedEffect(moving, fits) {
+            if (moving || fits) return@LaunchedEffect
+            val target = centerOn(nearestTo(offset + viewportPx / 2))
+            if (kotlin.math.abs(target - offset) < 0.5f) return@LaunchedEffect
+            androidx.compose.animation.core.animate(
+                initialValue = offset,
+                targetValue = target,
+                animationSpec = androidx.compose.animation.core.spring(dampingRatio = 0.9f, stiffness = 400f),
+            ) { value, _ -> offset = value }
         }
         val activeColor by animateColorAsState(
             colors[activeShelf.key] ?: fallbackColor(activeShelf.key),
@@ -169,9 +184,9 @@ fun BookshelfHome(
                 val onVaultSpine = activeShelf.kind == Shelf.Kind.Vault
                 Text(
                     text = when {
-                        moving -> "TAP TO OPEN"
                         onVaultSpine -> "VAULT"
-                        else -> "LAST OPENED"
+                        active == lastIndex && !moving -> "LAST OPENED"
+                        else -> "TAP TO OPEN"
                     },
                     style = MaterialTheme.typography.labelMedium,
                     color = if (moving) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
@@ -228,13 +243,13 @@ fun BookshelfHome(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(shelfHeight + liftRoom)
-                    .padding(horizontal = sidePadding)
+                    // Clip at the screen edge, not the inner padding, so spines slide off naturally
                     .clipToBounds()
                     .semantics { contentDescription = "Bookshelf. Drag to move along it, tap a shelf to open it" }
                     .scrollable(scrollState, Orientation.Horizontal)
                     .pointerInput(shelves, minOffset, maxOffset) {
                         detectTapGestures { position ->
-                            val i = indexAt(position.x + offset) ?: return@detectTapGestures
+                            val i = indexAt(position.x - sidePx + offset) ?: return@detectTapGestures
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             if (shelves[i].kind == Shelf.Kind.Vault) onVault() else onOpen(i)
                         }
@@ -259,7 +274,7 @@ fun BookshelfHome(
                         hasUpdates = shelf.hasUpdates,
                         modifier = Modifier
                             .align(Alignment.BottomStart)
-                            .offset { IntOffset((lefts[i] - offset).roundToInt(), 0) }
+                            .offset { IntOffset((sidePx + lefts[i] - offset).roundToInt(), 0) }
                             .width(with(density) { widthsPx[i].toDp() })
                             .height(shelfHeight)
                             .graphicsLayer {
@@ -289,8 +304,9 @@ fun BookshelfHome(
                     .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f)),
             )
 
-            if (maxOffset > 0f) {
+            if (!fits) {
                 val thumbFraction = (viewportPx / totalPx).coerceIn(0.12f, 1f)
+                val scrolled = ((offset - minOffset) / (maxOffset - minOffset)).coerceIn(0f, 1f)
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -302,7 +318,7 @@ fun BookshelfHome(
                 ) {
                     Box(
                         modifier = Modifier
-                            .offset(x = (120.dp * (1f - thumbFraction)) * (offset / maxOffset))
+                            .offset(x = (120.dp * (1f - thumbFraction)) * scrolled)
                             .width(120.dp * thumbFraction)
                             .height(3.dp)
                             .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)),

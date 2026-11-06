@@ -80,6 +80,7 @@ import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.source.local.isLocal
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 
 data object LibraryTab : Tab {
@@ -124,6 +125,7 @@ data object LibraryTab : Tab {
         var onBookshelf by rememberSaveable { mutableStateOf(true) }
         val defaultCategoryName = stringResource(MR.strings.label_default)
         val vault by MekuriVault.filter.collectAsState()
+        val weekAgo = remember(state.libraryData) { kotlin.time.Clock.System.now() - 7.days }
         val shelves = remember(state.displayedCategories, state.libraryData, defaultCategoryName, vault.categories) {
             state.displayedCategories.mapIndexed { index, category ->
                 val items = state.getItemsForCategory(category)
@@ -137,12 +139,14 @@ data object LibraryTab : Tab {
                         ?.libraryManga?.manga,
                     categoryIndex = index,
                     kind = if (category.id in vault.categories) Shelf.Kind.Hidden else Shelf.Kind.Normal,
-                    // New chapters fetched by an update (not when the manga was added) and not read since
+                    // Recently updated: new chapters fetched by an update in the last 7 days (not when the manga was
+                    // added), still unread and not read since
                     hasUpdates = items.any { item ->
                         val manga = item.libraryManga
                         val fetched = manga.chapterFetchedAt ?: return@any false
                         val added = manga.manga.favoriteAt
                         item.unreadCount > 0 &&
+                            fetched > weekAgo &&
                             (added == null || fetched > added + 10.minutes) &&
                             (manga.lastRead == null || fetched > manga.lastRead!!)
                     },
@@ -189,6 +193,7 @@ data object LibraryTab : Tab {
         }
         var focusFirstHidden by remember { mutableStateOf(false) }
         var menuShelf by remember { mutableStateOf<Shelf?>(null) }
+        var compactPreview by remember { mutableStateOf<Int?>(null) } // shelf under the finger on the small shelf
         val shelfActions = metroViewModel<ShelfActionsViewModel>()
         val lastShelfIdPref = context.appGraph.libraryPreferences.mekuriLastShelfId
         val lastShelfId by lastShelfIdPref.collectAsState()
@@ -215,7 +220,7 @@ data object LibraryTab : Tab {
                     // Mekuri: "Library" on the bookshelf, the shelf's name inside it
                     showBookshelf -> LibraryToolbarTitle(stringResource(MR.strings.label_library))
                     useBookshelf -> LibraryToolbarTitle(
-                        shelves.getOrNull(state.coercedActiveCategoryIndex)?.name
+                        shelves.getOrNull(compactPreview ?: state.coercedActiveCategoryIndex)?.name
                             ?: stringResource(MR.strings.label_library),
                     )
                     else -> state.getToolbarTitle(
@@ -367,7 +372,12 @@ data object LibraryTab : Tab {
                         getItemsForCategory = { state.getItemsForCategory(it) },
                         tabsOverride = if (useBookshelf) {
                             { page, scrollTo ->
-                                CompactShelf(shelves = shelves, currentIndex = page, onSelect = scrollTo)
+                                CompactShelf(
+                                    shelves = shelves,
+                                    currentIndex = page,
+                                    onSelect = scrollTo,
+                                    onPreview = { compactPreview = it },
+                                )
                             }
                         } else {
                             null
