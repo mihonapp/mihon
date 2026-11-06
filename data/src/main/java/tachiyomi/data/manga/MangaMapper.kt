@@ -2,6 +2,7 @@ package tachiyomi.data.manga
 
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import kotlinx.serialization.json.JsonObject
+import mihon.core.common.extensions.toInstantOrNull
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaWithChapterCount
@@ -30,6 +31,7 @@ object MangaMapper {
         stateChapterFetchInterval: Long,
         stateCoverLastModified: Instant?,
         stateInitialized: Boolean,
+        userLastReadAt: Long,
     ): Manga = Manga(
         id = id,
         source = sourceId,
@@ -52,6 +54,7 @@ object MangaMapper {
         initialized = stateInitialized,
         notes = userNotes,
         memo = remoteMemo,
+        lastReadAt = userLastReadAt,
     )
 
     fun mapLibraryManga(
@@ -76,6 +79,7 @@ object MangaMapper {
         stateChapterFetchInterval: Long,
         stateCoverLastModified: Instant?,
         stateInitialized: Boolean,
+        userLastReadAt: Long,
         totalCount: Long,
         readCount: Double,
         latestUpload: Instant?,
@@ -106,6 +110,7 @@ object MangaMapper {
             stateChapterFetchInterval = stateChapterFetchInterval,
             stateCoverLastModified = stateCoverLastModified,
             stateInitialized = stateInitialized,
+            userLastReadAt = userLastReadAt,
         ),
         categories = categories.split(",").map { it.toLong() },
         totalChapters = totalCount,
@@ -113,7 +118,7 @@ object MangaMapper {
         bookmarkCount = bookmarkCount.toLong(),
         latestUpload = latestUpload,
         chapterFetchedAt = chapterFetchedAt,
-        lastRead = lastRead,
+        lastRead = lastRead ?: userLastReadAt.toInstantOrNull(),
     )
 
     fun mapMangaWithChapterCount(
@@ -138,6 +143,7 @@ object MangaMapper {
         stateChapterFetchInterval: Long,
         stateCoverLastModified: Instant?,
         stateInitialized: Boolean,
+        userLastReadAt: Long,
         chapterCount: Long,
     ): MangaWithChapterCount = MangaWithChapterCount(
         manga = mapManga(
@@ -162,6 +168,7 @@ object MangaMapper {
             stateChapterFetchInterval = stateChapterFetchInterval,
             stateCoverLastModified = stateCoverLastModified,
             stateInitialized = stateInitialized,
+            userLastReadAt = userLastReadAt,
         ),
         chapterCount = chapterCount,
     )
