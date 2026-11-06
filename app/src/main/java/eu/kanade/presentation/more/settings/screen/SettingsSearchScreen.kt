@@ -223,7 +223,10 @@ private fun SearchResult(
 private fun search(index: List<SettingsData>, searchKey: String, isLtr: Boolean): List<SearchResultItem> {
     return index.asSequence()
         .flatMap { settingsData ->
-            fun result(title: String, categoryTitle: String?) = SearchResultItem(
+            val headerOccurrences = mutableMapOf<String, Int>()
+            val itemOccurrences = mutableMapOf<String, Int>()
+
+            fun result(title: String, categoryTitle: String?, highlightKey: PreferenceHighlightKey) = SearchResultItem(
                 route = settingsData.route,
                 title = title,
                 breadcrumbs = getLocalizedBreadcrumb(
@@ -231,7 +234,7 @@ private fun search(index: List<SettingsData>, searchKey: String, isLtr: Boolean)
                     node = categoryTitle,
                     isLtr = isLtr,
                 ),
-                highlightKey = title,
+                highlightKey = highlightKey,
             )
 
             fun Preference.PreferenceItem<*, *>.matches(): Boolean {
@@ -243,30 +246,76 @@ private fun search(index: List<SettingsData>, searchKey: String, isLtr: Boolean)
             }
 
             settingsData.contents.asSequence()
-                // Only search from enabled prefs and one with valid title
-                .filter { it.visible && it.title.isNotBlank() }
+                // Only search from enabled prefs
+                .filter { it.visible }
                 .flatMap { p ->
                     when (p) {
                         is Preference.PreferenceGroup -> {
+                            val headerOccurrence = headerOccurrences.nextOccurrence(p.title)
+
                             // A matching heading leads to the group itself, not to one of its items
-                            val heading = if (p.title.contains(searchKey, true)) {
-                                sequenceOf(result(p.title, null))
+                            val heading = if (p.title.isNotBlank() && p.title.contains(searchKey, true)) {
+                                sequenceOf(
+                                    result(
+                                        title = p.title,
+                                        categoryTitle = null,
+                                        highlightKey = PreferenceHighlightKey(
+                                            title = p.title,
+                                            isGroupHeader = true,
+                                            occurrence = headerOccurrence,
+                                        ),
+                                    ),
+                                )
                             } else {
                                 emptySequence()
                             }
                             val items = p.preferenceItems.asSequence()
-                                .filter { it.visible && it.title.isNotBlank() && it.matches() }
-                                .map { result(it.title, p.title) }
+                                .filter { it.visible }
+                                .mapNotNull { item ->
+                                    val itemOccurrence = itemOccurrences.nextOccurrence(item.title)
+                                    if (item.title.isNotBlank() && item.matches()) {
+                                        result(
+                                            title = item.title,
+                                            categoryTitle = p.title,
+                                            highlightKey = PreferenceHighlightKey(
+                                                title = item.title,
+                                                occurrence = itemOccurrence,
+                                            ),
+                                        )
+                                    } else {
+                                        null
+                                    }
+                                }
                             heading + items
                         }
                         is Preference.PreferenceItem<*, *> -> {
-                            if (p.matches()) sequenceOf(result(p.title, null)) else emptySequence()
+                            val itemOccurrence = itemOccurrences.nextOccurrence(p.title)
+                            if (p.title.isNotBlank() && p.matches()) {
+                                sequenceOf(
+                                    result(
+                                        title = p.title,
+                                        categoryTitle = null,
+                                        highlightKey = PreferenceHighlightKey(
+                                            title = p.title,
+                                            occurrence = itemOccurrence,
+                                        ),
+                                    ),
+                                )
+                            } else {
+                                emptySequence()
+                            }
                         }
                     }
                 }
         }
         .take(10) // Just take top 10 result for quicker result
         .toList()
+}
+
+private fun MutableMap<String, Int>.nextOccurrence(title: String): Int {
+    val occurrence = this[title] ?: 0
+    this[title] = occurrence + 1
+    return occurrence
 }
 
 @Composable
@@ -316,5 +365,5 @@ private data class SearchResultItem(
     val route: VoyagerScreen,
     val title: String,
     val breadcrumbs: String,
-    val highlightKey: String,
+    val highlightKey: PreferenceHighlightKey,
 )

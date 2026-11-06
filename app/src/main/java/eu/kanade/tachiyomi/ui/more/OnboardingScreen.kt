@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.onboarding.OnboardingScreen
+import eu.kanade.presentation.more.settings.screen.PreferenceHighlightKey
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
 import eu.kanade.presentation.util.Screen
@@ -41,7 +42,7 @@ class OnboardingScreen : Screen() {
             onComplete = finishOnboarding,
             onRestoreBackup = {
                 finishOnboarding()
-                SearchableSettings.highlightKey = restoreSettingKey
+                SearchableSettings.highlightKey = PreferenceHighlightKey(restoreSettingKey)
                 navigator.push(SettingsScreen(SettingsScreen.Destination.DataAndStorage))
             },
         )
