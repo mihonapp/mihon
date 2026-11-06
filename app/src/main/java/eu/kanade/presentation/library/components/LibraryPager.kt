@@ -20,6 +20,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import eu.kanade.core.preference.PreferenceMutableState
 import eu.kanade.tachiyomi.ui.library.LibraryItem
+import mihon.feature.mekuri.cards.LibraryMekuriCards
+import mihon.feature.mekuri.cards.LibraryMekuriWideCards
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
@@ -66,7 +68,9 @@ fun LibraryPager(
         }
 
         val displayMode by getDisplayMode(page)
-        val columns by if (displayMode != LibraryDisplayMode.List) {
+        val columns by if (displayMode != LibraryDisplayMode.List &&
+            displayMode != LibraryDisplayMode.MekuriWideCards
+        ) {
             val configuration = LocalConfiguration.current
             val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
@@ -96,6 +100,31 @@ fun LibraryPager(
                     items = items,
                     showTitle = displayMode is LibraryDisplayMode.CompactGrid,
                     columns = columns,
+                    contentPadding = contentPadding,
+                    selection = selection,
+                    onClick = onClickManga,
+                    onLongClick = onLongClickManga,
+                    onClickContinueReading = onClickContinueReading,
+                    searchQuery = searchQuery,
+                    onGlobalSearchClicked = onGlobalSearchClicked,
+                )
+            }
+            // Mekuri: card styles
+            LibraryDisplayMode.MekuriCards -> {
+                LibraryMekuriCards(
+                    items = items,
+                    columns = columns,
+                    contentPadding = contentPadding,
+                    selection = selection,
+                    onClick = onClickManga,
+                    onLongClick = onLongClickManga,
+                    searchQuery = searchQuery,
+                    onGlobalSearchClicked = onGlobalSearchClicked,
+                )
+            }
+            LibraryDisplayMode.MekuriWideCards -> {
+                LibraryMekuriWideCards(
+                    items = items,
                     contentPadding = contentPadding,
                     selection = selection,
                     onClick = onClickManga,

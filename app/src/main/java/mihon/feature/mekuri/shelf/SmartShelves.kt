@@ -42,35 +42,18 @@ import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.EmptyScreen
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.days
 
-/** Mekuri: shelves that fill themselves from the library. */
+/** Mekuri: shelves that fill themselves from the library (just Downloaded for now). */
 enum class SmartShelf(val title: String, val key: Long) {
-    RecentlyRead("Recently read", -101),
-    NewThisWeek("New this week", -102),
-    Unread("Unread", -103),
     Downloaded("Downloaded", -104),
     ;
 
     /** Picks and orders this shelf's manga from library items. Returns ids, best first. */
-    fun select(items: List<LibraryItem>): List<Long> {
-        val now = Clock.System.now()
-        return when (this) {
-            RecentlyRead ->
-                items
-                    .filter { item -> item.libraryManga.lastRead?.let { now - it < 14.days } == true }
-                    .sortedByDescending { it.libraryManga.lastRead }
-            NewThisWeek ->
-                items
-                    .filter { item -> item.libraryManga.latestUpload?.let { now - it < 7.days } == true }
-                    .sortedByDescending { it.libraryManga.latestUpload }
-            Unread -> items.filter { it.unreadCount > 0 }.sortedByDescending { it.unreadCount }
-            Downloaded -> items.filter { it.downloadCount > 0 }.sortedByDescending { it.downloadCount }
-        }
-            .map { it.id }
-            .distinct()
+    fun select(items: List<LibraryItem>): List<Long> = when (this) {
+        Downloaded -> items.filter { it.downloadCount > 0 }.sortedByDescending { it.downloadCount }
     }
+        .map { it.id }
+        .distinct()
 }
 
 /** The grid that opens from a smart shelf. */

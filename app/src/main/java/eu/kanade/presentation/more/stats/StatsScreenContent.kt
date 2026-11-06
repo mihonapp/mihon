@@ -67,7 +67,7 @@ private fun LazyItemScope.OverviewSection(
             .toDuration(DurationUnit.MILLISECONDS)
             .toDurationString(context, fallback = none)
     }
-    SectionCard(MR.strings.label_overview_section) {
+    SectionCard(MR.strings.label_overview_section, centerTitle = true) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Min),
         ) {
@@ -94,7 +94,7 @@ private fun LazyItemScope.OverviewSection(
 private fun LazyItemScope.TitlesStats(
     data: StatsData.Titles,
 ) {
-    SectionCard(MR.strings.label_titles_section) {
+    SectionCard(MR.strings.label_titles_section, centerTitle = true) {
         Row {
             StatsItem(
                 data.globalUpdateItemCount.toString(),
@@ -116,7 +116,7 @@ private fun LazyItemScope.TitlesStats(
 private fun LazyItemScope.ChapterStats(
     data: StatsData.Chapters,
 ) {
-    SectionCard(MR.strings.chapters) {
+    SectionCard(MR.strings.chapters, centerTitle = true) {
         Row {
             StatsItem(
                 data.totalChapterCount.toString(),
@@ -147,7 +147,7 @@ private fun LazyItemScope.TrackerStats(
             notApplicable
         }
     }
-    SectionCard(MR.strings.label_tracker_section) {
+    SectionCard(MR.strings.label_tracker_section, centerTitle = true) {
         Row {
             StatsItem(
                 data.trackedTitleCount.toString(),

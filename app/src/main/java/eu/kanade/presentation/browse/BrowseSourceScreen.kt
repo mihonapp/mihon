@@ -117,7 +117,8 @@ fun BrowseSourceContent(
     }
 
     when (displayMode) {
-        LibraryDisplayMode.ComfortableGrid -> {
+        // Mekuri: the library card styles browse sources as a comfortable grid
+        LibraryDisplayMode.ComfortableGrid, LibraryDisplayMode.MekuriCards, LibraryDisplayMode.MekuriWideCards -> {
             BrowseSourceComfortableGrid(
                 mangaList = mangaList,
                 columns = columns,

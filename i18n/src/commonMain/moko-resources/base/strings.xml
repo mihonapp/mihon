@@ -1108,5 +1108,7 @@
     <string name="mekuri.you.summary">%1$d titles in your library</string>
     <string name="mekuri.you.backup">Backup and data</string>
     <string name="mekuri.classic_library">Classic library</string>
+    <string name="mekuri.display_cards">Mekuri cards</string>
+    <string name="mekuri.display_wide_cards">Wide cards</string>
     <string name="mekuri.classic_library_summary">Use Mihon's tabbed library instead of the bookshelf</string>
 </resources>

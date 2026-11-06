@@ -7,6 +7,10 @@ sealed interface LibraryDisplayMode {
     data object List : LibraryDisplayMode
     data object CoverOnlyGrid : LibraryDisplayMode
 
+    // Mekuri: card styles
+    data object MekuriCards : LibraryDisplayMode
+    data object MekuriWideCards : LibraryDisplayMode
+
     object Serializer {
         fun deserialize(serialized: String): LibraryDisplayMode {
             return LibraryDisplayMode.deserialize(serialized)
@@ -18,7 +22,7 @@ sealed interface LibraryDisplayMode {
     }
 
     companion object {
-        val values by lazy { setOf(CompactGrid, ComfortableGrid, List, CoverOnlyGrid) }
+        val values by lazy { setOf(CompactGrid, ComfortableGrid, List, CoverOnlyGrid, MekuriCards, MekuriWideCards) }
         val default = CompactGrid
 
         fun deserialize(serialized: String): LibraryDisplayMode {
@@ -27,6 +31,8 @@ sealed interface LibraryDisplayMode {
                 "COMPACT_GRID" -> CompactGrid
                 "COVER_ONLY_GRID" -> CoverOnlyGrid
                 "LIST" -> List
+                "MEKURI_CARDS" -> MekuriCards
+                "MEKURI_WIDE_CARDS" -> MekuriWideCards
                 else -> default
             }
         }
@@ -38,6 +44,8 @@ sealed interface LibraryDisplayMode {
             CompactGrid -> "COMPACT_GRID"
             CoverOnlyGrid -> "COVER_ONLY_GRID"
             List -> "LIST"
+            MekuriCards -> "MEKURI_CARDS"
+            MekuriWideCards -> "MEKURI_WIDE_CARDS"
         }
     }
 }

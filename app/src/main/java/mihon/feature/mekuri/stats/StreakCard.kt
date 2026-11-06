@@ -3,6 +3,7 @@ package mihon.feature.mekuri.stats
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,8 +12,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,31 +57,28 @@ fun StreakCard(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
-        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Text(
                 "Reading streak",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.secondary,
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(28.dp)) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Figure(value = data.current, label = if (data.current == 1) "day now" else "days now")
                 Figure(value = data.best, label = "best")
-                Figure(
-                    value = data.thisWeek,
-                    label = if (data.thisWeek ==
-                        1
-                    ) {
-                        "chapter this week"
-                    } else {
-                        "chapters this week"
-                    },
-                )
+                val weekLabel = if (data.thisWeek == 1) "chapter this week" else "chapters this week"
+                Figure(value = data.thisWeek, label = weekLabel)
             }
             if (data.current == 0) {
                 Text(
                     text = "Read a chapter today to start a new streak.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -86,13 +86,14 @@ fun StreakCard(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Figure(value: Int, label: String) {
-    Column {
+private fun RowScope.Figure(value: Int, label: String) {
+    Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = value.toString(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.SemiBold)
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
         )
     }
 }

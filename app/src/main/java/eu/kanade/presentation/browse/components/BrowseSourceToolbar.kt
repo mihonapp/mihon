@@ -60,7 +60,10 @@ fun BrowseSourceToolbar(
                             title = stringResource(MR.strings.action_display_mode),
                             icon = when (displayMode) {
                                 LibraryDisplayMode.List -> MaterialSymbols.AutoMirroredRoundedFilled.ViewList
-                                LibraryDisplayMode.ComfortableGrid -> MaterialSymbols.RoundedFilled.ViewModule
+                                LibraryDisplayMode.ComfortableGrid,
+                                LibraryDisplayMode.MekuriCards, // Mekuri
+                                LibraryDisplayMode.MekuriWideCards,
+                                -> MaterialSymbols.RoundedFilled.ViewModule
                                 LibraryDisplayMode.CompactGrid,
                                 LibraryDisplayMode.CoverOnlyGrid,
                                 -> MaterialSymbols.RoundedFilled.ViewCompact

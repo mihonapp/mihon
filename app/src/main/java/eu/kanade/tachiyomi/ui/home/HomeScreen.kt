@@ -34,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -65,6 +66,9 @@ import mihon.feature.mekuri.nav.FloatingNavPillMargin
 import mihon.feature.mekuri.offline.OfflineTab
 import mihon.feature.mekuri.vault.VaultScreenPrivacy
 import mihon.feature.mekuri.you.YouTab
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.Notifications
+import mihon.icons.materialsymbols.rounded.TravelExplore
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.i18n.MR
@@ -239,7 +243,12 @@ object HomeScreen : Screen() {
                         FloatingNavItem(
                             key = tab.key,
                             title = tab.options.title,
-                            icon = tab.options.icon!!,
+                            // Mekuri: a bell for Updates and a globe-with-magnifier for Browse
+                            icon = when (tab) {
+                                is UpdatesTab -> rememberVectorPainter(MaterialSymbols.Rounded.Notifications)
+                                is BrowseTab -> rememberVectorPainter(MaterialSymbols.Rounded.TravelExplore)
+                                else -> tab.options.icon!!
+                            },
                             selected = selected,
                             badge = mekuriBadgeCount(tab),
                             onClick = {

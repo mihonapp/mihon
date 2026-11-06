@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlin.math.roundToInt
 
 /**
  * Mekuri: smooth hands-free scrolling for the long strip reader.
@@ -28,7 +27,7 @@ class AutoScroller(
     private val _speed = MutableStateFlow(DEFAULT_SPEED)
     val speedState: StateFlow<Int> = _speed.asStateFlow()
 
-    /** 1 (slowest) to 10 (fastest). */
+    /** A step in [SPEEDS] (1-based): 1 is 0.25×, 4 is 1×, the last is 10×. */
     var speed: Int
         get() = _speed.value
         set(value) {
@@ -58,6 +57,7 @@ class AutoScroller(
         if (_playing.value) return
         _playing.value = true
         lastFrameNanos = 0L
+        startedAtNanos = 0L
         remainder = 0f
         if (window.attributes.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON == 0) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -102,20 +102,36 @@ class AutoScroller(
             }
         }
         lastFrameNanos = frameTimeNanos
+        if (startedAtNanos == 0L) startedAtNanos = frameTimeNanos
         Choreographer.getInstance().postFrameCallback(this)
     }
 
-    private fun pixelsPerSecond(): Float = (BASE_DP_PER_SECOND + STEP_DP_PER_SECOND * (speed - 1)) * density
+    private var startedAtNanos = 0L
+
+    private fun pixelsPerSecond(): Float {
+        // Ease in over the first ~0.4 s so starting doesn't jolt the page
+        val ramp = if (startedAtNanos ==
+            0L
+        ) {
+            1f
+        } else {
+            ((lastFrameNanos - startedAtNanos) / 400_000_000f).coerceIn(0.15f, 1f)
+        }
+        return ONE_X_DP_PER_SECOND * multiplier(speed) * density * ramp
+    }
 
     companion object {
-        val SPEED_RANGE = 1..10
+        /** Speed steps, as multiples of a comfortable reading pace. */
+        private val SPEEDS = listOf(0.25f, 0.5f, 0.75f, 1f, 1.25f, 1.5f, 2f, 2.5f, 3f, 4f, 5f, 6f, 8f, 10f)
+        val SPEED_RANGE = 1..SPEEDS.size
         const val DEFAULT_SPEED = 4
-        private const val BASE_DP_PER_SECOND = 20f
-        private const val STEP_DP_PER_SECOND = 24f
+        private const val ONE_X_DP_PER_SECOND = 92f
 
-        /** Speed as a multiplier label, 4 being 1×. */
+        fun multiplier(speed: Int): Float = SPEEDS[speed.coerceIn(SPEED_RANGE) - 1]
+
+        /** Speed as a multiplier label, like "1.25×" or "10×". */
         fun label(speed: Int): String {
-            val x = (speed * 0.25f).let { (it * 100).roundToInt() / 100f }
+            val x = multiplier(speed)
             return if (x == x.toInt().toFloat()) "${x.toInt()}×" else "$x×"
         }
     }
