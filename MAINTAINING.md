@@ -22,10 +22,13 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `app/src/main/java/eu/kanade/presentation/more/settings/screen/about/AboutScreen.kt` | only a GitHub link to this repo; Mihon website/social/privacy links removed |
 | `app/src/main/java/eu/kanade/presentation/more/MoreScreen.kt` | "Support us" (Mihon donations) hidden |
 | `app/src/main/java/eu/kanade/tachiyomi/ui/main/MainActivity.kt` | donation campaign dialog disabled |
-| `app/src/main/java/mihon/feature/mekuri/**` | Mekuri-only code: `MekuriSetup` (one-time defaults), `autoscroll/`, `nav/FloatingNavPill`, `offline/OfflineTab`, `you/YouTab` |
+| `app/src/main/java/mihon/feature/mekuri/**` | Mekuri-only code: `MekuriSetup` (one-time defaults), `autoscroll/`, `nav/FloatingNavPill`, `offline/OfflineTab`, `you/YouTab`, `shelf/` (BookshelfHome, CompactShelf, Shelf) |
 | `App.kt` | calls `MekuriSetup.run(...)` on startup |
 | `HomeScreen.kt` | tabs Library · Updates · Offline · Browse · You; floating pill on phones (`MekuriPhoneHome`) |
 | `ExtensionsTab.kt`, `MigrateSourceTab.kt` | tab titles Add-ons / Move |
+| `LibraryTab.kt` | bookshelf home + compact shelf (unless Classic library); Back/Library button return to the shelf |
+| `LibraryContent.kt` | `tabsOverride` hook used for the compact shelf |
+| `LibraryPreferences.kt`, `SettingsLibraryScreen.kt` | `mekuri_classic_library` switch |
 | `i18n/.../base/strings.xml` | `mekuri.*` strings at the end |
 | `ReaderActivity.kt`, `ReaderAppBars.kt`, `ReaderPreferences.kt` | auto-scroll wiring, speed pref `mekuri_auto_scroll_speed` |
 | `ReaderViewModel.kt`, `ReaderSettingsViewModel.kt`, `ReadingModePage.kt`, `ReaderBottomBar.kt`, `SettingsReaderScreen.kt` | long strip only (mode always WEBTOON; pickers removed) |

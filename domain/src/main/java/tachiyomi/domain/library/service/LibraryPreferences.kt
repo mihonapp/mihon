@@ -133,6 +133,9 @@ class LibraryPreferences(
 
     val categoryTabs: Preference<Boolean> = preferenceStore.getBoolean("display_category_tabs", true)
 
+    // Mekuri: show Mihon's classic tabbed library instead of the bookshelf
+    val mekuriClassicLibrary: Preference<Boolean> = preferenceStore.getBoolean("mekuri_classic_library", false)
+
     val categoryNumberOfItems: Preference<Boolean> = preferenceStore.getBoolean("display_number_of_items", false)
 
     val categorizedDisplaySettings: Preference<Boolean> = preferenceStore.getBoolean("categorized_display", false)
