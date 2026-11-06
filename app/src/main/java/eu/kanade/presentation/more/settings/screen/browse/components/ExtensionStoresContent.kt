@@ -39,7 +39,6 @@ fun ExtensionStoresContent(
     onOpenWebsite: (ExtensionStore) -> Unit,
     onOpenDiscord: (ExtensionStore) -> Unit,
     onClickDelete: (ExtensionStore) -> Unit,
-    disabledStores: Set<String>,
     onSetEnabled: (ExtensionStore, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -58,7 +57,6 @@ fun ExtensionStoresContent(
                     onOpenDiscord = { onOpenDiscord(it) },
                     onCopy = { onCopy(it) },
                     onDelete = { onClickDelete(it) },
-                    isEnabled = it.indexUrl !in disabledStores,
                     onSetEnabled = { enabled -> onSetEnabled(it, enabled) },
                 )
             }
@@ -73,7 +71,6 @@ private fun ExtensionStoresListItem(
     onOpenDiscord: () -> Unit,
     onCopy: () -> Unit,
     onDelete: () -> Unit,
-    isEnabled: Boolean,
     onSetEnabled: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -137,7 +134,7 @@ private fun ExtensionStoresListItem(
             }
 
             Switch(
-                checked = isEnabled,
+                checked = store.isEnabled,
                 onCheckedChange = onSetEnabled,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)

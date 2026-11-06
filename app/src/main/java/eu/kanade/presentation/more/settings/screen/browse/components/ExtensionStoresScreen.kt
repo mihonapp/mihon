@@ -75,7 +75,6 @@ fun ExtensionStoresScreen(
             onOpenWebsite = onOpenWebsite,
             onOpenDiscord = onOpenDiscord,
             onClickDelete = onClickDelete,
-            disabledStores = state.disabledStores,
             onSetEnabled = onSetEnabled,
         )
     }

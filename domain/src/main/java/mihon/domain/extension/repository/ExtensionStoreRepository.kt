@@ -13,7 +13,9 @@ interface ExtensionStoreRepository {
 
     suspend fun refreshAll()
 
-    suspend fun fetchExtensions(disabledStoreUrls: Set<String> = emptySet()): List<Extension.Available>
+    suspend fun fetchExtensions(): List<Extension.Available>
+
+    suspend fun setEnabled(indexUrl: String, isEnabled: Boolean)
 
     suspend fun getAll(): List<ExtensionStore>
 
