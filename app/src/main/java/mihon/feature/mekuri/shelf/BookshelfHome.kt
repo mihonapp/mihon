@@ -300,7 +300,8 @@ fun BookshelfHome(
                                 transformOrigin = androidx.compose.ui.graphics.TransformOrigin(0.5f, 1f)
                             }
                             .clearAndSetSemantics {
-                                contentDescription = "${shelf.name}, ${shelf.count} titles"
+                                contentDescription =
+                                    "${shelf.name}, ${shelf.count} " + if (shelf.count == 1) "title" else "titles"
                                 role = Role.Button
                                 onClick {
                                     if (shelf.kind == Shelf.Kind.Vault) onVault() else onOpen(i)

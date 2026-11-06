@@ -77,6 +77,10 @@ object MekuriVault {
 
     fun isSourceInVault(sourceId: Long): Boolean = sourceId in _filter.value.sources
 
+    /** True for anything that lives in the vault, locked or not (for notifications and other places that outlive it). */
+    fun keepsPrivate(mangaId: Long, sourceId: Long): Boolean =
+        _filter.value.let { sourceId in it.sources || mangaId in it.manga }
+
     fun setCategoryInVault(categoryId: Long, inVault: Boolean) {
         val pref = categoriesPref ?: return
         val id = categoryId.toString()
