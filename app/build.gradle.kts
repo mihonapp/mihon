@@ -38,7 +38,7 @@ android {
         applicationId = "com.vsrksaketh.mekuri"
 
         versionCode = 39
-        versionName = "1.7.0"
+        versionName = "1.8.0"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -309,6 +309,9 @@ dependencies {
     implementation(libs.reorderable)
     implementation(libs.bundles.markdown)
     implementation(libs.materialKolor)
+    implementation(libs.haze) // Mekuri: frosted glass
+    implementation(libs.haze.blur)
+    implementation(libs.androidx.glance.appWidget) // Mekuri: Continue reading widget
 
     // Logging
     implementation(libs.logcat)

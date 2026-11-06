@@ -22,7 +22,7 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `app/src/main/java/eu/kanade/presentation/more/settings/screen/about/AboutScreen.kt` | only a GitHub link to this repo; Mihon website/social/privacy links removed |
 | `app/src/main/java/eu/kanade/presentation/more/MoreScreen.kt` | "Support us" (Mihon donations) hidden |
 | `app/src/main/java/eu/kanade/tachiyomi/ui/main/MainActivity.kt` | donation campaign dialog disabled |
-| `app/src/main/java/mihon/feature/mekuri/**` | Mekuri-only code: `MekuriSetup` (one-time defaults), `autoscroll/`, `nav/FloatingNavPill`, `offline/OfflineTab`, `you/YouTab`, `shelf/` (BookshelfHome, CompactShelf, Shelf, ShelfPrefs, ShelfMenuSheet, SmartShelves), `vault/` (MekuriVault, VaultScreen, VaultAuth, VaultRow, VaultPrivacy), `settings/MekuriSettingsHome` |
+| `app/src/main/java/mihon/feature/mekuri/**` | Mekuri-only code: `MekuriSetup` (one-time defaults), `autoscroll/`, `nav/FloatingNavPill`, `offline/OfflineTab`, `you/YouTab`, `shelf/` (BookshelfHome, CompactShelf, Shelf, ShelfPrefs, ShelfMenuSheet, SmartShelves), `vault/` (MekuriVault, VaultScreen, VaultAuth, VaultRow, VaultPrivacy), `settings/MekuriSettingsHome`, `stats/StreakCard`, `widget/ContinueReadingWidget` |
 | `App.kt` | calls `MekuriSetup.run(...)` on startup |
 | `HomeScreen.kt` | tabs Library · Updates · Offline · Browse · You; floating pill on phones (`MekuriPhoneHome`) |
 | `ExtensionsTab.kt`, `MigrateSourceTab.kt` | tab titles Add-ons / Move |
@@ -36,6 +36,11 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `ReaderActivity.kt` | also `VaultScreenPrivacy()`; volume keys → auto-scroll speed (`dispatchKeyEvent`), per-manga speed, stop at chapter end |
 | `ReaderPreferences.kt` | also `mekuri_auto_scroll_speeds`, `mekuri_auto_scroll_stop_chapter` |
 | `GetApplicationRelease.kt` (+ test) | correct version comparison |
+| `ReaderAppBars.kt`, `ReaderActivity.kt` | frosted glass via Haze (`hazeSource` on the pages, `hazeBlur` on the bars) |
+| `gradle/libs.versions.toml`, `app/build.gradle.kts` | `haze`, `haze-blur` 2.0.1; glance for the widget |
+| `AppGraph.kt` | `getHistory` accessor (widget) |
+| `AndroidManifest.xml`, `res/xml/mekuri_continue_widget_info.xml`, `res/values/mekuri_strings.xml` | Continue reading widget |
+| `StatsScreenContent.kt` | streak card |
 | `.github/workflows/release.yml` | `generate_release_notes` so the in-app update dialog lists what changed |
 | `LibraryPreferences.kt` | also `mekuri_last_shelf_id` (last-opened shelf by id), `mekuri_smart_shelves` |
 | prefs `mekuri_shelf_colors`, `mekuri_shelf_demo_done` | pinned spine colours, first-run demo |

@@ -77,6 +77,11 @@ object MekuriVault {
 
     fun isSourceInVault(sourceId: Long): Boolean = sourceId in _filter.value.sources
 
+    /** Vault shelves straight from preferences (for code that may run before the library has loaded). */
+    fun storedCategories(): Set<Long> = categoriesPref?.get()?.mapNotNull(String::toLongOrNull)?.toSet().orEmpty()
+
+    fun storedSources(): Set<Long> = sourcesPref?.get()?.mapNotNull(String::toLongOrNull)?.toSet().orEmpty()
+
     /** True for anything that lives in the vault, locked or not (for notifications and other places that outlive it). */
     fun keepsPrivate(mangaId: Long, sourceId: Long): Boolean =
         _filter.value.let { sourceId in it.sources || mangaId in it.manga }

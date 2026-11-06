@@ -60,5 +60,7 @@ Motion level 4 of 5. Every release is installable on its own.
 - Auto-scroll speed remembered per manga; volume keys change the speed while auto-scrolling (never the media volume); "Stop at chapter end" chip; "≈ N min left in chapter" estimate
 - Updater: version comparison fixed (first differing number decides), with tests
 
-## v1.8.0: look and home (planned)
-- Real frosted glass on Android 12+ (nav pill, sheets), "Continue reading" home-screen widget, reading streaks in Stats
+## v1.8.0: look and home (done)
+- Real frosted glass (Haze 2.0.1) on the reader's top, auto-scroll and bottom bars, blurring the pages behind them (Android 12+; a translucent tint below). Not on the nav pill: Mihon's lists stop above it, so there is nothing behind it to blur. That needs every list to scroll under the pill, which is a bigger change.
+- "Continue reading" home-screen widget (cover, title, chapter; opens the manga; hides vault manga; blank when the app lock is on)
+- Reading streak card at the top of Statistics (days in a row, best run, chapters in the last 7 days)

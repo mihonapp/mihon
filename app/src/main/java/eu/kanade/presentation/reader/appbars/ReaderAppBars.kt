@@ -33,6 +33,11 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.blur.HazeBlurStyle
+import dev.chrisbanes.haze.blur.HazeColorEffect
+import dev.chrisbanes.haze.blur.hazeBlur
 import eu.kanade.presentation.reader.components.ChapterNavigator
 import eu.kanade.presentation.reader.components.ChapterNavigatorType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
@@ -84,10 +89,24 @@ fun ReaderAppBars(
     autoScrollTimeLeft: String? = null,
     autoScrollStopAtChapterEnd: Boolean = false,
     onAutoScrollStopAtChapterEndChange: (Boolean) -> Unit = {},
+    // Mekuri: frosted glass over the pages (Android 12+; a translucent scrim elsewhere)
+    hazeState: HazeState? = null,
 ) {
     val backgroundColor = MaterialTheme.colorScheme
         .surfaceColorAtElevation(3.dp)
         .copy(alpha = if (isSystemInDarkTheme()) 0.9f else 0.95f)
+    val barSurface = if (hazeState != null) {
+        Modifier.hazeBlur(
+            input = HazeInput.Sources(hazeState),
+            style = HazeBlurStyle {
+                blurRadius(28.dp)
+                colorEffects(listOf(HazeColorEffect.tint(backgroundColor.copy(alpha = 0.55f))))
+                fallbackColorEffect(HazeColorEffect.tint(backgroundColor))
+            },
+        )
+    } else {
+        Modifier.background(backgroundColor)
+    }
 
     Column(modifier = Modifier.fillMaxHeight()) {
         AnimatedVisibility(
@@ -97,7 +116,7 @@ fun ReaderAppBars(
         ) {
             ReaderTopBar(
                 modifier = Modifier
-                    .background(backgroundColor)
+                    .then(barSurface)
                     .clickable(onClick = onClickTopAppBar),
                 mangaTitle = mangaTitle,
                 chapterTitle = chapterTitle,
@@ -181,13 +200,13 @@ fun ReaderAppBars(
                         onStopAtChapterEndChange = onAutoScrollStopAtChapterEndChange,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(backgroundColor),
+                            .then(barSurface),
                     )
                 }
                 ReaderBottomBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(backgroundColor)
+                        .then(barSurface)
                         .padding(horizontal = MaterialTheme.padding.small)
                         .windowInsetsPadding(WindowInsets.navigationBars),
                     readingMode = readingMode,

@@ -259,6 +259,19 @@
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />
 
+        <!-- Mekuri: Continue reading widget -->
+        <receiver
+            android:name="mihon.feature.mekuri.widget.ContinueReadingWidgetReceiver"
+            android:exported="true"
+            android:label="Continue reading">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mekuri_continue_widget_info" />
+        </receiver>
+
     </application>
 
 </manifest>
