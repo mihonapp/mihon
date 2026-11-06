@@ -222,6 +222,8 @@ private val displayModes = listOf(
     MR.strings.action_display_comfortable_grid to LibraryDisplayMode.ComfortableGrid,
     MR.strings.action_display_cover_only_grid to LibraryDisplayMode.CoverOnlyGrid,
     MR.strings.action_display_list to LibraryDisplayMode.List,
+    MR.strings.mekuri_display_cards to LibraryDisplayMode.MekuriCards, // Mekuri
+    MR.strings.mekuri_display_wide_cards to LibraryDisplayMode.MekuriWideCards, // Mekuri
 )
 
 @Composable
@@ -239,7 +241,7 @@ private fun ColumnScope.DisplayPage(
         }
     }
 
-    if (displayMode != LibraryDisplayMode.List) {
+    if (displayMode != LibraryDisplayMode.List && displayMode != LibraryDisplayMode.MekuriWideCards) {
         val configuration = LocalConfiguration.current
         val columnPreference = remember {
             if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {

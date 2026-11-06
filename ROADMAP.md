@@ -64,3 +64,12 @@ Motion level 4 of 5. Every release is installable on its own.
 - Real frosted glass (Haze 2.0.1) on the reader's top, auto-scroll and bottom bars, blurring the pages behind them (Android 12+; a translucent tint below). Not on the nav pill: Mihon's lists stop above it, so there is nothing behind it to blur. That needs every list to scroll under the pill, which is a bigger change.
 - "Continue reading" home-screen widget (cover, title, chapter; opens the manga; hides vault manga; blank when the app lock is on)
 - Reading streak card at the top of Statistics (days in a row, best run, chapters in the last 7 days)
+
+## v1.9.0: feedback round (done)
+- Bookshelf: drag to move along the shelf (with momentum), tap a spine to open it. No more release-to-open. All spines the same height; width = number of titles.
+- Smart shelves: Recently read, New this week and Unread removed; only Downloaded remains (Settings → Library → Smart shelves turns it off)
+- "New chapters" marker: a coral bar on a spine when a manga on that shelf got chapters in an update since you last read it; it clears once you read them
+- Nav icons: bell for Updates, globe-with-magnifier for Browse
+- Auto-scroll up to 10× (0.25× … 10×), eases in when it starts; coral hairline shows chapter progress while reading
+- Library card styles: "Mekuri cards" (rounded covers, unread count, progress bar) and "Wide cards" (one row each: cover, chapters read, unread, progress, source, resume). In the shelf's Filter → Display.
+- Statistics: streak card and section titles centred

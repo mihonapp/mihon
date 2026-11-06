@@ -80,6 +80,7 @@ import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.source.local.isLocal
+import kotlin.time.Duration.Companion.minutes
 
 data object LibraryTab : Tab {
 
@@ -136,6 +137,15 @@ data object LibraryTab : Tab {
                         ?.libraryManga?.manga,
                     categoryIndex = index,
                     kind = if (category.id in vault.categories) Shelf.Kind.Hidden else Shelf.Kind.Normal,
+                    // New chapters fetched by an update (not when the manga was added) and not read since
+                    hasUpdates = items.any { item ->
+                        val manga = item.libraryManga
+                        val fetched = manga.chapterFetchedAt ?: return@any false
+                        val added = manga.manga.favoriteAt
+                        item.unreadCount > 0 &&
+                            (added == null || fetched > added + 10.minutes) &&
+                            (manga.lastRead == null || fetched > manga.lastRead!!)
+                    },
                 )
             }
         }
@@ -179,7 +189,6 @@ data object LibraryTab : Tab {
         }
         var focusFirstHidden by remember { mutableStateOf(false) }
         var menuShelf by remember { mutableStateOf<Shelf?>(null) }
-        val shelfDemoDone by ShelfPrefs.demoDone.collectAsState()
         val shelfActions = metroViewModel<ShelfActionsViewModel>()
         val lastShelfIdPref = context.appGraph.libraryPreferences.mekuriLastShelfId
         val lastShelfId by lastShelfIdPref.collectAsState()
@@ -307,8 +316,6 @@ data object LibraryTab : Tab {
                             menuShelf = bigShelves[it]
                             lastShelfIdPref.set(bigShelves[it].key)
                         },
-                        showDemo = !shelfDemoDone,
-                        onDemoDone = ShelfPrefs::markDemoDone,
                         contentPadding = contentPadding,
                         vaultUnlocked = vault.unlocked,
                         onVault = {

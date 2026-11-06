@@ -86,7 +86,7 @@ object SettingsLibraryScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.mekuriSmartShelves,
                     title = "Smart shelves",
-                    subtitle = "Recently read, New this week, Unread and Downloaded at the start of the bookshelf",
+                    subtitle = "Show a Downloaded shelf at the start of the bookshelf",
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.action_edit_categories),

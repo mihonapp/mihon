@@ -4,8 +4,10 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -29,11 +31,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,11 +70,11 @@ import mihon.icons.materialsymbols.rounded.Sparkle
 import kotlin.math.roundToInt
 
 /**
- * Mekuri: the library home. A full-screen bookshelf, one spine per category.
+ * Mekuri: the library home. A full-screen bookshelf, one spine per category; thicker spines hold more titles.
  *
- * Hold anywhere on the shelf and slide: the spine under the finger lifts (with a haptic tick) and its name shows
- * above. Near either edge the shelf glides sideways. Let go to open that shelf; drag up off the shelf first to
- * cancel. A quick tap opens the spine under the finger.
+ * Drag the shelf sideways to move along it (it keeps gliding after a flick); the spine in the middle lifts and its
+ * name shows above while you move. Tap a spine to open that shelf. Shelves with chapters that arrived since you last
+ * read them carry a small coral marker.
  */
 @Composable
 fun BookshelfHome(
@@ -87,8 +86,6 @@ fun BookshelfHome(
     vaultUnlocked: Boolean = false,
     onVault: () -> Unit = {},
     onShelfMenu: ((Int) -> Unit)? = null,
-    showDemo: Boolean = false,
-    onDemoDone: () -> Unit = {},
 ) {
     if (shelves.isEmpty()) return
     val density = LocalDensity.current
@@ -96,18 +93,7 @@ fun BookshelfHome(
     val colors = rememberShelfColors(shelves)
     val lastIndex = lastOpenedIndex.coerceIn(0, shelves.lastIndex)
 
-    var scrubbing by remember { mutableStateOf(false) }
-    var cancelling by remember { mutableStateOf(false) }
-    var hover by remember { mutableIntStateOf(lastIndex) }
-    var edge by remember { mutableIntStateOf(0) }
-    var lastX by remember { mutableFloatStateOf(0f) }
     var offset by remember { mutableFloatStateOf(0f) }
-    var demoGhost by remember { mutableStateOf(false) }
-    var demoX by remember { mutableFloatStateOf(0f) }
-
-    val active = if (scrubbing) hover else lastIndex
-    val activeShelf = shelves[active.coerceIn(0, shelves.lastIndex)]
-    val activeColor by animateColorAsState(colors[activeShelf.key] ?: fallbackColor(activeShelf.key), label = "glow")
 
     BoxWithConstraints(
         modifier = modifier
@@ -120,65 +106,42 @@ fun BookshelfHome(
         val widthsPx = shelves.map { with(density) { SpineMetrics.width(it.count).toPx() } }
         val lefts = widthsPx.runningFold(0f) { acc, w -> acc + w + gapPx }.dropLast(1)
         val totalPx = (lefts.lastOrNull() ?: 0f) + (widthsPx.lastOrNull() ?: 0f)
-        val maxOffset = (totalPx - viewportPx).coerceAtLeast(0f)
+        // When every spine fits, the shelf sits centred (a fixed negative offset); otherwise it scrolls
+        val minOffset = if (totalPx < viewportPx) -(viewportPx - totalPx) / 2 else 0f
+        val maxOffset = if (totalPx < viewportPx) minOffset else totalPx - viewportPx
         val shelfHeight = (maxHeight * 0.42f).coerceIn(200.dp, 340.dp)
-        val liftRoom = 44.dp
-        val edgeZonePx = with(density) { 44.dp.toPx() }
-        val cancelPx = 0f // above the shelf area (which already includes the lift room) cancels
-        val glidePxPerFrame = with(density) { 7.dp.toPx() }
+        val liftRoom = 24.dp
 
-        fun indexAt(trackX: Float): Int {
+        fun indexAt(trackX: Float): Int? {
+            lefts.forEachIndexed { i, left -> if (trackX >= left && trackX <= left + widthsPx[i]) return i }
+            return null
+        }
+        fun nearestTo(trackX: Float): Int {
             lefts.forEachIndexed { i, left -> if (trackX < left + widthsPx[i] + gapPx / 2) return i }
             return shelves.lastIndex
         }
-        // When every spine fits, the shelf sits centred (a negative offset); otherwise it scrolls within bounds
-        val minOffset = if (totalPx < viewportPx) -(viewportPx - totalPx) / 2 else 0f
         fun centerOn(i: Int): Float =
             if (minOffset < 0f) minOffset else (lefts[i] + widthsPx[i] / 2 - viewportPx / 2).coerceIn(0f, maxOffset)
-        fun edgeFor(x: Float): Int = when {
-            x < edgeZonePx -> -1
-            x > viewportPx - edgeZonePx -> 1
-            else -> 0
-        }
 
         LaunchedEffect(shelves.size, viewportPx, lastIndex) {
             offset = centerOn(lastIndex)
         }
-        // First run: a ghost finger slides across a few spines once, so the gesture is obvious
-        LaunchedEffect(showDemo) {
-            if (!showDemo) return@LaunchedEffect
-            kotlinx.coroutines.delay(700)
-            val visible = (0..shelves.lastIndex).filter { i ->
-                val x = lefts[i] - offset
-                x >= 0f && x + widthsPx[i] <= viewportPx
-            }.ifEmpty { listOf(lastIndex) }.take(4)
-            demoGhost = true
-            scrubbing = true
-            for (i in visible) {
-                hover = i
-                demoX = lefts[i] - offset + widthsPx[i] / 2
-                kotlinx.coroutines.delay(420)
-            }
-            kotlinx.coroutines.delay(300)
-            scrubbing = false
-            demoGhost = false
-            onDemoDone()
+
+        val scrollState = rememberScrollableState { delta ->
+            val old = offset
+            offset = (offset - delta).coerceIn(minOffset, maxOffset)
+            old - offset
         }
-        // Edge glide while the finger rests near either end of the shelf
-        LaunchedEffect(scrubbing) {
-            while (scrubbing) {
-                withFrameNanos { }
-                if (edge != 0) {
-                    if (minOffset < 0f) continue
-                    offset = (offset + edge * glidePxPerFrame).coerceIn(0f, maxOffset)
-                    val i = indexAt(lastX + offset)
-                    if (i != hover) {
-                        hover = i
-                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    }
-                }
-            }
+        val moving = scrollState.isScrollInProgress
+        val active = if (moving) nearestTo(offset + viewportPx / 2) else lastIndex
+        val activeShelf = shelves[active]
+        LaunchedEffect(active, moving) {
+            if (moving) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         }
+        val activeColor by animateColorAsState(
+            colors[activeShelf.key] ?: fallbackColor(activeShelf.key),
+            label = "glow",
+        )
 
         // Soft glow in the active shelf's colour behind the shelf
         Box(
@@ -187,7 +150,7 @@ fun BookshelfHome(
                 .size(460.dp)
                 .background(
                     Brush.radialGradient(
-                        listOf(activeColor.copy(alpha = if (scrubbing) 0.42f else 0.26f), Color.Transparent),
+                        listOf(activeColor.copy(alpha = if (moving) 0.38f else 0.26f), Color.Transparent),
                     ),
                 ),
         )
@@ -206,13 +169,12 @@ fun BookshelfHome(
                 val onVaultSpine = activeShelf.kind == Shelf.Kind.Vault
                 Text(
                     text = when {
-                        !scrubbing -> if (onVaultSpine) "VAULT" else "LAST OPENED"
-                        cancelling -> "LET GO TO CANCEL"
-                        onVaultSpine -> if (vaultUnlocked) "LET GO TO LOCK" else "LET GO TO UNLOCK"
-                        else -> "LET GO TO OPEN"
+                        moving -> "TAP TO OPEN"
+                        onVaultSpine -> "VAULT"
+                        else -> "LAST OPENED"
                     },
                     style = MaterialTheme.typography.labelMedium,
-                    color = if (scrubbing) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
+                    color = if (moving) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline,
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
@@ -224,7 +186,7 @@ fun BookshelfHome(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.weight(1f, fill = false),
                     )
-                    val menuShown = onShelfMenu != null && !scrubbing &&
+                    val menuShown = onShelfMenu != null && !moving &&
                         (activeShelf.kind == Shelf.Kind.Normal || activeShelf.kind == Shelf.Kind.Hidden)
                     if (menuShown) {
                         IconButton(onClick = { onShelfMenu?.invoke(active) }) {
@@ -239,7 +201,7 @@ fun BookshelfHome(
                 Text(
                     text = when {
                         onVaultSpine && vaultUnlocked -> "Hidden shelves are showing"
-                        onVaultSpine -> "Fingerprint or PIN"
+                        onVaultSpine -> "Tap to unlock with fingerprint or PIN"
                         activeShelf.kind == Shelf.Kind.Smart ->
                             if (activeShelf.count ==
                                 1
@@ -251,6 +213,7 @@ fun BookshelfHome(
                         else -> buildString {
                             append(if (activeShelf.count == 1) "1 title" else "${activeShelf.count} titles")
                             if (activeShelf.unread > 0) append(" · ${activeShelf.unread} unread")
+                            if (activeShelf.hasUpdates) append(" · new chapters")
                             if (activeShelf.kind == Shelf.Kind.Hidden) append(" · in the vault")
                         }
                     },
@@ -267,111 +230,52 @@ fun BookshelfHome(
                     .height(shelfHeight + liftRoom)
                     .padding(horizontal = sidePadding)
                     .clipToBounds()
-                    .semantics { contentDescription = "Bookshelf. Hold and slide to pick a shelf, let go to open it" }
-                    .pointerInput(shelves, maxOffset, viewportPx) {
-                        awaitEachGesture {
-                            val down = awaitFirstDown(requireUnconsumed = false)
-                            down.consume()
-                            scrubbing = true
-                            cancelling = false
-                            lastX = down.position.x
-                            edge = edgeFor(lastX)
-                            hover = indexAt(lastX + offset)
-                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            var cancelled = false
-                            while (true) {
-                                val event = awaitPointerEvent()
-                                val change = event.changes.firstOrNull { it.id == down.id }
-                                if (change == null) {
-                                    cancelled = true
-                                    break
-                                }
-                                if (!change.pressed) {
-                                    change.consume()
-                                    break
-                                }
-                                lastX = change.position.x
-                                cancelling = change.position.y < -cancelPx
-                                edge = if (cancelling) 0 else edgeFor(lastX)
-                                val i = indexAt(lastX + offset)
-                                if (i != hover) {
-                                    hover = i
-                                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                }
-                                change.consume()
-                            }
-                            val open = !cancelled && !cancelling
-                            val target = hover
-                            scrubbing = false
-                            cancelling = false
-                            edge = 0
-                            if (open) {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                if (shelves[target].kind == Shelf.Kind.Vault) onVault() else onOpen(target)
-                            }
+                    .semantics { contentDescription = "Bookshelf. Drag to move along it, tap a shelf to open it" }
+                    .scrollable(scrollState, Orientation.Horizontal)
+                    .pointerInput(shelves, minOffset, maxOffset) {
+                        detectTapGestures { position ->
+                            val i = indexAt(position.x + offset) ?: return@detectTapGestures
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            if (shelves[i].kind == Shelf.Kind.Vault) onVault() else onOpen(i)
                         }
                     },
             ) {
                 shelves.forEachIndexed { i, shelf ->
                     val on = i == active
-                    val near = kotlin.math.abs(i - active) == 1
                     val lift by animateDpAsState(
                         targetValue = when {
-                            scrubbing && on -> 30.dp
-                            scrubbing && near -> 10.dp
+                            on && moving -> 16.dp
                             on -> 8.dp
                             else -> 0.dp
                         },
                         label = "lift",
                     )
-                    val alpha by animateFloatAsState(
-                        targetValue = when {
-                            on -> 1f
-                            scrubbing -> 0.5f
-                            else -> 0.82f
-                        },
-                        label = "alpha",
-                    )
-                    val scale by animateFloatAsState(if (on && scrubbing) 1.06f else 1f, label = "scale")
+                    val alpha by animateFloatAsState(if (on) 1f else 0.82f, label = "alpha")
                     Spine(
                         name = if (shelf.kind == Shelf.Kind.Vault && vaultUnlocked) "Lock" else shelf.name,
                         count = shelf.count,
                         color = colors[shelf.key] ?: fallbackColor(shelf.key),
                         kind = shelf.kind,
+                        hasUpdates = shelf.hasUpdates,
                         modifier = Modifier
                             .align(Alignment.BottomStart)
                             .offset { IntOffset((lefts[i] - offset).roundToInt(), 0) }
                             .width(with(density) { widthsPx[i].toDp() })
-                            .height(shelfHeight * SpineMetrics.heightFraction(shelf.key, shelf.name))
+                            .height(shelfHeight)
                             .graphicsLayer {
                                 translationY = -lift.toPx()
                                 this.alpha = alpha
-                                scaleX = scale
-                                scaleY = scale
-                                transformOrigin = androidx.compose.ui.graphics.TransformOrigin(0.5f, 1f)
                             }
                             .clearAndSetSemantics {
-                                contentDescription =
-                                    "${shelf.name}, ${shelf.count} " + if (shelf.count == 1) "title" else "titles"
+                                contentDescription = "${shelf.name}, ${shelf.count} " +
+                                    (if (shelf.count == 1) "title" else "titles") +
+                                    if (shelf.hasUpdates) ", new chapters" else ""
                                 role = Role.Button
                                 onClick {
                                     if (shelf.kind == Shelf.Kind.Vault) onVault() else onOpen(i)
                                     true
                                 }
                             },
-                    )
-                }
-                if (demoGhost) {
-                    val ghostX by androidx.compose.animation.core.animateFloatAsState(demoX, label = "ghost")
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .offset {
-                                IntOffset((ghostX - 26.dp.toPx()).roundToInt(), -(shelfHeight * 0.35f).roundToPx())
-                            }
-                            .size(52.dp)
-                            .clip(androidx.compose.foundation.shape.CircleShape)
-                            .background(Color.White.copy(alpha = 0.28f)),
                     )
                 }
             }
@@ -407,7 +311,7 @@ fun BookshelfHome(
             }
 
             Text(
-                text = if (scrubbing) " " else "Hold and slide across your shelf · let go to open",
+                text = "Drag to move along your shelf · tap one to open it",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.Center,
@@ -427,6 +331,7 @@ internal fun Spine(
     modifier: Modifier = Modifier,
     showText: Boolean = true,
     kind: Shelf.Kind = Shelf.Kind.Normal,
+    hasUpdates: Boolean = false,
 ) {
     val accent = MaterialTheme.colorScheme.secondary
     val isVault = kind == Shelf.Kind.Vault
@@ -444,6 +349,16 @@ internal fun Spine(
             )
             .drawWithContent {
                 drawContent()
+                // New chapters since last read: a short coral bar across the top of the spine
+                if (hasUpdates) {
+                    val barW = size.width * 0.5f
+                    drawRoundRect(
+                        color = accent,
+                        topLeft = Offset((size.width - barW) / 2, 5.dp.toPx()),
+                        size = Size(barW, 4.dp.toPx()),
+                        cornerRadius = CornerRadius(2.dp.toPx()),
+                    )
+                }
                 // Vault: dashed coral outline. Hidden shelves: solid coral outline.
                 if (kind == Shelf.Kind.Vault || kind == Shelf.Kind.Hidden) {
                     val stroke = 1.5.dp.toPx()

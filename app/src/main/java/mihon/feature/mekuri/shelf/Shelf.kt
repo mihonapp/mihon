@@ -40,6 +40,8 @@ data class Shelf(
     /** For [Kind.Smart]: which smart shelf, and the manga on it in order. */
     val smart: SmartShelf? = null,
     val mangaIds: List<Long> = emptyList(),
+    /** Chapters arrived (in a library update) since you last read something on this shelf, and are still unread. */
+    val hasUpdates: Boolean = false,
 ) {
     enum class Kind {
         Normal,
@@ -65,12 +67,6 @@ internal object SpineMetrics {
 
     /** Thicker spines for shelves with more titles, never thinner than a comfortable touch target. */
     fun width(count: Int): Dp = (26f + count * 1.7f).dp.coerceIn(MinWidth, MaxWidth)
-
-    /** Slight, stable height variation so the shelf looks like real books. 0.82..1.0 */
-    fun heightFraction(key: Long, name: String): Float {
-        val h = abs((key * 31 + name.hashCode()).toInt()) % 5
-        return 0.82f + h * 0.045f
-    }
 }
 
 /** Fallback spine colours (Mekuri palette), picked by shelf key until a cover colour is known. */

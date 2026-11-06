@@ -119,6 +119,7 @@ import logcat.LogPriority
 import mihon.app.di.AppGraph
 import mihon.core.metro.metroGraph
 import mihon.feature.mekuri.autoscroll.AutoScroller
+import mihon.feature.mekuri.reader.ReadingProgressLine
 import mihon.feature.mekuri.vault.VaultScreenPrivacy
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
@@ -259,6 +260,15 @@ class ReaderActivity : BaseActivity() {
                     color = colorOverlay.takeIf { colorOverlayEnabled },
                     colorBlendMode = colorOverlayBlendMode,
                 )
+
+                // Mekuri: chapter progress hairline while the menus are hidden
+                if (!state.menuVisible) {
+                    ReadingProgressLine(
+                        currentPage = state.currentPage,
+                        totalPages = state.totalPages,
+                        modifier = Modifier.align(Alignment.TopCenter),
+                    )
+                }
 
                 if (!state.menuVisible && showPageNumber) {
                     ReaderPageIndicator(
