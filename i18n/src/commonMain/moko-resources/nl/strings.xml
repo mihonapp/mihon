@@ -318,7 +318,7 @@
     <string name="restoring_backup_error">Herstellen mislukt</string>
     <string name="restore_in_progress">Er wordt al een back-up hersteld</string>
     <string name="channel_ext_updates">Extensie-updates</string>
-    <string name="information_webview_required">WebView is vereist voor Mihon</string>
+    <string name="information_webview_required">WebView is vereist voor Mekuri</string>
     <string name="notification_chapters_multiple">Hoofdstukken %1$s</string>
     <string name="notification_chapters_single_and_more">Hoofdstuk %1$s en %2$d meer</string>
     <string name="notification_chapters_single">Hoofdstuk %1$s</string>

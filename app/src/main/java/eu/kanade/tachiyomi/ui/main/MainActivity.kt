@@ -311,7 +311,8 @@ class MainActivity : BaseActivity() {
                 if (!isBenchmarkBuildType) {
                     if (isLaunch) CheckForUpdates()
                     ShowOnboarding()
-                    ShowDonationCampaign()
+                    // Mekuri: Mihon donation campaign disabled in this personal fork
+                    // ShowDonationCampaign()
                 }
             }
         }

@@ -505,7 +505,7 @@
     <string name="categorized_display_settings">הגדרות מיון לכל קטגוריה בנפרד</string>
     <string name="source_empty_screen">מקור לא נמצא</string>
     <string name="update_check_eol">גרסת האנדרואיד הזאת כבר לא נתמכת</string>
-    <string name="information_webview_required">WebView נצרך ל-Mihon</string>
+    <string name="information_webview_required">WebView נצרך ל-Mekuri</string>
     <string name="action_display_cover_only_grid">רשת כריכות בלבד</string>
     <string name="action_open_log">פתח את יומן האירועים</string>
     <string name="pref_landscape_zoom">בצע קירוב לתמונות אופקיות באופן אוטומטי</string>

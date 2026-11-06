@@ -1,3 +1,6 @@
+> [!NOTE]
+> **Mekuri** is a personal fork of [Mihon](https://github.com/mihonapp/mihon) by [vsrksaketh-dev](https://github.com/vsrksaketh-dev), built as a separate app (`com.vsrksaketh.mekuri`). It is not affiliated with or supported by the Mihon team. Please don't report issues with this fork to Mihon. Download APKs from this repo's [Releases](https://github.com/vsrksaketh-dev/mekuri/releases). See [MAINTAINING.md](MAINTAINING.md).
+
 <div align="center">
 
 <a href="https://mihon.app">

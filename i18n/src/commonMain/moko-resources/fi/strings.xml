@@ -138,7 +138,7 @@
     <string name="ext_untrusted">Luottamaton</string>
     <string name="ext_uninstall">Poista asennus</string>
     <string name="untrusted_extension">Luottamattomat laajennokset</string>
-    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Mihonista tai suorittaa luvatonta koodia. \n \nLuottamalla tähän laajennokseen hyväksyt nämä riskit.</string>
+    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Mekuriista tai suorittaa luvatonta koodia. \n \nLuottamalla tähän laajennokseen hyväksyt nämä riskit.</string>
     <string name="pref_fullscreen">Koko näyttö</string>
     <string name="pref_page_transitions">Animoi sivusiirtymät</string>
     <string name="pref_double_tap_anim_speed">Tuplanäpäytyksen animaation nopeus</string>
@@ -280,7 +280,7 @@
     <string name="action_webview_refresh">Päivitä</string>
     <string name="pref_category_library">Kirjasto</string>
     <string name="ext_obsolete">Vanhentunut</string>
-    <string name="obsolete_extension_message">Tämä laajennos ei ole enää saatavilla. Se ei välttämättä toimi oikein ja voi aiheuttaa ongelmia Mihonin kanssa. Laajennoksen poistoa suositellaan.</string>
+    <string name="obsolete_extension_message">Tämä laajennos ei ole enää saatavilla. Se ei välttämättä toimi oikein ja voi aiheuttaa ongelmia Mekuriin kanssa. Laajennoksen poistoa suositellaan.</string>
     <string name="pref_date_format">Päivämäärän muoto</string>
     <string name="pref_category_library_update">Globaali päivitys</string>
     <string name="logout_title">Kirjaa ulos kohteesta %1$s?</string>
@@ -338,7 +338,7 @@
     <string name="action_pin">Kiinnitä</string>
     <string name="action_select_inverse">Valitse käänteinen</string>
     <string name="vertical_plus_viewer">Jatkuva pystysuora</string>
-    <string name="information_webview_required">WebView on pakollinen Mihonissa</string>
+    <string name="information_webview_required">WebView on pakollinen Mekuriissa</string>
     <string name="restore_in_progress">Palautus on jo käynnissä</string>
     <string name="backup_in_progress">Varmuuskopiointi on jo käynnissä</string>
     <string name="pref_webtoon_side_padding">Sivuntäyttö</string>
