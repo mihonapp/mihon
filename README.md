@@ -3,8 +3,8 @@
 
 <div align="center">
 
-<a href="https://mihon.app">
-    <img src="./.github/assets/logo.png" alt="Mihon logo" title="Mihon logo" width="80"/>
+<a href="https://github.com/vsrksaketh-dev/mekuri">
+    <img src="./.github/assets/logo.png" alt="Mekuri logo" title="Mekuri logo" width="80"/>
 </a>
 
 # Mihon [App](#)

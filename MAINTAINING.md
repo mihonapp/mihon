@@ -14,7 +14,7 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `app/build.gradle.kts` | `applicationId = "com.vsrksaketh.mekuri"`, `versionName = "1.0.0"` (versionCode left at upstream's value) |
 | `i18n/.../base/strings.xml` | `app_name` = Mekuri |
 | `i18n/.../<22 locales>/strings.xml` | "Mihon" → "Mekuri" in `information_webview_required`, `untrusted_extension_message`, `obsolete_extension_message` |
-| `app/src/main/res/drawable/ic_launcher_{foreground,background,monochrome}.xml` | placeholder icon |
+| `app/src/main/res/drawable/ic_launcher_{foreground,background,monochrome}.xml` | Mekuri icon (manga page being turned, purple gradient) |
 | `app/src/debug/res/drawable/ic_launcher_{foreground,background}.xml` | same icon, orange background for debug builds |
 | `app/src/main/res/drawable/ic_mihon.xml` | Mekuri logo (About header, splash, notifications). File name kept on purpose |
 | `app/src/main/res/values/colors.xml` | splash colour |
@@ -26,7 +26,7 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `.github/workflows/release.yml` | tag `v*` → signed APKs → GitHub Release in this repo |
 | `.github/workflows/update_website.yml`, `.github/FUNDING.yml` | deleted (Mihon-only) |
 | `.gitignore` | keystores, `signing.properties` |
-| `README.md` | fork notice at top |
+| `README.md`, `.github/assets/logo.png`, `.idea/icon.svg` | fork notice at top, Mekuri logo |
 | `MAINTAINING.md`, `CLAUDE.md` | these docs |
 
 Intentionally **unchanged**: Kotlin namespace (`eu.kanade.tachiyomi`), tracker OAuth schemes (`mihon://…-auth`,
@@ -68,7 +68,7 @@ those switch on Firebase telemetry.
 
 1. Bump `versionName` in `app/build.gradle.kts` (e.g. `1.0.1`) and merge to `main`.
 2. Tag it: `git tag v1.0.1 && git push origin v1.0.1`. The tag must equal `v` + versionName.
-3. The **Release** workflow builds the signed APKs and publishes "Mekuri v1.0.1" with `mekuri-v1.0.1.apk` (universal) plus per-ABI APKs.
+3. The **Release** workflow builds the signed APKs and publishes "Mekuri v1.0.1" with two APKs: `mekuri-v1.0.1.apk` (universal) and `mekuri-arm64-v8a-v1.0.1.apk`.
 4. The app's update checker (More → About → Check for updates) reads `/releases/latest` and offers the APK for your phone's ABI.
 
 Versioning: Mekuri uses its own `MAJOR.MINOR.PATCH`, and the in-app comparison is numeric per component. **Never lower

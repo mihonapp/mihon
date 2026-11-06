@@ -1,20 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Mekuri placeholder launcher icon (foreground): two pages, front one with a turned corner. -->
+<!-- Mekuri launcher icon: a manga page with its corner being turned ("mekuri" = page turn). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="432"
-    android:viewportHeight="432">
-    <path
-        android:fillColor="#99FFFFFF"
-        android:pathData="M146,158h104v138h-104z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M176,136h70l40,40v120h-110z" />
-    <path
-        android:fillColor="#FFB8C4FF"
-        android:pathData="M246,136v40h40z" />
-    <path
-        android:fillColor="#FF3A4A8C"
-        android:pathData="M196,196h70v10h-70zM196,222h70v10h-70zM196,248h46v10h-46z" />
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:scaleX="0.88"
+        android:scaleY="0.88"
+        android:translateX="1">
+        <path
+            android:fillColor="#4DFFFFFF"
+            android:pathData="M31.5,33L66,28.6Q70,28.1 70.5,32.1L75.5,71Q76,75 72,75.5L37.5,79.9Q33.5,80.4 33,76.4L28,37.5Q27.5,33.5 31.5,33Z" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M40,27H74Q78,27 78,31V60L60,79H40Q36,79 36,75V31Q36,27 40,27Z" />
+        <path
+            android:fillColor="#FF2E2373"
+            android:pathData="M41,32H73V46L41,49Z" />
+        <path
+            android:fillColor="#FF453797"
+            android:pathData="M41,52.5L54,51.4V74H41Z" />
+        <path
+            android:fillColor="#FF7A6BC6"
+            android:pathData="M57.5,51.1L73,49.7V58L62.6,69H57.5Z" />
+        <path
+            android:fillColor="#38000000"
+            android:pathData="M78,60L60,79Q58,69.5 62.5,65Z" />
+        <path android:pathData="M78,60C69,60.5 61.5,66 60,79C65.5,71.5 70.5,65 78,60Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="60"
+                    android:startY="60"
+                    android:endX="78"
+                    android:endY="79"
+                    android:startColor="#FFFFC17A"
+                    android:endColor="#FFFF5C7C" />
+            </aapt:attr>
+        </path>
+    </group>
 </vector>
