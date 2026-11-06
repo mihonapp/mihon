@@ -61,6 +61,14 @@ class ReaderPreferences(
     // Mekuri: auto-scroll speed, 1 (slowest) to 10 (fastest)
     val autoScrollSpeed: Preference<Int> = preferenceStore.getInt("mekuri_auto_scroll_speed", 4)
 
+    // Mekuri: per-manga auto-scroll speeds ("mangaId:speed") and stop-at-chapter-end
+    val autoScrollSpeeds: Preference<Set<String>> = preferenceStore.getStringSet(
+        "mekuri_auto_scroll_speeds",
+        emptySet(),
+    )
+    val autoScrollStopAtChapterEnd: Preference<Boolean> =
+        preferenceStore.getBoolean("mekuri_auto_scroll_stop_chapter", false)
+
     val fullscreen: Preference<Boolean> = preferenceStore.getBoolean("fullscreen", true)
 
     val drawUnderCutout: Preference<Boolean> = preferenceStore.getBoolean("cutout_short", true)

@@ -25,11 +25,24 @@ class AutoScroller(
     private val _playing = MutableStateFlow(false)
     val playing: StateFlow<Boolean> = _playing.asStateFlow()
 
+    private val _speed = MutableStateFlow(DEFAULT_SPEED)
+    val speedState: StateFlow<Int> = _speed.asStateFlow()
+
     /** 1 (slowest) to 10 (fastest). */
-    var speed: Int = DEFAULT_SPEED
+    var speed: Int
+        get() = _speed.value
         set(value) {
-            field = value.coerceIn(SPEED_RANGE)
+            _speed.value = value.coerceIn(SPEED_RANGE)
         }
+
+    /** Rough seconds to scroll through [pagesLeft] more pages at the current speed, from the pages on screen. */
+    fun estimateSecondsLeft(pagesLeft: Int): Int? {
+        if (pagesLeft <= 0) return 0
+        val heights = (0 until recycler.childCount).map { recycler.getChildAt(it).height }.filter { it > 0 }
+        if (heights.isEmpty()) return null
+        val remainingPx = heights.average() * pagesLeft
+        return (remainingPx / pixelsPerSecond()).toInt()
+    }
 
     private val density = recycler.resources.displayMetrics.density
     private var held = false

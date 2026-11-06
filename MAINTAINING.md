@@ -33,7 +33,9 @@ Mekuri is my personal fork of [Mihon](https://github.com/mihonapp/mihon). It ins
 | `GetIncognitoState.kt` | vault sources always incognito |
 | `SettingsMainScreen.kt` | phones show `MekuriSettingsHome` |
 | `LibraryUpdateNotifier.kt` | vault manga never appear in update notifications |
-| `ReaderActivity.kt` | also `VaultScreenPrivacy()` |
+| `ReaderActivity.kt` | also `VaultScreenPrivacy()`; volume keys → auto-scroll speed (`dispatchKeyEvent`), per-manga speed, stop at chapter end |
+| `ReaderPreferences.kt` | also `mekuri_auto_scroll_speeds`, `mekuri_auto_scroll_stop_chapter` |
+| `GetApplicationRelease.kt` (+ test) | correct version comparison |
 | `.github/workflows/release.yml` | `generate_release_notes` so the in-app update dialog lists what changed |
 | `LibraryPreferences.kt` | also `mekuri_last_shelf_id` (last-opened shelf by id), `mekuri_smart_shelves` |
 | prefs `mekuri_shelf_colors`, `mekuri_shelf_demo_done` | pinned spine colours, first-run demo |

@@ -81,6 +81,9 @@ fun ReaderAppBars(
     onToggleAutoScroll: () -> Unit = {},
     autoScrollSpeed: Int = 4,
     onAutoScrollSpeedChange: (Int) -> Unit = {},
+    autoScrollTimeLeft: String? = null,
+    autoScrollStopAtChapterEnd: Boolean = false,
+    onAutoScrollStopAtChapterEndChange: (Boolean) -> Unit = {},
 ) {
     val backgroundColor = MaterialTheme.colorScheme
         .surfaceColorAtElevation(3.dp)
@@ -173,6 +176,9 @@ fun ReaderAppBars(
                         onTogglePlaying = onToggleAutoScroll,
                         speed = autoScrollSpeed,
                         onSpeedChange = onAutoScrollSpeedChange,
+                        timeLeft = autoScrollTimeLeft,
+                        stopAtChapterEnd = autoScrollStopAtChapterEnd,
+                        onStopAtChapterEndChange = onAutoScrollStopAtChapterEndChange,
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(backgroundColor),
