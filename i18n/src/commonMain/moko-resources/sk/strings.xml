@@ -99,7 +99,7 @@
     <string name="ext_untrusted">Odobrať dôveru</string>
     <string name="ext_uninstall">Odinštalovať</string>
     <string name="untrusted_extension">Nedôveryhodné rozšírenie</string>
-    <string name="untrusted_extension_message">Toto rozšírenie bolo podpísané nedôveryhodným certifikátom a nebolo aktivované. \n \nŠkodlivé rozšírenie môže čítať všetky prihlasovacie údaje uložené v Mihon alebo spúšťať ľubovoľný kód. \n \nDôverovaním tohto certifikátu akceptujete tieto riziká.</string>
+    <string name="untrusted_extension_message">Toto rozšírenie bolo podpísané nedôveryhodným certifikátom a nebolo aktivované. \n \nŠkodlivé rozšírenie môže čítať všetky prihlasovacie údaje uložené v Mekuri alebo spúšťať ľubovoľný kód. \n \nDôverovaním tohto certifikátu akceptujete tieto riziká.</string>
     <string name="pref_fullscreen">Na celú obrazovku</string>
     <string name="pref_page_transitions">Animácia prechodov strán</string>
     <string name="pref_double_tap_anim_speed">Rýchlosť animácie pre dvojité ťuknutie</string>
@@ -403,7 +403,7 @@
     <string name="error_sharing_cover">Chyba pri zdieľaní obalu</string>
     <string name="loader_not_implemented_error">Zdroj sa nenašiel</string>
     <string name="empty_screen">No, toto je trápne</string>
-    <string name="information_webview_required">WebView je potrebné pre Mihon</string>
+    <string name="information_webview_required">WebView je potrebné pre Mekuri</string>
     <string name="popular">Populárne</string>
     <string name="reading_list">Zoznam čítania</string>
     <string name="track_finished_reading_date">Dátum ukončenia</string>

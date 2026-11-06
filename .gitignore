@@ -15,3 +15,9 @@ local.properties
 
 # macOS specific files
 .DS_Store
+
+# Signing (Mekuri): never commit keystores or local signing config
+*.jks
+*.keystore
+*.p12
+signing.properties

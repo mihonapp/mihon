@@ -4,6 +4,8 @@ on:
     tags:
       - v*
 
+# Mekuri: tag vX.Y.Z -> signed APKs -> published GitHub Release in this repo.
+# The in-app update checker reads /releases/latest of vsrksaketh-dev/mekuri.
 env:
   MIHON_GITHUB_RELEASE: true
 
@@ -11,28 +13,22 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
-  get_tag:
-    if: github.repository == 'mihonapp/mihon'
-    name: Extract tag name
+  release:
+    if: github.repository == 'vsrksaketh-dev/mekuri'
+    name: Build & publish release
     runs-on: 'ubuntu-26.04'
-    outputs:
-      tag: ${{ steps.extract.outputs.tag }}
-
-    steps:
-      - name: Get tag name
-        id: extract
-        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-
-  build:
-    if: github.repository == 'mihonapp/mihon'
-    name: Build
-    runs-on: 'ubuntu-26.04'
-    needs: get_tag
 
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Get tag name
+        id: tag
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Set up JDK
         uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
@@ -46,131 +42,45 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Decode signing keystore
-        run: echo "$SIGNING_KEY" | base64 -d > "${{ runner.temp }}/antsy.keystore"
+        run: echo "$SIGNING_KEY" | base64 -d > "${{ runner.temp }}/release.keystore"
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
       - name: Build
-        run: ./gradlew assembleRelease -Pdist=github
+        run: ./gradlew assembleRelease -Pinclude-telemetry=false -Penable-updater=true
         env:
-          storeFile: ${{ runner.temp }}/antsy.keystore
+          storeFile: ${{ runner.temp }}/release.keystore
           storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyAlias: ${{ secrets.ALIAS }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Rename APK
+      - name: Rename APKs
         run: |
           set -e
-
-          mv app/build/outputs/apk/release/app-universal-release.apk mihon-${{ needs.get_tag.outputs.tag }}.apk
-          mv app/build/outputs/apk/release/app-arm64-v8a-release.apk mihon-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
-          mv app/build/outputs/apk/release/app-armeabi-v7a-release.apk mihon-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
-          mv app/build/outputs/apk/release/app-x86-release.apk mihon-x86-${{ needs.get_tag.outputs.tag }}.apk
-          mv app/build/outputs/apk/release/app-x86_64-release.apk mihon-x86_64-${{ needs.get_tag.outputs.tag }}.apk
-
-      - name: Upload APK
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: mihon
-          path: |
-            mihon-${{ needs.get_tag.outputs.tag }}.apk
-            mihon-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
-            mihon-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
-            mihon-x86-${{ needs.get_tag.outputs.tag }}.apk
-            mihon-x86_64-${{ needs.get_tag.outputs.tag }}.apk
-
-  build_foss:
-    if: github.repository == 'mihonapp/mihon'
-    name: Build (FOSS)
-    runs-on: ubuntu-26.04
-    needs: get_tag
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Set up JDK
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
-        with:
-          java-version-file: .github/.java-version
-          distribution: temurin
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
-        with:
-          cache-disabled: true
-
-      - name: Decode signing keystore
-        run: echo "$SIGNING_KEY" | base64 -d > "${{ runner.temp }}/antsy.keystore"
-        env:
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-
-      - name: Build
-        run: ./gradlew assembleFoss -Pdist=foss
-        env:
-          storeFile: ${{ runner.temp }}/antsy.keystore
-          storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyAlias: ${{ secrets.ALIAS }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Rename APK
-        run: |
-          set -e
-
-          mv app/build/outputs/apk/foss/app-universal-foss.apk mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
-
-      - name: Upload APK
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: mihon-foss
-          path: mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
-
-  release:
-    if: github.repository == 'mihonapp/mihon'
-    name: Create GitHub Release
-    runs-on: ubuntu-26.04
-    needs: [get_tag, build, build_foss]
-
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          merge-multiple: true
-
-      - name: Delete all artifacts
-        uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
-        with:
-          failOnError: false
-          name: |
-            mihon
-            mihon-foss
+          T=${{ steps.tag.outputs.tag }}
+          D=app/build/outputs/apk/release
+          mv $D/app-universal-release.apk   mekuri-$T.apk
+          mv $D/app-arm64-v8a-release.apk   mekuri-arm64-v8a-$T.apk
+          mv $D/app-armeabi-v7a-release.apk mekuri-armeabi-v7a-$T.apk
+          mv $D/app-x86-release.apk         mekuri-x86-$T.apk
+          mv $D/app-x86_64-release.apk      mekuri-x86_64-$T.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
-          tag_name: ${{ needs.get_tag.outputs.tag }}
-          name: Mihon ${{ needs.get_tag.outputs.tag }}
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Mekuri ${{ steps.tag.outputs.tag }}
           body: |
-            Consider supporting the development on [Patreon](https://www.patreon.com/mihon/membership) or [OpenCollective](https://opencollective.com/mihon/contribute) to keep Mihon improving!
-
-            Check out the [past release notes](https://github.com/mihonapp/mihon/releases) if you're upgrading from an earlier version.
-
-            <!-->
-
-
-
-            <!-->
+            Personal build of Mekuri, a fork of [Mihon](https://github.com/mihonapp/mihon).
 
             > [!TIP]
-            >
-            > ### If you are unsure which version to download then go with `mihon-${{ needs.get_tag.outputs.tag }}.apk`
+            > Not sure which file to download? Use `mekuri-${{ steps.tag.outputs.tag }}.apk` (works on every device).
           files: |
-            mihon-${{ needs.get_tag.outputs.tag }}.apk
-            mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
-            mihon-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
-            mihon-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
-            mihon-x86-${{ needs.get_tag.outputs.tag }}.apk
-            mihon-x86_64-${{ needs.get_tag.outputs.tag }}.apk
-          draft: true
+            mekuri-${{ steps.tag.outputs.tag }}.apk
+            mekuri-arm64-v8a-${{ steps.tag.outputs.tag }}.apk
+            mekuri-armeabi-v7a-${{ steps.tag.outputs.tag }}.apk
+            mekuri-x86-${{ steps.tag.outputs.tag }}.apk
+            mekuri-x86_64-${{ steps.tag.outputs.tag }}.apk
+          draft: false
           prerelease: false
-          token: ${{ secrets.MIHON_BOT_TOKEN }}
+          make_latest: true

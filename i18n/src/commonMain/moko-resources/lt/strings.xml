@@ -179,7 +179,7 @@
     <string name="pref_show_navigation_mode_summary">Trumpai parodyti skaitytuvą, kai atidarytas</string>
     <string name="pref_fullscreen">Pilno ekrano rėžimas</string>
     <string name="obsolete_extension_message">Šis plėtinys nebėra prieinamas. Plėtinys gali veikti netinkamai arba sukelti problemas programėlėje. Rekomenduojama išdiegti plėtinį.</string>
-    <string name="untrusted_extension_message">Šis plėtinys buvo pasirašytas nepatikimu sertifikatu ir nebuvo aktyvuotas. \n \nPlėtinys, su negeranoriškais ketinimais, gali perskaityti prisijungimo duomenys patalpintus Mihon arba gali paleisti kenkėjišką kodą. \n \nJūs priimate šias rizikas pasitikėdami sertifikatu.</string>
+    <string name="untrusted_extension_message">Šis plėtinys buvo pasirašytas nepatikimu sertifikatu ir nebuvo aktyvuotas. \n \nPlėtinys, su negeranoriškais ketinimais, gali perskaityti prisijungimo duomenys patalpintus Mekuri arba gali paleisti kenkėjišką kodą. \n \nJūs priimate šias rizikas pasitikėdami sertifikatu.</string>
     <string name="untrusted_extension">Nepatikimas plėtinys</string>
     <string name="ext_app_info">Aplikacijos informacija</string>
     <string name="ext_uninstall">Šalinti</string>
@@ -340,7 +340,7 @@
     <string name="notification_first_add_to_library">Prieš atlikdami šį veiksmą, pridėkite įrašą į savo biblioteką</string>
     <string name="skipped_reason_not_started">Praleista, nes nėra perskaitytų skyrių</string>
     <string name="information_cloudflare_bypass_failure">Nepavyko apeiti \"Cloudflare\"</string>
-    <string name="information_webview_required">\"WebView\" reikalingas \"Mihon\"</string>
+    <string name="information_webview_required">\"WebView\" reikalingas \"Mekuri\"</string>
     <string name="loader_not_implemented_error">Šaltinis nerastas</string>
     <string name="migration_selection_prompt">Pasirinkite šaltinį, iš kurio norite perkelti</string>
     <string name="migrate">Perkelti</string>

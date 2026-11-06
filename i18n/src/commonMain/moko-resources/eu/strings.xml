@@ -302,7 +302,7 @@
     <string name="notification_first_add_to_library">Mesedez, gehitu manga zure liburutegian hau egin aurretik</string>
     <string name="transition_pages_loading">Orriak kargatzen…</string>
     <string name="channel_common">Arrunta</string>
-    <string name="information_webview_required">WebView beharrezkoa da Mihon-rentzat</string>
+    <string name="information_webview_required">WebView beharrezkoa da Mekuri-rentzat</string>
     <string name="download_notifier_text_only_wifi">Ez dago Wi-Fi konexiorik erabilgarri</string>
     <string name="label_default">Lehenetsia</string>
     <string name="track">Jarraipena</string>

@@ -241,7 +241,7 @@
     <string name="none">Wala</string>
     <string name="ext_pending">Naghulat</string>
     <string name="ext_app_info">Impormasyon sa app</string>
-    <string name="untrusted_extension_message">Kini nga extension gipirmahan gamit ang dili kasaligan nga sertipiko ug wala gi-aktibo. \n \nAng usa ka malisyoso nga extension mahimong makabasa sa bisan unsang mga kredensyal sa pag-login nga gitipigan sa Mihon o ipatuman ang arbitraryong code. \n \nPinaagi sa pagsalig niini nga sertipiko gidawat nimo kini nga mga risgo.</string>
+    <string name="untrusted_extension_message">Kini nga extension gipirmahan gamit ang dili kasaligan nga sertipiko ug wala gi-aktibo. \n \nAng usa ka malisyoso nga extension mahimong makabasa sa bisan unsang mga kredensyal sa pag-login nga gitipigan sa Mekuri o ipatuman ang arbitraryong code. \n \nPinaagi sa pagsalig niini nga sertipiko gidawat nimo kini nga mga risgo.</string>
     <string name="pref_cutout_short">Ipakita ang sulod sa ginunting nga lugar</string>
     <string name="pref_page_transitions">I-animate ang mga transisyon sa panid</string>
     <string name="pref_custom_brightness">Custom nga kahayag</string>
@@ -427,7 +427,7 @@
     <string name="label_local">Lokal</string>
     <string name="pref_appearance_summary">Tema, format sa petsa ug panahon</string>
     <string name="action_not_now">Dili karon</string>
-    <string name="information_webview_required">Gikinahanlan ang WebView alang sa Mihon</string>
+    <string name="information_webview_required">Gikinahanlan ang WebView alang sa Mekuri</string>
     <string name="information_required_plain">*gikinahanlan</string>
     <string name="selected">Napili</string>
 </resources>

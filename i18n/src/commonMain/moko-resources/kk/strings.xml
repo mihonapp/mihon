@@ -231,7 +231,7 @@
     <string name="ext_install">Орнату</string>
     <string name="ext_app_info">Қолданба туралы</string>
     <string name="untrusted_extension">Сенімсіз кеңейту</string>
-    <string name="untrusted_extension_message">Бұл кеңейту сенімсіз сертификатпен қол қойылған және іске қосылмаған. \n \nЗиянды кеңейту Mihon-де сақталған кез келген кіру тіркелгі деректерін оқуы немесе еркін кодты орындауы мүмкін. \n \nОсы сертификатқа сену арқылы сіз осы қауіп-қатерді қабылдайсыз.</string>
+    <string name="untrusted_extension_message">Бұл кеңейту сенімсіз сертификатпен қол қойылған және іске қосылмаған. \n \nЗиянды кеңейту Mekuri-де сақталған кез келген кіру тіркелгі деректерін оқуы немесе еркін кодты орындауы мүмкін. \n \nОсы сертификатқа сену арқылы сіз осы қауіп-қатерді қабылдайсыз.</string>
     <string name="ext_install_service_notif">Кеңейту орнатылуда…</string>
     <string name="pref_fullscreen">Толық экранды</string>
     <string name="pref_page_transitions">Беттің ауысуын анимациялау</string>
@@ -477,7 +477,7 @@
     <string name="repeating">Қайта оқылуда</string>
     <string name="reading_list">Оқылудағылар Тізімі</string>
     <string name="update_check_no_new_updates">Жаңалтулар жоқ</string>
-    <string name="information_webview_required">Mihon-ны қолдану үшін WebView керек</string>
+    <string name="information_webview_required">Mekuri-ны қолдану үшін WebView керек</string>
     <string name="chapter_settings_updated">Әдепкі тарау параметрлері жаңартылды</string>
     <string name="download_notifier_no_network">Желі байланысы жоқ</string>
     <string name="information_empty_category_dialog">Сіздің кітапханаңызда санаттар жоқ.</string>

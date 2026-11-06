@@ -340,7 +340,7 @@
     <string name="creating_backup_error">Cópia de segurança falhou</string>
     <string name="backup_in_progress">Cópia de segurança já em progresso</string>
     <string name="label_downloaded_only">Apenas transferidos</string>
-    <string name="information_webview_required">WebView é necessária para Mihon</string>
+    <string name="information_webview_required">WebView é necessária para Mekuri</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
     <string name="add_tracking">Adicionar à monitorização</string>
     <string name="manga_info_collapse">Menos</string>

@@ -20,6 +20,11 @@ concurrency:
 permissions:
   contents: read
 
+# Mekuri: pushes to main are signed with the release key (secrets below);
+# pull requests are built with the default debug key and never publish anything.
+env:
+  MIHON_GITHUB_RELEASE: ${{ github.event_name == 'push' }}
+
 jobs:
   build:
     name: Build & Test App
@@ -61,14 +66,27 @@ jobs:
           name: test-report-${{ github.sha }}
           path: app/build/reports/tests/testDebugUnitTest
 
+      - name: Decode signing keystore
+        if: github.event_name == 'push'
+        run: echo "$SIGNING_KEY" | base64 -d > "${{ runner.temp }}/release.keystore"
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+
       - name: Build app
-        run: ./gradlew assembleRelease -Pdist=ci
+        run: ./gradlew assembleRelease -Pinclude-telemetry=false -Penable-updater=true
+        env:
+          storeFile: ${{ runner.temp }}/release.keystore
+          storePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyAlias: ${{ secrets.ALIAS }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload APK
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: arm64-v8a-${{ github.sha }}
-          path: app/build/outputs/apk/release/app-arm64-v8a-release.apk
+          name: mekuri-${{ github.event_name == 'push' && 'signed' || 'debug-signed' }}-${{ github.sha }}
+          path: |
+            app/build/outputs/apk/release/app-universal-release.apk
+            app/build/outputs/apk/release/app-arm64-v8a-release.apk
 
       - name: Upload mapping
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

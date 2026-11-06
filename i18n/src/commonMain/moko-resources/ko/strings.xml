@@ -93,7 +93,7 @@
     <string name="ext_untrusted">신뢰되지않음</string>
     <string name="ext_uninstall">삭제</string>
     <string name="untrusted_extension">신뢰할 수 없는 확장 앱</string>
-    <string name="untrusted_extension_message">일부 악의적인 확장 앱은 Mihon에 저장된 로그인 정보를 읽거나 임의의 코드를 실행할 수도 있습니다. \n \n이 확장 앱을 신뢰하면 이러한 위험에 노출될 수 있습니다.</string>
+    <string name="untrusted_extension_message">일부 악의적인 확장 앱은 Mekuri에 저장된 로그인 정보를 읽거나 임의의 코드를 실행할 수도 있습니다. \n \n이 확장 앱을 신뢰하면 이러한 위험에 노출될 수 있습니다.</string>
     <string name="pref_fullscreen">전체화면</string>
     <string name="pref_double_tap_anim_speed">더블 탭 애니메이션 속도</string>
     <string name="pref_show_page_number">페이지 번호 표시</string>
@@ -462,7 +462,7 @@
     <string name="skipped_reason_not_started">읽지 않은 만화를 건너 뛰었습니다</string>
     <string name="update_check_eol">이 안드로이드 버전은 더이상 지원되지 않습니다</string>
     <string name="information_cloudflare_bypass_failure">Cloudflare를 통과하지 못했습니다</string>
-    <string name="information_webview_required">Mihon 앱의 기능을 사용하려면 WebView가 필요합니다</string>
+    <string name="information_webview_required">Mekuri 앱의 기능을 사용하려면 WebView가 필요합니다</string>
     <string name="information_webview_outdated">호환성을 위해 WebView 어플리케이션을 업데이트 해 주세요</string>
     <string name="pref_navigate_pan">넓은 이미지 이동</string>
     <string name="obsolete_extension_message">이 확장 프로그램은 어떤 스토어와도 연결되어 있지 않습니다. 업데이트되지 않으며, 제대로 작동하지 않을 수 있고, 앱에 문제가 발생할 수 있습니다. 제거하는 것을 권장합니다.</string>
