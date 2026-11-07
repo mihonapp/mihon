@@ -26,8 +26,10 @@ import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.data.cache.ThumbnailCache
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
+import eu.kanade.tachiyomi.util.removeChapterThumbnails
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +51,7 @@ import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
@@ -71,8 +74,10 @@ class BrowseSourceViewModel(
     sourcePreferences: SourcePreferences,
     private val libraryPreferences: LibraryPreferences,
     private val coverCache: CoverCache,
+    private val thumbnailCache: ThumbnailCache,
     private val getRemoteManga: GetRemoteManga,
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga,
+    private val getChaptersByMangaId: GetChaptersByMangaId,
     private val getCategories: GetCategories,
     private val setMangaCategories: SetMangaCategories,
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags,
@@ -240,6 +245,7 @@ class BrowseSourceViewModel(
         appScope.launch {
             val update = if (manga.favorite) {
                 manga.removeCovers(coverCache)
+                manga.removeChapterThumbnails(thumbnailCache, getChaptersByMangaId)
                 MangaUpdate(manga.id) { favoriteAt = null }
             } else {
                 setMangaDefaultChapterFlags.await(manga)
