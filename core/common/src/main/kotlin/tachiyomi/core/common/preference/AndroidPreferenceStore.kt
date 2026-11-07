@@ -28,6 +28,10 @@ class AndroidPreferenceStore(private val sharedPreferences: SharedPreferences) :
     private val keyFlow = sharedPreferences.keyFlow
 
     override fun getString(key: String, defaultValue: String): Preference<String> {
+        return StringPrimitive(sharedPreferences, keyFlow, key) { defaultValue }
+    }
+
+    override fun getString(key: String, defaultValue: () -> String): Preference<String> {
         return StringPrimitive(sharedPreferences, keyFlow, key, defaultValue)
     }
 
