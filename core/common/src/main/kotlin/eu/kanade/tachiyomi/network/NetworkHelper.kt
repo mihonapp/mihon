@@ -65,6 +65,10 @@ class NetworkHelper(
             PREF_DOH_CONTROLD -> builder.dohControlD()
             PREF_DOH_NJALLA -> builder.dohNajalla()
             PREF_DOH_SHECAN -> builder.dohShecan()
+            PREF_DOH_CUSTOM -> {
+                val url = parseDohCustomUrl(preferences.dohProviderCustom.get())
+                if (url != null) builder.dohCustom(url) else builder.dohBlocked()
+            }
             else -> builder
         }
     }

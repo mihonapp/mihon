@@ -125,6 +125,7 @@ internal fun PreferenceItem(
                             }
                         }
                     },
+                    input = item.input,
                 )
             }
             is Preference.PreferenceItem.BasicListPreference -> {

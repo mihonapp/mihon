@@ -10,6 +10,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,6 +29,18 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.i18n.stringResource
 
+/**
+ * A text field shown under the entry with [key] while it is selected.
+ */
+class ListPreferenceInput(
+    val key: Any?,
+    val value: String,
+    val label: String,
+    val error: String,
+    val isValid: (String) -> Boolean,
+    val onValueChange: (String) -> Unit,
+)
+
 @Composable
 fun <T> ListPreferenceWidget(
     value: T,
@@ -36,6 +49,7 @@ fun <T> ListPreferenceWidget(
     icon: ImageVector?,
     entries: Map<out T, String>,
     onValueChange: (T) -> Unit,
+    input: ListPreferenceInput? = null,
 ) {
     var isDialogShown by remember { mutableStateOf(false) }
 
@@ -53,6 +67,7 @@ fun <T> ListPreferenceWidget(
             entries = entries,
             onValueChange = onValueChange,
             onDismissRequest = { isDialogShown = false },
+            input = input,
         )
     }
 }
@@ -65,7 +80,10 @@ fun <T> ListPreferenceDialog(
     onValueChange: (T) -> Unit,
     onDismissRequest: () -> Unit,
     message: String? = null,
+    input: ListPreferenceInput? = null,
 ) {
+    var text by remember { mutableStateOf(input?.value.orEmpty()) }
+
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = title?.let { { Text(text = it) } },
@@ -83,9 +101,31 @@ fun <T> ListPreferenceDialog(
                                     isSelected = isSelected,
                                     onSelected = {
                                         onValueChange(current.key)
-                                        onDismissRequest()
+                                        if (input == null || current.key != input.key) onDismissRequest()
                                     },
                                 )
+                            }
+                            if (input != null && current.key == input.key && isSelected) {
+                                item {
+                                    OutlinedTextField(
+                                        value = text,
+                                        onValueChange = {
+                                            text = it
+                                            input.onValueChange(it)
+                                        },
+                                        label = { Text(text = input.label) },
+                                        isError = !input.isValid(text),
+                                        supportingText = if (!input.isValid(text)) {
+                                            { Text(text = input.error) }
+                                        } else {
+                                            null
+                                        },
+                                        singleLine = true,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 4.dp, bottom = 8.dp),
+                                    )
+                                }
                             }
                         }
                     }
