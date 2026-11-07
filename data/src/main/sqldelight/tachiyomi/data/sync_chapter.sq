@@ -1,0 +1,45 @@
+-- When each chapter's reading state was decided, which the sync needs to let a correction travel: marking
+-- chapters unread, or going back to an earlier page, has to beat older progress made on another device.
+CREATE TABLE sync_chapter(
+    chapter_id INTEGER NOT NULL PRIMARY KEY,
+    -- In seconds. A refresh from the source rewrites chapter rows without anyone deciding anything, so
+    -- only a real change of read, bookmark or page moves it.
+    read_changed_at INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY(chapter_id) REFERENCES chapter (id)
+    ON DELETE CASCADE
+);
+
+CREATE TRIGGER sync_chapter_read_changed AFTER UPDATE OF user_read, user_bookmark, user_last_page_read ON chapter
+WHEN new.user_read != old.user_read
+    OR new.user_bookmark != old.user_bookmark
+    OR new.user_last_page_read != old.user_last_page_read
+BEGIN
+    INSERT INTO sync_chapter(chapter_id, read_changed_at) VALUES (new.id, strftime('%s', 'now'))
+    ON CONFLICT(chapter_id) DO UPDATE SET read_changed_at = excluded.read_changed_at;
+    INSERT INTO sync_manga(manga_id, change_count) VALUES (new.manga_id, 1)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+-- New and vanished chapters change the list the sync publishes, as reading does
+CREATE TRIGGER sync_chapter_inserted AFTER INSERT ON chapter
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count) VALUES (new.manga_id, 1)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+CREATE TRIGGER sync_chapter_deleted AFTER DELETE ON chapter
+BEGIN
+    INSERT INTO sync_manga(manga_id, change_count)
+    SELECT old.manga_id, 1 WHERE EXISTS (SELECT 1 FROM manga WHERE id = old.manga_id)
+    ON CONFLICT(manga_id) DO UPDATE SET change_count = change_count + 1;
+END;
+
+getReadChangedAtByMangaId:
+SELECT C.remote_url, S.read_changed_at
+FROM sync_chapter S
+JOIN chapter C ON C.id = S.chapter_id
+WHERE C.manga_id = :mangaId;
+
+setReadChangedAt:
+INSERT INTO sync_chapter(chapter_id, read_changed_at) VALUES (:chapterId, :readChangedAt)
+ON CONFLICT(chapter_id) DO UPDATE SET read_changed_at = excluded.read_changed_at;

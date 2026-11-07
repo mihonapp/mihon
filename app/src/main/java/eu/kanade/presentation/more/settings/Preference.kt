@@ -19,12 +19,19 @@ sealed class Preference {
         abstract val onValueChanged: suspend (value: T) -> R
 
         /**
+         * Shifts the item to the right, so it reads as belonging to the setting that reveals it
+         * rather than as another option of the group.
+         */
+        open val indented: Boolean get() = false
+
+        /**
          * A basic [PreferenceItem] that only displays texts.
          */
         data class TextPreference(
             override val title: String,
             override val subtitle: String? = null,
             override val visible: Boolean = true,
+            override val indented: Boolean = false,
             val widget: @Composable (() -> Unit)? = null,
             val onClick: (() -> Unit)? = null,
         ) : PreferenceItem<String, Unit>() {
@@ -40,6 +47,7 @@ sealed class Preference {
             override val title: String,
             override val subtitle: String? = null,
             override val visible: Boolean = true,
+            override val indented: Boolean = false,
             override val onValueChanged: suspend (value: Boolean) -> Boolean = { true },
         ) : PreferenceItem<Boolean, Boolean>() {
             override val icon: ImageVector? = null
@@ -74,6 +82,7 @@ sealed class Preference {
                 { v, e -> subtitle?.format(e[v]) },
             override val icon: ImageVector? = null,
             override val visible: Boolean = true,
+            override val indented: Boolean = false,
             override val onValueChanged: suspend (value: T) -> Boolean = { true },
         ) : PreferenceItem<T, Boolean>() {
             internal fun internalSet(value: Any) = preference.set(value as T)

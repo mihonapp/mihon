@@ -38,6 +38,12 @@ import tachiyomi.presentation.core.util.collectAsState
 
 val LocalPreferenceHighlighted = compositionLocalOf(structuralEqualityPolicy()) { false }
 val LocalPreferenceMinHeight = compositionLocalOf(structuralEqualityPolicy()) { 56.dp }
+val LocalPreferenceIndent = compositionLocalOf(structuralEqualityPolicy()) { 0.dp }
+
+/**
+ * How far a sub-setting sits to the right of the setting it depends on.
+ */
+val SubPreferenceIndent = 24.dp
 
 @Composable
 fun StatusWrapper(
@@ -54,6 +60,7 @@ fun StatusWrapper(
         content = {
             CompositionLocalProvider(
                 LocalPreferenceHighlighted provides highlighted,
+                LocalPreferenceIndent provides if (item.indented) SubPreferenceIndent else 0.dp,
                 content = content,
             )
         },
