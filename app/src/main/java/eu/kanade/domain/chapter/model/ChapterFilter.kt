@@ -3,6 +3,7 @@ package eu.kanade.domain.chapter.model
 import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.manga.ChapterList
+import mihon.domain.source.model.sourceId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.manga.model.Manga
@@ -28,7 +29,7 @@ fun List<Chapter>.applyFilters(manga: Manga, downloadManager: DownloadManager): 
                     chapter.scanlator,
                     chapter.url,
                     manga.title,
-                    manga.source,
+                    chapter.sourceId(manga.source),
                 )
                 downloaded || isLocalManga
             }

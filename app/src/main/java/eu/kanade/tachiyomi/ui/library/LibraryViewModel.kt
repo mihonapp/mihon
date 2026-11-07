@@ -48,6 +48,7 @@ import kotlinx.coroutines.withContext
 import mihon.core.common.utils.mutate
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.library.model.search.QueryNode
+import mihon.domain.source.model.storageSources
 import mihon.feature.library.matches
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -575,8 +576,8 @@ class LibraryViewModel(
 
             if (deleteChapters) {
                 mangas.forEach { manga ->
-                    val source = sourceManager.get(manga.source) as? HttpSource
-                    if (source != null) {
+                    val source = sourceManager.getOrStub(manga.source)
+                    if (source is HttpSource || manga.storageSources().size > 1) {
                         downloadManager.deleteManga(manga, source)
                     }
                 }

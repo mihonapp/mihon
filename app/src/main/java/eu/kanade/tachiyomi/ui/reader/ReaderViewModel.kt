@@ -16,7 +16,7 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ViewModelAssistedFactoryKey
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.chapter.model.toSChapter
+import eu.kanade.domain.chapter.model.toSourceChapter
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.readerOrientation
@@ -76,8 +76,10 @@ import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import mihon.data.cache.ChapterCache
+import mihon.domain.source.model.sourceId
 import tachiyomi.core.common.preference.toggle
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
@@ -116,6 +118,7 @@ class ReaderViewModel(
     private val trackChapter: TrackChapter,
     private val getManga: GetManga,
     private val getChaptersByMangaId: GetChaptersByMangaId,
+    private val getChapter: GetChapter,
     private val getNextChapters: GetNextChapters,
     private val upsertHistory: UpsertHistory,
     private val updateChapter: UpdateChapter,
@@ -246,7 +249,7 @@ class ReaderViewModel(
                                             it.scanlator,
                                             it.url,
                                             manga.title,
-                                            manga.source,
+                                            it.sourceId(manga.source),
                                         )
                                     ) ||
                                 (
@@ -256,7 +259,7 @@ class ReaderViewModel(
                                             it.scanlator,
                                             it.url,
                                             manga.title,
-                                            manga.source,
+                                            it.sourceId(manga.source),
                                         )
                                     ) ||
                                 (manga.bookmarkedFilterRaw == Manga.CHAPTER_SHOW_BOOKMARKED && !it.bookmark) ||
@@ -360,6 +363,8 @@ class ReaderViewModel(
                     ::canLoadAhead,
                     manga,
                     source,
+                    sourceManager,
+                    getChapter,
                 )
 
                 chapterList = loadChapterList()
@@ -390,6 +395,7 @@ class ReaderViewModel(
             chapterList.getOrNull(chapterPos + 1),
         )
         preloadNextChapterAfter(newChapters)
+        val activeSource = sourceManager.getOrStub(chapter.chapter.sourceId(manga!!.source))
 
         withContext(Dispatchers.Main) {
             val toDownload = cancelQueuedDownloads(newChapters.currChapter)
@@ -401,6 +407,7 @@ class ReaderViewModel(
                 chapterToDownload = toDownload
                 it.copy(
                     viewerChapters = newChapters,
+                    source = activeSource,
                     bookmarked = newChapters.currChapter.chapter.bookmark,
                 )
             }
@@ -495,13 +502,12 @@ class ReaderViewModel(
         if (chapter.pageLoader?.isLocal == false) {
             val manga = manga ?: return
             val dbChapter = chapter.chapter
-            val source = state.value.source ?: return
             val isDownloaded = downloadManager.isChapterDownloadedOnDisk(
                 dbChapter.name,
                 dbChapter.scanlator,
                 dbChapter.url,
                 manga.title,
-                source,
+                sourceManager.getOrStub(dbChapter.sourceId(manga.source)),
             )
             if (isDownloaded) {
                 chapter.state = ReaderChapter.State.Wait
@@ -569,7 +575,7 @@ class ReaderViewModel(
                 nextChapter.scanlator,
                 nextChapter.url,
                 manga.title,
-                manga.source,
+                nextChapter.sourceId(manga.source),
             )
             if (!isNextChapterDownloaded) return@launch
 
@@ -776,7 +782,7 @@ class ReaderViewModel(
     fun getSource() = state.value.source as? HttpSource
 
     fun getChapterUrl(): String? {
-        val sChapter = getCurrentChapter()?.chapter?.toSChapter() ?: return null
+        val sChapter = getCurrentChapter()?.chapter?.toSourceChapter() ?: return null
         val source = getSource() ?: return null
 
         return try {

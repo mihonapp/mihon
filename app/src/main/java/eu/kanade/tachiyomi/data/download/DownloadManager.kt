@@ -20,6 +20,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.domain.source.model.sourceId
+import mihon.domain.source.model.storageSources
+import mihon.domain.source.model.withoutLinkedSources
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
 import tachiyomi.core.common.util.system.ImageUtil
@@ -113,9 +116,8 @@ class DownloadManager(
     private suspend fun downloadFromChapterId(chapterId: Long): Download? {
         val chapter = getChapter.await(chapterId) ?: return null
         val manga = getManga.await(chapter.mangaId) ?: return null
-        val source = sourceManager.get(manga.source) as? HttpSource ?: return null
-
-        return Download(source, manga, chapter)
+        downloader.queueChapters(manga, listOf(chapter), autoStart = false)
+        return getQueuedDownloadOrNull(chapterId)
     }
 
     /**
@@ -191,7 +193,9 @@ class DownloadManager(
      * @param manga the manga of the chapters.
      */
     fun getDownloadedChapterIds(chapters: List<Chapter>, manga: Manga): Set<Long> {
-        return cache.getDownloadedChapterIds(chapters, manga.title, manga.source)
+        return chapters.groupBy { it.sourceId(manga.source) }.flatMap { (sourceId, group) ->
+            cache.getDownloadedChapterIds(group, manga.title, sourceId)
+        }.toSet()
     }
 
     /**
@@ -243,7 +247,8 @@ class DownloadManager(
      * @param manga the manga to check.
      */
     fun getDownloadCount(manga: Manga): Int {
-        return cache.getDownloadCount(manga)
+        return manga.storageSources()
+            .sumOf { cache.getDownloadCount(manga.copy(source = it)) }
     }
 
     /**
@@ -252,7 +257,19 @@ class DownloadManager(
      * @param manga the manga to check.
      */
     fun getDownloadCounts(manga: List<Manga>): Map<Long, Int> {
-        return cache.getDownloadCounts(manga)
+        return cache.getDownloadCounts(manga).toMutableMap().apply {
+            manga.filter { it.storageSources().size > 1 }.forEach { put(it.id, getDownloadCount(it)) }
+        }
+    }
+
+    suspend fun isChapterDownloadedOnDisk(chapter: Chapter, manga: Manga): Boolean {
+        return isChapterDownloadedOnDisk(
+            chapter.name,
+            chapter.scanlator,
+            chapter.url,
+            manga.title,
+            sourceManager.getOrStub(chapter.sourceId(manga.source)),
+        )
     }
 
     suspend fun cancelQueuedDownloads(downloads: List<Download>) {
@@ -275,13 +292,16 @@ class DownloadManager(
 
             downloader.dequeue(filteredChapters)
 
-            val (mangaDir, chapterDirs) = provider.findChapterDirs(filteredChapters, manga, source)
-            chapterDirs.forEach { it.delete() }
-            cache.removeChapters(filteredChapters, manga)
-
-            // Delete manga directory if empty
-            if (mangaDir?.listFiles()?.isEmpty() == true) {
-                deleteManga(manga, source, removeQueued = false)
+            filteredChapters.groupBy { it.sourceId(manga.source) }.forEach { (sourceId, group) ->
+                val originSource = sourceManager.getOrStub(sourceId)
+                val originManga = manga.copy(source = sourceId)
+                val (mangaDir, chapterDirs) = provider.findChapterDirs(group, originManga, originSource)
+                chapterDirs.forEach { it.delete() }
+                cache.removeChapters(group, originManga)
+                if (mangaDir?.listFiles()?.isEmpty() == true) {
+                    provider.findMangaDir(manga.title, originSource)?.delete()
+                    cache.removeManga(originManga)
+                }
             }
         }
     }
@@ -298,14 +318,15 @@ class DownloadManager(
             if (removeQueued) {
                 downloader.removeFromQueue(manga)
             }
-            provider.findMangaDir(manga.title, source)?.delete()
-            cache.removeManga(manga)
-
-            // Delete source directory if empty
-            val sourceDir = provider.findSourceDir(source)
-            if (sourceDir?.listFiles()?.isEmpty() == true) {
-                sourceDir.delete()
-                cache.removeSource(source)
+            manga.storageSources().forEach { sourceId ->
+                val originSource = sourceManager.getOrStub(sourceId)
+                provider.findMangaDir(manga.title, originSource)?.delete()
+                cache.removeManga(manga.copy(source = sourceId))
+                val sourceDir = provider.findSourceDir(originSource)
+                if (sourceDir?.listFiles()?.isEmpty() == true) {
+                    sourceDir.delete()
+                    cache.removeSource(originSource)
+                }
             }
         }
     }
@@ -326,7 +347,7 @@ class DownloadManager(
     suspend fun deletePendingChapters() {
         val pendingChapters = pendingDeleter.getPendingChapters()
         for ((manga, chapters) in pendingChapters) {
-            val source = sourceManager.get(manga.source) ?: continue
+            val source = sourceManager.getOrStub(manga.source)
             deleteChapters(chapters, manga, source)
         }
     }
@@ -363,7 +384,10 @@ class DownloadManager(
      * @param manga the manga
      * @param newTitle the new manga title.
      */
-    suspend fun renameManga(manga: Manga, newTitle: String) = withContext(Dispatchers.IO) {
+    suspend fun renameManga(manga: Manga, newTitle: String): Unit = withContext(Dispatchers.IO) {
+        manga.storageSources().filter { it != manga.source }.forEach { sourceId ->
+            renameManga(manga.copy(source = sourceId, memo = manga.memo.withoutLinkedSources()), newTitle)
+        }
         val source = sourceManager.getOrStub(manga.source)
         val oldFolder = provider.findMangaDir(manga.title, source) ?: return@withContext
         val newName = provider.getMangaDirName(newTitle)

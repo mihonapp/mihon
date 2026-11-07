@@ -6,4 +6,5 @@ import tachiyomi.domain.manga.model.Manga
 data class RemoteMangaUpdate(
     val manga: Manga,
     val newChapters: List<Chapter>,
+    val sourceFailures: List<String> = emptyList(),
 )

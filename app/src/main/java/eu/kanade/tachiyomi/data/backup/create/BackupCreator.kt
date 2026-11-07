@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
+import mihon.core.common.extensions.toJsonObject
+import mihon.domain.source.model.storageSources
 import okio.buffer
 import okio.gzip
 import okio.sink
@@ -98,7 +100,7 @@ class BackupCreator(
                     val sourceIds = mutableSetOf<Long>()
                     backupManga.collect { manga ->
                         writer.writeEntry(manga)
-                        sourceIds += manga.source
+                        sourceIds += manga.memo.toJsonObject().storageSources(manga.source)
                     }
                     writer.writeMetadata(
                         Backup(
@@ -169,9 +171,10 @@ class BackupCreator(
         private const val MAX_AUTO_BACKUPS: Int = 4
         private val FILENAME_REGEX = """${BuildConfig.APPLICATION_ID}_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}.tachibk""".toRegex()
 
-        fun getFilename(): String {
+        fun getFilename(officialCompatibility: Boolean = false): String {
             val date = SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.ENGLISH).format(Date())
-            return "${BuildConfig.APPLICATION_ID}_$date.tachibk"
+            val suffix = if (officialCompatibility) "_official" else ""
+            return "${BuildConfig.APPLICATION_ID}_$date$suffix.tachibk"
         }
     }
 }

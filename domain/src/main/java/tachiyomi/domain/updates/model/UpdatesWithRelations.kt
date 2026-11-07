@@ -16,4 +16,5 @@ data class UpdatesWithRelations(
     val sourceId: Long,
     val dateFetch: Instant,
     val coverData: MangaCover,
+    val downloadSourceId: Long = sourceId,
 )
