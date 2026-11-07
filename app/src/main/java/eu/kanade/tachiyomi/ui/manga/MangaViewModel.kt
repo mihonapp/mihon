@@ -291,7 +291,8 @@ class MangaViewModel(
             it.isAnySelected
             it.selectedChapters
             it.hasUnreadChapters
-            it.hasReadChapters
+            it.hasStartedReading
+            it.nextUnreadChapter
             it.missingChapterCount
         }
         .flowOn(Dispatchers.IO)
@@ -651,8 +652,7 @@ class MangaViewModel(
      * Returns the next unread chapter or null if everything is read.
      */
     fun getNextUnreadChapter(): Chapter? {
-        val successState = successState ?: return null
-        return successState.chapters.getNextUnread(successState.manga)
+        return successState?.nextUnreadChapter
     }
 
     private fun getUnreadChapters(): List<Chapter> {
@@ -1127,8 +1127,12 @@ class MangaViewModel(
                 processedChapters.fastAny { !it.chapter.read }
             }
 
-            val hasReadChapters by lazy {
-                chapters.fastAny { it.chapter.read }
+            val hasStartedReading by lazy {
+                chapters.fastAny { it.chapter.read || it.chapter.lastPageRead > 0 }
+            }
+
+            val nextUnreadChapter by lazy {
+                chapters.getNextUnread(manga)
             }
 
             val missingChapterCount by lazy {
