@@ -62,6 +62,7 @@ import mihon.icons.materialsymbols.automirroredrounded.Help
 import mihon.icons.materialsymbols.rounded.Close
 import mihon.icons.materialsymbols.roundedfilled.Visibility
 import mihon.icons.materialsymbols.roundedfilled.VisibilityOff
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -86,9 +87,11 @@ object SettingsTrackingScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val context = LocalContext.current
+        val scope = rememberCoroutineScope()
         val trackPreferences = remember { context.appGraph.trackPreferences }
         val trackerManager = remember { context.appGraph.trackerManager }
         val sourceManager = remember { context.appGraph.sourceManager }
+        val syncLibraryTracks = remember { context.appGraph.syncLibraryTracks }
 
         var dialog by remember { mutableStateOf<Any?>(null) }
         dialog?.run {
@@ -135,6 +138,24 @@ object SettingsTrackingScreen : SearchableSettings {
                 entries = AutoTrackState.entries
                     .associateWith { stringResource(it.titleRes) },
                 title = stringResource(MR.strings.pref_auto_update_manga_on_mark_read),
+            ),
+            Preference.PreferenceItem.SwitchPreference(
+                preference = trackPreferences.twoWaySync,
+                title = stringResource(MR.strings.pref_two_way_sync),
+                subtitle = stringResource(MR.strings.pref_two_way_sync_summary),
+            ),
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_sync_library_trackers),
+                subtitle = stringResource(MR.strings.pref_sync_library_trackers_summary),
+                onClick = {
+                    scope.launch {
+                        context.toast(context.stringResource(MR.strings.syncing_library))
+                        withContext(Dispatchers.IO) {
+                            syncLibraryTracks.await()
+                        }
+                        context.toast(context.stringResource(MR.strings.library_sync_complete))
+                    }
+                },
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.services),
