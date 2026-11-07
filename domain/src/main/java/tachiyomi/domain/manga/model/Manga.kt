@@ -52,6 +52,9 @@ data class Manga(
     val displayMode: Long
         get() = chapterFlags and CHAPTER_DISPLAY_MASK
 
+    val chapterThumbnail: Boolean
+        get() = (chapterFlags and CHAPTER_THUMBNAIL_MASK) != 0L
+
     val unreadFilterRaw: Long
         get() = chapterFlags and CHAPTER_UNREAD_MASK
 
@@ -108,6 +111,9 @@ data class Manga(
         const val CHAPTER_DISPLAY_NAME = 0x00000000L
         const val CHAPTER_DISPLAY_NUMBER = 0x00100000L
         const val CHAPTER_DISPLAY_MASK = 0x00100000L
+
+        const val CHAPTER_THUMBNAIL = 0x00200000L
+        const val CHAPTER_THUMBNAIL_MASK = 0x00200000L
 
         /**
          * [favoriteAt] of an entry added to the library before the time it was added was recorded.

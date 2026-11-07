@@ -762,7 +762,7 @@ private fun LazyListScope.sharedChapterItems(
                             )
                         },
                     scanlator = item.chapter.scanlator.takeIf { !it.isNullOrBlank() },
-                    thumbnailUrl = item.chapter.thumbnailUrl,
+                    thumbnailUrl = item.chapter.thumbnailUrl.takeIf { manga.chapterThumbnail },
                     thumbnailAspectRatio = item.chapter.thumbnailAspectRatio,
                     thumbnailLastModified = item.chapter.thumbnailLastModified,
                     read = item.chapter.read,

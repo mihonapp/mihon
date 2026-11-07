@@ -42,6 +42,14 @@ class SetMangaChapterFlags(
         )
     }
 
+    suspend fun awaitSetChapterThumbnail(manga: Manga, flag: Long): Boolean {
+        return mangaRepository.update(
+            MangaUpdate(manga.id) {
+                chapterFlags = manga.chapterFlags.setFlag(flag, Manga.CHAPTER_THUMBNAIL_MASK)
+            },
+        )
+    }
+
     suspend fun awaitSetSortingModeOrFlipOrder(manga: Manga, flag: Long): Boolean {
         val newFlags = manga.chapterFlags.let {
             if (manga.sorting == flag) {
@@ -74,6 +82,7 @@ class SetMangaChapterFlags(
         sortingMode: Long,
         sortingDirection: Long,
         displayMode: Long,
+        chapterThumbnail: Long,
     ): Boolean {
         val flags = 0L.setFlag(unreadFilter, Manga.CHAPTER_UNREAD_MASK)
             .setFlag(downloadedFilter, Manga.CHAPTER_DOWNLOADED_MASK)
@@ -81,6 +90,7 @@ class SetMangaChapterFlags(
             .setFlag(sortingMode, Manga.CHAPTER_SORTING_MASK)
             .setFlag(sortingDirection, Manga.CHAPTER_SORT_DIR_MASK)
             .setFlag(displayMode, Manga.CHAPTER_DISPLAY_MASK)
+            .setFlag(chapterThumbnail, Manga.CHAPTER_THUMBNAIL_MASK)
         return mangaRepository.updateAll(mangaIds.map { MangaUpdate(it) { chapterFlags = flags } })
     }
 

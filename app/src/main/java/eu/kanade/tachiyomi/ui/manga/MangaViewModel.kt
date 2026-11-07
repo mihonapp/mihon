@@ -951,6 +951,20 @@ class MangaViewModel(
     }
 
     /**
+     * Set whether to display chapter thumbnail
+     * @param value flag for showing thumbnails
+     */
+    fun setChapterThumbnail(value: Boolean) {
+        val manga = successState?.manga ?: return
+
+        val flag = if (value) Manga.CHAPTER_THUMBNAIL_MASK else 0L
+
+        appScope.launch {
+            setMangaChapterFlags.awaitSetChapterThumbnail(manga, flag)
+        }
+    }
+
+    /**
      * Sets the sorting method and requests an UI update.
      * @param sort the sorting mode.
      */
