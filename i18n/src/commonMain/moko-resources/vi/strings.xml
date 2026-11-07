@@ -754,7 +754,6 @@
     <string name="onboarding_storage_help_info">Cập nhật từ phiên bản cũ hơn và không biết nên chọn gì? Tham khảo hướng dẫn lưu trữ để biết thêm thông tin.</string>
     <string name="ext_revoke_trust">Thu hồi quyền truy cập của tiện ích không xác định</string>
     <string name="onboarding_storage_help_action">Hướng dẫn lưu trữ</string>
-    <string name="action_open_repo">Nguồn mở</string>
     <string name="manga_interval_expected_update_soon">Sớm</string>
     <string name="manga_interval_custom_amount">Tần suất cập nhật tùy chỉnh:</string>
     <string name="pref_display_profile">Tùy chỉnh hồ sơ màn hình</string>

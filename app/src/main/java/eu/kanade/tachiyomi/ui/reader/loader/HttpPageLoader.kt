@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import eu.kanade.domain.chapter.model.toSChapter
-import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -16,6 +15,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mihon.data.cache.ChapterCache
+import java.io.FileNotFoundException
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -41,14 +42,8 @@ internal class HttpPageLoader(
      * otherwise fallbacks to network.
      */
     override suspend fun getPages(): List<ReaderPage> {
-        val pages = try {
-            chapterCache.getPageListFromCache(chapter.chapter)
-        } catch (e: Throwable) {
-            if (e is CancellationException) {
-                throw e
-            }
-            source.getPageList(chapter.chapter.toSChapter())
-        }
+        val pages = chapterCache.getPageList(chapter.chapter)
+            ?: source.getPageList(chapter.chapter.toSChapter())
         return pages.mapIndexed { index, page ->
             // Don't trust sources and use our own indexing
             ReaderPage(index, page.url, page.imageUrl).also {
@@ -114,7 +109,7 @@ internal class HttpPageLoader(
                 try {
                     // Convert to pages without reader information
                     val pagesToSave = pages.map { Page(it.index, it.url, it.imageUrl) }
-                    chapterCache.putPageListToCache(chapter.chapter, pagesToSave)
+                    chapterCache.putPageList(chapter.chapter, pagesToSave)
                 } catch (e: Throwable) {
                     if (e is CancellationException) {
                         throw e
@@ -230,13 +225,12 @@ internal class HttpPageLoader(
             }
             val imageUrl = page.imageUrl!!
 
-            if (force || !chapterCache.isImageInCache(imageUrl)) {
+            val file = chapterCache.getImageFile(imageUrl).takeUnless { force } ?: run {
                 val live = page.downloadStream
                 page.status = Page.State.DownloadImage
                 try {
-                    val imageResponse = source.getImage(page)
-                    chapterCache.putImageToCache(imageUrl, imageResponse, live)
-                    live?.finish()
+                    chapterCache.putImage(imageUrl, source.getImage(page), live)
+                        .also { live?.finish() }
                 } catch (e: Throwable) {
                     live?.finish(e)
                     throw e
@@ -244,7 +238,16 @@ internal class HttpPageLoader(
             }
 
             page.downloadStream = null
-            page.stream = { chapterCache.getImageFile(imageUrl).inputStream() }
+            page.stream = {
+                try {
+                    file.inputStream()
+                } catch (e: FileNotFoundException) {
+                    // Gone from the cache since, so it's fetched again and shown once it's back
+                    page.status = Page.State.Queue
+                    launchLoadOnce(page)
+                    throw e
+                }
+            }
             page.status = Page.State.Ready
         } catch (e: Throwable) {
             page.downloadStream = null

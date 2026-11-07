@@ -735,7 +735,6 @@
     <string name="onboarding_permission_action_grant">Acordă</string>
     <string name="onboarding_guides_returning_user">Reinstalare %s?</string>
     <string name="pref_library_update_smart_update">Actualizare inteligentă</string>
-    <string name="action_open_repo">Repozitoriu open source</string>
     <string name="no_location_set">Nici o locație pentru stocare nu a fost setată</string>
     <string name="invalid_backup_file_error">Eroarea completă:</string>
     <string name="private_settings">Includeți setări sensibile (ex. token-ul serviciilor de urmărire al logări)</string>

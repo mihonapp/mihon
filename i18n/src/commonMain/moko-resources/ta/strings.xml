@@ -337,7 +337,6 @@
     <string name="ext_installer_shizuku_unavailable_dialog">சிசுகுவை நீட்டிப்பு நிறுவியாகப் பயன்படுத்த சிசுகுவை நிறுவி தொடங்கவும்.</string>
     <string name="ext_revoke_trust">நம்பகமான அறியப்படாத நீட்டிப்புகளைத் திரும்பப் பெறுங்கள்</string>
     <string name="untrusted_extension_message">தீங்கிழைக்கும் நீட்டிப்புகள் சேமிக்கப்பட்ட உள்நுழைவு நற்சான்றிதழ்களைப் படிக்கலாம் அல்லது தன்னிச்சையான குறியீட்டை இயக்கலாம்.\n\n இந்த நீட்டிப்பை நம்புவதன் மூலம், இந்த அபாயங்களை நீங்கள் ஏற்றுக்கொள்கிறீர்கள்.</string>
-    <string name="action_open_repo">திறந்த மூல ரெப்போ</string>
     <string name="pref_dual_page_split">பரந்த பக்கங்களைப் பிரிக்கவும்</string>
     <string name="pref_dual_page_invert">பிளவு பக்க வேலைவாய்ப்பு தலைகீழ்</string>
     <string name="pref_dual_page_invert_summary">பிளவு அகலமான பக்கங்களின் இடம் வாசிப்பு திசையுடன் பொருந்தவில்லை என்றால்</string>

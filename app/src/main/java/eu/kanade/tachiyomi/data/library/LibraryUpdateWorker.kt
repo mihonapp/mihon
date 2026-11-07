@@ -260,6 +260,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
 
         coroutineScope {
             mangaToUpdate.groupBy { it.manga.source }.values
+                .sortedByDescending { it.size }
                 .map { mangaInSource ->
                     async {
                         semaphore.withPermit {

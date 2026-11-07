@@ -731,7 +731,6 @@
     <string name="pref_library_update_smart_update">Intelligens frissítés</string>
     <string name="ext_permission_install_apps_warning">A bővítmények telepítéséhez engedélyek szükségesek. Az engedélyezéshez koppintson ide.</string>
     <string name="ext_revoke_trust">Megbízható ismeretlen kiterjesztések visszavonása</string>
-    <string name="action_open_repo">Nyílt forráskódú tároló</string>
     <string name="no_location_set">Nincs tárolási hely beállítva</string>
     <string name="action_create">Létrehoz</string>
     <string name="invalid_backup_file_error">Teljes hiba:</string>

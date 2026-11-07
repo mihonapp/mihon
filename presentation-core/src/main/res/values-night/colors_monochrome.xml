@@ -24,7 +24,6 @@
     <color name="monochrome_onSurfaceVariant">#FFFFFF</color>
     <color name="monochrome_outline">#FFFFFF</color>
     <color name="monochrome_outlineVariant">#FFFFFF</color>
-    <color name="monochrome_scrim">#000000</color>
     <color name="monochrome_inverseSurface">#FFFFFF</color>
     <color name="monochrome_inverseOnSurface">#000000</color>
     <color name="monochrome_inversePrimary">#000000</color>
