@@ -8,13 +8,8 @@ import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.data.download.model.Download
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import mihon.domain.source.model.origins
-import mihon.domain.source.model.sourceId
-import mihon.domain.source.model.withAssignedSource
-import mihon.domain.source.service.ChapterSourceRecovery
+import mihon.domain.source.service.ChapterDownloadPlanner
 import tachiyomi.domain.chapter.interactor.GetChapter
-import tachiyomi.domain.chapter.model.ChapterRemoteUpdate
-import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
@@ -30,7 +25,6 @@ class DownloadStore(
     private val json: Json,
     private val getManga: GetManga,
     private val getChapter: GetChapter,
-    private val chapterRepository: ChapterRepository,
 ) {
 
     /**
@@ -103,6 +97,7 @@ class DownloadStore(
             .mapNotNull { deserialize(it) }
             .sortedBy { it.order }
 
+        counter = maxOf(counter, (objs.maxOfOrNull { it.order } ?: -1) + 1)
         val downloads = mutableListOf<Download>()
         if (objs.isNotEmpty()) {
             val cachedManga = mutableMapOf<Long, Manga?>()
@@ -117,39 +112,17 @@ class DownloadStore(
                     preferences.edit { remove(obj.chapterId.toString()) }
                     continue
                 }
-                val chapter = if (original.sourceId(manga.source) in installed) {
-                    if (original.origins().isEmpty()) {
-                        original
-                    } else {
-                        original.copy(
-                            memo = original.memo.withAssignedSource(original.sourceId(manga.source)),
-                        )
-                    }
-                } else {
-                    ChapterSourceRecovery.recover(original, installed.keys, obj.attemptedSourceIds) ?: continue
-                }
-                val source = installed[chapter.sourceId(manga.source)] ?: continue
-                if (chapter.memo != original.memo) {
-                    chapterRepository.updateFromRemote(
-                        emptyList(),
-                        emptyList(),
-                        listOf(
-                            ChapterRemoteUpdate(
-                                chapter.id,
-                                chapter.name,
-                                chapter.scanlator,
-                                chapter.chapterNumber,
-                                chapter.dateUpload,
-                                chapter.sourceOrder,
-                                chapter.memo,
-                            ),
-                        ),
-                    )
-                }
+                val sourceId = ChapterDownloadPlanner.availableSources(
+                    original,
+                    manga.source,
+                    installed.keys,
+                    attemptedSourceIds = if (obj.failed) emptySet() else obj.attemptedSourceIds,
+                ).firstOrNull() ?: continue
+                val source = installed.getValue(sourceId)
                 downloads.add(
-                    Download(source, manga, chapter).apply {
+                    Download(source, manga, original).apply {
                         attemptedSourceIds = obj.attemptedSourceIds
-                        if (obj.failed && chapter.sourceId(manga.source) == original.sourceId(manga.source)) {
+                        if (obj.failed) {
                             status = Download.State.ERROR
                         }
                     },
@@ -171,7 +144,8 @@ class DownloadStore(
         val obj = DownloadObject(
             download.manga.id,
             download.chapter.id,
-            counter++,
+            // Allocating a waiting download must not move it to the end after an app restart.
+            preferences.getString(getKey(download), null)?.let(::deserialize)?.order ?: counter++,
             download.attemptedSourceIds,
             download.status == Download.State.ERROR,
         )

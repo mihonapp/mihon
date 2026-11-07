@@ -100,7 +100,7 @@ fun JsonObject.withChapterOrigins(origins: List<ChapterOrigin>): JsonObject = Js
 
 fun JsonObject.withoutChapterOrigins(): JsonObject = JsonObject(this - CHAPTER_ORIGINS_KEY - ASSIGNED_SOURCE_KEY)
 
-/** An origin describes an available version; it becomes assigned only when queued for download. */
+/** An origin describes an available version; it becomes assigned only when downloading starts. */
 fun JsonObject.assignedSourceId(): Long? = (this[ASSIGNED_SOURCE_KEY] as? JsonPrimitive)?.longOrNull
 
 fun Chapter.assignedSourceId(): Long? = memo.assignedSourceId()

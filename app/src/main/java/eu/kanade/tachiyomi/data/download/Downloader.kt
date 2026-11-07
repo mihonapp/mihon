@@ -56,6 +56,7 @@ import mihon.domain.source.model.withChapterOrigins
 import mihon.domain.source.service.ChapterDownloadPlanner
 import mihon.domain.source.service.ChapterSourceRecovery
 import mihon.domain.source.service.SourceRecoveryState
+import mihon.domain.source.service.awaitSourceResponse
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
@@ -248,19 +249,25 @@ class Downloader(
                 downloadPreferences.parallelSourceLimit.changes(),
             ) { a, b -> a to b }.transformLatest { (queue, parallelCount) ->
                 while (true) {
-                    val activeDownloads = queue.asSequence()
+                    val activeDownloads = queue
                         // Ignore completed downloads, leave them in the queue
                         .filter { it.status.value <= Download.State.DOWNLOADING.value }
-                        .groupBy { it.source }
-                        .toList()
+                        // Keep running workers inside the limit before considering waiting chapters.
+                        .sortedByDescending { it.status == Download.State.DOWNLOADING }
+                        .flatMap { download -> candidateSources(download) }
+                        .distinct()
                         .take(parallelCount)
-                        .map { (_, downloads) -> downloads.first() }
+                        .toList()
                     emit(activeDownloads)
 
                     if (activeDownloads.isEmpty()) break
                     // Suspend until a download enters the ERROR state
                     val activeDownloadsErroredFlow =
-                        combine(activeDownloads.map(Download::statusFlow)) { states ->
+                        combine(
+                            queue.filter {
+                                it.status.value <= Download.State.DOWNLOADING.value
+                            }.map(Download::statusFlow),
+                        ) { states ->
                             states.contains(Download.State.ERROR)
                         }.filter { it }
                     activeDownloadsErroredFlow.first()
@@ -281,7 +288,7 @@ class Downloader(
                 }
 
                 activeDownloadsFlow.collectLatest { activeDownloads ->
-                    val activeSources = activeDownloads.map { it.source }
+                    val activeSources = activeDownloads
                     val sourceJobsToStop = sourceJobs.filter { it.key !in activeSources }
                     sourceJobsToStop.forEach { (source, job) ->
                         job.cancel()
@@ -310,26 +317,93 @@ class Downloader(
         val slots = Semaphore(downloadPreferences.parallelPageLimit.get())
         while (true) {
             // A canceled job can mark a chapter as downloading after it's been reset, so that counts as waiting too
-            val download = queueState
-                .map { queue ->
-                    queue.firstOrNull {
-                        it.source == source &&
-                            (it.status == Download.State.QUEUE || it.status == Download.State.DOWNLOADING) &&
-                            it !in downloadJobs
-                    }
-                }
-                .filterNotNull()
-                .first()
             val pagesStarted = CompletableDeferred<Unit>()
-            val job = launchDownloadJob(download, slots, pagesStarted, owner)
-            downloadJobs[download] = job
-            job.invokeOnCompletion {
-                downloadJobs.remove(download, job)
-                // A job canceled before it starts never reaches its finally block
-                pagesStarted.complete(Unit)
-            }
+            queueState.map {
+                lock.withLock {
+                    val waiting = queueState.value.firstOrNull {
+                        (it.status == Download.State.QUEUE || it.status == Download.State.DOWNLOADING) &&
+                            it !in downloadJobs && source in candidateSources(it)
+                    } ?: return@withLock null
+                    val download = allocateDownload(waiting, source) ?: return@withLock null
+                    val job = launchDownloadJob(download, slots, pagesStarted, owner)
+                    downloadJobs[download] = job
+                    job.invokeOnCompletion {
+                        downloadJobs.remove(download, job)
+                        // A job canceled before it starts never reaches its finally block
+                        pagesStarted.complete(Unit)
+                    }
+                    download
+                }
+            }.filterNotNull().first()
             pagesStarted.await()
         }
+    }
+
+    private suspend fun candidateSources(download: Download): List<HttpSource> {
+        // Reusing a page list requires the same edition after pause/resume.
+        if (download.pages != null || download.status == Download.State.DOWNLOADING) return listOf(download.source)
+        return candidateSources(download.chapter, download.manga.source, download.attemptedSourceIds)
+    }
+
+    private suspend fun candidateSources(
+        chapter: Chapter,
+        defaultSourceId: Long,
+        attemptedSourceIds: Set<Long> = emptySet(),
+    ): List<HttpSource> {
+        val installed = sourceManager.getOnlineSources().associateBy { it.id }
+        return ChapterDownloadPlanner.availableSources(
+            chapter,
+            defaultSourceId,
+            installed.keys,
+            sourceRecovery.unavailableSources(),
+            attemptedSourceIds,
+        ).mapNotNull(installed::get)
+    }
+
+    /** Called under the queue lock only when a source worker is ready to start this chapter. */
+    private suspend fun allocateDownload(waiting: Download, source: HttpSource): Download? {
+        if (waiting.pages != null) {
+            waiting.status = Download.State.DOWNLOADING
+            return waiting
+        }
+        val current = chapterRepository.getChapterById(waiting.chapter.id) ?: waiting.chapter
+        val chapter = ChapterDownloadPlanner.plan(
+            listOf(current),
+            waiting.manga.source,
+            setOf(source.id),
+            emptyMap(),
+        ).firstOrNull() ?: run {
+            val refreshed = Download(waiting.source, waiting.manga, current).apply {
+                attemptedSourceIds = waiting.attemptedSourceIds
+                status = Download.State.QUEUE
+            }
+            _queueState.update { queue -> queue.map { if (it === waiting) refreshed else it } }
+            return null
+        }
+        if (chapter.memo != current.memo) {
+            chapterRepository.updateFromRemote(
+                emptyList(),
+                emptyList(),
+                listOf(
+                    ChapterRemoteUpdate(
+                        chapter.id,
+                        chapter.name,
+                        chapter.scanlator,
+                        chapter.chapterNumber,
+                        chapter.dateUpload,
+                        chapter.sourceOrder,
+                        chapter.memo,
+                    ),
+                ),
+            )
+        }
+        val allocated = Download(source, waiting.manga, chapter).apply {
+            attemptedSourceIds = waiting.attemptedSourceIds
+            status = Download.State.DOWNLOADING
+        }
+        store.addAll(listOf(allocated))
+        _queueState.update { queue -> queue.map { if (it === waiting) allocated else it } }
+        return allocated
     }
 
     private fun CoroutineScope.launchDownloadJob(
@@ -386,25 +460,10 @@ class Downloader(
                 store.addAll(listOf(download))
                 return@withLock false
             }
-            chapterRepository.updateFromRemote(
-                emptyList(),
-                emptyList(),
-                listOf(
-                    ChapterRemoteUpdate(
-                        chapter.id,
-                        chapter.name,
-                        chapter.scanlator,
-                        chapter.chapterNumber,
-                        chapter.dateUpload,
-                        chapter.sourceOrder,
-                        chapter.memo,
-                    ),
-                ),
-            )
             val replacement = Download(
                 installed.getValue(chapter.sourceId(download.manga.source)),
                 download.manga,
-                chapter,
+                current,
             )
                 .apply {
                     attemptedSourceIds = download.attemptedSourceIds
@@ -452,35 +511,9 @@ class Downloader(
                 val queuedChapterIds = queueState.value.mapTo(HashSet()) { it.chapter.id }
                 val requested = chapters.filter { it.id !in downloadedChapterIds && it.id !in queuedChapterIds }
                     .sortedByDescending { it.sourceOrder }
-                val planned = ChapterDownloadPlanner.plan(
-                    requested,
-                    manga.source,
-                    sourceManager.getAll().filterIsInstance<HttpSource>().mapTo(mutableSetOf()) { it.id },
-                    queueState.value.groupingBy { it.source.id }.eachCount(),
-                    sourceRecovery.unavailableSources(),
-                )
-                val requestedById = requested.associateBy { it.id }
-                val changed = planned.filter { chapter -> requestedById.getValue(chapter.id).memo != chapter.memo }
-                if (changed.isNotEmpty()) {
-                    chapterRepository.updateFromRemote(
-                        emptyList(),
-                        emptyList(),
-                        changed.map {
-                            ChapterRemoteUpdate(
-                                it.id,
-                                it.name,
-                                it.scanlator,
-                                it.chapterNumber,
-                                it.dateUpload,
-                                it.sourceOrder,
-                                it.memo,
-                            )
-                        },
-                    )
-                }
-                planned.mapNotNull {
-                    val sourceId = it.sourceId(manga.source)
-                    val source = sourceManager.get(sourceId) as? HttpSource ?: return@mapNotNull null
+                requested.mapNotNull {
+                    val source = candidateSources(it, manga.source).firstOrNull()
+                        ?: return@mapNotNull null
                     Download(source, manga, it)
                 }.also { addAllToQueue(it) }
             }
@@ -572,7 +605,7 @@ class Downloader(
             // If the page list already exists, start from the file
             val pageList = download.pages ?: run {
                 // Otherwise, pull page list from network and add them to download object
-                val pages = download.source.getPageList(download.chapter.toSourceChapter())
+                val pages = awaitSourceResponse { download.source.getPageList(download.chapter.toSourceChapter()) }
 
                 if (pages.isEmpty()) {
                     throw Exception(context.stringResource(MR.strings.page_list_empty_error))
@@ -595,9 +628,11 @@ class Downloader(
                         if (page.imageUrl.isNullOrEmpty()) {
                             page.status = Page.State.LoadPage
                             try {
-                                page.imageUrl = download.source.getImageUrl(page)
+                                page.imageUrl = awaitSourceResponse { download.source.getImageUrl(page) }
                             } catch (e: Throwable) {
                                 if (e is CancellationException) throw e
+                                // Stop sibling page requests so a dead provider doesn't stall every page in turn.
+                                if (isSourceUnavailable(e)) throw e
                                 page.status = Page.State.Error(e)
                             }
                         }
@@ -695,6 +730,8 @@ class Downloader(
             page.status = Page.State.Ready
         } catch (e: Throwable) {
             if (e is CancellationException) throw e
+            // Recover the chapter immediately when its provider is unavailable.
+            if (isSourceUnavailable(e)) throw e
             // Mark this page as error and allow to download the remaining
             page.progress = 0
             page.status = Page.State.Error(e)
@@ -736,9 +773,9 @@ class Downloader(
             }
             emit(file)
         }
-            // Retry 3 times, waiting 2, 4 and 8 seconds between attempts.
-            .retryWhen { _, attempt ->
-                if (attempt < 3) {
+            // Retry page-specific errors; unavailable providers go directly to chapter recovery.
+            .retryWhen { error, attempt ->
+                if (!isSourceUnavailable(error) && attempt < 3) {
                     delay((2L shl attempt.toInt()).seconds)
                     true
                 } else {

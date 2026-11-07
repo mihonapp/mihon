@@ -26,6 +26,35 @@ class ChapterDownloadPlannerTest {
     }
 
     @Test
+    fun `waiting chapter exposes all providers without assigning one`() {
+        val waiting = chapter(1)
+        ChapterDownloadPlanner.availableSources(waiting, 1, setOf(1, 2)) shouldBe setOf(1L, 2L)
+        waiting.assignedSourceId() shouldBe null
+        val started = ChapterDownloadPlanner.plan(listOf(waiting), 1, setOf(2), emptyMap()).single()
+        started.assignedSourceId() shouldBe 2L
+    }
+
+    @Test
+    fun `waiting chapters exclude failed and cooling providers when alternatives exist`() {
+        val waiting = chapter(1)
+        ChapterDownloadPlanner.availableSources(waiting, 1, setOf(1, 2), setOf(2)) shouldBe setOf(1L)
+        ChapterDownloadPlanner.availableSources(
+            waiting,
+            1,
+            setOf(1, 2),
+            attemptedSourceIds = setOf(2),
+        ) shouldBe setOf(1L)
+        ChapterDownloadPlanner.availableSources(waiting, 1, setOf(2), setOf(2)) shouldBe setOf(2L)
+    }
+
+    @Test
+    fun `partially read waiting chapter offers only its current edition`() {
+        val waiting = chapter(1).copy(lastPageRead = 5)
+        ChapterDownloadPlanner.availableSources(waiting, 1, setOf(1, 2)) shouldBe setOf(2L)
+        ChapterDownloadPlanner.availableSources(waiting, 1, setOf(1)) shouldBe emptySet()
+    }
+
+    @Test
     fun `arbitrary subset is balanced independently of chapter number`() {
         val planned = ChapterDownloadPlanner.plan(listOf(chapter(2), chapter(4)), 1, setOf(1, 2), emptyMap())
         planned.map { it.sourceId(1) } shouldBe listOf(1L, 2L)
