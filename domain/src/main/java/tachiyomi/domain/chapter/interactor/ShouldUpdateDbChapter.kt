@@ -12,6 +12,9 @@ class ShouldUpdateDbChapter {
             dbChapter.dateUpload != sourceChapter.dateUpload ||
             dbChapter.chapterNumber != sourceChapter.chapterNumber ||
             dbChapter.sourceOrder != sourceChapter.sourceOrder ||
-            dbChapter.memo != sourceChapter.memo
+            dbChapter.memo != sourceChapter.memo ||
+            dbChapter.thumbnailUrl != sourceChapter.thumbnailUrl ||
+            dbChapter.thumbnailLastModified != sourceChapter.thumbnailLastModified ||
+            dbChapter.thumbnailLastModified == null
     }
 }
