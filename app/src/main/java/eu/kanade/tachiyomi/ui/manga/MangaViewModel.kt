@@ -20,9 +20,9 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.core.preference.asState
-import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
+import eu.kanade.domain.chapter.interactor.SetChapterHidden
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
@@ -64,6 +64,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -85,6 +86,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
@@ -121,6 +123,7 @@ class MangaViewModel(
     private val downloadManager: DownloadManager,
     private val downloadCache: DownloadCache,
     private val getMangaAndChapters: GetMangaWithChapters,
+    getChaptersByMangaId: GetChaptersByMangaId,
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga,
     private val getAvailableScanlators: GetAvailableScanlators,
     private val getExcludedScanlators: GetExcludedScanlators,
@@ -128,6 +131,7 @@ class MangaViewModel(
     private val setMangaChapterFlags: SetMangaChapterFlags,
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags,
     private val setReadStatus: SetReadStatus,
+    private val setChapterHidden: SetChapterHidden,
     private val updateChapter: UpdateChapter,
     private val updateManga: UpdateManga,
     private val getCategories: GetCategories,
@@ -179,8 +183,8 @@ class MangaViewModel(
     val isUpdateIntervalEnabled =
         LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions.get()
 
-    private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
-    private val selectedChapterIds = MutableStateFlow(emptySet<Long>())
+    private val chapterSelection = MangaChapterSelection()
+    private val selectedChapterIds = chapterSelection.ids
 
     private val dialog = MutableStateFlow<Dialog?>(null)
 
@@ -200,6 +204,13 @@ class MangaViewModel(
     }
 
     private val hideMissingChapters = libraryPreferences.hideMissingChapters.get()
+
+    // Recovery must include hidden chapters excluded by the normal scanlator filters.
+    private val hiddenChapters = getChaptersByMangaId.subscribeHidden(mangaId).map { chapters ->
+        chapters.map {
+            ChapterList.Item(chapter = it, downloadState = Download.State.NOT_DOWNLOADED)
+        }
+    }.distinctUntilChanged()
 
     private var hasPromptedToAddBefore = false
 
@@ -250,17 +261,17 @@ class MangaViewModel(
         .onStart { emit(0 to false) }
 
     val state: StateFlow<State> = combine(
-        mangaAndChapters,
+        combine(mangaAndChapters, hiddenChapters, ::Pair),
         scanlators,
         trackers,
         combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
-        combine(dialog, isRefreshingData, ::Pair),
+        combine(dialog, isRefreshingData, libraryPreferences.hideHiddenChapters.changes(), ::Triple),
     ) {
-            mangaAndChapters,
+            (mangaAndChapters, hiddenChapters),
             (availableScanlators, excludedScanlators),
             (trackingCount, hasLoggedInTrackers),
             (selectedIds, downloads),
-            (dialog, isRefreshingData),
+            (dialog, isRefreshingData, hideHiddenChapters),
         ->
         State.Success(
             manga = mangaAndChapters.manga,
@@ -282,6 +293,8 @@ class MangaViewModel(
             isRefreshingData = isRefreshingData,
             dialog = dialog,
             hideMissingChapters = hideMissingChapters,
+            hideHiddenChapters = hideHiddenChapters,
+            hiddenChapters = hiddenChapters,
         )
     }
         // Composition would otherwise build these on first read, on the main thread, for every new state
@@ -293,6 +306,8 @@ class MangaViewModel(
             it.hasUnreadChapters
             it.hasReadChapters
             it.missingChapterCount
+            // Drop ids that left the displayed list so they cannot reappear selected when revealed.
+            chapterSelection.retain(it.processedChapters)
         }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State.Loading)
@@ -621,6 +636,7 @@ class MangaViewModel(
         swipeAction: LibraryPreferences.ChapterSwipeAction,
     ) {
         val chapter = chapterItem.chapter
+        if (chapter.hidden) return
         when (swipeAction) {
             LibraryPreferences.ChapterSwipeAction.ToggleRead -> {
                 markChaptersRead(listOf(chapter), !chapter.read)
@@ -652,13 +668,15 @@ class MangaViewModel(
      */
     fun getNextUnreadChapter(): Chapter? {
         val successState = successState ?: return null
-        return successState.chapters.getNextUnread(successState.manga)
+        return successState.chapters.filterNot { it.chapter.hidden }.getNextUnread(successState.manga)
     }
 
     private fun getUnreadChapters(): List<Chapter> {
         val chapterItems = if (skipFiltered) filteredChapters.orEmpty() else allChapters.orEmpty()
         return chapterItems
-            .filter { (chapter, dlStatus) -> !chapter.read && dlStatus == Download.State.NOT_DOWNLOADED }
+            .filter { (chapter, dlStatus) ->
+                !chapter.hidden && !chapter.read && dlStatus == Download.State.NOT_DOWNLOADED
+            }
             .map { it.chapter }
     }
 
@@ -671,7 +689,9 @@ class MangaViewModel(
     private fun getBookmarkedChapters(): List<Chapter> {
         val chapterItems = if (skipFiltered) filteredChapters.orEmpty() else allChapters.orEmpty()
         return chapterItems
-            .filter { (chapter, dlStatus) -> chapter.bookmark && dlStatus == Download.State.NOT_DOWNLOADED }
+            .filter { (chapter, dlStatus) ->
+                !chapter.hidden && chapter.bookmark && dlStatus == Download.State.NOT_DOWNLOADED
+            }
             .map { it.chapter }
     }
 
@@ -680,7 +700,9 @@ class MangaViewModel(
         startNow: Boolean,
     ) {
         if (successState == null) return
-        val startNowId = if (startNow) chapters.singleOrNull()?.id ?: return else null
+        val visibleChapters = chapters.filterNot { it.hidden }
+        if (visibleChapters.isEmpty()) return
+        val startNowId = if (startNow) visibleChapters.singleOrNull()?.id ?: return else null
 
         viewModelScope.launch {
             // The queueing outlives the screen, the add to library prompt doesn't
@@ -688,7 +710,7 @@ class MangaViewModel(
                 if (startNowId != null) {
                     downloadManager.startDownloadNow(startNowId)
                 } else {
-                    downloadChapters(chapters)
+                    downloadChapters(visibleChapters)
                 }
             }.join()
             if (startNowId == null) toggleAllSelection(false)
@@ -713,8 +735,10 @@ class MangaViewModel(
     ) {
         when (action) {
             ChapterDownloadAction.START -> {
-                startDownload(items.map { it.chapter }, false)
-                if (items.any { it.downloadState == Download.State.ERROR }) {
+                val visibleItems = items.filterNot { it.chapter.hidden }
+                if (visibleItems.isEmpty()) return
+                startDownload(visibleItems.map { it.chapter }, false)
+                if (visibleItems.any { it.downloadState == Download.State.ERROR }) {
                     downloadManager.startDownloads()
                 }
             }
@@ -834,7 +858,25 @@ class MangaViewModel(
      */
     private suspend fun downloadChapters(chapters: List<Chapter>) {
         val manga = successState?.manga ?: return
-        downloadManager.downloadChapters(manga, chapters)
+        downloadManager.downloadChapters(manga, chapters.filterNot { it.hidden })
+    }
+
+    /** Hiding removes downloaded copies while preserving progress and bookmarks. */
+    fun hideChapters(chapters: List<Chapter>, hidden: Boolean) {
+        val state = successState ?: return
+        val targets = chapters.toList()
+        appScope.launch {
+            snackbarHostState.setChapterHiddenWithRetry(
+                interactor = setChapterHidden,
+                chapters = targets,
+                manga = state.manga,
+                source = state.source,
+                hidden = hidden,
+                errorMessage = context.stringResource(MR.strings.chapter_hide_error),
+                retryLabel = context.stringResource(MR.strings.action_retry),
+            )
+        }
+        toggleAllSelection(false)
     }
 
     /**
@@ -976,71 +1018,26 @@ class MangaViewModel(
         }
     }
 
+    fun showHiddenChapters() {
+        toggleAllSelection(false)
+        dialog.value = Dialog.HiddenChapters
+    }
+
     fun toggleSelection(
         item: ChapterList.Item,
         selected: Boolean,
         fromLongPress: Boolean = false,
     ) {
         val chapters = successState?.processedChapters ?: return
-        val selectedIndex = chapters.indexOfFirst { it.id == item.chapter.id }
-        if (selectedIndex < 0) return
-
-        // Read from the ids, as the state catches up with a selection only after it's been made
-        val selectedIds = HashSet(selectedChapterIds.value)
-        if ((item.id in selectedIds) == selected) return
-
-        val firstSelection = chapters.none { it.id in selectedIds }
-        selectedIds.addOrRemove(item.id, selected)
-
-        if (selected && fromLongPress) {
-            if (firstSelection) {
-                selectedPositions[0] = selectedIndex
-                selectedPositions[1] = selectedIndex
-            } else {
-                // Try to select the items in-between when possible
-                val range: IntRange
-                if (selectedIndex < selectedPositions[0]) {
-                    range = selectedIndex + 1..<selectedPositions[0]
-                    selectedPositions[0] = selectedIndex
-                } else if (selectedIndex > selectedPositions[1]) {
-                    range = (selectedPositions[1] + 1)..<selectedIndex
-                    selectedPositions[1] = selectedIndex
-                } else {
-                    // Just select itself
-                    range = IntRange.EMPTY
-                }
-
-                range.forEach { selectedIds.add(chapters[it].id) }
-            }
-        } else if (!fromLongPress) {
-            if (!selected) {
-                if (selectedIndex == selectedPositions[0]) {
-                    selectedPositions[0] = chapters.indexOfFirst { it.id in selectedIds }
-                } else if (selectedIndex == selectedPositions[1]) {
-                    selectedPositions[1] = chapters.indexOfLast { it.id in selectedIds }
-                }
-            } else {
-                if (selectedIndex < selectedPositions[0]) {
-                    selectedPositions[0] = selectedIndex
-                } else if (selectedIndex > selectedPositions[1]) {
-                    selectedPositions[1] = selectedIndex
-                }
-            }
-        }
-        selectedChapterIds.value = selectedIds
+        chapterSelection.toggle(chapters, item, selected, fromLongPress)
     }
 
     fun toggleAllSelection(selected: Boolean) {
-        selectedChapterIds.value = if (selected) allChapters.orEmpty().mapTo(HashSet()) { it.id } else emptySet()
-        selectedPositions[0] = -1
-        selectedPositions[1] = -1
+        chapterSelection.selectAll(filteredChapters.orEmpty(), selected)
     }
 
     fun invertSelection() {
-        val selectedIds = selectedChapterIds.value
-        selectedChapterIds.value = allChapters.orEmpty().filterNot { it.id in selectedIds }.mapTo(HashSet()) { it.id }
-        selectedPositions[0] = -1
-        selectedPositions[1] = -1
+        chapterSelection.invert(filteredChapters.orEmpty())
     }
 
     // Chapters list - end
@@ -1055,6 +1052,7 @@ class MangaViewModel(
         data class Migrate(val target: Manga, val current: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
         data object RemoveFromLibrary : Dialog
+        data object HiddenChapters : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog
@@ -1110,13 +1108,23 @@ class MangaViewModel(
             val isRefreshingData: Boolean = false,
             val dialog: Dialog? = null,
             val hideMissingChapters: Boolean = false,
+            val hideHiddenChapters: Boolean = false,
+            val hiddenChapters: List<ChapterList.Item> = chapters.filter { it.chapter.hidden },
         ) : State {
-            val processedChapters by lazy {
+            private val filteredChapters by lazy {
                 chapters.applyFilters(manga).toList()
             }
 
+            val processedChapters by lazy {
+                if (hideHiddenChapters) filteredChapters.fastFilter { !it.chapter.hidden } else filteredChapters
+            }
+
+            val hasHiddenChapters by lazy {
+                hiddenChapters.isNotEmpty()
+            }
+
             val isAnySelected by lazy {
-                chapters.fastAny { it.selected }
+                processedChapters.fastAny { it.selected }
             }
 
             val selectedChapters by lazy {
@@ -1124,16 +1132,33 @@ class MangaViewModel(
             }
 
             val hasUnreadChapters by lazy {
-                processedChapters.fastAny { !it.chapter.read }
+                processedChapters.fastAny { !it.chapter.hidden && !it.chapter.read }
             }
 
             val hasReadChapters by lazy {
-                chapters.fastAny { it.chapter.read }
+                chapters.fastAny { !it.chapter.hidden && it.chapter.read }
             }
 
             val missingChapterCount by lazy {
                 if (hideMissingChapters) return@lazy 0
-                processedChapters.fastMap { it.chapter.chapterNumber }.missingChaptersCount()
+                val latestVisibleNumber = filteredChapters.filterNot { it.chapter.hidden }
+                    .maxOfOrNull { it.chapter.chapterNumber } ?: return@lazy 0
+                // Hidden chapters are known to exist, but must not extend the range
+                // used to look for missing chapters (for example a bogus 99990000).
+                knownChapterNumbers.asSequence()
+                    .takeWhile { it <= latestVisibleNumber }
+                    .asIterable()
+                    .missingChaptersCount()
+            }
+
+            private val knownChapterNumbers: List<Int> by lazy {
+                (filteredChapters.asSequence() + hiddenChapters.asSequence())
+                    .mapNotNull { item ->
+                        item.chapter.chapterNumber.takeIf { it >= 0 }?.let { floor(it).toInt() }
+                    }
+                    .distinct()
+                    .sorted()
+                    .toList()
             }
 
             val chapterListItems by lazy {
@@ -1141,15 +1166,19 @@ class MangaViewModel(
                     return@lazy processedChapters
                 }
 
+                // Hidden numbers remain known even when their rows are omitted from the display.
+                var previousVisible: ChapterList.Item? = null
                 processedChapters.insertSeparators { before, after ->
+                    if (before != null && !before.chapter.hidden) previousVisible = before
+                    if (after?.chapter?.hidden == true) return@insertSeparators null
                     val (lowerChapter, higherChapter) = if (manga.sortDescending()) {
-                        after to before
+                        after to previousVisible
                     } else {
-                        before to after
+                        previousVisible to after
                     }
                     if (higherChapter == null) return@insertSeparators null
 
-                    if (lowerChapter == null) {
+                    val gap = if (lowerChapter == null) {
                         floor(higherChapter.chapter.chapterNumber)
                             .toInt()
                             .minus(1)
@@ -1157,7 +1186,14 @@ class MangaViewModel(
                     } else {
                         calculateChapterGap(higherChapter.chapter, lowerChapter.chapter)
                     }
-                        .takeIf { it > 0 }
+                    val lowerNumber = lowerChapter?.chapter?.chapterNumber?.let { floor(it).toInt() } ?: 0
+                    val higherNumber = floor(higherChapter.chapter.chapterNumber).toInt()
+                    val knownBetween = if (gap > 0) {
+                        knownChapterNumbers.countSortedUniqueChapterNumbersBetween(lowerNumber, higherNumber)
+                    } else {
+                        0
+                    }
+                    (gap - knownBetween).takeIf { it > 0 }
                         ?.let { missingCount ->
                             ChapterList.MissingCount(
                                 id = "${lowerChapter?.id}-${higherChapter.id}",
@@ -1191,6 +1227,13 @@ class MangaViewModel(
             }
         }
     }
+}
+
+internal fun List<Int>.countSortedUniqueChapterNumbersBetween(lowerExclusive: Int, higherExclusive: Int): Int {
+    if (lowerExclusive >= higherExclusive) return 0
+    val lowerIndex = binarySearch(lowerExclusive).let { if (it >= 0) it + 1 else -it - 1 }
+    val higherIndex = binarySearch(higherExclusive).let { if (it >= 0) it else -it - 1 }
+    return higherIndex - lowerIndex
 }
 
 @Immutable

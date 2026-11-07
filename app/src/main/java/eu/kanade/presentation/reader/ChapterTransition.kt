@@ -32,12 +32,12 @@ import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.ui.reader.viewer.calculateChapterGap
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Info
 import mihon.icons.materialsymbols.roundedfilled.CheckCircle
 import mihon.icons.materialsymbols.roundedfilled.Warning
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.chapter.service.calculateChapterGap
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
@@ -63,7 +63,7 @@ fun ChapterTransition(
                     bottomChapter = currChapter,
                     bottomChapterDownloaded = currChapterDownloaded,
                     fallbackLabel = stringResource(MR.strings.transition_no_previous),
-                    chapterGap = calculateChapterGap(currChapter, goingToChapter),
+                    chapterGap = calculateChapterGap(transition.from, transition.to),
                 )
             }
             is ChapterTransition.Next -> {
@@ -75,7 +75,7 @@ fun ChapterTransition(
                     bottomChapter = goingToChapter,
                     bottomChapterDownloaded = goingToChapterDownloaded,
                     fallbackLabel = stringResource(MR.strings.transition_no_next),
-                    chapterGap = calculateChapterGap(goingToChapter, currChapter),
+                    chapterGap = calculateChapterGap(transition.to, transition.from),
                 )
             }
         }

@@ -31,6 +31,7 @@ import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
+import eu.kanade.presentation.manga.components.HiddenChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
@@ -161,6 +162,8 @@ class MangaScreen(
                 navigator.push(MigrationConfigScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
+            onHiddenChaptersClicked = viewModel::showHiddenChapters,
+            onMultiHideClicked = viewModel::hideChapters,
             onMultiBookmarkClicked = viewModel::bookmarkChapters,
             onMultiMarkAsReadClicked = viewModel::markChaptersRead,
             onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,
@@ -224,6 +227,13 @@ class MangaScreen(
                     onDismissRequest = onDismissRequest,
                 )
             }
+            MangaViewModel.Dialog.HiddenChapters -> HiddenChaptersDialog(
+                manga = successState.manga,
+                chapters = successState.hiddenChapters,
+                snackbarHostState = viewModel.snackbarHostState,
+                onDismissRequest = onDismissRequest,
+                onUnhide = { viewModel.hideChapters(it, false) },
+            )
             MangaViewModel.Dialog.SettingsSheet -> ChapterSettingsDialog(
                 onDismissRequest = onDismissRequest,
                 manga = successState.manga,
@@ -304,6 +314,7 @@ class MangaScreen(
     }
 
     private fun openChapter(context: Context, chapter: Chapter) {
+        if (chapter.hidden) return
         context.startActivity(ReaderActivity.newIntent(context, chapter.mangaId, chapter.id))
     }
 

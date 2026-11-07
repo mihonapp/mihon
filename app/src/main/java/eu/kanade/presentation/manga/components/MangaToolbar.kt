@@ -37,6 +37,8 @@ fun MangaToolbar(
     onClickRefresh: () -> Unit,
     onClickMigrate: (() -> Unit)?,
     onClickEditNotes: () -> Unit,
+    hasHiddenChapters: Boolean,
+    onHiddenChaptersClicked: () -> Unit,
 
     // For action mode
     actionModeCounter: Int,
@@ -116,6 +118,14 @@ fun MangaToolbar(
                             onClick = onClickRefresh,
                         ),
                     )
+                    if (hasHiddenChapters) {
+                        add(
+                            AppBar.OverflowAction(
+                                title = stringResource(MR.strings.hidden_chapters),
+                                onClick = onHiddenChaptersClicked,
+                            ),
+                        )
+                    }
                     if (onClickEditCategory != null) {
                         add(
                             AppBar.OverflowAction(
