@@ -27,8 +27,7 @@ class NetworkPreferences(
 
     val dohProvider: Preference<Int> = preferenceStore.getInt("doh_provider", -1)
 
-    val defaultUserAgent: Preference<String> = preferenceStore.getString(
-        "default_user_agent",
-        WebViewUtil.getDefaultUserAgent(),
-    )
+    val defaultUserAgent: Preference<String> = preferenceStore.getString("default_user_agent") {
+        WebViewUtil.getDefaultUserAgent()
+    }
 }
