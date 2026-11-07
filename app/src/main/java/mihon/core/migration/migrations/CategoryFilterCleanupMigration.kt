@@ -16,7 +16,7 @@ class CategoryFilterCleanupMigration(
     private val upcomingPreferences: UpcomingPreferences,
     private val updatesPreferences: UpdatesPreferences,
 ) : Migration {
-    override val version: Float = 39f
+    override val version: Float = 40f
 
     override suspend fun invoke(migrationContext: MigrationContext): Boolean {
         val allCategoryIds = getCategories.await().map { it.id }.toSet()
