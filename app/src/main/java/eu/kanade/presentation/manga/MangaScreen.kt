@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SmallExtendedFloatingActionButton
 import androidx.compose.material3.SnackbarHost
@@ -48,6 +49,7 @@ import androidx.compose.ui.util.fastMap
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.ChapterHeader
+import eu.kanade.presentation.manga.components.ChapterNavigationButtons
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
 import eu.kanade.presentation.manga.components.MangaActionRow
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
@@ -55,6 +57,7 @@ import eu.kanade.presentation.manga.components.MangaChapterListItem
 import eu.kanade.presentation.manga.components.MangaInfoBox
 import eu.kanade.presentation.manga.components.MangaToolbar
 import eu.kanade.presentation.manga.components.MissingChapterCountListItem
+import eu.kanade.presentation.manga.components.rememberChapterScrollNavigation
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
@@ -83,6 +86,9 @@ fun MangaScreen(
     snackbarHostState: SnackbarHostState,
     nextUpdate: Instant?,
     isTabletUi: Boolean,
+    chapterVolumeKeys: Boolean,
+    showChapterNavigationButtons: Boolean,
+    showChapterJumpToTopButton: Boolean,
     chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction,
     chapterSwipeEndAction: LibraryPreferences.ChapterSwipeAction,
     navigateUp: () -> Unit,
@@ -137,6 +143,9 @@ fun MangaScreen(
     if (!isTabletUi) {
         MangaScreenSmallImpl(
             state = state,
+            chapterVolumeKeys = chapterVolumeKeys,
+            showChapterNavigationButtons = showChapterNavigationButtons,
+            showChapterJumpToTopButton = showChapterJumpToTopButton,
             snackbarHostState = snackbarHostState,
             nextUpdate = nextUpdate,
             chapterSwipeStartAction = chapterSwipeStartAction,
@@ -174,6 +183,9 @@ fun MangaScreen(
     } else {
         MangaScreenLargeImpl(
             state = state,
+            chapterVolumeKeys = chapterVolumeKeys,
+            showChapterNavigationButtons = showChapterNavigationButtons,
+            showChapterJumpToTopButton = showChapterJumpToTopButton,
             snackbarHostState = snackbarHostState,
             chapterSwipeStartAction = chapterSwipeStartAction,
             chapterSwipeEndAction = chapterSwipeEndAction,
@@ -214,6 +226,9 @@ fun MangaScreen(
 @Composable
 private fun MangaScreenSmallImpl(
     state: MangaViewModel.State.Success,
+    chapterVolumeKeys: Boolean,
+    showChapterNavigationButtons: Boolean,
+    showChapterJumpToTopButton: Boolean,
     snackbarHostState: SnackbarHostState,
     nextUpdate: Instant?,
     chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction,
@@ -262,6 +277,13 @@ private fun MangaScreenSmallImpl(
     onInvertSelection: () -> Unit,
 ) {
     val chapterListState = rememberLazyListState()
+    var topBarHeight by remember { mutableIntStateOf(0) }
+    val onChapterPageChange = rememberChapterScrollNavigation(
+        listState = chapterListState,
+        topInset = topBarHeight,
+        volumeKeysEnabled = chapterVolumeKeys,
+        enabled = state.dialog == null,
+    )
 
     val (chapters, listItem, isAnySelected) = remember(state) {
         Triple(
@@ -276,6 +298,13 @@ private fun MangaScreenSmallImpl(
     }
 
     Scaffold(
+        floatingActionButtonPosition = if (showChapterNavigationButtons &&
+            !isAnySelected
+        ) {
+            FabPosition.Center
+        } else {
+            FabPosition.End
+        },
         topBar = {
             val isFirstItemVisible by remember {
                 derivedStateOf { chapterListState.firstVisibleItemIndex == 0 }
@@ -292,6 +321,7 @@ private fun MangaScreenSmallImpl(
                 label = "Top Bar Background",
             )
             MangaToolbar(
+                modifier = Modifier.onSizeChanged { topBarHeight = it.height },
                 title = state.manga.title,
                 hasFilters = state.filterActive,
                 navigateUp = navigateUp,
@@ -324,22 +354,29 @@ private fun MangaScreenSmallImpl(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             val isFABVisible = state.hasUnreadChapters && !isAnySelected
-            SmallExtendedFloatingActionButton(
-                text = {
-                    Text(
-                        text = stringResource(
-                            if (state.hasReadChapters) MR.strings.action_resume else MR.strings.action_start,
-                        ),
-                    )
-                },
-                icon = { Icon(imageVector = MaterialSymbols.RoundedFilled.PlayArrow, contentDescription = null) },
-                onClick = onContinueReading,
-                expanded = chapterListState.shouldExpandFAB(),
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = isFABVisible,
-                    alignment = Alignment.BottomEnd,
-                ),
-            )
+            ChapterNavigationButtons(
+                listState = chapterListState,
+                showNavigation = showChapterNavigationButtons && !isAnySelected,
+                showJumpToTop = showChapterJumpToTopButton && !isAnySelected,
+                onPageChange = onChapterPageChange,
+            ) {
+                SmallExtendedFloatingActionButton(
+                    text = {
+                        Text(
+                            text = stringResource(
+                                if (state.hasReadChapters) MR.strings.action_resume else MR.strings.action_start,
+                            ),
+                        )
+                    },
+                    icon = { Icon(imageVector = MaterialSymbols.RoundedFilled.PlayArrow, contentDescription = null) },
+                    onClick = onContinueReading,
+                    expanded = chapterListState.shouldExpandFAB(),
+                    modifier = Modifier.animateFloatingActionButton(
+                        visible = isFABVisible,
+                        alignment = Alignment.BottomEnd,
+                    ),
+                )
+            }
         },
     ) { contentPadding ->
         val topPadding = contentPadding.calculateTopPadding()
@@ -446,6 +483,9 @@ private fun MangaScreenSmallImpl(
 @Composable
 fun MangaScreenLargeImpl(
     state: MangaViewModel.State.Success,
+    chapterVolumeKeys: Boolean,
+    showChapterNavigationButtons: Boolean,
+    showChapterJumpToTopButton: Boolean,
     snackbarHostState: SnackbarHostState,
     nextUpdate: Instant?,
     chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction,
@@ -509,11 +549,25 @@ fun MangaScreenLargeImpl(
 
     val chapterListState = rememberLazyListState()
 
+    val onChapterPageChange = rememberChapterScrollNavigation(
+        listState = chapterListState,
+        topInset = topBarHeight,
+        volumeKeysEnabled = chapterVolumeKeys,
+        enabled = state.dialog == null,
+    )
+
     BackHandler(enabled = isAnySelected) {
         onAllChapterSelected(false)
     }
 
     Scaffold(
+        floatingActionButtonPosition = if (showChapterNavigationButtons &&
+            !isAnySelected
+        ) {
+            FabPosition.Center
+        } else {
+            FabPosition.End
+        },
         topBar = {
             MangaToolbar(
                 modifier = Modifier.onSizeChanged { topBarHeight = it.height },
@@ -554,22 +608,29 @@ fun MangaScreenLargeImpl(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             val isFABVisible = state.hasUnreadChapters && !isAnySelected
-            SmallExtendedFloatingActionButton(
-                text = {
-                    Text(
-                        text = stringResource(
-                            if (state.hasReadChapters) MR.strings.action_resume else MR.strings.action_start,
-                        ),
-                    )
-                },
-                icon = { Icon(imageVector = MaterialSymbols.RoundedFilled.PlayArrow, contentDescription = null) },
-                onClick = onContinueReading,
-                expanded = chapterListState.shouldExpandFAB(),
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = isFABVisible,
-                    alignment = Alignment.BottomEnd,
-                ),
-            )
+            ChapterNavigationButtons(
+                listState = chapterListState,
+                showNavigation = showChapterNavigationButtons && !isAnySelected,
+                showJumpToTop = showChapterJumpToTopButton && !isAnySelected,
+                onPageChange = onChapterPageChange,
+            ) {
+                SmallExtendedFloatingActionButton(
+                    text = {
+                        Text(
+                            text = stringResource(
+                                if (state.hasReadChapters) MR.strings.action_resume else MR.strings.action_start,
+                            ),
+                        )
+                    },
+                    icon = { Icon(imageVector = MaterialSymbols.RoundedFilled.PlayArrow, contentDescription = null) },
+                    onClick = onContinueReading,
+                    expanded = chapterListState.shouldExpandFAB(),
+                    modifier = Modifier.animateFloatingActionButton(
+                        visible = isFABVisible,
+                        alignment = Alignment.BottomEnd,
+                    ),
+                )
+            }
         },
     ) { contentPadding ->
         PullRefresh(

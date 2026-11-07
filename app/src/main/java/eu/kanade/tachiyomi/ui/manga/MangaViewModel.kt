@@ -172,6 +172,8 @@ class MangaViewModel(
 
     val chapterSwipeStartAction = libraryPreferences.swipeToEndAction.get()
     val chapterSwipeEndAction = libraryPreferences.swipeToStartAction.get()
+    val chapterVolumeKeys = libraryPreferences.scrollChaptersWithVolumeKeys
+    val chapterNavigationControls = libraryPreferences.chapterNavigationControls
     var autoTrackState = trackPreferences.autoUpdateTrackOnMarkRead.get()
 
     private val skipFiltered by readerPreferences.skipFiltered.asState(viewModelScope)
