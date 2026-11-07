@@ -85,9 +85,14 @@ class BackupReader(
         return false
     }
 
-    fun readEntry(): BackupManga {
+    fun readEntry(): BackupManga = readEntry(BackupManga.serializer())
+
+    /**
+     * Decodes the entry as [deserializer], which can declare only the fields it needs so the rest are skipped.
+     */
+    fun <T> readEntry(deserializer: DeserializationStrategy<T>): T {
         val bytes = source.readByteArray(takeEntryLength())
-        return decode(BackupManga.serializer(), bytes)
+        return decode(deserializer, bytes)
     }
 
     fun skipEntry() {

@@ -730,7 +730,6 @@
     <string name="onboarding_guides_new_user">Novo no %s? Recomendamos dar uma olhada no guia de introdução.</string>
     <string name="theme_nord">Nord</string>
     <string name="pref_relative_format_summary">\"%1$s\" ao invés de \"%2$s\"</string>
-    <string name="action_open_repo">Abrir repositório da fonte</string>
     <string name="pref_flash_page_summ">Reduz o efeito fantasma em ecrãs de e-ink</string>
     <string name="invalid_backup_file_error">Erro completo:</string>
     <string name="source_settings">Configurações das fontes</string>

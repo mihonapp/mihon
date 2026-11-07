@@ -746,7 +746,6 @@
     <string name="invalid_backup_file_error">Erreur complète :</string>
     <string name="ext_revoke_trust">Révoquer les extensions provenant d\'un répertoire additionnel</string>
     <string name="manga_interval_expected_update_soon">Bientôt</string>
-    <string name="action_open_repo">Répertoire open source</string>
     <string name="theme_nord">Nord</string>
     <string name="action_create">Créer</string>
     <string name="track_delete_text">Cela arrêtera le suivi pour cette série.</string>

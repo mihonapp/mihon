@@ -24,15 +24,6 @@ class MangaRestorer(
     private val currentFetchWindow = fetchInterval.getWindow(now.date, timeZone)
 
     /**
-     * Returns whether an entry was already in the database at the time of this call.
-     */
-    suspend fun getExistingMatcher(): (BackupManga) -> Boolean {
-        val urlsBySource = restoreRepository.getMangaUrlsBySourceId()
-
-        return { it.url in urlsBySource[it.source].orEmpty() }
-    }
-
-    /**
      * Restores [backupMangas] all together, so either every one of them is restored or none is.
      */
     suspend fun restore(

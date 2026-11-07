@@ -720,7 +720,6 @@
     <string name="pref_update_only_in_release_period">Predicir cando sae o seguinte capítulo</string>
     <string name="ext_permission_install_apps_warning">Preme aquí para conceder os permisos para instalar extensións.</string>
     <string name="ext_revoke_trust">Revogar as extensións de confianza de orixe descoñecida</string>
-    <string name="action_open_repo">Abrir o repositorio</string>
     <string name="pref_flash_page">Tremelucir ao cambiar de páxina</string>
     <string name="pref_flash_page_summ">Reducir o efecto de retención de imaxe nas pantallas de tinta electrónica</string>
     <string name="no_location_set">Aínda non seleccionaches ningunha localización de almacenamento</string>
