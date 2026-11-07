@@ -22,6 +22,8 @@ class ReaderPreferences(
 
     // region General
 
+    val composeViewer: Preference<Boolean> = preferenceStore.getBoolean("pref_reader_compose_viewer", true)
+
     val pageTransitions: Preference<Boolean> = preferenceStore.getBoolean("pref_enable_transitions_key", true)
 
     val loadAheadOnlyOverWifi: Preference<Boolean> = preferenceStore.getBoolean(
