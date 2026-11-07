@@ -6,8 +6,25 @@ import mihon.domain.source.model.withAssignedSource
 import mihon.domain.source.model.withChapterOrigins
 import tachiyomi.domain.chapter.model.Chapter
 
-/** Balance the requested batch, including existing queue load, without switching a partially read version. */
+/** Select providers when downloads start, without switching a partially read version. */
 object ChapterDownloadPlanner {
+    /** Waiting chapters advertise candidates without committing an assignment. */
+    fun availableSources(
+        chapter: Chapter,
+        defaultSourceId: Long,
+        installedSourceIds: Set<Long>,
+        unavailableSourceIds: Set<Long> = emptySet(),
+        attemptedSourceIds: Set<Long> = emptySet(),
+    ): Set<Long> {
+        val origins = chapter.origins()
+        val candidates = if (origins.isEmpty() || (!chapter.read && chapter.lastPageRead > 0)) {
+            setOf(chapter.sourceId(defaultSourceId))
+        } else {
+            origins.mapTo(mutableSetOf()) { it.sourceId }
+        }.intersect(installedSourceIds) - attemptedSourceIds
+        return candidates.filterTo(mutableSetOf()) { it !in unavailableSourceIds }.ifEmpty { candidates }
+    }
+
     fun plan(
         chapters: List<Chapter>,
         defaultSourceId: Long,

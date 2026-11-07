@@ -20,6 +20,51 @@ import tachiyomi.domain.chapter.model.Chapter
 
 class MultiSourceChapterMergerTest {
     @Test
+    fun `special forces chapter titles merge with plain chapter titles across sources`() {
+        val a = listOf(remote(331f, "/a331", "Chapter 331 - 107: Special Forces <4>"))
+        val b = listOf(remote(331f, "/b331", "Ch. 331"))
+        val c = listOf(remote(331f, "/c331", "Chapter 331: 107: Special Forces <4>"))
+        val merged = MultiSourceChapterMerger.merge(
+            1,
+            listOf(1L to a, 2L to b, 3L to c),
+            emptyList(),
+            emptySet(),
+        )
+        merged.size shouldBe 1
+        merged.single().memo.chapterOrigins().size shouldBe 3
+    }
+
+    @Test
+    fun `refresh consolidates existing special forces duplicates while retaining progress identity`() {
+        val partial = Chapter.create().copy(
+            id = 1,
+            url = "/original",
+            name = "Chapter 331 - 107: Special Forces <4>",
+            chapterNumber = 331.0,
+            lastPageRead = 5,
+        )
+        val duplicate = partial.copy(id = 2, url = "/duplicate", name = "Ch. 331", lastPageRead = 0)
+        val merged = merge(
+            listOf(remote(331f, "/original", partial.name)),
+            listOf(remote(331f, "/b331", "Ch. 331")),
+            listOf(partial, duplicate),
+            setOf(1),
+        )
+        merged.single().url shouldBe partial.url
+        merged.single().memo.chapterOrigins().size shouldBe 2
+        MultiSourceChapterMerger.identity(partial, 1) shouldBe MultiSourceChapterMerger.identity(duplicate, 1)
+    }
+
+    @Test
+    fun `explicit special release labels remain separate from regular chapters`() {
+        listOf("Special 1", "Extra", "Bonus: Side Story", "Chapter 1 [Special]", "Prologue", "Epilogue")
+            .forEach { name ->
+                val chapters = listOf(remote(1f, "/special", name))
+                merge(chapters, chapters).size shouldBe 2
+            }
+    }
+
+    @Test
     fun `abbreviated volume and season labels do not collapse repeated chapter numbers`() {
         val chapters = listOf(remote(1f, "/v1", "v1 Ch.1"), remote(1f, "/s2", "s2 Ch.1"))
         merge(chapters, chapters).size shouldBe 4

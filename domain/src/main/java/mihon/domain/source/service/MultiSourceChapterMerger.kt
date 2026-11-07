@@ -11,10 +11,18 @@ import tachiyomi.domain.chapter.model.Chapter
 /** One stable local chapter per recognized number; unknown chapters and specials stay source-specific. */
 object MultiSourceChapterMerger {
     private val separateChapter =
-        Regex("(?i)\\b(special|extra|bonus|prologue|epilogue|volume|vol\\.?|season|v\\d+|s\\d+)\\b")
+        Regex("(?i)\\b(volume|vol\\.?|season|v\\d+|s\\d+)\\b")
+
+    // Match release labels, not words in normal titles such as "Special Forces" or "Bonus Attack".
+    private val separateRelease = Regex(
+        "(?i)(?:^|[\\s\\[(:-])(?:special|extra|bonus|prologue|epilogue)" +
+            "\\s*(?:\\d+(?:\\.\\d+)?)?\\s*(?:$|[\\]):.-])",
+    )
 
     private fun key(number: Double, name: String, source: Long, url: String): String =
-        if (number.isFinite() && number >= 0 && !separateChapter.containsMatchIn(name)) {
+        if (number.isFinite() && number >= 0 &&
+            !separateChapter.containsMatchIn(name) && !separateRelease.containsMatchIn(name)
+        ) {
             "number:${number.toFloat()}"
         } else {
             "source:$source:$url"
