@@ -436,6 +436,9 @@
     <string name="pref_inverted_colors">Inverted</string>
     <string name="pref_custom_color_filter">Custom color filter</string>
     <string name="pref_color_filter_mode">Color filter blend mode</string>
+    <string name="pref_night_filter_schedule">Night filter on schedule</string>
+    <string name="pref_night_filter_start">Night filter start</string>
+    <string name="pref_night_filter_end">Night filter end</string>
     <string name="filter_mode_overlay">Overlay</string>
     <string name="filter_mode_multiply">Multiply</string>
     <string name="filter_mode_screen">Screen</string>

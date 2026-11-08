@@ -51,6 +51,7 @@ internal fun ColumnScope.ColorFilterPage(viewModel: ReaderSettingsViewModel) {
         label = stringResource(MR.strings.pref_custom_color_filter),
         pref = viewModel.preferences.colorFilter,
     )
+    val nightSchedule by viewModel.preferences.nightFilterSchedule.collectAsState()
     if (colorFilter) {
         val colorFilterValue by viewModel.preferences.colorFilterValue.collectAsState()
         SliderItem(
@@ -115,6 +116,33 @@ internal fun ColumnScope.ColorFilterPage(viewModel: ReaderSettingsViewModel) {
     }
 
     CheckboxItem(
+        label = stringResource(MR.strings.pref_night_filter_schedule),
+        pref = viewModel.preferences.nightFilterSchedule,
+    )
+    if (nightSchedule) {
+        val nightStart by viewModel.preferences.nightFilterStart.collectAsState()
+        SliderItem(
+            value = nightStart,
+            valueRange = 0..1439,
+            steps = 0,
+            label = stringResource(MR.strings.pref_night_filter_start),
+            valueString = formatMinutes(nightStart),
+            onChange = { viewModel.preferences.nightFilterStart.set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+        val nightEnd by viewModel.preferences.nightFilterEnd.collectAsState()
+        SliderItem(
+            value = nightEnd,
+            valueRange = 0..1439,
+            steps = 0,
+            label = stringResource(MR.strings.pref_night_filter_end),
+            valueString = formatMinutes(nightEnd),
+            onChange = { viewModel.preferences.nightFilterEnd.set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        )
+    }
+
+    CheckboxItem(
         label = stringResource(MR.strings.pref_grayscale),
         pref = viewModel.preferences.grayscale,
     )
@@ -127,6 +155,12 @@ internal fun ColumnScope.ColorFilterPage(viewModel: ReaderSettingsViewModel) {
 private fun getColorValue(currentColor: Int, color: Int, mask: Long, bitShift: Int): Int {
     return (color shl bitShift) or (currentColor and mask.inv().toInt())
 }
+
+private fun formatMinutes(minutes: Int): String {
+    val m = minutes.mod(24 * 60)
+    return "%02d:%02d".format(m / 60, m % 60)
+}
+
 private const val ALPHA_MASK: Long = 0xFF000000
 private const val RED_MASK: Long = 0x00FF0000
 private const val GREEN_MASK: Long = 0x0000FF00
