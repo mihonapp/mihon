@@ -19,7 +19,7 @@ object ImageDecoder {
      * Decode an image, or the first frame of an animated one. Blocking; safe to call from
      * several threads.
      *
-     * @since tachiyomix 1.6
+     * @since tachiyomix 1.7
      * @param stream the encoded image, read to the end. The caller closes it.
      * @return a new sRGB [Bitmap.Config.ARGB_8888] bitmap, recycled by the caller.
      * @throws IOException if the image can't be decoded.
