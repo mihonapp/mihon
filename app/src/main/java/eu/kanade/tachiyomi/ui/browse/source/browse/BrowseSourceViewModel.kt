@@ -189,16 +189,18 @@ class BrowseSourceViewModel(
     }
 
     /**
-     * Applies [filters] using the current search field text as the query. An empty field means
-     * filters only, instead of keeping the query of the previous search.
+     * Applies [filters] using the current search field text as the query. Both the listing and the
+     * field are normalized, so a blank field means no query and filters only.
      */
     fun searchWithFilters(filters: FilterList) {
         state.update {
+            val query = it.toolbarQuery?.takeIf(String::isNotBlank)
             it.copy(
                 listing = Listing.Search(
-                    query = it.toolbarQuery?.takeIf(String::isNotBlank),
+                    query = query,
                     filters = filters,
                 ),
+                toolbarQuery = query,
             )
         }
     }
