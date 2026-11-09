@@ -91,7 +91,7 @@ class MigrationListViewModel(
                             manga = manga,
                             chapterCount = chapterInfo.chapterCount,
                             latestChapter = chapterInfo.latestChapter,
-                            source = sourceManager.getOrStub(manga.source).getNameForMangaInfo(),
+                            source = sourceManager.getOrStub(manga.source).getNameForMangaInfo(preferences),
                             parentContext = viewModelScope.coroutineContext,
                         )
                     }
@@ -112,7 +112,7 @@ class MigrationListViewModel(
 
     private suspend fun Manga.toSuccessSearchResult(): SearchResult.Success {
         val chapterInfo = getChapterInfo(id)
-        val source = sourceManager.getOrStub(source).getNameForMangaInfo()
+        val source = sourceManager.getOrStub(source).getNameForMangaInfo(preferences)
         return SearchResult.Success(
             manga = this,
             chapterCount = chapterInfo.chapterCount,
