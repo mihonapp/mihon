@@ -1934,6 +1934,10 @@ open class WebGpuViewer(
 
     /** How a [moveToPage] turn is shown. [direction] is 1 forward through the pages, -1 back. */
     protected open fun animateTurn(direction: Int, fromSpread: ImagePage) {
+        if (!general.usePageTransitions) {
+            viewerState.invalidate()
+            return
+        }
         viewerState.transitionFromPage = fromSpread
         viewerState.animatePageTurn(if (isReversed) direction else -direction)
     }
