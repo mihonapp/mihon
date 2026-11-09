@@ -18,6 +18,9 @@ data class Chapter(
     val chapterNumber: Double,
     val scanlator: String?,
     val memo: JsonObject,
+    val thumbnailUrl: String?,
+    val thumbnailAspectRatio: Double,
+    val thumbnailLastModified: Instant?,
 ) {
     val isRecognizedNumber: Boolean
         get() = chapterNumber >= 0f
@@ -47,6 +50,9 @@ data class Chapter(
             chapterNumber = -1.0,
             scanlator = null,
             memo = JsonObject.EMPTY,
+            thumbnailUrl = null,
+            thumbnailAspectRatio = 1.0,
+            thumbnailLastModified = null,
         )
     }
 }

@@ -16,6 +16,7 @@
 -keep class eu.kanade.tachiyomi.source.model.SManga { public protected *; }
 -keep class eu.kanade.tachiyomi.source.model.SManga$Companion { public protected *; }
 -keep class eu.kanade.tachiyomi.source.model.SMangaUpdate { public protected *; }
+-keep class eu.kanade.tachiyomi.source.model.ThumbnailInfo { public protected *; }
 -keep class eu.kanade.tachiyomi.source.model.UpdateStrategy { public protected *; }
 -keep class eu.kanade.tachiyomi.source.online.HttpSource { public protected *; }
 -keep class eu.kanade.tachiyomi.source.online.ParsedHttpSource { public protected *; }

@@ -232,6 +232,7 @@ class MangaScreen(
                 onBookmarkedFilterChanged = viewModel::setBookmarkedFilter,
                 onSortModeChanged = viewModel::setSorting,
                 onDisplayModeChanged = viewModel::setDisplayMode,
+                onChapterThumbnailsChanged = viewModel::setChapterThumbnail,
                 onSetAsDefault = viewModel::setCurrentSettingsAsDefault,
                 onResetToDefault = viewModel::resetToDefaultSettings,
                 scanlatorFilterActive = successState.scanlatorFilterActive,

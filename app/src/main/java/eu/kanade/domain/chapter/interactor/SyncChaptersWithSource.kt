@@ -6,6 +6,7 @@ import eu.kanade.domain.chapter.model.toSChapter
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.tachiyomi.data.cache.ThumbnailCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
@@ -39,6 +40,7 @@ class SyncChaptersWithSource(
     private val updateManga: UpdateManga,
     private val getExcludedScanlators: GetExcludedScanlators,
     private val libraryPreferences: LibraryPreferences,
+    private val thumbnailCache: ThumbnailCache,
 ) {
 
     /**
@@ -131,6 +133,19 @@ class SyncChaptersWithSource(
                         downloadManager.renameChapter(source, manga, dbChapter, chapter)
                     }
 
+                    val thumbnailLastModified = when {
+                        // Never refresh thumbnails if the url is empty to avoid "losing" existing thumbnails
+                        chapter.thumbnailUrl.isNullOrEmpty() -> null
+                        !manualFetch && dbChapter.thumbnailUrl == chapter.thumbnailUrl -> null
+                        manga.isLocal() -> Clock.System.now()
+                        else -> {
+                            dbChapter.thumbnailUrl?.let {
+                                thumbnailCache.deleteFromCache(dbChapter)
+                            }
+                            Clock.System.now()
+                        }
+                    }
+
                     updatedChapters.add(
                         ChapterRemoteUpdate(
                             id = dbChapter.id,
@@ -140,6 +155,9 @@ class SyncChaptersWithSource(
                             sourceOrder = chapter.sourceOrder,
                             dateUpload = chapter.dateUpload,
                             memo = chapter.memo,
+                            thumbnailUrl = chapter.thumbnailUrl,
+                            thumbnailAspectRatio = chapter.thumbnailAspectRatio,
+                            thumbnailLastModified = thumbnailLastModified ?: chapter.thumbnailLastModified,
                         ),
                     )
                 }

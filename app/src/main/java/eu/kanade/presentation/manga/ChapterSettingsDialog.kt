@@ -35,6 +35,7 @@ import mihon.icons.materialsymbols.rounded.Group
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.RadioItem
 import tachiyomi.presentation.core.components.SortItem
@@ -53,6 +54,7 @@ fun ChapterSettingsDialog(
     onScanlatorFilterClicked: (() -> Unit),
     onSortModeChanged: (Long) -> Unit,
     onDisplayModeChanged: (Long) -> Unit,
+    onChapterThumbnailsChanged: (Boolean) -> Unit,
     onSetAsDefault: (applyToExistingManga: Boolean) -> Unit,
     onResetToDefault: () -> Unit,
 ) {
@@ -121,6 +123,8 @@ fun ChapterSettingsDialog(
                     DisplayPage(
                         displayMode = manga?.displayMode ?: 0,
                         onItemSelected = onDisplayModeChanged,
+                        showChapterThumbnails = manga?.chapterThumbnail ?: false,
+                        onChapterThumbnailsChanged = onChapterThumbnailsChanged,
                     )
                 }
             }
@@ -213,6 +217,8 @@ private fun ColumnScope.SortPage(
 private fun ColumnScope.DisplayPage(
     displayMode: Long,
     onItemSelected: (Long) -> Unit,
+    showChapterThumbnails: Boolean,
+    onChapterThumbnailsChanged: (Boolean) -> Unit,
 ) {
     listOf(
         MR.strings.show_title to Manga.CHAPTER_DISPLAY_NAME,
@@ -224,6 +230,12 @@ private fun ColumnScope.DisplayPage(
             onClick = { onItemSelected(mode) },
         )
     }
+
+    CheckboxItem(
+        label = stringResource(MR.strings.show_chapter_thumbnail),
+        checked = showChapterThumbnails,
+        onClick = { onChapterThumbnailsChanged(!showChapterThumbnails) },
+    )
 }
 
 @Composable

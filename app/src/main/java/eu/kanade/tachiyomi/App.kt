@@ -30,7 +30,10 @@ import eu.kanade.tachiyomi.core.security.PrivacyPreferences
 import eu.kanade.tachiyomi.crash.CrashActivity
 import eu.kanade.tachiyomi.crash.GlobalExceptionHandler
 import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.data.cache.ThumbnailCache
 import eu.kanade.tachiyomi.data.coil.BufferedSourceFetcher
+import eu.kanade.tachiyomi.data.coil.ChapterThumbnailFetcher
+import eu.kanade.tachiyomi.data.coil.ChapterThumbnailKeyer
 import eu.kanade.tachiyomi.data.coil.CoverRequestInterceptor
 import eu.kanade.tachiyomi.data.coil.ExtensionIconFetcher
 import eu.kanade.tachiyomi.data.coil.ImageDecoder
@@ -96,6 +99,8 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     // Lazy: only the image loader uses these, and process starts without UI (workers, receivers) never build it
     @Inject private lateinit var coverCache: Lazy<CoverCache>
+
+    @Inject private lateinit var thumbnailCache: Lazy<ThumbnailCache>
 
     @Inject private lateinit var networkHelper: Lazy<NetworkHelper>
 
@@ -222,6 +227,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         return ImageLoader.Builder(this).apply {
             val callFactoryLazy = lazy { networkHelper.value.client }
             val coverCache = coverCache.value
+            val thumbnailCache = thumbnailCache.value
             val sourceManager = sourceManager.value
             components {
                 // NetworkFetcher.Factory
@@ -232,11 +238,13 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                 add(BufferedSourceFetcher.Factory())
                 add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy, coverCache, sourceManager))
                 add(MangaCoverFetcher.MangaFactory(callFactoryLazy, coverCache, sourceManager))
+                add(ChapterThumbnailFetcher.ChapterThumbnailFactory(callFactoryLazy, thumbnailCache, sourceManager))
                 add(ExtensionIconFetcher.ExtensionFactory(context))
                 add(ExtensionIconFetcher.SourceFactory(context, extensionManager))
                 // Keyer
                 add(MangaCoverKeyer(coverCache))
                 add(MangaKeyer())
+                add(ChapterThumbnailKeyer())
                 add(InstalledExtensionIconKeyer())
                 add(InstalledSourceIconKeyer())
                 // Interceptor

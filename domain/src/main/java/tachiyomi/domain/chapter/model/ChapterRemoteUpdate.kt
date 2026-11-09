@@ -11,4 +11,7 @@ data class ChapterRemoteUpdate(
     val dateUpload: Instant?,
     val sourceOrder: Long,
     val memo: JsonObject,
+    val thumbnailUrl: String?,
+    val thumbnailAspectRatio: Double?,
+    val thumbnailLastModified: Instant?,
 )

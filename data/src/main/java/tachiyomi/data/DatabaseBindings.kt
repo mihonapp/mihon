@@ -81,6 +81,7 @@ object DatabaseBindings {
             chapterAdapter = Chapter.Adapter(
                 remote_date_uploadAdapter = InstantColumnAdapter,
                 remote_memoAdapter = MemoColumnAdapter,
+                remote_thumbnail_last_modifiedAdapter = InstantColumnAdapter,
                 user_last_page_readAdapter = IntColumnAdapter,
                 state_date_fetchAdapter = InstantColumnAdapter,
             ),

@@ -177,6 +177,11 @@ class LibraryPreferences(
         Manga.CHAPTER_DISPLAY_NAME,
     )
 
+    val displayChapterThumbnail: Preference<Long> = preferenceStore.getLong(
+        "default_display_chapter_thumbnail",
+        0L,
+    )
+
     val sortChapterByAscendingOrDescending: Preference<Long> = preferenceStore.getLong(
         "default_chapter_sort_by_ascending_or_descending",
         Manga.CHAPTER_SORT_DESC,
