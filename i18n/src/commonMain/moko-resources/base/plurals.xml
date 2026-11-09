@@ -91,6 +91,11 @@
         <item quantity="other">%d extension updates available</item>
     </plurals>
 
+    <plurals name="missing_ext_entries">
+        <item quantity="one">%d entry in your library</item>
+        <item quantity="other">%d entries in your library</item>
+    </plurals>
+
     <plurals name="num_repos">
         <item quantity="one">%d store</item>
         <item quantity="other">%d stores</item>
