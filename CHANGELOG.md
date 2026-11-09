@@ -34,6 +34,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Keep online chapters cached for a day instead of up to a size limit ([@AntsyLich](https://github.com/AntsyLich))
 - Apply the reader's grayscale and inverted colors to pages only, not to transition, loading and error pages ([@AntsyLich](https://github.com/AntsyLich))
 
+### Improved
+- Download cache is more robust and does not automatically rescan once initialized ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#4196](https://github.com/mihonapp/mihon/pull/4196))
+
 ### Removed
 - Remove "Custom hardware bitmap threshold" and "Custom display profile" advanced settings ([@wwww-wwww](https://github.com/wwww-wwww)) ([#3786](https://github.com/mihonapp/mihon/pull/3786))
 

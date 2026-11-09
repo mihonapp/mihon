@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
@@ -27,6 +26,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.download.model.DownloadIndexMangaKey
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
@@ -194,6 +194,10 @@ class DownloadManager(
         return cache.getDownloadedChapterIds(chapters, manga.title, manga.source)
     }
 
+    fun getDownloadedChapterIdsFlow(chapters: List<Chapter>, manga: Manga): Flow<Set<Long>> {
+        return cache.getDownloadedChapterIdsAsFlow(chapters, manga.title, manga.source)
+    }
+
     /**
      * Returns true if the chapter is downloaded.
      *
@@ -233,7 +237,7 @@ class DownloadManager(
     /**
      * Returns the amount of downloaded chapters.
      */
-    fun getDownloadCount(): Int {
+    suspend fun getDownloadCount(): Int {
         return cache.getTotalDownloadCount()
     }
 
@@ -246,13 +250,8 @@ class DownloadManager(
         return cache.getDownloadCount(manga)
     }
 
-    /**
-     * Returns the amount of downloaded chapters for each of the given manga, keyed by manga id.
-     *
-     * @param manga the manga to check.
-     */
-    fun getDownloadCounts(manga: List<Manga>): Map<Long, Int> {
-        return cache.getDownloadCounts(manga)
+    fun getAllDownloadCountsFlow(): Flow<Map<DownloadIndexMangaKey, Long>> {
+        return cache.getAllDownloadCountsFlow()
     }
 
     suspend fun cancelQueuedDownloads(downloads: List<Download>) {
@@ -383,7 +382,7 @@ class DownloadManager(
         }
 
         if (oldFolder.renameTo(newName)) {
-            cache.renameManga(manga, oldFolder, newTitle)
+            cache.renameManga(manga, newTitle)
         } else {
             logcat(LogPriority.ERROR) { "Failed to rename manga download folder: ${oldFolder.name}" }
         }
@@ -421,7 +420,7 @@ class DownloadManager(
 
             if (oldDownload.renameTo(newName)) {
                 cache.removeChapter(oldChapter, manga)
-                cache.addChapter(newName, mangaDir, manga)
+                cache.addChapter(newName, manga)
             } else {
                 logcat(LogPriority.ERROR) { "Could not rename downloaded chapter: ${oldNames.joinToString()}" }
             }

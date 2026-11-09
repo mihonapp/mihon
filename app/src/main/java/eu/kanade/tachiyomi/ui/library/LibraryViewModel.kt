@@ -418,15 +418,19 @@ class LibraryViewModel(
         return combine(
             getLibraryManga.subscribe(),
             getLibraryItemPreferencesFlow(),
-            downloadCache.changes.pausedWhileUnsubscribed(),
-        ) { libraryManga, preferences, _ ->
+            downloadManager.getAllDownloadCountsFlow().pausedWhileUnsubscribed(),
+        ) { libraryManga, preferences, downloadCounts ->
             val sources = libraryManga
                 .mapTo(mutableSetOf()) { it.manga.source }
                 .associateWith { sourceManager.getOrStub(it) }
-            val downloadCounts = downloadManager.getDownloadCounts(libraryManga.map { it.manga })
+            val sourcesWithDownloads = downloadCounts.keys.mapTo(HashSet()) { it.sourceId }
             libraryManga.map { manga ->
                 val source = sources.getValue(manga.manga.source)
-                val downloadCount = downloadCounts.getValue(manga.id)
+                val downloadCount = if (manga.manga.source in sourcesWithDownloads) {
+                    downloadCounts[downloadCache.getMangaKey(manga.manga.source, manga.manga.title)]?.toInt() ?: 0
+                } else {
+                    0
+                }
                 LibraryItem(
                     libraryManga = manga,
                     downloadCount = downloadCount,

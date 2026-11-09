@@ -56,6 +56,9 @@ class DownloadPreferences(
 
     val parallelPageLimit: Preference<Int> = preferenceStore.getInt("download_parallel_page_limit", 5)
 
+    val downloadIndexInitialized: Preference<Boolean> =
+        preferenceStore.getBoolean(Preference.appStateKey("download_index_initialized"), false)
+
     companion object {
         private const val REMOVE_EXCLUDE_CATEGORIES_PREF_KEY = "remove_exclude_categories"
         private const val DOWNLOAD_NEW_CATEGORIES_PREF_KEY = "download_new_categories"
