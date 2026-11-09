@@ -487,6 +487,15 @@ abstract class HttpSource : CatalogueSource {
     }
 
     /**
+     * Opens a proxy for the app's WebView opened for this source, or returns null for the WebView to connect directly,
+     * e.g. so its requests go through the source's client. The app calls it before loading the WebView's first page
+     * and closes the proxy when the WebView is closed, see [LocalProxy].
+     *
+     * @since tachiyomix 1.7
+     */
+    open suspend fun openWebViewProxy(): LocalProxy? = null
+
+    /**
      * Called before inserting a new chapter into database. Use it if you need to override chapter
      * fields, like the title or the chapter number. Do not change anything to [manga].
      *

@@ -14,15 +14,13 @@ import eu.kanade.presentation.webview.WebViewScreenContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.LocalProxy
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
-import eu.kanade.tachiyomi.util.system.toWebViewHeaders
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -38,6 +36,9 @@ class WebViewActivity : BaseActivity() {
     @Inject private lateinit var network: NetworkHelper
 
     private var assistUrl: String? = null
+
+    @Volatile
+    private var proxy: LocalProxy? = null
 
     init {
         registerSecureActivity(this)
@@ -68,19 +69,17 @@ class WebViewActivity : BaseActivity() {
 
         setComposeContent {
             // Null until the source it belongs to has been resolved
-            val headers by produceState<Map<String, String>?>(initialValue = null) {
+            val setup by produceState<WebViewSourceSetup?>(initialValue = null) {
                 val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource
-                value = withContext(Dispatchers.IO) {
-                    try {
-                        source?.headers?.toWebViewHeaders().orEmpty()
-                    } catch (e: Exception) {
-                        logcat(LogPriority.ERROR, e) { "Failed to build headers" }
-                        emptyMap()
-                    }
+                value = webViewSourceSetup(source).also {
+                    proxy = it.proxy
+                    // Closed while the source was opening it
+                    if (isDestroyed) closeProxy()
                 }
             }
 
-            if (headers == null) {
+            val sourceSetup = setup
+            if (sourceSetup == null) {
                 LoadingScreen()
                 return@setComposeContent
             }
@@ -89,7 +88,8 @@ class WebViewActivity : BaseActivity() {
                 onNavigateUp = { finish() },
                 initialTitle = intent.extras?.getString(TITLE_KEY),
                 url = url,
-                headers = headers.orEmpty(),
+                headers = sourceSetup.headers,
+                proxy = sourceSetup.proxy,
                 defaultUserAgentProvider = network::defaultUserAgentProvider,
                 onUrlChange = { assistUrl = it },
                 onShare = this::shareWebpage,
@@ -102,6 +102,17 @@ class WebViewActivity : BaseActivity() {
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
         assistUrl?.let { outContent.webUri = it.toUri() }
+    }
+
+    override fun onDestroy() {
+        closeProxy()
+        super.onDestroy()
+    }
+
+    private fun closeProxy() {
+        val proxy = proxy ?: return
+        this.proxy = null
+        proxy.closeQuietly()
     }
 
     override fun finish() {

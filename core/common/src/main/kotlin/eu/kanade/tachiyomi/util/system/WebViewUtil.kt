@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.webkit.ProxyConfig
+import androidx.webkit.ProxyController
 import androidx.webkit.UserAgentMetadata
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
@@ -59,6 +61,25 @@ object WebViewUtil {
         }
 
         return context.packageManager.hasSystemFeature(PackageManager.FEATURE_WEBVIEW)
+    }
+
+    /**
+     * Sends all of the app's WebView requests through the proxy at [address] (`host:port`), returning once WebView
+     * uses it; false where WebView can't be proxied. WebView's proxy setting is the process's.
+     */
+    suspend fun setProxy(address: String): Boolean {
+        if (!WebViewFeature.isFeatureSupported(WebViewFeature.PROXY_OVERRIDE)) return false
+        val config = ProxyConfig.Builder().addProxyRule(address).build()
+        suspendCancellableCoroutine { continuation ->
+            ProxyController.getInstance().setProxyOverride(config, Runnable::run) { continuation.resume(Unit) }
+        }
+        return true
+    }
+
+    /** Lets the app's WebViews connect directly again after [setProxy]. */
+    fun clearProxy() {
+        if (!WebViewFeature.isFeatureSupported(WebViewFeature.PROXY_OVERRIDE)) return
+        ProxyController.getInstance().clearProxyOverride(Runnable::run) {}
     }
 
     fun spoofedPackageName(context: Context): String {
