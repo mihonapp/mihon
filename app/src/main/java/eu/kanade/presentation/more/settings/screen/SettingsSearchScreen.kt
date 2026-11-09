@@ -48,6 +48,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.more.settings.forEachRow
 import eu.kanade.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -57,6 +58,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.util.runOnEnterKeyPressed
+import java.util.IdentityHashMap
 import cafe.adriel.voyager.core.screen.Screen as VoyagerScreen
 
 class SettingsSearchScreen : Screen() {
@@ -223,15 +225,19 @@ private fun SearchResult(
 private fun search(index: List<SettingsData>, searchKey: String, isLtr: Boolean): List<SearchResultItem> {
     return index.asSequence()
         .flatMap { settingsData ->
-            fun result(title: String, categoryTitle: String?) = SearchResultItem(
+            // Entries on a screen can share a title, so each result keeps the key of its own entry
+            val highlightKeys = IdentityHashMap<Preference, SearchableSettings.HighlightKey>()
+            settingsData.contents.forEachRow { preference, key, _ -> highlightKeys[preference] = key }
+
+            fun result(preference: Preference, categoryTitle: String?) = SearchResultItem(
                 route = settingsData.route,
-                title = title,
+                title = preference.title,
                 breadcrumbs = getLocalizedBreadcrumb(
                     path = settingsData.title,
                     node = categoryTitle,
                     isLtr = isLtr,
                 ),
-                highlightKey = title,
+                highlightKey = highlightKeys[preference] ?: SearchableSettings.HighlightKey(preference.title),
             )
 
             fun Preference.PreferenceItem<*, *>.matches(): Boolean {
@@ -250,17 +256,17 @@ private fun search(index: List<SettingsData>, searchKey: String, isLtr: Boolean)
                         is Preference.PreferenceGroup -> {
                             // A matching heading leads to the group itself, not to one of its items
                             val heading = if (p.title.contains(searchKey, true)) {
-                                sequenceOf(result(p.title, null))
+                                sequenceOf(result(p, null))
                             } else {
                                 emptySequence()
                             }
                             val items = p.preferenceItems.asSequence()
                                 .filter { it.visible && it.title.isNotBlank() && it.matches() }
-                                .map { result(it.title, p.title) }
+                                .map { result(it, p.title) }
                             heading + items
                         }
                         is Preference.PreferenceItem<*, *> -> {
-                            if (p.matches()) sequenceOf(result(p.title, null)) else emptySequence()
+                            if (p.matches()) sequenceOf(result(p, null)) else emptySequence()
                         }
                     }
                 }
@@ -316,5 +322,5 @@ private data class SearchResultItem(
     val route: VoyagerScreen,
     val title: String,
     val breadcrumbs: String,
-    val highlightKey: String,
+    val highlightKey: SearchableSettings.HighlightKey,
 )

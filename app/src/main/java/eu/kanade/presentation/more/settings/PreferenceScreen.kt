@@ -30,12 +30,12 @@ fun PreferenceScreen(
 ) {
     val state = rememberLazyListState()
     val highlightKey = SearchableSettings.highlightKey
+    val highlighted = highlightKey?.let { items.findHighlighted(it) }
     if (highlightKey != null) {
         LaunchedEffect(Unit) {
-            val i = items.findHighlightedIndex(highlightKey)
-            if (i >= 0) {
+            if (highlighted != null) {
                 delay(0.5.seconds)
-                state.animateScrollToItem(i)
+                state.animateScrollToItem(highlighted.index)
             }
             SearchableSettings.highlightKey = null
         }
@@ -56,14 +56,14 @@ fun PreferenceScreen(
                         Column {
                             PreferenceGroupHeader(
                                 title = preference.title,
-                                highlighted = preference.title == highlightKey,
+                                highlighted = preference === highlighted?.value,
                             )
                         }
                     }
                     items(preference.preferenceItems) { item ->
                         PreferenceItem(
                             item = item,
-                            highlightKey = highlightKey,
+                            highlighted = item === highlighted?.value,
                         )
                     }
                     item {
@@ -77,7 +77,7 @@ fun PreferenceScreen(
                 is Preference.PreferenceItem<*, *> -> item {
                     PreferenceItem(
                         item = preference,
-                        highlightKey = highlightKey,
+                        highlighted = preference === highlighted?.value,
                     )
                 }
             }
@@ -85,16 +85,48 @@ fun PreferenceScreen(
     }
 }
 
-private fun List<Preference>.findHighlightedIndex(highlightKey: String): Int {
-    return flatMap {
-        if (it is Preference.PreferenceGroup) {
-            buildList<String?> {
-                add(it.title) // Header
-                addAll(it.preferenceItems.map { groupItem -> groupItem.title })
-                add(null) // Spacer
+/**
+ * Calls [action] for each group heading and preference item that [PreferenceScreen] shows for these preferences,
+ * with the [SearchableSettings.HighlightKey] that identifies it and its index in the list.
+ */
+internal fun List<Preference>.forEachRow(
+    action: (preference: Preference, key: SearchableSettings.HighlightKey, row: Int) -> Unit,
+) {
+    val occurrences = mutableMapOf<SearchableSettings.HighlightKey, Int>()
+    fun keyOf(title: String, isHeading: Boolean): SearchableSettings.HighlightKey {
+        val firstKey = SearchableSettings.HighlightKey(title, isHeading)
+        val occurrence = occurrences.getOrDefault(firstKey, 0)
+        occurrences[firstKey] = occurrence + 1
+        return firstKey.copy(occurrence = occurrence)
+    }
+
+    var row = 0
+    forEach { preference ->
+        when (preference) {
+            is Preference.PreferenceGroup -> {
+                if (!preference.visible) return@forEach
+                action(preference, keyOf(preference.title, isHeading = true), row++)
+                preference.preferenceItems.forEach { item ->
+                    action(item, keyOf(item.title, isHeading = false), row++)
+                }
+                row++ // Spacer
             }
-        } else {
-            listOf(it.title)
+            is Preference.PreferenceItem<*, *> -> {
+                action(preference, keyOf(preference.title, isHeading = false), row++)
+            }
         }
-    }.indexOfFirst { it == highlightKey }
+    }
+}
+
+/**
+ * Returns the heading or item identified by [highlightKey] with its index in the list, or null if there is none
+ */
+internal fun List<Preference>.findHighlighted(
+    highlightKey: SearchableSettings.HighlightKey,
+): IndexedValue<Preference>? {
+    var highlighted: IndexedValue<Preference>? = null
+    forEachRow { preference, key, row ->
+        if (highlighted == null && key == highlightKey) highlighted = IndexedValue(row, preference)
+    }
+    return highlighted
 }

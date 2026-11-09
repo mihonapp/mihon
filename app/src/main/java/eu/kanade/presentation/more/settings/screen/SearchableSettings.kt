@@ -33,11 +33,22 @@ interface SearchableSettings : Screen {
         )
     }
 
+    /**
+     * Identifies a group heading or preference item on a settings screen. Several entries on a screen can share a
+     * title, so it also holds whether the entry is a heading and which of the entries of that kind with that title
+     * it is, counted from the top of the screen.
+     */
+    data class HighlightKey(
+        val title: String,
+        val isHeading: Boolean = false,
+        val occurrence: Int = 0,
+    )
+
     companion object {
         // HACK: for the background blipping thingy.
-        // The title of the target PreferenceItem
+        // The target entry of the destination screen
         // Set before showing the destination screen and reset after
         // See BasePreferenceWidget.highlightBackground
-        var highlightKey: String? = null
+        var highlightKey: HighlightKey? = null
     }
 }
