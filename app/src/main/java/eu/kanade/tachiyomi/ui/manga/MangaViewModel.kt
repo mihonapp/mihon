@@ -22,6 +22,7 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.core.util.insertSeparators
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
@@ -29,6 +30,7 @@ import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.chaptersFiltered
 import eu.kanade.domain.manga.model.downloadedFilter
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.TrackChapter
@@ -44,6 +46,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
@@ -118,6 +121,8 @@ class MangaViewModel(
     @Assisted private val isFromSource: Boolean,
     @AppCoroutineScope private val appScope: CoroutineScope,
     private val context: Context,
+    private val basePreferences: BasePreferences,
+    private val sourcePreferences: SourcePreferences,
     private val libraryPreferences: LibraryPreferences,
     trackPreferences: TrackPreferences,
     readerPreferences: ReaderPreferences,
@@ -225,9 +230,11 @@ class MangaViewModel(
         downloadCache.changes.pausedWhileUnsubscribed(),
         downloadManager.queueState.pausedWhileUnsubscribed(),
     ) { (manga, chapters), _, _ ->
+        val source = sourceManager.getOrStub(manga.source)
         MangaAndChapters(
             manga = manga,
-            source = sourceManager.getOrStub(manga.source),
+            source = source,
+            sourceName = source.getNameForMangaInfo(sourcePreferences),
             chapters = chapters.toChapterListItems(manga),
         )
     }
@@ -259,17 +266,18 @@ class MangaViewModel(
         scanlators,
         trackers,
         combine(selectedChapterIds, queuedDownloadStates.pausedWhileUnsubscribed(), ::Pair),
-        combine(dialog, isRefreshingData, ::Pair),
+        combine(dialog, isRefreshingData, basePreferences.downloadedOnly.changes(), ::Triple),
     ) {
             mangaAndChapters,
             (availableScanlators, excludedScanlators),
             (trackingCount, hasLoggedInTrackers),
             (selectedIds, downloads),
-            (dialog, isRefreshingData),
+            (dialog, isRefreshingData, downloadedOnly),
         ->
         State.Success(
             manga = mangaAndChapters.manga,
             source = mangaAndChapters.source,
+            sourceName = mangaAndChapters.sourceName,
             isFromSource = isFromSource,
             chapters = mangaAndChapters.chapters.map { item ->
                 val downloadState = downloads[item.id]
@@ -287,6 +295,7 @@ class MangaViewModel(
             isRefreshingData = isRefreshingData,
             dialog = dialog,
             hideMissingChapters = hideMissingChapters,
+            downloadedOnly = downloadedOnly,
         )
     }
         // Composition would otherwise build these on first read, on the main thread, for every new state
@@ -676,7 +685,7 @@ class MangaViewModel(
      */
     fun getNextUnreadChapter(): Chapter? {
         val successState = successState ?: return null
-        return successState.chapters.getNextUnread(successState.manga)
+        return successState.chapters.getNextUnread(successState.manga, successState.downloadedOnly)
     }
 
     private fun getUnreadChapters(): List<Chapter> {
@@ -1117,7 +1126,12 @@ class MangaViewModel(
         }
     }
 
-    private data class MangaAndChapters(val manga: Manga, val source: Source, val chapters: List<ChapterList.Item>)
+    private data class MangaAndChapters(
+        val manga: Manga,
+        val source: Source,
+        val sourceName: String,
+        val chapters: List<ChapterList.Item>,
+    )
 
     sealed interface State {
         @Immutable
@@ -1127,6 +1141,7 @@ class MangaViewModel(
         data class Success(
             val manga: Manga,
             val source: Source,
+            val sourceName: String,
             val isFromSource: Boolean,
             val chapters: List<ChapterList.Item>,
             val availableScanlators: Set<String>,
@@ -1136,6 +1151,7 @@ class MangaViewModel(
             val isRefreshingData: Boolean = false,
             val dialog: Dialog? = null,
             val hideMissingChapters: Boolean = false,
+            val downloadedOnly: Boolean = false,
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()
@@ -1197,7 +1213,7 @@ class MangaViewModel(
                 get() = excludedScanlators.intersect(availableScanlators).isNotEmpty()
 
             val filterActive: Boolean
-                get() = scanlatorFilterActive || manga.chaptersFiltered()
+                get() = scanlatorFilterActive || manga.chaptersFiltered(downloadedOnly)
 
             /**
              * Applies the view filters to the list of chapters obtained from the database.
@@ -1206,7 +1222,7 @@ class MangaViewModel(
             private fun List<ChapterList.Item>.applyFilters(manga: Manga): Sequence<ChapterList.Item> {
                 val isLocalManga = manga.isLocal()
                 val unreadFilter = manga.unreadFilter
-                val downloadedFilter = manga.downloadedFilter
+                val downloadedFilter = manga.downloadedFilter(downloadedOnly)
                 val bookmarkedFilter = manga.bookmarkedFilter
                 val chapterSort = getChapterSort(manga)
                 return asSequence()
