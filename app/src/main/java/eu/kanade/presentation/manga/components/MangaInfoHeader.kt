@@ -73,7 +73,6 @@ import com.mikepenz.markdown.utils.getUnescapedTextInNode
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.datetime.TimeZone
@@ -117,6 +116,7 @@ fun MangaInfoBox(
     appBarPadding: Dp,
     manga: Manga,
     source: Source,
+    sourceName: String,
     isStubSource: Boolean,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
@@ -154,6 +154,7 @@ fun MangaInfoBox(
                     appBarPadding = appBarPadding,
                     manga = manga,
                     source = source,
+                    sourceName = sourceName,
                     isStubSource = isStubSource,
                     onCoverClick = onCoverClick,
                     doSearch = doSearch,
@@ -163,6 +164,7 @@ fun MangaInfoBox(
                     appBarPadding = appBarPadding,
                     manga = manga,
                     source = source,
+                    sourceName = sourceName,
                     isStubSource = isStubSource,
                     onCoverClick = onCoverClick,
                     doSearch = doSearch,
@@ -359,6 +361,7 @@ private fun MangaAndSourceTitlesLarge(
     appBarPadding: Dp,
     manga: Manga,
     source: Source,
+    sourceName: String,
     isStubSource: Boolean,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
@@ -385,6 +388,7 @@ private fun MangaAndSourceTitlesLarge(
             artist = manga.artist,
             status = manga.status,
             source = source,
+            sourceName = sourceName,
             isStubSource = isStubSource,
             doSearch = doSearch,
             textAlign = TextAlign.Center,
@@ -397,6 +401,7 @@ private fun MangaAndSourceTitlesSmall(
     appBarPadding: Dp,
     manga: Manga,
     source: Source,
+    sourceName: String,
     isStubSource: Boolean,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
@@ -428,6 +433,7 @@ private fun MangaAndSourceTitlesSmall(
                 artist = manga.artist,
                 status = manga.status,
                 source = source,
+                sourceName = sourceName,
                 isStubSource = isStubSource,
                 doSearch = doSearch,
             )
@@ -442,6 +448,7 @@ private fun ColumnScope.MangaContentInfo(
     artist: String?,
     status: Long,
     source: Source,
+    sourceName: String,
     isStubSource: Boolean,
     doSearch: (query: String, global: Boolean) -> Unit,
     textAlign: TextAlign? = LocalTextStyle.current.textAlign,
@@ -567,7 +574,7 @@ private fun ColumnScope.MangaContentInfo(
                 )
             }
             Text(
-                text = source.getNameForMangaInfo(),
+                text = sourceName,
                 modifier = Modifier.clickableNoIndication {
                     doSearch(source.query(), false)
                 },

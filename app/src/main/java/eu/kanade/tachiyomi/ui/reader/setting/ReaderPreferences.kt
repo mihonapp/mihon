@@ -222,6 +222,12 @@ class ReaderPreferences(
 
     val continuousGap: Preference<Int> = preferenceStore.getInt("webgpu_continuous_gap", 10)
 
+    val fastRenderingOnly: Preference<Boolean> = preferenceStore.getBoolean("webgpu_fast_rendering_only", false)
+
+    val holdUntilFinal: Preference<Boolean> = preferenceStore.getBoolean("webgpu_hold_until_final", false)
+
+    val cropInsteadOfZoom: Preference<Boolean> = preferenceStore.getBoolean("webgpu_crop_instead_of_zoom", false)
+
     val disableDoubleTapGestures: Preference<Boolean> =
         preferenceStore.getBoolean("webgpu_disable_double_tap_gestures", false)
 
@@ -236,6 +242,22 @@ class ReaderPreferences(
     /** In run order. */
     val tileFilters: Preference<List<WebGpuShader>> = preferenceStore.getObjectFromString(
         "webgpu_tile_filters",
+        emptyList(),
+        WebGpuShaders::serialize,
+        WebGpuShaders::deserialize,
+    )
+
+    /** At most one; none for the default. */
+    val upscaler: Preference<List<WebGpuShader>> = preferenceStore.getObjectFromString(
+        "webgpu_upscaler",
+        emptyList(),
+        WebGpuShaders::serialize,
+        WebGpuShaders::deserialize,
+    )
+
+    /** At most one; none for the default. */
+    val downscaler: Preference<List<WebGpuShader>> = preferenceStore.getObjectFromString(
+        "webgpu_downscaler",
         emptyList(),
         WebGpuShaders::serialize,
         WebGpuShaders::deserialize,
@@ -264,6 +286,70 @@ class ReaderPreferences(
             shouldInvertVertical = true,
         ),
         BOTH(MR.strings.tapping_inverted_both, shouldInvertHorizontal = true, shouldInvertVertical = true),
+    }
+
+    /**
+     * The [readerTheme] preference, stored as its [value].
+     */
+    enum class ReaderTheme(val value: Int) {
+        WHITE(0),
+        BLACK(1),
+        GRAY(2),
+        AUTOMATIC(3),
+        ;
+
+        companion object {
+            fun fromValue(value: Int) = entries.find { it.value == value } ?: BLACK
+        }
+    }
+
+    /**
+     * The [imageScaleType] preference, stored as its [value], which is also the scale type the image view takes.
+     */
+    enum class ScaleType(val value: Int) {
+        FIT_SCREEN(1),
+        STRETCH(2),
+        FIT_WIDTH(3),
+        FIT_HEIGHT(4),
+        ORIGINAL_SIZE(5),
+        SMART_FIT(6),
+        ;
+
+        companion object {
+            fun fromValue(value: Int) = entries.find { it.value == value } ?: FIT_SCREEN
+        }
+    }
+
+    /**
+     * The [zoomStart] preference, stored as its [value].
+     */
+    enum class ZoomStartType(val value: Int) {
+        AUTOMATIC(1),
+        LEFT(2),
+        RIGHT(3),
+        CENTER(4),
+        ;
+
+        companion object {
+            fun fromValue(value: Int) = entries.find { it.value == value } ?: CENTER
+        }
+    }
+
+    /**
+     * The [navigationModePager] and [navigationModeWebtoon] preferences, stored as their [value].
+     */
+    enum class NavigationMode(val value: Int) {
+        DEFAULT(0),
+        L_SHAPED(1),
+        KINDLISH(2),
+        EDGE(3),
+        RIGHT_AND_LEFT(4),
+        DISABLED(5),
+        ;
+
+        companion object {
+            fun fromValue(value: Int) = entries.find { it.value == value } ?: DEFAULT
+        }
     }
 
     enum class ReaderHideThreshold(val threshold: Int) {
