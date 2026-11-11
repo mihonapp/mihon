@@ -67,6 +67,7 @@ class ExtensionStoreRepositoryImpl(
             contactDiscord = null,
             isLegacy = false,
             extensionListUrl = null,
+            isEnabled = true,
         )
     }
 
@@ -80,7 +81,7 @@ class ExtensionStoreRepositoryImpl(
                         }
                     }
                     .getOrNull()
-                    ?.let { store.indexUrl to it }
+                    ?.let { store.indexUrl to it.copy(isEnabled = store.isEnabled) }
             }
             database.transaction {
                 refreshed.forEach { (indexUrl, store) ->
@@ -108,21 +109,23 @@ class ExtensionStoreRepositoryImpl(
             contactDiscord = store.contact.discord,
             isLegacy = store.isLegacy,
             extensionListUrl = store.extensionListUrl,
+            isEnabled = store.isEnabled,
         )
     }
 
     override suspend fun fetchExtensions(): List<Extension.Available> {
         return try {
             supervisorScope {
-                database.extension_storeQueries.getAll(::extensionStoreMapper).awaitAsList().map { store ->
-                    async {
-                        service.getExtensions(store).onFailure {
-                            this@ExtensionStoreRepositoryImpl.logcat(LogPriority.ERROR, it) {
-                                "Failed to fetch extensions for store '${store.name} (${store.indexUrl})'"
+                database.extension_storeQueries.getEnabled(::extensionStoreMapper).awaitAsList()
+                    .map { store ->
+                        async {
+                            service.getExtensions(store).onFailure {
+                                this@ExtensionStoreRepositoryImpl.logcat(LogPriority.ERROR, it) {
+                                    "Failed to fetch extensions for store '${store.name} (${store.indexUrl})'"
+                                }
                             }
                         }
                     }
-                }
                     .awaitAll()
                     .flatMap { it.getOrDefault(emptyList()) }
             }
@@ -159,6 +162,7 @@ class ExtensionStoreRepositoryImpl(
         contactDiscord: String?,
         isLegacy: Boolean,
         extensionListUrl: String?,
+        isEnabled: Boolean,
     ): ExtensionStore = ExtensionStore(
         indexUrl = indexUrl,
         name = name,
@@ -170,5 +174,13 @@ class ExtensionStoreRepositoryImpl(
         ),
         isLegacy = isLegacy,
         extensionListUrl = extensionListUrl,
+        isEnabled = isEnabled,
     )
+
+    override suspend fun setEnabled(indexUrl: String, isEnabled: Boolean) {
+        database.extension_storeQueries.setEnabled(
+            indexUrl = indexUrl,
+            isEnabled = isEnabled,
+        )
+    }
 }

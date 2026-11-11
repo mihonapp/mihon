@@ -24,6 +24,7 @@ import mihon.domain.extension.interactor.GetExtensionStores
 import mihon.domain.extension.interactor.RemoveExtensionStore
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.model.ExtensionStore
+import mihon.domain.extension.repository.ExtensionStoreRepository
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
@@ -33,6 +34,7 @@ class ExtensionStoresViewModel(
     private val getExtensionStores: GetExtensionStores,
     private val addExtensionStore: AddExtensionStore,
     private val removeExtensionStore: RemoveExtensionStore,
+    private val extensionStoreRepository: ExtensionStoreRepository,
     private val updateExtensionStores: UpdateExtensionStores,
     private val extensionManager: ExtensionManager,
 ) : ViewModel() {
@@ -43,7 +45,10 @@ class ExtensionStoresViewModel(
         getExtensionStores.subscribe(),
         dialog,
     ) { stores, dialog ->
-        ExtensionStoreScreenState.Success(stores = stores, dialog = dialog)
+        ExtensionStoreScreenState.Success(
+            stores = stores,
+            dialog = dialog,
+        )
     }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), ExtensionStoreScreenState.Loading)
@@ -100,6 +105,13 @@ class ExtensionStoresViewModel(
     fun deleteRepo(baseUrl: String) {
         viewModelScope.launch(Dispatchers.IO) {
             removeExtensionStore(baseUrl)
+            extensionManager.findAvailableExtensions()
+        }
+    }
+
+    fun setRepoEnabled(baseUrl: String, enabled: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            extensionStoreRepository.setEnabled(baseUrl, enabled)
             extensionManager.findAvailableExtensions()
         }
     }
