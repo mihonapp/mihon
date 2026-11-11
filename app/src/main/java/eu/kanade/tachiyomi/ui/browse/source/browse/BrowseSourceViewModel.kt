@@ -35,15 +35,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mihon.core.metro.AppCoroutineScope
+import mihon.domain.protectedfolder.interactor.GetProtectedMangaIds
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.domain.category.interactor.GetCategories
@@ -77,6 +80,7 @@ class BrowseSourceViewModel(
     private val setMangaCategories: SetMangaCategories,
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags,
     private val getManga: GetManga,
+    getProtectedMangaIds: GetProtectedMangaIds,
     private val updateManga: UpdateManga,
     private val addTracks: AddTracks,
     getIncognitoState: GetIncognitoState,
@@ -127,6 +131,11 @@ class BrowseSourceViewModel(
      * Flow of Pager flow tied to [State.listing]
      */
     private val hideInLibraryItems = sourcePreferences.hideInLibraryItems.get()
+
+    // Replays the ids, so no entry is shown before it is known whether it is protected
+    private val protectedMangaIds = getProtectedMangaIds.subscribe()
+        .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
+
     val mangaPagerFlowFlow = state.map { it.source to it.listing }
         .filter { (source, _) -> source != null }
         .map { (_, listing) -> listing }
@@ -138,6 +147,10 @@ class BrowseSourceViewModel(
                 pagingData.map { manga ->
                     getManga.subscribe(manga.url, manga.source)
                         .map { it ?: manga }
+                        // A protected entry is shown as outside the library, which would otherwise give it away
+                        .combine(protectedMangaIds) { manga, ids ->
+                            if (manga.id in ids) manga.copy(favoriteAt = null) else manga
+                        }
                         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), manga)
                 }
                     .filter { !hideInLibraryItems || !it.value.favorite }

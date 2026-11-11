@@ -13,10 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import mihon.domain.protectedfolder.interactor.GetProtectedMangaIds
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
@@ -24,9 +26,18 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoMap(AppScope::class)
 class DownloadQueueViewModel(
     private val downloadManager: DownloadManager,
+    getProtectedMangaIds: GetProtectedMangaIds,
 ) : ViewModel() {
 
+    // Downloads of protected entries stay in the queue but are not listed
+    private var hiddenDownloads = emptyList<Download>()
+
     val state: StateFlow<List<DownloadQueueSection>> = downloadManager.queueState
+        .combine(getProtectedMangaIds.subscribe()) { downloads, protectedMangaIds ->
+            val (hidden, shown) = downloads.partition { it.manga.id in protectedMangaIds }
+            hiddenDownloads = hidden
+            shown
+        }
         .map { downloads ->
             downloads
                 .groupBy { it.source }
@@ -51,7 +62,7 @@ class DownloadQueueViewModel(
     }
 
     fun reorder(downloads: List<Download>) {
-        viewModelScope.launch { downloadManager.reorderQueue(downloads) }
+        viewModelScope.launch { downloadManager.reorderQueue(downloads + hiddenDownloads) }
     }
 
     fun cancel(downloads: List<Download>) {
