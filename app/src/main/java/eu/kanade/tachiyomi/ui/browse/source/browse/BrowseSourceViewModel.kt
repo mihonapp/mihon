@@ -25,34 +25,44 @@ import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
+import eu.kanade.presentation.browse.components.ReadProgress
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mihon.core.metro.AppCoroutineScope
 import tachiyomi.core.common.preference.CheckboxState
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
+import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
+import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.MangaWithChapterCount
@@ -76,6 +86,8 @@ class BrowseSourceViewModel(
     private val getCategories: GetCategories,
     private val setMangaCategories: SetMangaCategories,
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags,
+    private val getChaptersByMangaId: GetChaptersByMangaId,
+    private val getMangaWithChapters: GetMangaWithChapters,
     private val getManga: GetManga,
     private val updateManga: UpdateManga,
     private val addTracks: AddTracks,
@@ -123,6 +135,14 @@ class BrowseSourceViewModel(
         }
     }
 
+    private val hideStartedItemsSources = sourcePreferences.hideStartedItemsSources
+    private val hideFinishedItemsSources = sourcePreferences.hideFinishedItemsSources
+    val hideStartedItems = hideStartedItemsSources.isEnabledForSource()
+    val hideFinishedItems = hideFinishedItemsSources.isEnabledForSource()
+
+    private val showReadProgressSources = sourcePreferences.showReadProgressSources
+    val showReadProgress = showReadProgressSources.isEnabledForSource()
+
     /**
      * Flow of Pager flow tied to [State.listing]
      */
@@ -131,6 +151,8 @@ class BrowseSourceViewModel(
         .filter { (source, _) -> source != null }
         .map { (_, listing) -> listing }
         .distinctUntilChanged()
+        .combine(hideStartedItems) { listing, _ -> listing }
+        .combine(hideFinishedItems) { listing, _ -> listing }
         .map { listing ->
             Pager(PagingConfig(pageSize = 25)) {
                 getRemoteManga(sourceId, listing.query ?: "", listing.filters)
@@ -141,10 +163,44 @@ class BrowseSourceViewModel(
                         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), manga)
                 }
                     .filter { !hideInLibraryItems || !it.value.favorite }
+                    .filter { !isHiddenByReadProgress(it.value) }
             }
                 .cachedIn(viewModelScope)
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyFlow())
+
+    private fun Preference<Set<String>>.isEnabledForSource() = changes()
+        .map { sourceId.toString() in it }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, sourceId.toString() in get())
+
+    fun toggleHideStartedItems() = hideStartedItemsSources.toggleSource()
+
+    fun toggleHideFinishedItems() = hideFinishedItemsSources.toggleSource()
+
+    fun toggleShowReadProgress() = showReadProgressSources.toggleSource()
+
+    private fun Preference<Set<String>>.toggleSource() {
+        val key = sourceId.toString()
+        getAndSet { if (key in it) it - key else it + key }
+    }
+
+    private suspend fun isHiddenByReadProgress(manga: Manga): Boolean {
+        if (!hideStartedItems.value && !hideFinishedItems.value) return false
+        return when (getChaptersByMangaId.await(manga.id).readProgress()) {
+            ReadProgress.None -> false
+            ReadProgress.Started -> hideStartedItems.value
+            ReadProgress.Finished -> hideFinishedItems.value
+        }
+    }
+
+    fun readProgress(manga: Manga): Flow<ReadProgress> = flow { emitAll(getMangaWithChapters.subscribe(manga.id)) }
+        .map { (_, chapters) -> chapters.readProgress() }
+
+    private fun List<Chapter>.readProgress() = when {
+        none { it.read || it.lastPageRead > 0 } -> ReadProgress.None
+        all { it.read } -> ReadProgress.Finished
+        else -> ReadProgress.Started
+    }
 
     fun getColumnsPreference(orientation: Int): GridCells {
         val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE

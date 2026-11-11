@@ -15,9 +15,11 @@ import androidx.paging.compose.LazyPagingItems
 import eu.kanade.presentation.browse.components.BrowseSourceComfortableGrid
 import eu.kanade.presentation.browse.components.BrowseSourceCompactGrid
 import eu.kanade.presentation.browse.components.BrowseSourceList
+import eu.kanade.presentation.browse.components.ReadProgress
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.source.Source
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
@@ -48,6 +50,7 @@ fun BrowseSourceContent(
     onLocalSourceHelpClick: () -> Unit,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
+    readProgress: ((Manga) -> Flow<ReadProgress>)? = null,
 ) {
     val context = LocalContext.current
 
@@ -124,6 +127,7 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
+                readProgress = readProgress,
             )
         }
         LibraryDisplayMode.List -> {
@@ -132,6 +136,7 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
+                readProgress = readProgress,
             )
         }
         LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
@@ -141,6 +146,7 @@ fun BrowseSourceContent(
                 contentPadding = contentPadding,
                 onMangaClick = onMangaClick,
                 onMangaLongClick = onMangaLongClick,
+                readProgress = readProgress,
             )
         }
     }
