@@ -259,27 +259,19 @@ private fun MangaGridCover(
             )
         }
 
-        if (coverSourceName.isNotEmpty()) {
-            Column(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .align(Alignment.TopEnd),
-                horizontalAlignment = Alignment.End,
-            ) {
-                SourceNameBadge(sourceName = coverSourceName)
-                if (badgesEnd != null) {
-                    BadgeGroup(content = badgesEnd)
-                }
-            }
-        } else if (badgesEnd != null) {
+        if (coverSourceName.isNotEmpty() || badgesEnd != null) {
             BadgeGroup(
                 modifier = Modifier
                     .padding(4.dp)
                     .align(Alignment.TopEnd),
-                content = badgesEnd,
+                content = {
+                    if (coverSourceName.isNotEmpty()) {
+                        SourceNameBadge(sourceName = coverSourceName)
+                    }
+                    badgesEnd?.invoke(this)
+                },
             )
         }
-
     }
 }
 

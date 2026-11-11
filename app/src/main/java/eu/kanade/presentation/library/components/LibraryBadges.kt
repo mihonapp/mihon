@@ -8,7 +8,6 @@ import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Folder
 import tachiyomi.presentation.core.components.Badge
-import androidx.compose.ui.unit.sp
 
 @Composable
 internal fun DownloadsBadge(count: Int) {
@@ -42,8 +41,8 @@ internal fun LanguageBadge(
     } else if (sourceLanguage.isNotEmpty()) {
         Badge(
             text = sourceLanguage.uppercase(),
-            color = MaterialTheme.colorScheme.tertiary,
-            textColor = MaterialTheme.colorScheme.onTertiary,
+            color = MaterialTheme.colorScheme.secondary,
+            textColor = MaterialTheme.colorScheme.onSecondary,
         )
     }
 }
@@ -61,8 +60,6 @@ internal fun SourceNameBadge(sourceName: String) {
             text = displayName,
             color = MaterialTheme.colorScheme.tertiary,
             textColor = MaterialTheme.colorScheme.onTertiary,
-            shape = MaterialTheme.shapes.extraSmall,
-            textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
         )
     }
 }
