@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
+import mihon.domain.protectedfolder.repository.ProtectedMangaRepository
+import mihon.domain.protectedfolder.service.ProtectedFolderPreferences
 import okio.buffer
 import okio.gzip
 import okio.sink
@@ -49,6 +51,8 @@ class BackupCreator(
     private val getFavorites: GetFavorites,
     private val backupPreferences: BackupPreferences,
     private val mangaRepository: MangaRepository,
+    private val protectedMangaRepository: ProtectedMangaRepository,
+    private val protectedFolderPreferences: ProtectedFolderPreferences,
     private val categoriesBackupCreator: CategoriesBackupCreator,
     private val mangaBackupCreator: MangaBackupCreator,
     private val preferenceBackupCreator: PreferenceBackupCreator,
@@ -86,7 +90,17 @@ class BackupCreator(
             }
 
             val nonFavoriteManga = if (options.readEntries) mangaRepository.getReadMangaNotInLibrary() else emptyList()
-            val backupManga = backupMangas(getFavorites.await() + nonFavoriteManga, options)
+            // An automatic backup is made without the user asking, so it never carries the protected folder
+            val protectedManga = if (!isAutoBackup && protectedFolderPreferences.includeInBackups.get()) {
+                protectedMangaRepository.getProtectedManga()
+            } else {
+                emptyList()
+            }
+            val backupManga = backupMangas(
+                mangas = getFavorites.await() + nonFavoriteManga + protectedManga,
+                options = options,
+                protectedMangaIds = protectedManga.mapTo(mutableSetOf()) { it.id },
+            )
 
             file.openOutputStream()
                 .also {
@@ -137,10 +151,14 @@ class BackupCreator(
         return categoriesBackupCreator()
     }
 
-    private fun backupMangas(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> {
+    private fun backupMangas(
+        mangas: List<Manga>,
+        options: BackupOptions,
+        protectedMangaIds: Set<Long>,
+    ): Flow<BackupManga> {
         if (!options.libraryEntries) return emptyFlow()
 
-        return mangaBackupCreator(mangas, options)
+        return mangaBackupCreator(mangas, options, protectedMangaIds)
     }
 
     private suspend fun backupSources(sourceIds: Set<Long>): List<BackupSource> {
