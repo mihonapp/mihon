@@ -48,6 +48,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import mihon.feature.migration.config.MigrationConfigScreen
+import mihon.feature.protectedfolder.ProtectedFolderScreen
+import mihon.feature.protectedfolder.components.ProtectedFolderConfirmDialog
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
@@ -135,6 +137,7 @@ data object LibraryTab : Tab {
                             }
                         }
                     },
+                    onOpenProtectedFolder = { navigator.push(ProtectedFolderScreen()) },
                     searchQuery = state.searchQuery,
                     onSearchQueryChange = viewModel::search,
                     // For scroll overlay when no tab
@@ -155,6 +158,8 @@ data object LibraryTab : Tab {
                         viewModel.clearSelection()
                         navigator.push(MigrationConfigScreen(selection))
                     },
+                    onMoveToProtectedFolderClicked = viewModel::openMoveToProtectedFolderDialog
+                        .takeIf { state.protectedFolderAvailable },
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -248,6 +253,17 @@ data object LibraryTab : Tab {
                     onDismissRequest = onDismissRequest,
                     onConfirm = { deleteManga, deleteChapter ->
                         viewModel.removeMangas(dialog.manga, deleteManga, deleteChapter)
+                        viewModel.clearSelection()
+                    },
+                )
+            }
+            is LibraryViewModel.Dialog.MoveToProtectedFolder -> {
+                ProtectedFolderConfirmDialog(
+                    title = stringResource(MR.strings.action_move_to_protected_folder),
+                    message = stringResource(MR.strings.protected_folder_move_confirmation),
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = {
+                        viewModel.moveToProtectedFolder(dialog.manga)
                         viewModel.clearSelection()
                     },
                 )

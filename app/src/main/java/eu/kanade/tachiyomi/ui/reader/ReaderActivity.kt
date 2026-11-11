@@ -106,6 +106,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -114,6 +115,8 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.AppGraph
 import mihon.core.metro.metroGraph
+import mihon.domain.protectedfolder.interactor.GetProtectedMangaIds
+import mihon.feature.protectedfolder.ProtectedFolderSession
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
@@ -138,6 +141,10 @@ class ReaderActivity : BaseActivity() {
     @Inject private lateinit var readerPreferences: ReaderPreferences
 
     @Inject private lateinit var preferences: BasePreferences
+
+    @Inject private lateinit var protectedFolderSession: ProtectedFolderSession
+
+    @Inject private lateinit var getProtectedMangaIds: GetProtectedMangaIds
 
     val viewModel by viewModels<ReaderViewModel> { graph.viewModelFactory }
     val settingsViewModel by viewModels<ReaderSettingsViewModel> {
@@ -187,6 +194,17 @@ class ReaderActivity : BaseActivity() {
         windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         super.onCreate(savedInstanceState)
+
+        // A protected entry doesn't stay on screen once its folder locks
+        protectedFolderSession.unlocked
+            .drop(1)
+            .filter { !it }
+            .onEach { if (viewModel.mangaId in getProtectedMangaIds.await()) finish() }
+            .launchIn(lifecycleScope)
+        if (savedInstanceState != null && !protectedFolderSession.unlocked.value) {
+            // Restored after the process died with the folder open
+            lifecycleScope.launch { if (viewModel.mangaId in getProtectedMangaIds.await()) finish() }
+        }
 
         setComposeContent {
             val state by viewModel.state.collectAsState()
@@ -404,6 +422,7 @@ class ReaderActivity : BaseActivity() {
 
     override fun onPause() {
         viewModel.saveHistory()
+        protectedFolderSession.setIdleTimerPaused(false)
         super.onPause()
     }
 
@@ -413,6 +432,7 @@ class ReaderActivity : BaseActivity() {
      */
     override fun onResume() {
         super.onResume()
+        protectedFolderSession.setIdleTimerPaused(true)
         viewModel.restartReadTimer()
         setMenuVisibility(viewModel.state.value.menuVisible)
     }
