@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
+import eu.kanade.tachiyomi.data.translation.TranslatedPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 
@@ -45,6 +46,13 @@ interface Viewer {
      * Moves backward through the pages.
      */
     fun moveBackward()
+
+    /**
+     * Translations of the pages currently loaded, keyed by page index. Setting it redraws the visible pages.
+     */
+    var translations: Map<Int, TranslatedPage>
+        get() = emptyMap()
+        set(value) {}
 }
 
 /**

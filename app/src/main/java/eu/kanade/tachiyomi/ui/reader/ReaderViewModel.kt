@@ -64,6 +64,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -73,6 +74,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -163,6 +165,15 @@ class ReaderViewModel(
     val translationState = mutableTranslationState.asStateFlow()
 
     private var translationJob: Job? = null
+
+    /** Translations drawn on the pages themselves, keyed by page index. */
+    private val mutableTranslations = MutableStateFlow<Map<Int, TranslatedPage>>(emptyMap())
+    val translations: StateFlow<Map<Int, TranslatedPage>> = mutableTranslations.asStateFlow()
+
+    private val mutableTranslationMode = MutableStateFlow(false)
+    val translationMode: StateFlow<Boolean> = mutableTranslationMode.asStateFlow()
+
+    private val translationJobs = mutableMapOf<Int, Job>()
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -554,6 +565,8 @@ class ReaderViewModel(
 
         if (selectedChapter != getCurrentChapter()) {
             logcat { "Setting ${selectedChapter.chapter.url} as active" }
+            // Translations belong to the chapter they were made for.
+            mutableTranslations.value = emptyMap()
             loadNewChapter(selectedChapter)
         }
 
@@ -564,9 +577,8 @@ class ReaderViewModel(
 
         eventChannel.trySend(Event.PageChanged)
 
-        val translation = mutableTranslationState.value
-        if (translation is TranslationState.Success && translation.page.pageIndex != page.index) {
-            dismissTranslation()
+        if (mutableTranslationMode.value) {
+            translatePageInline(page)
         }
     }
 
@@ -969,6 +981,66 @@ class ReaderViewModel(
         }
     }
 
+    /**
+     * Turns translation mode on or off. While it's on, every page you scroll to is translated and drawn on top of
+     * the page itself.
+     */
+    fun toggleTranslationMode() {
+        val enable = !mutableTranslationMode.value
+        mutableTranslationMode.value = enable
+
+        if (enable) {
+            translateCurrentPageInline()
+        } else {
+            translationJobs.values.forEach { it.cancel() }
+            translationJobs.clear()
+            mutableTranslations.value = emptyMap()
+        }
+    }
+
+    fun translateCurrentPageInline() {
+        val current = state.value
+        val page = current.currentChapter?.pages?.getOrNull(current.currentPage - 1) ?: return
+        translatePageInline(page)
+    }
+
+    fun translatePageInline(page: ReaderPage) {
+        mutableTranslationMode.value = true
+        if (mutableTranslations.value.containsKey(page.index)) return
+        if (translationJobs[page.index]?.isActive == true) return
+
+        translationJobs[page.index] = viewModelScope.launch {
+            try {
+                // Scrolling ahead of the download means the page isn't decoded yet; wait for it instead of
+                // dropping the page.
+                if (page.status != Page.State.Ready) {
+                    withTimeoutOrNull(PAGE_READY_TIMEOUT_MILLIS) {
+                        page.statusFlow.first { it == Page.State.Ready }
+                    } ?: return@launch
+                }
+
+                val translated = pageTranslator.translate(page.index, page.stream)
+                mutableTranslations.update { current ->
+                    // A webtoon strip is big, so only the pages around the reader are kept.
+                    val updated = LinkedHashMap(current)
+                    updated[page.index] = translated
+                    while (updated.size > MAX_TRANSLATED_PAGES) {
+                        val oldest = updated.keys.first()
+                        if (oldest == page.index) break
+                        updated.remove(oldest)
+                    }
+                    updated
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
+            } finally {
+                translationJobs.remove(page.index)
+            }
+        }
+    }
+
     fun dismissTranslation() {
         translationJob?.cancel()
         translationJob = null
@@ -1182,6 +1254,12 @@ class ReaderViewModel(
         data class SavedImage(val result: SaveImageResult) : Event
         data class ShareImage(val uri: Uri, val page: ReaderPage) : Event
         data class CopyImage(val uri: Uri) : Event
+    }
+
+    private companion object {
+        // Each translated page holds a bitmap, and a webtoon page can be tens of megabytes.
+        const val MAX_TRANSLATED_PAGES = 3
+        const val PAGE_READY_TIMEOUT_MILLIS = 30_000L
     }
 }
 

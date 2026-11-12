@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
+import eu.kanade.tachiyomi.data.translation.TranslatedPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.GeneralSettings
@@ -172,6 +173,12 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         private set
 
     @Composable
+    override var translations: Map<Int, TranslatedPage> = emptyMap()
+        set(value) {
+            field = value
+            adapter.notifyDataSetChanged()
+        }
+
     override fun Content(modifier: Modifier) {
         val filter = LocalPageColorFilter.current
         val pageFilter = remember(filter) { filter?.asAndroidColorFilter() }

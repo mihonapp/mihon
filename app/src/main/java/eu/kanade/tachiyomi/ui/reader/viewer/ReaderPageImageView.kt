@@ -40,6 +40,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.tachiyomi.data.coil.ImageDecoder
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.webtoonStrips
+import eu.kanade.tachiyomi.data.translation.TranslatedPage
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonStripImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
@@ -62,6 +63,8 @@ open class ReaderPageImageView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttrs, defStyleRes) {
 
     private var pageView: View? = null
+
+    private var translationLayer: TranslationTextLayer? = null
 
     /**
      * The reader's grayscale and inverted colours for the page image alone, so the transition and error views
@@ -170,6 +173,40 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Draws [page]'s translation over the page image, in the image's own coordinate space, so it follows every
+     * pan, zoom and scroll instead of drifting away from the art.
+     */
+    fun setTranslation(page: TranslatedPage?) {
+        if (page == null) {
+            translationLayer?.let { removeView(it) }
+            translationLayer = null
+            return
+        }
+
+        val layer = translationLayer ?: TranslationTextLayer(context).also { view ->
+            translationLayer = view
+            addView(view, MATCH_PARENT, MATCH_PARENT)
+        }
+
+        // The paged reader zooms and pans its own image, so the text has to follow its mapping.
+        layer.sourceToView = when (val view = pageView) {
+            // The layer works in the coordinates of the translated bitmap, which is a scaled copy of the page.
+            is SubsamplingScaleImageView -> { x, y ->
+                val scaleX = view.sWidth.toFloat() / page.bitmap.width
+                val scaleY = view.sHeight.toFloat() / page.bitmap.height
+                view.sourceToViewCoord(x * scaleX, y * scaleY)
+            }
+            else -> null
+        }
+        layer.page = page
+        layer.invalidate()
+    }
+
+    private fun invalidateTranslation() {
+        translationLayer?.invalidate()
+    }
+
     fun setImage(drawable: Drawable, config: Config) {
         this.config = config
         if (drawable is Animatable) {
@@ -196,6 +233,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     fun recycle() {
+        setTranslation(null)
         stripRequest?.dispose()
         stripRequest = null
         pageView?.let {
@@ -274,10 +312,11 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 object : SubsamplingScaleImageView.OnStateChangedListener {
                     override fun onScaleChanged(newScale: Float, origin: Int) {
                         this@ReaderPageImageView.onScaleChanged(newScale)
+                        this@ReaderPageImageView.invalidateTranslation()
                     }
 
                     override fun onCenterChanged(newCenter: PointF?, origin: Int) {
-                        // Not used
+                        this@ReaderPageImageView.invalidateTranslation()
                     }
                 },
             )
@@ -416,6 +455,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 )
                 setOnScaleChangeListener { _, _, _ ->
                     this@ReaderPageImageView.onScaleChanged(scale)
+                    this@ReaderPageImageView.invalidateTranslation()
                 }
             }
         }

@@ -73,8 +73,6 @@ import eu.kanade.presentation.reader.ReaderNavigationOverlayState
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
-import eu.kanade.presentation.reader.TranslationOverlay
-import eu.kanade.presentation.reader.TranslationOverlayState
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.components.ChapterNavigatorType
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
@@ -203,9 +201,6 @@ class ReaderActivity : BaseActivity() {
             val colorOverlayMode by readerPreferences.colorFilterMode.collectAsState()
             val brightness by settingsViewModel.brightness.collectAsState()
             val navigation = settingsViewModel.navigation.collectAsState().value
-            val translationState by viewModel.translationState.collectAsState()
-            val translationSource by translationPreferences.sourceLanguage.collectAsState()
-            val translationTarget by translationPreferences.targetLanguage.collectAsState()
 
             val backgroundColor = remember(general.theme) { Color(baseContext.readerBackgroundColor(general.theme)) }
             val colorOverlayBlendMode = remember(colorOverlayMode) {
@@ -270,32 +265,6 @@ class ReaderActivity : BaseActivity() {
 
                 AppBars(state = state)
 
-                val translationOverlay = when (val translation = translationState) {
-                    ReaderViewModel.TranslationState.Idle -> null
-                    ReaderViewModel.TranslationState.Loading -> TranslationOverlayState(loading = true)
-                    is ReaderViewModel.TranslationState.Success -> TranslationOverlayState(page = translation.page)
-                    is ReaderViewModel.TranslationState.Error -> TranslationOverlayState(
-                        error = translation.error,
-                        errorDetail = translation.detail,
-                    )
-                }
-                if (translationOverlay != null) {
-                    TranslationOverlay(
-                        state = translationOverlay,
-                        sourceLanguage = translationSource,
-                        targetLanguage = translationTarget,
-                        onSourceLanguageChange = {
-                            translationPreferences.sourceLanguage.set(it)
-                            translatePage()
-                        },
-                        onTargetLanguageChange = {
-                            translationPreferences.targetLanguage.set(it)
-                            translatePage()
-                        },
-                        onDismiss = viewModel::dismissTranslation,
-                        onRetry = { translatePage() },
-                    )
-                }
             }
 
             if (state.isLoadingAdjacentChapter) {
@@ -354,7 +323,7 @@ class ReaderActivity : BaseActivity() {
                         onSave = viewModel::saveImage,
                         onTranslate = {
                             onDismissRequest()
-                            translatePage(dialog.page)
+                            viewModel.translatePageInline(dialog.page)
                         },
                     )
                 }
@@ -494,6 +463,10 @@ class ReaderActivity : BaseActivity() {
     @Composable
     private fun ReaderViewer() {
         val viewer by viewerFlow.collectAsState()
+        val translations by viewModel.translations.collectAsState()
+        LaunchedEffect(viewer, translations) {
+            viewer?.translations = translations
+        }
         val general by settingsViewModel.general.collectAsState()
         val insets = when {
             !general.fullscreen -> WindowInsets.systemBars
@@ -649,7 +622,7 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
-            onClickTranslate = { translatePage() },
+            onClickTranslate = viewModel::toggleTranslationMode,
         )
     }
 
@@ -819,18 +792,6 @@ class ReaderActivity : BaseActivity() {
      */
     fun toggleMenu() {
         setMenuVisibility(!viewModel.state.value.menuVisible)
-    }
-
-    /**
-     * Translates [page], or the current page when it's null, and hides the menu so the translation has the screen.
-     */
-    private fun translatePage(page: ReaderPage? = null) {
-        setMenuVisibility(false)
-        if (page == null) {
-            viewModel.translateCurrentPage()
-        } else {
-            viewModel.translatePage(page)
-        }
     }
 
     /**
