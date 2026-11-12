@@ -56,6 +56,7 @@ import eu.kanade.tachiyomi.util.lang.byteSize
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.system.activeNetworkState
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,6 +83,7 @@ import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import mihon.data.cache.ChapterCache
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.toggle
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
@@ -97,6 +99,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.i18n.MR
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.isLocal
 import kotlin.time.Clock
@@ -990,11 +993,13 @@ class ReaderViewModel(
         mutableTranslationMode.value = enable
 
         if (enable) {
+            context.toast(MR.strings.translation_mode_on)
             translateCurrentPageInline()
         } else {
             translationJobs.values.forEach { it.cancel() }
             translationJobs.clear()
             mutableTranslations.value = emptyMap()
+            context.toast(MR.strings.translation_mode_off)
         }
     }
 
@@ -1033,12 +1038,30 @@ class ReaderViewModel(
                 }
             } catch (e: CancellationException) {
                 throw e
+            } catch (e: TranslationException) {
+                logcat(LogPriority.ERROR, e)
+                toastTranslationError(e)
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e)
+                context.toast(context.stringResource(MR.strings.translation_failed, e.message.orEmpty().replace("%", "%%")))
             } finally {
                 translationJobs.remove(page.index)
             }
         }
+    }
+
+    private fun toastTranslationError(error: TranslationException) {
+        val message = when (error.error) {
+            TranslationError.PAGE_NOT_AVAILABLE -> MR.strings.translation_error_page_not_available
+            TranslationError.NO_TEXT_FOUND -> MR.strings.translation_error_no_text
+            TranslationError.NO_TRANSLATION -> MR.strings.translation_error_no_translation
+            TranslationError.MISSING_API_KEY -> MR.strings.translation_error_missing_api_key
+            TranslationError.MISSING_TARGET_LANGUAGE -> MR.strings.translation_error_missing_target
+            TranslationError.UNSUPPORTED_SOURCE_SCRIPT -> MR.strings.translation_error_unsupported_source
+            TranslationError.PROVIDER_ERROR -> MR.strings.translation_error_provider
+        }
+        val detail = error.detail?.replace("%", "%%").orEmpty()
+        context.toast(context.stringResource(message, detail))
     }
 
     fun dismissTranslation() {

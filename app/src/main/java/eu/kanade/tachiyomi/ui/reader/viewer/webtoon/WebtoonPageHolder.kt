@@ -225,6 +225,8 @@ class WebtoonPageHolder(
     private fun onImageDecoded() {
         progressContainer.isVisible = false
         removeErrorLayout()
+        // The page view exists now, so the translation layer can be put above it.
+        page?.let { current -> frame.setTranslation(viewer.translations[current.index]) }
     }
 
     /**

@@ -1116,6 +1116,9 @@
     <string name="translation_page">Translate page</string>
     <string name="translation_manga">Translate title and description</string>
     <string name="translation_loading">Translating…</string>
+    <string name="translation_mode_on">Translation mode on: pages are translated as you read</string>
+    <string name="translation_mode_off">Translation mode off</string>
+    <string name="translation_failed">Translation failed: %s</string>
     <string name="translation_from">From</string>
     <string name="translation_to">To</string>
     <string name="translation_title">Title</string>

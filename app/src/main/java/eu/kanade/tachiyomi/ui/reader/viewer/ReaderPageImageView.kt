@@ -207,6 +207,14 @@ open class ReaderPageImageView @JvmOverloads constructor(
         translationLayer?.invalidate()
     }
 
+    // The layer is added while binding, before the page view exists, so the page view would cover it.
+    private fun bringTranslationToFront() {
+        translationLayer?.let {
+            it.bringToFront()
+            it.invalidate()
+        }
+    }
+
     fun setImage(drawable: Drawable, config: Config) {
         this.config = config
         if (drawable is Animatable) {
@@ -324,6 +332,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
         addView(pageView, MATCH_PARENT, MATCH_PARENT)
         applyPageColorFilter()
+        bringTranslationToFront()
     }
 
     private fun SubsamplingScaleImageView.setupZoom(config: Config?) {
@@ -383,6 +392,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         pageView = WebtoonStripImageView(context)
         addView(pageView, MATCH_PARENT, WRAP_CONTENT)
         applyPageColorFilter()
+        bringTranslationToFront()
     }
 
     private fun setStripImage(data: BufferedSource, config: Config) {
@@ -461,6 +471,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         }
         addView(pageView, MATCH_PARENT, MATCH_PARENT)
         applyPageColorFilter()
+        bringTranslationToFront()
     }
 
     private fun setAnimatedImage(

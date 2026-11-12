@@ -928,6 +928,9 @@
     <string name="translation_page">ترجمة الصفحة</string>
     <string name="translation_manga">ترجمة العنوان والوصف</string>
     <string name="translation_loading">جارٍ الترجمة…</string>
+    <string name="translation_mode_on">وضع الترجمة مفعّل: تُترجم الصفحات أثناء القراءة</string>
+    <string name="translation_mode_off">تم إيقاف وضع الترجمة</string>
+    <string name="translation_failed">تعذّرت الترجمة: %s</string>
     <string name="translation_from">من</string>
     <string name="translation_to">إلى</string>
     <string name="translation_title">العنوان</string>
