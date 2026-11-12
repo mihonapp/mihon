@@ -45,13 +45,13 @@ class PageTranslator(
         pageIndex: Int,
         openStream: (() -> InputStream)?,
     ): TranslatedPage = withContext(Dispatchers.IO) {
-        val stream = openStream ?: throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
+        val open = openStream ?: throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
         val source = translator.sourceLanguage
         val target = translator.targetLanguage
 
         val file = cacheFile(pageIndex)
         try {
-            file.outputStream().use { output -> stream.use { it.copyTo(output) } }
+            open().use { input -> file.outputStream().use { output -> input.copyTo(output) } }
             file.setReadOnly()
 
             val descriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
