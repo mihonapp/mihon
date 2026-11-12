@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -204,16 +203,14 @@ private fun TranslatedPageContent(page: TranslatedPage) {
             val baseScale = if (stripLike) widthScale else fitScale
 
             var zoom by remember(page) { mutableStateOf(1f) }
-            var pan by remember(page) { mutableStateOf(Offset.Zero) }
+            var panX by remember(page) { mutableStateOf(0.dp) }
+            var panY by remember(page) { mutableStateOf(0.dp) }
 
             val scale = baseScale * zoom
             val displayedWidth = imageWidth * scale
             val displayedHeight = imageHeight * scale
             val maxPanX = ((displayedWidth - maxWidth) / 2f).coerceAtLeast(0.dp)
             val maxPanY = ((displayedHeight - maxHeight) / 2f).coerceAtLeast(0.dp)
-            // Drags arrive in pixels, the layout works in dp.
-            val panX = with(density) { pan.x.toDp() }
-            val panY = with(density) { pan.y.toDp() }
             val offsetX = (maxWidth - displayedWidth) / 2f + panX.coerceIn(-maxPanX, maxPanX)
             val offsetY = (maxHeight - displayedHeight) / 2f + panY.coerceIn(-maxPanY, maxPanY)
             val measurer = rememberTextMeasurer()
@@ -221,10 +218,15 @@ private fun TranslatedPageContent(page: TranslatedPage) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .pointerInput(page) {
+                    // Clamping while dragging (not only while drawing) matters: otherwise the drag keeps adding
+                    // distance past the end of the page and moving back does nothing until that slack is used up.
+                    .pointerInput(page, maxPanX, maxPanY) {
                         detectTransformGestures { _, panChange, zoomChange, _ ->
                             zoom = (zoom * zoomChange).coerceIn(1f, MAX_ZOOM)
-                            pan += panChange
+                            val dragX = with(density) { panChange.x.toDp() }
+                            val dragY = with(density) { panChange.y.toDp() }
+                            panX = (panX + dragX).coerceIn(-maxPanX, maxPanX)
+                            panY = (panY + dragY).coerceIn(-maxPanY, maxPanY)
                         }
                     },
             ) {
