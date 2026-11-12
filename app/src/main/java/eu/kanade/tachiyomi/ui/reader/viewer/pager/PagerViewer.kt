@@ -175,7 +175,9 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     override var translations: Map<Int, TranslatedPage> = emptyMap()
         set(value) {
             field = value
-            adapter.notifyDataSetChanged()
+            for (index in 0 until pager.childCount) {
+                (pager.getChildAt(index) as? PagerPageHolder)?.applyTranslation()
+            }
         }
 
     @Composable

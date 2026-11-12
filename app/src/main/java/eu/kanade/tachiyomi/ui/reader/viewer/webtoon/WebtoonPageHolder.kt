@@ -84,6 +84,11 @@ class WebtoonPageHolder(
     /**
      * Binds the given [page] with this view holder, subscribing to its state.
      */
+    /** Re-draws this page's translation after it has been received. */
+    fun applyTranslation() {
+        page?.let { current -> frame.setTranslation(viewer.translations[current.index]) }
+    }
+
     fun bind(page: ReaderPage) {
         this.page = page
         frame.pageColorFilter = viewer.pageColorFilter

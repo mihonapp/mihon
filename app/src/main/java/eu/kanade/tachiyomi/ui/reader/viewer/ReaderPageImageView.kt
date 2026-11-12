@@ -66,6 +66,11 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
     private var translationLayer: TranslationTextLayer? = null
 
+    init {
+        // Created up front: attaching a child while the reader scrolls makes the strip shift.
+        translationLayer = TranslationTextLayer(context).also { addView(it, MATCH_PARENT, MATCH_PARENT) }
+    }
+
     /**
      * The reader's grayscale and inverted colours for the page image alone, so the transition and error views
      * keep theirs - see [LocalPageColorFilter].
@@ -179,15 +184,13 @@ open class ReaderPageImageView @JvmOverloads constructor(
      */
     fun setTranslation(page: TranslatedPage?) {
         if (page == null) {
-            translationLayer?.let { removeView(it) }
-            translationLayer = null
+            // The view stays attached, only its content is dropped: adding and removing children while the reader
+            // is scrolling makes the strip shift around.
+            translationLayer?.page = null
             return
         }
 
-        val layer = translationLayer ?: TranslationTextLayer(context).also { view ->
-            translationLayer = view
-            addView(view, MATCH_PARENT, MATCH_PARENT)
-        }
+        val layer = translationLayer ?: return
 
         // The paged reader zooms and pans its own image, so the text has to follow its mapping.
         layer.sourceToView = when (val view = pageView) {
@@ -241,7 +244,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     fun recycle() {
-        setTranslation(null)
+        translationLayer?.page = null
         stripRequest?.dispose()
         stripRequest = null
         pageView?.let {
