@@ -1,9 +1,10 @@
 package eu.kanade.tachiyomi.ui.manga
 
 import androidx.lifecycle.viewModelScope
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
-import eu.kanade.domain.manga.model.downloadedFilter
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -15,9 +16,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.spyk
-import io.mockk.unmockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,7 +39,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import tachiyomi.core.common.preference.InMemoryPreferenceStore
 import tachiyomi.core.common.preference.Preference
-import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.repository.ChapterRepository
@@ -75,8 +73,6 @@ class MangaHiddenChaptersViewModelTest {
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(Dispatchers.Unconfined)
-        mockkStatic("eu.kanade.domain.manga.model.MangaKt")
-        every { any<Manga>().downloadedFilter } returns TriState.DISABLED
         every { preference.get() } answers { hide.value }
         every { preference.changes() } returns hide
         every { preferences.hideHiddenChapters } returns preference
@@ -89,7 +85,6 @@ class MangaHiddenChaptersViewModelTest {
     fun tearDown() {
         viewModels.forEach { it.viewModelScope.cancel() }
         Dispatchers.resetMain()
-        unmockkStatic("eu.kanade.domain.manga.model.MangaKt")
     }
 
     @Test
@@ -143,9 +138,11 @@ class MangaHiddenChaptersViewModelTest {
 
     @Test
     fun `dedicated hidden subscription ignores all ordinary filters and updates live`() = runBlocking {
-        val filtered = manga.copy(chapterFlags = Manga.CHAPTER_SHOW_UNREAD or Manga.CHAPTER_SHOW_NOT_BOOKMARKED)
+        val filtered = manga.copy(
+            chapterFlags = Manga.CHAPTER_SHOW_UNREAD or Manga.CHAPTER_SHOW_NOT_BOOKMARKED or
+                Manga.CHAPTER_SHOW_DOWNLOADED,
+        )
         normalData.value = filtered to emptyList()
-        every { any<Manga>().downloadedFilter } returns TriState.ENABLED_IS
         val filteredHidden = hidden.copy(bookmark = true, scanlator = "Excluded")
         hiddenData.value = listOf(filteredHidden)
         val vm = createViewModel()
@@ -176,6 +173,8 @@ class MangaHiddenChaptersViewModelTest {
         val excluded = mockk<GetExcludedScanlators>()
         every { excluded.subscribe(1) } returns flowOf(emptySet())
         val source = mockk<Source>()
+        every { source.lang } returns "en"
+        every { source.name } returns "Test"
         val sources = mockk<SourceManager>()
         coEvery { sources.getOrStub(1) } returns source
         val trackers = mockk<TrackerManager>()
@@ -184,12 +183,20 @@ class MangaHiddenChaptersViewModelTest {
         every { tracks.subscribe(1) } returns flowOf(emptyList())
         val reader = mockk<ReaderPreferences>()
         every { reader.skipFiltered } returns InMemoryPreferenceStore().getBoolean("skip_filtered", false)
+        val base = mockk<BasePreferences>()
+        val downloadedOnly = mockk<Preference<Boolean>>()
+        every { downloadedOnly.changes() } returns MutableStateFlow(false)
+        every { base.downloadedOnly } returns downloadedOnly
+        val sourcePrefs = mockk<SourcePreferences>()
+        every { sourcePrefs.enabledLanguages } returns InMemoryPreferenceStore().getStringSet("langs", setOf("en"))
         return MangaViewModel(
             mangaId = 1,
             isFromSource = false,
             appScope = kotlinx.coroutines.CoroutineScope(Dispatchers.Unconfined),
             context = mockk(),
             libraryPreferences = preferences,
+            basePreferences = base,
+            sourcePreferences = sourcePrefs,
             trackPreferences = TrackPreferences(InMemoryPreferenceStore()),
             readerPreferences = reader,
             trackerManager = trackers,
