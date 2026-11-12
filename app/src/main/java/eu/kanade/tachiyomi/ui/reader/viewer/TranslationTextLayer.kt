@@ -37,18 +37,14 @@ class TranslationTextLayer(context: Context) : View(context) {
 
     private val density = resources.displayMetrics.density
 
-    private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.argb(242, 18, 18, 18)
-    }
-
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         textAlign = Paint.Align.CENTER
+        strokeJoin = Paint.Join.ROUND
     }
 
     private val rect = RectF()
-    private val bounds = RectF()
 
     init {
         // Taps belong to the page underneath, so the reader still reacts normally.
@@ -100,9 +96,9 @@ class TranslationTextLayer(context: Context) : View(context) {
     private fun drawBlock(canvas: Canvas, text: String, blockRect: RectF, margin: Float) {
         if (text.isBlank()) return
 
-        // Vertical Japanese columns are tall and narrow: widen before measuring so the translation doesn't end up
-        // one letter per line.
-        val boxWidth = max(blockRect.width(), min(blockRect.height() * 0.45f, blockRect.width() * 2f))
+        // Vertical Japanese columns are tall and narrow: widen a little so the translation doesn't end up one
+        // letter per line, but stay close to the original text so neighbouring art isn't covered.
+        val boxWidth = max(blockRect.width(), min(blockRect.height() * 0.35f, blockRect.width() * 1.35f))
         val boxHeight = blockRect.height()
         val left = blockRect.centerX() - boxWidth / 2f
         val top = blockRect.top
@@ -121,15 +117,22 @@ class TranslationTextLayer(context: Context) : View(context) {
         val boxHeightDrawn = max(boxHeight, min(textHeight + margin * 2f, boxHeight * MAX_GROWTH))
         val boxTop = top + (boxHeight - boxHeightDrawn) / 2f
 
-        bounds.set(left, boxTop, left + boxWidth, boxTop + boxHeightDrawn)
-        canvas.drawRoundRect(bounds, CORNER_DP * density, CORNER_DP * density, backgroundPaint)
-
         canvas.save()
         canvas.translate(
             left + boxWidth / 2f,
             boxTop + margin + (boxHeightDrawn - margin * 2f - textHeight) / 2f,
         )
+
+        // No background: the artwork stays visible, the letters carry a dark outline instead.
+        textPaint.style = Paint.Style.STROKE
+        textPaint.strokeWidth = max(2f, textSize * 0.14f)
+        textPaint.color = Color.BLACK
         layout.draw(canvas)
+
+        textPaint.style = Paint.Style.FILL
+        textPaint.color = Color.WHITE
+        layout.draw(canvas)
+
         canvas.restore()
     }
 
@@ -145,7 +148,6 @@ class TranslationTextLayer(context: Context) : View(context) {
     companion object {
         private const val MIN_TEXT_SIZE_DP = 7f
         private const val MAX_TEXT_SIZE_DP = 40f
-        private const val MAX_GROWTH = 2.2f
-        private const val CORNER_DP = 4f
+        private const val MAX_GROWTH = 1.7f
     }
 }

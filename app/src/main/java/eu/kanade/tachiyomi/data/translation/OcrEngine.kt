@@ -182,11 +182,11 @@ class OcrEngine {
         val horizontalGap = max(first.box.left, second.box.left) - min(first.box.right, second.box.right)
 
         // Stacked: the next line of the same bubble, close and roughly in the same column.
-        val stacked = verticalGap >= -0.5f * minHeight &&
-            verticalGap <= 0.55f * minHeight &&
-            horizontalOverlap(first.box, second.box) >= 0.3f &&
+        val stacked = verticalGap >= -0.45f * minHeight &&
+            verticalGap <= 0.45f * minHeight &&
+            horizontalOverlap(first.box, second.box) >= 0.45f &&
             // Lines of one bubble have comparable lettering; this keeps a sound effect out of a bubble.
-            max(first.box.height(), second.box.height()) <= minHeight * 2.5f
+            max(first.box.height(), second.box.height()) <= minHeight * 2.2f
         if (stacked) return true
 
         // Side by side: the columns of vertical Japanese text. Only tall boxes can merge this way, otherwise two

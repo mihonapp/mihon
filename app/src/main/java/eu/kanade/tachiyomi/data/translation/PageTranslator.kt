@@ -77,7 +77,9 @@ class PageTranslator(
 
                 // Text positions are read at the OCR scale and have to be drawn on the displayed bitmap.
                 val ratio = bitmap.width.toFloat() / nativeWidth
-                val translation = translateAll(blocks.map { it.text }, source, target)
+                // Line breaks and repeated spacing from the recognizer break the sentences the service sees.
+                val cleaned = blocks.map { it.text.normalizeForTranslation() }
+                val translation = translateAll(cleaned, source, target)
                 val translatedBlocks = blocks.mapIndexedNotNull { index, block ->
                     val translated = translation.getOrNull(index)?.trim()
                     if (translated.isNullOrEmpty()) {
@@ -85,7 +87,7 @@ class PageTranslator(
                     } else {
                         TranslatedTextBlock(
                             box = block.box.scaled(ratio),
-                            original = block.text,
+                            original = cleaned[index],
                             translated = translated,
                         )
                     }
@@ -234,6 +236,15 @@ class PageTranslator(
             }
         }
     }
+
+    /**
+     * Recognized lettering arrives with artificial line breaks and repeated spacing, which translation services turn
+     * into broken sentences.
+     */
+    private fun String.normalizeForTranslation(): String = this
+        .replace(Regex("\\s+"), " ")
+        .replace(Regex("\\.{2,}|…+"), "…")
+        .trim()
 
     private fun Rect.scaled(ratio: Float): Rect = Rect(
         (left * ratio).toInt(),
