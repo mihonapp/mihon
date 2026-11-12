@@ -17,7 +17,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.domain.translation.model.OcrScript
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -29,16 +28,10 @@ data class OcrBlock(
 private data class OcrLine(
     val text: String,
     val box: Rect,
-)
-
-private data class OcrGroup(
-    val lines: MutableList<OcrLine> = mutableListOf(),
 ) {
-    val box: Rect
-        get() = lines.drop(1).fold(Rect(lines.first().box)) { acc, line -> acc.apply { union(line.box) } }
-
-    val bottom: Int
-        get() = lines.maxOf { it.box.bottom }
+    /** Japanese columns are tall and narrow; Latin lines are the other way around. */
+    val isTall: Boolean
+        get() = box.height() > box.width() * 1.5f
 }
 
 @Inject
@@ -46,14 +39,14 @@ private data class OcrGroup(
 class OcrEngine {
 
     suspend fun recognize(image: Bitmap, script: OcrScript): List<OcrBlock> {
-        return clusterIntoBlocks(recognizeLines(image, script))
+        return toBlocks(mergeLines(recognizeLines(image, script)))
     }
 
     /**
-     * Reads the page in horizontal tiles.
+     * Reads the page in tiles.
      *
      * Long strip pages are much taller than the recognizer is comfortable with, and shrinking them to a single
-     * manageable bitmap blurts small lettering away — that is what used to leave most speech bubbles untranslated.
+     * manageable bitmap blurs small lettering away — that is what used to leave most speech bubbles untranslated.
      */
     private suspend fun recognizeLines(image: Bitmap, script: OcrScript): List<OcrLine> {
         val recognizer = recognizerFor(script)
@@ -74,7 +67,12 @@ class OcrEngine {
                             if (text.isNotEmpty()) {
                                 lines += OcrLine(
                                     text = text,
-                                    box = Rect(box.left + tile.left, box.top + tile.top, box.right + tile.left, box.bottom + tile.top),
+                                    box = Rect(
+                                        box.left + tile.left,
+                                        box.top + tile.top,
+                                        box.right + tile.left,
+                                        box.bottom + tile.top,
+                                    ),
                                 )
                             }
                         }
@@ -115,7 +113,7 @@ class OcrEngine {
         val kept = mutableListOf<OcrLine>()
         lines.sortedByDescending { it.text.length }.forEach { candidate ->
             val duplicate = kept.any { existing ->
-                intersection(existing.box, candidate.box) >= 0.5f * min(existing.box.area(), candidate.box.area())
+                intersection(existing.box, candidate.box) >= 0.5f * minArea(existing.box, candidate.box)
             }
             if (!duplicate) kept += candidate
         }
@@ -123,40 +121,99 @@ class OcrEngine {
     }
 
     /**
-     * Speech bubbles arrive as one line per block, so translating them one by one produced fragments like
-     * "أنا..." / "هنا...". Lines that sit on top of each other are joined back into a single block instead.
+     * Rebuilds speech bubbles out of the recognized lines.
+     *
+     * The recognizer hands back one entry per line, and Japanese columns come back one per column, so translating
+     * them as-is produced fragments like "أنا…" / "هنا…" and thin vertical strips of Arabic. Lines (or columns) that
+     * sit right next to each other with no gap are joined back into the bubble they came from.
      */
-    private fun clusterIntoBlocks(lines: List<OcrLine>): List<OcrBlock> {
-        if (lines.isEmpty()) return emptyList()
+    private fun mergeLines(lines: List<OcrLine>): List<List<OcrLine>> {
+        val parent = IntArray(lines.size) { it }
 
-        val groups = mutableListOf<OcrGroup>()
-        lines.sortedWith(compareBy({ it.box.top }, { it.box.left })).forEach { line ->
-            val group = groups.firstOrNull { it.fits(line) }
-            if (group != null) group.lines += line else groups += OcrGroup(mutableListOf(line))
+        fun find(index: Int): Int {
+            var root = index
+            while (parent[root] != root) root = parent[root]
+            var current = index
+            while (parent[current] != current) {
+                val next = parent[current]
+                parent[current] = root
+                current = next
+            }
+            return root
         }
 
+        fun union(a: Int, b: Int) {
+            val rootA = find(a)
+            val rootB = find(b)
+            if (rootA != rootB) parent[rootB] = rootA
+        }
+
+        for (i in lines.indices) {
+            for (j in i + 1 until lines.size) {
+                if (isSameBubble(lines[i], lines[j])) union(i, j)
+            }
+        }
+
+        val groups = mutableMapOf<Int, MutableList<OcrLine>>()
+        lines.indices.forEach { index ->
+            groups.getOrPut(find(index)) { mutableListOf() }.add(lines[index])
+        }
+        return groups.values.toList()
+    }
+
+    private fun isSameBubble(first: OcrLine, second: OcrLine): Boolean {
+        val minHeight = min(first.box.height(), second.box.height()).coerceAtLeast(1)
+        val minWidth = min(first.box.width(), second.box.width()).coerceAtLeast(1)
+        val verticalGap = max(first.box.top, second.box.top) - min(first.box.bottom, second.box.bottom)
+        val horizontalGap = max(first.box.left, second.box.left) - min(first.box.right, second.box.right)
+
+        // Stacked: the next line of the same bubble, close and roughly in the same column.
+        val stacked = verticalGap >= -0.5f * minHeight &&
+            verticalGap <= 0.55f * minHeight &&
+            horizontalOverlap(first.box, second.box) >= 0.3f &&
+            // Lines of one bubble have comparable lettering; this keeps a sound effect out of a bubble.
+            max(first.box.height(), second.box.height()) <= minHeight * 2.5f
+        if (stacked) return true
+
+        // Side by side: the columns of vertical Japanese text. Only tall boxes can merge this way, otherwise two
+        // neighbouring bubbles would be glued together and their translation would land between them.
+        return first.isTall && second.isTall &&
+            horizontalGap >= -0.6f * minWidth &&
+            horizontalGap <= 1.1f * minWidth &&
+            verticalOverlap(first.box, second.box) >= 0.5f
+    }
+
+    private fun toBlocks(groups: List<List<OcrLine>>): List<OcrBlock> {
         return groups.mapNotNull { group ->
-            val box = group.box
+            val box = group.drop(1).fold(Rect(group.first().box)) { acc, line -> acc.apply { union(line.box) } }
             if (box.width() < MIN_BOX_SIZE || box.height() < MIN_BOX_SIZE) return@mapNotNull null
 
-            val ordered = group.lines.sortedWith(compareBy({ it.box.top }, { it.box.left }))
-            val text = joinLines(ordered.map { it.text })
-            if (text.length < 2) null else OcrBlock(text, box)
+            val vertical = group.count { it.isTall } * 2 >= group.size
+            val text = if (vertical) textOfVerticalGroup(group) else textOfHorizontalGroup(group)
+            if (text.count { it.isLetterOrDigit() } < 2) null else OcrBlock(text, box)
         }.sortedWith(compareBy({ it.box.top }, { it.box.left }))
     }
 
-    private fun OcrGroup.fits(line: OcrLine): Boolean {
-        val anchor = lines.maxByOrNull { it.box.bottom } ?: return false
-        val lineHeight = anchor.box.height().coerceAtLeast(1)
-        val gap = line.box.top - anchor.box.bottom
+    private fun textOfHorizontalGroup(group: List<OcrLine>): String {
+        val ordered = group.sortedWith(compareBy({ it.box.top }, { it.box.left }))
+        return joinLines(ordered.map { it.text })
+    }
 
-        // The next line of the same bubble follows closely; a different bubble is further away.
-        if (gap > lineHeight * 0.9 || gap < -lineHeight * 0.7) return false
-        if (line.box.height() > anchor.box.height() * 2.5) return false
+    /**
+     * Japanese columns are read right to left, and top to bottom inside a column.
+     */
+    private fun textOfVerticalGroup(group: List<OcrLine>): String {
+        val columns = mutableListOf<MutableList<OcrLine>>()
+        group.sortedByDescending { it.box.centerX() }.forEach { line ->
+            val column = columns.firstOrNull { existing ->
+                existing.any { horizontalOverlap(it.box, line.box) >= 0.5f }
+            }
+            if (column != null) column.add(line) else columns.add(mutableListOf(line))
+        }
 
-        val overlap = intersection(anchor.box, line.box)
-        val narrowest = min(anchor.box.width(), line.box.width()).coerceAtLeast(1)
-        return overlap >= 0.2f * narrowest || abs(anchor.box.centerX() - line.box.centerX()) <= narrowest * 0.45f
+        return columns.joinToString(separator = "") { column ->
+            column.sortedBy { it.box.top }.joinToString(separator = "") { it.text }
+        }
     }
 
     private fun joinLines(lines: List<String>): String {
@@ -166,7 +223,8 @@ class OcrEngine {
         return lines.joinToString(separator)
     }
 
-    private fun Char.isCjk(): Boolean = this in '\u3040'..'\u30FF' || this in '\u3400'..'\u9FFF' || this in '\uAC00'..'\uD7AF'
+    private fun Char.isCjk(): Boolean =
+        this in '\u3040'..'\u30FF' || this in '\u3400'..'\u9FFF' || this in '\uAC00'..'\uD7AF'
 
     private fun intersection(a: Rect, b: Rect): Int {
         val left = max(a.left, b.left)
@@ -178,7 +236,21 @@ class OcrEngine {
         return (right - left) * (bottom - top)
     }
 
-    private fun Rect.area(): Int = width() * height()
+    private fun horizontalOverlap(a: Rect, b: Rect): Float {
+        val left = max(a.left, b.left)
+        val right = min(a.right, b.right)
+        if (right <= left) return 0f
+        return (right - left).toFloat() / min(a.width(), b.width()).coerceAtLeast(1)
+    }
+
+    private fun verticalOverlap(a: Rect, b: Rect): Float {
+        val top = max(a.top, b.top)
+        val bottom = min(a.bottom, b.bottom)
+        if (bottom <= top) return 0f
+        return (bottom - top).toFloat() / min(a.height(), b.height()).coerceAtLeast(1)
+    }
+
+    private fun minArea(a: Rect, b: Rect): Int = min(a.width() * a.height(), b.width() * b.height())
 
     private fun recognizerFor(script: OcrScript): TextRecognizer = when (script) {
         OcrScript.JAPANESE -> TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())

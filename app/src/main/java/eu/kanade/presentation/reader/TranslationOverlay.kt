@@ -240,7 +240,9 @@ private fun TranslatedBlock(
     // cutting the text off with an ellipsis.
     val horizontalPadding = 3.dp
     val verticalPadding = 2.dp
-    val boxWidth = width * 1.14f
+    // A tall, narrow box (vertical Japanese columns) would squeeze the translation into one letter per line,
+    // so it is widened a little before the text is measured.
+    val boxWidth = maxOf(width * 1.14f, (height * 0.45f).coerceAtMost(width * 2f))
     val textWidthPx = with(density) { (boxWidth - horizontalPadding * 2).toPx() }.toInt().coerceAtLeast(1)
     val maxHeight = height * 2.2f
 
