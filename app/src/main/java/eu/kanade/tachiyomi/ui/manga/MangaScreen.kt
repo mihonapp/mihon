@@ -182,7 +182,7 @@ class MangaScreen(
         var showScanlatorsDialog by remember { mutableStateOf(false) }
 
         if (showTranslationDialog) {
-            val translation by viewModel.mangaTranslation.collectAsState()
+            val translation by viewModel.mangaTranslation.collectAsStateWithLifecycle()
             val onDismissTranslation = {
                 showTranslationDialog = false
                 viewModel.dismissMangaTranslation()

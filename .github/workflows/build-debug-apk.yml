@@ -70,9 +70,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           {
-            echo 'Gradle output (last 200 lines):'
+            echo 'Compiler errors:'
             echo '```'
-            tail -n 200 build.log 2>/dev/null || echo 'no build.log'
+            grep -E '^(e: |error: |FAILURE:|\* What went wrong)' build.log | head -n 80 || echo '(none matched)'
+            echo '```'
+            echo
+            echo 'Gradle output (last 80 lines):'
+            echo '```'
+            tail -n 80 build.log 2>/dev/null || echo 'no build.log'
             echo '```'
           } > /tmp/body.txt
           gh api --method POST \
