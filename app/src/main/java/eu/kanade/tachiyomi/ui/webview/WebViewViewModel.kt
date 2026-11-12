@@ -15,9 +15,7 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
-import eu.kanade.tachiyomi.util.system.toWebViewHeaders
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -41,19 +39,19 @@ class WebViewViewModel(
     }
 
     /** Null until the source it belongs to has been resolved. */
-    val headers: StateFlow<Map<String, String>?>
-        field = MutableStateFlow<Map<String, String>?>(null)
+    val setup: StateFlow<WebViewSourceSetup?>
+        field = MutableStateFlow<WebViewSourceSetup?>(null)
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val source = sourceId?.let { sourceManager.get(it) as? HttpSource }
-            headers.value = try {
-                source?.headers?.toWebViewHeaders().orEmpty()
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "Failed to build headers" }
-                emptyMap()
-            }
+            setup.value = webViewSourceSetup(source)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        setup.value?.proxy?.closeQuietly()
     }
 
     fun shareWebpage(context: Context, url: String) {

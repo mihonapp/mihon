@@ -29,8 +29,9 @@ class WebViewScreen(
         val viewModel =
             assistedMetroViewModel<WebViewViewModel, WebViewViewModel.Factory> { create(sourceId = sourceId) }
 
-        val headers by viewModel.headers.collectAsState()
-        if (headers == null) {
+        val setup by viewModel.setup.collectAsState()
+        val sourceSetup = setup
+        if (sourceSetup == null) {
             LoadingScreen()
             return
         }
@@ -39,7 +40,8 @@ class WebViewScreen(
             onNavigateUp = { navigator.pop() },
             initialTitle = initialTitle,
             url = url,
-            headers = headers.orEmpty(),
+            headers = sourceSetup.headers,
+            proxy = sourceSetup.proxy,
             defaultUserAgentProvider = viewModel::defaultUserAgentProvider,
             onUrlChange = { assistUrl = it },
             onShare = { viewModel.shareWebpage(context, it) },

@@ -2,10 +2,13 @@ package eu.kanade.presentation.webview
 
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
+import android.net.http.SslError
 import android.os.Message
+import android.webkit.HttpAuthHandler
 import android.webkit.JsPromptResult
 import android.webkit.JsResult
 import android.webkit.RenderProcessGoneDetail
+import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.Toast
@@ -45,6 +48,8 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.source.online.LocalProxy
+import eu.kanade.tachiyomi.ui.webview.derEncoding
 import eu.kanade.tachiyomi.util.system.getHtml
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.setUserAgent
@@ -60,6 +65,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
+import java.security.MessageDigest
 
 class WebViewWindow(webContent: WebContent, val navigator: WebViewNavigator) {
     var state by mutableStateOf(WebViewState(webContent))
@@ -82,6 +88,7 @@ fun WebViewScreenContent(
     onOpenInBrowser: (String) -> Unit,
     onClearCookies: (String) -> Unit,
     headers: Map<String, String> = emptyMap(),
+    proxy: LocalProxy? = null,
     onUrlChange: (String) -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -118,6 +125,32 @@ fun WebViewScreenContent(
                 url?.let {
                     currentUrl = it
                     onUrlChange(it)
+                }
+            }
+
+            // The source's proxy presents its own certificate and asks for its own credentials;
+            // nothing else is accepted
+            override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
+                val der = proxy?.let { derEncoding(error.certificate) }
+                if (der != null &&
+                    MessageDigest.isEqual(der, proxy.certificate)
+                ) {
+                    handler.proceed()
+                } else {
+                    handler.cancel()
+                }
+            }
+
+            override fun onReceivedHttpAuthRequest(
+                view: WebView,
+                handler: HttpAuthHandler,
+                host: String?,
+                realm: String?,
+            ) {
+                if (proxy != null && host in LOOPBACK_HOSTS && realm == proxy.realm) {
+                    handler.proceed(proxy.username, proxy.password)
+                } else {
+                    super.onReceivedHttpAuthRequest(view, handler, host, realm)
                 }
             }
 
@@ -392,3 +425,6 @@ fun WebViewScreenContent(
         }
     }
 }
+
+// Where a source's proxy listens
+private val LOOPBACK_HOSTS = setOf("127.0.0.1")
