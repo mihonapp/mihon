@@ -25,6 +25,7 @@ import com.hippo.unifile.UniFile
 import logcat.LogPriority
 import okio.Buffer
 import okio.BufferedSource
+import java.io.FilterInputStream
 import java.io.InputStream
 import java.util.Locale
 import kotlin.math.abs
@@ -108,10 +109,23 @@ object ImageUtil {
         // The reader's decoder, not BitmapFactory: its size is after EXIF orientation, and it reads formats
         // BitmapFactory can't, so this agrees with how the page is shown
         return try {
-            ImageDecoder.open(imageSource.peek().inputStream()).use { it.width > it.height }
+            openHeader(imageSource).use { it.width > it.height }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR) { "isWideImage: ${e.message}" }
             false
+        }
+    }
+
+    /** A decoder that read only the header, unless the format needs the whole file, as JPEG 2000 does. */
+    private fun openHeader(imageSource: BufferedSource): ImageDecoder {
+        // available() 0 stops the read after the header
+        val headerOnly = object : FilterInputStream(imageSource.peek().inputStream()) {
+            override fun available() = 0
+        }
+        return try {
+            ImageDecoder.open(headerOnly, complete = false)
+        } catch (e: ImageDecoder.DecodeException) {
+            ImageDecoder.open(imageSource.peek().inputStream())
         }
     }
 
