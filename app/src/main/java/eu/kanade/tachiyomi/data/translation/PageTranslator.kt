@@ -12,6 +12,7 @@ import tachiyomi.domain.translation.model.OcrScript
 import tachiyomi.domain.translation.model.TranslationLanguage
 import java.io.InputStream
 import kotlin.math.max
+import kotlin.math.min
 
 data class TranslatedTextBlock(
     val box: Rect,
@@ -67,8 +68,9 @@ class PageTranslator(
     }
 
     /**
-     * "Auto" is the one source that has to guess: the Japanese model reads Latin too, so it's used first and the
-     * Latin model is only tried when the guess came back nearly empty.
+     * "Auto" is the one source that has to guess, so a couple of slices are read first with the Japanese model —
+     * it picks up Latin and Korean text as well — and the script the page is actually written in is used for the
+     * real pass. Guessing Japanese for an English page used to leave most bubbles untranslated.
      */
     private suspend fun recognize(bitmap: Bitmap, source: TranslationLanguage): List<OcrBlock> {
         source.ocrScript?.let { script -> return ocrEngine.recognize(bitmap, script) }
@@ -77,12 +79,52 @@ class PageTranslator(
             throw TranslationException(TranslationError.UNSUPPORTED_SOURCE_SCRIPT)
         }
 
-        val japanese = ocrEngine.recognize(bitmap, OcrScript.JAPANESE)
-        if (japanese.sumOf { it.text.length } >= AUTO_SCRIPT_ENOUGH_TEXT) return japanese
-
-        val latin = ocrEngine.recognize(bitmap, OcrScript.LATIN)
-        return if (latin.sumOf { it.text.length } > japanese.sumOf { it.text.length }) latin else japanese
+        return ocrEngine.recognize(bitmap, detectScript(bitmap))
     }
+
+    private suspend fun detectScript(bitmap: Bitmap): OcrScript {
+        val sliceHeight = min(bitmap.height, DETECTION_SLICE_HEIGHT)
+        val tops = if (bitmap.height <= sliceHeight) {
+            listOf(0)
+        } else {
+            listOf(0, (bitmap.height - sliceHeight) / 2, bitmap.height - sliceHeight)
+        }
+
+        var cjk = 0
+        var hangul = 0
+        var latin = 0
+        tops.distinct().forEach { top ->
+            val slice = Bitmap.createBitmap(bitmap, 0, top, bitmap.width, sliceHeight)
+            val sample = if (slice.width > DETECTION_WIDTH) {
+                Bitmap.createScaledBitmap(slice, DETECTION_WIDTH, (slice.height * DETECTION_WIDTH / slice.width).coerceAtLeast(1), true)
+            } else {
+                slice
+            }
+            try {
+                ocrEngine.recognize(sample, OcrScript.JAPANESE).forEach { block ->
+                    block.text.forEach { char ->
+                        when {
+                            char in '\uAC00'..'\uD7AF' -> hangul++
+                            char.isCjk() -> cjk++
+                            char in 'a'..'z' || char in 'A'..'Z' -> latin++
+                        }
+                    }
+                }
+            } finally {
+                if (sample !== slice) sample.recycle()
+                if (slice !== bitmap) slice.recycle()
+            }
+        }
+
+        return when {
+            hangul > (cjk + latin) -> OcrScript.KOREAN
+            cjk >= latin -> OcrScript.JAPANESE
+            else -> OcrScript.LATIN
+        }
+    }
+
+    private fun Char.isCjk(): Boolean =
+        this in '\u3040'..'\u30FF' || this in '\u3400'..'\u9FFF'
 
     /**
      * Translates every block, but doesn't let one bad response cost the whole page — anything that fails is simply
@@ -124,6 +166,7 @@ class PageTranslator(
     companion object {
         // Kept high enough that small lettering survives; the OCR step reads the page in tiles anyway.
         private const val MAX_DIMENSION = 4096
-        private const val AUTO_SCRIPT_ENOUGH_TEXT = 80
+        private const val DETECTION_SLICE_HEIGHT = 900
+        private const val DETECTION_WIDTH = 720
     }
 }

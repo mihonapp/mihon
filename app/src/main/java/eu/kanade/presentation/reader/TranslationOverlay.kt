@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +32,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
@@ -180,35 +183,67 @@ fun TranslationOverlay(
 
 @Composable
 private fun TranslatedPageContent(page: TranslatedPage) {
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val density = LocalDensity.current
-        val image = remember(page.bitmap) { page.bitmap.asImageBitmap() }
-        val imageWidth = with(density) { page.bitmap.width.toDp() }
-        val imageHeight = with(density) { page.bitmap.height.toDp() }
-        val scale = minOf(maxWidth / imageWidth, maxHeight / imageHeight)
-        val displayedWidth = imageWidth * scale
-        val displayedHeight = imageHeight * scale
-        val offsetX = (maxWidth - displayedWidth) / 2f
-        val offsetY = (maxHeight - displayedHeight) / 2f
-        val measurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+    val image = remember(page.bitmap) { page.bitmap.asImageBitmap() }
+    val imageWidth = with(density) { page.bitmap.width.toDp() }
+    val imageHeight = with(density) { page.bitmap.height.toDp() }
 
-        Image(
-            bitmap = image,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                .offset(x = offsetX, y = offsetY)
-                .size(width = displayedWidth, height = displayedHeight),
-        )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            // Leaves room for the language bar, which is drawn on top of the page.
+            .padding(top = 56.dp),
+    ) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            val fitScale = minOf(maxWidth / imageWidth, maxHeight / imageHeight)
+            val widthScale = maxWidth / imageWidth
 
-        page.blocks.forEach { block ->
-            TranslatedBlock(
-                block = block,
-                scale = scale,
-                offsetX = offsetX,
-                offsetY = offsetY,
-                measurer = measurer,
-            )
+            // A long strip fitted on a single screen is unreadable, so strips open at reading width instead and
+            // are panned; regular pages still open whole.
+            val stripLike = imageHeight * widthScale > maxHeight * 1.35f
+            val baseScale = if (stripLike) widthScale else fitScale
+
+            var zoom by remember(page) { mutableStateOf(1f) }
+            var pan by remember(page) { mutableStateOf(Offset.Zero) }
+
+            val scale = baseScale * zoom
+            val displayedWidth = imageWidth * scale
+            val displayedHeight = imageHeight * scale
+            val maxPanX = ((displayedWidth - maxWidth) / 2f).coerceAtLeast(0.dp)
+            val maxPanY = ((displayedHeight - maxHeight) / 2f).coerceAtLeast(0.dp)
+            val offsetX = (maxWidth - displayedWidth) / 2f + pan.x.coerceIn(-maxPanX, maxPanX)
+            val offsetY = (maxHeight - displayedHeight) / 2f + pan.y.coerceIn(-maxPanY, maxPanY)
+            val measurer = rememberTextMeasurer()
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(page) {
+                        detectTransformGestures { _, panChange, zoomChange, _ ->
+                            zoom = (zoom * zoomChange).coerceIn(1f, MAX_ZOOM)
+                            pan += panChange
+                        }
+                    },
+            ) {
+                Image(
+                    bitmap = image,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .offset(x = offsetX, y = offsetY)
+                        .size(width = displayedWidth, height = displayedHeight),
+                )
+
+                page.blocks.forEach { block ->
+                    TranslatedBlock(
+                        block = block,
+                        scale = scale,
+                        offsetX = offsetX,
+                        offsetY = offsetY,
+                        measurer = measurer,
+                    )
+                }
+            }
         }
     }
 }
@@ -289,7 +324,8 @@ private fun TranslatedBlock(
 }
 
 private const val MIN_FONT_SIZE = 7f
-private const val MAX_FONT_SIZE = 17f
+private const val MAX_FONT_SIZE = 44f
+private const val MAX_ZOOM = 4f
 
 private data class FittedLabel(
     val fontSize: Float,
