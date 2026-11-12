@@ -88,11 +88,28 @@ jobs:
         run: |
           ls -lh app/build/outputs/apk/debug/*.apk
 
+      # Confirms the APK is a separate app ("app.mihon.dev" / "Mihon Dev")
+      # before anyone installs it.
+      - name: Verify APK identity
+        run: |
+          AAPT=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | tail -1)
+          APK=app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
+          "$AAPT" dump badging "$APK" | grep -E "^(package|application-label|sdkVersion|targetSdkVersion)"
+
       - name: Upload APK
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: apk-debug
           path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      # Single small download for phones (every Android phone made since ~2016).
+      - name: Upload arm64 APK
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: apk-arm64-only
+          path: app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
           if-no-files-found: error
           retention-days: 30
 
