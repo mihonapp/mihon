@@ -5,15 +5,15 @@ import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.manga.repository.MangaRepository
 
 @Inject
-class GetExcludedScanlators(
+class GetFilteredScanlators(
     private val mangaRepository: MangaRepository,
 ) {
 
     suspend fun await(mangaId: Long): Set<String> {
-        return mangaRepository.getExcludedScanlators(mangaId)
+        return mangaRepository.getFilteredScanlators(mangaId)
     }
 
     fun subscribe(mangaId: Long): Flow<Set<String>> {
-        return mangaRepository.getExcludedScanlatorsAsFlow(mangaId)
+        return mangaRepository.getFilteredScanlatorsAsFlow(mangaId)
     }
 }

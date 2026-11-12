@@ -17,12 +17,17 @@ SELECT
     manga.state_cover_last_modified AS coverLastModified,
     chapter.remote_date_upload AS dateUpload,
     chapter.state_date_fetch AS dateFetch,
-    excluded_scanlator.scanlator AS excludedScanlator
+    CASE
+        WHEN manga.user_chapter_flags & 128 != 0
+            AND EXISTS (SELECT 0 FROM filtered_scanlator FS WHERE FS.manga_id = manga.id)
+        THEN filtered_scanlator.scanlator IS NULL
+        ELSE filtered_scanlator.scanlator IS NOT NULL
+    END AS scanlatorFiltered
 FROM manga JOIN chapter
 ON manga.id = chapter.manga_id
-LEFT JOIN excluded_scanlator
-ON manga.id = excluded_scanlator.manga_id
-AND chapter.remote_scanlator = excluded_scanlator.scanlator
+LEFT JOIN filtered_scanlator
+ON manga.id = filtered_scanlator.manga_id
+AND chapter.remote_scanlator = filtered_scanlator.scanlator
 WHERE user_favorite_at IS NOT NULL
 AND state_date_fetch > user_favorite_at
 ORDER BY state_date_fetch DESC;
@@ -31,7 +36,7 @@ getRecentUpdatesWithFilters:
 SELECT
     mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
     lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
-    excludedScanlator
+    scanlatorFiltered
 FROM updatesView
 WHERE dateUpload > :after
 AND (:read IS NULL OR read = :read)
@@ -42,7 +47,7 @@ AND (
     OR (:started = 0 AND lastPageRead = 0 AND read = 0)
 )
 AND (:bookmarked IS NULL OR bookmark = :bookmarked)
-AND (excludedScanlator IS NULL OR :hideExcludedScanlators = 0)
+AND (scanlatorFiltered = 0 OR :hideExcludedScanlators = 0)
 AND (
     -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
     :includedEmpty
@@ -77,7 +82,7 @@ getReadUpdates:
 SELECT
     mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
     lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
-    excludedScanlator
+    scanlatorFiltered
 FROM updatesView
 WHERE read = 1
 AND dateUpload > :after
@@ -88,7 +93,7 @@ getUnreadUpdates:
 SELECT
     mangaId, mangaTitle, chapterId, chapterName, scanlator, chapterUrl, read, bookmark,
     lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, dateUpload, dateFetch,
-    excludedScanlator
+    scanlatorFiltered
 FROM updatesView
 WHERE read = 0
 AND dateUpload > :after

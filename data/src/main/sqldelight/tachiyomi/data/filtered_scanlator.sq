@@ -1,4 +1,4 @@
-CREATE TABLE excluded_scanlator(
+CREATE TABLE filtered_scanlator(
     manga_id INTEGER NOT NULL,
     scanlator TEXT NOT NULL,
     UNIQUE(manga_id, scanlator),
@@ -8,22 +8,22 @@ CREATE TABLE excluded_scanlator(
 
 
 insert:
-INSERT INTO excluded_scanlator(manga_id, scanlator)
+INSERT INTO filtered_scanlator(manga_id, scanlator)
 VALUES (:mangaId, :scanlator)
 ON CONFLICT(manga_id, scanlator) DO NOTHING;
 
 remove:
-DELETE FROM excluded_scanlator
+DELETE FROM filtered_scanlator
 WHERE manga_id = :mangaId
 AND scanlator IN :scanlators;
 
-getExcludedScanlatorsByMangaId:
+getFilteredScanlatorsByMangaId:
 SELECT scanlator
-FROM excluded_scanlator
+FROM filtered_scanlator
 WHERE manga_id = :mangaId;
 
-getExcludedScanlatorsByMangaIds:
+getFilteredScanlatorsByMangaIds:
 SELECT manga_id, scanlator
-FROM excluded_scanlator
+FROM filtered_scanlator
 WHERE manga_id IN :mangaIds
 ORDER BY manga_id, scanlator;

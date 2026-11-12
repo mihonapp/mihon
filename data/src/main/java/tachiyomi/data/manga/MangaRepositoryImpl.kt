@@ -137,41 +137,42 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun getExcludedScanlators(mangaId: Long): Set<String> {
-        return database.excluded_scanlatorQueries
-            .getExcludedScanlatorsByMangaId(mangaId)
+    override suspend fun getFilteredScanlators(mangaId: Long): Set<String> {
+        return database.filtered_scanlatorQueries
+            .getFilteredScanlatorsByMangaId(mangaId)
             .awaitAsList()
             .toSet()
     }
 
-    override suspend fun getExcludedScanlatorsByMangaIds(mangaIds: List<Long>): Map<Long, List<String>> {
-        return database.excluded_scanlatorQueries
-            .getExcludedScanlatorsByMangaIds(mangaIds)
+    override suspend fun getFilteredScanlatorsByMangaIds(mangaIds: List<Long>): Map<Long, List<String>> {
+        return database.filtered_scanlatorQueries
+            .getFilteredScanlatorsByMangaIds(mangaIds)
             .awaitAsList()
             .groupBy({ it.manga_id }, { it.scanlator })
     }
 
-    override fun getExcludedScanlatorsAsFlow(mangaId: Long): Flow<Set<String>> {
-        return database.excluded_scanlatorQueries
-            .getExcludedScanlatorsByMangaId(mangaId)
+    override fun getFilteredScanlatorsAsFlow(mangaId: Long): Flow<Set<String>> {
+        return database.filtered_scanlatorQueries
+            .getFilteredScanlatorsByMangaId(mangaId)
             .subscribeToList()
             .map { it.toSet() }
     }
 
-    override suspend fun setExcludedScanlators(mangaId: Long, excludedScanlators: Set<String>) {
+    override suspend fun setScanlatorFilter(mangaId: Long, scanlators: Set<String>, include: Boolean) {
         database.transaction {
-            val current = database.excluded_scanlatorQueries
-                .getExcludedScanlatorsByMangaId(mangaId)
+            val current = database.filtered_scanlatorQueries
+                .getFilteredScanlatorsByMangaId(mangaId)
                 .awaitAsList()
                 .toSet()
-            excludedScanlators.minus(current).forEach { scanlator ->
-                database.excluded_scanlatorQueries.insert(mangaId, scanlator)
+            scanlators.minus(current).forEach { scanlator ->
+                database.filtered_scanlatorQueries.insert(mangaId, scanlator)
             }
-            val toRemove = current.minus(excludedScanlators)
+            val toRemove = current.minus(scanlators)
             // An empty delete still tells every chapter query to run again
             if (toRemove.isNotEmpty()) {
-                database.excluded_scanlatorQueries.remove(mangaId, toRemove)
+                database.filtered_scanlatorQueries.remove(mangaId, toRemove)
             }
+            database.mangaQueries.setScanlatorFilterInclude(include = include, id = mangaId)
         }
     }
 

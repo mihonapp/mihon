@@ -11,7 +11,7 @@ data class RestoredManga(
     val categoryIds: List<Long>,
     val history: List<RestoredHistory>,
     val tracks: List<Track>,
-    val excludedScanlators: List<String>,
+    val filteredScanlators: List<String>,
 )
 
 data class RestoredHistory(
