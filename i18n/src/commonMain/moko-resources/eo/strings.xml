@@ -963,4 +963,9 @@
     <string name="information_webview_crashed">WebView ĉesis funkcii kaj la paĝo estis fermita</string>
     <string name="ext_malformed_message">Al ĉi tiu etendaĵo mankas informo, kiun la apo bezonas por ŝargi ĝin.</string>
     <string name="ext_info_warning">Averto</string>
+    <string name="pref_time_format">Tempa formo</string>
+    <string name="follow_system">Laŭ sistemo</string>
+    <string name="follow_language">Laŭ lingvo</string>
+    <string name="time_24_hours">24-hora</string>
+    <string name="time_12_hours">12-hora</string>
 </resources>

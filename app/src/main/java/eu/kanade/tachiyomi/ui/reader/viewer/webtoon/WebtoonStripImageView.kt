@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.MotionEvent
@@ -22,6 +23,14 @@ class WebtoonStripImageView(context: Context) : View(context) {
     private var imageHeight = 0
 
     private val paint = Paint(Paint.FILTER_BITMAP_FLAG)
+
+    /** Applied to the strips as they draw. */
+    var colorFilter: ColorFilter?
+        get() = paint.colorFilter
+        set(value) {
+            paint.colorFilter = value
+            invalidate()
+        }
     private val clipRect = Rect()
     private val dstRect = Rect()
 

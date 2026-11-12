@@ -97,6 +97,15 @@ object SettingsAdvancedScreen : SearchableSettings {
                     true
                 },
             ),
+            Preference.PreferenceItem.SwitchPreference(
+                preference = networkPreferences.redactSensitiveHeaders,
+                title = stringResource(MR.strings.pref_redact_sensitive_headers),
+                subtitle = stringResource(MR.strings.pref_redact_sensitive_headers_summary),
+                onValueChanged = {
+                    context.toast(MR.strings.requires_app_restart)
+                    true
+                },
+            ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_debug_info),
                 onClick = { navigator.push(DebugInfoScreen()) },

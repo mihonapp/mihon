@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
 import android.content.Context
+import android.graphics.ColorFilter
+import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
 import android.graphics.drawable.Animatable
@@ -13,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.annotation.AttrRes
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
@@ -59,6 +62,30 @@ open class ReaderPageImageView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttrs, defStyleRes) {
 
     private var pageView: View? = null
+
+    /**
+     * The reader's grayscale and inverted colours for the page image alone, so the transition and error views
+     * keep theirs - see [LocalPageColorFilter].
+     */
+    var pageColorFilter: ColorFilter? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            applyPageColorFilter()
+        }
+
+    private fun applyPageColorFilter() {
+        val filter = pageColorFilter
+        when (val view = pageView) {
+            is ImageView -> view.colorFilter = filter
+            is WebtoonStripImageView -> view.colorFilter = filter
+            // Drawn with its own paints: a layer takes the filter instead, as wide as the screen it fills.
+            is SubsamplingScaleImageView -> view.setLayerType(
+                if (filter == null) LAYER_TYPE_NONE else LAYER_TYPE_HARDWARE,
+                filter?.let { Paint().apply { colorFilter = it } },
+            )
+        }
+    }
 
     private var stripRequest: Disposable? = null
 
@@ -257,6 +284,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             setOnClickListener { this@ReaderPageImageView.onViewClicked() }
         }
         addView(pageView, MATCH_PARENT, MATCH_PARENT)
+        applyPageColorFilter()
     }
 
     private fun SubsamplingScaleImageView.setupZoom(config: Config?) {
@@ -315,6 +343,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
         pageView = WebtoonStripImageView(context)
         addView(pageView, MATCH_PARENT, WRAP_CONTENT)
+        applyPageColorFilter()
     }
 
     private fun setStripImage(data: BufferedSource, config: Config) {
@@ -391,6 +420,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             }
         }
         addView(pageView, MATCH_PARENT, MATCH_PARENT)
+        applyPageColorFilter()
     }
 
     private fun setAnimatedImage(

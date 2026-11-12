@@ -929,4 +929,9 @@
     <string name="ext_unsupported_message">この拡張機能は、このアプリのバージョンでは読み込めないバージョンの拡張機能ライブラリ向けに作成されています。アプリまたは拡張機能を更新すると、問題が解決する場合があります。</string>
     <string name="ext_malformed_message">この拡張機能には、アプリがこれを読み込むために必要な情報が不足しています。</string>
     <string name="ext_load_failed_message">この拡張機能は読み込み中にエラーが発生したため、そのソースコードは一切利用できません。</string>
+    <string name="pref_time_format">時刻形式</string>
+    <string name="follow_system">システムに従う</string>
+    <string name="follow_language">システムの言語に従う</string>
+    <string name="time_24_hours">24 時間制</string>
+    <string name="time_12_hours">12 時間制</string>
 </resources>

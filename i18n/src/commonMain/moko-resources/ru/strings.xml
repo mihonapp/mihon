@@ -963,4 +963,9 @@
     <string name="update_check_skip_message">Обновления часто могут иметь исправления ошибок и улучшения стабильности. Вам больше не будут напоминать об этой версии, но вы по прежнему будете получать уведомления об новой версии, когда она будет выпущена.</string>
     <string name="information_webview_crashed">WebView перестало работать, и страница была закрыта</string>
     <string name="refresh_tracker_profile">Обновить профиль сервиса отслеживания</string>
+    <string name="pref_time_format">Формат времени</string>
+    <string name="follow_system">Как в системе</string>
+    <string name="follow_language">Как на устройстве</string>
+    <string name="time_24_hours">24 часа</string>
+    <string name="time_12_hours">12 часов</string>
 </resources>

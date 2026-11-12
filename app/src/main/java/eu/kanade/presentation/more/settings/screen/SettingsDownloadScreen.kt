@@ -43,11 +43,6 @@ object SettingsDownloadScreen : SearchableSettings {
                 preference = downloadPreferences.saveChaptersAsCBZ,
                 title = stringResource(MR.strings.save_chapter_as_cbz),
             ),
-            Preference.PreferenceItem.SwitchPreference(
-                preference = downloadPreferences.splitTallImages,
-                title = stringResource(MR.strings.split_tall_images),
-                subtitle = stringResource(MR.strings.split_tall_images_summary),
-            ),
             Preference.PreferenceItem.SliderPreference(
                 preference = downloadPreferences.parallelSourceLimit,
                 valueRange = 1..10,

@@ -1,6 +1,7 @@
 package eu.kanade.presentation.more.settings.widget
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,11 +47,32 @@ fun <T> ListPreferenceWidget(
     )
 
     if (isDialogShown) {
-        AlertDialog(
+        ListPreferenceDialog(
+            title = title,
+            value = value,
+            entries = entries,
+            onValueChange = onValueChange,
             onDismissRequest = { isDialogShown = false },
-            title = { Text(text = title) },
-            text = {
-                Box {
+        )
+    }
+}
+
+@Composable
+fun <T> ListPreferenceDialog(
+    title: String?,
+    value: T,
+    entries: Map<out T, String>,
+    onValueChange: (T) -> Unit,
+    onDismissRequest: () -> Unit,
+    message: String? = null,
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = title?.let { { Text(text = it) } },
+        text = {
+            Column {
+                if (message != null) PreferenceDialogMessage(message)
+                Box(modifier = Modifier.weight(1f, fill = false)) {
                     val state = rememberLazyListState()
                     ScrollbarLazyColumn(state = state) {
                         entries.forEach { current ->
@@ -60,8 +82,8 @@ fun <T> ListPreferenceWidget(
                                     label = current.value,
                                     isSelected = isSelected,
                                     onSelected = {
-                                        onValueChange(current.key!!)
-                                        isDialogShown = false
+                                        onValueChange(current.key)
+                                        onDismissRequest()
                                     },
                                 )
                             }
@@ -70,14 +92,19 @@ fun <T> ListPreferenceWidget(
                     if (state.canScrollBackward) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
                     if (state.canScrollForward) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
                 }
-            },
-            confirmButton = {
-                TextButton(onClick = { isDialogShown = false }) {
-                    Text(text = stringResource(MR.strings.action_cancel))
-                }
-            },
-        )
-    }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_cancel))
+            }
+        },
+    )
+}
+
+@Composable
+internal fun PreferenceDialogMessage(message: String) {
+    Text(text = message, modifier = Modifier.padding(bottom = 8.dp))
 }
 
 @Composable
