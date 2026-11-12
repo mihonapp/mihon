@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
 import android.graphics.Color
 import android.graphics.Matrix
@@ -106,15 +105,21 @@ object ImageUtil {
      * @return true if the width is greater than the height
      */
     fun isWideImage(imageSource: BufferedSource): Boolean {
-        val options = extractImageOptions(imageSource)
-        return options.outWidth > options.outHeight
+        // The reader's decoder, not BitmapFactory: its size is after EXIF orientation, and it reads formats
+        // BitmapFactory can't, so this agrees with how the page is shown
+        return try {
+            ImageDecoder.open(imageSource.peek().inputStream()).use { it.width > it.height }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR) { "isWideImage: ${e.message}" }
+            false
+        }
     }
 
     /**
      * Extract the 'side' part from [BufferedSource] and return it as [BufferedSource].
      */
     fun splitInHalf(imageSource: BufferedSource, side: Side): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+        val imageBitmap = decodeBitmap(imageSource)
         val height = imageBitmap.height
         val width = imageBitmap.width
 
@@ -135,7 +140,7 @@ object ImageUtil {
     }
 
     fun rotateImage(imageSource: BufferedSource, degrees: Float): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+        val imageBitmap = decodeBitmap(imageSource)
         val rotated = rotateBitMap(imageBitmap, degrees)
 
         val output = Buffer()
@@ -153,7 +158,7 @@ object ImageUtil {
      * Split the image into left and right parts, then merge them into a new image.
      */
     fun splitAndMerge(imageSource: BufferedSource, upperSide: Side): BufferedSource {
-        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+        val imageBitmap = decodeBitmap(imageSource)
         val height = imageBitmap.height
         val width = imageBitmap.width
 
@@ -431,12 +436,8 @@ object ImageUtil {
     private fun @receiver:ColorInt Int.isWhite(): Boolean =
         red + blue + green > 740
 
-    /**
-     * Used to check an image's dimensions without loading it in the memory.
-     */
-    private fun extractImageOptions(imageSource: BufferedSource): BitmapFactory.Options {
-        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeStream(imageSource.peek().inputStream(), null, options)
-        return options
+    /** The whole image, oriented as [isWideImage] measures it. */
+    private fun decodeBitmap(imageSource: BufferedSource): Bitmap {
+        return ImageDecoder.open(imageSource.inputStream()).use { it.decodeToBitmap() }
     }
 }
