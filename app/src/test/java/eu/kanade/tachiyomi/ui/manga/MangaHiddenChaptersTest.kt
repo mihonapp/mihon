@@ -1,35 +1,16 @@
 package eu.kanade.tachiyomi.ui.manga
 
-import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.Source
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 
 class MangaHiddenChaptersTest {
-
-    @BeforeEach
-    fun setUp() {
-        // The Android extension also reads the app-wide downloaded-only preference.
-        mockkStatic("eu.kanade.domain.manga.model.MangaKt")
-        every { any<Manga>().downloadedFilter } returns TriState.DISABLED
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkStatic("eu.kanade.domain.manga.model.MangaKt")
-    }
 
     @Test
     fun `hidden outlier does not inflate header or gaps in either sort direction`() {
@@ -176,9 +157,11 @@ class MangaHiddenChaptersTest {
             assertEquals(rawHidden, state.hiddenChapters)
             assertTrue(state.hasHiddenChapters)
         }
-        every { any<Manga>().downloadedFilter } returns TriState.ENABLED_NOT
-        assertEquals(rawHidden, base.hiddenChapters)
-        assertTrue(base.processedChapters.isEmpty())
+        val notDownloaded = base.copy(
+            manga = base.manga.copy(chapterFlags = base.manga.chapterFlags or Manga.CHAPTER_SHOW_NOT_DOWNLOADED),
+        )
+        assertEquals(rawHidden, notDownloaded.hiddenChapters)
+        assertTrue(notDownloaded.processedChapters.isEmpty())
     }
 
     @Test
@@ -200,9 +183,11 @@ class MangaHiddenChaptersTest {
                 filtered.copy(hideHiddenChapters = true).processedChapters.map { it.id }.toSet(),
             )
         }
-        every { any<Manga>().downloadedFilter } returns TriState.ENABLED_IS
         for (hide in listOf(false, true)) {
-            assertEquals(listOf(5L), base.copy(hideHiddenChapters = hide).processedChapters.map { it.id })
+            assertEquals(
+                listOf(5L),
+                base.copy(hideHiddenChapters = hide, downloadedOnly = true).processedChapters.map { it.id },
+            )
         }
     }
 
@@ -312,6 +297,7 @@ class MangaHiddenChaptersTest {
                 if (descending) Manga.CHAPTER_SORT_DESC else Manga.CHAPTER_SORT_ASC,
         ),
         source = mockk<Source>(),
+        sourceName = "",
         isFromSource = false,
         chapters = chapters,
         availableScanlators = emptySet(),
