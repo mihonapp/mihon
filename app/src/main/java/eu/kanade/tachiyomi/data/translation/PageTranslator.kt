@@ -1,8 +1,11 @@
 package eu.kanade.tachiyomi.data.translation
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.BitmapRegionDecoder
 import android.graphics.Rect
+import android.os.ParcelFileDescriptor
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -10,7 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import tachiyomi.domain.translation.model.OcrScript
 import tachiyomi.domain.translation.model.TranslationLanguage
+import java.io.File
 import java.io.InputStream
+import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
@@ -31,6 +36,7 @@ class TranslatedPage(
 @Inject
 @SingleIn(AppScope::class)
 class PageTranslator(
+    private val context: Context,
     private val translator: Translator,
     private val ocrEngine: OcrEngine,
 ) {
@@ -43,63 +49,147 @@ class PageTranslator(
         val source = translator.sourceLanguage
         val target = translator.targetLanguage
 
-        val bitmap = decode(stream) ?: throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
-        val blocks = recognize(bitmap, source)
-        if (blocks.isEmpty()) throw TranslationException(TranslationError.NO_TEXT_FOUND)
+        val file = cacheFile(pageIndex)
+        try {
+            file.outputStream().use { output -> stream.use { it.copyTo(output) } }
+            file.setReadOnly()
 
-        val translations = translateAll(blocks.map { it.text }, source, target)
-        val translatedBlocks = blocks.mapIndexedNotNull { index, block ->
-            val translated = translations.getOrNull(index)?.trim()
-            if (translated.isNullOrEmpty()) {
-                null
-            } else {
-                TranslatedTextBlock(box = block.box, original = block.text, translated = translated)
+            val descriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+            val decoder = try {
+                BitmapRegionDecoder.newInstance(descriptor.fileDescriptor, false)
+                    ?: throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
+            } catch (e: Exception) {
+                descriptor.close()
+                throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
             }
-        }
-        if (translatedBlocks.isEmpty()) throw TranslationException(TranslationError.NO_TRANSLATION)
 
-        TranslatedPage(
-            pageIndex = pageIndex,
-            bitmap = bitmap,
-            blocks = translatedBlocks,
-            source = source,
-            target = target,
-        )
+            try {
+                val nativeWidth = decoder.width
+                val nativeHeight = decoder.height
+                if (nativeWidth <= 0 || nativeHeight <= 0) {
+                    throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
+                }
+
+                val bitmap = decodeForDisplay(file, nativeWidth, nativeHeight)
+                    ?: throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
+                val blocks = recognize(decoder, nativeWidth, nativeHeight, source)
+                if (blocks.isEmpty()) throw TranslationException(TranslationError.NO_TEXT_FOUND)
+
+                // Text positions are read at the OCR scale and have to be drawn on the displayed bitmap.
+                val ratio = bitmap.width.toFloat() / nativeWidth
+                val translation = translateAll(blocks.map { it.text }, source, target)
+                val translatedBlocks = blocks.mapIndexedNotNull { index, block ->
+                    val translated = translation.getOrNull(index)?.trim()
+                    if (translated.isNullOrEmpty()) {
+                        null
+                    } else {
+                        TranslatedTextBlock(
+                            box = block.box.scaled(ratio),
+                            original = block.text,
+                            translated = translated,
+                        )
+                    }
+                }
+                if (translatedBlocks.isEmpty()) throw TranslationException(TranslationError.NO_TRANSLATION)
+
+                TranslatedPage(
+                    pageIndex = pageIndex,
+                    bitmap = bitmap,
+                    blocks = translatedBlocks,
+                    source = source,
+                    target = target,
+                )
+            } finally {
+                decoder.recycle()
+                descriptor.close()
+            }
+        } finally {
+            file.delete()
+        }
+    }
+
+    private fun cacheFile(pageIndex: Int): File {
+        val dir = File(context.cacheDir, "translation").apply { mkdirs() }
+        return File(dir, "page-$pageIndex-${System.nanoTime()}.img")
     }
 
     /**
-     * "Auto" is the one source that has to guess, so a couple of slices are read first with the Japanese model —
-     * it picks up Latin and Korean text as well — and the script the page is actually written in is used for the
-     * real pass. Guessing Japanese for an English page used to leave most bubbles untranslated.
+     * The page is shown at a readable size while keeping memory in check; the recognizer doesn't use this bitmap,
+     * so it may be coarser than what is read.
      */
-    private suspend fun recognize(bitmap: Bitmap, source: TranslationLanguage): List<OcrBlock> {
-        source.ocrScript?.let { script -> return ocrEngine.recognize(bitmap, script) }
-
-        if (source != TranslationLanguage.AUTO) {
-            throw TranslationException(TranslationError.UNSUPPORTED_SOURCE_SCRIPT)
+    private fun decodeForDisplay(file: File, nativeWidth: Int, nativeHeight: Int): Bitmap? {
+        var sampleSize = 1
+        while ((nativeWidth / sampleSize).toLong() * (nativeHeight / sampleSize) > DISPLAY_PIXEL_BUDGET) {
+            sampleSize *= 2
         }
 
-        return ocrEngine.recognize(bitmap, detectScript(bitmap))
+        val options = BitmapFactory.Options().apply {
+            inSampleSize = sampleSize
+            // Otherwise the platform rescales the bitmap by the device density and every position drifts.
+            inScaled = false
+        }
+        return BitmapFactory.decodeFile(file.absolutePath, options)
     }
 
-    private suspend fun detectScript(bitmap: Bitmap): OcrScript {
-        val sliceHeight = min(bitmap.height, DETECTION_SLICE_HEIGHT)
-        val tops = if (bitmap.height <= sliceHeight) {
+    private suspend fun recognize(
+        decoder: BitmapRegionDecoder,
+        nativeWidth: Int,
+        nativeHeight: Int,
+        source: TranslationLanguage,
+    ): List<OcrBlock> {
+        val script = source.ocrScript ?: run {
+            if (source != TranslationLanguage.AUTO) {
+                throw TranslationException(TranslationError.UNSUPPORTED_SOURCE_SCRIPT)
+            }
+            detectScript(decoder, nativeWidth, nativeHeight)
+        }
+
+        val sampleSize = max(1, ceil(nativeWidth / MAX_OCR_WIDTH.toFloat()).toInt())
+        val width = nativeWidth / sampleSize
+        val height = nativeHeight / sampleSize
+
+        return ocrEngine.recognizeTiles(width, height, script) { tile ->
+            val region = Rect(
+                tile.left * sampleSize,
+                tile.top * sampleSize,
+                tile.right * sampleSize,
+                tile.bottom * sampleSize,
+            )
+            val options = BitmapFactory.Options().apply {
+                inSampleSize = sampleSize
+                inScaled = false
+            }
+            decoder.decodeRegion(region, options)?.let { OcrTile(it, release = true) }
+        }
+    }
+
+    /**
+     * "Auto" is the one source that has to guess, so a couple of slices are read first and the script the page is
+     * actually written in is used for the real pass. Assuming Japanese used to leave English pages untranslated.
+     */
+    private suspend fun detectScript(
+        decoder: BitmapRegionDecoder,
+        nativeWidth: Int,
+        nativeHeight: Int,
+    ): OcrScript {
+        val sampleSize = max(1, ceil(nativeWidth / DETECTION_WIDTH.toFloat()).toInt())
+        val sliceHeight = min(nativeHeight, DETECTION_SLICE_HEIGHT * sampleSize)
+        val starts = if (nativeHeight <= sliceHeight) {
             listOf(0)
         } else {
-            listOf(0, (bitmap.height - sliceHeight) / 2, bitmap.height - sliceHeight)
+            listOf(0, (nativeHeight - sliceHeight) / 2, nativeHeight - sliceHeight)
         }
 
         var cjk = 0
         var hangul = 0
         var latin = 0
-        tops.distinct().forEach { top ->
-            val slice = Bitmap.createBitmap(bitmap, 0, top, bitmap.width, sliceHeight)
-            val sample = if (slice.width > DETECTION_WIDTH) {
-                Bitmap.createScaledBitmap(slice, DETECTION_WIDTH, (slice.height * DETECTION_WIDTH / slice.width).coerceAtLeast(1), true)
-            } else {
-                slice
+        starts.distinct().forEach { top ->
+            val region = Rect(0, top, nativeWidth, top + sliceHeight)
+            val options = BitmapFactory.Options().apply {
+                inSampleSize = sampleSize
+                inScaled = false
             }
+            val sample = decoder.decodeRegion(region, options) ?: return@forEach
             try {
                 ocrEngine.recognize(sample, OcrScript.JAPANESE).forEach { block ->
                     block.text.forEach { char ->
@@ -111,20 +201,16 @@ class PageTranslator(
                     }
                 }
             } finally {
-                if (sample !== slice) sample.recycle()
-                if (slice !== bitmap) slice.recycle()
+                sample.recycle()
             }
         }
 
         return when {
-            hangul > (cjk + latin) -> OcrScript.KOREAN
+            hangul > cjk + latin -> OcrScript.KOREAN
             cjk >= latin -> OcrScript.JAPANESE
             else -> OcrScript.LATIN
         }
     }
-
-    private fun Char.isCjk(): Boolean =
-        this in '\u3040'..'\u30FF' || this in '\u3400'..'\u9FFF'
 
     /**
      * Translates every block, but doesn't let one bad response cost the whole page — anything that fails is simply
@@ -149,23 +235,18 @@ class PageTranslator(
         }
     }
 
-    private fun decode(openStream: () -> InputStream): Bitmap? {
-        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        openStream().use { BitmapFactory.decodeStream(it, null, bounds) }
-        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+    private fun Rect.scaled(ratio: Float): Rect = Rect(
+        (left * ratio).toInt(),
+        (top * ratio).toInt(),
+        (right * ratio).toInt(),
+        (bottom * ratio).toInt(),
+    )
 
-        var sampleSize = 1
-        while (max(bounds.outWidth, bounds.outHeight) / sampleSize > MAX_DIMENSION) {
-            sampleSize *= 2
-        }
-
-        val options = BitmapFactory.Options().apply { inSampleSize = sampleSize }
-        return openStream().use { BitmapFactory.decodeStream(it, null, options) }
-    }
+    private fun Char.isCjk(): Boolean = this in '\u3040'..'\u30FF' || this in '\u3400'..'\u9FFF'
 
     companion object {
-        // Kept high enough that small lettering survives; the OCR step reads the page in tiles anyway.
-        private const val MAX_DIMENSION = 4096
+        private const val DISPLAY_PIXEL_BUDGET = 8_000_000L
+        private const val MAX_OCR_WIDTH = 2_000
         private const val DETECTION_SLICE_HEIGHT = 900
         private const val DETECTION_WIDTH = 720
     }

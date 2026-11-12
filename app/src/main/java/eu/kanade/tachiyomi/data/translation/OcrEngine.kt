@@ -25,6 +25,14 @@ data class OcrBlock(
     val box: Rect,
 )
 
+/**
+ * A piece of the page handed to the recognizer. [release] tells the engine whether it owns the bitmap.
+ */
+class OcrTile(
+    val bitmap: Bitmap,
+    val release: Boolean,
+)
+
 private data class OcrLine(
     val text: String,
     val box: Rect,
@@ -39,27 +47,35 @@ private data class OcrLine(
 class OcrEngine {
 
     suspend fun recognize(image: Bitmap, script: OcrScript): List<OcrBlock> {
-        return toBlocks(mergeLines(recognizeLines(image, script)))
+        return recognizeTiles(image.width, image.height, script) { tile ->
+            val bitmap = if (tile.width() == image.width && tile.height() == image.height) {
+                image
+            } else {
+                Bitmap.createBitmap(image, tile.left, tile.top, tile.width(), tile.height())
+            }
+            OcrTile(bitmap, release = bitmap !== image)
+        }
     }
 
     /**
-     * Reads the page in tiles.
+     * Recognizes a page region by region.
      *
-     * Long strip pages are much taller than the recognizer is comfortable with, and shrinking them to a single
-     * manageable bitmap blurs small lettering away — that is what used to leave most speech bubbles untranslated.
+     * Long strip pages can be tens of thousands of pixels tall, so they are never loaded as a single bitmap: the
+     * caller decodes one tile at a time at full resolution, which is what keeps small lettering readable.
      */
-    private suspend fun recognizeLines(image: Bitmap, script: OcrScript): List<OcrLine> {
+    suspend fun recognizeTiles(
+        width: Int,
+        height: Int,
+        script: OcrScript,
+        load: (Rect) -> OcrTile?,
+    ): List<OcrBlock> {
         val recognizer = recognizerFor(script)
-        return try {
-            val lines = mutableListOf<OcrLine>()
-            for (tile in tilesOf(image)) {
-                val bitmap = if (tile.width() == image.width && tile.height() == image.height) {
-                    image
-                } else {
-                    Bitmap.createBitmap(image, tile.left, tile.top, tile.width(), tile.height())
-                }
+        val lines = mutableListOf<OcrLine>()
+        try {
+            for (tile in tilesFor(width, height)) {
+                val image = load(tile) ?: continue
                 try {
-                    val result = recognizer.process(InputImage.fromBitmap(bitmap, 0)).awaitResult()
+                    val result = recognizer.process(InputImage.fromBitmap(image.bitmap, 0)).awaitResult()
                     result.textBlocks.forEach { block ->
                         block.lines.forEach { line ->
                             val box = line.boundingBox ?: return@forEach
@@ -78,10 +94,10 @@ class OcrEngine {
                         }
                     }
                 } finally {
-                    if (bitmap !== image) bitmap.recycle()
+                    if (image.release) image.bitmap.recycle()
                 }
             }
-            dedupe(lines)
+            return toBlocks(mergeLines(dedupe(lines)))
         } finally {
             recognizer.close()
         }
@@ -90,9 +106,7 @@ class OcrEngine {
     /**
      * Splits the page into overlapping tiles so nothing is lost on a tile boundary.
      */
-    private fun tilesOf(image: Bitmap): List<Rect> {
-        val width = image.width
-        val height = image.height
+    private fun tilesFor(width: Int, height: Int): List<Rect> {
         if (height <= TILE_HEIGHT) return listOf(Rect(0, 0, width, height))
 
         val tiles = mutableListOf<Rect>()
