@@ -43,6 +43,9 @@ android {
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
+        // Lets builds that install next to the official app be told apart in the launcher.
+        manifestPlaceholders["appLabel"] = "@string/app_name"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -72,6 +75,7 @@ android {
         val debug = getByName("debug") {
             applicationIdSuffix = ".dev"
             isPseudoLocalesEnabled = true
+            manifestPlaceholders["appLabel"] = "Mihon Dev"
         }
         val release = getByName("release") {
             isMinifyEnabled = true
@@ -97,6 +101,7 @@ android {
             initWith(release)
 
             applicationIdSuffix = ".debug"
+            manifestPlaceholders["appLabel"] = "Mihon Nightly"
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
         }
@@ -271,6 +276,12 @@ dependencies {
 
     // HTML parser
     implementation(libs.jsoup)
+
+    // On-device text recognition for page translation
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.mlkit.text.recognition.chinese)
+    implementation(libs.mlkit.text.recognition.japanese)
+    implementation(libs.mlkit.text.recognition.korean)
 
     // Disk
     implementation(libs.unifile)

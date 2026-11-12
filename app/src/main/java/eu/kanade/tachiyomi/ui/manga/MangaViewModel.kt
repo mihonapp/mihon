@@ -43,6 +43,9 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
+import eu.kanade.tachiyomi.data.translation.Translator
+import eu.kanade.tachiyomi.data.translation.TranslationError
+import eu.kanade.tachiyomi.data.translation.TranslationException
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
@@ -54,6 +57,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -105,6 +109,7 @@ import tachiyomi.domain.manga.model.MangaWithChapterCount
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.translation.model.TranslationLanguage
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import kotlin.math.floor
@@ -144,6 +149,7 @@ class MangaViewModel(
     private val sourceManager: SourceManager,
     private val refreshTracks: RefreshTracks,
     private val coverCache: CoverCache,
+    private val translator: Translator,
 ) : ViewModel() {
 
     private val subscriberGate = SubscriberGate()
@@ -188,6 +194,11 @@ class MangaViewModel(
     private val selectedChapterIds = MutableStateFlow(emptySet<Long>())
 
     private val dialog = MutableStateFlow<Dialog?>(null)
+
+    private val mutableMangaTranslation = MutableStateFlow<MangaTranslationState>(MangaTranslationState.Idle)
+    val mangaTranslation = mutableMangaTranslation.asStateFlow()
+
+    private var translationJob: Job? = null
 
     private val isRefreshingData = MutableStateFlow(false)
 
@@ -1054,6 +1065,18 @@ class MangaViewModel(
 
     // Chapters list - end
 
+    sealed interface MangaTranslationState {
+        data object Idle : MangaTranslationState
+        data object Loading : MangaTranslationState
+        data class Success(
+            val title: String,
+            val description: String,
+            val source: TranslationLanguage,
+            val target: TranslationLanguage,
+        ) : MangaTranslationState
+        data class Error(val error: TranslationError, val detail: String? = null) : MangaTranslationState
+    }
+
     sealed interface Dialog {
         data class ChangeCategory(
             val manga: Manga,
@@ -1075,6 +1098,41 @@ class MangaViewModel(
 
     fun showDeleteChapterDialog(chapters: List<Chapter>) {
         dialog.value = Dialog.DeleteChapters(chapters)
+    }
+
+    fun translateManga() {
+        val currentManga = manga ?: return
+        translationJob?.cancel()
+        translationJob = viewModelScope.launch {
+            mutableMangaTranslation.value = MangaTranslationState.Loading
+            try {
+                val source = translator.sourceLanguage
+                val target = translator.targetLanguage
+                val translated = translator.translate(
+                    texts = listOf(currentManga.title, currentManga.description.orEmpty()),
+                    source = source,
+                    target = target,
+                )
+                mutableMangaTranslation.value = MangaTranslationState.Success(
+                    title = translated.getOrElse(0) { currentManga.title },
+                    description = translated.getOrElse(1) { currentManga.description.orEmpty() },
+                    source = source,
+                    target = target,
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: TranslationException) {
+                mutableMangaTranslation.value = MangaTranslationState.Error(e.error, e.detail)
+            } catch (e: Exception) {
+                mutableMangaTranslation.value = MangaTranslationState.Error(TranslationError.PROVIDER_ERROR, e.message)
+            }
+        }
+    }
+
+    fun dismissMangaTranslation() {
+        translationJob?.cancel()
+        translationJob = null
+        mutableMangaTranslation.value = MangaTranslationState.Idle
     }
 
     fun showSettingsDialog() {

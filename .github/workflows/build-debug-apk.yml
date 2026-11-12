@@ -1,0 +1,57 @@
+name: Build debug APK
+
+# Manual runs from the Actions tab, plus every push to this work branch.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'arena/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Assemble debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up JDK
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          java-version-file: .github/.java-version
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      # Debug builds use the "app.mihon.dev" application id and the "Mihon Dev"
+      # label, so they install next to the official app without sharing data.
+      # -Pdist=local keeps telemetry and the in-app updater off.
+      - name: Build debug APK
+        run: ./gradlew assembleDebug -Pdist=local --stacktrace
+
+      - name: List produced APKs
+        run: |
+          ls -lh app/build/outputs/apk/debug/*.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: apk-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      # Kept after the APK steps so a formatting nit never costs you the build.
+      - name: Check code format
+        continue-on-error: true
+        run: ./gradlew spotlessCheck

@@ -907,4 +907,35 @@
     <string name="ext_content_warning_nsfw">18+</string>
     <string name="ext_content_warning_mixed_description">قد تحتوي المصادر الواردة من هذه الإضافة على محتوى آمن وآخر مخصص للبالغين (18+).</string>
     <string name="ext_content_warning_nsfw_description">تركز المصادر الواردة من هذه الإضافة بشكل أساسي على المحتوى الموجه لمن هم في سن 18 عاماً فما فوق.</string>
+
+    <string name="pref_category_translation">الترجمة</string>
+    <string name="pref_translation_summary">الخدمة ولغة المصدر والهدف</string>
+    <string name="pref_translation_provider">الخدمة</string>
+    <string name="pref_translation_source_language">الترجمة من</string>
+    <string name="pref_translation_target_language">الترجمة إلى</string>
+    <string name="pref_translation_deepl_api_key">مفتاح DeepL</string>
+    <string name="pref_translation_deepl_api_key_summary">المفاتيح المجانية تنتهي بـ ":fx"</string>
+    <string name="pref_translation_libre_url">خادم LibreTranslate</string>
+    <string name="pref_translation_libre_api_key">مفتاح LibreTranslate</string>
+    <string name="pref_translation_libre_api_key_summary">فقط إذا كان الخادم يتطلبه</string>
+    <string name="translation_provider_google">Google Translate</string>
+    <string name="translation_provider_deepl">DeepL</string>
+    <string name="translation_provider_libre">LibreTranslate</string>
+    <string name="translation_languages">اللغات</string>
+    <string name="translation_service">الخدمة</string>
+    <string name="translation_language_auto">اكتشاف تلقائي</string>
+    <string name="translation_source_language_hint">يمكن قراءة نص الصفحات على الجهاز من اليابانية والصينية والكورية والكتابة اللاتينية فقط. أما بقية لغات المصدر فتعمل مع العناوين والأوصاف.</string>
+    <string name="translation_page">ترجمة الصفحة</string>
+    <string name="translation_manga">ترجمة العنوان والوصف</string>
+    <string name="translation_loading">جارٍ الترجمة…</string>
+    <string name="translation_from">من</string>
+    <string name="translation_to">إلى</string>
+    <string name="translation_title">العنوان</string>
+    <string name="translation_description">الوصف</string>
+    <string name="translation_error_provider">فشلت الترجمة: %s</string>
+    <string name="translation_error_missing_api_key">أضف مفتاح API لهذه الخدمة من الإعدادات ← الترجمة</string>
+    <string name="translation_error_unsupported_source">التعرّف على النص غير متاح لهذه اللغة. اختر لغة مصدر أخرى من الإعدادات ← الترجمة</string>
+    <string name="translation_error_missing_target">اختر لغة الهدف من الإعدادات ← الترجمة</string>
+    <string name="translation_error_no_text">لم يُعثر على نص في هذه الصفحة</string>
+    <string name="translation_error_page_not_available">الصفحة لم تُحمَّل بعد</string>
 </resources>

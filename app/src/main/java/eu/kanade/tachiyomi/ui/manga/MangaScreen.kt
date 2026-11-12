@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,8 @@ import eu.kanade.presentation.manga.ChapterSettingsDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
+import eu.kanade.presentation.manga.MangaTranslationDialog
+import eu.kanade.presentation.manga.MangaTranslationUiState
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
@@ -104,6 +107,8 @@ class MangaScreen(
             }
         }
 
+        var showTranslationDialog by remember { mutableStateOf(false) }
+
         MangaScreen(
             state = successState,
             snackbarHostState = viewModel.snackbarHostState,
@@ -160,6 +165,10 @@ class MangaScreen(
                 navigator.push(MigrationConfigScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
             onEditNotesClicked = { navigator.push(MangaNotesScreen(manga = successState.manga)) },
+            onTranslateClicked = {
+                showTranslationDialog = true
+                viewModel.translateManga()
+            },
             onMultiBookmarkClicked = viewModel::bookmarkChapters,
             onMultiMarkAsReadClicked = viewModel::markChaptersRead,
             onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,
@@ -171,6 +180,33 @@ class MangaScreen(
         )
 
         var showScanlatorsDialog by remember { mutableStateOf(false) }
+
+        if (showTranslationDialog) {
+            val translation by viewModel.mangaTranslation.collectAsState()
+            val onDismissTranslation = {
+                showTranslationDialog = false
+                viewModel.dismissMangaTranslation()
+            }
+            val uiState = when (val translationState = translation) {
+                MangaViewModel.MangaTranslationState.Idle -> MangaTranslationUiState()
+                MangaViewModel.MangaTranslationState.Loading -> MangaTranslationUiState(loading = true)
+                is MangaViewModel.MangaTranslationState.Success -> MangaTranslationUiState(
+                    title = translationState.title,
+                    description = translationState.description,
+                    source = translationState.source,
+                    target = translationState.target,
+                )
+                is MangaViewModel.MangaTranslationState.Error -> MangaTranslationUiState(
+                    error = translationState.error,
+                    errorDetail = translationState.detail,
+                )
+            }
+            MangaTranslationDialog(
+                state = uiState,
+                onDismiss = onDismissTranslation,
+                onRetry = viewModel::translateManga,
+            )
+        }
 
         val onDismissRequest = { viewModel.dismissDialog() }
         when (val dialog = successState.dialog) {

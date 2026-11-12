@@ -32,6 +32,10 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.data.translation.PageTranslator
+import eu.kanade.tachiyomi.data.translation.TranslatedPage
+import eu.kanade.tachiyomi.data.translation.TranslationError
+import eu.kanade.tachiyomi.data.translation.TranslationException
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -127,6 +131,7 @@ class ReaderViewModel(
     private val coverCache: CoverCache,
     private val chapterCache: ChapterCache,
     private val downloadCache: DownloadCache,
+    private val pageTranslator: PageTranslator,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -153,6 +158,11 @@ class ReaderViewModel(
 
     private val eventChannel = Channel<Event>()
     val eventFlow = eventChannel.receiveAsFlow()
+
+    private val mutableTranslationState = MutableStateFlow<TranslationState>(TranslationState.Idle)
+    val translationState = mutableTranslationState.asStateFlow()
+
+    private var translationJob: Job? = null
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -553,6 +563,11 @@ class ReaderViewModel(
         }
 
         eventChannel.trySend(Event.PageChanged)
+
+        val translation = mutableTranslationState.value
+        if (translation is TranslationState.Success && translation.page.pageIndex != page.index) {
+            dismissTranslation()
+        }
     }
 
     private fun downloadNextChapters() {
@@ -920,6 +935,46 @@ class ReaderViewModel(
         mutableState.update { it.copy(dialog = Dialog.OrientationModeSelect) }
     }
 
+    /**
+     * Reads the current page with on-device text recognition and translates what it finds, showing the result over
+     * the page until it's dismissed.
+     */
+    fun translateCurrentPage() {
+        val current = state.value
+        val page = current.currentChapter?.pages?.getOrNull(current.currentPage - 1) ?: return
+        translatePage(page)
+    }
+
+    fun translatePage(page: ReaderPage) {
+        if (page.status != Page.State.Ready) {
+            mutableTranslationState.value = TranslationState.Error(TranslationError.PAGE_NOT_AVAILABLE)
+            return
+        }
+
+        translationJob?.cancel()
+        translationJob = viewModelScope.launch {
+            mutableTranslationState.value = TranslationState.Loading
+            try {
+                mutableTranslationState.value = TranslationState.Success(
+                    pageTranslator.translate(page.index, page.stream),
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: TranslationException) {
+                mutableTranslationState.value = TranslationState.Error(e.error, e.detail)
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
+                mutableTranslationState.value = TranslationState.Error(TranslationError.PROVIDER_ERROR, e.message)
+            }
+        }
+    }
+
+    fun dismissTranslation() {
+        translationJob?.cancel()
+        translationJob = null
+        mutableTranslationState.value = TranslationState.Idle
+    }
+
     fun openPageDialog(page: ReaderPage) {
         mutableState.update { it.copy(dialog = Dialog.PageActions(page)) }
     }
@@ -1102,6 +1157,13 @@ class ReaderViewModel(
 
         val totalPages: Int
             get() = currentChapter?.pages?.size ?: -1
+    }
+
+    sealed interface TranslationState {
+        data object Idle : TranslationState
+        data object Loading : TranslationState
+        data class Success(val page: TranslatedPage) : TranslationState
+        data class Error(val error: TranslationError, val detail: String? = null) : TranslationState
     }
 
     sealed interface Dialog {

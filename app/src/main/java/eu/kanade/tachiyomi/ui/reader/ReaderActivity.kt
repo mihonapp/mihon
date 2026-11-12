@@ -73,6 +73,8 @@ import eu.kanade.presentation.reader.ReaderNavigationOverlayState
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReaderPageIndicator
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
+import eu.kanade.presentation.reader.TranslationOverlay
+import eu.kanade.presentation.reader.TranslationOverlayState
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.components.ChapterNavigatorType
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
@@ -117,6 +119,7 @@ import mihon.core.metro.metroGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.collectAsState
@@ -138,6 +141,8 @@ class ReaderActivity : BaseActivity() {
     @Inject private lateinit var readerPreferences: ReaderPreferences
 
     @Inject private lateinit var preferences: BasePreferences
+
+    @Inject private lateinit var translationPreferences: TranslationPreferences
 
     val viewModel by viewModels<ReaderViewModel> { graph.viewModelFactory }
     val settingsViewModel by viewModels<ReaderSettingsViewModel> {
@@ -198,6 +203,9 @@ class ReaderActivity : BaseActivity() {
             val colorOverlayMode by readerPreferences.colorFilterMode.collectAsState()
             val brightness by settingsViewModel.brightness.collectAsState()
             val navigation = settingsViewModel.navigation.collectAsState().value
+            val translationState by viewModel.translationState.collectAsState()
+            val translationSource by translationPreferences.sourceLanguage.collectAsState()
+            val translationTarget by translationPreferences.targetLanguage.collectAsState()
 
             val backgroundColor = remember(general.theme) { Color(baseContext.readerBackgroundColor(general.theme)) }
             val colorOverlayBlendMode = remember(colorOverlayMode) {
@@ -261,6 +269,33 @@ class ReaderActivity : BaseActivity() {
                 ReaderNavigationOverlay(state = navigationOverlayState)
 
                 AppBars(state = state)
+
+                val translationOverlay = when (val translation = translationState) {
+                    ReaderViewModel.TranslationState.Idle -> null
+                    ReaderViewModel.TranslationState.Loading -> TranslationOverlayState(loading = true)
+                    is ReaderViewModel.TranslationState.Success -> TranslationOverlayState(page = translation.page)
+                    is ReaderViewModel.TranslationState.Error -> TranslationOverlayState(
+                        error = translation.error,
+                        errorDetail = translation.detail,
+                    )
+                }
+                if (translationOverlay != null) {
+                    TranslationOverlay(
+                        state = translationOverlay,
+                        sourceLanguage = translationSource,
+                        targetLanguage = translationTarget,
+                        onSourceLanguageChange = {
+                            translationPreferences.sourceLanguage.set(it)
+                            translatePage()
+                        },
+                        onTargetLanguageChange = {
+                            translationPreferences.targetLanguage.set(it)
+                            translatePage()
+                        },
+                        onDismiss = viewModel::dismissTranslation,
+                        onRetry = { translatePage() },
+                    )
+                }
             }
 
             if (state.isLoadingAdjacentChapter) {
@@ -280,7 +315,7 @@ class ReaderActivity : BaseActivity() {
             }
 
             val onDismissRequest = viewModel::closeDialog
-            when (state.dialog) {
+            when (val dialog = state.dialog) {
                 is ReaderViewModel.Dialog.Settings -> {
                     ReaderSettingsDialog(
                         onDismissRequest = onDismissRequest,
@@ -317,6 +352,10 @@ class ReaderActivity : BaseActivity() {
                         onSetAsCover = viewModel::setAsCover,
                         onShare = viewModel::shareImage,
                         onSave = viewModel::saveImage,
+                        onTranslate = {
+                            onDismissRequest()
+                            translatePage(dialog.page)
+                        },
                     )
                 }
                 null -> {}
@@ -610,6 +649,7 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
+            onClickTranslate = { translatePage() },
         )
     }
 
@@ -779,6 +819,18 @@ class ReaderActivity : BaseActivity() {
      */
     fun toggleMenu() {
         setMenuVisibility(!viewModel.state.value.menuVisible)
+    }
+
+    /**
+     * Translates [page], or the current page when it's null, and hides the menu so the translation has the screen.
+     */
+    private fun translatePage(page: ReaderPage? = null) {
+        setMenuVisibility(false)
+        if (page == null) {
+            viewModel.translateCurrentPage()
+        } else {
+            viewModel.translatePage(page)
+        }
     }
 
     /**

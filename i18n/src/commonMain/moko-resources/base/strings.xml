@@ -1095,4 +1095,35 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+
+    <string name="pref_category_translation">Translation</string>
+    <string name="pref_translation_summary">Service, source and target languages</string>
+    <string name="pref_translation_provider">Service</string>
+    <string name="pref_translation_source_language">Translate from</string>
+    <string name="pref_translation_target_language">Translate to</string>
+    <string name="pref_translation_deepl_api_key">DeepL API key</string>
+    <string name="pref_translation_deepl_api_key_summary">Free keys end with ":fx"</string>
+    <string name="pref_translation_libre_url">LibreTranslate server</string>
+    <string name="pref_translation_libre_api_key">LibreTranslate API key</string>
+    <string name="pref_translation_libre_api_key_summary">Only if the server requires one</string>
+    <string name="translation_provider_google">Google Translate</string>
+    <string name="translation_provider_deepl">DeepL</string>
+    <string name="translation_provider_libre">LibreTranslate</string>
+    <string name="translation_languages">Languages</string>
+    <string name="translation_service">Service</string>
+    <string name="translation_language_auto">Detect automatically</string>
+    <string name="translation_source_language_hint">Page text can only be read on-device from Japanese, Chinese, Korean and Latin script. Other source languages work for titles and descriptions.</string>
+    <string name="translation_page">Translate page</string>
+    <string name="translation_manga">Translate title and description</string>
+    <string name="translation_loading">Translating…</string>
+    <string name="translation_from">From</string>
+    <string name="translation_to">To</string>
+    <string name="translation_title">Title</string>
+    <string name="translation_description">Description</string>
+    <string name="translation_error_provider">Translation failed: %s</string>
+    <string name="translation_error_missing_api_key">Add the API key for this service in Settings → Translation</string>
+    <string name="translation_error_unsupported_source">Text recognition is not available for this language. Pick another source language in Settings → Translation</string>
+    <string name="translation_error_missing_target">Choose a target language in Settings → Translation</string>
+    <string name="translation_error_no_text">No text was found on this page</string>
+    <string name="translation_error_page_not_available">The page is not loaded yet</string>
 </resources>
