@@ -49,6 +49,7 @@ class BackupManga(
     @ProtoNumber(111) var initialized: Boolean = false,
     @ProtoNumber(112) var memo: ByteArray = JsonObjectEmptyBytes,
     @ProtoNumber(113) var nextUpdate: Long = 0,
+    @ProtoNumber(114) var lastReadAt: Long = 0,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
@@ -77,6 +78,7 @@ class BackupManga(
             initialized = this@BackupManga.initialized,
             memo = this@BackupManga.memo.toJsonObject(),
             nextUpdate = this@BackupManga.nextUpdate.toInstantOrNull(),
+            lastReadAt = this@BackupManga.lastReadAt,
         )
     }
 }

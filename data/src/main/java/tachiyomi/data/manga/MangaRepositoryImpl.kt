@@ -266,6 +266,7 @@ class MangaRepositoryImpl(
                         stateCoverLastModified = coverLastModified,
                         id = id,
                         userNotes = notes,
+                        userLastReadAt = lastReadAt,
                     )
                 }
             }
