@@ -26,7 +26,6 @@ fun LogoHeader(
         Icon(
             painter = painterResource(R.drawable.ic_mihon),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .padding(iconPadding)
                 .size(64.dp),
