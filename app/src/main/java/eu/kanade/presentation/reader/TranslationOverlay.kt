@@ -211,8 +211,11 @@ private fun TranslatedPageContent(page: TranslatedPage) {
             val displayedHeight = imageHeight * scale
             val maxPanX = ((displayedWidth - maxWidth) / 2f).coerceAtLeast(0.dp)
             val maxPanY = ((displayedHeight - maxHeight) / 2f).coerceAtLeast(0.dp)
-            val offsetX = (maxWidth - displayedWidth) / 2f + pan.x.coerceIn(-maxPanX, maxPanX)
-            val offsetY = (maxHeight - displayedHeight) / 2f + pan.y.coerceIn(-maxPanY, maxPanY)
+            // Drags arrive in pixels, the layout works in dp.
+            val panX = with(density) { pan.x.toDp() }
+            val panY = with(density) { pan.y.toDp() }
+            val offsetX = (maxWidth - displayedWidth) / 2f + panX.coerceIn(-maxPanX, maxPanX)
+            val offsetY = (maxHeight - displayedHeight) / 2f + panY.coerceIn(-maxPanY, maxPanY)
             val measurer = rememberTextMeasurer()
 
             Box(
