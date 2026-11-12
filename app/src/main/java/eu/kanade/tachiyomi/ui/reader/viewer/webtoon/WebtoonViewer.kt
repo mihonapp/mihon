@@ -185,13 +185,13 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         pageViews += view
     }
 
-    @Composable
     override var translations: Map<Int, TranslatedPage> = emptyMap()
         set(value) {
             field = value
             adapter.notifyDataSetChanged()
         }
 
+    @Composable
     override fun Content(modifier: Modifier) {
         val filter = LocalPageColorFilter.current
         val pageFilter = remember(filter) { filter?.asAndroidColorFilter() }
