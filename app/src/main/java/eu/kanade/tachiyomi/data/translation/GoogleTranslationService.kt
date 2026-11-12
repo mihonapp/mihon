@@ -27,9 +27,29 @@ class GoogleTranslationService(
                 text
             } else {
                 if (index > 0) delay(REQUEST_INTERVAL_MILLIS)
-                translate(text, source, target)
+                translateWithRetry(text, source, target)
             }
         }
+    }
+
+    /**
+     * The endpoint is unofficial and throttles bursts, so a single hiccup shouldn't drop a whole speech bubble.
+     */
+    private suspend fun translateWithRetry(
+        text: String,
+        source: TranslationLanguage,
+        target: TranslationLanguage,
+    ): String {
+        var lastError: TranslationException? = null
+        repeat(MAX_ATTEMPTS) { attempt ->
+            try {
+                return translate(text, source, target)
+            } catch (e: TranslationException) {
+                lastError = e
+                if (attempt < MAX_ATTEMPTS - 1) delay(RETRY_DELAY_MILLIS * (attempt + 1))
+            }
+        }
+        throw lastError ?: TranslationException(TranslationError.PROVIDER_ERROR)
     }
 
     private suspend fun translate(
@@ -73,5 +93,7 @@ class GoogleTranslationService(
     companion object {
         private const val ENDPOINT = "https://translate.googleapis.com/translate_a/single"
         private const val REQUEST_INTERVAL_MILLIS = 100L
+        private const val RETRY_DELAY_MILLIS = 400L
+        private const val MAX_ATTEMPTS = 3
     }
 }

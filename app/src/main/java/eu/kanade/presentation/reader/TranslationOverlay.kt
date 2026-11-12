@@ -34,8 +34,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -183,6 +190,7 @@ private fun TranslatedPageContent(page: TranslatedPage) {
         val displayedHeight = imageHeight * scale
         val offsetX = (maxWidth - displayedWidth) / 2f
         val offsetY = (maxHeight - displayedHeight) / 2f
+        val measurer = rememberTextMeasurer()
 
         Image(
             bitmap = image,
@@ -199,6 +207,7 @@ private fun TranslatedPageContent(page: TranslatedPage) {
                 scale = scale,
                 offsetX = offsetX,
                 offsetY = offsetY,
+                measurer = measurer,
             )
         }
     }
@@ -210,39 +219,92 @@ private fun TranslatedBlock(
     scale: Float,
     offsetX: Dp,
     offsetY: Dp,
+    measurer: TextMeasurer,
 ) {
+    if (block.translated.isBlank()) return
+
     val density = LocalDensity.current
+    val baseStyle = MaterialTheme.typography.bodyMedium.copy(
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onSurface,
+        fontWeight = FontWeight.Medium,
+    )
+
     val left = with(density) { block.box.left.toDp() } * scale
     val top = with(density) { block.box.top.toDp() } * scale
     val width = with(density) { block.box.width().toDp() } * scale
     val height = with(density) { block.box.height().toDp() } * scale
     if (width.value <= 0f || height.value <= 0f) return
 
-    val fontSize = (height.value / 2.4f).coerceIn(7f, 22f)
-    val maxLines = (height.value / (fontSize * 1.25f)).toInt().coerceAtLeast(1)
+    // Translations rarely match the length of the original lettering, so the bubble is allowed to grow instead of
+    // cutting the text off with an ellipsis.
+    val horizontalPadding = 3.dp
+    val verticalPadding = 2.dp
+    val boxWidth = width * 1.14f
+    val textWidthPx = with(density) { (boxWidth - horizontalPadding * 2).toPx() }.toInt().coerceAtLeast(1)
+    val maxHeight = height * 2.2f
+
+    val fit = remember(block.translated, textWidthPx, height.value) {
+        var fontSize = (height.value / 3.2f).coerceIn(MIN_FONT_SIZE, MAX_FONT_SIZE)
+        var required = with(density) {
+            measureText(measurer, block.translated, baseStyle, textWidthPx, fontSize).size.height.toDp()
+        } + verticalPadding * 2
+
+        while (required > maxHeight && fontSize > MIN_FONT_SIZE) {
+            fontSize -= 0.5f
+            required = with(density) {
+                measureText(measurer, block.translated, baseStyle, textWidthPx, fontSize).size.height.toDp()
+            } + verticalPadding * 2
+        }
+
+        FittedLabel(fontSize = fontSize, height = required.coerceIn(height * 1.05f, maxHeight))
+    }
 
     Box(
         modifier = Modifier
-            .offset(x = offsetX + left, y = offsetY + top)
-            .size(width = width, height = height)
-            .background(
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.82f),
-                shape = RoundedCornerShape(3.dp),
+            .offset(
+                x = offsetX + left + (width - boxWidth) / 2,
+                y = offsetY + top + (height - fit.height) / 2,
             )
-            .padding(2.dp),
+            .size(width = boxWidth, height = fit.height)
+            .background(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.94f),
+                shape = RoundedCornerShape(4.dp),
+            )
+            .padding(horizontal = horizontalPadding, vertical = verticalPadding),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = block.translated,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontSize = fontSize.sp,
-            lineHeight = (fontSize * 1.2f).sp,
-            maxLines = maxLines,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center,
+            style = baseStyle.copy(
+                fontSize = fit.fontSize.sp,
+                lineHeight = (fit.fontSize * 1.18f).sp,
+            ),
+            maxLines = Int.MAX_VALUE,
+            softWrap = true,
         )
     }
 }
+
+private const val MIN_FONT_SIZE = 7f
+private const val MAX_FONT_SIZE = 17f
+
+private data class FittedLabel(
+    val fontSize: Float,
+    val height: Dp,
+)
+
+private fun measureText(
+    measurer: TextMeasurer,
+    text: String,
+    style: TextStyle,
+    maxWidthPx: Int,
+    fontSize: Float,
+): TextLayoutResult = measurer.measure(
+    text = AnnotatedString(text),
+    style = style.copy(fontSize = fontSize.sp, lineHeight = (fontSize * 1.18f).sp),
+    constraints = Constraints(maxWidth = maxWidthPx),
+)
 
 @Composable
 private fun LanguageSelector(

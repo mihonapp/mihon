@@ -1125,5 +1125,6 @@
     <string name="translation_error_unsupported_source">Text recognition is not available for this language. Pick another source language in Settings → Translation</string>
     <string name="translation_error_missing_target">Choose a target language in Settings → Translation</string>
     <string name="translation_error_no_text">No text was found on this page</string>
+    <string name="translation_error_no_translation">The page text could not be translated</string>
     <string name="translation_error_page_not_available">The page is not loaded yet</string>
 </resources>

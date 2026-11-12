@@ -15,5 +15,6 @@ fun TranslationError.message(detail: String?): String = when (this) {
     TranslationError.UNSUPPORTED_SOURCE_SCRIPT -> stringResource(MR.strings.translation_error_unsupported_source)
     TranslationError.MISSING_TARGET_LANGUAGE -> stringResource(MR.strings.translation_error_missing_target)
     TranslationError.NO_TEXT_FOUND -> stringResource(MR.strings.translation_error_no_text)
+    TranslationError.NO_TRANSLATION -> stringResource(MR.strings.translation_error_no_translation)
     TranslationError.PAGE_NOT_AVAILABLE -> stringResource(MR.strings.translation_error_page_not_available)
 }

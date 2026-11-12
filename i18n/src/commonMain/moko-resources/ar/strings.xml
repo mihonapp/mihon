@@ -937,5 +937,6 @@
     <string name="translation_error_unsupported_source">التعرّف على النص غير متاح لهذه اللغة. اختر لغة مصدر أخرى من الإعدادات ← الترجمة</string>
     <string name="translation_error_missing_target">اختر لغة الهدف من الإعدادات ← الترجمة</string>
     <string name="translation_error_no_text">لم يُعثر على نص في هذه الصفحة</string>
+    <string name="translation_error_no_translation">تعذّر ترجمة نص هذه الصفحة</string>
     <string name="translation_error_page_not_available">الصفحة لم تُحمَّل بعد</string>
 </resources>
