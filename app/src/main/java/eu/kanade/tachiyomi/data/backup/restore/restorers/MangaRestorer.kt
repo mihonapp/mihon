@@ -47,7 +47,7 @@ class MangaRestorer(
                     RestoredHistory(it.url, history.readAt, history.readDuration)
                 },
                 tracks = backupManga.tracking.map { it.getTrackImpl() },
-                excludedScanlators = backupManga.excludedScanlators,
+                filteredScanlators = backupManga.filteredScanlators,
             )
         }
 

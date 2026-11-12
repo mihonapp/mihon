@@ -3,7 +3,7 @@ package eu.kanade.domain.chapter.interactor
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.chapter.model.copyFromSChapter
 import eu.kanade.domain.chapter.model.toSChapter
-import eu.kanade.domain.manga.interactor.GetExcludedScanlators
+import eu.kanade.domain.manga.interactor.GetFilteredScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -37,7 +37,7 @@ class SyncChaptersWithSource(
     private val chapterRepository: ChapterRepository,
     private val shouldUpdateDbChapter: ShouldUpdateDbChapter,
     private val updateManga: UpdateManga,
-    private val getExcludedScanlators: GetExcludedScanlators,
+    private val getFilteredScanlators: GetFilteredScanlators,
     private val libraryPreferences: LibraryPreferences,
 ) {
 
@@ -226,12 +226,12 @@ class SyncChaptersWithSource(
             updated = updatedChapters,
         )
 
-        val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
+        val filteredScanlators = getFilteredScanlators.await(manga.id)
 
         // A first fetch lists the back catalogue, and chapters coming back under a deleted number were out already
         val foundRelease = dbChapters.isNotEmpty() &&
             toAdd.any { chapter ->
-                chapter.scanlator !in excludedScanlators &&
+                !manga.hidesScanlator(chapter.scanlator, filteredScanlators) &&
                     !(chapter.isRecognizedNumber && chapter.chapterNumber in deletedChapterNumbers)
             }
 
@@ -239,6 +239,9 @@ class SyncChaptersWithSource(
         // Note that last_update actually represents last time the chapter list changed at all
         updateManga.awaitUpdateFetchIntervalAndLastUpdate(manga, timeZone, now, fetchWindow, foundRelease)
 
-        return added.filterNot { it.url in changedOrDuplicateReadUrls || it.scanlator in excludedScanlators }
+        return added.filterNot {
+            it.url in changedOrDuplicateReadUrls ||
+                manga.hidesScanlator(it.scanlator, filteredScanlators)
+        }
     }
 }

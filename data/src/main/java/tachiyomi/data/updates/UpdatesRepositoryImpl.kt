@@ -98,7 +98,7 @@ class UpdatesRepositoryImpl(
         coverLastModified: Instant?,
         dateUpload: Instant?,
         dateFetch: Instant,
-        excludedScanlator: String?,
+        scanlatorFiltered: Boolean,
     ): UpdatesWithRelations = UpdatesWithRelations(
         mangaId = mangaId,
         mangaTitle = mangaTitle,

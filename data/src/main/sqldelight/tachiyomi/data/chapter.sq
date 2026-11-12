@@ -39,13 +39,20 @@ SELECT
     C.remote_date_upload, C.remote_order, C.remote_memo, C.user_read, C.user_bookmark,
     C.user_last_page_read, C.state_date_fetch
 FROM chapter C
-LEFT JOIN excluded_scanlator ES
-ON C.manga_id = ES.manga_id
-AND C.remote_scanlator = ES.scanlator
+JOIN manga M
+ON M.id = C.manga_id
+LEFT JOIN filtered_scanlator FS
+ON C.manga_id = FS.manga_id
+AND C.remote_scanlator = FS.scanlator
 WHERE C.manga_id = :mangaId
 AND (
     :applyScanlatorFilter = 0
-    OR ES.scanlator IS NULL
+    OR CASE
+        WHEN M.user_chapter_flags & 128 != 0
+            AND EXISTS (SELECT 0 FROM filtered_scanlator WHERE manga_id = M.id)
+        THEN FS.scanlator IS NOT NULL
+        ELSE FS.scanlator IS NULL
+    END
 );
 
 getChaptersByMangaIds:

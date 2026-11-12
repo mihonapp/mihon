@@ -58,7 +58,7 @@ class RestoreRepositoryImpl(
         restoreChapters(manga, entry.chapters)
         restoreTracking(manga, entry.tracks)
         restoreHistory(manga, entry.history)
-        restoreExcludedScanlators(manga, entry.excludedScanlators)
+        restoreScanlatorFilter(manga, entry)
         return manga
     }
 
@@ -287,7 +287,16 @@ class RestoreRepositoryImpl(
         }
     }
 
-    private suspend fun restoreExcludedScanlators(manga: Manga, excludedScanlators: List<String>) {
-        excludedScanlators.forEach { database.excluded_scanlatorQueries.insert(manga.id, it) }
+    private suspend fun restoreScanlatorFilter(manga: Manga, entry: RestoredManga) {
+        if (entry.filteredScanlators.isEmpty()) return
+        val include = entry.manga.scanlatorFilterInclude
+        val hasLocalFilter = database.filtered_scanlatorQueries
+            .getFilteredScanlatorsByMangaId(manga.id)
+            .awaitAsList()
+            .isNotEmpty()
+        val localFilterHasOtherMode = hasLocalFilter && manga.scanlatorFilterInclude != include
+        if (localFilterHasOtherMode) return
+        entry.filteredScanlators.forEach { database.filtered_scanlatorQueries.insert(manga.id, it) }
+        database.mangaQueries.setScanlatorFilterInclude(include = include, id = manga.id)
     }
 }

@@ -41,13 +41,13 @@ interface MangaRepository {
 
     suspend fun setMangaCategories(mangaId: Long, categoryIds: List<Long>)
 
-    suspend fun getExcludedScanlators(mangaId: Long): Set<String>
+    suspend fun getFilteredScanlators(mangaId: Long): Set<String>
 
-    suspend fun getExcludedScanlatorsByMangaIds(mangaIds: List<Long>): Map<Long, List<String>>
+    suspend fun getFilteredScanlatorsByMangaIds(mangaIds: List<Long>): Map<Long, List<String>>
 
-    fun getExcludedScanlatorsAsFlow(mangaId: Long): Flow<Set<String>>
+    fun getFilteredScanlatorsAsFlow(mangaId: Long): Flow<Set<String>>
 
-    suspend fun setExcludedScanlators(mangaId: Long, excludedScanlators: Set<String>)
+    suspend fun setScanlatorFilter(mangaId: Long, scanlators: Set<String>, include: Boolean)
 
     suspend fun update(update: MangaUpdate): Boolean
 

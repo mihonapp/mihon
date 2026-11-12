@@ -118,11 +118,16 @@ SELECT
     (
         SELECT count(*)
         FROM chapter C
-        LEFT JOIN excluded_scanlator ES
-        ON C.manga_id = ES.manga_id
-        AND C.remote_scanlator = ES.scanlator
+        LEFT JOIN filtered_scanlator FS
+        ON C.manga_id = FS.manga_id
+        AND C.remote_scanlator = FS.scanlator
         WHERE C.manga_id = M.id
-        AND ES.scanlator IS NULL
+        AND CASE
+            WHEN M.user_chapter_flags & 128 != 0
+                AND EXISTS (SELECT 0 FROM filtered_scanlator WHERE manga_id = M.id)
+            THEN FS.scanlator IS NOT NULL
+            ELSE FS.scanlator IS NULL
+        END
     ) AS chapter_count
 FROM manga M
 WHERE M.user_favorite_at IS NOT NULL
@@ -177,6 +182,11 @@ resetViewerFlags:
 UPDATE manga
 SET user_reader_flags = 0
 WHERE user_reader_flags != 0;
+
+setScanlatorFilterInclude:
+UPDATE manga
+SET user_chapter_flags = CASE WHEN :include THEN user_chapter_flags | 128 ELSE user_chapter_flags & ~128 END
+WHERE id = :id;
 
 getSourceIdsWithNonLibraryManga:
 SELECT source_id, count(*) AS manga_count
