@@ -4,7 +4,9 @@ import dev.zacsweers.metro.Inject
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.service.getChapterSort
 import tachiyomi.domain.download.service.DownloadPreferences
+import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
 
 /**
@@ -19,6 +21,7 @@ class FilterChaptersForDownload(
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val downloadPreferences: DownloadPreferences,
     private val getCategories: GetCategories,
+    private val getHistory: GetHistory,
 ) {
 
     /**
@@ -37,15 +40,26 @@ class FilterChaptersForDownload(
             return emptyList()
         }
 
-        if (!downloadPreferences.downloadNewUnreadChaptersOnly.get()) return newChapters
+        val chapters = if (downloadPreferences.downloadNewUnreadChaptersOnly.get()) {
+            val readChapterNumbers = getChaptersByMangaId.await(manga.id)
+                .asSequence()
+                .filter { it.read && it.isRecognizedNumber }
+                .map { it.chapterNumber }
+                .toSet()
 
-        val readChapterNumbers = getChaptersByMangaId.await(manga.id)
-            .asSequence()
-            .filter { it.read && it.isRecognizedNumber }
-            .map { it.chapterNumber }
-            .toSet()
+            newChapters.filterNot { it.chapterNumber in readChapterNumbers }
+        } else {
+            newChapters
+        }
 
-        return newChapters.filterNot { it.chapterNumber in readChapterNumbers }
+        val readingWindow = downloadPreferences.downloadNewReadingWindow.get()
+        if (readingWindow <= 0 || chapters.isEmpty()) return chapters
+
+        val inReadingOrder = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true)
+            .sortedWith(getChapterSort(manga, sortDescending = false))
+        val openedChapterIds = getHistory.await(manga.id).map { it.chapterId }.toSet()
+        val allowedIds = readingWindowChapterIds(inReadingOrder, openedChapterIds, readingWindow)
+        return chapters.filter { it.id in allowedIds }
     }
 
     /**

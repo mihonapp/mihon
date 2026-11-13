@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.browse.source
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -16,6 +17,7 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.TravelExplore
@@ -43,6 +45,9 @@ fun Screen.sourcesTab(): TabContent {
             ),
         ),
         content = { contentPadding, snackbarHostState ->
+            val scope = rememberCoroutineScope()
+            val noTitles = stringResource(MR.strings.source_no_library_titles)
+
             SourcesScreen(
                 state = state,
                 contentPadding = contentPadding,
@@ -57,6 +62,19 @@ fun Screen.sourcesTab(): TabContent {
                 val source = dialog.source
                 SourceOptionsDialog(
                     source = source,
+                    onClickTitles = {
+                        viewModel.closeDialog()
+                        navigator.push(SourceLibraryScreen(source.id))
+                    },
+                    onClickMigrate = {
+                        viewModel.closeDialog()
+                        val mangaIds = viewModel.libraryMangaIds(source.id)
+                        if (mangaIds.isEmpty()) {
+                            scope.launch { snackbarHostState.showSnackbar(noTitles) }
+                        } else {
+                            navigator.push(MigrationConfigScreen(mangaIds))
+                        }
+                    },
                     onClickPin = {
                         viewModel.togglePin(source)
                         viewModel.closeDialog()

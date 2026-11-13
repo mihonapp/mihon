@@ -161,10 +161,16 @@ private fun ColumnScope.SortPage(
     val trackers by viewModel.trackersFlow.collectAsState()
     val sortingMode = category.sort.type
     val sortDescending = !category.sort.isAscending
+    val showUpdateErrors by viewModel.libraryPreferences.showUpdateErrors.collectAsState()
 
-    val options = remember(trackers.isEmpty()) {
+    val options = remember(trackers.isEmpty(), showUpdateErrors) {
         val trackerMeanPair = if (trackers.isNotEmpty()) {
             MR.strings.action_sort_tracker_score to LibrarySort.Type.TrackerMean
+        } else {
+            null
+        }
+        val updateErrorPair = if (showUpdateErrors) {
+            MR.strings.action_sort_update_error to LibrarySort.Type.UpdateError
         } else {
             null
         }
@@ -177,7 +183,10 @@ private fun ColumnScope.SortPage(
             MR.strings.action_sort_latest_chapter to LibrarySort.Type.LatestChapter,
             MR.strings.action_sort_chapter_fetch_date to LibrarySort.Type.ChapterFetchDate,
             MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
+            MR.strings.action_sort_source_rating to LibrarySort.Type.SourceRating,
+            MR.strings.action_sort_source_rating_count to LibrarySort.Type.SourceRatingCount,
             trackerMeanPair,
+            updateErrorPair,
             MR.strings.action_sort_random to LibrarySort.Type.Random,
         )
     }
@@ -280,6 +289,14 @@ private fun ColumnScope.DisplayPage(
     CheckboxItem(
         label = stringResource(MR.strings.action_display_language_badge),
         pref = viewModel.libraryPreferences.languageBadge,
+    )
+    CheckboxItem(
+        label = stringResource(MR.strings.action_display_update_errors),
+        pref = viewModel.libraryPreferences.showUpdateErrors,
+    )
+    CheckboxItem(
+        label = stringResource(MR.strings.action_display_source_rating),
+        pref = viewModel.libraryPreferences.showSourceRating,
     )
     CheckboxItem(
         label = stringResource(MR.strings.action_display_show_continue_reading_button),
