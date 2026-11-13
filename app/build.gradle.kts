@@ -123,6 +123,10 @@ android {
         getByName("benchmark").res.directories.add("src/debug/res")
     }
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
     splits {
         abi {
             isEnable = true
