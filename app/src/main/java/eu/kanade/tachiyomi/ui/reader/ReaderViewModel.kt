@@ -989,6 +989,12 @@ class ReaderViewModel(
      * the page itself.
      */
     fun toggleTranslationMode() {
+        // The WebGPU renderer draws pages on its own surface, so the text layer has nothing to attach to.
+        if (!mutableTranslationMode.value && basePreferences.highQualityRenderer.get()) {
+            context.toast(MR.strings.translation_renderer_unsupported)
+            return
+        }
+
         val enable = !mutableTranslationMode.value
         mutableTranslationMode.value = enable
 

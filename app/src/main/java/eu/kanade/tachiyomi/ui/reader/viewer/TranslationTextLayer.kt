@@ -29,6 +29,7 @@ class TranslationTextLayer(context: Context) : View(context) {
     var page: TranslatedPage? = null
         set(value) {
             field = value
+            lightCache.clear()
             invalidate()
         }
 
@@ -51,6 +52,9 @@ class TranslationTextLayer(context: Context) : View(context) {
     }
 
     private val rect = RectF()
+
+    /** Sampling the page on every redraw makes zooming in the paged reader stutter. */
+    private val lightCache = HashMap<TranslatedTextBlock, Boolean>()
 
     init {
         // Taps belong to the page underneath, so the reader still reacts normally.
@@ -139,7 +143,7 @@ class TranslationTextLayer(context: Context) : View(context) {
         val centerY = blockRect.centerY()
 
         // The original lettering has to disappear, so the box is filled with the colour of the page around it.
-        val light = isLightAround(bitmap, block.box)
+        val light = lightCache.getOrPut(block) { isLightAround(bitmap, block.box) }
         erasePaint.color = if (light) Color.WHITE else Color.rgb(14, 14, 14)
         val corner = 2f * density
         canvas.drawRoundRect(

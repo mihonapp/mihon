@@ -930,6 +930,7 @@
     <string name="translation_loading">جارٍ الترجمة…</string>
     <string name="translation_mode_on">وضع الترجمة مفعّل: تُترجم الصفحات أثناء القراءة</string>
     <string name="translation_mode_off">تم إيقاف وضع الترجمة</string>
+    <string name="translation_renderer_unsupported">محرّك العرض عالي الجودة لا يدعم رسم الترجمة فوق الصفحة حاليًا. أوقفه من الإعدادات، متقدّم.</string>
     <string name="translation_failed">تعذّرت الترجمة: %s</string>
     <string name="translation_from">من</string>
     <string name="translation_to">إلى</string>

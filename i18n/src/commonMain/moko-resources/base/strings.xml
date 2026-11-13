@@ -1118,6 +1118,7 @@
     <string name="translation_loading">Translating…</string>
     <string name="translation_mode_on">Translation mode on: pages are translated as you read</string>
     <string name="translation_mode_off">Translation mode off</string>
+    <string name="translation_renderer_unsupported">The high quality renderer can't draw translations over the page yet. Turn it off in Settings, Advanced.</string>
     <string name="translation_failed">Translation failed: %s</string>
     <string name="translation_from">From</string>
     <string name="translation_to">To</string>
