@@ -7,6 +7,7 @@ enum class TranslationProvider {
     OPENAI,
     GEMINI,
     CLAUDE,
+    ON_DEVICE,
     ;
 
     /** Chat models take a key of their own and answer a whole page at once. */

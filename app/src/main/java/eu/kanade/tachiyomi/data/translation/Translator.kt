@@ -19,6 +19,7 @@ class Translator(
     private val deepL = DeepLTranslationService(networkHelper, preferences)
     private val libreTranslate = LibreTranslateService(networkHelper, preferences)
     private val ai = AiTranslationService(networkHelper, preferences)
+    private val onDevice = OnDeviceTranslationService()
 
     val sourceLanguage: TranslationLanguage
         get() = preferences.sourceLanguage.get()
@@ -48,6 +49,7 @@ class Translator(
             TranslationProvider.GEMINI,
             TranslationProvider.CLAUDE,
             -> ai
+            TranslationProvider.ON_DEVICE -> onDevice
         }
         return service.translate(texts, source, target)
     }

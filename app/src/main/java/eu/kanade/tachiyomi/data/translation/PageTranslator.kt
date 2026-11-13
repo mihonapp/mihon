@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import tachiyomi.domain.translation.model.OcrScript
 import tachiyomi.domain.translation.model.TranslationLanguage
+import tachiyomi.domain.translation.model.TranslationProvider
 import tachiyomi.domain.translation.service.TranslationPreferences
 import java.io.File
 import java.io.InputStream
@@ -76,7 +77,8 @@ class PageTranslator(
                     ?: throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
                 // Dots of an ellipsis, page numbers and sound effects are recognized as "0000" or "…" all the
                 // time; translating those only paints boxes over the art.
-                val blocks = recognize(decoder, nativeWidth, nativeHeight, source)
+                val recognition = recognize(decoder, nativeWidth, nativeHeight, source)
+                val blocks = recognition.blocks
                     .filter { it.text.count { char -> char.isLetter() } >= MIN_LETTERS }
                 if (blocks.isEmpty()) throw TranslationException(TranslationError.NO_TEXT_FOUND)
 
@@ -84,7 +86,17 @@ class PageTranslator(
                 val ratio = bitmap.width.toFloat() / nativeWidth
                 // Line breaks and repeated spacing from the recognizer break the sentences the service sees.
                 val cleaned = blocks.map { it.text.normalizeForTranslation() }
-                val translation = translateAll(cleaned, source, target)
+                // The on-device models need the real source language, and the recognizer already told us which
+                // script it just read, so "detect automatically" is resolved here instead of failing.
+                val effectiveSource = if (
+                    source == TranslationLanguage.AUTO &&
+                    preferences.provider.get() == TranslationProvider.ON_DEVICE
+                ) {
+                    recognition.script.defaultLanguage()
+                } else {
+                    source
+                }
+                val translation = translateAll(cleaned, effectiveSource, target)
                 val translatedBlocks = blocks.mapIndexedNotNull { index, block ->
                     val translated = translation.getOrNull(index)?.trim()
                     val hasLetters = translated != null && translated.any { it.isLetter() }
@@ -144,7 +156,7 @@ class PageTranslator(
         nativeWidth: Int,
         nativeHeight: Int,
         source: TranslationLanguage,
-    ): List<OcrBlock> {
+    ): Recognition {
         val script = source.ocrScript ?: run {
             if (source != TranslationLanguage.AUTO) {
                 throw TranslationException(TranslationError.UNSUPPORTED_SOURCE_SCRIPT)
@@ -161,7 +173,7 @@ class PageTranslator(
         val width = nativeWidth / sampleSize
         val height = nativeHeight / sampleSize
 
-        return ocrEngine.recognizeTiles(width, height, script) { tile ->
+        val blocks = ocrEngine.recognizeTiles(width, height, script) { tile ->
             val region = Rect(
                 tile.left * sampleSize,
                 tile.top * sampleSize,
@@ -174,6 +186,7 @@ class PageTranslator(
             }
             decoder.decodeRegion(region, options)?.let { OcrTile(it, release = true) }
         }
+        return Recognition(blocks, script)
     }
 
     /**
@@ -256,6 +269,20 @@ class PageTranslator(
         .replace(Regex("\\s+"), " ")
         .replace(Regex("\\.{2,}|…+"), "…")
         .trim()
+
+    /** The language a script is normally written in, used when the reader left the source on automatic. */
+    private fun OcrScript.defaultLanguage(): TranslationLanguage = when (this) {
+        OcrScript.JAPANESE -> TranslationLanguage.JAPANESE
+        OcrScript.KOREAN -> TranslationLanguage.KOREAN
+        OcrScript.CHINESE -> TranslationLanguage.CHINESE_SIMPLIFIED
+        OcrScript.LATIN -> TranslationLanguage.ENGLISH
+    }
+
+    /** What the recognizer read and the script it read it in. */
+    private data class Recognition(
+        val blocks: List<OcrBlock>,
+        val script: OcrScript,
+    )
 
     private fun Rect.scaled(ratio: Float): Rect = Rect(
         (left * ratio).toInt(),

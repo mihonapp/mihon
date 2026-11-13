@@ -114,8 +114,15 @@ object SettingsTranslationScreen : SearchableSettings {
                             TranslationProvider.OPENAI to stringResource(MR.strings.translation_provider_openai),
                             TranslationProvider.GEMINI to stringResource(MR.strings.translation_provider_gemini),
                             TranslationProvider.CLAUDE to stringResource(MR.strings.translation_provider_claude),
+                            TranslationProvider.ON_DEVICE to
+                                stringResource(MR.strings.translation_provider_on_device),
                         ),
                         title = stringResource(MR.strings.pref_translation_provider),
+                        subtitle = if (provider == TranslationProvider.ON_DEVICE) {
+                            stringResource(MR.strings.translation_on_device_hint)
+                        } else {
+                            null
+                        },
                     ),
                     Preference.PreferenceItem.EditTextPreference(
                         preference = preferences.deeplApiKey,

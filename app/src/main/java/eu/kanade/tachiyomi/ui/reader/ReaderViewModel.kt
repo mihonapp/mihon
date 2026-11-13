@@ -1110,6 +1110,7 @@ class ReaderViewModel(
             TranslationError.MISSING_TARGET_LANGUAGE -> MR.strings.translation_error_missing_target
             TranslationError.UNSUPPORTED_SOURCE_SCRIPT -> MR.strings.translation_error_unsupported_source
             TranslationError.PROVIDER_ERROR -> MR.strings.translation_error_provider
+            TranslationError.SOURCE_LANGUAGE_REQUIRED -> MR.strings.translation_error_source_required
         }
         val detail = error.detail?.replace("%", "%%").orEmpty()
         context.toast(context.stringResource(message, detail))

@@ -27,6 +27,7 @@ enum class TranslationError {
     NO_TEXT_FOUND,
     NO_TRANSLATION,
     PAGE_NOT_AVAILABLE,
+    SOURCE_LANGUAGE_REQUIRED,
 }
 
 class TranslationException(

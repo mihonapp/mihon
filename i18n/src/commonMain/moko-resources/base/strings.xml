@@ -1145,6 +1145,9 @@
     <string name="translation_provider_openai">ChatGPT (OpenAI key)</string>
     <string name="translation_provider_gemini">Gemini (Google key)</string>
     <string name="translation_provider_claude">Claude (Anthropic key)</string>
+    <string name="translation_provider_on_device">On this device (offline)</string>
+    <string name="translation_error_source_required">Pick the language to translate from in Settings, Translation. The on-device models can't detect it.</string>
+    <string name="translation_on_device_hint">Downloads a model for the language pair the first time (tens of megabytes), then works without a connection.</string>
     <string name="translation_ai_keys">AI service</string>
     <string name="pref_translation_ai_key">API key</string>
     <string name="pref_translation_ai_key_summary">Kept on the device; requests go straight to the provider</string>

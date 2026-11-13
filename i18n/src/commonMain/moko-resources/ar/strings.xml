@@ -957,6 +957,9 @@
     <string name="translation_provider_openai">ChatGPT (مفتاح OpenAI)</string>
     <string name="translation_provider_gemini">Gemini (مفتاح Google)</string>
     <string name="translation_provider_claude">Claude (مفتاح Anthropic)</string>
+    <string name="translation_provider_on_device">على الجهاز (بدون إنترنت)</string>
+    <string name="translation_error_source_required">اختر لغة «الترجمة من» في الإعدادات ← الترجمة، فالنماذج المحلية لا تكتشف اللغة تلقائيًا.</string>
+    <string name="translation_on_device_hint">يُنزّل نموذجًا لزوج اللغات عند أول استخدام (عشرات الميغابايتات)، ثم يعمل بدون اتصال.</string>
     <string name="translation_ai_keys">خدمة الذكاء الاصطناعي</string>
     <string name="pref_translation_ai_key">مفتاح API</string>
     <string name="pref_translation_ai_key_summary">يُحفظ على جهازك فقط، والطلبات تذهب مباشرة إلى المزوّد</string>
