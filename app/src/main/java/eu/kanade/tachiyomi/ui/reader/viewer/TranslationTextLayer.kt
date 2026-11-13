@@ -1,10 +1,12 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.text.Layout
@@ -38,10 +40,14 @@ class TranslationTextLayer(context: Context) : View(context) {
     private val density = resources.displayMetrics.density
 
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
+        color = Color.BLACK
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         textAlign = Paint.Align.CENTER
-        strokeJoin = Paint.Join.ROUND
+    }
+
+    private val erasePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.WHITE
     }
 
     private val rect = RectF()
@@ -66,7 +72,7 @@ class TranslationTextLayer(context: Context) : View(context) {
             mapBlock(block, mapper, scaleX, scaleY)
             if (rect.width() < 2f || rect.height() < 2f) return@forEach
 
-            drawBlock(canvas, block.translated, rect, margin)
+            drawBlock(canvas, block, bitmap, rect, margin)
         }
     }
 
@@ -93,47 +99,96 @@ class TranslationTextLayer(context: Context) : View(context) {
         rect.set(box.left * scaleX, box.top * scaleY, box.right * scaleX, box.bottom * scaleY)
     }
 
-    private fun drawBlock(canvas: Canvas, text: String, blockRect: RectF, margin: Float) {
+    private fun drawBlock(
+        canvas: Canvas,
+        block: TranslatedTextBlock,
+        bitmap: Bitmap,
+        blockRect: RectF,
+        margin: Float,
+    ) {
+        val text = block.translated
         if (text.isBlank()) return
 
-        // Vertical Japanese columns are tall and narrow: widen a little so the translation doesn't end up one
-        // letter per line, but stay close to the original text so neighbouring art isn't covered.
-        val boxWidth = max(blockRect.width(), min(blockRect.height() * 0.35f, blockRect.width() * 1.35f))
-        val boxHeight = blockRect.height()
-        val left = blockRect.centerX() - boxWidth / 2f
-        val top = blockRect.top
+        val originalWidth = blockRect.width()
+        val originalHeight = blockRect.height()
 
-        val textWidth = (boxWidth - margin * 2f).toInt().coerceAtLeast(1)
-        val maxTextHeight = boxHeight * MAX_GROWTH
+        // Vertical Japanese columns are tall and narrow. Arabic and other horizontal scripts need room, so those
+        // blocks get a wider box; everything else stays close to the original lettering.
+        val aspect = originalHeight / max(originalWidth, 1f)
+        val widthMultiplier = when {
+            aspect > 2.2f -> 2.0f
+            aspect > 1.4f -> 1.4f
+            else -> 1.1f
+        }
+        val coverWidth = min(originalWidth * widthMultiplier, originalWidth * MAX_WIDTH_GROWTH)
+        val textWidth = (coverWidth - margin * 2f).toInt().coerceAtLeast(1)
 
-        var textSize = (boxHeight / 2.4f).coerceIn(MIN_TEXT_SIZE_DP * density, MAX_TEXT_SIZE_DP * density)
+        var textSize = (originalHeight / 2.4f).coerceIn(MIN_TEXT_SIZE_DP * density, MAX_TEXT_SIZE_DP * density)
         var layout = layout(text, textSize, textWidth)
-        while (layout.height > maxTextHeight && textSize > MIN_TEXT_SIZE_DP * density) {
+        while (layout.height > originalHeight * MAX_GROWTH && textSize > MIN_TEXT_SIZE_DP * density) {
             textSize -= 0.5f * density
             layout = layout(text, textSize, textWidth)
         }
 
         val textHeight = layout.height.toFloat()
-        val boxHeightDrawn = max(boxHeight, min(textHeight + margin * 2f, boxHeight * MAX_GROWTH))
-        val boxTop = top + (boxHeight - boxHeightDrawn) / 2f
+        val coverHeight = max(
+            originalHeight * 1.02f,
+            min(textHeight + margin * 2f, originalHeight * MAX_GROWTH),
+        )
+        val centerX = blockRect.centerX()
+        val centerY = blockRect.centerY()
 
-        canvas.save()
-        canvas.translate(
-            left + boxWidth / 2f,
-            boxTop + margin + (boxHeightDrawn - margin * 2f - textHeight) / 2f,
+        // The original lettering has to disappear, so the box is filled with the colour of the page around it.
+        val light = isLightAround(bitmap, block.box)
+        erasePaint.color = if (light) Color.WHITE else Color.rgb(14, 14, 14)
+        val corner = 2f * density
+        canvas.drawRoundRect(
+            centerX - coverWidth / 2f,
+            centerY - coverHeight / 2f,
+            centerX + coverWidth / 2f,
+            centerY + coverHeight / 2f,
+            corner,
+            corner,
+            erasePaint,
         )
 
-        // No background: the artwork stays visible, the letters carry a dark outline instead.
-        textPaint.style = Paint.Style.STROKE
-        textPaint.strokeWidth = max(2f, textSize * 0.14f)
-        textPaint.color = Color.BLACK
+        textPaint.color = if (light) Color.BLACK else Color.WHITE
+        canvas.save()
+        canvas.translate(
+            centerX,
+            centerY - coverHeight / 2f + (coverHeight - textHeight) / 2f,
+        )
         layout.draw(canvas)
-
-        textPaint.style = Paint.Style.FILL
-        textPaint.color = Color.WHITE
-        layout.draw(canvas)
-
         canvas.restore()
+    }
+
+    /**
+     * Average brightness of the page under the original text, so the box blends into bubbles and dark panels alike.
+     */
+    private fun isLightAround(bitmap: Bitmap, box: Rect): Boolean {
+        if (bitmap.config == Bitmap.Config.HARDWARE) return true
+
+        val left = box.left.coerceIn(0, bitmap.width - 1)
+        val top = box.top.coerceIn(0, bitmap.height - 1)
+        val right = box.right.coerceIn(left + 1, bitmap.width)
+        val bottom = box.bottom.coerceIn(top + 1, bitmap.height)
+
+        val stepX = max(1, (right - left) / 8)
+        val stepY = max(1, (bottom - top) / 8)
+        var sum = 0.0
+        var count = 0
+        var y = top
+        while (y < bottom) {
+            var x = left
+            while (x < right) {
+                val pixel = bitmap.getPixel(x, y)
+                sum += Color.red(pixel) * 0.299 + Color.green(pixel) * 0.587 + Color.blue(pixel) * 0.114
+                count++
+                x += stepX
+            }
+            y += stepY
+        }
+        return count == 0 || sum / count >= LUMA_THRESHOLD
     }
 
     private fun layout(text: String, textSize: Float, width: Int): StaticLayout {
@@ -148,6 +203,8 @@ class TranslationTextLayer(context: Context) : View(context) {
     companion object {
         private const val MIN_TEXT_SIZE_DP = 7f
         private const val MAX_TEXT_SIZE_DP = 40f
-        private const val MAX_GROWTH = 1.7f
+        private const val MAX_GROWTH = 1.8f
+        private const val MAX_WIDTH_GROWTH = 2.2f
+        private const val LUMA_THRESHOLD = 128.0
     }
 }
