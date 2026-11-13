@@ -403,6 +403,8 @@
     <string name="pref_dual_page_split">Split wide pages</string>
     <string name="pref_dual_page_invert">Invert split page placement</string>
     <string name="pref_dual_page_invert_summary">If the placement of the split wide pages don\'t match reading direction</string>
+    <string name="pref_split_all_pages">Split all pages (4-koma)</string>
+    <string name="pref_split_all_pages_summary">For pages with two columns; the reading-direction side is shown first</string>
     <string name="pref_page_rotate">Rotate wide pages to fit</string>
     <string name="pref_page_rotate_invert">Flip orientation of rotated wide pages</string>
     <string name="pref_double_tap_zoom">Double tap to zoom</string>
@@ -477,6 +479,7 @@
     <string name="vertical_viewer">Paged (vertical)</string>
     <string name="webtoon_viewer">Long strip</string>
     <string name="vertical_plus_viewer">Long strip with gaps</string>
+    <string name="four_koma_viewer">4-Koma</string>
     <string name="pager_viewer">Paged</string>
     <string name="pref_viewer_nav">Tap zones</string>
     <string name="pref_image_scale_type">Scale type</string>

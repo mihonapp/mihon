@@ -8,6 +8,7 @@ import tachiyomi.core.common.util.system.ImageUtil
 /**
  * The image of [page] as a pager shows it: a wide page rotated to fit or split in two, the half on the reading
  * side first, so [isLeftToRight] tells which. [onPageSplit] is told of the [InsertPage] for the second half.
+ * When [DualPageSettings.splitAllPages] is enabled, every page is split in two regardless of its shape.
  */
 fun DualPageSettings.processPagedImage(
     page: ReaderPage,
@@ -15,6 +16,13 @@ fun DualPageSettings.processPagedImage(
     isLeftToRight: Boolean,
     onPageSplit: (InsertPage) -> Unit,
 ): BufferedSource {
+    if (splitAllPages) {
+        if (page !is InsertPage) {
+            onPageSplit(InsertPage(page))
+        }
+        return splitInHalf(imageSource, page, isLeftToRight)
+    }
+
     if (dualPageRotateToFit) {
         return rotateDualPage(imageSource)
     }
@@ -39,8 +47,14 @@ fun DualPageSettings.processPagedImage(
 
 /**
  * The image of a page as a strip shows it: a wide page rotated to fit, or split with its halves one above the other.
+ * When [DualPageSettings.splitAllPages] is enabled, every page is split in two regardless of its shape.
  */
 fun DualPageSettings.processStripImage(imageSource: BufferedSource): BufferedSource {
+    if (splitAllPages) {
+        val upperSide = if (dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
+        return ImageUtil.splitAndMerge(imageSource, upperSide)
+    }
+
     if (dualPageRotateToFit) {
         return rotateDualPage(imageSource)
     }
