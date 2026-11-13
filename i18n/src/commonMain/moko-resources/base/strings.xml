@@ -419,6 +419,16 @@
     <string name="pref_flash_style_black">Black</string>
     <string name="pref_flash_style_white">White</string>
     <string name="pref_flash_style_white_black">White and Black</string>
+    <string name="pref_eink_hardware_refresh">Hardware e-ink refresh</string>
+    <string name="pref_eink_hardware_refresh_summary">Use the device\'s native e-ink refresh instead of a software flash. Only available on supported devices.</string>
+    <string name="pref_eink_refresh_mode">Refresh type</string>
+    <string name="pref_eink_refresh_mode_full">Full</string>
+    <string name="pref_eink_refresh_mode_fast">Fast</string>
+    <string name="pref_eink_refresh_mode_auto">Auto</string>
+    <string name="pref_eink_refresh_delay">Refresh delay</string>
+    <string name="pref_eink_refresh_delay_summary">%1$d ms</string>
+    <string name="pref_eink_refresh_interval">Hardware refresh interval</string>
+    <string name="pref_eink_not_supported">Not supported on this device</string>
     <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_vertical_navigator">Use vertical chapter navigator in</string>

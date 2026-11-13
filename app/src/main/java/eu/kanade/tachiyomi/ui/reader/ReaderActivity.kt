@@ -85,6 +85,9 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.AddToLibraryFirst
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Error
 import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Success
+import eu.kanade.tachiyomi.ui.reader.eink.EinkBackendFactory
+import eu.kanade.tachiyomi.ui.reader.eink.EinkRefreshController
+import eu.kanade.tachiyomi.ui.reader.eink.ViewEinkRefreshScheduler
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
@@ -148,6 +151,10 @@ class ReaderActivity : BaseActivity() {
     private var menuToggleToast: Toast? = null
     private var readingModeToast: Toast? = null
     private val displayRefreshHost by lazy { DisplayRefreshHost(readerPreferences) }
+    private val einkRefreshScheduler by lazy { ViewEinkRefreshScheduler(window.decorView) }
+    private val einkRefreshController by lazy {
+        EinkRefreshController(EinkBackendFactory.create(), readerPreferences)
+    }
     private val navigationOverlayState = ReaderNavigationOverlayState()
 
     private val windowInsetsController by lazy { WindowInsetsControllerCompat(window, window.decorView) }
@@ -370,7 +377,13 @@ class ReaderActivity : BaseActivity() {
                         viewModel.state.value.viewerChapters?.let(::setChapters)
                     }
                     ReaderViewModel.Event.PageChanged -> {
-                        displayRefreshHost.flash()
+                        val handledByHardware = einkRefreshController.onPageChanged(
+                            window.decorView,
+                            einkRefreshScheduler,
+                        )
+                        if (!handledByHardware) {
+                            displayRefreshHost.flash()
+                        }
                     }
                     is ReaderViewModel.Event.SetOrientation -> {
                         setOrientation(event.orientation)
@@ -396,6 +409,7 @@ class ReaderActivity : BaseActivity() {
      * Called when the activity is destroyed. Cleans up the viewer and any view.
      */
     override fun onDestroy() {
+        einkRefreshScheduler.cancel()
         super.onDestroy()
         viewer?.destroy()
         menuToggleToast?.cancel()
@@ -404,6 +418,8 @@ class ReaderActivity : BaseActivity() {
 
     override fun onPause() {
         viewModel.saveHistory()
+        einkRefreshScheduler.cancel()
+        einkRefreshController.onPause()
         super.onPause()
     }
 
@@ -413,6 +429,7 @@ class ReaderActivity : BaseActivity() {
      */
     override fun onResume() {
         super.onResume()
+        einkRefreshController.onResume()
         viewModel.restartReadTimer()
         setMenuVisibility(viewModel.state.value.menuVisible)
     }

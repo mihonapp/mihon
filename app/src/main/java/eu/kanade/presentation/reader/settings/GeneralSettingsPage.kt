@@ -7,6 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import eu.kanade.tachiyomi.ui.reader.eink.EinkBackendFactory
+import eu.kanade.tachiyomi.ui.reader.eink.EinkRefreshMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
@@ -46,6 +49,11 @@ internal fun ColumnScope.GeneralPage(viewModel: ReaderSettingsViewModel) {
 
     val flashColorPref = viewModel.preferences.flashColor
     val flashColor by flashColorPref.collectAsState()
+
+    val einkBackend = remember { EinkBackendFactory.create() }
+    val supportedEinkModes = einkBackend.supportedModes
+    val hardwareRefresh by viewModel.preferences.einkHardwareRefresh.collectAsState()
+    val einkRefreshMode by viewModel.preferences.einkRefreshMode.collectAsState()
 
     SettingsChipRow(MR.strings.pref_reader_theme) {
         themes.map { (labelRes, value) ->
@@ -163,6 +171,59 @@ internal fun ColumnScope.GeneralPage(viewModel: ReaderSettingsViewModel) {
                     label = { Text(stringResource(labelRes)) },
                 )
             }
+        }
+    }
+
+    if (supportedEinkModes.isNotEmpty()) {
+        CheckboxItem(
+            label = stringResource(MR.strings.pref_eink_hardware_refresh),
+            pref = viewModel.preferences.einkHardwareRefresh,
+        )
+        if (hardwareRefresh) {
+            if (supportedEinkModes.size > 1) {
+                SettingsChipRow(MR.strings.pref_eink_refresh_mode) {
+                    supportedEinkModes.forEach { mode ->
+                        FilterChip(
+                            selected = einkRefreshMode == mode,
+                            onClick = { viewModel.preferences.einkRefreshMode.set(mode) },
+                            label = {
+                                Text(
+                                    stringResource(
+                                        when (mode) {
+                                            EinkRefreshMode.FULL -> MR.strings.pref_eink_refresh_mode_full
+                                            EinkRefreshMode.FAST -> MR.strings.pref_eink_refresh_mode_fast
+                                            EinkRefreshMode.AUTO -> MR.strings.pref_eink_refresh_mode_auto
+                                        },
+                                    ),
+                                )
+                            },
+                        )
+                    }
+                }
+            }
+
+            val einkDelayPref = viewModel.preferences.einkRefreshDelayMillis
+            val einkDelay by einkDelayPref.collectAsState()
+            SliderItem(
+                value = einkDelay,
+                valueRange = 0..1000 step 50,
+                steps = 19,
+                label = stringResource(MR.strings.pref_eink_refresh_delay),
+                valueString = stringResource(MR.strings.pref_eink_refresh_delay_summary, einkDelay),
+                onChange = einkDelayPref::set,
+                pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            )
+
+            val einkIntervalPref = viewModel.preferences.einkRefreshInterval
+            val einkInterval by einkIntervalPref.collectAsState()
+            SliderItem(
+                value = einkInterval,
+                valueRange = 1..10,
+                label = stringResource(MR.strings.pref_eink_refresh_interval),
+                valueString = pluralStringResource(MR.plurals.pref_pages, einkInterval, einkInterval),
+                onChange = einkIntervalPref::set,
+                pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            )
         }
     }
 }

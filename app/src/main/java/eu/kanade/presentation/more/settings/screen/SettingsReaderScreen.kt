@@ -7,6 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.tachiyomi.ui.reader.eink.EinkBackendFactory
+import eu.kanade.tachiyomi.ui.reader.eink.EinkRefreshMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
@@ -120,8 +122,17 @@ object SettingsReaderScreen : SearchableSettings {
     @Composable
     private fun getEInkGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
         val flashPageState by readerPreferences.flashOnPageChange.collectAsState()
+        val hardwareRefreshState by readerPreferences.einkHardwareRefresh.collectAsState()
 
         val flashColorPref = readerPreferences.flashColor
+
+        val einkBackend = remember { EinkBackendFactory.create() }
+        val supportedModes = einkBackend.supportedModes
+        val modeEntries = mapOf(
+            EinkRefreshMode.FULL to stringResource(MR.strings.pref_eink_refresh_mode_full),
+            EinkRefreshMode.FAST to stringResource(MR.strings.pref_eink_refresh_mode_fast),
+            EinkRefreshMode.AUTO to stringResource(MR.strings.pref_eink_refresh_mode_auto),
+        ).filterKeys { it in supportedModes }
 
         return Preference.PreferenceGroup(
             title = "E-Ink",
@@ -155,6 +166,32 @@ object SettingsReaderScreen : SearchableSettings {
                     ),
                     title = stringResource(MR.strings.pref_flash_with),
                     visible = flashPageState,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = readerPreferences.einkHardwareRefresh,
+                    title = stringResource(MR.strings.pref_eink_hardware_refresh),
+                    subtitle = stringResource(MR.strings.pref_eink_hardware_refresh_summary),
+                    visible = supportedModes.isNotEmpty(),
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    preference = readerPreferences.einkRefreshMode,
+                    entries = modeEntries,
+                    title = stringResource(MR.strings.pref_eink_refresh_mode),
+                    visible = hardwareRefreshState && supportedModes.size > 1,
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    preference = readerPreferences.einkRefreshDelayMillis,
+                    valueRange = 0..1000 step 50,
+                    title = stringResource(MR.strings.pref_eink_refresh_delay),
+                    valueText = { stringResource(MR.strings.pref_eink_refresh_delay_summary, it) },
+                    visible = hardwareRefreshState && supportedModes.isNotEmpty(),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    preference = readerPreferences.einkRefreshInterval,
+                    valueRange = 1..10,
+                    title = stringResource(MR.strings.pref_eink_refresh_interval),
+                    valueText = { pluralStringResource(MR.plurals.pref_pages, it, it) },
+                    visible = hardwareRefreshState && supportedModes.isNotEmpty(),
                 ),
             ),
         )
