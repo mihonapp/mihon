@@ -1,13 +1,16 @@
 package eu.kanade.tachiyomi.ui.reader.eink
 
 import android.util.Log
+import eu.kanade.tachiyomi.ui.reader.eink.epd.CremaEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.NGL4EPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.NookEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.NookEmperorEPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.OldTolinoEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.OnyxEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3026EPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3368EPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3566EPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.TolinoEPDController
 
 /**
  * Maps a detected [EinkDeviceInfo.Id] to a backend.
@@ -85,6 +88,28 @@ object EinkBackendFactory {
             EinkDeviceInfo.Id.TOLINO_VISION6,
             EinkDeviceInfo.Id.TOLINO_SHINE4,
             -> EpdEinkRefreshBackend(NGL4EPDController())
+
+            EinkDeviceInfo.Id.CREMA,
+            EinkDeviceInfo.Id.CREMA_CARTA_G,
+            EinkDeviceInfo.Id.HANVON_960,
+            EinkDeviceInfo.Id.ONYX_JDREAD,
+            EinkDeviceInfo.Id.TOLINO,
+            EinkDeviceInfo.Id.TOLINO_EPOS1,
+            EinkDeviceInfo.Id.TOLINO_EPOS2,
+            EinkDeviceInfo.Id.TOLINO_PAGE2,
+            EinkDeviceInfo.Id.TOLINO_SHINE3,
+            EinkDeviceInfo.Id.TOLINO_VISION4,
+            EinkDeviceInfo.Id.TOLINO_VISION5,
+            -> EpdEinkRefreshBackend(TolinoEPDController())
+
+            EinkDeviceInfo.Id.CREMA_0660L,
+            -> EpdEinkRefreshBackend(CremaEPDController())
+
+            EinkDeviceInfo.Id.NABUK,
+            EinkDeviceInfo.Id.ONYX_DARWIN7,
+            EinkDeviceInfo.Id.ONYX_FAUST3,
+            EinkDeviceInfo.Id.TAGUS_GEA,
+            -> EpdEinkRefreshBackend(OldTolinoEPDController())
 
             EinkDeviceInfo.Id.ONYX_DARWIN5,
             EinkDeviceInfo.Id.ONYX_DARWIN9,

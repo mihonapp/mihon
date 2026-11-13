@@ -46,4 +46,18 @@ class EinkBackendFactoryTest {
         backend.platform shouldBe "freescale"
         backend.supportedModes shouldBe setOf(FULL, FAST, AUTO)
     }
+
+    @Test
+    fun `tolino vision 5 exposes all three modes`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.TOLINO_VISION5)
+        backend.platform shouldBe "freescale"
+        backend.supportedModes shouldBe setOf(FULL, FAST, AUTO)
+    }
+
+    @Test
+    fun `crema 0660l exposes all three modes`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.CREMA_0660L)
+        backend.platform shouldBe "freescale"
+        backend.supportedModes shouldBe setOf(FULL, FAST, AUTO)
+    }
 }
