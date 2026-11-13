@@ -308,7 +308,10 @@ class LibraryViewModel(
     ): Map<Category, List</* LibraryItem */ Long>> {
         // The collator already ignores case, and lowercasing on every comparison is slow on large libraries
         val sortAlphabetically: (LibraryItem, LibraryItem) -> Int = { manga1, manga2 ->
-            manga1.libraryManga.manga.title.compareToWithCollator(manga2.libraryManga.manga.title)
+            (manga1.libraryManga.manga.customTitle?.takeIf { it.isNotBlank() } ?: manga1.libraryManga.manga.title)
+                .compareToWithCollator(
+                    manga2.libraryManga.manga.customTitle?.takeIf { it.isNotBlank() } ?: manga2.libraryManga.manga.title,
+                )
         }
 
         val defaultTrackerScoreSortValue = -1.0

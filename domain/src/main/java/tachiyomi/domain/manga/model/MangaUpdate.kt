@@ -12,6 +12,7 @@ class MangaUpdate(val id: Long, block: MangaUpdate.() -> Unit) : PartialUpdate()
     var chapterFlags: Long? by field(null)
     var coverLastModified: Instant? by field(null)
     var notes: String? by field(null)
+    var customTitle: String? by field(null)
 
     init {
         block()
