@@ -58,8 +58,6 @@ class TranslationTextLayer(context: Context) : View(context) {
         color = Color.WHITE
     }
 
-    private val rect = RectF()
-
     /** Sampling the page on every redraw makes zooming in the paged reader stutter. */
     private val lightCache = HashMap<TranslatedTextBlock, Boolean>()
 
@@ -79,12 +77,21 @@ class TranslationTextLayer(context: Context) : View(context) {
         val mapper = sourceToView
         val margin = 3f * density
 
-        page.blocks.forEach { block ->
-            mapBlock(block, mapper, scaleX, scaleY)
-            if (rect.width() < 2f || rect.height() < 2f) return@forEach
-
-            drawBlock(canvas, block, bitmap, rect, margin)
+        val placed = page.blocks.mapNotNull { block ->
+            val box = RectF()
+            mapBlock(block, mapper, scaleX, scaleY, box)
+            if (box.width() < 2f || box.height() < 2f) null else block to box
         }
+        if (placed.isEmpty()) return
+
+        // One letter size for the whole page: sizing every bubble on its own made neighbouring bubbles look like
+        // different readers had pasted them in.
+        val heights = placed.map { it.second.height() }.sorted()
+        val reference = heights[(heights.size - 1) * 3 / 5]
+        val baseTextSize = (reference / TEXT_HEIGHT_DIVISOR)
+            .coerceIn(MIN_TEXT_SIZE_DP * density, MAX_TEXT_SIZE_DP * density)
+
+        placed.forEach { (block, box) -> drawBlock(canvas, block, bitmap, box, margin, baseTextSize) }
     }
 
     private fun mapBlock(
@@ -92,13 +99,14 @@ class TranslationTextLayer(context: Context) : View(context) {
         mapper: ((Float, Float) -> PointF?)?,
         scaleX: Float,
         scaleY: Float,
+        into: RectF,
     ) {
         val box = block.box
         if (mapper != null) {
             val topLeft = mapper(box.left.toFloat(), box.top.toFloat())
             val bottomRight = mapper(box.right.toFloat(), box.bottom.toFloat())
             if (topLeft != null && bottomRight != null) {
-                rect.set(
+                into.set(
                     min(topLeft.x, bottomRight.x),
                     min(topLeft.y, bottomRight.y),
                     max(topLeft.x, bottomRight.x),
@@ -107,7 +115,7 @@ class TranslationTextLayer(context: Context) : View(context) {
                 return
             }
         }
-        rect.set(box.left * scaleX, box.top * scaleY, box.right * scaleX, box.bottom * scaleY)
+        into.set(box.left * scaleX, box.top * scaleY, box.right * scaleX, box.bottom * scaleY)
     }
 
     private fun drawBlock(
@@ -116,6 +124,7 @@ class TranslationTextLayer(context: Context) : View(context) {
         bitmap: Bitmap,
         blockRect: RectF,
         margin: Float,
+        baseTextSize: Float,
     ) {
         val text = preferences.letterCase.get().apply(block.translated)
         if (text.isBlank()) return
@@ -131,7 +140,7 @@ class TranslationTextLayer(context: Context) : View(context) {
         val boxWidth = originalWidth * MAX_WIDTH_GROWTH
         val textWidth = (boxWidth - margin * 2f).toInt().coerceAtLeast(1)
 
-        var textSize = (originalHeight / 3f).coerceIn(MIN_TEXT_SIZE_DP * density, MAX_TEXT_SIZE_DP * density)
+        var textSize = baseTextSize
         var layout = layout(text, textSize, textWidth)
         while (layout.height > originalHeight * MAX_GROWTH && textSize > MIN_TEXT_SIZE_DP * density) {
             textSize -= 0.5f * density
@@ -222,6 +231,7 @@ class TranslationTextLayer(context: Context) : View(context) {
     companion object {
         private const val MIN_TEXT_SIZE_DP = 6f
         private const val MAX_TEXT_SIZE_DP = 28f
+        private const val TEXT_HEIGHT_DIVISOR = 3.2f
         private const val MAX_GROWTH = 1.25f
         private const val MAX_WIDTH_GROWTH = 1.06f
         private const val LUMA_THRESHOLD = 128.0

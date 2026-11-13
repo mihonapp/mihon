@@ -177,6 +177,7 @@ class ReaderViewModel(
     val translationMode: StateFlow<Boolean> = mutableTranslationMode.asStateFlow()
 
     private val translationJobs = mutableMapOf<Int, Job>()
+    private var prefetchJob: Job? = null
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -1004,6 +1005,8 @@ class ReaderViewModel(
         } else {
             translationJobs.values.forEach { it.cancel() }
             translationJobs.clear()
+            prefetchJob?.cancel()
+            prefetchJob = null
             mutableTranslations.value = emptyMap()
             context.toast(MR.strings.translation_mode_off)
         }
@@ -1031,17 +1034,8 @@ class ReaderViewModel(
                 }
 
                 val translated = pageTranslator.translate(page.index, page.stream)
-                mutableTranslations.update { current ->
-                    // A webtoon strip is big, so only the pages around the reader are kept.
-                    val updated = LinkedHashMap(current)
-                    updated[page.index] = translated
-                    while (updated.size > MAX_TRANSLATED_PAGES) {
-                        val oldest = updated.keys.first()
-                        if (oldest == page.index) break
-                        updated.remove(oldest)
-                    }
-                    updated
-                }
+                storeTranslation(page.index, translated)
+                prefetchTranslations(page.index)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: TranslationException) {
@@ -1052,6 +1046,57 @@ class ReaderViewModel(
                 context.toast(context.stringResource(MR.strings.translation_failed, e.message.orEmpty().replace("%", "%%")))
             } finally {
                 translationJobs.remove(page.index)
+            }
+        }
+    }
+
+    /**
+     * Keeps the pages around the reader and drops the ones left behind: a translated page holds its own bitmap.
+     */
+    private fun storeTranslation(index: Int, page: TranslatedPage) {
+        mutableTranslations.update { current ->
+            val updated = LinkedHashMap(current)
+            updated[index] = page
+            while (updated.size > MAX_TRANSLATED_PAGES) {
+                val farthest = updated.keys.maxByOrNull { kotlin.math.abs(it - index) } ?: break
+                if (farthest == index) break
+                updated.remove(farthest)
+            }
+            updated
+        }
+    }
+
+    /**
+     * Translates the pages that follow the one being read, so scrolling doesn't wait for the service every time.
+     * It stops at the first page that isn't downloaded, which is the edge of the chapter when reading offline.
+     */
+    private fun prefetchTranslations(fromIndex: Int) {
+        if (!mutableTranslationMode.value) return
+        if (prefetchJob?.isActive == true) return
+
+        val pages = state.value.currentChapter?.pages ?: return
+        val start = pages.indexOfFirst { it.index == fromIndex }
+        if (start < 0) return
+
+        prefetchJob = viewModelScope.launch {
+            var done = 0
+            for (i in start + 1 until pages.size) {
+                if (done >= PREFETCH_PAGES) break
+                val next = pages[i]
+                if (next.status != Page.State.Ready) break
+                if (mutableTranslations.value.containsKey(next.index)) continue
+                if (translationJobs.containsKey(next.index)) continue
+
+                try {
+                    val translated = pageTranslator.translate(next.index, next.stream)
+                    storeTranslation(next.index, translated)
+                    done++
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e)
+                    break
+                }
             }
         }
     }
@@ -1287,7 +1332,8 @@ class ReaderViewModel(
 
     private companion object {
         // Each translated page holds a bitmap, and a webtoon page can be tens of megabytes.
-        const val MAX_TRANSLATED_PAGES = 3
+        const val MAX_TRANSLATED_PAGES = 5
+        const val PREFETCH_PAGES = 4
         const val PAGE_READY_TIMEOUT_MILLIS = 30_000L
     }
 }

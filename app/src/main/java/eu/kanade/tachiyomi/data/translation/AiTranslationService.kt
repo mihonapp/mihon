@@ -228,7 +228,10 @@ class AiTranslationService(
         AiBackend.OPENAI -> preferences.openAiApiKey.get()
         AiBackend.GEMINI -> preferences.geminiApiKey.get()
         AiBackend.CLAUDE -> preferences.claudeApiKey.get()
-    }.trim()
+    }.cleanKey()
+
+    /** Pasting a key often brings quotes or a zero-width space along, and the provider then rejects it. */
+    private fun String.cleanKey(): String = filter { it.code in 33..126 }.trim()
 
     private fun model(backend: AiBackend): String = when (backend) {
         AiBackend.OPENAI -> preferences.openAiModel.get().ifBlank { DEFAULT_OPENAI_MODEL }
