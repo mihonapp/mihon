@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.ui.reader.eink
 
 import android.util.Log
 import eu.kanade.tachiyomi.ui.reader.eink.epd.CremaEPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.IflytekAiNoteX1EPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.LenovoSmartPaperEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.NGL4EPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.NookEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.NookEmperorEPDController
@@ -10,6 +12,7 @@ import eu.kanade.tachiyomi.ui.reader.eink.epd.OnyxEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3026EPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3368EPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3566EPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.SunxiEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.TolinoEPDController
 
 /**
@@ -110,6 +113,15 @@ object EinkBackendFactory {
             EinkDeviceInfo.Id.ONYX_FAUST3,
             EinkDeviceInfo.Id.TAGUS_GEA,
             -> EpdEinkRefreshBackend(OldTolinoEPDController())
+
+            EinkDeviceInfo.Id.MOAAN_W7,
+            -> EpdEinkRefreshBackend(SunxiEPDController())
+
+            EinkDeviceInfo.Id.IFLYTEK_AINOTE_X1,
+            -> EpdEinkRefreshBackend(IflytekAiNoteX1EPDController())
+
+            EinkDeviceInfo.Id.LENOVO_SMARTPAPER,
+            -> EpdEinkRefreshBackend(LenovoSmartPaperEPDController())
 
             EinkDeviceInfo.Id.ONYX_DARWIN5,
             EinkDeviceInfo.Id.ONYX_DARWIN9,

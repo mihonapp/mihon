@@ -60,4 +60,25 @@ class EinkBackendFactoryTest {
         backend.platform shouldBe "freescale"
         backend.supportedModes shouldBe setOf(FULL, FAST, AUTO)
     }
+
+    @Test
+    fun `moaan w7 uses sunxi backend with all modes`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.MOAAN_W7)
+        backend.platform shouldBe "sunxi"
+        backend.supportedModes shouldBe setOf(FULL, FAST, AUTO)
+    }
+
+    @Test
+    fun `iflytek ainote uses full-only backend`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.IFLYTEK_AINOTE_X1)
+        backend.platform shouldBe "iflytek"
+        backend.supportedModes shouldBe setOf(FULL)
+    }
+
+    @Test
+    fun `lenovo smart paper uses full-only rockchip backend`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.LENOVO_SMARTPAPER)
+        backend.platform shouldBe "rockchip"
+        backend.supportedModes shouldBe setOf(FULL)
+    }
 }
