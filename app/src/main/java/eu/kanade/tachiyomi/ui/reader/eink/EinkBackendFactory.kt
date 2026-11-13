@@ -128,6 +128,7 @@ object EinkBackendFactory {
             EinkDeviceInfo.Id.ONYX_EDISON,
             EinkDeviceInfo.Id.ONYX_FARADAY2,
             EinkDeviceInfo.Id.ONYX_GALILEO2,
+            EinkDeviceInfo.Id.ONYX_GENERIC,
             EinkDeviceInfo.Id.ONYX_GO_103,
             EinkDeviceInfo.Id.ONYX_GO_103_2,
             EinkDeviceInfo.Id.ONYX_GO6,

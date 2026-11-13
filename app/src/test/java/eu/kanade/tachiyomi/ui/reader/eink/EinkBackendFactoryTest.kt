@@ -15,6 +15,13 @@ class EinkBackendFactoryTest {
     }
 
     @Test
+    fun `generic onyx id creates the onyx backend`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.ONYX_GENERIC)
+        backend.platform shouldBe "qualcomm"
+        backend.supportedModes shouldBe setOf(FULL)
+    }
+
+    @Test
     fun `unknown id creates the no-op backend`() {
         EinkBackendFactory.create(EinkDeviceInfo.Id.NONE) shouldBe NoOpEinkRefreshBackend
     }

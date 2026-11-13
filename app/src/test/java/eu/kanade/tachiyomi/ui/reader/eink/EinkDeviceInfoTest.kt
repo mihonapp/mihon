@@ -29,4 +29,11 @@ class EinkDeviceInfoTest {
     fun `unknown build maps to none`() {
         EinkDeviceInfo.detect(EinkBuildInfo("", "", "", "", "", "")) shouldBe EinkDeviceInfo.Id.NONE
     }
+
+    @Test
+    fun `unknown onyx device falls back to generic onyx`() {
+        EinkDeviceInfo.detect(
+            EinkBuildInfo("onyx", "onyx", "c69_m_star", "c69_m_star", "c69_m_star", "qcom"),
+        ) shouldBe EinkDeviceInfo.Id.ONYX_GENERIC
+    }
 }

@@ -88,6 +88,7 @@ object EinkDeviceInfo {
         ONYX_FARADAY2,
         ONYX_FAUST3,
         ONYX_GALILEO2,
+        ONYX_GENERIC,
         ONYX_GO_103,
         ONYX_GO_103_2,
         ONYX_GO_COLOR7,
@@ -749,6 +750,10 @@ object EinkDeviceInfo {
             manufacturer == "xiaomi" && brand == "xiaomi" && model == "xiaomi_reader" && device == "rk3566_eink" &&
                 hardware == "rk30board"
             -> Id.XIAOMI_READER
+
+            // Generic Onyx fallback: unlisted/newer models expose the same Onyx EPD SDK.
+            manufacturer == "onyx" || brand == "onyx"
+            -> Id.ONYX_GENERIC
 
             // ???
             else -> Id.NONE
