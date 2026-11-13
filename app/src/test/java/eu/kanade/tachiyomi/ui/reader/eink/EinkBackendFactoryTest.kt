@@ -16,4 +16,18 @@ class EinkBackendFactoryTest {
     fun `unknown id creates the no-op backend`() {
         EinkBackendFactory.create(EinkDeviceInfo.Id.NONE) shouldBe NoOpEinkRefreshBackend
     }
+
+    @Test
+    fun `xiaomi reader uses rk3566 backend`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.XIAOMI_READER)
+        backend.platform shouldBe "rockchip"
+        backend.supportedModes shouldBe setOf(FULL)
+    }
+
+    @Test
+    fun `boyue t61 uses rk3026 backend`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.BOYUE_T61)
+        backend.platform shouldBe "rockchip"
+        backend.supportedModes shouldBe setOf(FULL)
+    }
 }

@@ -2,6 +2,9 @@ package eu.kanade.tachiyomi.ui.reader.eink
 
 import android.util.Log
 import eu.kanade.tachiyomi.ui.reader.eink.epd.OnyxEPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3026EPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3368EPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3566EPDController
 
 /**
  * Maps a detected [EinkDeviceInfo.Id] to a backend.
@@ -14,6 +17,51 @@ object EinkBackendFactory {
 
     fun create(id: EinkDeviceInfo.Id = EinkDeviceInfo.fromAndroid()): EinkRefreshBackend {
         val backend = when (id) {
+            EinkDeviceInfo.Id.BOYUE_T61,
+            EinkDeviceInfo.Id.BOYUE_T62,
+            EinkDeviceInfo.Id.BOYUE_T80S,
+            EinkDeviceInfo.Id.CREMA_0650L,
+            EinkDeviceInfo.Id.ENERGY,
+            EinkDeviceInfo.Id.FIDIBOOK,
+            EinkDeviceInfo.Id.INKBOOK,
+            EinkDeviceInfo.Id.INKBOOKFOCUS,
+            EinkDeviceInfo.Id.MEEBOOK_P6,
+            EinkDeviceInfo.Id.ONYX_C67,
+            EinkDeviceInfo.Id.ONYX_MAGICBOOK,
+            EinkDeviceInfo.Id.ONYX_MONTECRISTO3,
+            EinkDeviceInfo.Id.ONYX_ROBINSON_CRUSOE2,
+            EinkDeviceInfo.Id.TOPJOY_E602,
+            -> EpdEinkRefreshBackend(RK3026EPDController())
+
+            EinkDeviceInfo.Id.BOYUE_C64P,
+            EinkDeviceInfo.Id.BOYUE_K78W,
+            EinkDeviceInfo.Id.BOYUE_K103,
+            EinkDeviceInfo.Id.BOYUE_P6,
+            EinkDeviceInfo.Id.BOYUE_P61,
+            EinkDeviceInfo.Id.BOYUE_P78,
+            EinkDeviceInfo.Id.BOYUE_P101,
+            EinkDeviceInfo.Id.BOYUE_S62,
+            EinkDeviceInfo.Id.BOYUE_T78D,
+            EinkDeviceInfo.Id.BOYUE_T80D,
+            EinkDeviceInfo.Id.BOYUE_T103D,
+            EinkDeviceInfo.Id.HYREAD_GAZE_NOTE,
+            -> EpdEinkRefreshBackend(RK3368EPDController())
+
+            EinkDeviceInfo.Id.HYREAD_GAZE_NOTE_CC,
+            EinkDeviceInfo.Id.HYREAD_MINI6,
+            EinkDeviceInfo.Id.IFLYTEK_R3,
+            EinkDeviceInfo.Id.INKBOOKFOCUS_PLUS,
+            EinkDeviceInfo.Id.INKPALM_PLUS,
+            EinkDeviceInfo.Id.MEEBOOK_M6,
+            EinkDeviceInfo.Id.MEEBOOK_M6C,
+            EinkDeviceInfo.Id.MEEBOOK_M7,
+            EinkDeviceInfo.Id.MOAAN_MIX7,
+            EinkDeviceInfo.Id.OBOOK_P10D,
+            EinkDeviceInfo.Id.OBOOK_P78D,
+            EinkDeviceInfo.Id.PUBU_PUBOOK,
+            EinkDeviceInfo.Id.XIAOMI_READER,
+            -> EpdEinkRefreshBackend(RK3566EPDController())
+
             EinkDeviceInfo.Id.ONYX_DARWIN5,
             EinkDeviceInfo.Id.ONYX_DARWIN9,
             EinkDeviceInfo.Id.ONYX_EDISON,
