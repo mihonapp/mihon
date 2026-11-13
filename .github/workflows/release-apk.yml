@@ -1,0 +1,92 @@
+name: Release APK
+
+# Publishes a debug build as a GitHub Release with the APK attached.
+# Run it from the Actions tab and give it a tag, e.g. v1.0.0.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (e.g. v1.0.0)
+        required: true
+        default: v1.0.0
+      title:
+        description: Release title
+        required: false
+        default: Mihon Dev — Instant translation
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up JDK
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          java-version-file: .github/.java-version
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      - name: Build debug APK
+        id: build
+        run: |-
+          set -o pipefail
+          ./gradlew assembleDebug -Pdist=local --stacktrace 2>&1 | tee build.log
+
+      - name: Annotate build errors
+        if: failure()
+        run: |-
+          python3 - <<'PY'
+          import re
+
+          try:
+              lines = open("build.log", encoding="utf-8", errors="replace").read().splitlines()
+          except FileNotFoundError:
+              lines = []
+
+          pat = re.compile(r"^(e: |error:|FAILURE:|Caused by:|\* What went wrong)")
+          picked = [l for l in lines if pat.match(l.strip())][:20] or lines[-20:]
+          for line in picked:
+              msg = line.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+              print(f"::error::{msg[:900]}")
+          PY
+
+      - name: Collect APKs
+        run: |-
+          mkdir -p release-apks
+          for abi in arm64-v8a armeabi-v7a; do
+            src="app/build/outputs/apk/debug/app-${abi}-debug.apk"
+            [ -f "$src" ] && cp "$src" release-apks/
+          done
+          [ -f app/build/outputs/apk/debug/app-universal-debug.apk ] && \
+            cp app/build/outputs/apk/debug/app-universal-debug.apk release-apks/
+          ls -lh release-apks
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |-
+          TAG="${{ inputs.tag }}"
+          if gh release view "$TAG" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            gh release upload "$TAG" release-apks/*.apk --repo "${{ github.repository }}" --clobber
+          else
+            gh release create "$TAG" release-apks/*.apk \
+              --repo "${{ github.repository }}" \
+              --target "${{ github.sha }}" \
+              --title "${{ inputs.title }}" \
+              --notes-file .github/release-notes.md \
+              --latest
+          fi
