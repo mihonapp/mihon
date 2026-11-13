@@ -66,6 +66,7 @@
     <string name="app_not_available">应用无法使用</string>
     <string name="pref_category_general">常规</string>
     <string name="pref_category_reader">阅读</string>
+    <string name="pref_category_translation">翻译</string>
     <string name="pref_category_downloads">下载</string>
     <string name="pref_category_tracking">进度记录</string>
     <string name="pref_category_advanced">高级</string>
@@ -962,4 +963,44 @@
     <string name="follow_language">跟随系统语言</string>
     <string name="time_24_hours">24小时</string>
     <string name="time_12_hours">12小时</string>
+<!-- Translation -->
+    <string name="pref_translation_summary">阅读器内的漫画文字识别与翻译</string>
+    <string name="pref_translation_enabled">启用翻译</string>
+    <string name="pref_translation_enabled_summary">在阅读底栏显示翻译按钮</string>
+    <string name="pref_translation_source_language">源语言</string>
+    <string name="pref_translation_source_japanese">日语</string>
+    <string name="pref_translation_source_korean">韩语</string>
+    <string name="pref_translation_source_english">英语</string>
+    <string name="pref_translation_target_language">目标语言</string>
+    <string name="pref_translation_target_chinese">中文（简体）</string>
+    <string name="pref_translation_ocr_group">文字识别</string>
+    <string name="pref_translation_ocr_model">识别模型</string>
+    <string name="pref_translation_ocr_model_missing">未下载</string>
+    <string name="pref_translation_ocr_model_hint">模型按需下载，不随应用打包</string>
+    <string name="pref_translation_provider">翻译引擎</string>
+    <string name="pref_translation_provider_edge">微软 Edge（无需密钥）</string>
+    <string name="pref_translation_provider_azure">Azure 翻译</string>
+    <string name="pref_translation_provider_google">谷歌（免费）</string>
+    <string name="pref_translation_provider_google_cloud">谷歌云</string>
+    <string name="pref_translation_provider_llm">大模型</string>
+    <string name="pref_translation_azure_key">Azure 密钥</string>
+    <string name="pref_translation_azure_region">Azure 区域</string>
+    <string name="pref_translation_google_key">谷歌云密钥</string>
+    <string name="pref_translation_llm_key">大模型密钥</string>
+    <string name="pref_translation_llm_base_url">大模型接口地址</string>
+    <string name="pref_translation_llm_model">大模型名称</string>
+    <string name="pref_translation_context">携带前文作为上下文</string>
+    <string name="pref_translation_context_summary">改善指代与省略主语，仅大模型生效</string>
+    <string name="pref_translation_network_consent">允许发送识别出的文字</string>
+    <string name="pref_translation_network_consent_summary">仅发送识别出的文字，图片不会离开设备；关闭后仍可识别，但只显示原文不翻译</string>
+    <string name="pref_translation_panel_height">竖屏面板高度</string>
+    <string name="pref_translation_panel_height_value">%1$d%%</string>
+    <string name="pref_translation_group_language">语言</string>
+    <string name="pref_translation_group_engine">引擎</string>
+    <string name="pref_translation_group_privacy">隐私</string>
+    <string name="pref_translation_group_panel">面板</string>
+    <string name="translation_settings_required">请先完成翻译设置</string>
+    <string name="translation_model_not_ready">请先下载识别模型</string>
+    <string name="translation_action_translate">翻译</string>
 </resources>
+

@@ -40,6 +40,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.tachiyomi.data.coil.ImageDecoder
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.webtoonStrips
+import eu.kanade.tachiyomi.ui.reader.translation.TranslationGeometry
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonStripImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
@@ -62,6 +63,16 @@ open class ReaderPageImageView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttrs, defStyleRes) {
 
     private var pageView: View? = null
+
+    private var lastPublishedRect: RectF? = null
+    private var lastPublishedWidth: Int = 0
+    private var lastPublishedHeight: Int = 0
+
+    /**
+     * Publishes where the page image currently sits on screen, together with the size of the image
+     * the view is showing (which can be cropped or split relative to the raw file).
+     */
+    var onImageRectChanged: ((rect: RectF, sourceWidth: Int, sourceHeight: Int, cropBorders: Boolean) -> Unit)? = null
 
     /**
      * The reader's grayscale and inverted colours for the page image alone, so the transition and error views
@@ -103,8 +114,11 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
     @CallSuper
     open fun onImageLoaded() {
+        // The image only becomes measurable once it is ready, so publish again here: layout ran
+        // earlier, when sWidth/sHeight were still zero.
         onImageLoaded?.invoke()
         background = pageBackground
+        publishImageRect()
     }
 
     @CallSuper
@@ -274,10 +288,12 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 object : SubsamplingScaleImageView.OnStateChangedListener {
                     override fun onScaleChanged(newScale: Float, origin: Int) {
                         this@ReaderPageImageView.onScaleChanged(newScale)
+                        publishImageRect()
                     }
 
                     override fun onCenterChanged(newCenter: PointF?, origin: Int) {
-                        // Not used
+                        // Panning moves the image under the overlay without changing its scale.
+                        publishImageRect()
                     }
                 },
             )
@@ -474,6 +490,95 @@ open class ReaderPageImageView @JvmOverloads constructor(
         CENTER,
         RIGHT,
     }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        publishImageRect()
+        // SubsamplingScaleImageView derives its pan/scale offsets while drawing, so the rect read
+        // here is still the previous frame's. Publishing again on the next frame catches up.
+        postOnAnimation { publishImageRect() }
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w != oldw || h != oldh) {
+            postOnAnimation { publishImageRect() }
+        }
+    }
+
+    override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {
+        val handled = super.dispatchTouchEvent(ev)
+        publishImageRect()
+        return handled
+    }
+
+    /** Rect of the image on screen right now, without publishing it. */
+    fun currentImageFrame(): TranslationGeometry.Frame? {
+        // A detached or recycled holder has no meaningful window position, and its page view may
+        // already belong to another page; reporting it put boxes in random places.
+        if (!isAttachedToWindow) return null
+        val view = pageView ?: return null
+        val cropBorders = config?.cropBorders == true
+        val rect: RectF
+        val sourceWidth: Int
+        val sourceHeight: Int
+        when (view) {
+            is SubsamplingScaleImageView -> {
+                if (view.sWidth <= 0 || view.sHeight <= 0) return null
+                val topLeft = view.sourceToViewCoord(0f, 0f) ?: return null
+                val bottomRight = view.sourceToViewCoord(view.sWidth.toFloat(), view.sHeight.toFloat()) ?: return null
+                rect = RectF(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
+                // sWidth/sHeight already exclude the borders SSIV cropped while decoding.
+                sourceWidth = view.sWidth
+                sourceHeight = view.sHeight
+            }
+            is WebtoonStripImageView -> {
+                if (view.imageWidth <= 0 || view.imageHeight <= 0) return null
+                rect = RectF(0f, 0f, view.width.toFloat(), view.height.toFloat())
+                sourceWidth = view.imageWidth
+                sourceHeight = view.imageHeight
+            }
+            is android.widget.ImageView -> {
+                val drawable = view.drawable ?: return null
+                if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) return null
+                rect = RectF(0f, 0f, view.width.toFloat(), view.height.toFloat())
+                sourceWidth = drawable.intrinsicWidth
+                sourceHeight = drawable.intrinsicHeight
+            }
+            else -> return null
+        }
+        if (rect.width() <= 0f || rect.height() <= 0f) return null
+        // Must match Compose's positionInWindow(): using screen coordinates here shifted every
+        // box by the status bar height and made them drift after a rotation. The rect is in the
+        // page view's own space, so take that view's origin rather than this container's.
+        val location = IntArray(2)
+        view.getLocationInWindow(location)
+        rect.offset(location[0].toFloat(), location[1].toFloat())
+        return TranslationGeometry.Frame(rect, sourceWidth, sourceHeight, cropBorders)
+    }
+
+    private fun publishImageRect() {
+        val frame = currentImageFrame() ?: return
+        val rect = frame.rect
+
+        // Pans and zoom animations call this every frame; only report real movement.
+        val previous = lastPublishedRect
+        if (previous != null &&
+            frame.sourceWidth == lastPublishedWidth &&
+            frame.sourceHeight == lastPublishedHeight &&
+            kotlin.math.abs(previous.left - rect.left) < 0.5f &&
+            kotlin.math.abs(previous.top - rect.top) < 0.5f &&
+            kotlin.math.abs(previous.right - rect.right) < 0.5f &&
+            kotlin.math.abs(previous.bottom - rect.bottom) < 0.5f
+        ) {
+            return
+        }
+        lastPublishedRect = RectF(rect)
+        lastPublishedWidth = frame.sourceWidth
+        lastPublishedHeight = frame.sourceHeight
+        onImageRectChanged?.invoke(rect, frame.sourceWidth, frame.sourceHeight, frame.cropBorders)
+    }
+
 }
 
 private const val MAX_ZOOM_SCALE = 5F

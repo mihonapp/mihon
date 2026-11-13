@@ -115,6 +115,7 @@ class PagerPageTracker(
     private fun onReaderPageSelected(page: ReaderPage, allowPreload: Boolean, forward: Boolean) {
         val pages = page.chapter.pages ?: return
         logcat { "onReaderPageSelected: ${page.number}/${pages.size}" }
+        activity.onChapterTransitionActive(false)
         activity.onPageSelected(page)
 
         // Notify holder of page change
@@ -139,6 +140,7 @@ class PagerPageTracker(
      */
     private fun onTransitionSelected(transition: ChapterTransition) {
         logcat { "onTransitionSelected: $transition" }
+        activity.onChapterTransitionActive(true)
         val toChapter = transition.to
         if (toChapter != null) {
             logcat { "Request preload destination chapter because we're on the transition" }

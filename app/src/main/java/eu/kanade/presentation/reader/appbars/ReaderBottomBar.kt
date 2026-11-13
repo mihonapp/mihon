@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +16,7 @@ import mihon.icons.custommaterialsymbols.CustomMaterialSymbols
 import mihon.icons.custommaterialsymbols.rounded.CropOff
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Crop
+import mihon.icons.materialsymbols.rounded.Public
 import mihon.icons.materialsymbols.rounded.Settings
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -26,6 +29,8 @@ fun ReaderBottomBar(
     onClickOrientation: () -> Unit,
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
+    translationActive: Boolean,
+    onClickTranslate: () -> Unit,
     onClickSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -53,6 +58,18 @@ fun ReaderBottomBar(
             Icon(
                 imageVector = if (cropEnabled) MaterialSymbols.Rounded.Crop else CustomMaterialSymbols.Rounded.CropOff,
                 contentDescription = stringResource(MR.strings.pref_crop_borders),
+            )
+        }
+
+        IconButton(onClick = onClickTranslate) {
+            Icon(
+                imageVector = MaterialSymbols.Rounded.Public,
+                contentDescription = stringResource(MR.strings.translation_action_translate),
+                tint = if (translationActive) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    LocalContentColor.current
+                },
             )
         }
 

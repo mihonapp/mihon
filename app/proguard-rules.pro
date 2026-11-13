@@ -1,5 +1,11 @@
 -dontobfuscate
 
+# ONNX Runtime's native library looks Java classes and constructors up by name through JNI
+# (e.g. OrtTensorInfo is only ever constructed from C++). R8's shrinking stage removes anything
+# without a Java-side reference even with -dontobfuscate, which aborted the first inference with
+# "JNI DETECTED ERROR IN APPLICATION: mid == null".
+-keep class ai.onnxruntime.** { *; }
+
 # Injekt reads the injected type from the generic superclass of its type tokens
 -keepattributes Signature
 -keep,allowshrinking class * extends uy.kohesive.injekt.api.FullTypeReference

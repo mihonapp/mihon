@@ -201,6 +201,7 @@
     <string name="pref_category_appearance">Appearance</string>
     <string name="pref_category_library">Library</string>
     <string name="pref_category_reader">Reader</string>
+    <string name="pref_category_translation">Translation</string>
     <string name="pref_category_downloads">Downloads</string>
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Advanced</string>
@@ -1087,4 +1088,44 @@
     <string name="donationCampaign.paragraph3">Regardless, Mihon will continue to be maintained by me and the volunteers, and it will stay open source.</string>
     <string name="donationCampaign.contactPlatform">Discord</string>
     <string name="donationCampaign.dismiss">Dismiss</string>
+
+    <!-- Translation -->
+    <string name="pref_translation_summary">Manga OCR and translation in the reader</string>
+    <string name="pref_translation_enabled">Enable translation</string>
+    <string name="pref_translation_enabled_summary">Show the translate button in the reader</string>
+    <string name="pref_translation_source_language">Source language</string>
+    <string name="pref_translation_source_japanese">Japanese</string>
+    <string name="pref_translation_source_korean">Korean</string>
+    <string name="pref_translation_source_english">English</string>
+    <string name="pref_translation_target_language">Target language</string>
+    <string name="pref_translation_target_chinese">Chinese (Simplified)</string>
+    <string name="pref_translation_group_language">Language</string>
+    <string name="pref_translation_group_engine">Engine</string>
+    <string name="pref_translation_group_privacy">Privacy</string>
+    <string name="pref_translation_group_panel">Panel</string>
+    <string name="pref_translation_ocr_group">Text recognition</string>
+    <string name="pref_translation_ocr_model">Recognition model</string>
+    <string name="pref_translation_ocr_model_missing">Not downloaded</string>
+    <string name="pref_translation_ocr_model_hint">Models are downloaded on demand and never bundled with the app.</string>
+    <string name="pref_translation_provider">Translation engine</string>
+    <string name="pref_translation_provider_edge">Microsoft Edge (no key)</string>
+    <string name="pref_translation_provider_azure">Azure Translator</string>
+    <string name="pref_translation_provider_google">Google (free)</string>
+    <string name="pref_translation_provider_google_cloud">Google Cloud</string>
+    <string name="pref_translation_provider_llm">LLM</string>
+    <string name="pref_translation_azure_key">Azure API key</string>
+    <string name="pref_translation_azure_region">Azure region</string>
+    <string name="pref_translation_google_key">Google Cloud API key</string>
+    <string name="pref_translation_llm_key">LLM API key</string>
+    <string name="pref_translation_llm_base_url">LLM base URL</string>
+    <string name="pref_translation_llm_model">LLM model</string>
+    <string name="pref_translation_context">Send previous lines as context</string>
+    <string name="pref_translation_context_summary">Improves pronouns and omitted subjects. LLM only.</string>
+    <string name="pref_translation_network_consent">Allow sending recognized text</string>
+    <string name="pref_translation_network_consent_summary">Only the text read from the page is sent. Images never leave the device.</string>
+    <string name="pref_translation_panel_height">Panel height in portrait</string>
+    <string name="pref_translation_panel_height_value">%1$d%%</string>
+    <string name="translation_settings_required">Finish setting up translation first</string>
+    <string name="translation_model_not_ready">Download a recognition model before translating</string>
+    <string name="translation_action_translate">Translate</string>
 </resources>

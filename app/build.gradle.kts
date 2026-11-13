@@ -37,8 +37,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 42
-        versionName = "0.21.3Beta4"
+        versionCode = 43
+        versionName = "0.21.3Beta5"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -222,6 +222,7 @@ dependencies {
     implementation(projects.presentationCore)
     implementation(projects.presentationWidget)
     implementation(projects.telemetry)
+    implementation(projects.translation)
 
     // Compose
     implementation(libs.androidx.activity.compose)

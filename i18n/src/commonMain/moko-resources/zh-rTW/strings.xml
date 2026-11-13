@@ -965,4 +965,44 @@
     <string name="update_check_skip_title">略過 %s？</string>
     <string name="update_check_skip_message">更新通常包含錯誤修復與安全性改善。您不會再收到關於此版本的提醒，但當有較新版本釋出時，您仍會收到通知。</string>
     <string name="information_webview_crashed">WebView 停止運作，且頁面已關閉</string>
+<!-- Translation -->
+    <string name="pref_category_translation">翻譯</string>
+    <string name="pref_translation_summary">閱讀器內的漫畫文字辨識與翻譯</string>
+    <string name="pref_translation_enabled">啟用翻譯</string>
+    <string name="pref_translation_enabled_summary">在閱讀底欄顯示翻譯按鈕</string>
+    <string name="pref_translation_source_language">來源語言</string>
+    <string name="pref_translation_source_japanese">日語</string>
+    <string name="pref_translation_source_korean">韓語</string>
+    <string name="pref_translation_source_english">英語</string>
+    <string name="pref_translation_target_language">目標語言</string>
+    <string name="pref_translation_target_chinese">中文（簡體）</string>
+    <string name="pref_translation_ocr_group">文字辨識</string>
+    <string name="pref_translation_ocr_model">辨識模型</string>
+    <string name="pref_translation_ocr_model_missing">未下載</string>
+    <string name="pref_translation_ocr_model_hint">模型按需下載，不隨應用程式打包</string>
+    <string name="pref_translation_provider">翻譯引擎</string>
+    <string name="pref_translation_provider_edge">微軟 Edge（免金鑰）</string>
+    <string name="pref_translation_provider_azure">Azure 翻譯</string>
+    <string name="pref_translation_provider_google">Google（免費）</string>
+    <string name="pref_translation_provider_google_cloud">Google 雲端</string>
+    <string name="pref_translation_provider_llm">大型語言模型</string>
+    <string name="pref_translation_azure_key">Azure 金鑰</string>
+    <string name="pref_translation_azure_region">Azure 區域</string>
+    <string name="pref_translation_google_key">Google 雲端金鑰</string>
+    <string name="pref_translation_llm_key">模型金鑰</string>
+    <string name="pref_translation_llm_base_url">模型介面位址</string>
+    <string name="pref_translation_llm_model">模型名稱</string>
+    <string name="pref_translation_context">攜帶前文作為上下文</string>
+    <string name="pref_translation_context_summary">改善指代與省略主語，僅大型語言模型生效</string>
+    <string name="pref_translation_network_consent">允許傳送辨識出的文字</string>
+    <string name="pref_translation_network_consent_summary">僅傳送辨識出的文字，圖片不會離開裝置；關閉後仍可辨識，但只顯示原文不翻譯</string>
+    <string name="pref_translation_panel_height">直向面板高度</string>
+    <string name="pref_translation_group_language">語言</string>
+    <string name="pref_translation_group_engine">引擎</string>
+    <string name="pref_translation_group_privacy">隱私</string>
+    <string name="pref_translation_group_panel">面板</string>
+    <string name="translation_settings_required">請先完成翻譯設定</string>
+    <string name="translation_model_not_ready">請先下載辨識模型</string>
+    <string name="translation_action_translate">翻譯</string>
 </resources>
+

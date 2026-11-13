@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.translation.TranslationGeometry
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageErrorView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
@@ -47,6 +48,9 @@ class PagerPageHolder(
      */
     private var errorLayout: ReaderPageErrorView? = null
 
+    /** Lets the overlay read the live rect instead of waiting for a publish. */
+    private val frameProvider: () -> TranslationGeometry.Frame? = { currentImageFrame() }
+
     private val scope = MainScope()
 
     /**
@@ -56,6 +60,13 @@ class PagerPageHolder(
 
     init {
         pageColorFilter = viewer.pageColorFilter
+        onImageRectChanged = { rect, width, height, cropBorders ->
+            TranslationGeometry.update(
+                page.index,
+                TranslationGeometry.Frame(rect, width, height, cropBorders),
+            )
+        }
+        TranslationGeometry.register(page.index, frameProvider)
         loadJob = scope.launch { loadPageAndProcessStatus() }
     }
 
@@ -63,8 +74,15 @@ class PagerPageHolder(
      * Called when this view is detached from the window. Unsubscribes any active subscription.
      */
     @SuppressLint("ClickableViewAccessibility")
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        // Re-register: the pager reuses holders, and a detached one drops its registration.
+        TranslationGeometry.register(page.index, frameProvider)
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        TranslationGeometry.unregister(page.index, frameProvider)
         loadJob?.cancel()
         loadJob = null
     }

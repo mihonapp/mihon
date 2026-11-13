@@ -10,6 +10,7 @@ import androidx.core.view.updateMargins
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import eu.kanade.tachiyomi.ui.reader.translation.TranslationGeometry
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageErrorView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
@@ -66,6 +67,11 @@ class WebtoonPageHolder(
      */
     private var page: ReaderPage? = null
 
+    private val frameProvider: () -> TranslationGeometry.Frame? = { frame.currentImageFrame() }
+
+    /** Index this holder last published; a recycled holder must not keep answering for it. */
+    private var registeredIndex: Int? = null
+
     private val scope = MainScope()
 
     /**
@@ -87,6 +93,17 @@ class WebtoonPageHolder(
     fun bind(page: ReaderPage) {
         this.page = page
         frame.pageColorFilter = viewer.pageColorFilter
+        frame.onImageRectChanged = { rect, width, height, cropBorders ->
+            TranslationGeometry.update(
+                page.index,
+                TranslationGeometry.Frame(rect, width, height, cropBorders),
+            )
+        }
+        registeredIndex?.let { previous ->
+            if (previous != page.index) TranslationGeometry.unregister(previous, frameProvider)
+        }
+        registeredIndex = page.index
+        TranslationGeometry.register(page.index, frameProvider)
         loadJob?.cancel()
         loadJob = scope.launch { loadPageAndProcessStatus() }
         refreshLayoutParams()
@@ -107,6 +124,8 @@ class WebtoonPageHolder(
      * Called when the view is recycled and added to the view pool.
      */
     override fun recycle() {
+        registeredIndex?.let { TranslationGeometry.unregister(it, frameProvider) }
+        registeredIndex = null
         loadJob?.cancel()
         loadJob = null
 

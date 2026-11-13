@@ -35,6 +35,7 @@ import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegateImpl
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
+import eu.kanade.tachiyomi.ui.reader.translation.TranslationPreferences
 import eu.kanade.tachiyomi.ui.setting.track.BaseOAuthLoginActivity
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.CrashLogUtil
@@ -82,6 +83,7 @@ interface AppGraph : ViewModelGraph {
     val basePreferences: BasePreferences
     val uiPreferences: UiPreferences
     val readerPreferences: ReaderPreferences
+    val translationPreferences: TranslationPreferences
     val networkPreferences: NetworkPreferences
     val libraryPreferences: LibraryPreferences
     val sourcePreferences: SourcePreferences

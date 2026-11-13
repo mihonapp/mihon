@@ -613,7 +613,8 @@ class MainActivity : BaseActivity() {
             }
             Intent.ACTION_APPLICATION_PREFERENCES -> {
                 navigator.popUntilRoot()
-                navigator.push(SettingsScreen())
+                val destination = intent.getIntExtra(SettingsScreen.EXTRA_DESTINATION, -1)
+                navigator.push(if (destination >= 0) SettingsScreen(destination) else SettingsScreen())
                 null
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {

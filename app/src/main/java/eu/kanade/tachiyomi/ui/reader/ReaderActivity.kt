@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.AlertDialog
@@ -30,12 +32,16 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +61,7 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.keepScreenOn
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -92,10 +99,14 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsViewModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.translation.TranslationController
+import eu.kanade.tachiyomi.ui.reader.translation.TranslationOverlay
+import eu.kanade.tachiyomi.ui.reader.translation.TranslationPanel
 import eu.kanade.tachiyomi.ui.reader.viewer.LocalPageColorFilter
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.Action
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
+import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.readerBackgroundColor
@@ -113,6 +124,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
@@ -216,6 +228,71 @@ class ReaderActivity : BaseActivity() {
             val focusRequester = remember { FocusRequester() }
             LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
+            val translationPreferences = remember { appGraph.translationPreferences }
+            val translationScope = rememberCoroutineScope()
+            val translationController = remember {
+                TranslationController(
+                    context = applicationContext,
+                    prefs = translationPreferences,
+                    scope = translationScope,
+                    onRequireSetup = ::openTranslationSettings,
+                    cropBordersEnabled = { appGraph.readerPreferences.cropBorders.get() },
+                )
+            }
+            val translationState by translationController.state.collectAsState()
+            // Webtoon scrolls across pages; the controller needs to know that to widen its window.
+            val continuousReader = remember(state.currentChapter) {
+                !ReadingMode.isPagerType(viewModel.getMangaReadingMode())
+            }
+            LaunchedEffect(continuousReader) { translationController.setContinuous(continuousReader) }
+            val configuration = LocalConfiguration.current
+            val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+            val panelHeight = if (translationState.panelVisible && !isLandscape) {
+                (configuration.screenHeightDp * translationState.panelFraction).dp
+            } else {
+                0.dp
+            }
+            val panelWidth = if (translationState.panelVisible && isLandscape) {
+                (configuration.screenWidthDp * translationState.panelWidthFraction).dp
+            } else {
+                0.dp
+            }
+
+            LaunchedEffect(translationState.panelVisible) {
+                translationPanelVisible = translationState.panelVisible
+                if (translationState.panelVisible) setMenuVisibility(false)
+            }
+
+            LaunchedEffect(state.currentPage, state.currentChapter) {
+                val page = state.currentChapter?.pages?.getOrNull(state.currentPage - 1)
+                if (page != null) translationController.onPageChanged(page)
+            }
+
+            LaunchedEffect(translationState.notice) {
+                translationState.notice?.let {
+                    android.widget.Toast.makeText(this@ReaderActivity, it, android.widget.Toast.LENGTH_SHORT).show()
+                    translationController.consumeNotice()
+                }
+            }
+
+            // Survives process death while the reader is in the background; a rotation drops it
+            // because the feature resets on orientation change.
+            var savedSession by rememberSaveable { mutableStateOf<String?>(null) }
+            var savedOrientation by rememberSaveable { mutableIntStateOf(configuration.orientation) }
+
+            LaunchedEffect(Unit) {
+                if (savedOrientation == configuration.orientation) {
+                    savedSession?.let { translationController.restore(it) }
+                }
+            }
+
+            DisposableEffect(Unit) {
+                onDispose {
+                    savedSession = translationController.snapshot()
+                    savedOrientation = configuration.orientation
+                }
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -231,7 +308,20 @@ class ReaderActivity : BaseActivity() {
                     }
                     .then(if (general.keepScreenOn) Modifier.keepScreenOn() else Modifier),
             ) {
-                ReaderViewer()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = panelHeight, end = panelWidth),
+                ) {
+                    ReaderViewer()
+
+                    if (translationState.panelVisible && !chapterTransitionActive.value) {
+                        TranslationOverlay(
+                            controller = translationController,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                }
 
                 if (isLoadingViewer) {
                     LoadingScreen()
@@ -250,9 +340,20 @@ class ReaderActivity : BaseActivity() {
                         totalPages = state.totalPages,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .navigationBarsPadding(),
+                            .navigationBarsPadding()
+                            .padding(bottom = panelHeight),
                     )
                 }
+
+                if (translationState.panelVisible) {
+                    TranslationPanel(
+                        controller = translationController,
+                        landscape = isLandscape,
+                        modifier = Modifier.align(if (isLandscape) Alignment.CenterEnd else Alignment.BottomCenter),
+                        onClose = translationController::close,
+                    )
+                }
+
 
                 if (flashOnPageChange) {
                     DisplayRefreshHost(hostState = displayRefreshHost)
@@ -260,7 +361,17 @@ class ReaderActivity : BaseActivity() {
 
                 ReaderNavigationOverlay(state = navigationOverlayState)
 
-                AppBars(state = state)
+                AppBars(
+                    state = state,
+                    translationActive = translationState.panelVisible,
+                    onClickTranslate = {
+                        if (translationState.panelVisible) {
+                            translationController.close()
+                        } else {
+                            translationController.open()
+                        }
+                    },
+                )
             }
 
             if (state.isLoadingAdjacentChapter) {
@@ -532,6 +643,8 @@ class ReaderActivity : BaseActivity() {
      */
     fun onViewerTap(pos: Offset) {
         val action = settingsViewModel.navigation.value?.getAction(pos) ?: Action.MENU
+        // The menu would be drawn over the translation panel, so ignore it while translating.
+        if (translationPanelVisible && action == Action.MENU) return
         when (action) {
             Action.MENU -> toggleMenu()
             Action.FORWARD -> viewer?.moveForward()
@@ -540,7 +653,11 @@ class ReaderActivity : BaseActivity() {
     }
 
     @Composable
-    fun AppBars(state: ReaderViewModel.State) {
+    fun AppBars(
+        state: ReaderViewModel.State,
+        translationActive: Boolean,
+        onClickTranslate: () -> Unit,
+    ) {
         val isHttpSource = state.source is HttpSource
         val readingMode = ReadingMode.fromPreference(viewModel.getMangaReadingMode())
 
@@ -609,6 +726,8 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast?.cancel()
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
+            translationActive = translationActive,
+            onClickTranslate = onClickTranslate,
             onClickSettings = viewModel::openSettingsDialog,
         )
     }
@@ -647,6 +766,8 @@ class ReaderActivity : BaseActivity() {
         isLoadingViewer = true
     }
 
+    private var translationPanelVisible = false
+
     private fun openMangaScreen() {
         viewModel.manga?.id?.let { id ->
             startActivity(
@@ -657,6 +778,16 @@ class ReaderActivity : BaseActivity() {
                 },
             )
         }
+    }
+
+    /** First-run entry point: everything is configured in Settings -> Translation. */
+    private fun openTranslationSettings() {
+        startActivity(
+            Intent(this, MainActivity::class.java).apply {
+                action = Intent.ACTION_APPLICATION_PREFERENCES
+                putExtra(SettingsScreen.EXTRA_DESTINATION, SettingsScreen.Destination.Translation.id)
+            },
+        )
     }
 
     private fun openChapterInWebView() {
@@ -755,6 +886,17 @@ class ReaderActivity : BaseActivity() {
      */
     fun onPageSelected(page: ReaderPage) {
         viewModel.onPageSelected(page)
+    }
+
+    /**
+     * Whether the viewer is currently showing a chapter transition instead of a page. Observable
+     * so the translation overlay can hide its boxes, which would otherwise float over the
+     * transition screen — the controller still points at the chapter's last page.
+     */
+    private val chapterTransitionActive = androidx.compose.runtime.mutableStateOf(false)
+
+    fun onChapterTransitionActive(active: Boolean) {
+        chapterTransitionActive.value = active
     }
 
     /**
