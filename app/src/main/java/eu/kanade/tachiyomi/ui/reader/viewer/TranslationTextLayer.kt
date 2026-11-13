@@ -122,10 +122,10 @@ class TranslationTextLayer(context: Context) : View(context) {
         val widthMultiplier = when {
             aspect > 2.2f -> 2.0f
             aspect > 1.4f -> 1.4f
-            else -> 1.1f
+            else -> 1.2f
         }
-        val coverWidth = min(originalWidth * widthMultiplier, originalWidth * MAX_WIDTH_GROWTH)
-        val textWidth = (coverWidth - margin * 2f).toInt().coerceAtLeast(1)
+        val maxBoxWidth = originalWidth * min(widthMultiplier + 0.4f, MAX_WIDTH_GROWTH)
+        val textWidth = (maxBoxWidth - margin * 2f).toInt().coerceAtLeast(1)
 
         var textSize = (originalHeight / 2.4f).coerceIn(MIN_TEXT_SIZE_DP * density, MAX_TEXT_SIZE_DP * density)
         var layout = layout(text, textSize, textWidth)
@@ -135,33 +135,38 @@ class TranslationTextLayer(context: Context) : View(context) {
         }
 
         val textHeight = layout.height.toFloat()
-        val coverHeight = max(
-            originalHeight * 1.02f,
-            min(textHeight + margin * 2f, originalHeight * MAX_GROWTH),
-        )
+        var widestLine = 0f
+        for (line in 0 until layout.lineCount) {
+            widestLine = max(widestLine, layout.getLineWidth(line))
+        }
+
+        // The box has to hide the original lettering completely, otherwise its edges stay readable underneath, and
+        // it has to contain the translation, otherwise lines spill over the bubble. Both are hard lower bounds.
+        val coverWidth = min(max(originalWidth, widestLine + margin * 2f), maxBoxWidth)
+        val coverHeight = max(originalHeight, textHeight + margin * 2f)
         val centerX = blockRect.centerX()
         val centerY = blockRect.centerY()
 
-        // The original lettering has to disappear, so the box is filled with the colour of the page around it.
+        val left = centerX - coverWidth / 2f
+        val top = centerY - coverHeight / 2f
+
         val light = lightCache.getOrPut(block) { isLightAround(bitmap, block.box) }
         erasePaint.color = if (light) Color.WHITE else Color.rgb(14, 14, 14)
         val corner = 2f * density
+        canvas.save()
+        canvas.clipRect(left, top, left + coverWidth, top + coverHeight)
         canvas.drawRoundRect(
-            centerX - coverWidth / 2f,
-            centerY - coverHeight / 2f,
-            centerX + coverWidth / 2f,
-            centerY + coverHeight / 2f,
+            left,
+            top,
+            left + coverWidth,
+            top + coverHeight,
             corner,
             corner,
             erasePaint,
         )
 
         textPaint.color = if (light) Color.BLACK else Color.WHITE
-        canvas.save()
-        canvas.translate(
-            centerX,
-            centerY - coverHeight / 2f + (coverHeight - textHeight) / 2f,
-        )
+        canvas.translate(centerX, top + (coverHeight - textHeight) / 2f)
         layout.draw(canvas)
         canvas.restore()
     }
@@ -201,11 +206,13 @@ class TranslationTextLayer(context: Context) : View(context) {
             .setAlignment(Layout.Alignment.ALIGN_CENTER)
             .setIncludePad(false)
             .setLineSpacing(0f, 1.05f)
+            .setBreakStrategy(Layout.BREAK_STRATEGY_SIMPLE)
+            .setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_NONE)
             .build()
     }
 
     companion object {
-        private const val MIN_TEXT_SIZE_DP = 7f
+        private const val MIN_TEXT_SIZE_DP = 6f
         private const val MAX_TEXT_SIZE_DP = 40f
         private const val MAX_GROWTH = 1.8f
         private const val MAX_WIDTH_GROWTH = 2.2f
