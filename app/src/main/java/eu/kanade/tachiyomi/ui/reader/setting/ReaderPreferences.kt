@@ -6,6 +6,7 @@ import dev.icerock.moko.resources.StringResource
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import eu.kanade.tachiyomi.ui.reader.eink.EinkRefreshMode
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuShader
 import eu.kanade.tachiyomi.ui.reader.viewer.webgpu.WebGpuShaders
 import tachiyomi.core.common.preference.Preference
@@ -36,6 +37,18 @@ class ReaderPreferences(
     val flashPageInterval: Preference<Int> = preferenceStore.getInt("pref_reader_flash_interval", 1)
 
     val flashColor: Preference<FlashColor> = preferenceStore.getEnum("pref_reader_flash_mode", FlashColor.BLACK)
+
+    val einkHardwareRefresh: Preference<Boolean> =
+        preferenceStore.getBoolean("pref_reader_eink_hardware_refresh", false)
+
+    val einkRefreshMode: Preference<EinkRefreshMode> =
+        preferenceStore.getEnum("pref_reader_eink_refresh_mode", EinkRefreshMode.FULL)
+
+    val einkRefreshInterval: Preference<Int> =
+        preferenceStore.getInt("pref_reader_eink_refresh_interval", 1)
+
+    val einkRefreshDelayMillis: Preference<Int> =
+        preferenceStore.getInt("pref_reader_eink_refresh_delay", 500)
 
     val doubleTapAnimSpeed: Preference<Int> = preferenceStore.getInt("pref_double_tap_anim_speed", 500)
 
