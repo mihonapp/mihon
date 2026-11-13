@@ -178,6 +178,7 @@ class ReaderViewModel(
 
     private val translationJobs = mutableMapOf<Int, Job>()
     private var prefetchJob: Job? = null
+    private var prefetchOrigin = -1
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -1072,7 +1073,13 @@ class ReaderViewModel(
      */
     private fun prefetchTranslations(fromIndex: Int) {
         if (!mutableTranslationMode.value) return
-        if (prefetchJob?.isActive == true) return
+
+        // The whole chapter is translated ahead; a jump forward restarts the run from where the reader landed.
+        if (prefetchJob?.isActive == true) {
+            if (fromIndex <= prefetchOrigin + PREFETCH_RESTART_DISTANCE) return
+            prefetchJob?.cancel()
+        }
+        prefetchOrigin = fromIndex
 
         val pages = state.value.currentChapter?.pages ?: return
         val start = pages.indexOfFirst { it.index == fromIndex }
@@ -1083,7 +1090,14 @@ class ReaderViewModel(
             for (i in start + 1 until pages.size) {
                 if (done >= PREFETCH_PAGES) break
                 val next = pages[i]
-                if (next.status != Page.State.Ready) break
+                if (next.status != Page.State.Ready) {
+                    // Streaming chapters hand pages over as they download; wait for the next one instead of
+                    // giving up, but not forever, so a dead connection doesn't hold the run.
+                    val ready = withTimeoutOrNull(PREFETCH_READY_TIMEOUT_MILLIS) {
+                        next.statusFlow.first { it == Page.State.Ready }
+                    }
+                    if (ready == null) break
+                }
                 if (mutableTranslations.value.containsKey(next.index)) continue
                 if (translationJobs.containsKey(next.index)) continue
 
@@ -1333,8 +1347,10 @@ class ReaderViewModel(
 
     private companion object {
         // Each translated page holds a bitmap, and a webtoon page can be tens of megabytes.
-        const val MAX_TRANSLATED_PAGES = 5
-        const val PREFETCH_PAGES = 4
+        const val MAX_TRANSLATED_PAGES = 80
+        const val PREFETCH_PAGES = 200
+        const val PREFETCH_RESTART_DISTANCE = 4
+        const val PREFETCH_READY_TIMEOUT_MILLIS = 10_000L
         const val PAGE_READY_TIMEOUT_MILLIS = 30_000L
     }
 }

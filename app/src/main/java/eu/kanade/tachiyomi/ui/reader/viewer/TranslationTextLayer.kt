@@ -69,11 +69,11 @@ class TranslationTextLayer(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         val page = page ?: return
-        val bitmap = page.bitmap
-        if (bitmap.width <= 0 || bitmap.height <= 0 || width <= 0 || height <= 0) return
+        val bitmap = page.preview
+        if (page.width <= 0 || page.height <= 0 || width <= 0 || height <= 0) return
 
-        val scaleX = width.toFloat() / bitmap.width
-        val scaleY = height.toFloat() / bitmap.height
+        val scaleX = width.toFloat() / page.width
+        val scaleY = height.toFloat() / page.height
         val mapper = sourceToView
         val margin = 3f * density
 
@@ -91,7 +91,7 @@ class TranslationTextLayer(context: Context) : View(context) {
         val baseTextSize = (reference / TEXT_HEIGHT_DIVISOR)
             .coerceIn(MIN_TEXT_SIZE_DP * density, MAX_TEXT_SIZE_DP * density)
 
-        placed.forEach { (block, box) -> drawBlock(canvas, block, bitmap, box, margin, baseTextSize) }
+        placed.forEach { (block, box) -> drawBlock(canvas, block, bitmap, page.previewScale, box, margin, baseTextSize) }
     }
 
     private fun mapBlock(
@@ -121,7 +121,8 @@ class TranslationTextLayer(context: Context) : View(context) {
     private fun drawBlock(
         canvas: Canvas,
         block: TranslatedTextBlock,
-        bitmap: Bitmap,
+        preview: Bitmap?,
+        previewScale: Float,
         blockRect: RectF,
         margin: Float,
         baseTextSize: Float,
@@ -162,7 +163,7 @@ class TranslationTextLayer(context: Context) : View(context) {
         val chosenColor = TranslationTextColor.of(preferences.textColor.get())
         // A fixed colour still needs a readable plate, so the plate follows the chosen lettering brightness.
         val light = chosenColor?.let { isLightColor(it) } ?: lightCache.getOrPut(block) {
-            isLightAround(bitmap, block.box)
+            isLightAround(preview, previewScale, block.box)
         }
         erasePaint.color = if (light) Color.WHITE else Color.rgb(14, 14, 14)
         val corner = 2f * density
@@ -190,24 +191,25 @@ class TranslationTextLayer(context: Context) : View(context) {
 
     /**
      * Average brightness of the page under the original text, so the box blends into bubbles and dark panels alike.
+     * It reads the thumbnail, whose coordinates are the page's multiplied by [previewScale].
      */
-    private fun isLightAround(bitmap: Bitmap, box: Rect): Boolean {
-        if (bitmap.config == Bitmap.Config.HARDWARE) return true
+    private fun isLightAround(preview: Bitmap?, previewScale: Float, box: Rect): Boolean {
+        if (preview == null || preview.config == Bitmap.Config.HARDWARE) return true
 
-        val left = box.left.coerceIn(0, bitmap.width - 1)
-        val top = box.top.coerceIn(0, bitmap.height - 1)
-        val right = box.right.coerceIn(left + 1, bitmap.width)
-        val bottom = box.bottom.coerceIn(top + 1, bitmap.height)
+        val left = (box.left * previewScale).toInt().coerceIn(0, preview.width - 1)
+        val top = (box.top * previewScale).toInt().coerceIn(0, preview.height - 1)
+        val right = (box.right * previewScale).toInt().coerceIn(left + 1, preview.width)
+        val bottom = (box.bottom * previewScale).toInt().coerceIn(top + 1, preview.height)
 
-        val stepX = max(1, (right - left) / 8)
-        val stepY = max(1, (bottom - top) / 8)
+        val stepX = max(1, (right - left) / 6)
+        val stepY = max(1, (bottom - top) / 6)
         var sum = 0.0
         var count = 0
         var y = top
         while (y < bottom) {
             var x = left
             while (x < right) {
-                val pixel = bitmap.getPixel(x, y)
+                val pixel = preview.getPixel(x, y)
                 sum += Color.red(pixel) * 0.299 + Color.green(pixel) * 0.587 + Color.blue(pixel) * 0.114
                 count++
                 x += stepX

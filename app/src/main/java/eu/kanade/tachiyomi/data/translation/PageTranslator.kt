@@ -27,9 +27,18 @@ data class TranslatedTextBlock(
     val translated: String,
 )
 
+/**
+ * One page worth of translations.
+ *
+ * Only a thumbnail of the page is kept, not the page itself: the reader draws the art, and the thumbnail is enough
+ * to size the text and to pick a plate colour. That keeps a whole chapter cached in memory instead of a few pages.
+ */
 class TranslatedPage(
     val pageIndex: Int,
-    val bitmap: Bitmap,
+    val width: Int,
+    val height: Int,
+    val preview: Bitmap?,
+    val previewScale: Float,
     val blocks: List<TranslatedTextBlock>,
     val source: TranslationLanguage,
     val target: TranslationLanguage,
@@ -73,8 +82,10 @@ class PageTranslator(
                     throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
                 }
 
-                val bitmap = decodeForDisplay(file, nativeWidth, nativeHeight)
-                    ?: throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
+                val displayWidth = decodeDisplayWidth(file, nativeWidth)
+                if (displayWidth <= 0) throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
+                val displayHeight = displayHeight(nativeWidth, nativeHeight, displayWidth)
+                val preview = decodePreview(file, displayWidth)
                 // Dots of an ellipsis, page numbers and sound effects are recognized as "0000" or "…" all the
                 // time; translating those only paints boxes over the art.
                 val recognition = recognize(decoder, nativeWidth, nativeHeight, source)
@@ -83,7 +94,7 @@ class PageTranslator(
                 if (blocks.isEmpty()) throw TranslationException(TranslationError.NO_TEXT_FOUND)
 
                 // Text positions are read at the OCR scale and have to be drawn on the displayed bitmap.
-                val ratio = bitmap.width.toFloat() / nativeWidth
+                val ratio = displayWidth.toFloat() / nativeWidth
                 // Line breaks and repeated spacing from the recognizer break the sentences the service sees.
                 val cleaned = blocks.map { it.text.normalizeForTranslation() }
                 // The on-device models need the real source language, and the recognizer already told us which
@@ -114,7 +125,10 @@ class PageTranslator(
 
                 TranslatedPage(
                     pageIndex = pageIndex,
-                    bitmap = bitmap,
+                    width = displayWidth,
+                    height = displayHeight,
+                    preview = preview,
+                    previewScale = preview?.let { it.width.toFloat() / displayWidth } ?: 1f,
                     blocks = translatedBlocks,
                     source = source,
                     target = target,
@@ -134,18 +148,32 @@ class PageTranslator(
     }
 
     /**
-     * The page is shown at a readable size while keeping memory in check; the recognizer doesn't use this bitmap,
-     * so it may be coarser than what is read.
+     * The size the reader shows the page at. Only the dimensions are decoded: the art belongs to the reader, so a
+     * second copy for every translated page would fill memory for nothing.
      */
-    private fun decodeForDisplay(file: File, nativeWidth: Int, nativeHeight: Int): Bitmap? {
+    private fun decodeDisplayWidth(file: File, nativeWidth: Int): Int {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(file.absolutePath, bounds)
         var sampleSize = 1
-        while ((nativeWidth / sampleSize).toLong() * (nativeHeight / sampleSize) > DISPLAY_PIXEL_BUDGET) {
+        while ((nativeWidth / sampleSize).toLong() * (bounds.outHeight / sampleSize) > DISPLAY_PIXEL_BUDGET) {
             sampleSize *= 2
         }
+        return nativeWidth / sampleSize
+    }
 
+    private fun displayHeight(nativeWidth: Int, nativeHeight: Int, displayWidth: Int): Int {
+        if (nativeWidth <= 0) return nativeHeight
+        return (nativeHeight.toLong() * displayWidth / nativeWidth).toInt().coerceAtLeast(1)
+    }
+
+    /**
+     * A thumbnail wide enough to tell a white bubble from a dark panel, which is all the text layer needs.
+     */
+    private fun decodePreview(file: File, displayWidth: Int): Bitmap? {
+        var sampleSize = 1
+        while (displayWidth / sampleSize > PREVIEW_WIDTH) sampleSize *= 2
         val options = BitmapFactory.Options().apply {
             inSampleSize = sampleSize
-            // Otherwise the platform rescales the bitmap by the device density and every position drifts.
             inScaled = false
         }
         return BitmapFactory.decodeFile(file.absolutePath, options)
@@ -298,6 +326,7 @@ class PageTranslator(
         private const val MIN_LETTERS = 2
 
         private const val DISPLAY_PIXEL_BUDGET = 8_000_000L
+        private const val PREVIEW_WIDTH = 160
         private const val DETECTION_SLICE_HEIGHT = 900
         private const val DETECTION_WIDTH = 720
     }
