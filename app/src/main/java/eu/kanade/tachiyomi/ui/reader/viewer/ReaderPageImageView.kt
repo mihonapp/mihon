@@ -194,10 +194,10 @@ open class ReaderPageImageView @JvmOverloads constructor(
 
         // The paged reader zooms and pans its own image, so the text has to follow its mapping.
         layer.sourceToView = when (val view = pageView) {
-            // The layer works in the coordinates of the translated bitmap, which is a scaled copy of the page.
+            // The layer works in the page's own coordinates, which the paged reader maps to the screen.
             is SubsamplingScaleImageView -> { x, y ->
-                val scaleX = view.sWidth.toFloat() / page.bitmap.width
-                val scaleY = view.sHeight.toFloat() / page.bitmap.height
+                val scaleX = view.sWidth.toFloat() / page.width
+                val scaleY = view.sHeight.toFloat() / page.height
                 view.sourceToViewCoord(x * scaleX, y * scaleY)
             }
             else -> null
