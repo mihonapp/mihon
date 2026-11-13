@@ -17,6 +17,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import tachiyomi.domain.translation.model.OcrScript
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -181,12 +182,15 @@ class OcrEngine {
         val verticalGap = max(first.box.top, second.box.top) - min(first.box.bottom, second.box.bottom)
         val horizontalGap = max(first.box.left, second.box.left) - min(first.box.right, second.box.right)
 
-        // Stacked: the next line of the same bubble, close and roughly in the same column.
+        // Stacked: the next line of the same bubble, close and in the same column. Centred lettering has lines of
+        // different widths, so comparing the line centres keeps a bubble together where plain overlap would not.
+        val centresAligned = abs(first.box.centerX() - second.box.centerX()) <=
+            max(first.box.width(), second.box.width()) * 0.4f
         val stacked = verticalGap >= -0.45f * minHeight &&
-            verticalGap <= 0.45f * minHeight &&
-            horizontalOverlap(first.box, second.box) >= 0.45f &&
+            verticalGap <= 0.6f * minHeight &&
+            (horizontalOverlap(first.box, second.box) >= 0.45f || centresAligned) &&
             // Lines of one bubble have comparable lettering; this keeps a sound effect out of a bubble.
-            max(first.box.height(), second.box.height()) <= minHeight * 2.2f
+            max(first.box.height(), second.box.height()) <= minHeight * 2.5f
         if (stacked) return true
 
         // Side by side: the columns of vertical Japanese text. Only tall boxes can merge this way, otherwise two

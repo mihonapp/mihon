@@ -202,7 +202,7 @@ class TranslationTextLayer(context: Context) : View(context) {
     }
 
     companion object {
-        private const val MIN_TEXT_SIZE_DP = 4.5f
+        private const val MIN_TEXT_SIZE_DP = 6f
         private const val MAX_TEXT_SIZE_DP = 28f
         private const val MAX_GROWTH = 1.25f
         private const val MAX_WIDTH_GROWTH = 1.06f
