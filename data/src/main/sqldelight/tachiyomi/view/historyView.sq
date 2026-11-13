@@ -23,7 +23,8 @@ JOIN (
     FROM history
     GROUP BY manga_id
 ) AS max_read
-ON chapter.manga_id = max_read.manga_id;
+ON chapter.manga_id = max_read.manga_id
+WHERE manga.id NOT IN (SELECT manga_id FROM protected_manga);
 
 history:
 SELECT
@@ -63,5 +64,6 @@ ON manga.id = history.manga_id
 JOIN chapter
 ON chapter.id = history.chapter_id
 WHERE history.read_at IS NOT NULL
+AND manga.id NOT IN (SELECT manga_id FROM protected_manga)
 ORDER BY history.read_at DESC
 LIMIT 1;

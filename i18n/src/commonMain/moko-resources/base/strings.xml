@@ -268,6 +268,40 @@
     <string name="secure_screen_summary">Secure screen hides app contents when switching apps and block screenshots</string>
     <string name="firebase_summary">Sending crash logs and analytics will allow us to identify and fix issues, improve performance, and make future updates more relevant to your needs</string>
 
+    <!-- Protected folder -->
+    <string name="protected_folder">Protected folder</string>
+    <string name="protected_folder_empty">The protected folder is empty</string>
+    <string name="protected_folder_enter_pin">Enter PIN</string>
+    <string name="protected_folder_create_pin">Set a 4-digit PIN</string>
+    <string name="protected_folder_confirm_pin">Enter the PIN again</string>
+    <string name="protected_folder_pin_mismatch">The PINs don\'t match. Try again</string>
+    <string name="protected_folder_pin_wrong">Wrong PIN</string>
+    <string name="protected_folder_locked_out">Too many wrong attempts. Try again in %s</string>
+    <string name="protected_folder_use_biometrics">Use biometrics</string>
+    <string name="protected_folder_use_pin">Use PIN</string>
+    <string name="protected_folder_forgot_pin">Forgot PIN?</string>
+    <string name="protected_folder_forgot_pin_title">Delete everything in the protected folder?</string>
+    <string name="protected_folder_forgot_pin_message">A forgotten PIN can\'t be recovered. Continuing permanently deletes every entry in the protected folder: each one is removed from the library, its downloaded chapters are deleted and its reading history is removed. This can\'t be undone.\n\nType %s to continue.</string>
+    <string name="protected_folder_forgot_pin_confirm">Delete everything</string>
+    <string name="protected_folder_wiped">The protected folder was deleted. Set a new PIN</string>
+    <string name="protected_folder_wipe_failed">Couldn\'t delete the protected folder. Nothing was deleted</string>
+    <string name="protected_folder_wipe_files_left">Some downloaded chapters or covers couldn\'t be deleted</string>
+    <string name="protected_folder_change_pin">Change PIN</string>
+    <string name="protected_folder_pin_changed">PIN set</string>
+    <string name="protected_folder_remove_pin">Remove PIN</string>
+    <string name="protected_folder_remove_pin_summary">Requires the current PIN</string>
+    <string name="protected_folder_remove_pin_message">Removing the PIN returns every entry in the protected folder to the library.</string>
+    <string name="protected_folder_pin_removed">PIN removed</string>
+    <string name="action_move_to_protected_folder">Move to protected folder</string>
+    <string name="protected_folder_move_confirmation">Move the selected entries to the protected folder? They are hidden from the library, updates and history until the folder is opened with its PIN.</string>
+    <string name="action_remove_from_protected_folder">Remove from protected folder</string>
+    <string name="protected_folder_remove_confirmation">Return the selected entries to the library?</string>
+    <string name="protected_folder_options">Folder options</string>
+    <string name="protected_folder_secure_screen">Hide the folder when switching apps and block screenshots</string>
+    <string name="protected_folder_biometrics">Unlock with biometrics</string>
+    <string name="protected_folder_backup">Include in manual backups</string>
+    <string name="protected_folder_backup_summary">Protected entries are left out of backups unless this is on. Automatic backups never include them, and the PIN is never backed up.</string>
+
     <string name="pref_category_extensions">Extensions</string>
     <string name="pref_allowed_content_warnings">Allowed content warnings</string>
     <string name="pref_apply_content_warnings_to_installed">Also apply to installed extensions</string>

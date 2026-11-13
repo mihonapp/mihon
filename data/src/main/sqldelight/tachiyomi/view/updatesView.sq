@@ -24,6 +24,7 @@ LEFT JOIN excluded_scanlator
 ON manga.id = excluded_scanlator.manga_id
 AND chapter.remote_scanlator = excluded_scanlator.scanlator
 WHERE user_favorite_at IS NOT NULL
+AND manga.id NOT IN (SELECT manga_id FROM protected_manga)
 AND state_date_fetch > user_favorite_at
 ORDER BY state_date_fetch DESC;
 

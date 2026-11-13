@@ -48,6 +48,8 @@ import kotlinx.coroutines.withContext
 import mihon.core.common.utils.mutate
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.library.model.search.QueryNode
+import mihon.domain.protectedfolder.interactor.SetMangaProtected
+import mihon.domain.protectedfolder.service.ProtectedFolderPin
 import mihon.feature.library.matches
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -91,6 +93,8 @@ class LibraryViewModel(
     private val setReadStatus: SetReadStatus,
     private val updateManga: UpdateManga,
     private val setMangaCategories: SetMangaCategories,
+    private val setMangaProtected: SetMangaProtected,
+    private val protectedFolderPin: ProtectedFolderPin,
     private val preferences: BasePreferences,
     private val libraryPreferences: LibraryPreferences,
     private val coverCache: CoverCache,
@@ -114,6 +118,7 @@ class LibraryViewModel(
         libraryPreferences.categoryTabs.changes(),
         libraryPreferences.categoryNumberOfItems.changes(),
         libraryPreferences.showContinueReadingButton.changes(),
+        protectedFolderPin.isSetAsFlow(),
         ::DisplayPreferences,
     )
 
@@ -198,6 +203,7 @@ class LibraryViewModel(
             showCategoryTabs = display.showCategoryTabs,
             showMangaCount = display.showMangaCount,
             showMangaContinueButton = display.showMangaContinueButton,
+            protectedFolderAvailable = display.protectedFolderAvailable,
             dialog = dialog,
             libraryData = library?.data ?: LibraryData(),
             activeCategoryIndex = activeCategoryIndex,
@@ -210,6 +216,7 @@ class LibraryViewModel(
         val showCategoryTabs: Boolean,
         val showMangaCount: Boolean,
         val showMangaContinueButton: Boolean,
+        val protectedFolderAvailable: Boolean,
     )
 
     private data class Library(
@@ -746,6 +753,16 @@ class LibraryViewModel(
         dialog.update { Dialog.DeleteManga(selectedManga) }
     }
 
+    fun openMoveToProtectedFolderDialog() {
+        dialog.update { Dialog.MoveToProtectedFolder(selectedManga) }
+    }
+
+    fun moveToProtectedFolder(manga: List<Manga>) {
+        closeDialog()
+        clearSelection()
+        appScope.launch { setMangaProtected.await(manga.map { it.id }, protected = true) }
+    }
+
     fun closeDialog() {
         dialog.update { null }
     }
@@ -758,6 +775,7 @@ class LibraryViewModel(
         ) : Dialog
 
         data class DeleteManga(val manga: List<Manga>) : Dialog
+        data class MoveToProtectedFolder(val manga: List<Manga>) : Dialog
     }
 
     @Immutable
@@ -799,6 +817,7 @@ class LibraryViewModel(
         val showCategoryTabs: Boolean = false,
         val showMangaCount: Boolean = false,
         val showMangaContinueButton: Boolean = false,
+        val protectedFolderAvailable: Boolean = false,
         val dialog: Dialog? = null,
         val libraryData: LibraryData = LibraryData(),
         private val activeCategoryIndex: Int = 0,

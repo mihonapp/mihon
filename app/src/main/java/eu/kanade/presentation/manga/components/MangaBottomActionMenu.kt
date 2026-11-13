@@ -237,6 +237,7 @@ fun LibraryBottomActionMenu(
     onDownloadClicked: ((DownloadAction) -> Unit)?,
     onDeleteClicked: () -> Unit,
     onMigrateClicked: () -> Unit,
+    onMoveToProtectedFolderClicked: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
@@ -262,7 +263,7 @@ fun LibraryBottomActionMenu(
                     if (isActive) confirm[toConfirmIndex] = false
                 }
             }
-            val itemOverflow = onDownloadClicked != null
+            val itemOverflow = onDownloadClicked != null || onMoveToProtectedFolderClicked != null
             Row(
                 modifier = Modifier
                     .windowInsetsPadding(
@@ -346,6 +347,15 @@ fun LibraryBottomActionMenu(
                                 text = { Text(stringResource(MR.strings.action_delete)) },
                                 onClick = onDeleteClicked,
                             )
+                            if (onMoveToProtectedFolderClicked != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(MR.strings.action_move_to_protected_folder)) },
+                                    onClick = {
+                                        overflowMenuOpen = false
+                                        onMoveToProtectedFolderClicked()
+                                    },
+                                )
+                            }
                         }
                     }
                 }

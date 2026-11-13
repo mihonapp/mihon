@@ -45,6 +45,9 @@ import mihon.core.metro.IsDebugBuild
 import mihon.data.cache.ChapterCache
 import mihon.domain.extension.interactor.GetExtensionStoreCountAsFlow
 import mihon.domain.extension.repository.ExtensionStoreRepository
+import mihon.domain.protectedfolder.service.ProtectedFolderPin
+import mihon.domain.protectedfolder.service.ProtectedFolderPreferences
+import mihon.feature.protectedfolder.ProtectedFolderSession
 import nl.adaptivity.xmlutil.serialization.XML
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.category.interactor.GetCategories
@@ -93,6 +96,10 @@ interface AppGraph : ViewModelGraph {
     val privacyPreferences: PrivacyPreferences
     val securityPreferences: SecurityPreferences
     val downloadPreferences: DownloadPreferences
+    val protectedFolderPreferences: ProtectedFolderPreferences
+
+    val protectedFolderPin: ProtectedFolderPin
+    val protectedFolderSession: ProtectedFolderSession
 
     val crashLogUtil: CrashLogUtil
 

@@ -24,4 +24,9 @@ open class BaseActivity :
         applyAppTheme(this)
         super.onCreate(savedInstanceState)
     }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        appGraph.protectedFolderSession.onUserInteraction()
+    }
 }

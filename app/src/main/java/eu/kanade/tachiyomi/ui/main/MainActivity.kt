@@ -115,6 +115,8 @@ import mihon.core.metro.metroGraph
 import mihon.core.migration.Migrator
 import mihon.data.cache.ChapterCache
 import mihon.domain.database.repository.DatabaseRepository
+import mihon.feature.protectedfolder.ProtectedFolderScreen
+import mihon.feature.protectedfolder.ProtectedFolderSession
 import mihon.feature.support.SupportUsScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
@@ -155,6 +157,8 @@ class MainActivity : BaseActivity() {
     @Inject private lateinit var getIncognitoState: GetIncognitoState
 
     @Inject private lateinit var extensionManager: ExtensionManager
+
+    @Inject private lateinit var protectedFolderSession: ProtectedFolderSession
 
     // To be checked by splash screen. If true then splash screen will be removed.
     var ready = false
@@ -302,6 +306,27 @@ class MainActivity : BaseActivity() {
                             ) {
                                 navigator.popUntilRoot()
                             }
+                        }
+                        .launchIn(this)
+                }
+
+                // The folder stays open only while its screen is somewhere in the stack, and leaves no screen
+                // of its own behind once it locks
+                LaunchedEffect(navigator.lastItem) {
+                    val folderIndex = navigator.items.indexOfFirst { it is ProtectedFolderScreen }
+                    if (folderIndex == -1) {
+                        protectedFolderSession.lock()
+                    } else if (!protectedFolderSession.unlocked.value && folderIndex != navigator.items.lastIndex) {
+                        // Screens opened from the folder were restored after the process died with it open
+                        navigator.popUntilRoot()
+                    }
+                }
+                LaunchedEffect(Unit) {
+                    protectedFolderSession.unlocked
+                        .drop(1)
+                        .filter { !it }
+                        .onEach {
+                            if (navigator.items.any { it is ProtectedFolderScreen }) navigator.popUntilRoot()
                         }
                         .launchIn(this)
                 }

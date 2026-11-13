@@ -47,6 +47,7 @@ import mihon.app.di.AppGraph
 import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
+import mihon.domain.protectedfolder.interactor.GetProtectedLibraryManga
 import mihon.domain.source.interactor.UpdateMangaFromRemote
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
@@ -94,6 +95,8 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
 
     @Inject private lateinit var getLibraryManga: GetLibraryManga
 
+    @Inject private lateinit var getProtectedLibraryManga: GetProtectedLibraryManga
+
     @Inject private lateinit var getManga: GetManga
 
     @Inject private lateinit var fetchInterval: FetchInterval
@@ -105,6 +108,9 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
     @Inject private lateinit var notifier: LibraryUpdateNotifier
 
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()
+
+    // Updated like the rest of the library, but left out of every notification, log and count
+    private var protectedMangaIds: Set<Long> = emptySet()
 
     override suspend fun doWork(): Result {
         graph.inject(this)
@@ -166,7 +172,9 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
      * @param categoryId the ID of the category to update, or -1 if no category specified.
      */
     private suspend fun addMangaToQueue(categoryId: Long) {
-        val libraryManga = getLibraryManga.await()
+        val protectedManga = getProtectedLibraryManga.await()
+        protectedMangaIds = protectedManga.mapTo(mutableSetOf()) { it.id }
+        val libraryManga = getLibraryManga.await() + protectedManga
 
         val listToUpdate = if (categoryId != -1L) {
             libraryManga.filter { categoryId in it.categories }
@@ -233,6 +241,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
             // TODO: surface skipped reasons to user?
             logcat {
                 skippedUpdates
+                    .filter { it.first.id !in protectedMangaIds }
                     .groupBy { it.second }
                     .map { (reason, entries) -> "$reason: [${entries.map { it.first.title }.sorted().joinToString()}]" }
                     .joinToString()
@@ -290,13 +299,17 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                                                 hasDownloads.store(true)
                                             }
 
-                                            // Sources update concurrently, and getAndSet is a separate read and write
-                                            synchronized(libraryPreferences.newUpdatesCount) {
-                                                libraryPreferences.newUpdatesCount.getAndSet { it + newChapters.size }
-                                            }
+                                            if (manga.id !in protectedMangaIds) {
+                                                // Sources update concurrently, and getAndSet is a separate read and
+                                                // write
+                                                synchronized(libraryPreferences.newUpdatesCount) {
+                                                    libraryPreferences.newUpdatesCount
+                                                        .getAndSet { it + newChapters.size }
+                                                }
 
-                                            // Convert to the manga that contains new chapters
-                                            newUpdates.add(manga to newChapters.toTypedArray())
+                                                // Convert to the manga that contains new chapters
+                                                newUpdates.add(manga to newChapters.toTypedArray())
+                                            }
                                         }
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
@@ -309,7 +322,9 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                                             )
                                             else -> e.message
                                         }
-                                        failedUpdates.add(manga to errorMessage)
+                                        if (manga.id !in protectedMangaIds) {
+                                            failedUpdates.add(manga to errorMessage)
+                                        }
                                     }
                                 }
                             }
@@ -323,9 +338,9 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
 
         if (newUpdates.isNotEmpty()) {
             notifier.showUpdateNotifications(newUpdates)
-            if (hasDownloads.load()) {
-                downloadManager.startDownloads()
-            }
+        }
+        if (hasDownloads.load()) {
+            downloadManager.startDownloads()
         }
 
         if (failedUpdates.isNotEmpty()) {
@@ -372,7 +387,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
     ) = coroutineScope {
         ensureActive()
 
-        updatingManga.add(manga)
+        if (manga.id !in protectedMangaIds) updatingManga.add(manga)
         notifier.showProgressNotification(
             updatingManga,
             completed.load(),
