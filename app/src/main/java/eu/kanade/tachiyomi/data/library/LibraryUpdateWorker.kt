@@ -442,7 +442,7 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
         ) {
             val preferences = context.appGraph.libraryPreferences
             val interval = prefInterval ?: preferences.autoUpdateInterval.get()
-            if (interval > 0) {
+            if (interval != 0) {
                 val restrictions = preferences.autoUpdateDeviceRestrictions.get()
                 val networkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
                     NetworkType.UNMETERED
@@ -466,8 +466,21 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                     .setRequiresBatteryNotLow(true)
                     .build()
 
+                val (intervalHours, initialDelayMinutes) = if (interval == -1) {
+                    val timeOfDay = preferences.autoUpdateTimeOfDay.get()
+                    val now = java.time.LocalTime.now()
+                    val targetTime = java.time.LocalTime.of(timeOfDay / 60, timeOfDay % 60)
+                    var delayMinutes = java.time.Duration.between(now, targetTime).toMinutes()
+                    if (delayMinutes < 0) {
+                        delayMinutes += 24 * 60
+                    }
+                    Pair(24L, delayMinutes)
+                } else {
+                    Pair(interval.toLong(), 0L)
+                }
+
                 val request = PeriodicWorkRequestBuilder<LibraryUpdateWorker>(
-                    interval.toLong(),
+                    intervalHours,
                     TimeUnit.HOURS,
                     10,
                     TimeUnit.MINUTES,
@@ -476,6 +489,11 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
                     .addTag(WORK_NAME_AUTO)
                     .setConstraints(constraints)
                     .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES)
+                    .apply {
+                        if (initialDelayMinutes > 0) {
+                            setInitialDelay(initialDelayMinutes, TimeUnit.MINUTES)
+                        }
+                    }
                     .build()
 
                 context.workManager.enqueueUniquePeriodicWork(
