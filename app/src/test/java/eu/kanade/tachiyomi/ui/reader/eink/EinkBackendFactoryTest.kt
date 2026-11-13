@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.eink
 
+import eu.kanade.tachiyomi.ui.reader.eink.EinkRefreshMode.AUTO
+import eu.kanade.tachiyomi.ui.reader.eink.EinkRefreshMode.FAST
 import eu.kanade.tachiyomi.ui.reader.eink.EinkRefreshMode.FULL
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -29,5 +31,19 @@ class EinkBackendFactoryTest {
         val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.BOYUE_T61)
         backend.platform shouldBe "rockchip"
         backend.supportedModes shouldBe setOf(FULL)
+    }
+
+    @Test
+    fun `nook glowlight uses freescale full backend`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.NOOK)
+        backend.platform shouldBe "freescale"
+        backend.supportedModes shouldBe setOf(FULL)
+    }
+
+    @Test
+    fun `nook emperor exposes all three modes`() {
+        val backend = EinkBackendFactory.create(EinkDeviceInfo.Id.NOOK_GL4PLUS)
+        backend.platform shouldBe "freescale"
+        backend.supportedModes shouldBe setOf(FULL, FAST, AUTO)
     }
 }

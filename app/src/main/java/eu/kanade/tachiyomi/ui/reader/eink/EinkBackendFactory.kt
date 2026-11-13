@@ -1,6 +1,9 @@
 package eu.kanade.tachiyomi.ui.reader.eink
 
 import android.util.Log
+import eu.kanade.tachiyomi.ui.reader.eink.epd.NGL4EPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.NookEPDController
+import eu.kanade.tachiyomi.ui.reader.eink.epd.NookEmperorEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.OnyxEPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3026EPDController
 import eu.kanade.tachiyomi.ui.reader.eink.epd.RK3368EPDController
@@ -61,6 +64,27 @@ object EinkBackendFactory {
             EinkDeviceInfo.Id.PUBU_PUBOOK,
             EinkDeviceInfo.Id.XIAOMI_READER,
             -> EpdEinkRefreshBackend(RK3566EPDController())
+
+            EinkDeviceInfo.Id.BOYUE_T65S,
+            EinkDeviceInfo.Id.CREMA_0710C,
+            EinkDeviceInfo.Id.JDREAD,
+            EinkDeviceInfo.Id.LINFINY_ENOTE,
+            EinkDeviceInfo.Id.NOOK,
+            EinkDeviceInfo.Id.NOOK_GLPLUS,
+            EinkDeviceInfo.Id.RIDI_PAPER_3,
+            EinkDeviceInfo.Id.SONY_CP1,
+            EinkDeviceInfo.Id.SONY_RP1,
+            -> EpdEinkRefreshBackend(NookEPDController())
+
+            EinkDeviceInfo.Id.NOOK_GL4PLUS,
+            -> EpdEinkRefreshBackend(NookEmperorEPDController())
+
+            EinkDeviceInfo.Id.MOOINKPLUS2C,
+            EinkDeviceInfo.Id.NOOK_GL4,
+            EinkDeviceInfo.Id.TOLINO_EPOS3,
+            EinkDeviceInfo.Id.TOLINO_VISION6,
+            EinkDeviceInfo.Id.TOLINO_SHINE4,
+            -> EpdEinkRefreshBackend(NGL4EPDController())
 
             EinkDeviceInfo.Id.ONYX_DARWIN5,
             EinkDeviceInfo.Id.ONYX_DARWIN9,
