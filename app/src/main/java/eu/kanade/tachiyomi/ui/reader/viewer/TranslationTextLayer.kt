@@ -116,18 +116,12 @@ class TranslationTextLayer(context: Context) : View(context) {
         val originalWidth = blockRect.width()
         val originalHeight = blockRect.height()
 
-        // Vertical Japanese columns are tall and narrow. Arabic and other horizontal scripts need room, so those
-        // blocks get a wider box; everything else stays close to the original lettering.
-        val aspect = originalHeight / max(originalWidth, 1f)
-        val widthMultiplier = when {
-            aspect > 2.2f -> 2.0f
-            aspect > 1.4f -> 1.4f
-            else -> 1.2f
-        }
-        val maxBoxWidth = originalWidth * min(widthMultiplier + 0.4f, MAX_WIDTH_GROWTH)
-        val textWidth = (maxBoxWidth - margin * 2f).toInt().coerceAtLeast(1)
+        // Stay inside the bubble: a translation that spills over the art looks broken, so the text shrinks to fit
+        // the original lettering area instead of the box growing around it.
+        val boxWidth = originalWidth * MAX_WIDTH_GROWTH
+        val textWidth = (boxWidth - margin * 2f).toInt().coerceAtLeast(1)
 
-        var textSize = (originalHeight / 2.4f).coerceIn(MIN_TEXT_SIZE_DP * density, MAX_TEXT_SIZE_DP * density)
+        var textSize = (originalHeight / 3f).coerceIn(MIN_TEXT_SIZE_DP * density, MAX_TEXT_SIZE_DP * density)
         var layout = layout(text, textSize, textWidth)
         while (layout.height > originalHeight * MAX_GROWTH && textSize > MIN_TEXT_SIZE_DP * density) {
             textSize -= 0.5f * density
@@ -135,15 +129,11 @@ class TranslationTextLayer(context: Context) : View(context) {
         }
 
         val textHeight = layout.height.toFloat()
-        var widestLine = 0f
-        for (line in 0 until layout.lineCount) {
-            widestLine = max(widestLine, layout.getLineWidth(line))
-        }
 
-        // The box has to hide the original lettering completely, otherwise its edges stay readable underneath, and
-        // it has to contain the translation, otherwise lines spill over the bubble. Both are hard lower bounds.
-        val coverWidth = min(max(originalWidth, widestLine + margin * 2f), maxBoxWidth)
+        // The box never shrinks below the original lettering and never lets the text escape sideways.
+        val coverWidth = boxWidth
         val coverHeight = max(originalHeight, textHeight + margin * 2f)
+
         val centerX = blockRect.centerX()
         val centerY = blockRect.centerY()
 
@@ -212,10 +202,10 @@ class TranslationTextLayer(context: Context) : View(context) {
     }
 
     companion object {
-        private const val MIN_TEXT_SIZE_DP = 6f
-        private const val MAX_TEXT_SIZE_DP = 40f
-        private const val MAX_GROWTH = 1.8f
-        private const val MAX_WIDTH_GROWTH = 2.2f
+        private const val MIN_TEXT_SIZE_DP = 4.5f
+        private const val MAX_TEXT_SIZE_DP = 28f
+        private const val MAX_GROWTH = 1.25f
+        private const val MAX_WIDTH_GROWTH = 1.06f
         private const val LUMA_THRESHOLD = 128.0
     }
 }
