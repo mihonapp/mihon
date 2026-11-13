@@ -34,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -103,6 +104,7 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -111,6 +113,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
 import mihon.app.di.AppGraph
 import mihon.core.metro.metroGraph
@@ -120,6 +124,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.collectAsState
+import kotlin.time.Clock
 
 class ReaderActivity : BaseActivity() {
 
@@ -196,6 +201,24 @@ class ReaderActivity : BaseActivity() {
             val colorOverlayEnabled by readerPreferences.colorFilter.collectAsState()
             val colorOverlay by readerPreferences.colorFilterValue.collectAsState()
             val colorOverlayMode by readerPreferences.colorFilterMode.collectAsState()
+            val nightSchedule by readerPreferences.nightFilterSchedule.collectAsState()
+            val nightStart by readerPreferences.nightFilterStart.collectAsState()
+            val nightEnd by readerPreferences.nightFilterEnd.collectAsState()
+            var nowMinutes by remember {
+                val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                mutableIntStateOf(now.hour * 60 + now.minute)
+            }
+            LaunchedEffect(Unit) {
+                while (true) {
+                    val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                    nowMinutes = now.hour * 60 + now.minute
+                    // Wake just past the next minute boundary so a window edge applies on time.
+                    delay(60_000L - (now.second * 1_000L + now.nanosecond / 1_000_000L))
+                }
+            }
+            val nightActive = nightSchedule &&
+                ReaderPreferences.isInNightWindow(nowMinutes, nightStart, nightEnd)
+            val effectiveColorOverlayEnabled = colorOverlayEnabled || nightActive
             val brightness by settingsViewModel.brightness.collectAsState()
             val navigation = settingsViewModel.navigation.collectAsState().value
 
@@ -240,7 +263,7 @@ class ReaderActivity : BaseActivity() {
 
                 ReaderContentOverlay(
                     brightness = brightness,
-                    color = colorOverlay.takeIf { colorOverlayEnabled },
+                    color = colorOverlay.takeIf { effectiveColorOverlayEnabled },
                     colorBlendMode = colorOverlayBlendMode,
                 )
 
