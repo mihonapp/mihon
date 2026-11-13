@@ -18,6 +18,9 @@ data class Download(
     val manga: Manga,
     val chapter: Chapter,
 ) {
+    // Queue-owned retry state; chapter metadata keeps the full confirmed origin list.
+    var attemptedSourceIds: Set<Long> = emptySet()
+
     @Transient
     private val _pagesFlow = MutableStateFlow<List<Page>?>(null)
 
