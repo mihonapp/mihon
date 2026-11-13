@@ -758,6 +758,8 @@ class LibraryViewModel(
     }
 
     fun moveToProtectedFolder(manga: List<Manga>) {
+        closeDialog()
+        clearSelection()
         appScope.launch { setMangaProtected.await(manga.map { it.id }, protected = true) }
     }
 

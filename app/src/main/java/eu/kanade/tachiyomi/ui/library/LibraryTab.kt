@@ -262,10 +262,7 @@ data object LibraryTab : Tab {
                     title = stringResource(MR.strings.action_move_to_protected_folder),
                     message = stringResource(MR.strings.protected_folder_move_confirmation),
                     onDismissRequest = onDismissRequest,
-                    onConfirm = {
-                        viewModel.moveToProtectedFolder(dialog.manga)
-                        viewModel.clearSelection()
-                    },
+                    onConfirm = { viewModel.moveToProtectedFolder(dialog.manga) },
                 )
             }
             null -> {}
