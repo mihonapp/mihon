@@ -72,7 +72,10 @@ class PageTranslator(
 
                 val bitmap = decodeForDisplay(file, nativeWidth, nativeHeight)
                     ?: throw TranslationException(TranslationError.PAGE_NOT_AVAILABLE)
+                // Dots of an ellipsis, page numbers and sound effects are recognized as "0000" or "…" all the
+                // time; translating those only paints boxes over the art.
                 val blocks = recognize(decoder, nativeWidth, nativeHeight, source)
+                    .filter { it.text.count { char -> char.isLetter() } >= MIN_LETTERS }
                 if (blocks.isEmpty()) throw TranslationException(TranslationError.NO_TEXT_FOUND)
 
                 // Text positions are read at the OCR scale and have to be drawn on the displayed bitmap.
@@ -82,7 +85,8 @@ class PageTranslator(
                 val translation = translateAll(cleaned, source, target)
                 val translatedBlocks = blocks.mapIndexedNotNull { index, block ->
                     val translated = translation.getOrNull(index)?.trim()
-                    if (translated.isNullOrEmpty()) {
+                    val hasLetters = translated != null && translated.any { it.isLetter() }
+                    if (translated.isNullOrEmpty() || !hasLetters) {
                         null
                     } else {
                         TranslatedTextBlock(
@@ -256,6 +260,9 @@ class PageTranslator(
     private fun Char.isCjk(): Boolean = this in '\u3040'..'\u30FF' || this in '\u3400'..'\u9FFF'
 
     companion object {
+        /** Blocks with fewer letters are ellipsis dots, page numbers or noise, not dialogue. */
+        private const val MIN_LETTERS = 2
+
         private const val DISPLAY_PIXEL_BUDGET = 8_000_000L
         private const val MAX_OCR_WIDTH = 2_000
         private const val DETECTION_SLICE_HEIGHT = 900
