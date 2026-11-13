@@ -13,6 +13,11 @@ on:
         description: Release title
         required: false
         default: Mihon Dev — Instant translation
+  # Pushing a tag is the simplest way to publish: the workflow file only has to
+  # exist in the tagged commit, unlike a manual run which needs it on main first.
+  push:
+    tags:
+      - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -78,15 +83,19 @@ jobs:
       - name: Publish release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ inputs.tag }}
+          INPUT_TITLE: ${{ inputs.title }}
         run: |-
-          TAG="${{ inputs.tag }}"
+          TAG="${INPUT_TAG:-${GITHUB_REF_NAME}}"
+          TITLE="${INPUT_TITLE:-Mihon Dev ${TAG}}"
           if gh release view "$TAG" --repo "${{ github.repository }}" >/dev/null 2>&1; then
             gh release upload "$TAG" release-apks/*.apk --repo "${{ github.repository }}" --clobber
+            gh release edit "$TAG" --repo "${{ github.repository }}" --title "$TITLE" --latest
           else
             gh release create "$TAG" release-apks/*.apk \
               --repo "${{ github.repository }}" \
               --target "${{ github.sha }}" \
-              --title "${{ inputs.title }}" \
+              --title "$TITLE" \
               --notes-file .github/release-notes.md \
               --latest
           fi
