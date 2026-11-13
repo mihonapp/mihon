@@ -113,10 +113,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.translation.service.TranslationPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.collectAsState
@@ -138,6 +140,8 @@ class ReaderActivity : BaseActivity() {
     @Inject private lateinit var readerPreferences: ReaderPreferences
 
     @Inject private lateinit var preferences: BasePreferences
+
+    @Inject private lateinit var translationPreferences: TranslationPreferences
 
     val viewModel by viewModels<ReaderViewModel> { graph.viewModelFactory }
     val settingsViewModel by viewModels<ReaderSettingsViewModel> {
@@ -261,6 +265,7 @@ class ReaderActivity : BaseActivity() {
                 ReaderNavigationOverlay(state = navigationOverlayState)
 
                 AppBars(state = state)
+
             }
 
             if (state.isLoadingAdjacentChapter) {
@@ -280,7 +285,7 @@ class ReaderActivity : BaseActivity() {
             }
 
             val onDismissRequest = viewModel::closeDialog
-            when (state.dialog) {
+            when (val dialog = state.dialog) {
                 is ReaderViewModel.Dialog.Settings -> {
                     ReaderSettingsDialog(
                         onDismissRequest = onDismissRequest,
@@ -317,6 +322,10 @@ class ReaderActivity : BaseActivity() {
                         onSetAsCover = viewModel::setAsCover,
                         onShare = viewModel::shareImage,
                         onSave = viewModel::saveImage,
+                        onTranslate = {
+                            onDismissRequest()
+                            viewModel.translatePageInline(dialog.page)
+                        },
                     )
                 }
                 null -> {}
@@ -455,6 +464,15 @@ class ReaderActivity : BaseActivity() {
     @Composable
     private fun ReaderViewer() {
         val viewer by viewerFlow.collectAsState()
+        val translations by viewModel.translations.collectAsState()
+        // Changing how translations look has to repaint the pages already on screen.
+        val translationPreferences = remember { applicationContext.appGraph.translationPreferences }
+        val translationColor by translationPreferences.textColor.collectAsState()
+        val translationBold by translationPreferences.boldText.collectAsState()
+        val translationCase by translationPreferences.letterCase.collectAsState()
+        LaunchedEffect(viewer, translations, translationColor, translationBold, translationCase) {
+            viewer?.translations = translations
+        }
         val general by settingsViewModel.general.collectAsState()
         val insets = when {
             !general.fullscreen -> WindowInsets.systemBars
@@ -610,6 +628,7 @@ class ReaderActivity : BaseActivity() {
                 menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
             },
             onClickSettings = viewModel::openSettingsDialog,
+            onClickTranslate = viewModel::toggleTranslationMode,
         )
     }
 

@@ -56,12 +56,23 @@ class PagerPageHolder(
 
     init {
         pageColorFilter = viewer.pageColorFilter
+        setTranslation(viewer.translations[page.index])
         loadJob = scope.launch { loadPageAndProcessStatus() }
     }
 
     /**
      * Called when this view is detached from the window. Unsubscribes any active subscription.
      */
+    /** Re-draws this page's translation after it has been received. */
+    fun applyTranslation() {
+        setTranslation(viewer.translations[page.index])
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        setTranslation(viewer.translations[page.index])
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()

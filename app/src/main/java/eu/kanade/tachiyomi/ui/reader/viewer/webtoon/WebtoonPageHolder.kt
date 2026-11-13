@@ -84,9 +84,15 @@ class WebtoonPageHolder(
     /**
      * Binds the given [page] with this view holder, subscribing to its state.
      */
+    /** Re-draws this page's translation after it has been received. */
+    fun applyTranslation() {
+        page?.let { current -> frame.setTranslation(viewer.translations[current.index]) }
+    }
+
     fun bind(page: ReaderPage) {
         this.page = page
         frame.pageColorFilter = viewer.pageColorFilter
+        frame.setTranslation(viewer.translations[page.index])
         loadJob?.cancel()
         loadJob = scope.launch { loadPageAndProcessStatus() }
         refreshLayoutParams()
@@ -224,6 +230,8 @@ class WebtoonPageHolder(
     private fun onImageDecoded() {
         progressContainer.isVisible = false
         removeErrorLayout()
+        // The page view exists now, so the translation layer can be put above it.
+        page?.let { current -> frame.setTranslation(viewer.translations[current.index]) }
     }
 
     /**

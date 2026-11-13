@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.WebtoonLayoutManager
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
+import eu.kanade.tachiyomi.data.translation.TranslatedPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.GeneralSettings
@@ -183,6 +184,17 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     fun onPageViewCreated(view: ReaderPageImageView) {
         pageViews += view
     }
+
+    override var translations: Map<Int, TranslatedPage> = emptyMap()
+        set(value) {
+            field = value
+            // Relaying out the adapter would move the strip under the reader's finger, so only the page views that
+            // are on screen are updated; pages bound later pick the translation up in bind().
+            for (index in 0 until recycler.childCount) {
+                val holder = recycler.getChildViewHolder(recycler.getChildAt(index))
+                if (holder is WebtoonPageHolder) holder.applyTranslation()
+            }
+        }
 
     @Composable
     override fun Content(modifier: Modifier) {

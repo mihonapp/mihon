@@ -32,6 +32,10 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.data.translation.PageTranslator
+import eu.kanade.tachiyomi.data.translation.TranslatedPage
+import eu.kanade.tachiyomi.data.translation.TranslationError
+import eu.kanade.tachiyomi.data.translation.TranslationException
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -52,6 +56,7 @@ import eu.kanade.tachiyomi.util.lang.byteSize
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.system.activeNetworkState
+import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +65,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -69,6 +75,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -76,6 +83,7 @@ import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import mihon.data.cache.ChapterCache
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.toggle
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
@@ -91,6 +99,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.i18n.MR
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.isLocal
 import kotlin.time.Clock
@@ -127,6 +136,7 @@ class ReaderViewModel(
     private val coverCache: CoverCache,
     private val chapterCache: ChapterCache,
     private val downloadCache: DownloadCache,
+    private val pageTranslator: PageTranslator,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -153,6 +163,22 @@ class ReaderViewModel(
 
     private val eventChannel = Channel<Event>()
     val eventFlow = eventChannel.receiveAsFlow()
+
+    private val mutableTranslationState = MutableStateFlow<TranslationState>(TranslationState.Idle)
+    val translationState = mutableTranslationState.asStateFlow()
+
+    private var translationJob: Job? = null
+
+    /** Translations drawn on the pages themselves, keyed by page index. */
+    private val mutableTranslations = MutableStateFlow<Map<Int, TranslatedPage>>(emptyMap())
+    val translations: StateFlow<Map<Int, TranslatedPage>> = mutableTranslations.asStateFlow()
+
+    private val mutableTranslationMode = MutableStateFlow(false)
+    val translationMode: StateFlow<Boolean> = mutableTranslationMode.asStateFlow()
+
+    private val translationJobs = mutableMapOf<Int, Job>()
+    private var prefetchJob: Job? = null
+    private var prefetchOrigin = -1
 
     /**
      * The manga loaded in the reader. It can be null when instantiated for a short time.
@@ -544,6 +570,8 @@ class ReaderViewModel(
 
         if (selectedChapter != getCurrentChapter()) {
             logcat { "Setting ${selectedChapter.chapter.url} as active" }
+            // Translations belong to the chapter they were made for.
+            mutableTranslations.value = emptyMap()
             loadNewChapter(selectedChapter)
         }
 
@@ -553,6 +581,10 @@ class ReaderViewModel(
         }
 
         eventChannel.trySend(Event.PageChanged)
+
+        if (mutableTranslationMode.value) {
+            translatePageInline(page)
+        }
     }
 
     private fun downloadNextChapters() {
@@ -920,6 +952,190 @@ class ReaderViewModel(
         mutableState.update { it.copy(dialog = Dialog.OrientationModeSelect) }
     }
 
+    /**
+     * Reads the current page with on-device text recognition and translates what it finds, showing the result over
+     * the page until it's dismissed.
+     */
+    fun translateCurrentPage() {
+        val current = state.value
+        val page = current.currentChapter?.pages?.getOrNull(current.currentPage - 1) ?: return
+        translatePage(page)
+    }
+
+    fun translatePage(page: ReaderPage) {
+        if (page.status != Page.State.Ready) {
+            mutableTranslationState.value = TranslationState.Error(TranslationError.PAGE_NOT_AVAILABLE)
+            return
+        }
+
+        translationJob?.cancel()
+        translationJob = viewModelScope.launch {
+            mutableTranslationState.value = TranslationState.Loading
+            try {
+                mutableTranslationState.value = TranslationState.Success(
+                    pageTranslator.translate(page.index, page.stream),
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: TranslationException) {
+                mutableTranslationState.value = TranslationState.Error(e.error, e.detail)
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
+                mutableTranslationState.value = TranslationState.Error(TranslationError.PROVIDER_ERROR, e.message)
+            }
+        }
+    }
+
+    /**
+     * Turns translation mode on or off. While it's on, every page you scroll to is translated and drawn on top of
+     * the page itself.
+     */
+    fun toggleTranslationMode() {
+        // The WebGPU renderer draws pages on its own surface, so the text layer has nothing to attach to.
+        if (!mutableTranslationMode.value && basePreferences.highQualityRenderer.get()) {
+            context.toast(MR.strings.translation_renderer_unsupported)
+            return
+        }
+
+        val enable = !mutableTranslationMode.value
+        mutableTranslationMode.value = enable
+
+        if (enable) {
+            context.toast(MR.strings.translation_mode_on)
+            translateCurrentPageInline()
+        } else {
+            translationJobs.values.forEach { it.cancel() }
+            translationJobs.clear()
+            prefetchJob?.cancel()
+            prefetchJob = null
+            mutableTranslations.value = emptyMap()
+            context.toast(MR.strings.translation_mode_off)
+        }
+    }
+
+    fun translateCurrentPageInline() {
+        val current = state.value
+        val page = current.currentChapter?.pages?.getOrNull(current.currentPage - 1) ?: return
+        translatePageInline(page)
+    }
+
+    fun translatePageInline(page: ReaderPage) {
+        mutableTranslationMode.value = true
+        if (mutableTranslations.value.containsKey(page.index)) return
+        if (translationJobs[page.index]?.isActive == true) return
+
+        translationJobs[page.index] = viewModelScope.launch {
+            try {
+                // Scrolling ahead of the download means the page isn't decoded yet; wait for it instead of
+                // dropping the page.
+                if (page.status != Page.State.Ready) {
+                    withTimeoutOrNull(PAGE_READY_TIMEOUT_MILLIS) {
+                        page.statusFlow.first { it == Page.State.Ready }
+                    } ?: return@launch
+                }
+
+                val translated = pageTranslator.translate(page.index, page.stream)
+                storeTranslation(page.index, translated)
+                prefetchTranslations(page.index)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: TranslationException) {
+                logcat(LogPriority.ERROR, e)
+                toastTranslationError(e)
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
+                context.toast(context.stringResource(MR.strings.translation_failed, e.message.orEmpty().replace("%", "%%")))
+            } finally {
+                translationJobs.remove(page.index)
+            }
+        }
+    }
+
+    /**
+     * Keeps the pages around the reader and drops the ones left behind: a translated page holds its own bitmap.
+     */
+    private fun storeTranslation(index: Int, page: TranslatedPage) {
+        mutableTranslations.update { current ->
+            val updated = LinkedHashMap(current)
+            updated[index] = page
+            while (updated.size > MAX_TRANSLATED_PAGES) {
+                val farthest = updated.keys.maxByOrNull { kotlin.math.abs(it - index) } ?: break
+                if (farthest == index) break
+                updated.remove(farthest)
+            }
+            updated
+        }
+    }
+
+    /**
+     * Translates the pages that follow the one being read, so scrolling doesn't wait for the service every time.
+     * It stops at the first page that isn't downloaded, which is the edge of the chapter when reading offline.
+     */
+    private fun prefetchTranslations(fromIndex: Int) {
+        if (!mutableTranslationMode.value) return
+
+        // The whole chapter is translated ahead; a jump forward restarts the run from where the reader landed.
+        if (prefetchJob?.isActive == true) {
+            if (fromIndex <= prefetchOrigin + PREFETCH_RESTART_DISTANCE) return
+            prefetchJob?.cancel()
+        }
+        prefetchOrigin = fromIndex
+
+        val pages = state.value.currentChapter?.pages ?: return
+        val start = pages.indexOfFirst { it.index == fromIndex }
+        if (start < 0) return
+
+        prefetchJob = viewModelScope.launch {
+            var done = 0
+            for (i in start + 1 until pages.size) {
+                if (done >= PREFETCH_PAGES) break
+                val next = pages[i]
+                if (next.status != Page.State.Ready) {
+                    // Streaming chapters hand pages over as they download; wait for the next one instead of
+                    // giving up, but not forever, so a dead connection doesn't hold the run.
+                    val ready = withTimeoutOrNull(PREFETCH_READY_TIMEOUT_MILLIS) {
+                        next.statusFlow.first { it == Page.State.Ready }
+                    }
+                    if (ready == null) break
+                }
+                if (mutableTranslations.value.containsKey(next.index)) continue
+                if (translationJobs.containsKey(next.index)) continue
+
+                try {
+                    val translated = pageTranslator.translate(next.index, next.stream)
+                    storeTranslation(next.index, translated)
+                    done++
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logcat(LogPriority.ERROR, e)
+                    break
+                }
+            }
+        }
+    }
+
+    private fun toastTranslationError(error: TranslationException) {
+        val message = when (error.error) {
+            TranslationError.PAGE_NOT_AVAILABLE -> MR.strings.translation_error_page_not_available
+            TranslationError.NO_TEXT_FOUND -> MR.strings.translation_error_no_text
+            TranslationError.NO_TRANSLATION -> MR.strings.translation_error_no_translation
+            TranslationError.MISSING_API_KEY -> MR.strings.translation_error_missing_api_key
+            TranslationError.MISSING_TARGET_LANGUAGE -> MR.strings.translation_error_missing_target
+            TranslationError.UNSUPPORTED_SOURCE_SCRIPT -> MR.strings.translation_error_unsupported_source
+            TranslationError.PROVIDER_ERROR -> MR.strings.translation_error_provider
+            TranslationError.SOURCE_LANGUAGE_REQUIRED -> MR.strings.translation_error_source_required
+        }
+        val detail = error.detail?.replace("%", "%%").orEmpty()
+        context.toast(context.stringResource(message, detail))
+    }
+
+    fun dismissTranslation() {
+        translationJob?.cancel()
+        translationJob = null
+        mutableTranslationState.value = TranslationState.Idle
+    }
+
     fun openPageDialog(page: ReaderPage) {
         mutableState.update { it.copy(dialog = Dialog.PageActions(page)) }
     }
@@ -1104,6 +1320,13 @@ class ReaderViewModel(
             get() = currentChapter?.pages?.size ?: -1
     }
 
+    sealed interface TranslationState {
+        data object Idle : TranslationState
+        data object Loading : TranslationState
+        data class Success(val page: TranslatedPage) : TranslationState
+        data class Error(val error: TranslationError, val detail: String? = null) : TranslationState
+    }
+
     sealed interface Dialog {
         data object Settings : Dialog
         data object ReadingModeSelect : Dialog
@@ -1120,6 +1343,15 @@ class ReaderViewModel(
         data class SavedImage(val result: SaveImageResult) : Event
         data class ShareImage(val uri: Uri, val page: ReaderPage) : Event
         data class CopyImage(val uri: Uri) : Event
+    }
+
+    private companion object {
+        // Each translated page holds a bitmap, and a webtoon page can be tens of megabytes.
+        const val MAX_TRANSLATED_PAGES = 80
+        const val PREFETCH_PAGES = 200
+        const val PREFETCH_RESTART_DISTANCE = 4
+        const val PREFETCH_READY_TIMEOUT_MILLIS = 10_000L
+        const val PAGE_READY_TIMEOUT_MILLIS = 30_000L
     }
 }
 

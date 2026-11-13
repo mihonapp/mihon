@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
+import eu.kanade.tachiyomi.data.translation.TranslatedPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.GeneralSettings
@@ -170,6 +171,14 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     /** The page images' colours, for holders made later - see [LocalPageColorFilter]. */
     var pageColorFilter: ColorFilter? = null
         private set
+
+    override var translations: Map<Int, TranslatedPage> = emptyMap()
+        set(value) {
+            field = value
+            for (index in 0 until pager.childCount) {
+                (pager.getChildAt(index) as? PagerPageHolder)?.applyTranslation()
+            }
+        }
 
     @Composable
     override fun Content(modifier: Modifier) {

@@ -1,0 +1,119 @@
+name: Build debug APK
+
+# Manual runs from the Actions tab, plus every push to this work branch.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'arena/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Assemble debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up JDK
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          java-version-file: .github/.java-version
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      # Debug builds use the "app.mihon.dev" application id and the "Mihon Dev"
+      # label, so they install next to the official app without sharing data.
+      # -Pdist=local keeps telemetry and the in-app updater off.
+      - name: Build debug APK
+        id: build
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug -Pdist=local --stacktrace 2>&1 | tee build.log
+
+      # Compiler errors are echoed as workflow annotations, which are readable
+      # from the API even when the raw job log is not.
+      - name: Annotate build errors
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import re
+
+          try:
+              lines = open("build.log", encoding="utf-8", errors="replace").read().splitlines()
+          except FileNotFoundError:
+              lines = []
+
+          pat = re.compile(r"^(e: |error:|FAILURE:|Caused by:|\* What went wrong)")
+          picked = [l for l in lines if pat.match(l.strip())][:20] or lines[-20:]
+          for line in picked:
+              msg = line.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+              print(f"::error::{msg[:900]}")
+          PY
+
+      # Also drop the tail of the log on the commit, so the failure can be read
+      # without access to the log download endpoint.
+      - name: Attach log tail to commit
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo 'Compiler errors:'
+            echo '```'
+            grep -E '^(e: |error: |FAILURE:|\* What went wrong)' build.log | head -n 80 || echo '(none matched)'
+            echo '```'
+            echo
+            echo 'Gradle output (last 80 lines):'
+            echo '```'
+            tail -n 80 build.log 2>/dev/null || echo 'no build.log'
+            echo '```'
+          } > /tmp/body.txt
+          gh api --method POST \
+            "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" \
+            -F "body=@/tmp/body.txt" || true
+
+      - name: List produced APKs
+        run: |
+          ls -lh app/build/outputs/apk/debug/*.apk
+
+      # Confirms the APK is a separate app ("app.mihon.dev" / "Mihon Dev")
+      # before anyone installs it.
+      - name: Verify APK identity
+        run: |
+          AAPT=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 | tail -1)
+          APK=app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
+          "$AAPT" dump badging "$APK" | grep -E "^(package|application-label|sdkVersion|targetSdkVersion)"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: apk-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      # Single small download for phones (every Android phone made since ~2016).
+      - name: Upload arm64 APK
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: apk-arm64-only
+          path: app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      # Kept after the APK steps so a formatting nit never costs you the build.
+      - name: Check code format
+        continue-on-error: true
+        run: ./gradlew spotlessCheck
