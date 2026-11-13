@@ -113,6 +113,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.AppGraph
+import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.i18n.stringResource
@@ -464,7 +465,12 @@ class ReaderActivity : BaseActivity() {
     private fun ReaderViewer() {
         val viewer by viewerFlow.collectAsState()
         val translations by viewModel.translations.collectAsState()
-        LaunchedEffect(viewer, translations) {
+        // Changing how translations look has to repaint the pages already on screen.
+        val translationPreferences = remember { applicationContext.appGraph.translationPreferences }
+        val translationColor by translationPreferences.textColor.collectAsState()
+        val translationBold by translationPreferences.boldText.collectAsState()
+        val translationCase by translationPreferences.letterCase.collectAsState()
+        LaunchedEffect(viewer, translations, translationColor, translationBold, translationCase) {
             viewer?.translations = translations
         }
         val general by settingsViewModel.general.collectAsState()

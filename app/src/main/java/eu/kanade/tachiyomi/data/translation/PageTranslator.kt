@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import tachiyomi.domain.translation.model.OcrScript
 import tachiyomi.domain.translation.model.TranslationLanguage
+import tachiyomi.domain.translation.service.TranslationPreferences
 import java.io.File
 import java.io.InputStream
 import kotlin.math.ceil
@@ -39,6 +40,7 @@ class PageTranslator(
     private val context: Context,
     private val translator: Translator,
     private val ocrEngine: OcrEngine,
+    private val preferences: TranslationPreferences,
 ) {
 
     suspend fun translate(
@@ -150,7 +152,12 @@ class PageTranslator(
             detectScript(decoder, nativeWidth, nativeHeight)
         }
 
-        val sampleSize = max(1, ceil(nativeWidth / MAX_OCR_WIDTH.toFloat()).toInt())
+        val wantedWidth = when (preferences.ocrQuality.get()) {
+            1 -> TranslationPreferences.OCR_FAST_WIDTH
+            3 -> TranslationPreferences.OCR_ACCURATE_WIDTH
+            else -> TranslationPreferences.OCR_BALANCED_WIDTH
+        }
+        val sampleSize = max(1, ceil(nativeWidth / wantedWidth.toFloat()).toInt())
         val width = nativeWidth / sampleSize
         val height = nativeHeight / sampleSize
 
@@ -264,7 +271,6 @@ class PageTranslator(
         private const val MIN_LETTERS = 2
 
         private const val DISPLAY_PIXEL_BUDGET = 8_000_000L
-        private const val MAX_OCR_WIDTH = 2_000
         private const val DETECTION_SLICE_HEIGHT = 900
         private const val DETECTION_WIDTH = 720
     }

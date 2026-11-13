@@ -7,6 +7,8 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
 import tachiyomi.domain.translation.model.TranslationLanguage
+import tachiyomi.domain.translation.model.TranslationLetterCase
+import tachiyomi.domain.translation.model.TranslationTextColor
 import tachiyomi.domain.translation.model.TranslationProvider
 import java.util.Locale
 
@@ -48,7 +50,31 @@ class TranslationPreferences(
         "",
     )
 
+    val textColor: Preference<TranslationTextColor> = preferenceStore.getEnum(
+        "pref_translation_text_color",
+        TranslationTextColor.AUTO,
+    )
+
+    val boldText: Preference<Boolean> = preferenceStore.getBoolean(
+        "pref_translation_bold",
+        true,
+    )
+
+    val letterCase: Preference<TranslationLetterCase> = preferenceStore.getEnum(
+        "pref_translation_letter_case",
+        TranslationLetterCase.ORIGINAL,
+    )
+
+    /** 1 = fast, 2 = balanced, 3 = accurate: how much of the page the recognizer is allowed to read. */
+    val ocrQuality: Preference<Int> = preferenceStore.getInt(
+        "pref_translation_ocr_quality",
+        2,
+    )
+
     companion object {
         const val DEFAULT_LIBRE_TRANSLATE_URL = "https://libretranslate.com"
+        const val OCR_FAST_WIDTH = 1200
+        const val OCR_BALANCED_WIDTH = 2000
+        const val OCR_ACCURATE_WIDTH = 2800
     }
 }

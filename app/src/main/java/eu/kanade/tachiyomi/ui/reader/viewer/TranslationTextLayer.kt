@@ -15,6 +15,8 @@ import android.text.TextPaint
 import android.view.View
 import eu.kanade.tachiyomi.data.translation.TranslatedPage
 import eu.kanade.tachiyomi.data.translation.TranslatedTextBlock
+import mihon.app.di.appGraph
+import tachiyomi.domain.translation.model.TranslationTextColor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -40,9 +42,14 @@ class TranslationTextLayer(context: Context) : View(context) {
 
     private val density = resources.displayMetrics.density
 
+    private val preferences = context.appGraph.translationPreferences
+
+    private val boldTypeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+    private val normalTypeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
-        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        typeface = boldTypeface
         textAlign = Paint.Align.CENTER
     }
 
@@ -110,8 +117,11 @@ class TranslationTextLayer(context: Context) : View(context) {
         blockRect: RectF,
         margin: Float,
     ) {
-        val text = block.translated
+        val text = preferences.letterCase.get().apply(block.translated)
         if (text.isBlank()) return
+
+        // Set before measuring: the layout has to be built with the typeface it will be drawn with.
+        textPaint.typeface = if (preferences.boldText.get()) boldTypeface else normalTypeface
 
         val originalWidth = blockRect.width()
         val originalHeight = blockRect.height()
@@ -140,7 +150,11 @@ class TranslationTextLayer(context: Context) : View(context) {
         val left = centerX - coverWidth / 2f
         val top = centerY - coverHeight / 2f
 
-        val light = lightCache.getOrPut(block) { isLightAround(bitmap, block.box) }
+        val chosenColor = TranslationTextColor.of(preferences.textColor.get())
+        // A fixed colour still needs a readable plate, so the plate follows the chosen lettering brightness.
+        val light = chosenColor?.let { isLightColor(it) } ?: lightCache.getOrPut(block) {
+            isLightAround(bitmap, block.box)
+        }
         erasePaint.color = if (light) Color.WHITE else Color.rgb(14, 14, 14)
         val corner = 2f * density
         canvas.save()
@@ -155,11 +169,15 @@ class TranslationTextLayer(context: Context) : View(context) {
             erasePaint,
         )
 
-        textPaint.color = if (light) Color.BLACK else Color.WHITE
+        textPaint.color = chosenColor ?: if (light) Color.BLACK else Color.WHITE
         canvas.translate(centerX, top + (coverHeight - textHeight) / 2f)
         layout.draw(canvas)
         canvas.restore()
     }
+
+    /** True when the given colour is bright enough for a dark plate. */
+    private fun isLightColor(color: Int): Boolean =
+        Color.red(color) * 0.299 + Color.green(color) * 0.587 + Color.blue(color) * 0.114 >= LUMA_THRESHOLD
 
     /**
      * Average brightness of the page under the original text, so the box blends into bubbles and dark panels alike.

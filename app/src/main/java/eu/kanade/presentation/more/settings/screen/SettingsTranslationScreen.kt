@@ -9,7 +9,9 @@ import eu.kanade.presentation.components.displayName
 import eu.kanade.presentation.more.settings.Preference
 import mihon.app.di.appGraph
 import tachiyomi.domain.translation.model.TranslationLanguage
+import tachiyomi.domain.translation.model.TranslationLetterCase
 import tachiyomi.domain.translation.model.TranslationProvider
+import tachiyomi.domain.translation.model.TranslationTextColor
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -47,6 +49,55 @@ object SettingsTranslationScreen : SearchableSettings {
                         preference = preferences.targetLanguage,
                         entries = languageNames.minus(TranslationLanguage.AUTO),
                         title = stringResource(MR.strings.pref_translation_target_language),
+                    ),
+                ),
+            ),
+            Preference.PreferenceGroup(
+                title = stringResource(MR.strings.pref_category_translation_appearance),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.textColor,
+                        entries = mapOf(
+                            TranslationTextColor.AUTO to stringResource(MR.strings.translation_color_auto),
+                            TranslationTextColor.WHITE to stringResource(MR.strings.translation_color_white),
+                            TranslationTextColor.BLACK to stringResource(MR.strings.translation_color_black),
+                            TranslationTextColor.RED to stringResource(MR.strings.translation_color_red),
+                            TranslationTextColor.YELLOW to stringResource(MR.strings.translation_color_yellow),
+                        ),
+                        title = stringResource(MR.strings.pref_translation_text_color),
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        preference = preferences.boldText,
+                        title = stringResource(MR.strings.pref_translation_bold),
+                    ),
+                    Preference.PreferenceItem.ListPreference(
+                        preference = preferences.letterCase,
+                        entries = mapOf(
+                            TranslationLetterCase.ORIGINAL to stringResource(MR.strings.translation_case_original),
+                            TranslationLetterCase.UPPER to stringResource(MR.strings.translation_case_upper),
+                            TranslationLetterCase.LOWER to stringResource(MR.strings.translation_case_lower),
+                        ),
+                        title = stringResource(MR.strings.pref_translation_letter_case),
+                    ),
+                ),
+            ),
+            Preference.PreferenceGroup(
+                title = stringResource(MR.strings.pref_category_translation_ocr),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.SliderPreference(
+                        preference = preferences.ocrQuality,
+                        valueRange = 1..3,
+                        valueText = { quality ->
+                            stringResource(
+                                when (quality) {
+                                    1 -> MR.strings.translation_ocr_fast
+                                    3 -> MR.strings.translation_ocr_accurate
+                                    else -> MR.strings.translation_ocr_balanced
+                                },
+                            )
+                        },
+                        title = stringResource(MR.strings.pref_translation_ocr_quality),
+                        subtitle = stringResource(MR.strings.pref_translation_ocr_quality_summary),
                     ),
                 ),
             ),
