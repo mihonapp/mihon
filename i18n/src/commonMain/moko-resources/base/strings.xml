@@ -1142,6 +1142,15 @@
     <string name="translation_ocr_fast">Fast</string>
     <string name="translation_ocr_balanced">Balanced</string>
     <string name="translation_ocr_accurate">Accurate</string>
+    <string name="translation_provider_openai">ChatGPT (OpenAI key)</string>
+    <string name="translation_provider_gemini">Gemini (Google key)</string>
+    <string name="translation_provider_claude">Claude (Anthropic key)</string>
+    <string name="translation_ai_keys">AI service</string>
+    <string name="pref_translation_ai_key">API key</string>
+    <string name="pref_translation_ai_key_summary">Kept on the device; requests go straight to the provider</string>
+    <string name="pref_translation_ai_model">Model</string>
+    <string name="pref_translation_ai_model_summary">Leave as is unless you know a newer model name</string>
+    <string name="translation_ai_hint">Chat models translate the whole page in one request, which keeps names and pronouns consistent. Quality is worth the key for Japanese and Korean.</string>
     <string name="translation_error_provider">Translation failed: %s</string>
     <string name="translation_error_missing_api_key">Add the API key for this service in Settings → Translation</string>
     <string name="translation_error_unsupported_source">Text recognition is not available for this language. Pick another source language in Settings → Translation</string>

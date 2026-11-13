@@ -954,6 +954,15 @@
     <string name="translation_ocr_fast">سريع</string>
     <string name="translation_ocr_balanced">متوازن</string>
     <string name="translation_ocr_accurate">دقيق</string>
+    <string name="translation_provider_openai">ChatGPT (مفتاح OpenAI)</string>
+    <string name="translation_provider_gemini">Gemini (مفتاح Google)</string>
+    <string name="translation_provider_claude">Claude (مفتاح Anthropic)</string>
+    <string name="translation_ai_keys">خدمة الذكاء الاصطناعي</string>
+    <string name="pref_translation_ai_key">مفتاح API</string>
+    <string name="pref_translation_ai_key_summary">يُحفظ على جهازك فقط، والطلبات تذهب مباشرة إلى المزوّد</string>
+    <string name="pref_translation_ai_model">النموذج</string>
+    <string name="pref_translation_ai_model_summary">اتركه كما هو إلا إذا كنت تعرف اسم نموذج أحدث</string>
+    <string name="translation_ai_hint">نماذج المحادثة تترجم الصفحة كاملة في طلب واحد، فتحافظ على الأسماء والضمائر. جودتها تستحق المفتاح في اليابانية والكورية.</string>
     <string name="translation_error_provider">فشلت الترجمة: %s</string>
     <string name="translation_error_missing_api_key">أضف مفتاح API لهذه الخدمة من الإعدادات ← الترجمة</string>
     <string name="translation_error_unsupported_source">التعرّف على النص غير متاح لهذه اللغة. اختر لغة مصدر أخرى من الإعدادات ← الترجمة</string>

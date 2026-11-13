@@ -18,6 +18,7 @@ class Translator(
     private val google = GoogleTranslationService(networkHelper)
     private val deepL = DeepLTranslationService(networkHelper, preferences)
     private val libreTranslate = LibreTranslateService(networkHelper, preferences)
+    private val ai = AiTranslationService(networkHelper, preferences)
 
     val sourceLanguage: TranslationLanguage
         get() = preferences.sourceLanguage.get()
@@ -43,6 +44,10 @@ class Translator(
             TranslationProvider.GOOGLE -> google
             TranslationProvider.DEEPL -> deepL
             TranslationProvider.LIBRE_TRANSLATE -> libreTranslate
+            TranslationProvider.OPENAI,
+            TranslationProvider.GEMINI,
+            TranslationProvider.CLAUDE,
+            -> ai
         }
         return service.translate(texts, source, target)
     }

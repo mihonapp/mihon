@@ -50,6 +50,36 @@ class TranslationPreferences(
         "",
     )
 
+    val openAiApiKey: Preference<String> = preferenceStore.getString(
+        Preference.privateKey("pref_translation_openai_key"),
+        "",
+    )
+
+    val openAiModel: Preference<String> = preferenceStore.getString(
+        "pref_translation_openai_model",
+        "gpt-4o-mini",
+    )
+
+    val geminiApiKey: Preference<String> = preferenceStore.getString(
+        Preference.privateKey("pref_translation_gemini_key"),
+        "",
+    )
+
+    val geminiModel: Preference<String> = preferenceStore.getString(
+        "pref_translation_gemini_model",
+        "gemini-2.0-flash",
+    )
+
+    val claudeApiKey: Preference<String> = preferenceStore.getString(
+        Preference.privateKey("pref_translation_claude_key"),
+        "",
+    )
+
+    val claudeModel: Preference<String> = preferenceStore.getString(
+        "pref_translation_claude_model",
+        "claude-3-5-haiku-latest",
+    )
+
     val textColor: Preference<TranslationTextColor> = preferenceStore.getEnum(
         "pref_translation_text_color",
         TranslationTextColor.AUTO,
