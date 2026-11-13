@@ -1,6 +1,9 @@
 package eu.kanade.tachiyomi.data.translation
 
 import eu.kanade.tachiyomi.network.await
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import tachiyomi.domain.translation.model.TranslationLanguage
@@ -36,9 +39,29 @@ internal suspend fun OkHttpClient.executeForBody(request: Request): String {
     val response = newCall(request).await()
     return response.use {
         if (!it.isSuccessful) {
-            val detail = runCatching { it.body.string() }.getOrDefault("").take(200)
-            throw TranslationException(TranslationError.PROVIDER_ERROR, detail.ifBlank { "HTTP ${it.code}" })
+            val body = runCatching { it.body.string() }.getOrDefault("")
+            val detail = body.readableError().ifBlank { "HTTP ${it.code}" }
+            throw TranslationException(TranslationError.PROVIDER_ERROR, detail)
         }
         it.body.string()
     }
+}
+
+/**
+ * Providers answer failures with a wall of JSON. The message inside it is what the reader needs to see, not the
+ * walls of braces the toast used to show.
+ */
+private fun String.readableError(): String {
+    val element = runCatching { Json.parseToJsonElement(this) }.getOrNull()
+    if (element is JsonObject) {
+        val error = element["error"]
+        val message = when (error) {
+            is JsonObject -> (error["message"] as? JsonPrimitive)?.content
+            is JsonPrimitive -> error.content
+            else -> null
+        } ?: (element["message"] as? JsonPrimitive)?.content
+            ?: (element["detail"] as? JsonPrimitive)?.content
+        if (!message.isNullOrBlank()) return message
+    }
+    return trim().take(160)
 }

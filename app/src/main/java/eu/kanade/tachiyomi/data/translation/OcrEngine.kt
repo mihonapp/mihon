@@ -98,7 +98,7 @@ class OcrEngine {
                     if (image.release) image.bitmap.recycle()
                 }
             }
-            return toBlocks(mergeLines(dedupe(lines)))
+            return toBlocks(absorbContained(mergeLines(dedupe(lines))))
         } finally {
             recognizer.close()
         }
@@ -200,6 +200,39 @@ class OcrEngine {
             horizontalGap <= 1.1f * minWidth &&
             verticalOverlap(first.box, second.box) >= 0.5f
     }
+
+    /**
+     * A line the recognizer boxed on its own (the narrow first line of a rounded bubble, an aside next to it) would
+     * otherwise become a block of its own and be drawn in a much smaller size than the rest of the bubble. Any group
+     * that sits mostly inside another one is folded into it.
+     */
+    private fun absorbContained(groups: List<List<OcrLine>>): List<List<OcrLine>> {
+        val pending = groups.map { it.toMutableList() }.toMutableList()
+        var changed = true
+        while (changed) {
+            changed = false
+            merge@ for (i in pending.indices) {
+                for (j in pending.indices) {
+                    if (i == j) continue
+                    val outer = boxOf(pending[i])
+                    val inner = boxOf(pending[j])
+                    val innerArea = inner.width() * inner.height()
+                    if (innerArea <= 0 || outer.width() * outer.height() <= innerArea) continue
+
+                    if (intersection(outer, inner) >= 0.75f * innerArea) {
+                        pending[i].addAll(pending[j])
+                        pending.removeAt(j)
+                        changed = true
+                        break@merge
+                    }
+                }
+            }
+        }
+        return pending
+    }
+
+    private fun boxOf(group: List<OcrLine>): Rect =
+        group.drop(1).fold(Rect(group.first().box)) { acc, line -> acc.apply { union(line.box) } }
 
     private fun toBlocks(groups: List<List<OcrLine>>): List<OcrBlock> {
         return groups.mapNotNull { group ->
