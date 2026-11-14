@@ -74,9 +74,19 @@ data class TwoPaneSettingsScene<T : Any>(
         fun listPane() = metadata {
             put(ListKey, true)
         }
+
+        /**
+         * Helper function to add metadata to a [NavEntry] that always opens full screen, even when
+         * pushed while settings are open
+         */
+        fun fullScreen() = metadata {
+            put(FullScreenKey, true)
+        }
     }
 
     object ListKey : NavMetadataKey<Boolean>
+
+    object FullScreenKey : NavMetadataKey<Boolean>
 }
 
 @Composable
@@ -103,6 +113,8 @@ class TwoPaneSettingsSceneStrategy<T : Any>(val isTabletUi: Boolean) : SceneStra
         val detailEntry =
             entries.lastOrNull()?.takeUnless { it.metadata.contains(TwoPaneSettingsScene.ListKey) } ?: return null
         val listEntry = entries.findLast { it.metadata.contains(TwoPaneSettingsScene.ListKey) } ?: return null
+        val details = entries.subList(entries.lastIndexOf(listEntry) + 1, entries.size)
+        if (details.any { it.metadata.contains(TwoPaneSettingsScene.FullScreenKey) }) return null
 
         // We use the list's contentKey to uniquely identify the scene.
         // This allows the detail panes to be animated in and out by the scene, rather than
@@ -117,7 +129,7 @@ class TwoPaneSettingsSceneStrategy<T : Any>(val isTabletUi: Boolean) : SceneStra
             previousEntries = entries.dropLast(popped),
             firstEntry = listEntry,
             secondEntry = detailEntry,
-            detailDepth = entries.lastIndex - entries.lastIndexOf(listEntry),
+            detailDepth = details.size,
         )
     }
 }

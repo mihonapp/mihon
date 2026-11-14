@@ -139,7 +139,7 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<DownloadQueueRoute> {
         DownloadQueueScreen()
     }
-    entry<NewUpdateRoute> { route ->
+    entry<NewUpdateRoute>(metadata = TwoPaneSettingsScene.fullScreen()) { route ->
         NewUpdateScreen(
             versionName = route.versionName,
             changelogInfo = route.changelogInfo,
@@ -156,7 +156,7 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<StatsRoute> {
         StatsScreen()
     }
-    entry<SupportUsRoute> {
+    entry<SupportUsRoute>(metadata = TwoPaneSettingsScene.fullScreen()) {
         SupportUsScreen()
     }
 
