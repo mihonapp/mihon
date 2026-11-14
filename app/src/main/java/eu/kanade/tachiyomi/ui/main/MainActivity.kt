@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.KeyEvent
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -160,6 +161,10 @@ class MainActivity : BaseActivity() {
     var ready = false
 
     private var navigator: Navigator? = null
+
+    internal var libraryKeyHandler: ((KeyEvent) -> Boolean)? = null
+
+    internal var chapterKeyHandler: ((KeyEvent) -> Boolean)? = null
 
     init {
         registerSecureActivity(this)
@@ -326,6 +331,12 @@ class MainActivity : BaseActivity() {
         if (isLaunch && libraryPreferences.autoClearChapterCache.get()) {
             lifecycleScope.launch { chapterCache.clear() }
         }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (navigator?.lastItem == HomeScreen && libraryKeyHandler?.invoke(event) == true) return true
+        if (navigator?.lastItem is MangaScreen && chapterKeyHandler?.invoke(event) == true) return true
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onProvideAssistContent(outContent: AssistContent) {

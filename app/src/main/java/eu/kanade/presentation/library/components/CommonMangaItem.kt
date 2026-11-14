@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -48,6 +50,9 @@ import tachiyomi.domain.manga.model.MangaCover as MangaCoverModel
 object CommonMangaItemDefaults {
     val GridHorizontalSpacer = 4.dp
     val GridVerticalSpacer = 4.dp
+    val GridItemPadding = 4.dp
+    val ComfortableGridTitlePadding = 4.dp
+    val GridTitleLineHeight = 18.sp
 
     @Suppress("ConstPropertyName")
     const val BrowseFavoriteCoverAlpha = 0.34f
@@ -79,8 +84,10 @@ fun MangaCompactGridItem(
     coverAlpha: Float = 1f,
     coverBadgeStart: @Composable (RowScope.() -> Unit)? = null,
     coverBadgeEnd: @Composable (RowScope.() -> Unit)? = null,
+    maxWidth: Dp = Dp.Infinity,
 ) {
     GridItemSelectable(
+        modifier = if (maxWidth == Dp.Infinity) Modifier else Modifier.wrapContentWidth().widthIn(max = maxWidth),
         isSelected = isSelected,
         onClick = onClick,
         onLongClick = onLongClick,
@@ -185,8 +192,10 @@ fun MangaComfortableGridItem(
     coverBadgeStart: (@Composable RowScope.() -> Unit)? = null,
     coverBadgeEnd: (@Composable RowScope.() -> Unit)? = null,
     onClickContinueReading: (() -> Unit)? = null,
+    maxWidth: Dp = Dp.Infinity,
 ) {
     GridItemSelectable(
+        modifier = if (maxWidth == Dp.Infinity) Modifier else Modifier.wrapContentWidth().widthIn(max = maxWidth),
         isSelected = isSelected,
         onClick = onClick,
         onLongClick = onLongClick,
@@ -217,7 +226,7 @@ fun MangaComfortableGridItem(
                 },
             )
             GridItemTitle(
-                modifier = Modifier.padding(4.dp),
+                modifier = Modifier.padding(CommonMangaItemDefaults.ComfortableGridTitlePadding),
                 title = title,
                 style = MaterialTheme.typography.titleSmall,
                 minLines = 2,
@@ -277,7 +286,7 @@ private fun GridItemTitle(
         modifier = modifier,
         text = title,
         fontSize = 12.sp,
-        lineHeight = 18.sp,
+        lineHeight = CommonMangaItemDefaults.GridTitleLineHeight,
         minLines = minLines,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
@@ -304,7 +313,7 @@ private fun GridItemSelectable(
                 onLongClick = onLongClick,
             )
             .selectedOutline(isSelected = isSelected, color = MaterialTheme.colorScheme.secondary)
-            .padding(4.dp),
+            .padding(CommonMangaItemDefaults.GridItemPadding),
     ) {
         val contentColor = if (isSelected) {
             MaterialTheme.colorScheme.onSecondary
