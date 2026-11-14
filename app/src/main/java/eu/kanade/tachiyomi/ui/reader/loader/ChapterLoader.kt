@@ -51,17 +51,16 @@ class ChapterLoader(
                 val loader = getPageLoader(chapter)
                 chapter.pageLoader = loader
 
+                // Before getPages, which starts loading from it
+                if (!chapter.chapter.read) {
+                    chapter.requestedPage = chapter.chapter.lastPageRead
+                }
+
                 val pages = loader.getPages()
                     .onEach { it.chapter = chapter }
 
                 if (pages.isEmpty()) {
                     throw Exception(context.stringResource(MR.strings.page_list_empty_error))
-                }
-
-                // If the chapter is partially read, set the starting page to the last the user read
-                // otherwise use the requested page.
-                if (!chapter.chapter.read) {
-                    chapter.requestedPage = chapter.chapter.lastPageRead
                 }
 
                 chapter.state = ReaderChapter.State.Loaded(pages)

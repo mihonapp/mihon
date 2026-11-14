@@ -10,6 +10,8 @@ import eu.kanade.tachiyomi.ui.reader.model.DownloadStream
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -101,12 +103,15 @@ class ChapterCache(
      */
     @Throws(IOException::class)
     suspend fun putImage(imageUrl: String, response: Response, live: DownloadStream? = null): File {
+        val context = currentCoroutineContext()
         response.body.use { body ->
             live?.reserve(body.contentLength())
             return images.put(imageUrl) { out ->
                 body.source().use { source ->
                     val buffer = ByteArray(1 shl 16)
                     while (true) {
+                        // The blocking read ignores cancellation
+                        context.ensureActive()
                         val n = source.read(buffer)
                         if (n < 0) break
                         out.write(buffer, 0, n)

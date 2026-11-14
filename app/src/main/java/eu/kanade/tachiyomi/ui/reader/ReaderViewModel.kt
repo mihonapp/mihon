@@ -538,6 +538,7 @@ class ReaderViewModel(
 
         val selectedChapter = page.chapter
         val pages = selectedChapter.pages ?: return
+        (selectedChapter.pageLoader as? HttpPageLoader)?.onPageSelected(page)
 
         // Save last page read and mark as read if needed
         updateChapterProgress(selectedChapter, page)
