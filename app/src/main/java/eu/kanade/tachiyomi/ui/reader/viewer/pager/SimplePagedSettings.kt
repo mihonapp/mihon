@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.DualPageSettings
  */
 data class SimplePagedSettings(
     override val dualPageSplit: Boolean,
+    override val splitAllPages: Boolean,
     override val dualPageInvert: Boolean,
     override val dualPageRotateToFit: Boolean,
     override val dualPageRotateToFitInvert: Boolean,

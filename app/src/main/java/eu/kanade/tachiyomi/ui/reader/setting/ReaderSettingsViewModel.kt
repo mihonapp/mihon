@@ -155,7 +155,7 @@ class ReaderSettingsViewModel(
     /**
      * Settings only the pager viewers use.
      */
-    val simplePaged = settings(
+    private val baseSimplePaged = settings(
         preferences.dualPageSplitPaged,
         preferences.dualPageInvertPaged,
         preferences.dualPageRotateToFit,
@@ -163,16 +163,27 @@ class ReaderSettingsViewModel(
     ) {
         SimplePagedSettings(
             dualPageSplit = dualPageSplitPaged.get(),
+            splitAllPages = false,
             dualPageInvert = dualPageInvertPaged.get(),
             dualPageRotateToFit = dualPageRotateToFit.get(),
             dualPageRotateToFitInvert = dualPageRotateToFitInvert.get(),
         )
     }
 
+    private val splitAllPagesFlow = readingMode.map { it == ReadingMode.FOUR_KOMA }.distinctUntilChanged()
+
+    val simplePaged = combine(baseSimplePaged, splitAllPagesFlow) { base, splitAll ->
+        base.copy(splitAllPages = splitAll)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        baseSimplePaged.value.copy(splitAllPages = readingMode.value == ReadingMode.FOUR_KOMA),
+    )
+
     /**
      * Settings only the webtoon viewers use.
      */
-    val simpleLongStrip = settings(
+    private val baseSimpleLongStrip = settings(
         preferences.webtoonSidePadding,
         preferences.dualPageSplitWebtoon,
         preferences.dualPageInvertWebtoon,
@@ -186,6 +197,7 @@ class ReaderSettingsViewModel(
             page = SimpleLongStripSettings.Page(
                 sidePadding = webtoonSidePadding.get(),
                 dualPageSplit = dualPageSplitWebtoon.get(),
+                splitAllPages = false,
                 dualPageInvert = dualPageInvertWebtoon.get(),
                 dualPageRotateToFit = dualPageRotateToFitWebtoon.get(),
                 dualPageRotateToFitInvert = dualPageRotateToFitInvertWebtoon.get(),
@@ -197,6 +209,16 @@ class ReaderSettingsViewModel(
             ),
         )
     }
+
+    val simpleLongStrip = combine(baseSimpleLongStrip, splitAllPagesFlow) { base, splitAll ->
+        base.copy(page = base.page.copy(splitAllPages = splitAll))
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        baseSimpleLongStrip.value.copy(
+            page = baseSimpleLongStrip.value.page.copy(splitAllPages = readingMode.value == ReadingMode.FOUR_KOMA),
+        ),
+    )
 
     /**
      * Settings only the paged WebGPU viewers use.
