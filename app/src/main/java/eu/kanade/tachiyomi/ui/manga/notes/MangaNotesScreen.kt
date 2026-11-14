@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.manga.notes
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,6 +22,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mihon.core.metro.AppCoroutineScope
+import mihon.core.navigation.MangaNotesRoute
+import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.UpdateMangaNotes
@@ -34,6 +37,14 @@ fun MangaNotesScreen(mangaId: Long) {
     val viewModel = assistedMetroViewModel<MangaNotesViewModel, MangaNotesViewModel.Factory> {
         create(mangaId = mangaId)
     }
+    val mangaMissing = viewModel.mangaMissing.collectAsState().value
+    LaunchedEffect(mangaMissing) {
+        // The manga screen below can't load a missing manga either
+        if (mangaMissing) {
+            navigator.popTo { it != MangaNotesRoute(mangaId) && (it as? MangaRoute)?.mangaId != mangaId }
+        }
+    }
+
     val state = viewModel.state.collectAsState().value
     if (state == null) {
         LoadingScreen()
@@ -58,9 +69,15 @@ class MangaNotesViewModel(
     val state: StateFlow<State?>
         field = MutableStateFlow<State?>(null)
 
+    val mangaMissing: StateFlow<Boolean>
+        field = MutableStateFlow(false)
+
     init {
         viewModelScope.launch {
-            val manga = getManga.await(mangaId) ?: return@launch
+            val manga = getManga.await(mangaId) ?: run {
+                mangaMissing.value = true
+                return@launch
+            }
             state.value = State(manga, manga.notes)
         }
     }
