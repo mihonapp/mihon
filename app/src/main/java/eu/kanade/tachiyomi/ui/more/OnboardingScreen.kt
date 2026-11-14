@@ -41,7 +41,7 @@ class OnboardingScreen : Screen() {
             onComplete = finishOnboarding,
             onRestoreBackup = {
                 finishOnboarding()
-                SearchableSettings.highlightKey = restoreSettingKey
+                SearchableSettings.highlightKey = SearchableSettings.HighlightKey(restoreSettingKey)
                 navigator.push(SettingsScreen(SettingsScreen.Destination.DataAndStorage))
             },
         )
