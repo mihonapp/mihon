@@ -12,6 +12,7 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.Scene
@@ -104,16 +105,22 @@ fun NavigatorDisplay(
         defaultPredictivePopTransitionSpec(),
     entryProvider: (NavKey) -> NavEntry<NavKey>,
 ) {
+    val entries = rememberDecoratedNavEntries(
+        // Keyed by position so equal routes don't share state; stable as the navigator only changes the top
+        entries = navigator.backStack.mapIndexed { index, route ->
+            val entry = entryProvider(route)
+            NavEntry(route, "$index:${entry.contentKey}", entry.metadata) { entry.Content() }
+        },
+        entryDecorators = entryDecorators + rememberLeavingEntryInputNavEntryDecorator(),
+    )
     NavDisplay(
-        backStack = navigator.backStack,
+        entries = entries,
         modifier = modifier,
         onBack = { navigator.pop() },
-        entryDecorators = entryDecorators + rememberLeavingEntryInputNavEntryDecorator(),
         sceneStrategies = sceneStrategies,
         sizeTransform = sizeTransform,
         transitionSpec = transitionSpec,
         popTransitionSpec = popTransitionSpec,
         predictivePopTransitionSpec = predictivePopTransitionSpec,
-        entryProvider = entryProvider,
     )
 }
