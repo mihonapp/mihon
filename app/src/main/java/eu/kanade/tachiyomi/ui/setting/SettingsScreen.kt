@@ -70,7 +70,7 @@ fun Navigator.addSettingsRoute(settingsRoute: SettingsRoute, isTabletUi: Boolean
     }
     if (route != null) {
         if (isTabletUi) {
-            push(SettingsRoute())
+            if (!popTo { it is SettingsRoute }) push(SettingsRoute())
         }
         push(route)
     } else {
