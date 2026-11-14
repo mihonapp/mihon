@@ -10,6 +10,7 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
+import eu.kanade.domain.track.interactor.SyncLibraryTracks
 import eu.kanade.domain.track.service.DelayedTrackingUpdateWorker
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.domain.ui.UiPreferences
@@ -122,6 +123,7 @@ interface AppGraph : ViewModelGraph {
     val resetCategoryFlags: ResetCategoryFlags
     val addTracks: AddTracks
     val upsertTrack: UpsertTrack
+    val syncLibraryTracks: SyncLibraryTracks
 
     val getExtensionStoreCountAsFlow: GetExtensionStoreCountAsFlow
 
