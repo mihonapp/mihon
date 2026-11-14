@@ -171,7 +171,13 @@ class LibraryUpdateNotifier(
             setContentText(context.stringResource(MR.strings.action_show_errors))
             setSmallIcon(R.drawable.ic_mihon)
 
-            setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context, uri))
+            setContentIntent(NotificationReceiver.openFailedUpdatesPendingActivity(context))
+
+            addAction(
+                MaterialSymbolsR.drawable.rounded_filled_folder,
+                context.stringResource(MR.strings.action_open_log),
+                NotificationReceiver.openErrorLogPendingActivity(context, uri),
+            )
         }
     }
 

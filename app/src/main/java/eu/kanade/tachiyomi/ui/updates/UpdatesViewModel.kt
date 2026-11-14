@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -59,6 +60,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.updates.interactor.GetMangaUpdateErrors
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.service.UpdatesPreferences
@@ -81,6 +83,7 @@ class UpdatesViewModel(
     private val getChapter: GetChapter,
     private val libraryPreferences: LibraryPreferences,
     private val updatesPreferences: UpdatesPreferences,
+    private val getMangaUpdateErrors: GetMangaUpdateErrors,
 ) : ViewModel() {
 
     private val subscriberGate = SubscriberGate()
@@ -189,6 +192,13 @@ class UpdatesViewModel(
         .flowOn(Dispatchers.Default)
         .stateIn(viewModelScope + subscriberGate, SharingStarted.Eagerly, null)
 
+    private val failedUpdatesCount = getMangaUpdateErrors.subscribeCount()
+        .onStart { emit(0L) }
+        .catch {
+            logcat(LogPriority.ERROR, it)
+            _events.send(Event.InternalError)
+        }
+
     val state: StateFlow<State> = combine(
         updateItems,
         selectedChapterIds,
@@ -213,6 +223,7 @@ class UpdatesViewModel(
             dialog = dialog,
         )
     }
+        .combine(failedUpdatesCount) { state, count -> state.copy(failedUpdatesCount = count) }
         .flowOn(Dispatchers.Default)
         .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State())
 
@@ -497,6 +508,7 @@ class UpdatesViewModel(
 
     @Immutable
     data class State(
+        val failedUpdatesCount: Long = 0,
         val isLoading: Boolean = true,
         val hasActiveFilters: Boolean = false,
         val items: List<UpdatesItem> = listOf(),

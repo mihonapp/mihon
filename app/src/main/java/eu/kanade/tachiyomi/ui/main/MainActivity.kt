@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.ui.main
 import android.animation.ValueAnimator
 import android.app.SearchManager
 import android.app.assist.AssistContent
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -11,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -57,7 +55,6 @@ import androidx.core.animation.doOnEnd
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.util.Consumer
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.Lifecycle
@@ -87,6 +84,7 @@ import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.deeplink.DeepLinkScreen
+import eu.kanade.tachiyomi.ui.failedupdate.FailedUpdatesScreen
 import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
@@ -98,15 +96,15 @@ import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
 import eu.kanade.tachiyomi.util.system.updaterEnabled
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import mihon.app.di.AppGraph
@@ -160,9 +158,11 @@ class MainActivity : BaseActivity() {
     var ready = false
 
     private var navigator: Navigator? = null
+    private val newIntents = Channel<Intent>(Channel.BUFFERED)
 
     init {
         registerSecureActivity(this)
+        addOnNewIntentListener { newIntents.trySend(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -209,8 +209,6 @@ class MainActivity : BaseActivity() {
                 LaunchedEffect(Unit) { ready = true }
                 return@setComposeContent
             }
-
-            val context = LocalContext.current
 
             var incognito by remember { mutableStateOf(false) }
             val downloadOnly by preferences.downloadedOnly.collectAsState()
@@ -306,7 +304,7 @@ class MainActivity : BaseActivity() {
                         .launchIn(this)
                 }
 
-                HandleOnNewIntent(context = context, navigator = navigator)
+                HandleOnNewIntent(navigator = navigator)
 
                 if (!isBenchmarkBuildType) {
                     if (isLaunch) CheckForUpdates()
@@ -348,14 +346,9 @@ class MainActivity : BaseActivity() {
     }
 
     @Composable
-    private fun HandleOnNewIntent(context: Context, navigator: Navigator) {
-        LaunchedEffect(Unit) {
-            callbackFlow {
-                val componentActivity = context as ComponentActivity
-                val consumer = Consumer<Intent> { trySend(it) }
-                componentActivity.addOnNewIntentListener(consumer)
-                awaitClose { componentActivity.removeOnNewIntentListener(consumer) }
-            }
+    private fun HandleOnNewIntent(navigator: Navigator) {
+        LaunchedEffect(navigator) {
+            newIntents.receiveAsFlow()
                 .collectLatest { handleIntentAction(it, navigator) }
         }
     }
@@ -604,6 +597,11 @@ class MainActivity : BaseActivity() {
                 HomeScreen.Tab.Library(idToOpen)
             }
             Constants.SHORTCUT_UPDATES -> HomeScreen.Tab.Updates
+            Constants.SHORTCUT_FAILED_UPDATES -> {
+                navigator.popUntilRoot()
+                navigator.push(FailedUpdatesScreen)
+                null
+            }
             Constants.SHORTCUT_HISTORY -> HomeScreen.Tab.History
             Constants.SHORTCUT_SOURCES -> HomeScreen.Tab.Browse(false)
             Constants.SHORTCUT_EXTENSIONS -> HomeScreen.Tab.Browse(true)
