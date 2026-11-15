@@ -276,6 +276,7 @@
     <string name="action_webview_back">Kembali</string>
     <string name="action_webview_forward">Teruskan</string>
     <string name="action_webview_refresh">Muat ulang</string>
+    <string name="action_webview_open_in_app">Buka di KomiKita</string>
     <string name="pref_category_library">Pustaka</string>
     <string name="ext_obsolete">Terputus</string>
     <string name="obsolete_extension_message">Ekstensi ini tidak terikat dengan toko apa pun. Ekstensi ini tidak akan menerima pembaruan, mungkin tidak berfungsi sebagaimana mestinya, dan dapat menyebabkan masalah pada aplikasi. Menghapus pemasangannya sangat disarankan.</string>
@@ -999,6 +1000,8 @@
     <string name="komikita_auth_unavailable">Siapkan PIN, pola, sandi, atau biometrik layar kunci di pengaturan Android, lalu coba lagi.</string>
     <string name="komikita_lock_categories">Kunci kategori tersembunyi</string>
     <string name="komikita_lock_categories_summary">Gunakan biometrik atau PIN perangkat untuk membuka kategori tersembunyi. Terkunci lagi saat aplikasi masuk latar belakang. Judul tersembunyi tetap tidak muncul di Lanjutkan Membaca, riwayat, pembaruan, dan widget.</string>
+    <string name="komikita_hide_category_sources">Sembunyikan sumber kategori tersembunyi</string>
+    <string name="komikita_hide_category_sources_summary">Sumber dengan setidaknya satu komik di kategori tersembunyi akan disembunyikan dari Jelajahi dan pencarian global sampai kategori ditampilkan kembali.</string>
     <string name="komikita_reading_wrapped">Tahun bacaanmu</string>
     <string name="komikita_current_streak">Streak saat ini (hari)</string>
     <string name="komikita_longest_streak">Streak terpanjang (hari)</string>

@@ -10,6 +10,7 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.webview.WebViewScreenContent
+import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class WebViewScreen(
@@ -44,6 +45,9 @@ class WebViewScreen(
             onUrlChange = { assistUrl = it },
             onShare = { viewModel.shareWebpage(context, it) },
             onOpenInBrowser = { viewModel.openInBrowser(context, it) },
+            canOpenManga = viewModel::canOpenManga,
+            resolveManga = viewModel::resolveManga,
+            onOpenManga = { navigator.push(MangaScreen(it, fromSource = true)) },
             onClearCookies = viewModel::clearCookies,
         )
     }

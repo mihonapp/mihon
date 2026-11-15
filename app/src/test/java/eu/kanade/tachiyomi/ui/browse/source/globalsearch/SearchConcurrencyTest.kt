@@ -12,6 +12,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -19,6 +20,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.Test
 import tachiyomi.core.common.preference.InMemoryPreferenceStore
+import tachiyomi.domain.library.service.LibraryVisibility
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
@@ -26,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class SearchConcurrencyTest {
     @Test
-    fun globalSearchIncludesUnpinnedSourcesWithTheSameNameByDefault() = runTest {
+    fun globalSearchIncludesSameNameSourcesAndReactsToVisibilityChanges() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         val viewModels = ViewModelStore()
         try {
@@ -48,6 +50,9 @@ class SearchConcurrencyTest {
             coEvery { extensionManager.getLoadedExtensions() } returns emptyList()
             val converter = mockk<NetworkToLocalManga>()
             coEvery { converter(any<List<Manga>>()) } returns emptyList()
+            val hiddenSourceIds = MutableStateFlow(emptySet<Long>())
+            val libraryVisibility = mockk<LibraryVisibility>()
+            every { libraryVisibility.hiddenSourceIdsFlow() } returns hiddenSourceIds
             val model = GlobalSearchViewModel(
                 initialQuery = "test",
                 initialExtensionFilter = null,
@@ -57,13 +62,20 @@ class SearchConcurrencyTest {
                 networkToLocalManga = converter,
                 getManga = mockk(),
                 preferences = preferences,
+                libraryVisibility = libraryVisibility,
             )
             viewModels.put("search", model)
 
             val results = model.state.first { it.total == sources.size && it.progress == it.total }
             results.items.keys.toList() shouldBe sources
 
+            hiddenSourceIds.value = setOf(1L, 2L)
+            model.state.first { it.total == 1 && it.progress == 1 }.items.keys.single() shouldBe sources.last()
+
             model.setSourceFilter(SourceFilter.PinnedOnly)
+            model.state.first { it.items.isEmpty() }
+
+            hiddenSourceIds.value = emptySet()
             model.state.first { it.total == 1 && it.progress == 1 }.items.keys.single() shouldBe sources.first()
         } finally {
             viewModels.clear()

@@ -34,15 +34,6 @@ class SecurityPreferences(
         true,
     )
 
-    /**
-     * For app lock. Will be set when there is a pending timed lock.
-     * Otherwise, this pref should be deleted.
-     */
-    val lastAppClosed: Preference<Long> = preferenceStore.getLong(
-        Preference.appStateKey("last_app_closed"),
-        0,
-    )
-
     enum class SecureScreenMode(val titleRes: StringResource) {
         ALWAYS(MR.strings.lock_always),
         INCOGNITO(MR.strings.pref_incognito_mode),

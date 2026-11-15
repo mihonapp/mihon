@@ -5,6 +5,7 @@ import eu.kanade.domain.source.service.SourcePreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import tachiyomi.core.common.util.lang.compareToWithCollator
+import tachiyomi.domain.library.service.LibraryVisibility
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.repository.SourceRepository
 import tachiyomi.source.local.isLocal
@@ -14,6 +15,7 @@ import java.util.Collections
 class GetSourcesWithFavoriteCount(
     private val repository: SourceRepository,
     private val preferences: SourcePreferences,
+    private val libraryVisibility: LibraryVisibility,
 ) {
 
     fun subscribe(): Flow<List<Pair<Source, Long>>> {
@@ -21,9 +23,10 @@ class GetSourcesWithFavoriteCount(
             preferences.migrationSortingDirection.changes(),
             preferences.migrationSortingMode.changes(),
             repository.getSourcesWithFavoriteCount(),
-        ) { direction, mode, list ->
+            libraryVisibility.hiddenSourceIdsFlow(),
+        ) { direction, mode, list, hiddenSourceIds ->
             list
-                .filterNot { it.first.isLocal() }
+                .filterNot { (source, _) -> source.isLocal() || source.id in hiddenSourceIds }
                 .sortedWith(sortFn(direction, mode))
         }
     }

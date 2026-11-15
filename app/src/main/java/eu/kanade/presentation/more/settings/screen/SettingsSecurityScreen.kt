@@ -17,6 +17,8 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.i18n.firebase_summary
 import tachiyomi.i18n.hide_notification_content
+import tachiyomi.i18n.komikita_hide_category_sources
+import tachiyomi.i18n.komikita_hide_category_sources_summary
 import tachiyomi.i18n.komikita_lock_categories
 import tachiyomi.i18n.komikita_lock_categories_summary
 import tachiyomi.i18n.lock_after_mins
@@ -61,6 +63,7 @@ object SettingsSecurityScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
         val authSupported = remember { context.isAuthenticationSupported() }
+        val libraryPreferences = remember { context.appGraph.libraryPreferences }
         val useAuthPref = securityPreferences.useAuthenticator
         val useAuth by useAuthPref.collectAsState()
 
@@ -81,12 +84,30 @@ object SettingsSecurityScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
+                    preference = libraryPreferences.hideSourcesInHiddenCategories,
+                    title = stringResource(MR.strings.komikita_hide_category_sources),
+                    subtitle = stringResource(MR.strings.komikita_hide_category_sources_summary),
+                    onValueChanged = { enabled ->
+                        if (enabled || !securityPreferences.authenticateHiddenCategories.get() ||
+                            libraryPreferences.hiddenCategories.get().isEmpty()
+                        ) {
+                            true
+                        } else {
+                            (context as FragmentActivity).authenticate(
+                                title = context.stringResource(MR.strings.komikita_hide_category_sources),
+                                allowUnsupported = false,
+                            )
+                        }
+                    },
+                ),
+                Preference.PreferenceItem.SwitchPreference(
                     preference = useAuthPref,
                     title = stringResource(MR.strings.lock_with_biometrics),
                     visible = authSupported,
                     onValueChanged = {
                         (context as FragmentActivity).authenticate(
                             title = context.stringResource(MR.strings.lock_with_biometrics),
+                            allowUnsupported = false,
                         )
                     },
                 ),
@@ -105,6 +126,7 @@ object SettingsSecurityScreen : SearchableSettings {
                     onValueChanged = {
                         (context as FragmentActivity).authenticate(
                             title = context.stringResource(MR.strings.lock_when_idle),
+                            allowUnsupported = false,
                         )
                     },
                 ),

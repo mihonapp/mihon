@@ -13,17 +13,23 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.source.online.ResolvableSource
+import eu.kanade.tachiyomi.source.online.UriType
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toWebViewHeaders
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
+import mihon.domain.manga.model.toDomainManga
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.source.service.SourceManager
 
 @AssistedInject
@@ -31,6 +37,7 @@ class WebViewViewModel(
     @Assisted val sourceId: Long?,
     private val sourceManager: SourceManager,
     private val network: NetworkHelper,
+    private val networkToLocalManga: NetworkToLocalManga,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -66,6 +73,40 @@ class WebViewViewModel(
 
     fun openInBrowser(context: Context, url: String) {
         context.openInBrowser(url, forceDefaultBrowser = true)
+    }
+
+    suspend fun canOpenManga(url: String): Boolean = withContext(Dispatchers.IO) {
+        findMangaSource(url) != null
+    }
+
+    suspend fun resolveManga(url: String): Long? = withContext(Dispatchers.IO) {
+        val source = findMangaSource(url) ?: return@withContext null
+        try {
+            source.getManga(url)?.let { networkToLocalManga(it.toDomainManga(source.id)).id }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to open manga from WebView" }
+            null
+        }
+    }
+
+    private suspend fun findMangaSource(url: String): ResolvableSource? {
+        if (url.toHttpUrlOrNull() == null) return null
+
+        return sourceManager.getAll()
+            .filterIsInstance<ResolvableSource>()
+            .sortedBy { it.id != sourceId }
+            .firstOrNull { source ->
+                try {
+                    source.getUriType(url) == UriType.Manga
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logcat(LogPriority.WARN, e) { "Failed to check manga URL for source ${source.id}" }
+                    false
+                }
+            }
     }
 
     fun clearCookies(url: String) {

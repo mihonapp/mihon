@@ -4,7 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.SystemClock
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +16,6 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.ui.security.UnlockActivity
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
-import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
 import eu.kanade.tachiyomi.util.view.setSecureScreen
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -29,53 +31,42 @@ interface SecureActivityDelegate {
          *
          * Always require unlock if app is killed.
          */
-        var requireUnlock = true
+        private var requireUnlock = true
+        private var backgroundedAt: Long? = null
 
         fun onApplicationStopped(context: Context) {
             context.appGraph.hiddenLibrarySession.lock()
-            val preferences = context.appGraph.securityPreferences
-            if (!preferences.useAuthenticator.get()) return
-
-            if (!AuthenticatorUtil.isAuthenticating) {
-                // Return if app is closed in locked state
-                if (requireUnlock) return
-                // Save app close time if lock is delayed
-                if (preferences.lockAppAfter.get() > 0) {
-                    preferences.lastAppClosed.set(System.currentTimeMillis())
-                }
-            }
+            backgroundedAt = SystemClock.elapsedRealtime()
         }
 
         /**
          * Checks if unlock is needed when app comes foreground.
          */
         fun onApplicationStart(context: Context) {
+            val closedAt = backgroundedAt ?: return
+            backgroundedAt = null
             val preferences = context.appGraph.securityPreferences
             if (!preferences.useAuthenticator.get()) return
 
-            val lastClosedPref = preferences.lastAppClosed
-
-            // `requireUnlock` can be true on process start or if app was closed in locked state
             if (!AuthenticatorUtil.isAuthenticating && !requireUnlock) {
-                requireUnlock = when (val lockDelay = preferences.lockAppAfter.get()) {
-                    -1 -> false // Never
-                    0 -> true // Always
-                    else -> lastClosedPref.get() + lockDelay * 60_000 <= System.currentTimeMillis()
-                }
+                val lockDelay = preferences.lockAppAfter.get()
+                requireUnlock = lockDelay != -1 && SystemClock.elapsedRealtime() - closedAt >= lockDelay * 60_000L
             }
-
-            lastClosedPref.delete()
         }
 
         fun unlock() {
             requireUnlock = false
         }
+
+        fun needsUnlock(preferences: SecurityPreferences): Boolean =
+            preferences.useAuthenticator.get() && requireUnlock
     }
 }
 
 class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObserver {
 
     private lateinit var activity: AppCompatActivity
+    private var protectWhilePaused = false
 
     @Inject private lateinit var preferences: BasePreferences
 
@@ -88,41 +79,54 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
 
     override fun onCreate(owner: LifecycleOwner) {
         activity.appGraph.inject(this)
-        setSecureScreen()
-    }
-
-    override fun onResume(owner: LifecycleOwner) {
-        setAppLock()
-    }
-
-    private fun setSecureScreen() {
-        val secureScreenFlow = securityPreferences.secureScreen.changes()
-        val incognitoModeFlow = preferences.incognitoMode.changes()
-        combine(secureScreenFlow, incognitoModeFlow, activity.appGraph.hiddenLibrarySession.unlocked) {
-                secureScreen,
-                incognitoMode,
-                hiddenUnlocked,
-            ->
-            hiddenUnlocked || secureScreen == SecurityPreferences.SecureScreenMode.ALWAYS ||
-                (secureScreen == SecurityPreferences.SecureScreenMode.INCOGNITO && incognitoMode)
-        }
-            .onEach(activity.window::setSecureScreen)
+        updateSecureScreen()
+        combine(
+            securityPreferences.secureScreen.changes(),
+            preferences.incognitoMode.changes(),
+            activity.appGraph.hiddenLibrarySession.unlocked,
+            securityPreferences.useAuthenticator.changes(),
+        ) { _, _, _, _ -> Unit }
+            .onEach { updateSecureScreen() }
             .launchIn(activity.lifecycleScope)
     }
 
+    override fun onResume(owner: LifecycleOwner) {
+        protectWhilePaused = false
+        updateSecureScreen()
+        setAppLock()
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        protectWhilePaused = securityPreferences.useAuthenticator.get() ||
+            activity.appGraph.hiddenLibrarySession.unlocked.value
+        updateSecureScreen()
+    }
+
+    private fun updateSecureScreen() {
+        val secureScreen = securityPreferences.secureScreen.get()
+        val hiddenUnlocked = activity.appGraph.hiddenLibrarySession.unlocked.value
+        activity.window.setSecureScreen(
+            protectWhilePaused || hiddenUnlocked || SecureActivityDelegate.needsUnlock(securityPreferences) ||
+                secureScreen == SecurityPreferences.SecureScreenMode.ALWAYS ||
+                (secureScreen == SecurityPreferences.SecureScreenMode.INCOGNITO && preferences.incognitoMode.get()),
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            activity.setRecentsScreenshotEnabled(
+                !protectWhilePaused && !securityPreferences.useAuthenticator.get() && !hiddenUnlocked,
+            )
+        }
+    }
+
     private fun setAppLock() {
-        if (!securityPreferences.useAuthenticator.get()) return
-        if (activity.isAuthenticationSupported()) {
-            if (!SecureActivityDelegate.requireUnlock) return
-            activity.startActivity(Intent(activity, UnlockActivity::class.java))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
-            } else {
-                @Suppress("DEPRECATION")
-                activity.overridePendingTransition(0, 0)
-            }
+        val locked = SecureActivityDelegate.needsUnlock(securityPreferences)
+        activity.findViewById<View>(android.R.id.content).isInvisible = locked
+        if (!locked) return
+        activity.startActivity(Intent(activity, UnlockActivity::class.java))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
         } else {
-            securityPreferences.useAuthenticator.set(false)
+            @Suppress("DEPRECATION")
+            activity.overridePendingTransition(0, 0)
         }
     }
 }

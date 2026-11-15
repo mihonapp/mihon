@@ -183,7 +183,7 @@ class MangaBaka(
         }
     }
 
-    fun verifyOAuthState(state: String): Boolean = api.verifyOAuthState(state)
+    fun consumeOAuthState(state: String): Boolean = api.consumeOAuthState(state)
 
     override fun logout() {
         super.logout()

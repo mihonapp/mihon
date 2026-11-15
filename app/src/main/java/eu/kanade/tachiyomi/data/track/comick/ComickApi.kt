@@ -263,7 +263,11 @@ class ComickApi(
         }
     }
 
-    fun verifyOAuthState(state: String): Boolean = state == oauthStateParam
+    fun consumeOAuthState(state: String): Boolean {
+        if (state.isEmpty() || state != oauthStateParam) return false
+        oauthStateParam = ""
+        return true
+    }
 
     companion object {
         private const val CLIENT_ID = "SGrUojDvbgqfhSCQbwfCjUPIccYMJdBH"

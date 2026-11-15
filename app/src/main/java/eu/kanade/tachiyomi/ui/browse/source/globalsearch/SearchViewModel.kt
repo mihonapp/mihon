@@ -12,10 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -38,6 +41,7 @@ abstract class SearchViewModel(
     private val networkToLocalManga: NetworkToLocalManga,
     private val getManga: GetManga,
     private val preferences: SourcePreferences,
+    private val hiddenSourceIds: Flow<Set<Long>> = flowOf(emptySet()),
 ) : ViewModel() {
 
     val state: StateFlow<State>
@@ -147,52 +151,46 @@ abstract class SearchViewModel(
         searchJob?.cancel()
 
         searchJob = viewModelScope.launch(Dispatchers.IO) {
-            val sources = getSelectedSources()
-
-            // Reuse previous results if possible
-            if (sameQuery) {
-                val existingResults = state.value.items
-                updateItems(
-                    sources
-                        .associateWith { existingResults[it] ?: SearchItemResult.Loading },
-                )
-            } else {
-                updateItems(
-                    sources
-                        .associateWith { SearchItemResult.Loading },
-                )
+            var reuseResults = sameQuery
+            hiddenSourceIds.collectLatest { hidden ->
+                val sources = getSelectedSources().filterNot { it.id in hidden }
+                val existingResults = if (reuseResults) state.value.items else emptyMap()
+                updateItems(sources.associateWith { existingResults[it] ?: SearchItemResult.Loading })
+                reuseResults = true
+                searchSources(sources, query)
             }
+        }
+    }
 
-            sources.map { source ->
-                async {
-                    if (state.value.items[source] !is SearchItemResult.Loading) {
-                        return@async
+    private suspend fun searchSources(sources: List<Source>, query: String) = coroutineScope {
+        sources.map { source ->
+            async {
+                if (state.value.items[source] !is SearchItemResult.Loading) {
+                    return@async
+                }
+
+                try {
+                    val page = searchSlots.withPermit {
+                        withContext(Dispatchers.IO) {
+                            source.getSearchManga(1, query, source.getFilterList())
+                        }
                     }
 
-                    try {
-                        val page = searchSlots.withPermit {
-                            withContext(Dispatchers.IO) {
-                                source.getSearchManga(1, query, source.getFilterList())
-                            }
-                        }
+                    val titles = page.mangas
+                        .map { it.toDomainManga(source.id) }
+                        .distinctBy { it.url }
+                        .let { networkToLocalManga(it) }
 
-                        val titles = page.mangas
-                            .map { it.toDomainManga(source.id) }
-                            .distinctBy { it.url }
-                            .let { networkToLocalManga(it) }
-
-                        if (isActive) {
-                            updateItem(source, SearchItemResult.Success(titles))
-                        }
-                    } catch (e: Exception) {
-                        if (isActive) {
-                            updateItem(source, SearchItemResult.Error(e))
-                        }
+                    if (isActive) {
+                        updateItem(source, SearchItemResult.Success(titles))
+                    }
+                } catch (e: Exception) {
+                    if (isActive) {
+                        updateItem(source, SearchItemResult.Error(e))
                     }
                 }
             }
-                .awaitAll()
-        }
+        }.awaitAll()
     }
 
     private fun updateItems(items: Map<Source, SearchItemResult>) {

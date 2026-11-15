@@ -4,6 +4,7 @@ import android.os.Bundle
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.startAuthentication
+import eu.kanade.tachiyomi.util.system.toast
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
@@ -27,6 +28,7 @@ class UnlockActivity : BaseActivity() {
             },
             onError = { error ->
                 logcat(LogPriority.ERROR) { error.toString() }
+                applicationContext.toast(error.toString())
                 finishAffinity()
             },
         )

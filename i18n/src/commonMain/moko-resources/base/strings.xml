@@ -160,6 +160,7 @@
     <string name="action_webview_forward">Forward</string>
     <string name="action_webview_refresh">Refresh</string>
     <string name="action_webview_close_tab">Close tab</string>
+    <string name="action_webview_open_in_app">Open in KomiKita</string>
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
     <string name="action_add_anyway">Add anyway</string>
@@ -1131,6 +1132,8 @@
     <string name="komikita_auth_unavailable">Set a screen lock PIN, pattern, password, or biometric in Android settings, then try again.</string>
     <string name="komikita_lock_categories">Lock hidden categories</string>
     <string name="komikita_lock_categories_summary">Use biometrics or your device PIN to reveal hidden categories. Locks again when the app enters the background. Hidden titles stay out of Continue reading, history, updates, and widgets.</string>
+    <string name="komikita_hide_category_sources">Hide sources of hidden categories</string>
+    <string name="komikita_hide_category_sources_summary">Hide any source with at least one comic in a hidden category from Browse and global search until you reveal the categories.</string>
     <string name="komikita_reading_wrapped">Your reading year</string>
     <string name="komikita_current_streak">Current streak (days)</string>
     <string name="komikita_longest_streak">Best streak (days)</string>

@@ -124,6 +124,9 @@ class LibraryPreferences(
         emptySet(),
     )
 
+    val hideSourcesInHiddenCategories: Preference<Boolean> =
+        preferenceStore.getBoolean("komikita_hide_sources_in_hidden_categories", false)
+
     val newShowUpdatesCount: Preference<Boolean> = preferenceStore.getBoolean("library_show_updates_count", true)
     val newUpdatesCount: Preference<Int> = preferenceStore.getInt(
         Preference.appStateKey("library_unseen_updates_count"),

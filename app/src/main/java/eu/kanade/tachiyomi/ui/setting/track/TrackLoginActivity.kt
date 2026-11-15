@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.setting.track
 import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.comick.ComickMissingScopesException
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.Dispatchers
@@ -14,109 +15,70 @@ import tachiyomi.core.common.util.system.logcat
 class TrackLoginActivity : BaseOAuthLoginActivity() {
 
     override fun handleResult(uri: Uri) {
-        val data = when {
-            !uri.encodedQuery.isNullOrBlank() -> uri.encodedQuery
-            !uri.encodedFragment.isNullOrBlank() -> uri.encodedFragment
-            else -> null
+        val authority = uri.encodedAuthority
+        val scheme = if (authority == "comick-auth") "app.mihon" else "mihon"
+        val path = uri.encodedPath.orEmpty()
+        if (uri.scheme != scheme || (path.isNotEmpty() && path != "/")) {
+            return finish()
         }
-            ?.split("&")
-            ?.filter { it.isNotBlank() }
-            ?.associate {
-                val parts = it.split("=", limit = 2).map<String, String>(Uri::decode)
-                parts[0] to parts.getOrNull(1)
+
+        val parameters = uri.encodedQuery?.takeIf { it.isNotEmpty() } ?: uri.encodedFragment.orEmpty()
+        val data = buildMap<String, String> {
+            for (parameter in parameters.split('&')) {
+                if (parameter.isEmpty()) continue
+                val key = Uri.decode(parameter.substringBefore('='))
+                val value = Uri.decode(parameter.substringAfter('=', ""))
+                if (put(key, value) != null) return finish()
             }
-            .orEmpty()
+        }
+        if ("error" in data) return returnToSettings()
 
         lifecycleScope.launch {
-            when (uri.host) {
-                "anilist-auth" -> handleAniList(data["access_token"])
+            when (authority) {
+                "anilist-auth" -> trackerManager.aniList.run { loginFromCallback(data["access_token"], ::login) }
                 "comick-auth" -> handleComick(data["code"], data["state"])
-                "bangumi-auth" -> handleBangumi(data["code"])
+                "bangumi-auth" -> trackerManager.bangumi.run { loginFromCallback(data["code"], ::login) }
                 "mangabaka-auth" -> handleMangaBaka(data["code"], data["state"])
-                "myanimelist-auth" -> handleMyAnimeList(data["code"])
-                "shikimori-auth" -> handleShikimori(data["code"])
-                "hikka-auth" -> handleHikka(data["reference"])
+                "myanimelist-auth" -> trackerManager.myAnimeList.run { loginFromCallback(data["code"], ::login) }
+                "shikimori-auth" -> trackerManager.shikimori.run { loginFromCallback(data["code"], ::login) }
+                "hikka-auth" -> trackerManager.hikka.run { loginFromCallback(data["reference"], ::login) }
+                else -> return@launch finish()
             }
             returnToSettings()
         }
     }
 
-    private suspend fun handleAniList(accessToken: String?) {
-        if (accessToken != null) {
-            trackerManager.aniList.login(accessToken)
-        } else {
-            trackerManager.aniList.logout()
-        }
-    }
-
-    private suspend fun handleBangumi(code: String?) {
-        if (code != null) {
-            trackerManager.bangumi.login(code)
-        } else {
-            trackerManager.bangumi.logout()
-        }
+    private suspend fun Tracker.loginFromCallback(credential: String?, login: suspend (String) -> Unit) {
+        if (!credential.isNullOrBlank() && !isLoggedIn) login(credential)
     }
 
     private suspend fun handleComick(code: String?, state: String?) {
-        if (state == null) {
-            logcat(LogPriority.WARN) { "Did not receive state parameter from Comick OAuth" }
-            return
-        }
-        if (code != null) {
-            if (!trackerManager.comick.verifyOAuthState(state)) {
-                logcat(LogPriority.WARN) { "Received wrong OAuth state back from Comick" }
-                return
-            }
-            try {
-                trackerManager.comick.login(code)
-            } catch (e: ComickMissingScopesException) {
-                withContext(Dispatchers.Main) {
-                    this@TrackLoginActivity.toast(e.message, Toast.LENGTH_LONG)
+        trackerManager.comick.run {
+            loginFromCallback(code) {
+                if (state.isNullOrBlank() || !consumeOAuthState(state)) {
+                    logcat(LogPriority.WARN) { "Missing or invalid OAuth state from Comick" }
+                    return@loginFromCallback
                 }
-                return
+                try {
+                    login(it)
+                } catch (e: ComickMissingScopesException) {
+                    withContext(Dispatchers.Main) {
+                        this@TrackLoginActivity.toast(e.message, Toast.LENGTH_LONG)
+                    }
+                }
             }
-        } else {
-            trackerManager.comick.logout()
         }
     }
 
     private suspend fun handleMangaBaka(code: String?, state: String?) {
-        if (state == null) {
-            logcat(LogPriority.WARN) { "Did not receive state parameter from MangaBaka OAuth" }
-            return
-        }
-        if (code != null) {
-            if (!trackerManager.mangaBaka.verifyOAuthState(state)) {
-                logcat(LogPriority.WARN) { "Received wrong OAuth state back from MangaBaka" }
-                return
+        trackerManager.mangaBaka.run {
+            loginFromCallback(code) {
+                if (state.isNullOrBlank() || !consumeOAuthState(state)) {
+                    logcat(LogPriority.WARN) { "Missing or invalid OAuth state from MangaBaka" }
+                    return@loginFromCallback
+                }
+                login(it)
             }
-            trackerManager.mangaBaka.login(code)
-        } else {
-            trackerManager.mangaBaka.logout()
-        }
-    }
-
-    private suspend fun handleMyAnimeList(code: String?) {
-        if (code != null) {
-            trackerManager.myAnimeList.login(code)
-        } else {
-            trackerManager.myAnimeList.logout()
-        }
-    }
-
-    private suspend fun handleShikimori(code: String?) {
-        if (code != null) {
-            trackerManager.shikimori.login(code)
-        } else {
-            trackerManager.shikimori.logout()
-        }
-    }
-
-    private suspend fun handleHikka(reference: String?) {
-        if (reference != null) {
-            trackerManager.hikka.login(reference)
-        } else {
-            trackerManager.hikka.logout()
         }
     }
 }

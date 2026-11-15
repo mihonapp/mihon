@@ -78,6 +78,21 @@ AND (
     )
 );
 
+getHiddenLibrarySourceIds:
+SELECT DISTINCT M.source_id
+FROM manga M
+WHERE M.user_favorite_at IS NOT NULL
+AND (
+    EXISTS (
+        SELECT 1 FROM manga_category MC
+        WHERE MC.manga_id = M.id AND MC.category_id IN :categoryIds
+    )
+    OR (
+        0 IN :categoryIds
+        AND NOT EXISTS (SELECT 1 FROM manga_category MC WHERE MC.manga_id = M.id)
+    )
+);
+
 getReadMangaNotInLibrary:
 SELECT
     id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,

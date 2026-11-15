@@ -197,7 +197,9 @@ class DownloadNotifier(
             Notifications.CHANNEL_DOWNLOADER_ERROR,
         ) {
             setContentTitle(context.stringResource(MR.strings.download_notifier_downloader_title))
-            setStyle(NotificationCompat.BigTextStyle().bigText(reason))
+            if (!preferences.hideNotificationContent.get()) {
+                setStyle(NotificationCompat.BigTextStyle().bigText(reason))
+            }
             setSmallIcon(MaterialSymbolsR.drawable.rounded_filled_warning)
             setAutoCancel(true)
             setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
@@ -225,15 +227,22 @@ class DownloadNotifier(
      * @param mangaId the id of the entry that the error occurred on
      */
     fun onError(error: String? = null, chapter: String? = null, mangaTitle: String? = null, mangaId: Long? = null) {
+        val hideContent = preferences.hideNotificationContent.get()
         // Create notification
         context.notify(
             Notifications.ID_DOWNLOAD_CHAPTER_ERROR,
             Notifications.CHANNEL_DOWNLOADER_ERROR,
         ) {
             setContentTitle(
-                mangaTitle?.plus(": $chapter") ?: context.stringResource(MR.strings.download_notifier_downloader_title),
+                if (!hideContent && mangaTitle != null) {
+                    "$mangaTitle: $chapter"
+                } else {
+                    context.stringResource(MR.strings.download_notifier_downloader_title)
+                },
             )
-            setContentText(error ?: context.stringResource(MR.strings.download_notifier_unknown_error))
+            setContentText(
+                error?.takeUnless { hideContent } ?: context.stringResource(MR.strings.download_notifier_unknown_error),
+            )
             setSmallIcon(MaterialSymbolsR.drawable.rounded_filled_warning)
             setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
             if (mangaId != null) {

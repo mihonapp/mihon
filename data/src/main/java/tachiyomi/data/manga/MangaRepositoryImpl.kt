@@ -93,6 +93,10 @@ class MangaRepositoryImpl(
         return database.mangaQueries.getHiddenLibraryMangaIds(categoryIds).subscribeToList().map { it.toSet() }
     }
 
+    override fun getHiddenLibrarySourceIdsAsFlow(categoryIds: List<Long>): Flow<Set<Long>> {
+        return database.mangaQueries.getHiddenLibrarySourceIds(categoryIds).subscribeToList().map { it.toSet() }
+    }
+
     override fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>> {
         return database.mangaQueries
             .getFavoriteBySourceId(sourceId, MangaMapper::mapManga)

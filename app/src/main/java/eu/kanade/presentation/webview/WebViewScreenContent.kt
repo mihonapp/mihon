@@ -21,18 +21,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import cafe.adriel.voyager.core.stack.mutableStateStackOf
 import com.kevinnzou.web.AccompanistWebChromeClient
 import com.kevinnzou.web.AccompanistWebViewClient
@@ -56,6 +58,7 @@ import mihon.icons.materialsymbols.automirroredrounded.ArrowBack
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
 import mihon.icons.materialsymbols.rounded.Close
 import mihon.icons.materialsymbols.rounded.TabClose
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import tachiyomi.i18n.action_open_in_browser
@@ -63,15 +66,18 @@ import tachiyomi.i18n.action_share
 import tachiyomi.i18n.action_webview_back
 import tachiyomi.i18n.action_webview_close_tab
 import tachiyomi.i18n.action_webview_forward
+import tachiyomi.i18n.action_webview_open_in_app
 import tachiyomi.i18n.action_webview_refresh
 import tachiyomi.i18n.information_cloudflare_help
 import tachiyomi.i18n.information_webview_crashed
+import tachiyomi.i18n.no_results_found
 import tachiyomi.i18n.pref_clear_cookies
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 
 class WebViewWindow(webContent: WebContent, val navigator: WebViewNavigator) {
     var state by mutableStateOf(WebViewState(webContent))
+    var currentUrl by mutableStateOf((webContent as? WebContent.Url)?.url)
     var popupMessage: Message? = null
         private set
     var webView: WebView? = null
@@ -89,6 +95,9 @@ fun WebViewScreenContent(
     defaultUserAgentProvider: () -> String,
     onShare: (String) -> Unit,
     onOpenInBrowser: (String) -> Unit,
+    canOpenManga: suspend (String) -> Boolean,
+    resolveManga: suspend (String) -> Long?,
+    onOpenManga: (Long) -> Unit,
     onClearCookies: (String) -> Unit,
     headers: Map<String, String> = emptyMap(),
     onUrlChange: (String) -> Unit = {},
@@ -106,33 +115,46 @@ fun WebViewScreenContent(
 
     val currentWindow = windowStack.lastItemOrNull!!
     val navigator = currentWindow.navigator
+    val currentUrl = currentWindow.currentUrl ?: url
 
+    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
-    val scope = rememberCoroutineScope()
 
-    var currentUrl by remember { mutableStateOf(url) }
     var showCloudflareHelp by remember { mutableStateOf(false) }
     var isActive by remember { mutableStateOf(true) }
+    var openingManga by remember { mutableStateOf(false) }
+
+    val mangaUrl by produceState<String?>(null, currentUrl) {
+        value = null
+        if (currentUrl != url && canOpenManga(currentUrl)) value = currentUrl
+    }
+
+    LaunchedEffect(currentUrl) {
+        onUrlChange(currentUrl)
+    }
 
     DisposableEffect(Unit) {
         onDispose { isActive = false }
     }
 
-    val headersHost = remember { url.toUri().host }
+    val headersOrigin = remember(url) { url.toHttpUrlOrNull() }
 
     val webClient = remember {
         object : AccompanistWebViewClient() {
+            private fun updateUrl(view: WebView, url: String?) {
+                if (url != null) {
+                    windowStack.items.find { it.webView === view }?.currentUrl = url
+                }
+            }
+
             override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                url?.let {
-                    currentUrl = it
-                    onUrlChange(it)
-                }
+                updateUrl(view, url)
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
                 super.onPageFinished(view, url)
-                scope.launch {
+                coroutineScope.launch {
                     val html = view.getHtml()
                     showCloudflareHelp = "window._cf_chl_opt" in html || "Ray ID is" in html
                 }
@@ -144,40 +166,34 @@ fun WebViewScreenContent(
                 isReload: Boolean,
             ) {
                 super.doUpdateVisitedHistory(view, url, isReload)
-                url?.let {
-                    currentUrl = it
-                    onUrlChange(it)
-                }
+                updateUrl(view, url)
             }
 
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?,
             ): Boolean {
-                val url = request?.url?.toString() ?: return false
+                val uri = request?.url ?: return false
+                if (uri.scheme.equals("intent", ignoreCase = true)) return true
+                if (!request.isForMainFrame || view == null || headers.isEmpty()) return false
 
-                // Ignore intents urls
-                if (url.startsWith("intent://")) return true
-
-                // Only send source headers to the source itself
-                if (request.url.host != headersHost) return false
-
-                // Only open valid web urls
-                if (url.startsWith("http") || url.startsWith("https")) {
-                    if (url != view?.url) {
-                        view?.loadUrl(url, headers)
-                        return true
-                    }
+                val url = uri.toString()
+                val origin = headersOrigin ?: return false
+                val target = url.toHttpUrlOrNull() ?: return false
+                if (target.scheme != origin.scheme || target.host != origin.host || target.port != origin.port) {
+                    return false
                 }
+                if (url == view.url) return false
 
-                return false
+                view.loadUrl(url, headers)
+                return true
             }
 
             override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
                 // Not handling it kills the app along with the page
                 logcat(LogPriority.ERROR) {
                     "WebView renderer gone: crashed=${detail.didCrash()}, " +
-                        "priority=${detail.rendererPriorityAtExit()}, url=$currentUrl"
+                        "priority=${detail.rendererPriorityAtExit()}, url=${view.url}"
                 }
                 view.context.toast(MR.strings.information_webview_crashed, Toast.LENGTH_LONG)
                 onNavigateUp()
@@ -253,6 +269,23 @@ fun WebViewScreenContent(
 
     BackHandler(windowStack.size > 1, popState)
 
+    fun openMangaInApp() {
+        if (openingManga) return
+        openingManga = true
+        coroutineScope.launch {
+            try {
+                val mangaId = resolveManga(currentUrl)
+                if (mangaId == null) {
+                    context.toast(MR.strings.no_results_found)
+                } else {
+                    onOpenManga(mangaId)
+                }
+            } finally {
+                openingManga = false
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             Box {
@@ -264,7 +297,7 @@ fun WebViewScreenContent(
                         navigationIcon = MaterialSymbols.Rounded.Close,
                         actions = {
                             AppBarActions(
-                                listOf(
+                                listOfNotNull(
                                     AppBar.Action(
                                         title = stringResource(MR.strings.action_webview_back),
                                         icon = MaterialSymbols.AutoMirroredRounded.ArrowBack,
@@ -297,6 +330,14 @@ fun WebViewScreenContent(
                                         title = stringResource(MR.strings.action_open_in_browser),
                                         onClick = { onOpenInBrowser(currentUrl) },
                                     ),
+                                    if (mangaUrl == currentUrl && !openingManga) {
+                                        AppBar.OverflowAction(
+                                            title = stringResource(MR.strings.action_webview_open_in_app),
+                                            onClick = ::openMangaInApp,
+                                        )
+                                    } else {
+                                        null
+                                    },
                                     AppBar.OverflowAction(
                                         title = stringResource(MR.strings.pref_clear_cookies),
                                         onClick = { onClearCookies(currentUrl) },

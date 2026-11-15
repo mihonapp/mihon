@@ -261,9 +261,6 @@
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
         <meta-data
-            android:name="android.webkit.WebView.EnableSafeBrowsing"
-            android:value="false" />
-        <meta-data
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />
 

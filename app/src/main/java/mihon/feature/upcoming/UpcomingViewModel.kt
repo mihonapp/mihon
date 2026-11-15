@@ -34,6 +34,7 @@ import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.SubscriberGate
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.library.service.LibraryVisibility
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.upcoming.service.UpcomingPreferences
 import kotlin.time.Clock
@@ -44,14 +45,19 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class UpcomingViewModel(
     private val getUpcomingManga: GetUpcomingManga,
-    val getCategories: GetCategories,
+    getCategories: GetCategories,
     val upcomingPreferences: UpcomingPreferences,
+    libraryVisibility: LibraryVisibility,
 ) : ViewModel() {
 
     private val subscriberGate = SubscriberGate()
 
     val excludedCategories = upcomingPreferences.filterExcludedCategories
     val includedCategories = upcomingPreferences.filterIncludedCategories
+
+    val visibleCategories = combine(getCategories.subscribe(), libraryVisibility.changes()) { categories, hidden ->
+        categories.filterNot { it.id in hidden }
+    }
 
     private val selectedYearMonth = MutableStateFlow(
         value = Clock.System.now()

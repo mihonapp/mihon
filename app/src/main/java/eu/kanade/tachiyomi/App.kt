@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -8,12 +9,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.Bundle
 import android.webkit.WebView
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.preference.PreferenceManager
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
@@ -81,7 +80,11 @@ import java.security.Security
 import kotlin.concurrent.thread
 import mihon.icons.materialsymbols.R as MaterialSymbolsR
 
-class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory, GraphProvider<AppGraph> {
+class App :
+    Application(),
+    Application.ActivityLifecycleCallbacks,
+    SingletonImageLoader.Factory,
+    GraphProvider<AppGraph> {
 
     override val graph: AppGraph by lazy {
         createGraphFactory<AppGraph.Factory>().create(context = this, isDebugBuild = isDebugBuildType)
@@ -114,10 +117,11 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     private lateinit var scope: CoroutineScope
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
+    private var startedActivities = 0
 
     @SuppressLint("LaunchActivityFromNotification")
     override fun onCreate() {
-        super<Application>.onCreate()
+        super.onCreate()
 
         // Must run before the graph is built, since injecting dependencies initializes WebView and the
         // suffix can't be set once a provider exists in the process. Secondary processes die otherwise.
@@ -146,7 +150,8 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
         setupNotificationChannels()
 
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        // ProcessLifecycleOwner delays background events to absorb Activity recreation.
+        registerActivityLifecycleCallbacks(this)
 
         // Show notification to disable Incognito Mode when it's enabled
         basePreferences.incognitoMode.changes()
@@ -275,13 +280,25 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
             .build()
     }
 
-    override fun onStart(owner: LifecycleOwner) {
-        SecureActivityDelegate.onApplicationStart(this)
+    override fun onActivityStarted(activity: Activity) {
+        if (startedActivities++ == 0) SecureActivityDelegate.onApplicationStart(this)
     }
 
-    override fun onStop(owner: LifecycleOwner) {
-        SecureActivityDelegate.onApplicationStopped(this)
+    override fun onActivityStopped(activity: Activity) {
+        if (--startedActivities == 0 && !activity.isChangingConfigurations) {
+            SecureActivityDelegate.onApplicationStopped(this)
+        }
     }
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+
+    override fun onActivityResumed(activity: Activity) = Unit
+
+    override fun onActivityPaused(activity: Activity) = Unit
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+
+    override fun onActivityDestroyed(activity: Activity) = Unit
 
     override fun getPackageName(): String {
         try {

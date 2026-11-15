@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import tachiyomi.domain.library.service.LibraryVisibility
 import tachiyomi.domain.source.model.Pin
 import tachiyomi.domain.source.model.Pins
 import tachiyomi.domain.source.model.Source
@@ -17,6 +18,7 @@ class GetEnabledSources(
     private val repository: SourceRepository,
     private val preferences: SourcePreferences,
     private val extensionManager: ExtensionManager,
+    private val libraryVisibility: LibraryVisibility,
 ) {
 
     fun subscribe(): Flow<List<Source>> {
@@ -29,10 +31,11 @@ class GetEnabledSources(
                 repository.getSources(),
                 preferences.hiddenExtensions.changes(),
                 extensionManager.loadedExtensionsFlow,
-            ) { sources, hidden, extensions ->
-                val hiddenSourceIds = extensions.filter { it.pkgName in hidden }
+                libraryVisibility.hiddenSourceIdsFlow(),
+            ) { sources, hiddenPackages, extensions, hiddenSourceIds ->
+                val hiddenExtensionSourceIds = extensions.filter { it.pkgName in hiddenPackages }
                     .flatMap { it.sources }.mapTo(mutableSetOf()) { it.id }
-                sources.filterNot { it.id in hiddenSourceIds }
+                sources.filterNot { it.id in hiddenSourceIds || it.id in hiddenExtensionSourceIds }
             },
         ) { pinnedSourceIds, enabledLanguages, disabledSources, lastUsedSource, sources ->
             sources

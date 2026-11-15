@@ -6,37 +6,23 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.core.net.toUri
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.webview.WebViewScreenContent
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
+import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.system.WebViewUtil
-import eu.kanade.tachiyomi.util.system.openInBrowser
-import eu.kanade.tachiyomi.util.system.toShareIntent
-import eu.kanade.tachiyomi.util.system.toWebViewHeaders
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import logcat.LogPriority
-import mihon.app.di.appGraph
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import tachiyomi.core.common.util.system.logcat
-import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.core.common.Constants
 import tachiyomi.i18n.MR
 import tachiyomi.i18n.information_webview_required
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class WebViewActivity : BaseActivity() {
-
-    @Inject private lateinit var sourceManager: SourceManager
-
-    @Inject private lateinit var network: NetworkHelper
 
     private var assistUrl: String? = null
 
@@ -56,7 +42,6 @@ class WebViewActivity : BaseActivity() {
             overridePendingTransition(R.anim.shared_axis_x_push_enter, R.anim.shared_axis_x_push_exit)
         }
         super.onCreate(savedInstanceState)
-        appGraph.inject(this)
 
         if (!WebViewUtil.supportsWebView(this)) {
             toast(MR.strings.information_webview_required, Toast.LENGTH_LONG)
@@ -65,21 +50,13 @@ class WebViewActivity : BaseActivity() {
         }
 
         val url = intent.extras?.getString(URL_KEY) ?: return
+        val sourceId = intent.getLongExtra(SOURCE_KEY, 0L).takeUnless { it == 0L }
         assistUrl = url
 
         setComposeContent {
-            // Null until the source it belongs to has been resolved
-            val headers by produceState<Map<String, String>?>(initialValue = null) {
-                val source = sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource
-                value = withContext(Dispatchers.IO) {
-                    try {
-                        source?.headers?.toWebViewHeaders().orEmpty()
-                    } catch (e: Exception) {
-                        logcat(LogPriority.ERROR, e) { "Failed to build headers" }
-                        emptyMap()
-                    }
-                }
-            }
+            val viewModel =
+                assistedMetroViewModel<WebViewViewModel, WebViewViewModel.Factory> { create(sourceId = sourceId) }
+            val headers by viewModel.headers.collectAsState()
 
             if (headers == null) {
                 LoadingScreen()
@@ -91,11 +68,14 @@ class WebViewActivity : BaseActivity() {
                 initialTitle = intent.extras?.getString(TITLE_KEY),
                 url = url,
                 headers = headers.orEmpty(),
-                defaultUserAgentProvider = network::defaultUserAgentProvider,
+                defaultUserAgentProvider = viewModel::defaultUserAgentProvider,
                 onUrlChange = { assistUrl = it },
-                onShare = this::shareWebpage,
-                onOpenInBrowser = this::openInBrowser,
-                onClearCookies = this::clearCookies,
+                onShare = { viewModel.shareWebpage(this, it) },
+                onOpenInBrowser = { viewModel.openInBrowser(this, it) },
+                canOpenManga = viewModel::canOpenManga,
+                resolveManga = viewModel::resolveManga,
+                onOpenManga = this::openManga,
+                onClearCookies = viewModel::clearCookies,
             )
         }
     }
@@ -119,21 +99,14 @@ class WebViewActivity : BaseActivity() {
         }
     }
 
-    private fun shareWebpage(url: String) {
-        try {
-            startActivity(url.toUri().toShareIntent(this, type = "text/plain"))
-        } catch (e: Exception) {
-            toast(e.message)
-        }
-    }
-
-    private fun openInBrowser(url: String) {
-        openInBrowser(url, forceDefaultBrowser = true)
-    }
-
-    private fun clearCookies(url: String) {
-        val cleared = network.cookieJar.remove(url.toHttpUrl())
-        logcat { "Cleared $cleared cookies for: $url" }
+    private fun openManga(mangaId: Long) {
+        startActivity(
+            Intent(this, MainActivity::class.java).apply {
+                action = Constants.SHORTCUT_MANGA
+                putExtra(Constants.MANGA_EXTRA, mangaId)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            },
+        )
     }
 
     companion object {
@@ -145,7 +118,7 @@ class WebViewActivity : BaseActivity() {
             return Intent(context, WebViewActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 putExtra(URL_KEY, url)
-                putExtra(SOURCE_KEY, sourceId)
+                sourceId?.let { putExtra(SOURCE_KEY, it) }
                 putExtra(TITLE_KEY, title)
             }
         }

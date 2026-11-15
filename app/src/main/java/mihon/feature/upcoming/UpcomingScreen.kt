@@ -12,11 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -82,9 +79,8 @@ private fun ColumnScope.CategoryFilterSheet(
 
     HorizontalDivider(modifier = Modifier.padding(MaterialTheme.padding.extraSmall))
 
-    val allCategories by viewModel.getCategories.subscribe().collectAsState(initial = emptyList())
-
-    if (allCategories.isEmpty()) {
+    val visibleCategories by viewModel.visibleCategories.collectAsState(initial = null)
+    val categories = visibleCategories ?: run {
         LoadingScreen(modifier = Modifier.padding(16.dp))
         return
     }
@@ -92,26 +88,17 @@ private fun ColumnScope.CategoryFilterSheet(
     val excluded by viewModel.upcomingPreferences.filterExcludedCategories.collectAsState()
     val included by viewModel.upcomingPreferences.filterIncludedCategories.collectAsState()
 
-    val selected = remember {
-        allCategories.map { category ->
-            when (category.id) {
+    Column {
+        categories.forEach { category ->
+            val state = when (category.id) {
                 in included -> TriState.ENABLED_IS
                 in excluded -> TriState.ENABLED_NOT
                 else -> TriState.DISABLED
             }
-        }.toMutableStateList()
-    }
-
-    Column {
-        allCategories.fastForEachIndexed { idx, category ->
-            val state = selected[idx]
             TriStateItem(
                 label = category.visualName,
                 state = state,
-                onClick = {
-                    selected[idx] = state.next()
-                    viewModel.cycleCategory(category)
-                },
+                onClick = { viewModel.cycleCategory(category) },
             )
         }
     }

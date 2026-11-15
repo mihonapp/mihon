@@ -263,7 +263,11 @@ class MangaBakaApi(
         }
     }
 
-    fun verifyOAuthState(state: String): Boolean = state == oauthStateParam
+    fun consumeOAuthState(state: String): Boolean {
+        if (state.isEmpty() || state != oauthStateParam) return false
+        oauthStateParam = ""
+        return true
+    }
 
     private fun parseIsoDateAsLocalStartOfDay(isoDate: String?): Long? {
         // The v1 API returns full ISO 8601 strings with a midnight-UTC-truncated time component, regardless of the
