@@ -1,0 +1,10 @@
+{
+  "uniqueId": "cargo:log:0.4.35",
+  "artifactVersion": "0.4.35",
+  "name": "log",
+  "website": "https://github.com/rust-lang/log",
+  "licenses": [
+    "rust-log-mit",
+    "rust-apache-2.0"
+  ]
+}

@@ -8,6 +8,10 @@ fun List<Double>.missingChaptersCount(): Int {
     if (size >= 512) {
         NativeChapterEngine.missingChaptersCount(this)?.let { return it }
     }
+    return missingChaptersCountKotlin()
+}
+
+fun List<Double>.missingChaptersCountKotlin(): Int {
     val chapters = IntArray(size)
     var count = 0
     for (number in this) {

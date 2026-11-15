@@ -5,7 +5,9 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import app.komikita.core.nativecore.NativeChapterEngine
+import tachiyomi.domain.chapter.service.missingChaptersCountKotlin
 import java.io.File
+import kotlin.random.Random
 import kotlin.system.measureNanoTime
 
 /** Measures the complete List -> DoubleArray -> JNI call, exclusively in benchmark builds. */
@@ -16,44 +18,28 @@ class NativeBenchmarkActivity : Activity() {
         setContentView(label)
         Thread {
             try {
-                val csv = StringBuilder("chapters,kotlin_median_ns,jni_including_conversion_median_ns\n")
-                for (size in listOf(128, 512, 1_000, 10_000)) {
-                    val numbers = List(size) { it * 2.0 }
-                    val expected = kotlinCount(numbers)
-                    check(NativeChapterEngine.missingChaptersCount(numbers.toDoubleArray()) == expected) {
-                        "Native library unavailable or result differs"
-                    }
-                    fun native() {
-                        sink = NativeChapterEngine.missingChaptersCount(numbers.toDoubleArray())!!
-                        check(sink == expected)
-                    }
-                    fun kotlin() {
-                        sink = kotlinCount(numbers)
-                    }
-                    repeat(100) {
-                        native()
-                        kotlin()
-                    }
-                    val old = LongArray(21)
-                    val jni = LongArray(21)
-                    repeat(21) { index ->
-                        fun oldRun() {
-                            old[index] = measureNanoTime { repeat(100) { kotlin() } } / 100
+                val csv = StringBuilder("chapters,input,kotlin_median_ns,jni_including_conversion_median_ns\n")
+                for (size in listOf(128, 256, 512, 1_000, 10_000)) {
+                    val ascending = List(size) { (it + 1) * 2.0 }
+                    val mixed = List(size) { index ->
+                        val offset = index % 10
+                        val chapter = (index / 10 * 12 + offset).toDouble()
+                        when (offset) {
+                            0 -> -1.0
+                            2 -> chapter - 0.5
+                            else -> chapter
                         }
-                        fun nativeRun() {
-                            jni[index] = measureNanoTime { repeat(100) { native() } } / 100
-                        }
-                        if (index % 2 == 0) {
-                            oldRun()
-                            nativeRun()
-                        } else {
-                            nativeRun()
-                            oldRun()
-                        }
+                    }.shuffled(Random(size))
+
+                    val inputs = listOf(
+                        "ascending" to ascending,
+                        "descending" to ascending.reversed(),
+                        "mixed" to mixed,
+                    )
+                    for ((name, numbers) in inputs) {
+                        val (kotlin, jni) = measure(numbers)
+                        csv.appendLine("$size,$name,$kotlin,$jni")
                     }
-                    old.sort()
-                    jni.sort()
-                    csv.appendLine("$size,${old[10]},${jni[10]}")
                 }
                 val directory = requireNotNull(getExternalFilesDir(null))
                 File(directory, "native-boundary.csv").writeText(csv.toString())
@@ -69,26 +55,43 @@ class NativeBenchmarkActivity : Activity() {
         }.start()
     }
 
-    // Same primitive-array fallback as domain/chapter/service/MissingChapters.kt.
-    private fun kotlinCount(numbers: List<Double>): Int {
-        val chapters = IntArray(numbers.size)
-        var count = 0
-        for (number in numbers) {
-            if (number.isFinite() && number >= 0.0 &&
-                number <= Int.MAX_VALUE.toDouble()
-            ) {
-                chapters[count++] = number.toInt()
+    private fun measure(numbers: List<Double>): Pair<Long, Long> {
+        val expected = numbers.missingChaptersCountKotlin()
+        check(NativeChapterEngine.missingChaptersCount(numbers) == expected) {
+            "Native library unavailable or result differs"
+        }
+
+        fun native() {
+            sink = NativeChapterEngine.missingChaptersCount(numbers)!!
+        }
+        fun kotlin() {
+            sink = numbers.missingChaptersCountKotlin()
+        }
+        repeat(100) {
+            native()
+            kotlin()
+        }
+
+        val kotlinTimes = LongArray(21)
+        val jniTimes = LongArray(21)
+        repeat(21) { index ->
+            fun measureKotlin() {
+                kotlinTimes[index] = measureNanoTime { repeat(100) { kotlin() } } / 100
+            }
+            fun measureJni() {
+                jniTimes[index] = measureNanoTime { repeat(100) { native() } } / 100
+            }
+            if (index % 2 == 0) {
+                measureKotlin()
+                measureJni()
+            } else {
+                measureJni()
+                measureKotlin()
             }
         }
-        java.util.Arrays.sort(chapters, 0, count)
-        var previous = 0L
-        var missing = 0L
-        for (index in 0 until count) {
-            val current = chapters[index].toLong()
-            if (current > previous + 1) missing += current - previous - 1
-            previous = current
-        }
-        return missing.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        kotlinTimes.sort()
+        jniTimes.sort()
+        return kotlinTimes[kotlinTimes.size / 2] to jniTimes[jniTimes.size / 2]
     }
 
     companion object {

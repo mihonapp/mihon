@@ -1,0 +1,10 @@
+{
+  "uniqueId": "cargo:jni:0.21.1",
+  "artifactVersion": "0.21.1",
+  "name": "jni",
+  "website": "https://github.com/jni-rs/jni-rs",
+  "licenses": [
+    "rust-jni-mit",
+    "rust-apache-2.0"
+  ]
+}

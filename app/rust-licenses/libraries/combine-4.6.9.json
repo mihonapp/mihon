@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:combine:4.6.9",
+  "artifactVersion": "4.6.9",
+  "name": "combine",
+  "website": "https://github.com/Marwes/combine",
+  "licenses": [
+    "rust-combine-mit"
+  ]
+}

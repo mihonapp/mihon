@@ -1,0 +1,10 @@
+{
+  "uniqueId": "cargo:memchr:2.8.3",
+  "artifactVersion": "2.8.3",
+  "name": "memchr",
+  "website": "https://github.com/BurntSushi/memchr",
+  "licenses": [
+    "rust-memchr-mit",
+    "rust-memchr-unlicense"
+  ]
+}

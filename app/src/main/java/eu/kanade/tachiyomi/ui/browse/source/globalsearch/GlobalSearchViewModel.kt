@@ -25,7 +25,7 @@ class GlobalSearchViewModel(
     getManga: GetManga,
     preferences: SourcePreferences,
 ) : SearchViewModel(
-    initialState = State(searchQuery = initialQuery),
+    initialState = State(searchQuery = initialQuery, sourceFilter = SourceFilter.All),
     sourcePreferences = sourcePreferences,
     sourceManager = sourceManager,
     extensionManager = extensionManager,
@@ -43,13 +43,7 @@ class GlobalSearchViewModel(
 
     init {
         extensionFilter = initialExtensionFilter
-        if (initialQuery.isNotBlank() || !initialExtensionFilter.isNullOrBlank()) {
-            if (extensionFilter != null) {
-                // we're going to use custom extension filter instead
-                setSourceFilter(SourceFilter.All)
-            }
-            search()
-        }
+        search()
     }
 
     override suspend fun getEnabledSources(): List<Source> {

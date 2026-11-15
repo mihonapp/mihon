@@ -66,6 +66,7 @@ abstract class SearchViewModel(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
             { "${it.id}" !in pinnedSources },
             { "${it.name.lowercase()} (${it.lang})" },
+            { it.id },
         )
     }
 

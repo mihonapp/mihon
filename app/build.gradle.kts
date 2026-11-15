@@ -30,6 +30,14 @@ if (Config.includeTelemetry) {
     }
 }
 
+if (providers.gradleProperty("enable-rust").map(String::toBoolean).orElse(true).get()) {
+    aboutLibraries {
+        collect {
+            configPath.set(layout.projectDirectory.dir("rust-licenses"))
+        }
+    }
+}
+
 val keystorePropertiesFile = layout.settingsDirectory.file("keystore.properties").asFile
 
 android {

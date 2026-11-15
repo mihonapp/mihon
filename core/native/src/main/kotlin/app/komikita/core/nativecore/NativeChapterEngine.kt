@@ -2,6 +2,9 @@ package app.komikita.core.nativecore
 
 /** Optional native batch processing; failure always leaves the Kotlin implementation available. */
 object NativeChapterEngine {
+    // Match the Rust limit so oversized lists skip the transfer array.
+    private const val MAX_NATIVE_CHAPTERS = 1_000_000
+
     @Volatile
     private var available = try {
         System.loadLibrary("komikita_native")
@@ -14,7 +17,7 @@ object NativeChapterEngine {
 
     /** Avoid allocating a transfer array when this build or device cannot use the native library. */
     fun missingChaptersCount(numbers: List<Double>): Int? {
-        if (!available) return null
+        if (!available || numbers.size > MAX_NATIVE_CHAPTERS) return null
         return missingChaptersCount(numbers.toDoubleArray())
     }
 

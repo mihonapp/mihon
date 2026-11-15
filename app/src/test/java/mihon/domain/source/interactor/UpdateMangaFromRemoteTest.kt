@@ -88,7 +88,7 @@ class UpdateMangaFromRemoteTest {
             throw failure
         }
 
-        val result = update(source, manga, fetchDetails = true, fetchChapters = true, fetchDetailsFirst = true)
+        val result = update(source, manga, fetchDetails = true, fetchChapters = true)
 
         result.exceptionOrNull() shouldBe failure
         storedManga.description shouldBe "Synopsis"
@@ -114,13 +114,7 @@ class UpdateMangaFromRemoteTest {
         }
         coEvery { syncChapters.await(listOf(sourceChapter), any(), source, false, null) } returns listOf(chapter)
 
-        val result = update(
-            source,
-            manga,
-            fetchDetails = true,
-            fetchChapters = true,
-            fetchDetailsFirst = true,
-        ).getOrThrow()
+        val result = update(source, manga, fetchDetails = true, fetchChapters = true).getOrThrow()
 
         result.manga.description shouldBe "Synopsis"
         result.newChapters shouldBe listOf(chapter)
@@ -135,7 +129,7 @@ class UpdateMangaFromRemoteTest {
         }
         coEvery { syncChapters.await(any(), manga, source, false, null) } returns emptyList()
 
-        update(source, manga, fetchDetails = true, fetchChapters = true, fetchDetailsFirst = true).getOrThrow()
+        update(source, manga, fetchDetails = true, fetchChapters = true).getOrThrow()
 
         coVerify(exactly = 1) { source.getMangaUpdate(any(), any(), any(), any()) }
     }
@@ -150,13 +144,7 @@ class UpdateMangaFromRemoteTest {
         }
         coEvery { syncChapters.await(listOf(sourceChapter), manga, source, false, null) } returns listOf(chapter)
 
-        val result = update(
-            source,
-            manga,
-            fetchDetails = true,
-            fetchChapters = true,
-            fetchDetailsFirst = true,
-        ).getOrThrow()
+        val result = update(source, manga, fetchDetails = true, fetchChapters = true).getOrThrow()
 
         result.manga.description shouldBe "Synopsis"
         result.newChapters shouldBe listOf(chapter)

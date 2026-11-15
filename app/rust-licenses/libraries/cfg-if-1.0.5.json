@@ -1,0 +1,10 @@
+{
+  "uniqueId": "cargo:cfg-if:1.0.5",
+  "artifactVersion": "1.0.5",
+  "name": "cfg-if",
+  "website": "https://github.com/rust-lang/cfg-if",
+  "licenses": [
+    "rust-cfg-if-mit",
+    "rust-apache-2.0"
+  ]
+}

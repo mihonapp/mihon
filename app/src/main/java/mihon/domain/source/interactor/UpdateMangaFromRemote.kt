@@ -60,13 +60,13 @@ class UpdateMangaFromRemote(
         fetchChapters: Boolean = false,
         manualFetch: Boolean = false,
         fetchWindow: ClosedRange<Instant>? = null,
-        fetchDetailsFirst: Boolean = false,
     ): Result<RemoteMangaUpdate> = withContext(Dispatchers.IO) {
         try {
             val chapters = chapterRepository.getChapterByMangaId(manga.id)
                 .sortedBy { it.sourceOrder }
                 .map(Chapter::toSChapter)
-            val earlyDetails = if (fetchDetailsFirst && fetchDetails && fetchChapters && chapters.isEmpty()) {
+            // A combined request can hold up the details until the first chapter list finishes loading.
+            val earlyDetails = if (fetchDetails && fetchChapters && chapters.isEmpty()) {
                 try {
                     source.getMangaUpdate(manga.toSManga(), chapters, fetchDetails = true, fetchChapters = false).manga
                 } catch (e: CancellationException) {

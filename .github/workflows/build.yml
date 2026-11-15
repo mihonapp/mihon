@@ -73,6 +73,52 @@ jobs:
       - name: Build app
         run: ./gradlew assembleRelease -Pdist=ci
 
+      - name: Verify release APK native libraries
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          directory = Path('app/build/outputs/apk/release')
+          abis = ('armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64')
+          with ZipFile(directory / 'app-universal-release.apk') as universal:
+              for abi in abis:
+                  library = f'lib/{abi}/libkomikita_native.so'
+                  universal.getinfo(library)
+                  with ZipFile(directory / f'app-{abi}-release.apk') as split:
+                      split.getinfo(library)
+          PY
+
+      - name: Enable KVM for the Android emulator
+        run: sudo chmod a+rw /dev/kvm
+
+      - name: Run Android JNI smoke test
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          script: ./gradlew :core:native:connectedDebugAndroidTest -Penable-rust=true
+
+      - name: Verify JNI smoke test ran
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree
+
+          reports = Path('core/native/build/outputs/androidTest-results/connected/debug').rglob('TEST-*.xml')
+          passed = {
+              case.get('name')
+              for report in reports
+              for case in ElementTree.parse(report).iter('testcase')
+              if case.get('classname') == 'app.komikita.core.nativecore.NativeChapterEngineTest'
+              and all(child.tag not in ('failure', 'error', 'skipped') for child in case)
+          }
+          missing = {'countsGapsThroughJni', 'rejectsOversizedBatches'} - passed
+          if missing:
+              raise SystemExit(f'JNI smoke tests without a passing result: {", ".join(sorted(missing))}')
+          PY
+
       - name: Upload APK
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

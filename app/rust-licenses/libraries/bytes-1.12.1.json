@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:bytes:1.12.1",
+  "artifactVersion": "1.12.1",
+  "name": "bytes",
+  "website": "https://github.com/tokio-rs/bytes",
+  "licenses": [
+    "rust-bytes-mit"
+  ]
+}

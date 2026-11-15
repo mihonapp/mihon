@@ -1,0 +1,10 @@
+{
+  "uniqueId": "cargo:jni-sys:0.3.1",
+  "artifactVersion": "0.3.1",
+  "name": "jni-sys",
+  "website": "https://github.com/jni-rs/jni-sys",
+  "licenses": [
+    "rust-jni-sys-mit",
+    "rust-apache-2.0"
+  ]
+}

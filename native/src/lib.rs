@@ -4,19 +4,33 @@ use jni::{
     objects::{JClass, JDoubleArray},
     sys::jint,
 };
+use std::collections::TryReserveError;
 use std::panic::{AssertUnwindSafe, catch_unwind};
+
+const MAX_NATIVE_CHAPTERS: usize = 1_000_000;
 
 /// Counts gaps between non-negative chapter numbers, starting at chapter one.
 /// Fractions share their base chapter. Invalid numbers are ignored and counts saturate.
+///
+/// # Panics
+///
+/// Panics if the chapter buffer cannot be allocated.
 #[must_use]
-#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
 pub fn missing_chapters_count(numbers: &[f64]) -> i32 {
-    let mut chapters: Vec<i32> = numbers
-        .iter()
-        .copied()
-        .filter(|n| n.is_finite() && *n >= 0.0 && *n <= f64::from(i32::MAX))
-        .map(|n| n as i32)
-        .collect();
+    try_missing_chapters_count(numbers).expect("could not allocate the chapter buffer")
+}
+
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+fn try_missing_chapters_count(numbers: &[f64]) -> Result<i32, TryReserveError> {
+    let mut chapters = Vec::new();
+    chapters.try_reserve_exact(numbers.len())?;
+    chapters.extend(
+        numbers
+            .iter()
+            .copied()
+            .filter(|n| n.is_finite() && *n >= 0.0 && *n <= f64::from(i32::MAX))
+            .map(|n| n as i32),
+    );
     chapters.sort_unstable();
     let mut previous = 0_i64;
     let mut missing = 0_i64;
@@ -27,7 +41,7 @@ pub fn missing_chapters_count(numbers: &[f64]) -> i32 {
         }
         previous = current;
     }
-    i32::try_from(missing).unwrap_or(i32::MAX)
+    Ok(i32::try_from(missing).unwrap_or(i32::MAX))
 }
 
 // SAFETY: This unique symbol is called only by the matching JVM static native method.
@@ -50,7 +64,7 @@ pub extern "system" fn Java_app_komikita_core_nativecore_NativeChapterEngine_nat
             return -1;
         };
         // Keep native temporary storage bounded; Kotlin handles larger inputs.
-        if length > 1_000_000 {
+        if length > MAX_NATIVE_CHAPTERS {
             return -1;
         }
         let mut values = Vec::new();
@@ -64,7 +78,7 @@ pub extern "system" fn Java_app_komikita_core_nativecore_NativeChapterEngine_nat
         {
             return -1;
         }
-        missing_chapters_count(&values)
+        try_missing_chapters_count(&values).unwrap_or(-1)
     }))
     .unwrap_or(-1)
 }

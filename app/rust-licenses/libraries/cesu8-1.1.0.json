@@ -1,0 +1,10 @@
+{
+  "uniqueId": "cargo:cesu8:1.1.0",
+  "artifactVersion": "1.1.0",
+  "name": "cesu8",
+  "website": "https://github.com/emk/cesu8-rs",
+  "licenses": [
+    "rust-cesu8-mit",
+    "rust-apache-2.0"
+  ]
+}

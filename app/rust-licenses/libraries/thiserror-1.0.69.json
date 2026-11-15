@@ -1,0 +1,10 @@
+{
+  "uniqueId": "cargo:thiserror:1.0.69",
+  "artifactVersion": "1.0.69",
+  "name": "thiserror",
+  "website": "https://github.com/dtolnay/thiserror",
+  "licenses": [
+    "rust-thiserror-mit",
+    "rust-apache-2.0"
+  ]
+}

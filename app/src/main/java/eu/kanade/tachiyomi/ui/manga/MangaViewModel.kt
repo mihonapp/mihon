@@ -47,7 +47,6 @@ import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
-import eu.kanade.tachiyomi.source.isComix
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
@@ -376,8 +375,6 @@ class MangaViewModel(
                 fetchDetails = fetchDetails,
                 fetchChapters = fetchChapters,
                 manualFetch = manualFetch,
-                // Comix returns combined updates only after walking the chapter list in its WebView.
-                fetchDetailsFirst = source.isComix(),
             )
                 .getOrThrow()
 

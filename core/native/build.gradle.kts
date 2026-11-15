@@ -10,6 +10,7 @@ android {
     namespace = "app.komikita.core.nativecore"
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
@@ -30,4 +31,9 @@ if (rustEnabled.get()) {
     components.onVariants { variant ->
         variant.sources.jniLibs?.addGeneratedSourceDirectory(buildRust, BuildRustTask::outputDirectory)
     }
+}
+
+dependencies {
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation("androidx.test:runner:1.7.0")
 }
