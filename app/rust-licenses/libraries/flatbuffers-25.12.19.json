@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:flatbuffers:25.12.19",
+  "artifactVersion": "25.12.19",
+  "name": "flatbuffers",
+  "website": "https://github.com/google/flatbuffers",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

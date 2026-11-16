@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:psl-types:2.0.11",
+  "artifactVersion": "2.0.11",
+  "name": "psl-types",
+  "website": "https://github.com/addr-rs/psl-types",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

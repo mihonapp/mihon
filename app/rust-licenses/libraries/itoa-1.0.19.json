@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:itoa:1.0.19",
+  "artifactVersion": "1.0.19",
+  "name": "itoa",
+  "website": "https://github.com/dtolnay/itoa",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

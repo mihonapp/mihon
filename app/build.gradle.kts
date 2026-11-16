@@ -221,7 +221,6 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
-    add("benchmarkImplementation", projects.core.native)
     baselineProfile(projects.baselineProfile)
 
     implementation(projects.i18n)
@@ -231,6 +230,7 @@ dependencies {
     implementation(projects.core.archive)
     implementation(projects.core.common)
     implementation(projects.core.metro)
+    implementation(projects.core.native)
     implementation(projects.coreMetadata)
     implementation(projects.sourceApi)
     implementation(projects.sourceLocal)
@@ -345,7 +345,6 @@ dependencies {
 
     // Tests
     testImplementation(libs.bundles.test)
-    testImplementation(projects.core.native)
     testRuntimeOnly(libs.junit.platform.launcher)
 
     // For detecting memory leaks; see https://square.github.io/leakcanary/

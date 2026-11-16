@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:idna_adapter:1.2.1",
+  "artifactVersion": "1.2.1",
+  "name": "idna_adapter",
+  "website": "https://github.com/hsivonen/idna_adapter",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

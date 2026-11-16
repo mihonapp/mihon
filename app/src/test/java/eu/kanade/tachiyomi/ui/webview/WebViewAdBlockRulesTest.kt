@@ -5,6 +5,30 @@ import org.junit.jupiter.api.Test
 
 class WebViewAdBlockRulesTest {
     @Test
+    fun preservesSavedHostSemanticsAndBraveNetworkOptions() {
+        val rules = buildString {
+            appendBraveRules(
+                sequenceOf(
+                    "ADS.example.org",
+                    "0.0.0.0 exact.example.org # host",
+                    "||cdn.example.org/ads/*\$script,third-party",
+                    "!#if ext_ublock",
+                    "||conditional.example.org^",
+                    "!#endif",
+                    "@@||trusted.ads.example.org^",
+                ),
+            )
+        }
+        rules.lineSequence().filter(String::isNotEmpty).toList() shouldBe listOf(
+            "||ads.example.org^",
+            "|http://exact.example.org^",
+            "|https://exact.example.org^",
+            "||cdn.example.org/ads/*\$script,third-party",
+            "@@||trusted.ads.example.org^",
+        )
+    }
+
+    @Test
     fun blocksDomainsAndSubdomainsWithExceptionsAndLeavesNavigationAvailable() {
         val builder = WebViewAdBlockRules.Builder()
         builder.addRules(

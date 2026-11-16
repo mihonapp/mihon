@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:idna:1.1.0",
+  "artifactVersion": "1.1.0",
+  "name": "idna",
+  "website": "https://github.com/servo/rust-url/",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

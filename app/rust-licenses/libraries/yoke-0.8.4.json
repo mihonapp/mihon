@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:yoke:0.8.4",
+  "artifactVersion": "0.8.4",
+  "name": "yoke",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

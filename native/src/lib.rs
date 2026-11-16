@@ -1,4 +1,6 @@
-//! Batched chapter statistics for `KomiKita`. The algorithm uses primitive contiguous storage.
+//! Native engines for `KomiKita`.
+mod ad_block;
+
 use jni::{
     JNIEnv,
     objects::{JClass, JDoubleArray},

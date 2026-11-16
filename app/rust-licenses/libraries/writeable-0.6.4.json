@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:writeable:0.6.4",
+  "artifactVersion": "0.6.4",
+  "name": "writeable",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:litemap:0.8.3",
+  "artifactVersion": "0.8.3",
+  "name": "litemap",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

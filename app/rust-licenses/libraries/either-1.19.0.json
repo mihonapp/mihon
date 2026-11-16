@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:either:1.19.0",
+  "artifactVersion": "1.19.0",
+  "name": "either",
+  "website": "https://github.com/rayon-rs/either",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

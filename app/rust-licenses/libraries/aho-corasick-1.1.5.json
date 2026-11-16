@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:aho-corasick:1.1.5",
+  "artifactVersion": "1.1.5",
+  "name": "aho-corasick",
+  "website": "https://github.com/BurntSushi/aho-corasick",
+  "licenses": [
+    "rust-aho-corasick-mit"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:arrayvec:0.7.8",
+  "artifactVersion": "0.7.8",
+  "name": "arrayvec",
+  "website": "https://github.com/bluss/arrayvec",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

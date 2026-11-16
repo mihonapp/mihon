@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:seahash:4.1.0",
+  "artifactVersion": "4.1.0",
+  "name": "seahash",
+  "website": "https://gitlab.redox-os.org/redox-os/seahash",
+  "licenses": [
+    "rust-seahash-mit"
+  ]
+}

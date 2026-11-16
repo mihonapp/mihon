@@ -30,7 +30,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,21 +75,20 @@ import tachiyomi.i18n.information_cloudflare_help
 import tachiyomi.i18n.information_webview_crashed
 import tachiyomi.i18n.no_results_found
 import tachiyomi.i18n.pref_clear_cookies
-import tachiyomi.i18n.webview_ad_block_title
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
+import java.util.concurrent.ConcurrentHashMap
 
-class WebViewWindow(webContent: WebContent, val navigator: WebViewNavigator) {
+private class WebViewWindow(
+    webContent: WebContent,
+    val navigator: WebViewNavigator,
+    val popupMessage: Message? = null,
+    val openerUrl: String? = null,
+) {
     var state by mutableStateOf(WebViewState(webContent))
     var currentUrl by mutableStateOf((webContent as? WebContent.Url)?.url)
-    var popupMessage: Message? = null
-        private set
     var webView: WebView? = null
-
-    constructor(popupMessage: Message, navigator: WebViewNavigator) : this(WebContent.NavigatorOnly, navigator) {
-        this.popupMessage = popupMessage
-    }
 }
 
 @Composable
@@ -109,8 +107,7 @@ fun WebViewScreenContent(
     headers: Map<String, String> = emptyMap(),
     onUrlChange: (String) -> Unit = {},
 ) {
-    val adBlockSettings = adBlocker.settings.collectAsState().value
-    if (adBlockSettings == null) {
+    if (adBlocker.settings.collectAsState().value == null) {
         LoadingScreen()
         return
     }
@@ -137,7 +134,6 @@ fun WebViewScreenContent(
     var showCloudflareHelp by remember { mutableStateOf(false) }
     var isActive by remember { mutableStateOf(true) }
     var openingManga by remember { mutableStateOf(false) }
-    var showAdBlockSettings by rememberSaveable { mutableStateOf(false) }
 
     val mangaUrl by produceState<String?>(null, activeUrl) {
         value = null
@@ -153,11 +149,14 @@ fun WebViewScreenContent(
     }
 
     val headersOrigin = remember(url) { url.toHttpUrlOrNull() }
+    // Resource interception runs off the UI thread, where WebView and Compose state cannot be read.
+    val pageUrls = remember { ConcurrentHashMap<WebView, String>() }
 
     val webClient = remember {
         object : AccompanistWebViewClient() {
             private fun updateUrl(view: WebView, url: String?) {
                 if (url != null) {
+                    pageUrls[view] = url
                     windowStack.items.find { it.webView === view }?.currentUrl = url
                 }
             }
@@ -195,7 +194,13 @@ fun WebViewScreenContent(
                 val popup = windowStack.lastItemOrNull
                 if ((uri.scheme == "http" || uri.scheme == "https") &&
                     popup?.popupMessage != null && popup.webView === view &&
-                    adBlocker.shouldBlock(uri.host, isMainFrame = false)
+                    adBlocker.shouldBlock(
+                        url = uri.toString(),
+                        host = uri.host,
+                        sourceUrl = request.header("Referer") ?: popup.openerUrl ?: url,
+                        resourceType = "document",
+                        method = request.method,
+                    )
                 ) {
                     windowStack.pop()
                     return true
@@ -217,8 +222,14 @@ fun WebViewScreenContent(
 
             override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
                 val uri = request.url
-                if ((uri.scheme == "http" || uri.scheme == "https") &&
-                    adBlocker.shouldBlock(uri.host, request.isForMainFrame)
+                if (!request.isForMainFrame && (uri.scheme == "http" || uri.scheme == "https") &&
+                    adBlocker.shouldBlock(
+                        url = uri.toString(),
+                        host = uri.host,
+                        sourceUrl = request.header("Referer") ?: pageUrls[view] ?: url,
+                        resourceType = request.resourceType(),
+                        method = request.method,
+                    )
                 ) {
                     return WebResourceResponse("text/plain", "UTF-8", 204, "No Content", emptyMap(), null)
                 }
@@ -248,7 +259,14 @@ fun WebViewScreenContent(
             ): Boolean {
                 // if it wasn't initiated by a user gesture, we should ignore it like a normal browser would
                 if (isUserGesture) {
-                    windowStack.push(WebViewWindow(resultMsg, WebViewNavigator(coroutineScope)))
+                    windowStack.push(
+                        WebViewWindow(
+                            WebContent.NavigatorOnly,
+                            WebViewNavigator(coroutineScope),
+                            popupMessage = resultMsg,
+                            openerUrl = view.url,
+                        ),
+                    )
                     return true
                 }
                 return false
@@ -304,18 +322,6 @@ fun WebViewScreenContent(
     }
 
     BackHandler(windowStack.size > 1, popState)
-
-    if (showAdBlockSettings) {
-        WebViewAdBlockDialog(
-            blocker = adBlocker,
-            settings = adBlockSettings,
-            onDismiss = { showAdBlockSettings = false },
-            onReload = {
-                showAdBlockSettings = false
-                navigator.reload()
-            },
-        )
-    }
 
     fun openMangaInApp() {
         if (openingManga) return
@@ -386,10 +392,6 @@ fun WebViewScreenContent(
                                     } else {
                                         null
                                     },
-                                    AppBar.OverflowAction(
-                                        title = stringResource(MR.strings.webview_ad_block_title),
-                                        onClick = { showAdBlockSettings = true },
-                                    ),
                                     AppBar.OverflowAction(
                                         title = stringResource(MR.strings.pref_clear_cookies),
                                         onClick = { onClearCookies(currentUrl) },
@@ -472,6 +474,7 @@ fun WebViewScreenContent(
                     if (window == null) {
                         // If we couldn't find any window on the stack that owns this WebView, it means that we can
                         // safely dispose of it because the window containing it has been closed.
+                        pageUrls.remove(webView)
                         webView.destroy()
                     } else {
                         // The composable is being disposed but the WebView object is not.
@@ -486,12 +489,40 @@ fun WebViewScreenContent(
                     currentWindow.webView
                         ?: WebView(context).also { webView ->
                             currentWindow.webView = webView
+                            pageUrls[webView] = currentWindow.currentUrl ?: currentWindow.openerUrl ?: url
                             currentWindow.popupMessage?.let {
                                 initializePopup(webView, it)
                             }
                         }
                 },
             )
+        }
+    }
+}
+
+private fun WebResourceRequest.header(name: String) =
+    requestHeaders.entries.firstOrNull { it.key.equals(name, ignoreCase = true) }?.value
+
+private fun WebResourceRequest.resourceType(): String {
+    return when (header("Sec-Fetch-Dest")) {
+        "script", "worker", "sharedworker", "serviceworker", "audioworklet", "paintworklet" -> "script"
+        "iframe", "frame" -> "subdocument"
+        "style" -> "stylesheet"
+        "audio", "video", "track" -> "media"
+        "image" -> "image"
+        "font" -> "font"
+        "object", "embed" -> "object"
+        "empty" -> "xmlhttprequest"
+        else -> {
+            // WebView does not expose Chromium's request type or always provide Sec-Fetch-Dest.
+            when (url.lastPathSegment?.substringAfterLast('.', "")?.lowercase()) {
+                "js", "mjs" -> "script"
+                "css" -> "stylesheet"
+                "avif", "gif", "ico", "jpeg", "jpg", "png", "svg", "webp" -> "image"
+                "woff", "woff2", "ttf", "otf" -> "font"
+                "mp3", "mp4", "webm", "m3u8" -> "media"
+                else -> "other"
+            }
         }
     }
 }

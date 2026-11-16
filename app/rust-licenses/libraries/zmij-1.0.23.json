@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:zmij:1.0.23",
+  "artifactVersion": "1.0.23",
+  "name": "zmij",
+  "website": "https://github.com/dtolnay/zmij",
+  "licenses": [
+    "rust-zmij-mit"
+  ]
+}

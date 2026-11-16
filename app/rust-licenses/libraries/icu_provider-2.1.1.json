@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:icu_provider:2.1.1",
+  "artifactVersion": "2.1.1",
+  "name": "icu_provider",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

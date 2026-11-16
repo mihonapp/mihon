@@ -4,6 +4,8 @@
 
 The `native/` module calculates missing chapters in batches using primitive arrays. `core:native` provides the JNI bridge; `domain` uses the native implementation for lists of 512 chapters or more. Smaller lists, or a failure to load the library, use the Kotlin implementation.
 
+WebView also uses Brave's [adblock-rust](https://github.com/brave/adblock-rust) through `core:native` to apply network filter rules. Builds without Rust use the Kotlin domain and hosts filters. Manage the filters in **More → Settings → Advanced → Ad blocker**.
+
 The algorithm ignores negative numbers, NaN, infinity, and values outside the Int range. Fractional chapters share their base chapter number. Totals use 64-bit arithmetic to prevent overflow.
 
 ## Toolchain

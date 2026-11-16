@@ -6,14 +6,7 @@ object NativeChapterEngine {
     private const val MAX_NATIVE_CHAPTERS = 1_000_000
 
     @Volatile
-    private var available = try {
-        System.loadLibrary("komikita_native")
-        true
-    } catch (_: LinkageError) {
-        false
-    } catch (_: SecurityException) {
-        false
-    }
+    private var available = NativeLibrary.isAvailable
 
     /** Avoid allocating a transfer array when this build or device cannot use the native library. */
     fun missingChaptersCount(numbers: List<Double>): Int? {

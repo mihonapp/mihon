@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:serde_core:1.0.229",
+  "artifactVersion": "1.0.229",
+  "name": "serde_core",
+  "website": "https://github.com/serde-rs/serde",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

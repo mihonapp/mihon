@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:utf8_iter:1.1.0",
+  "artifactVersion": "1.1.0",
+  "name": "utf8_iter",
+  "website": "https://github.com/hsivonen/utf8_iter",
+  "licenses": [
+    "rust-utf8_iter-apache-2.0"
+  ]
+}

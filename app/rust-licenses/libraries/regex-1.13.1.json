@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:regex:1.13.1",
+  "artifactVersion": "1.13.1",
+  "name": "regex",
+  "website": "https://github.com/rust-lang/regex",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

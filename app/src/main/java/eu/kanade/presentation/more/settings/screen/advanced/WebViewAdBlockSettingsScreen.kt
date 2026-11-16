@@ -1,9 +1,11 @@
-package eu.kanade.presentation.webview
+package eu.kanade.presentation.more.settings.screen.advanced
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -24,6 +26,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -33,66 +36,105 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.webview.WebViewAdBlocker
 import eu.kanade.tachiyomi.ui.webview.WebViewAdBlocker.FilterError
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.MoreVert
 import tachiyomi.i18n.MR
 import tachiyomi.i18n.action_add
 import tachiyomi.i18n.action_cancel
-import tachiyomi.i18n.action_close
 import tachiyomi.i18n.action_edit
 import tachiyomi.i18n.action_menu_overflow_description
 import tachiyomi.i18n.action_remove
 import tachiyomi.i18n.action_save
-import tachiyomi.i18n.action_webview_refresh
 import tachiyomi.i18n.webview_ad_block_add_list
 import tachiyomi.i18n.webview_ad_block_built_in
 import tachiyomi.i18n.webview_ad_block_custom_rules
 import tachiyomi.i18n.webview_ad_block_download_failed
 import tachiyomi.i18n.webview_ad_block_duplicate_url
 import tachiyomi.i18n.webview_ad_block_enabled
+import tachiyomi.i18n.webview_ad_block_engine_basic
+import tachiyomi.i18n.webview_ad_block_engine_brave
 import tachiyomi.i18n.webview_ad_block_invalid_url
 import tachiyomi.i18n.webview_ad_block_list_hint
+import tachiyomi.i18n.webview_ad_block_list_hint_brave
 import tachiyomi.i18n.webview_ad_block_list_url
 import tachiyomi.i18n.webview_ad_block_refresh_list
 import tachiyomi.i18n.webview_ad_block_rules_hint
+import tachiyomi.i18n.webview_ad_block_rules_hint_brave
 import tachiyomi.i18n.webview_ad_block_title
 import tachiyomi.i18n.webview_ad_block_too_large
 import tachiyomi.i18n.webview_ad_block_unsupported_rules
+import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.LoadingScreen
 
 private enum class FilterEditor { Rules, Url }
 
+class WebViewAdBlockSettingsScreen : Screen() {
+    @Composable
+    override fun Content() {
+        val context = LocalContext.current
+        val navigator = LocalNavigator.currentOrThrow
+        val blocker = remember(context) { context.appGraph.webViewAdBlocker }
+        val settings by blocker.settings.collectAsState()
+        Scaffold(
+            topBar = { scrollBehavior ->
+                AppBar(
+                    title = stringResource(MR.strings.webview_ad_block_title),
+                    navigateUp = { navigator.pop() },
+                    scrollBehavior = scrollBehavior,
+                )
+            },
+        ) { padding ->
+            val current = settings
+            if (current == null) {
+                LoadingScreen(Modifier.padding(padding))
+            } else {
+                WebViewAdBlockPreferences(blocker, current, Modifier.padding(padding))
+            }
+        }
+    }
+}
+
 @Composable
-internal fun WebViewAdBlockDialog(
+private fun WebViewAdBlockPreferences(
     blocker: WebViewAdBlocker,
     settings: WebViewAdBlocker.Settings,
-    onDismiss: () -> Unit,
-    onReload: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     var editor by rememberSaveable { mutableStateOf<FilterEditor?>(null) }
-    var processing by remember { mutableStateOf(false) }
+    var operation by remember { mutableStateOf<Job?>(null) }
+    val processing = operation != null
     var error by remember { mutableStateOf<FilterError?>(null) }
 
     fun submit(action: suspend () -> FilterError?, onSuccess: () -> Unit = {}) {
-        if (processing) return
-        processing = true
+        if (operation != null) return
         error = null
-        scope.launch {
+        val job = scope.launch(start = CoroutineStart.LAZY) {
             try {
                 error = action()
                 if (error == null) onSuccess()
             } finally {
-                processing = false
+                operation = null
             }
         }
+        operation = job
+        job.start()
     }
 
     fun change(action: suspend () -> Unit) = submit({
@@ -106,15 +148,13 @@ internal fun WebViewAdBlockDialog(
         FilterEditorDialog(
             editingRules = editingRules,
             initialValue = if (editingRules) settings.customRules else "",
+            supportsBraveFilters = blocker.supportsBraveFilters,
             processing = processing,
             error = error,
             onDismiss = {
-                if (processing) {
-                    onDismiss()
-                } else {
-                    error = null
-                    editor = null
-                }
+                operation?.cancel()
+                error = null
+                editor = null
             },
             onSave = { value ->
                 submit(
@@ -125,84 +165,82 @@ internal fun WebViewAdBlockDialog(
                 )
             },
         )
-        return
     }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(MR.strings.webview_ad_block_title)) },
-        text = {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Text(
+            text = stringResource(
+                if (blocker.supportsBraveFilters) {
+                    MR.strings.webview_ad_block_engine_brave
+                } else {
+                    MR.strings.webview_ad_block_engine_basic
+                },
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        AdBlockSwitch(
+            label = stringResource(MR.strings.webview_ad_block_enabled),
+            checked = settings.enabled,
+            enabled = !processing,
+            onCheckedChange = { change { blocker.setEnabled(it) } },
+        )
+        HorizontalDivider()
+        AdBlockSwitch(
+            label = stringResource(MR.strings.webview_ad_block_built_in),
+            checked = settings.builtInEnabled,
+            enabled = !processing,
+            onCheckedChange = { change { blocker.setBuiltInEnabled(it) } },
+        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            AdBlockSwitch(
+                label = stringResource(MR.strings.webview_ad_block_custom_rules),
+                checked = settings.customRulesEnabled,
+                enabled = !processing,
+                onCheckedChange = { change { blocker.setCustomRulesEnabled(it) } },
+                modifier = Modifier.weight(1f),
+            )
+            TextButton(
+                onClick = {
+                    error = null
+                    editor = FilterEditor.Rules
+                },
+                enabled = !processing,
             ) {
-                AdBlockSwitch(
-                    label = stringResource(MR.strings.webview_ad_block_enabled),
-                    checked = settings.enabled,
+                Text(stringResource(MR.strings.action_edit))
+            }
+        }
+        for (list in settings.lists) {
+            key(list.url) {
+                AdBlockListRow(
+                    list = list,
                     enabled = !processing,
-                    onCheckedChange = { change { blocker.setEnabled(it) } },
+                    onCheckedChange = { change { blocker.setListEnabled(list.url, it) } },
+                    onRefresh = { submit({ blocker.downloadList(list.url, add = false) }) },
+                    onRemove = { change { blocker.removeList(list.url) } },
                 )
-                HorizontalDivider()
-                AdBlockSwitch(
-                    label = stringResource(MR.strings.webview_ad_block_built_in),
-                    checked = settings.builtInEnabled,
-                    enabled = !processing,
-                    onCheckedChange = { change { blocker.setBuiltInEnabled(it) } },
-                )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    AdBlockSwitch(
-                        label = stringResource(MR.strings.webview_ad_block_custom_rules),
-                        checked = settings.customRulesEnabled,
-                        enabled = !processing,
-                        onCheckedChange = { change { blocker.setCustomRulesEnabled(it) } },
-                        modifier = Modifier.weight(1f),
-                    )
-                    TextButton(
-                        onClick = {
-                            error = null
-                            editor = FilterEditor.Rules
-                        },
-                        enabled = !processing,
-                    ) {
-                        Text(stringResource(MR.strings.action_edit))
-                    }
-                }
-
-                for (list in settings.lists) {
-                    key(list.url) {
-                        AdBlockListRow(
-                            list = list,
-                            enabled = !processing,
-                            onCheckedChange = { change { blocker.setListEnabled(list.url, it) } },
-                            onRefresh = { submit({ blocker.downloadList(list.url, add = false) }) },
-                            onRemove = { change { blocker.removeList(list.url) } },
-                        )
-                    }
-                }
-                TextButton(
-                    onClick = {
-                        error = null
-                        editor = FilterEditor.Url
-                    },
-                    enabled = !processing,
-                ) {
-                    Text(stringResource(MR.strings.webview_ad_block_add_list))
-                }
-                if (processing) LinearProgressIndicator(Modifier.fillMaxWidth())
-                error?.let { Text(it.message(), color = MaterialTheme.colorScheme.error) }
             }
-        },
-        confirmButton = {
-            TextButton(onClick = onReload, enabled = !processing) {
-                Text(stringResource(MR.strings.action_webview_refresh))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(MR.strings.action_close))
-            }
-        },
-    )
+        }
+        TextButton(
+            onClick = {
+                error = null
+                editor = FilterEditor.Url
+            },
+            enabled = !processing,
+        ) {
+            Text(stringResource(MR.strings.webview_ad_block_add_list))
+        }
+        if (currentEditor == null) {
+            if (processing) LinearProgressIndicator(Modifier.fillMaxWidth())
+            error?.let { Text(it.message(), color = MaterialTheme.colorScheme.error) }
+        }
+    }
 }
 
 @Composable
@@ -278,6 +316,7 @@ private fun AdBlockSwitch(
 private fun FilterEditorDialog(
     editingRules: Boolean,
     initialValue: String,
+    supportsBraveFilters: Boolean,
     processing: Boolean,
     error: FilterError?,
     onDismiss: () -> Unit,
@@ -286,7 +325,12 @@ private fun FilterEditorDialog(
     var text by rememberSaveable { mutableStateOf(initialValue) }
     val title = if (editingRules) MR.strings.webview_ad_block_custom_rules else MR.strings.webview_ad_block_add_list
     val label = if (editingRules) MR.strings.webview_ad_block_custom_rules else MR.strings.webview_ad_block_list_url
-    val hint = if (editingRules) MR.strings.webview_ad_block_rules_hint else MR.strings.webview_ad_block_list_hint
+    val hint = when {
+        editingRules && supportsBraveFilters -> MR.strings.webview_ad_block_rules_hint_brave
+        editingRules -> MR.strings.webview_ad_block_rules_hint
+        supportsBraveFilters -> MR.strings.webview_ad_block_list_hint_brave
+        else -> MR.strings.webview_ad_block_list_hint
+    }
     val action = if (editingRules) MR.strings.action_save else MR.strings.action_add
 
     AlertDialog(
@@ -294,6 +338,18 @@ private fun FilterEditorDialog(
         title = { Text(stringResource(title)) },
         text = {
             Column {
+                if (!editingRules && supportsBraveFilters) {
+                    FlowRow {
+                        TextButton(
+                            onClick = { text = "https://easylist.to/easylist/easylist.txt" },
+                            enabled = !processing,
+                        ) { Text("EasyList") }
+                        TextButton(
+                            onClick = { text = "https://easylist.to/easylist/easyprivacy.txt" },
+                            enabled = !processing,
+                        ) { Text("EasyPrivacy") }
+                    }
+                }
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = text,

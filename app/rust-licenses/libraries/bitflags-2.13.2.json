@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:bitflags:2.13.2",
+  "artifactVersion": "2.13.2",
+  "name": "bitflags",
+  "website": "https://github.com/bitflags/bitflags",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

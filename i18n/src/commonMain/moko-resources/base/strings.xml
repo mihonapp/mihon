@@ -162,6 +162,9 @@
     <string name="action_webview_close_tab">Close tab</string>
     <string name="action_webview_open_in_app">Open in KomiKita</string>
     <string name="webview_ad_block_title">Ad blocker</string>
+    <string name="webview_ad_block_settings_summary">Manage filters for the in-app browser.</string>
+    <string name="webview_ad_block_engine_brave">WebView uses Brave’s adblock-rust engine for network filtering.</string>
+    <string name="webview_ad_block_engine_basic">This build supports basic domain and hosts filters.</string>
     <string name="webview_ad_block_enabled">Block ads</string>
     <string name="webview_ad_block_built_in">Built-in filter</string>
     <string name="webview_ad_block_custom_rules">Custom rules</string>
@@ -169,10 +172,12 @@
     <string name="webview_ad_block_list_url">Filter list URL</string>
     <string name="webview_ad_block_refresh_list">Update filter list</string>
     <string name="webview_ad_block_rules_hint">Enter one rule per line. Use a domain, a hosts entry, ||example.org^ to block, or @@||example.org^ to allow.</string>
+    <string name="webview_ad_block_rules_hint_brave">Enter one rule per line. Use Adblock Plus network rules, domains, or hosts entries.</string>
     <string name="webview_ad_block_list_hint">Paste a direct link to a plain-text domain or hosts list. Unsupported rules are skipped.</string>
+    <string name="webview_ad_block_list_hint_brave">Paste a direct link to a plain-text filter list. The engine loads its supported network rules.</string>
     <string name="webview_ad_block_invalid_url">Enter a valid HTTP or HTTPS URL.</string>
     <string name="webview_ad_block_duplicate_url">This filter list has already been added.</string>
-    <string name="webview_ad_block_unsupported_rules">Check that the filter uses the supported domain or hosts formats.</string>
+    <string name="webview_ad_block_unsupported_rules">Check that the filter uses a supported format.</string>
     <string name="webview_ad_block_too_large">The filter is too large.</string>
     <string name="webview_ad_block_download_failed">Could not download or save the filter list.</string>
     <string name="action_start_downloading_now">Start downloading now</string>

@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:zerovec:0.11.9",
+  "artifactVersion": "0.11.9",
+  "name": "zerovec",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

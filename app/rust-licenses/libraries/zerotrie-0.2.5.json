@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:zerotrie:0.2.5",
+  "artifactVersion": "0.2.5",
+  "name": "zerotrie",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

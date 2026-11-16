@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:potential_utf:0.1.6",
+  "artifactVersion": "0.1.6",
+  "name": "potential_utf",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

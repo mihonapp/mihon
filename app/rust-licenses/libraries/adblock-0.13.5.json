@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:adblock:0.13.5",
+  "artifactVersion": "0.13.5",
+  "name": "Brave adblock-rust",
+  "website": "https://github.com/brave/adblock-rust/",
+  "licenses": [
+    "rust-adblock-mpl-2.0"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:itertools:0.14.0",
+  "artifactVersion": "0.14.0",
+  "name": "itertools",
+  "website": "https://github.com/rust-itertools/itertools",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

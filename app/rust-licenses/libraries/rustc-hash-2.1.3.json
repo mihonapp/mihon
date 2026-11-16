@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:rustc-hash:2.1.3",
+  "artifactVersion": "2.1.3",
+  "name": "rustc-hash",
+  "website": "https://github.com/rust-lang/rustc-hash",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

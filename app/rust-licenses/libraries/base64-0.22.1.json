@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:base64:0.22.1",
+  "artifactVersion": "0.22.1",
+  "name": "base64",
+  "website": "https://github.com/marshallpierce/rust-base64",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

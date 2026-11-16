@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:zerofrom:0.1.8",
+  "artifactVersion": "0.1.8",
+  "name": "zerofrom",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

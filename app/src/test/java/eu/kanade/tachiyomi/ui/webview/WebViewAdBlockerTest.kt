@@ -30,13 +30,13 @@ class WebViewAdBlockerTest {
         blocker.setBuiltInEnabled(false)
         blocker.saveCustomRules("||ads.example.org^") shouldBe null
         blocker.saveCustomRules("manga.example.org##.banner") shouldBe WebViewAdBlocker.FilterError.UnsupportedRules
-        blocker.shouldBlock("ads.example.org", isMainFrame = false) shouldBe true
+        blocker.blocksAd() shouldBe true
 
         blocker.setEnabled(false)
-        blocker.shouldBlock("ads.example.org", isMainFrame = false) shouldBe false
+        blocker.blocksAd() shouldBe false
         blocker.setEnabled(true)
         blocker.setCustomRulesEnabled(false)
-        blocker.shouldBlock("ads.example.org", isMainFrame = false) shouldBe false
+        blocker.blocksAd() shouldBe false
 
         val restored = WebViewAdBlocker(mockk(), preferences, Json, backgroundScope)
         val settings = restored.settings.filterNotNull().first()
@@ -44,6 +44,14 @@ class WebViewAdBlockerTest {
         settings.customRulesEnabled shouldBe false
         settings.customRules shouldBe "||ads.example.org^"
         restored.setCustomRulesEnabled(true)
-        restored.shouldBlock("ads.example.org", isMainFrame = false) shouldBe true
+        restored.blocksAd() shouldBe true
     }
+
+    private fun WebViewAdBlocker.blocksAd() = shouldBlock(
+        url = "https://ads.example.org/banner.png",
+        host = "ads.example.org",
+        sourceUrl = "https://manga.example.net/",
+        resourceType = "image",
+        method = "GET",
+    )
 }

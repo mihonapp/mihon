@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:icu_properties_data:2.1.2",
+  "artifactVersion": "2.1.2",
+  "name": "icu_properties_data",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

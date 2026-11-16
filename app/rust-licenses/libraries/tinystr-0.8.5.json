@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:tinystr:0.8.5",
+  "artifactVersion": "0.8.5",
+  "name": "tinystr",
+  "website": "https://github.com/unicode-org/icu4x",
+  "licenses": [
+    "rust-unicode-3.0"
+  ]
+}

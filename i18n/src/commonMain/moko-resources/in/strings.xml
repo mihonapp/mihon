@@ -278,6 +278,9 @@
     <string name="action_webview_refresh">Muat ulang</string>
     <string name="action_webview_open_in_app">Buka di KomiKita</string>
     <string name="webview_ad_block_title">Pemblokir iklan</string>
+    <string name="webview_ad_block_settings_summary">Kelola filter untuk peramban dalam aplikasi.</string>
+    <string name="webview_ad_block_engine_brave">WebView menyaring permintaan jaringan dengan mesin adblock-rust dari Brave.</string>
+    <string name="webview_ad_block_engine_basic">Build ini mendukung filter domain dan hosts dasar.</string>
     <string name="webview_ad_block_enabled">Blokir iklan</string>
     <string name="webview_ad_block_built_in">Filter bawaan</string>
     <string name="webview_ad_block_custom_rules">Aturan kustom</string>
@@ -285,10 +288,12 @@
     <string name="webview_ad_block_list_url">URL daftar filter</string>
     <string name="webview_ad_block_refresh_list">Perbarui daftar filter</string>
     <string name="webview_ad_block_rules_hint">Masukkan satu aturan per baris. Gunakan domain, entri hosts, ||example.org^ untuk memblokir, atau @@||example.org^ untuk mengizinkan.</string>
+    <string name="webview_ad_block_rules_hint_brave">Masukkan satu aturan per baris. Gunakan aturan jaringan Adblock Plus, domain, atau entri hosts.</string>
     <string name="webview_ad_block_list_hint">Tempel tautan langsung ke daftar domain atau hosts dalam format teks. Aturan yang tidak didukung akan dilewati.</string>
+    <string name="webview_ad_block_list_hint_brave">Tempel tautan langsung ke daftar filter dalam format teks. Mesin akan memuat aturan jaringan yang didukung.</string>
     <string name="webview_ad_block_invalid_url">Masukkan URL HTTP atau HTTPS yang valid.</string>
     <string name="webview_ad_block_duplicate_url">Daftar filter ini sudah ditambahkan.</string>
-    <string name="webview_ad_block_unsupported_rules">Pastikan filter memakai format domain atau hosts yang didukung.</string>
+    <string name="webview_ad_block_unsupported_rules">Pastikan filter memakai format yang didukung.</string>
     <string name="webview_ad_block_too_large">Ukuran filter terlalu besar.</string>
     <string name="webview_ad_block_download_failed">Daftar filter gagal diunduh atau disimpan.</string>
     <string name="pref_category_library">Pustaka</string>

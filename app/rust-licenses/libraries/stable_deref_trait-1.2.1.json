@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:stable_deref_trait:1.2.1",
+  "artifactVersion": "1.2.1",
+  "name": "stable_deref_trait",
+  "website": "https://github.com/storyyeller/stable_deref_trait",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

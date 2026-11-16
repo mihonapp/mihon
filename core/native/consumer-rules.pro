@@ -1,1 +1,2 @@
 -keep class app.komikita.core.nativecore.NativeChapterEngine { *; }
+-keep class app.komikita.core.nativecore.NativeAdBlockEngine { *; }

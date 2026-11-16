@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:addr:0.15.6",
+  "artifactVersion": "0.15.6",
+  "name": "addr",
+  "website": "https://github.com/addr-rs/addr",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

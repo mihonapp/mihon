@@ -4,6 +4,8 @@
 
 Modul `native/` menghitung chapter yang hilang secara batch menggunakan array primitif. `core:native` menyediakan bridge JNI; `domain` memakai native mulai 512 chapter. Daftar kecil atau kegagalan memuat library memakai implementasi Kotlin.
 
+WebView memakai [adblock-rust](https://github.com/brave/adblock-rust) dari Brave melalui `core:native` untuk menyaring permintaan jaringan. Build tanpa Rust memakai filter domain dan hosts dari implementasi Kotlin. Kelola filter lewat **Lainnya → Pengaturan → Lanjutan → Pemblokir iklan**.
+
 Algoritma mengabaikan nomor negatif, NaN, infinity, dan angka di luar rentang Int. Pecahan memiliki nomor dasar yang sama. Penjumlahan memakai 64 bit untuk mencegah overflow.
 
 ## Toolchain

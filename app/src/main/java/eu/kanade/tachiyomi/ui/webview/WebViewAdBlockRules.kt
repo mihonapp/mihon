@@ -50,16 +50,12 @@ internal class WebViewAdBlockRules private constructor(
                 return addDomain(rule.substring(2, rule.lastIndex), blockedDomains)
             }
 
-            val separator = rule.indexOfFirst { it.isWhitespace() }
-            if (separator < 0) return addDomain(rule, blockedDomains)
-            if (rule.substring(0, separator) !in HOSTS_ADDRESSES) return false
-            val hosts = rule.substring(separator).substringBefore('#').trim().split(WHITESPACE)
-            return hosts.count { !it.equals("localhost", ignoreCase = true) && !addDomain(it, blockedHosts) } == 0
+            val hosts = rule.hostsEntries() ?: return addDomain(rule, blockedDomains)
+            return hosts.count { !addDomain(it, blockedHosts) } == 0
         }
 
         private fun addDomain(value: String, domains: MutableSet<String>): Boolean {
-            val domain = value.trimEnd('.').lowercase()
-            if (domain.length > 253 || !DOMAIN.matches(domain)) return false
+            val domain = value.asDomain() ?: return false
             domains.add(domain)
             return true
         }
@@ -67,11 +63,48 @@ internal class WebViewAdBlockRules private constructor(
 
     companion object {
         val Empty = WebViewAdBlockRules(emptySet(), emptySet(), emptySet())
-
-        private val HOSTS_ADDRESSES = setOf("0.0.0.0", "127.0.0.1", "::", "::1")
-        private val WHITESPACE = Regex("\\s+")
-        private val DOMAIN = Regex(
-            """[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+""",
-        )
     }
 }
+
+internal fun StringBuilder.appendBraveRules(lines: Sequence<String>) {
+    var conditionalDepth = 0
+    for (rawLine in lines) {
+        val rule = rawLine.trimStart('\uFEFF').trim()
+        if (rule.startsWith("!#if ")) conditionalDepth++
+        if (rule == "!#endif" && conditionalDepth > 0) conditionalDepth--
+        if (conditionalDepth > 0 || rule.isEmpty() || rule.startsWith('!') || rule.startsWith('#') ||
+            rule.startsWith("[Adblock", ignoreCase = true)
+        ) {
+            continue
+        }
+
+        val hosts = rule.hostsEntries()
+        if (hosts != null) {
+            // Hosts entries in saved filters match the exact host, including on URLs with a port.
+            for (host in hosts.mapNotNull(String::asDomain)) {
+                appendLine("|http://$host^")
+                appendLine("|https://$host^")
+            }
+        } else {
+            appendLine(rule.asDomain()?.let { "||$it^" } ?: rule)
+        }
+    }
+}
+
+private fun String.hostsEntries(): List<String>? {
+    val separator = indexOfFirst(Char::isWhitespace)
+    if (separator < 0 || substring(0, separator) !in HOSTS_ADDRESSES) return null
+    return substring(separator).substringBefore('#').trim().split(WHITESPACE)
+        .filterNot { it.equals("localhost", ignoreCase = true) }
+}
+
+private fun String.asDomain(): String? {
+    val domain = trimEnd('.').lowercase()
+    return domain.takeIf { it.length <= 253 && DOMAIN.matches(it) }
+}
+
+private val HOSTS_ADDRESSES = setOf("0.0.0.0", "127.0.0.1", "::", "::1")
+private val WHITESPACE = Regex("\\s+")
+private val DOMAIN = Regex(
+    """[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+""",
+)

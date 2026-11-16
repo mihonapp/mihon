@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:regex-automata:0.4.18",
+  "artifactVersion": "0.4.18",
+  "name": "regex-automata",
+  "website": "https://github.com/rust-lang/regex",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

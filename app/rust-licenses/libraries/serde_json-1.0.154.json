@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:serde_json:1.0.154",
+  "artifactVersion": "1.0.154",
+  "name": "serde_json",
+  "website": "https://github.com/serde-rs/json",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

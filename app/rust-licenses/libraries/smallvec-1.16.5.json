@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:smallvec:1.16.5",
+  "artifactVersion": "1.16.5",
+  "name": "smallvec",
+  "website": "https://github.com/servo/rust-smallvec",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

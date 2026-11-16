@@ -25,6 +25,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
+import eu.kanade.presentation.more.settings.screen.advanced.WebViewAdBlockSettingsScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.tachiyomi.data.library.MetadataUpdateWorker
 import eu.kanade.tachiyomi.network.NetworkPreferences
@@ -110,6 +111,8 @@ import tachiyomi.i18n.pref_user_agent_string
 import tachiyomi.i18n.pref_verbose_logging
 import tachiyomi.i18n.pref_verbose_logging_summary
 import tachiyomi.i18n.requires_app_restart
+import tachiyomi.i18n.webview_ad_block_settings_summary
+import tachiyomi.i18n.webview_ad_block_title
 import tachiyomi.i18n.webview_data_deleted
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -256,6 +259,7 @@ object SettingsAdvancedScreen : SearchableSettings {
         networkPreferences: NetworkPreferences,
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
+        val navigator = LocalNavigator.currentOrThrow
         val networkHelper = remember { context.appGraph.networkHelper }
         val scope = rememberCoroutineScope()
 
@@ -265,6 +269,11 @@ object SettingsAdvancedScreen : SearchableSettings {
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_network),
             preferenceItems = listOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.webview_ad_block_title),
+                    subtitle = stringResource(MR.strings.webview_ad_block_settings_summary),
+                    onClick = { navigator.push(WebViewAdBlockSettingsScreen()) },
+                ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_clear_cookies),
                     onClick = {

@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.webview
 import android.content.Context
 import android.util.AtomicFile
 import androidx.core.util.writeBytes
+import app.komikita.core.nativecore.NativeAdBlockEngine
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -52,8 +53,12 @@ class WebViewAdBlocker(
     private val mutableSettings = MutableStateFlow<Settings?>(null)
     val settings = mutableSettings.asStateFlow()
 
+    /** Null when the native engine is handling requests. */
     @Volatile
-    private var rules = WebViewAdBlockRules.Empty
+    private var fallbackRules: WebViewAdBlockRules? = WebViewAdBlockRules.Empty
+
+    val supportsBraveFilters: Boolean
+        get() = NativeAdBlockEngine.isAvailable
 
     init {
         scope.launch {
@@ -66,7 +71,10 @@ class WebViewAdBlocker(
         }
     }
 
-    fun shouldBlock(host: String?, isMainFrame: Boolean): Boolean = rules.blocks(host, isMainFrame)
+    fun shouldBlock(url: String, host: String?, sourceUrl: String, resourceType: String, method: String): Boolean {
+        return fallbackRules?.blocks(host, isMainFrame = false)
+            ?: NativeAdBlockEngine.shouldBlock(url, sourceUrl, resourceType, method)
+    }
 
     suspend fun setEnabled(enabled: Boolean) = update { save(it.copy(enabled = enabled)) }
 
@@ -76,7 +84,7 @@ class WebViewAdBlocker(
 
     suspend fun saveCustomRules(text: String): FilterError? = update { current ->
         if (text.length > MAX_CUSTOM_RULE_CHARS) return@update FilterError.TooLarge
-        if (WebViewAdBlockRules.Builder().addRules(text.lineSequence()) > 0) {
+        if (!validateRules(text, strict = true)) {
             return@update FilterError.UnsupportedRules
         }
         save(current.copy(customRules = text))
@@ -112,9 +120,7 @@ class WebViewAdBlocker(
                 if (body.request(MAX_LIST_BYTES + 1)) return@update FilterError.TooLarge
                 body.readByteArray()
             }
-            val builder = WebViewAdBlockRules.Builder()
-            builder.addRules(bytes.decodeToString().lineSequence())
-            if (!builder.hasRules) return@update FilterError.UnsupportedRules
+            if (!validateRules(bytes.decodeToString(), strict = false)) return@update FilterError.UnsupportedRules
 
             currentCoroutineContext().ensureActive()
             listFile(key).writeBytes(bytes)
@@ -135,25 +141,50 @@ class WebViewAdBlocker(
     }
 
     private fun publish(settings: Settings) {
-        rules = if (settings.enabled) loadRules(settings) else WebViewAdBlockRules.Empty
+        fallbackRules = if (settings.enabled) {
+            loadRules(settings)
+        } else {
+            if (fallbackRules == null) NativeAdBlockEngine.replaceRules("")
+            WebViewAdBlockRules.Empty
+        }
         mutableSettings.value = settings
     }
 
-    private fun loadRules(settings: Settings): WebViewAdBlockRules {
+    private fun validateRules(text: String, strict: Boolean): Boolean {
+        if (text.trimStart('\uFEFF').trimStart().startsWith('<')) return false
+        if (supportsBraveFilters) {
+            val rules = buildString { appendBraveRules(text.lineSequence()) }
+            NativeAdBlockEngine.validateRules(rules, strict)?.let { return it }
+        }
         val builder = WebViewAdBlockRules.Builder()
-        if (settings.builtInEnabled) builder.addRules(BUILT_IN_DOMAINS.asSequence())
-        if (settings.customRulesEnabled) builder.addRules(settings.customRules.lineSequence())
+        val unsupported = builder.addRules(text.lineSequence())
+        return if (strict) unsupported == 0 else builder.hasRules
+    }
+
+    private fun loadRules(settings: Settings): WebViewAdBlockRules? {
+        if (supportsBraveFilters) {
+            val rules = buildString { readFilterLists(settings) { appendBraveRules(it) } }
+            if (NativeAdBlockEngine.replaceRules(rules)) return null
+            logcat(LogPriority.WARN) { "Could not load native WebView filters" }
+        }
+        return WebViewAdBlockRules.Builder().apply {
+            readFilterLists(settings) { addRules(it) }
+        }.build()
+    }
+
+    private fun readFilterLists(settings: Settings, addRules: (Sequence<String>) -> Unit) {
+        if (settings.builtInEnabled) addRules(BUILT_IN_DOMAINS.asSequence())
+        if (settings.customRulesEnabled) addRules(settings.customRules.lineSequence())
         for (list in settings.lists) {
             if (!list.enabled) continue
             try {
-                listFile(list.url).openRead().bufferedReader().useLines(builder::addRules)
+                listFile(list.url).openRead().bufferedReader().useLines(addRules)
             } catch (_: FileNotFoundException) {
                 // Restored settings can refer to lists that have yet to be downloaded on this device.
             } catch (e: IOException) {
                 logcat(LogPriority.WARN, e) { "Failed to read a WebView ad filter list" }
             }
         }
-        return builder.build()
     }
 
     private fun listFile(url: String): AtomicFile {

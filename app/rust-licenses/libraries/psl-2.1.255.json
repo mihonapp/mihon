@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:psl:2.1.255",
+  "artifactVersion": "2.1.255",
+  "name": "psl",
+  "website": "https://github.com/addr-rs/psl",
+  "licenses": [
+    "rust-apache-2.0"
+  ]
+}

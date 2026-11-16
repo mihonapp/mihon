@@ -1,0 +1,9 @@
+{
+  "uniqueId": "cargo:utf_types:1.0.0",
+  "artifactVersion": "1.0.0",
+  "name": "utf_types",
+  "website": "https://github.com/hsivonen/utf_types",
+  "licenses": [
+    "rust-utf_types-apache-2.0"
+  ]
+}
