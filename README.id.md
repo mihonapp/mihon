@@ -69,15 +69,15 @@ KomiKita membutuhkan Android 8.0 (API 26) atau lebih baru. Unduh APK dari [GitHu
 
 ### Pilih APK
 
-Pilih APK universal jika kamu belum tahu arsitektur perangkatmu. `X.Y.Z` pada nama berkas adalah nomor versi.
+Untuk unduhan yang lebih kecil di perangkat ARM64, pilih `komikita-arm64-v8a-vX.Y.Z.apk`. Jika kamu belum tahu arsitektur perangkatmu, pilih APK universal. `X.Y.Z` pada nama berkas adalah nomor versi.
 
 | Nama APK | Penggunaan |
 | --- | --- |
-| `komikita-vX.Y.Z.apk` | Semua arsitektur yang tercantum di bawah. |
 | `komikita-arm64-v8a-vX.Y.Z.apk` | Ponsel dan tablet ARM64. |
 | `komikita-armeabi-v7a-vX.Y.Z.apk` | Perangkat dengan ARM 32-bit. |
 | `komikita-x86-vX.Y.Z.apk` | Perangkat atau emulator x86 32-bit. |
 | `komikita-x86_64-vX.Y.Z.apk` | Perangkat atau emulator x86 64-bit. |
+| `komikita-vX.Y.Z.apk` | APK universal untuk semua arsitektur di atas. |
 
 Workflow rilis GitHub hanya menghasilkan APK standar (`app.komikita`). Fitur pembaruan aktif dan Firebase nonaktif secara bawaan. Android memasang APK standar sebagai aplikasi terpisah dari instalasi FOSS lama (`app.komikita.foss`), yang menyimpan datanya sendiri.
 

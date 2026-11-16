@@ -76,6 +76,7 @@ class WebViewActivity : BaseActivity() {
                 resolveManga = viewModel::resolveManga,
                 onOpenManga = this::openManga,
                 onClearCookies = viewModel::clearCookies,
+                adBlocker = viewModel.adBlocker,
             )
         }
     }

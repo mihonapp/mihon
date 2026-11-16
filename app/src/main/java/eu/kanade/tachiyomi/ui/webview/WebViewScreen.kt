@@ -49,6 +49,7 @@ class WebViewScreen(
             resolveManga = viewModel::resolveManga,
             onOpenManga = { navigator.push(MangaScreen(it, fromSource = true)) },
             onClearCookies = viewModel::clearCookies,
+            adBlocker = viewModel.adBlocker,
         )
     }
 }

@@ -56,7 +56,7 @@ class WebViewViewModelTest {
             val networkToLocalManga = mockk<NetworkToLocalManga> {
                 coEvery { this@mockk(domainManga) } returns domainManga.copy(id = 42L)
             }
-            val model = WebViewViewModel(10L, sourceManager, mockk(), networkToLocalManga)
+            val model = WebViewViewModel(10L, sourceManager, mockk(), networkToLocalManga, mockk())
             viewModels.put("webview", model)
 
             model.canOpenManga(mangaUrl) shouldBe true

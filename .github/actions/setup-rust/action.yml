@@ -11,14 +11,37 @@ runs:
         rustup target add --toolchain stable aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
     - name: Set up Android SDK
       uses: android-actions/setup-android@138b5fb1cf087fdb4c5f3c621466fe304d0cf2e3 # v4.0.3
-    - name: Install Android NDK
+    - name: Set up Android NDK
+      id: ndk
       shell: bash
       run: |
         ndk_version=$(python3 -c "import tomllib; print(tomllib.load(open('gradle/mihon.versions.toml', 'rb'))['versions']['android-ndk'])")
-        sdkmanager "ndk;$ndk_version"
         ndk_path="$ANDROID_HOME/ndk/$ndk_version"
+        if [[ ! -f "$ndk_path/source.properties" ]]; then
+          sdkmanager "ndk;$ndk_version"
+        fi
         echo "ANDROID_NDK_HOME=$ndk_path" >> "$GITHUB_ENV"
         echo "ANDROID_NDK_ROOT=$ndk_path" >> "$GITHUB_ENV"
+        echo "version=$ndk_version" >> "$GITHUB_OUTPUT"
     - name: Install cargo-ndk
+      id: cargo-ndk
       shell: bash
-      run: cargo +stable install cargo-ndk --version 4.1.2 --locked
+      run: |
+        version=4.1.2
+        archive="cargo-ndk-x86_64-unknown-linux-gnu-v$version"
+        sha256=9451622c4567e8abb2c8005001855e32901c0b716ccdd3a173a4375fd03426e1
+        download_dir=$(mktemp -d "$RUNNER_TEMP/cargo-ndk.XXXXXX")
+        curl --fail --location --silent --show-error --retry 3 \
+          --output "$download_dir/$archive.tgz" \
+          "https://github.com/bbqsrc/cargo-ndk/releases/download/v$version/$archive.tgz"
+        printf '%s  %s\n' "$sha256" "$download_dir/$archive.tgz" | sha256sum --check
+        tar -xzf "$download_dir/$archive.tgz" -C "$download_dir" "$archive/cargo-ndk"
+        echo "$download_dir/$archive" >> "$GITHUB_PATH"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+    - name: Cache Rust dependencies
+      uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      with:
+        shared-key: android-ndk-${{ steps.ndk.outputs.version }}-cargo-ndk-${{ steps.cargo-ndk.outputs.version }}
+        workspaces: native -> ../core/native/build/rust-target
+        cache-bin: 'false'
+        save-if: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}

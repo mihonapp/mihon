@@ -40,6 +40,7 @@ class WebViewViewModel(
     private val sourceManager: SourceManager,
     private val network: NetworkHelper,
     private val networkToLocalManga: NetworkToLocalManga,
+    val adBlocker: WebViewAdBlocker,
 ) : ViewModel() {
 
     @AssistedFactory

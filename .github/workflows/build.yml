@@ -53,18 +53,12 @@ jobs:
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
-      - name: Check code format
-        run: ./gradlew spotlessCheck
-
-      - name: Run unit tests
-        id: unit_tests
-        run: ./gradlew testDebugUnitTest
-
-      - name: Verify SQLDelight migrations
-        run: ./gradlew verifySqlDelightMigration
+      - name: Check code format, unit tests, and SQLDelight migrations
+        id: gradle_checks
+        run: ./gradlew spotlessCheck testDebugUnitTest verifySqlDelightMigration
 
       - name: Upload test report
-        if: steps.unit_tests.outcome == 'failure'
+        if: failure() && steps.gradle_checks.outcome == 'failure' && hashFiles('app/build/reports/tests/testDebugUnitTest/index.html') != ''
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: test-report-${{ github.sha }}

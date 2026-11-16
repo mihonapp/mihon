@@ -69,15 +69,15 @@ KomiKita requires Android 8.0 (API 26) or later. Download the APK from [GitHub R
 
 ### Choose an APK
 
-Choose the universal APK if you are unsure which architecture your device uses. `X.Y.Z` in the filename is the version number.
+For a smaller download on an ARM64 device, choose `komikita-arm64-v8a-vX.Y.Z.apk`. If you are unsure which architecture your device uses, choose the universal APK. `X.Y.Z` in the filename is the version number.
 
 | APK filename | Choose this for |
 | --- | --- |
-| `komikita-vX.Y.Z.apk` | All architectures listed below. |
 | `komikita-arm64-v8a-vX.Y.Z.apk` | ARM64 phones and tablets. |
 | `komikita-armeabi-v7a-vX.Y.Z.apk` | Devices using 32-bit ARM. |
 | `komikita-x86-vX.Y.Z.apk` | Devices or emulators using 32-bit x86. |
 | `komikita-x86_64-vX.Y.Z.apk` | Devices or emulators using 64-bit x86. |
+| `komikita-vX.Y.Z.apk` | Universal APK for all architectures listed above. |
 
 The GitHub release workflow builds only the standard APK (`app.komikita`). The updater is enabled and Firebase is disabled by default. Android installs the standard APK separately from older FOSS installations (`app.komikita.foss`), which store their own data.
 

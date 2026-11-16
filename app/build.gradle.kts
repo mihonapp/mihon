@@ -46,8 +46,8 @@ android {
     defaultConfig {
         applicationId = "app.komikita"
 
-        versionCode = 58
-        versionName = "1.0.16"
+        versionCode = 59
+        versionName = "1.0.17"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
@@ -435,6 +435,10 @@ fun ApplicationVariant.buildConfigField(type: String, name: String, value: Provi
 }
 
 androidComponents {
+    onVariants(selector().withBuildType("release")) {
+        it.packaging.jniLibs.useLegacyPackaging.set(true)
+    }
+
     onVariants { variant ->
         val isUnstableBuild = variant.buildType == "debug" || variant.buildType == "nightly"
         val buildTime = if (isUnstableBuild) currentTime else latestCommitTime

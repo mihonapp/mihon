@@ -7,6 +7,7 @@ import android.webkit.JsPromptResult
 import android.webkit.JsResult
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -22,12 +23,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +50,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.ui.webview.WebViewAdBlocker
 import eu.kanade.tachiyomi.util.system.getHtml
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.setUserAgent
@@ -72,8 +76,10 @@ import tachiyomi.i18n.information_cloudflare_help
 import tachiyomi.i18n.information_webview_crashed
 import tachiyomi.i18n.no_results_found
 import tachiyomi.i18n.pref_clear_cookies
+import tachiyomi.i18n.webview_ad_block_title
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.LoadingScreen
 
 class WebViewWindow(webContent: WebContent, val navigator: WebViewNavigator) {
     var state by mutableStateOf(WebViewState(webContent))
@@ -99,9 +105,16 @@ fun WebViewScreenContent(
     resolveManga: suspend (String) -> Long?,
     onOpenManga: (Long) -> Unit,
     onClearCookies: (String) -> Unit,
+    adBlocker: WebViewAdBlocker,
     headers: Map<String, String> = emptyMap(),
     onUrlChange: (String) -> Unit = {},
 ) {
+    val adBlockSettings = adBlocker.settings.collectAsState().value
+    if (adBlockSettings == null) {
+        LoadingScreen()
+        return
+    }
+
     val coroutineScope = rememberCoroutineScope()
 
     val windowStack = remember {
@@ -124,6 +137,7 @@ fun WebViewScreenContent(
     var showCloudflareHelp by remember { mutableStateOf(false) }
     var isActive by remember { mutableStateOf(true) }
     var openingManga by remember { mutableStateOf(false) }
+    var showAdBlockSettings by rememberSaveable { mutableStateOf(false) }
 
     val mangaUrl by produceState<String?>(null, activeUrl) {
         value = null
@@ -176,7 +190,18 @@ fun WebViewScreenContent(
             ): Boolean {
                 val uri = request?.url ?: return false
                 if (uri.scheme.equals("intent", ignoreCase = true)) return true
-                if (!request.isForMainFrame || view == null || headers.isEmpty()) return false
+                if (!request.isForMainFrame || view == null) return false
+
+                val popup = windowStack.lastItemOrNull
+                if ((uri.scheme == "http" || uri.scheme == "https") &&
+                    popup?.popupMessage != null && popup.webView === view &&
+                    adBlocker.shouldBlock(uri.host, isMainFrame = false)
+                ) {
+                    windowStack.pop()
+                    return true
+                }
+
+                if (headers.isEmpty()) return false
 
                 val url = uri.toString()
                 val origin = headersOrigin ?: return false
@@ -188,6 +213,16 @@ fun WebViewScreenContent(
 
                 view.loadUrl(url, headers)
                 return true
+            }
+
+            override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
+                val uri = request.url
+                if ((uri.scheme == "http" || uri.scheme == "https") &&
+                    adBlocker.shouldBlock(uri.host, request.isForMainFrame)
+                ) {
+                    return WebResourceResponse("text/plain", "UTF-8", 204, "No Content", emptyMap(), null)
+                }
+                return super.shouldInterceptRequest(view, request)
             }
 
             override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
@@ -270,6 +305,18 @@ fun WebViewScreenContent(
 
     BackHandler(windowStack.size > 1, popState)
 
+    if (showAdBlockSettings) {
+        WebViewAdBlockDialog(
+            blocker = adBlocker,
+            settings = adBlockSettings,
+            onDismiss = { showAdBlockSettings = false },
+            onReload = {
+                showAdBlockSettings = false
+                navigator.reload()
+            },
+        )
+    }
+
     fun openMangaInApp() {
         if (openingManga) return
         openingManga = true
@@ -339,6 +386,10 @@ fun WebViewScreenContent(
                                     } else {
                                         null
                                     },
+                                    AppBar.OverflowAction(
+                                        title = stringResource(MR.strings.webview_ad_block_title),
+                                        onClick = { showAdBlockSettings = true },
+                                    ),
                                     AppBar.OverflowAction(
                                         title = stringResource(MR.strings.pref_clear_cookies),
                                         onClick = { onClearCookies(currentUrl) },

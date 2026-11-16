@@ -9,29 +9,17 @@ permissions:
 
 env:
   KOMIKITA_GITHUB_RELEASE: true
+  RELEASE_TAG: ${{ github.ref_name }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  get_tag:
-    if: github.repository == 'BaghasWahyu/komikita'
-    name: Extract tag name
-    runs-on: 'ubuntu-26.04'
-    outputs:
-      tag: ${{ steps.extract.outputs.tag }}
-
-    steps:
-      - name: Get tag name
-        id: extract
-        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-
   build:
     if: github.repository == 'BaghasWahyu/komikita'
     name: Build
     runs-on: 'ubuntu-26.04'
-    needs: get_tag
 
     steps:
       - name: Checkout
@@ -65,8 +53,6 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Verify APK versions
-        env:
-          RELEASE_TAG: ${{ needs.get_tag.outputs.tag }}
         run: |
           python3 - <<'PY'
           import json
@@ -89,28 +75,28 @@ jobs:
         run: |
           set -e
 
-          mv app/build/outputs/apk/release/app-universal-release.apk komikita-${{ needs.get_tag.outputs.tag }}.apk
-          mv app/build/outputs/apk/release/app-arm64-v8a-release.apk komikita-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
-          mv app/build/outputs/apk/release/app-armeabi-v7a-release.apk komikita-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
-          mv app/build/outputs/apk/release/app-x86-release.apk komikita-x86-${{ needs.get_tag.outputs.tag }}.apk
-          mv app/build/outputs/apk/release/app-x86_64-release.apk komikita-x86_64-${{ needs.get_tag.outputs.tag }}.apk
+          mv app/build/outputs/apk/release/app-universal-release.apk "komikita-${RELEASE_TAG}.apk"
+          mv app/build/outputs/apk/release/app-arm64-v8a-release.apk "komikita-arm64-v8a-${RELEASE_TAG}.apk"
+          mv app/build/outputs/apk/release/app-armeabi-v7a-release.apk "komikita-armeabi-v7a-${RELEASE_TAG}.apk"
+          mv app/build/outputs/apk/release/app-x86-release.apk "komikita-x86-${RELEASE_TAG}.apk"
+          mv app/build/outputs/apk/release/app-x86_64-release.apk "komikita-x86_64-${RELEASE_TAG}.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: komikita
           path: |
-            komikita-${{ needs.get_tag.outputs.tag }}.apk
-            komikita-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
-            komikita-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
-            komikita-x86-${{ needs.get_tag.outputs.tag }}.apk
-            komikita-x86_64-${{ needs.get_tag.outputs.tag }}.apk
+            komikita-${{ env.RELEASE_TAG }}.apk
+            komikita-arm64-v8a-${{ env.RELEASE_TAG }}.apk
+            komikita-armeabi-v7a-${{ env.RELEASE_TAG }}.apk
+            komikita-x86-${{ env.RELEASE_TAG }}.apk
+            komikita-x86_64-${{ env.RELEASE_TAG }}.apk
 
   release:
     if: github.repository == 'BaghasWahyu/komikita'
     name: Create GitHub Release
     runs-on: ubuntu-26.04
-    needs: [get_tag, build]
+    needs: build
 
     steps:
       - name: Checkout release history
@@ -121,7 +107,6 @@ jobs:
       - name: Generate release notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ needs.get_tag.outputs.tag }}
         run: |
           python3 -m unittest discover -s .github/scripts -p 'test_*.py'
           gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
@@ -148,15 +133,15 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
         with:
-          tag_name: ${{ needs.get_tag.outputs.tag }}
-          name: KomiKita ${{ needs.get_tag.outputs.tag }}
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: KomiKita ${{ env.RELEASE_TAG }}
           body_path: ${{ runner.temp }}/release-notes.md
           files: |
-            komikita-${{ needs.get_tag.outputs.tag }}.apk
-            komikita-arm64-v8a-${{ needs.get_tag.outputs.tag }}.apk
-            komikita-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
-            komikita-x86-${{ needs.get_tag.outputs.tag }}.apk
-            komikita-x86_64-${{ needs.get_tag.outputs.tag }}.apk
+            komikita-${{ env.RELEASE_TAG }}.apk
+            komikita-arm64-v8a-${{ env.RELEASE_TAG }}.apk
+            komikita-armeabi-v7a-${{ env.RELEASE_TAG }}.apk
+            komikita-x86-${{ env.RELEASE_TAG }}.apk
+            komikita-x86_64-${{ env.RELEASE_TAG }}.apk
           draft: true
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
