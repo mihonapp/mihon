@@ -46,8 +46,8 @@ android {
     defaultConfig {
         applicationId = "app.komikita"
 
-        versionCode = 59
-        versionName = "1.0.17"
+        versionCode = 60
+        versionName = "1.0.18"
 
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
