@@ -115,7 +115,8 @@ fun WebViewScreenContent(
 
     val currentWindow = windowStack.lastItemOrNull!!
     val navigator = currentWindow.navigator
-    val currentUrl = currentWindow.currentUrl ?: url
+    val activeUrl = currentWindow.currentUrl
+    val currentUrl = activeUrl ?: url
 
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
@@ -124,9 +125,9 @@ fun WebViewScreenContent(
     var isActive by remember { mutableStateOf(true) }
     var openingManga by remember { mutableStateOf(false) }
 
-    val mangaUrl by produceState<String?>(null, currentUrl) {
+    val mangaUrl by produceState<String?>(null, activeUrl) {
         value = null
-        if (currentUrl != url && canOpenManga(currentUrl)) value = currentUrl
+        if (activeUrl != null && canOpenManga(activeUrl)) value = activeUrl
     }
 
     LaunchedEffect(currentUrl) {
@@ -330,7 +331,7 @@ fun WebViewScreenContent(
                                         title = stringResource(MR.strings.action_open_in_browser),
                                         onClick = { onOpenInBrowser(currentUrl) },
                                     ),
-                                    if (mangaUrl == currentUrl && !openingManga) {
+                                    if (activeUrl != null && mangaUrl == activeUrl && !openingManga) {
                                         AppBar.OverflowAction(
                                             title = stringResource(MR.strings.action_webview_open_in_app),
                                             onClick = ::openMangaInApp,
@@ -375,13 +376,14 @@ fun WebViewScreenContent(
                         }
                     }
                 }
-                when (val loadingState = currentWindow.state.loadingState) {
-                    is LoadingState.Initializing -> LinearProgressIndicator(
+                val loadingState = currentWindow.state.loadingState
+                when {
+                    openingManga || loadingState is LoadingState.Initializing -> LinearProgressIndicator(
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.BottomCenter),
                     )
-                    is LoadingState.Loading -> LinearProgressIndicator(
+                    loadingState is LoadingState.Loading -> LinearProgressIndicator(
                         progress = { loadingState.progress },
                         modifier = Modifier
                             .fillMaxWidth()
