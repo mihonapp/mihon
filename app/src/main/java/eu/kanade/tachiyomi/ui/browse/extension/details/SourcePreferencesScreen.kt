@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.items
@@ -313,7 +313,7 @@ private fun EditTextPreferenceDialog(
                 AndroidView(
                     factory = { viewContext ->
                         LinearLayout(viewContext).apply {
-                            val confirmButton = object : Button(viewContext) {
+                            val confirmButton = object : AppCompatButton(viewContext) {
                                 init {
                                     id = android.R.id.button1
                                     visibility = GONE

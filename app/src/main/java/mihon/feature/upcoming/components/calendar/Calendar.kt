@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,6 @@ import tachiyomi.presentation.core.components.material.padding
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
-import java.util.Locale
 
 private val FontSize = 16.sp
 private const val DAYS_OF_WEEK = 7
@@ -71,8 +71,9 @@ private fun CalendarGrid(
     events: Map<LocalDate, Int>,
     onClickDay: (day: LocalDate) -> Unit,
 ) {
-    val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
-    val weekDays = remember {
+    val locale = LocalLocale.current.platformLocale
+    val weekDays = remember(locale) {
+        val localeFirstDayOfWeek = WeekFields.of(locale).firstDayOfWeek.value
         (0 until DAYS_OF_WEEK)
             .map { DayOfWeek.of((localeFirstDayOfWeek - 1 + it) % DAYS_OF_WEEK + 1) }
     }
@@ -90,10 +91,7 @@ private fun CalendarGrid(
     ) {
         weekDays.fastForEach { item ->
             Text(
-                text = item.getDisplayName(
-                    TextStyle.NARROW,
-                    Locale.getDefault(),
-                ),
+                text = item.getDisplayName(TextStyle.NARROW, locale),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = FontSize,

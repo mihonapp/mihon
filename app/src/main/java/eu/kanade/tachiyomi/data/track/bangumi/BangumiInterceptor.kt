@@ -6,11 +6,11 @@ import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
-import uy.kohesive.injekt.injectLazy
 
-class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
-
-    private val json: Json by injectLazy()
+class BangumiInterceptor(
+    private val bangumi: Bangumi,
+    private val json: Json,
+) : Interceptor {
 
     /**
      * OAuth object used for authenticated requests.

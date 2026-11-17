@@ -70,13 +70,13 @@ class DebugInfoScreen : Screen() {
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
                     title = "Version",
-                    subtitle = AboutScreen.getVersionName(false),
+                    subtitle = AboutScreen.getVersionName(buildTime = null),
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = "Build time",
                     // Keyed on the system 12/24h setting, which can change while the app is backgrounded.
                     // Date/time prefs only change in Appearance, which recreates this screen on return.
-                    subtitle = remember(is24HourSystem) { AboutScreen.getFormattedBuildTime() },
+                    subtitle = remember(is24HourSystem) { AboutScreen.getFormattedBuildTime(context) },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = "Installation ID",

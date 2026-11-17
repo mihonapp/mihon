@@ -228,7 +228,7 @@ object SettingsMainScreen : Screen() {
         Item(
             titleRes = MR.strings.pref_category_about,
             formatSubtitle = {
-                "${stringResource(MR.strings.app_name)} ${AboutScreen.getVersionName(withBuildDate = false)}"
+                "${stringResource(MR.strings.app_name)} ${AboutScreen.getVersionName(buildTime = null)}"
             },
             icon = MaterialSymbols.Rounded.Info,
             screen = AboutScreen,

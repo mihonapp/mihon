@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import mihon.app.di.appGraph
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 interface SecureActivityDelegate {
     fun registerSecureActivity(activity: AppCompatActivity)
@@ -84,11 +82,11 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
 
     override fun registerSecureActivity(activity: AppCompatActivity) {
         this.activity = activity
-        Injekt.get<Context>().appGraph.inject(this)
         activity.lifecycle.addObserver(this)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
+        activity.appGraph.inject(this)
         setSecureScreen()
     }
 
