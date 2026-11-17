@@ -229,7 +229,7 @@ private fun UpdatesBottomBar(
         }.takeIf { selected.fastAny { !it.update.bookmark } },
         onRemoveBookmarkClicked = {
             onMultiBookmarkClicked.invoke(selected, false)
-        }.takeIf { selected.fastAll { it.update.bookmark } },
+        }.takeIf { selected.isNotEmpty() && selected.fastAll { it.update.bookmark } },
         onMarkAsReadClicked = {
             onMultiMarkAsReadClicked(selected, true)
         }.takeIf { selected.fastAny { !it.update.read } },
