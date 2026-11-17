@@ -10,10 +10,13 @@ import eu.kanade.tachiyomi.data.track.TrackerManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.interactor.UpsertTrack
+import java.util.concurrent.ConcurrentHashMap
 
 @Inject
 class TrackChapter(
@@ -24,6 +27,12 @@ class TrackChapter(
 ) {
 
     suspend fun await(context: Context, mangaId: Long, chapterNumber: Double, setupJobOnFailure: Boolean = true) {
+        mangaLocks.computeIfAbsent(mangaId) { Mutex() }.withLock {
+            update(context, mangaId, chapterNumber, setupJobOnFailure)
+        }
+    }
+
+    private suspend fun update(context: Context, mangaId: Long, chapterNumber: Double, setupJobOnFailure: Boolean) {
         coroutineScope {
             val tracks = getTracks.await(mangaId)
             if (tracks.isEmpty()) return@coroutineScope
@@ -57,5 +66,9 @@ class TrackChapter(
                 .mapNotNull { it.exceptionOrNull() }
                 .forEach { logcat(LogPriority.WARN, it) }
         }
+    }
+
+    private companion object {
+        val mangaLocks = ConcurrentHashMap<Long, Mutex>()
     }
 }
