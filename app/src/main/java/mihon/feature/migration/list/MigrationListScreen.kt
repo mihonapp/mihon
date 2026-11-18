@@ -10,9 +10,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.result.ResultEffect
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.tachiyomi.util.system.toast
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrateSearchRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.list.components.MigrationExitDialog
 import mihon.feature.migration.list.components.MigrationMangaDialog
 import mihon.feature.migration.list.components.MigrationProgressDialog

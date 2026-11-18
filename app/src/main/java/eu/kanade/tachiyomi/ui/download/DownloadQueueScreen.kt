@@ -35,7 +35,7 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.download.DownloadQueueList
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Sort
 import mihon.icons.materialsymbols.roundedfilled.Pause

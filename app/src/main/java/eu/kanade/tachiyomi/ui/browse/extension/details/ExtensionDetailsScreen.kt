@@ -6,8 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.ExtensionDetailsScreen
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.SourcePreferencesRoute
-import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen

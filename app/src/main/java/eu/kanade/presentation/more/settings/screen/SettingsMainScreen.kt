@@ -30,9 +30,9 @@ import eu.kanade.presentation.more.settings.screen.about.getVersionName
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import kotlinx.serialization.Serializable
 import mihon.core.navigation.AboutRoute
+import mihon.core.navigation.LocalNavigator
+import mihon.core.navigation.Navigator
 import mihon.core.navigation.SettingsSearchRoute
-import mihon.core.navigation.util.LocalNavigator
-import mihon.core.navigation.util.Navigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ChromeReaderMode
 import mihon.icons.materialsymbols.rounded.Code

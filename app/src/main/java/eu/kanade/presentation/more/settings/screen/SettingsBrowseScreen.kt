@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.ExtensionStoresRoute
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import mihon.domain.extension.model.ContentWarning
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR

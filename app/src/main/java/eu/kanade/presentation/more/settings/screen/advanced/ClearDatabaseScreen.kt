@@ -47,7 +47,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mihon.core.metro.AppCoroutineScope
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FlipToBack
 import mihon.icons.materialsymbols.rounded.SelectAll

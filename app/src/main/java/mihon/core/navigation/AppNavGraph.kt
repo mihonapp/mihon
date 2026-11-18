@@ -43,10 +43,6 @@ import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.ui.stats.StatsScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
-import mihon.core.navigation.util.LocalAssistContentManager
-import mihon.core.navigation.util.LocalNavigator
-import mihon.core.navigation.util.OverlaySheetScene
-import mihon.core.navigation.util.TwoPaneSettingsScene
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.list.MigrationListScreen
 import mihon.feature.support.SupportUsScreen

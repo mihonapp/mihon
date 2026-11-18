@@ -12,7 +12,7 @@ import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionSt
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoresScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable

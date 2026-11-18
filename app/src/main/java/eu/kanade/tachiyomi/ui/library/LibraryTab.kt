@@ -36,9 +36,9 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.launch
 import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.GlobalSearchRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationConfigRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource

@@ -61,7 +61,7 @@ import eu.kanade.tachiyomi.util.view.setIncognito
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mihon.app.di.appGraph
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold

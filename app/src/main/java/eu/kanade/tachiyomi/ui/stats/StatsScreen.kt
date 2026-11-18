@@ -7,7 +7,7 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.stats.StatsScreenContent
 import eu.kanade.presentation.more.stats.StatsScreenState
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

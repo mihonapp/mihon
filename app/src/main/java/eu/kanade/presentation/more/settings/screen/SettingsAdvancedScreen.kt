@@ -50,8 +50,8 @@ import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.core.navigation.ClearDatabaseRoute
 import mihon.core.navigation.DebugInfoRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.OnboardingRoute
-import mihon.core.navigation.util.LocalNavigator
 import okhttp3.Headers
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences

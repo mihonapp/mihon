@@ -10,8 +10,8 @@ import androidx.compose.runtime.setValue
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.GlobalSearchScreen
 import mihon.core.navigation.BrowseSourceRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable

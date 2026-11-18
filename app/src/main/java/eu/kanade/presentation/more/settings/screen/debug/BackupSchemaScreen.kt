@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.serialization.protobuf.schema.ProtoBufSchemaGenerator
 import mihon.core.navigation.BackupSchemaRoute
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.ContentCopy
 import tachiyomi.i18n.MR

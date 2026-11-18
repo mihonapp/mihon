@@ -28,9 +28,9 @@ import kotlinx.coroutines.launch
 import mihon.core.navigation.AboutRoute
 import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.DownloadQueueRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.StatsRoute
 import mihon.core.navigation.SupportUsRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.presentation.core.util.isTabletUi
 
 @Composable

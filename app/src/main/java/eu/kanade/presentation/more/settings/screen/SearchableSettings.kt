@@ -7,8 +7,8 @@ import androidx.navigation3.runtime.NavKey
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
-import mihon.core.navigation.util.LocalBackButtonVisibility
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalBackButtonVisibility
+import mihon.core.navigation.LocalNavigator
 
 interface SearchableSettings : NavKey {
 

@@ -86,10 +86,10 @@ import kotlinx.serialization.Serializable
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.core.metro.AppCoroutineScope
-import mihon.core.navigation.util.LocalNavigator
-import mihon.core.navigation.util.Navigator
-import mihon.core.navigation.util.NavigatorDisplay
-import mihon.core.navigation.util.rememberNavigator
+import mihon.core.navigation.LocalNavigator
+import mihon.core.navigation.Navigator
+import mihon.core.navigation.NavigatorDisplay
+import mihon.core.navigation.rememberNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.roundedfilled.Delete
 import tachiyomi.core.common.i18n.stringResource

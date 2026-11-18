@@ -23,7 +23,7 @@ import eu.kanade.presentation.components.relativeDateText
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import mihon.feature.upcoming.components.UpcomingItem
 import mihon.feature.upcoming.components.calendar.Calendar
 import mihon.icons.materialsymbols.MaterialSymbols

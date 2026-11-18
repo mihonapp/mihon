@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import mihon.core.navigation.BrowseSourceRoute
 import mihon.core.navigation.GlobalSearchRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.SourcesFilterRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.TravelExplore

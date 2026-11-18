@@ -10,7 +10,7 @@ import eu.kanade.presentation.more.settings.screen.SearchableSettings
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
 import eu.kanade.presentation.more.settings.screen.openSettings
 import mihon.app.di.appGraph
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import mihon.presentation.core.util.isTabletUi
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState

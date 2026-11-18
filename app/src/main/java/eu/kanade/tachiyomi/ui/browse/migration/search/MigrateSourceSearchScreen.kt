@@ -22,10 +22,10 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterDialog
 import eu.kanade.tachiyomi.ui.home.TabEvent
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationListRoute
 import mihon.core.navigation.WebViewRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
 import mihon.icons.materialsymbols.MaterialSymbols

@@ -19,9 +19,9 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.updates.UpdatesViewModel.Event
 import kotlinx.coroutines.flow.collectLatest
 import mihon.core.navigation.DownloadQueueRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.UpcomingRoute
-import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 

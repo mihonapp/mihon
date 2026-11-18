@@ -50,9 +50,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MigrateSearchRoute
 import mihon.core.navigation.MigrationListRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
 import mihon.icons.materialsymbols.rounded.Deselect

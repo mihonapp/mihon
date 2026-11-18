@@ -7,10 +7,10 @@ import androidx.navigation3.runtime.result.LocalResultEventBus
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.MigrateSearchScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrateSourceSearchRoute
 import mihon.core.navigation.MigrationListRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
 @Composable

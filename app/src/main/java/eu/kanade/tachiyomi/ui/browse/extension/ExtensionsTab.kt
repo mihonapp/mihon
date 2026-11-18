@@ -19,8 +19,8 @@ import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import mihon.core.navigation.ExtensionDetailsRoute
 import mihon.core.navigation.ExtensionFilterRoute
 import mihon.core.navigation.ExtensionStoresRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.WebViewRoute
-import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 

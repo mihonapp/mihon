@@ -48,11 +48,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.DownloadQueueRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalNavigator
-import mihon.core.navigation.util.Navigator
-import mihon.core.navigation.util.NavigatorDisplay
-import mihon.core.navigation.util.rememberNavigator
+import mihon.core.navigation.Navigator
+import mihon.core.navigation.NavigatorDisplay
+import mihon.core.navigation.rememberNavigator
 import mihon.presentation.core.util.isTabletUi
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut

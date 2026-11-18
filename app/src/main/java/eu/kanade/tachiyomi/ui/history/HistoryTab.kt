@@ -20,8 +20,8 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.coroutines.flow.collectLatest
 import mihon.core.navigation.CategoryRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.domain.chapter.model.Chapter

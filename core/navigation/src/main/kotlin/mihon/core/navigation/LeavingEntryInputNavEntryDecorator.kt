@@ -1,4 +1,4 @@
-package mihon.core.navigation.util
+package mihon.core.navigation
 
 import androidx.compose.animation.EnterExitState
 import androidx.compose.foundation.layout.Box

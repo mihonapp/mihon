@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
 import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import mihon.core.navigation.GlobalSearchRoute
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import tachiyomi.i18n.MR
 
 @Composable

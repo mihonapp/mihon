@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.simpleicons.Discord

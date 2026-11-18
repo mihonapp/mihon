@@ -25,8 +25,8 @@ import kotlinx.coroutines.launch
 import mihon.app.di.appGraph
 import mihon.core.common.FeatureFlags
 import mihon.core.navigation.BackupSchemaRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.WorkerInfoRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Autorenew
 import tachiyomi.i18n.MR

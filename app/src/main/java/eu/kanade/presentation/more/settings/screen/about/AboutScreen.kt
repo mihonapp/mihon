@@ -40,10 +40,10 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logcat.LogPriority
 import mihon.app.di.appGraph
+import mihon.core.navigation.LocalBackButtonVisibility
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.NewUpdateRoute
 import mihon.core.navigation.OpenSourceLicensesRoute
-import mihon.core.navigation.util.LocalBackButtonVisibility
-import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Public
 import mihon.icons.simpleicons.Discord

@@ -22,9 +22,9 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.manga.components.BaseMangaListItem
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationConfigRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
 import tachiyomi.domain.manga.model.Manga

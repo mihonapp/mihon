@@ -57,8 +57,8 @@ import kotlinx.serialization.Serializable
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.core.navigation.CreateBackupRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.RestoreBackupRoute
-import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource

@@ -22,8 +22,8 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.SettingsItemsPaddings

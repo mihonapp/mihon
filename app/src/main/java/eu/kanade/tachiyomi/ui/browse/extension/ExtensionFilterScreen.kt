@@ -8,7 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.ExtensionFilterScreen
 import kotlinx.coroutines.flow.collectLatest
-import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.LocalNavigator
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen

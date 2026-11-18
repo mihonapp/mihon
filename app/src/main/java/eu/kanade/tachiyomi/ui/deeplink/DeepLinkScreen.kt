@@ -11,8 +11,8 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import mihon.core.navigation.GlobalSearchRoute
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

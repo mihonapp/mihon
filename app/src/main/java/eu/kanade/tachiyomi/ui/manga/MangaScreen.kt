@@ -49,14 +49,14 @@ import mihon.core.navigation.BrowseSourceRoute
 import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.GlobalSearchRoute
 import mihon.core.navigation.HomeRoute
+import mihon.core.navigation.LocalAssistUrl
+import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaNotesRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationConfigRoute
+import mihon.core.navigation.Navigator
 import mihon.core.navigation.TrackInfoDialogRoute
 import mihon.core.navigation.WebViewRoute
-import mihon.core.navigation.util.LocalAssistUrl
-import mihon.core.navigation.util.LocalNavigator
-import mihon.core.navigation.util.Navigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.presentation.core.util.isTabletUi
 import tachiyomi.core.common.util.system.logcat
