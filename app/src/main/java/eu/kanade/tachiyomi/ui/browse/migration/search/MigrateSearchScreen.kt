@@ -13,7 +13,6 @@ import mihon.core.navigation.MigrationListRoute
 import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
-
 @Composable
 fun MigrateSearchScreen(mangaId: Long) {
     val navigator = LocalNavigator.current
@@ -58,15 +57,7 @@ fun MigrateSearchScreen(mangaId: Long) {
                 // Initiated from the context of [dialog.current] so we show [dialog.target].
                 onClickTitle = { navigator.push(MangaRoute(dialog.target.id, true)) },
                 onDismissRequest = { viewModel.clearDialog() },
-                onComplete = {
-                    if (navigator.current is MangaRoute) {
-                        val lastItem = navigator.current
-                        navigator.popTo { navigator.routes.contains(lastItem) }
-                        navigator.push(MangaRoute(dialog.target.id))
-                    } else {
-                        navigator.replace(MangaRoute(dialog.target.id))
-                    }
-                },
+                onComplete = { navigator.replace(MangaRoute(dialog.target.id)) },
             )
         }
         else -> {}
