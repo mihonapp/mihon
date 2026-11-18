@@ -48,6 +48,7 @@ class MangaRestorer(
                 },
                 tracks = backupManga.tracking.map { it.getTrackImpl() },
                 excludedScanlators = backupManga.excludedScanlators,
+                protected = backupManga.protected,
             )
         }
 

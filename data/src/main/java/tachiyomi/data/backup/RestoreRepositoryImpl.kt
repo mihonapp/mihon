@@ -59,6 +59,8 @@ class RestoreRepositoryImpl(
         restoreTracking(manga, entry.tracks)
         restoreHistory(manga, entry.history)
         restoreExcludedScanlators(manga, entry.excludedScanlators)
+        // Only ever adds: an entry protected on this device stays so whatever the backup says
+        if (entry.protected) database.protected_mangaQueries.insert(manga.id)
         return manga
     }
 

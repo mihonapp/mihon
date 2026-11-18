@@ -1,0 +1,38 @@
+-- Entries in the protected folder. Membership is kept even when the entry leaves the library, so its history
+-- stays hidden until the entry is taken out of the folder or the folder is wiped.
+CREATE TABLE protected_manga(
+    manga_id INTEGER NOT NULL PRIMARY KEY,
+    FOREIGN KEY(manga_id) REFERENCES manga (id)
+    ON DELETE CASCADE
+);
+
+getProtectedMangaIds:
+SELECT manga_id
+FROM protected_manga;
+
+getProtectedManga:
+SELECT
+    id, source_id, remote_url, remote_title, remote_author, remote_artist, remote_description,
+    remote_genre, remote_status, remote_cover, remote_update_strategy, remote_memo,
+    user_favorite_at, user_notes, user_reader_flags, user_chapter_flags,
+    state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
+    state_cover_last_modified, state_initialized
+FROM manga
+WHERE id IN (SELECT manga_id FROM protected_manga);
+
+insert:
+INSERT INTO protected_manga(manga_id)
+VALUES (:mangaId)
+ON CONFLICT(manga_id) DO NOTHING;
+
+delete:
+DELETE FROM protected_manga
+WHERE manga_id IN :mangaIds;
+
+deleteAll:
+DELETE FROM protected_manga;
+
+-- Chapters, history, tracks, categories and the membership itself go with the entry through their foreign keys
+deleteProtectedManga:
+DELETE FROM manga
+WHERE id IN (SELECT manga_id FROM protected_manga);

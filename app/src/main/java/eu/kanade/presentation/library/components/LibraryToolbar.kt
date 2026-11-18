@@ -1,5 +1,6 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.LocalContentColor
@@ -10,11 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.SearchToolbar
+import mihon.feature.protectedfolder.ProtectedFolderEntry
+import mihon.feature.protectedfolder.ProtectedFolderEntryGesture
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.FlipToBack
@@ -36,6 +40,7 @@ fun LibraryToolbar(
     onClickRefresh: () -> Unit,
     onClickGlobalUpdate: () -> Unit,
     onClickOpenRandomManga: () -> Unit,
+    onOpenProtectedFolder: () -> Unit,
     searchQuery: String?,
     onSearchQueryChange: (String?) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
@@ -55,6 +60,7 @@ fun LibraryToolbar(
         onClickRefresh = onClickRefresh,
         onClickGlobalUpdate = onClickGlobalUpdate,
         onClickOpenRandomManga = onClickOpenRandomManga,
+        onOpenProtectedFolder = onOpenProtectedFolder,
         scrollBehavior = scrollBehavior,
     )
 }
@@ -69,12 +75,27 @@ private fun LibraryRegularToolbar(
     onClickRefresh: () -> Unit,
     onClickGlobalUpdate: () -> Unit,
     onClickOpenRandomManga: () -> Unit,
+    onOpenProtectedFolder: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior?,
 ) {
     val pillAlpha = if (isSystemInDarkTheme()) 0.12f else 0.08f
     SearchToolbar(
         titleContent = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                // Plain pointer input on purpose: a clickable would add a ripple and an accessibility action,
+                // either of which gives the protected folder away
+                modifier = Modifier.pointerInput(onOpenProtectedFolder) {
+                    when (ProtectedFolderEntry) {
+                        ProtectedFolderEntryGesture.TitleLongPress -> {
+                            detectTapGestures(onLongPress = { onOpenProtectedFolder() })
+                        }
+                        ProtectedFolderEntryGesture.TitleDoubleTap -> {
+                            detectTapGestures(onDoubleTap = { onOpenProtectedFolder() })
+                        }
+                    }
+                },
+            ) {
                 Text(
                     text = title.text,
                     maxLines = 1,

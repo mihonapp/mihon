@@ -30,13 +30,21 @@ class MangaBackupCreator(
     /**
      * Builds the entries a chunk at a time, so only one chunk's chapters are held at once.
      */
-    operator fun invoke(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> = flow {
+    operator fun invoke(
+        mangas: List<Manga>,
+        options: BackupOptions,
+        protectedMangaIds: Set<Long>,
+    ): Flow<BackupManga> = flow {
         mangas.chunked(CHUNK_SIZE).forEach { chunk ->
-            backupMangas(chunk, options).forEach { emit(it) }
+            backupMangas(chunk, options, protectedMangaIds).forEach { emit(it) }
         }
     }
 
-    private suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
+    private suspend fun backupMangas(
+        mangas: List<Manga>,
+        options: BackupOptions,
+        protectedMangaIds: Set<Long>,
+    ): List<BackupManga> {
         val mangaIds = mangas.map { it.id }
 
         val excludedScanlatorsByMangaId = mangaRepository.getExcludedScanlatorsByMangaIds(mangaIds)
@@ -59,6 +67,7 @@ class MangaBackupCreator(
             val chapters = chaptersByMangaId[manga.id].orEmpty()
 
             mangaObject.excludedScanlators = excludedScanlatorsByMangaId[manga.id].orEmpty()
+            mangaObject.protected = manga.id in protectedMangaIds
 
             if (options.chapters) {
                 mangaObject.chapters = chapters.map { it.toBackupChapter() }

@@ -49,6 +49,8 @@ class BackupManga(
     @ProtoNumber(111) var initialized: Boolean = false,
     @ProtoNumber(112) var memo: ByteArray = JsonObjectEmptyBytes,
     @ProtoNumber(113) var nextUpdate: Long = 0,
+    // Protected folder values start here
+    @ProtoNumber(1000) var protected: Boolean = false,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(

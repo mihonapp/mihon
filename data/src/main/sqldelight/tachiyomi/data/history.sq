@@ -54,4 +54,5 @@ ON CONFLICT(chapter_id) DO UPDATE SET
 
 getReadDuration:
 SELECT coalesce(sum(read_duration), 0)
-FROM history;
+FROM history
+WHERE manga_id NOT IN (SELECT manga_id FROM protected_manga);

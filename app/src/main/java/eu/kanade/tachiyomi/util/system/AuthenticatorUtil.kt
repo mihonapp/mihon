@@ -7,6 +7,7 @@ import androidx.biometric.BiometricManager.Authenticators
 import androidx.biometric.BiometricPrompt
 import androidx.biometric.BiometricPrompt.AuthenticationError
 import androidx.biometric.auth.AuthPromptCallback
+import androidx.biometric.auth.startClass2BiometricAuthentication
 import androidx.biometric.auth.startClass2BiometricOrCredentialAuthentication
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -87,6 +88,46 @@ object AuthenticatorUtil {
     fun Context.isAuthenticationSupported(): Boolean {
         val authenticators = Authenticators.BIOMETRIC_WEAK or Authenticators.DEVICE_CREDENTIAL
         return BiometricManager.from(this).canAuthenticate(authenticators) == BiometricManager.BIOMETRIC_SUCCESS
+    }
+
+    /**
+     * Asks for a biometric only. The device PIN or pattern is not accepted, so knowing it is not enough to pass.
+     *
+     * @param negativeButtonText label of the button that gives up on biometrics.
+     */
+    suspend fun FragmentActivity.authenticateWithBiometrics(
+        title: String,
+        negativeButtonText: String,
+    ): Boolean = suspendCancellableCoroutine { cont ->
+        isAuthenticating = true
+        startClass2BiometricAuthentication(
+            title = title,
+            negativeButtonText = negativeButtonText,
+            executor = ContextCompat.getMainExecutor(this),
+            callback = object : AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(
+                    activity: FragmentActivity?,
+                    result: BiometricPrompt.AuthenticationResult,
+                ) {
+                    super.onAuthenticationSucceeded(activity, result)
+                    cont.resume(true)
+                }
+
+                override fun onAuthenticationError(
+                    activity: FragmentActivity?,
+                    errorCode: Int,
+                    errString: CharSequence,
+                ) {
+                    super.onAuthenticationError(activity, errorCode, errString)
+                    cont.resume(false)
+                }
+            },
+        )
+    }
+
+    fun Context.isBiometricAuthenticationSupported(): Boolean {
+        return BiometricManager.from(this).canAuthenticate(Authenticators.BIOMETRIC_WEAK) ==
+            BiometricManager.BIOMETRIC_SUCCESS
     }
 
     /**

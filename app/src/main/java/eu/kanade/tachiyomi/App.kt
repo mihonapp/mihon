@@ -266,6 +266,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
     override fun onStop(owner: LifecycleOwner) {
         SecureActivityDelegate.onApplicationStopped(this)
+        graph.protectedFolderSession.lock()
     }
 
     override fun getPackageName(): String {

@@ -61,7 +61,8 @@ SELECT
     state_chapter_last_update, state_chapter_next_update, state_chapter_fetch_interval,
     state_cover_last_modified, state_initialized
 FROM manga
-WHERE user_favorite_at IS NOT NULL;
+WHERE user_favorite_at IS NOT NULL
+AND id NOT IN (SELECT manga_id FROM protected_manga);
 
 getReadMangaNotInLibrary:
 SELECT
@@ -72,6 +73,7 @@ SELECT
     state_cover_last_modified, state_initialized
 FROM manga
 WHERE user_favorite_at IS NULL
+AND id NOT IN (SELECT manga_id FROM protected_manga)
 AND EXISTS (
     SELECT 1
     FROM chapter
@@ -83,6 +85,7 @@ getSourceIdWithFavoriteCount:
 SELECT source_id, count(*)
 FROM manga
 WHERE user_favorite_at IS NOT NULL
+AND id NOT IN (SELECT manga_id FROM protected_manga)
 GROUP BY source_id;
 
 getFavoriteBySourceId:
@@ -94,6 +97,7 @@ SELECT
     state_cover_last_modified, state_initialized
 FROM manga
 WHERE user_favorite_at IS NOT NULL
+AND id NOT IN (SELECT manga_id FROM protected_manga)
 AND source_id = :sourceId;
 
 getDuplicateLibraryManga:
@@ -126,6 +130,7 @@ SELECT
     ) AS chapter_count
 FROM manga M
 WHERE M.user_favorite_at IS NOT NULL
+AND M.id NOT IN (SELECT manga_id FROM protected_manga)
 AND M.id != :id
 -- A blank title would match every title
 AND (
@@ -143,6 +148,7 @@ SELECT
 FROM manga
 WHERE state_chapter_next_update >= :startOfDay
 AND user_favorite_at IS NOT NULL
+AND id NOT IN (SELECT manga_id FROM protected_manga)
 AND remote_status IN :statuses
 AND (
     -- includedEmpty being true expresses "don't care" state and bypasses the membership filter
@@ -182,11 +188,13 @@ getSourceIdsWithNonLibraryManga:
 SELECT source_id, count(*) AS manga_count
 FROM manga
 WHERE user_favorite_at IS NULL
+AND id NOT IN (SELECT manga_id FROM protected_manga)
 GROUP BY source_id;
 
 deleteNonLibraryManga:
 DELETE FROM manga
 WHERE user_favorite_at IS NULL
+AND id NOT IN (SELECT manga_id FROM protected_manga)
 AND source_id IN :sourceIds
 AND (
     :keepReadManga = 0

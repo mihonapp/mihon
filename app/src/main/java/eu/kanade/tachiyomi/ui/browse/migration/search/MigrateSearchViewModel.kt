@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
 import kotlinx.coroutines.launch
+import mihon.domain.protectedfolder.interactor.GetProtectedMangaIds
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.source.service.SourceManager
@@ -25,6 +26,7 @@ class MigrateSearchViewModel(
     extensionManager: ExtensionManager,
     networkToLocalManga: NetworkToLocalManga,
     getManga: GetManga,
+    getProtectedMangaIds: GetProtectedMangaIds,
     preferences: SourcePreferences,
     private val sourceManager: SourceManager,
 ) : SearchViewModel(
@@ -33,6 +35,7 @@ class MigrateSearchViewModel(
     extensionManager = extensionManager,
     networkToLocalManga = networkToLocalManga,
     getManga = getManga,
+    getProtectedMangaIds = getProtectedMangaIds,
     preferences = preferences,
 ) {
     @AssistedFactory

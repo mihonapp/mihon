@@ -13,14 +13,18 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mihon.domain.manga.model.toDomainManga
+import mihon.domain.protectedfolder.interactor.GetProtectedMangaIds
 import tachiyomi.core.common.preference.toggle
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
@@ -35,8 +39,13 @@ abstract class SearchViewModel(
     private val extensionManager: ExtensionManager,
     private val networkToLocalManga: NetworkToLocalManga,
     private val getManga: GetManga,
+    getProtectedMangaIds: GetProtectedMangaIds,
     private val preferences: SourcePreferences,
 ) : ViewModel() {
+
+    // Replays the ids, so no result is shown before it is known whether it is protected
+    private val protectedMangaIds = getProtectedMangaIds.subscribe()
+        .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
     val state: StateFlow<State>
         field = MutableStateFlow<State>(initialState)
@@ -80,6 +89,10 @@ abstract class SearchViewModel(
         return produceState(initialValue = initialManga) {
             getManga.subscribe(initialManga.url, initialManga.source)
                 .filterNotNull()
+                // A protected entry is shown as outside the library, which would otherwise give it away
+                .combine(protectedMangaIds) { manga, ids ->
+                    if (manga.id in ids) manga.copy(favoriteAt = null) else manga
+                }
                 .collectLatest { manga ->
                     value = manga
                 }

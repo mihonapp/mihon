@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import mihon.app.di.appGraph
+import mihon.domain.protectedfolder.service.ProtectedFolderPreferences
+import mihon.feature.protectedfolder.ProtectedFolderSession
 
 interface SecureActivityDelegate {
     fun registerSecureActivity(activity: AppCompatActivity)
@@ -80,6 +82,10 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
 
     @Inject private lateinit var securityPreferences: SecurityPreferences
 
+    @Inject private lateinit var protectedFolderPreferences: ProtectedFolderPreferences
+
+    @Inject private lateinit var protectedFolderSession: ProtectedFolderSession
+
     override fun registerSecureActivity(activity: AppCompatActivity) {
         this.activity = activity
         activity.lifecycle.addObserver(this)
@@ -97,9 +103,14 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
     private fun setSecureScreen() {
         val secureScreenFlow = securityPreferences.secureScreen.changes()
         val incognitoModeFlow = preferences.incognitoMode.changes()
-        combine(secureScreenFlow, incognitoModeFlow) { secureScreen, incognitoMode ->
+        val protectedFolderFlow = combine(
+            protectedFolderSession.unlocked,
+            protectedFolderPreferences.secureScreen.changes(),
+        ) { unlocked, secure -> unlocked && secure }
+        combine(secureScreenFlow, incognitoModeFlow, protectedFolderFlow) { secureScreen, incognitoMode, folderOpen ->
             secureScreen == SecurityPreferences.SecureScreenMode.ALWAYS ||
-                (secureScreen == SecurityPreferences.SecureScreenMode.INCOGNITO && incognitoMode)
+                (secureScreen == SecurityPreferences.SecureScreenMode.INCOGNITO && incognitoMode) ||
+                folderOpen
         }
             .onEach(activity.window::setSecureScreen)
             .launchIn(activity.lifecycleScope)

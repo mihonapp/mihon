@@ -10,6 +10,7 @@ import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import mihon.domain.protectedfolder.interactor.GetProtectedMangaIds
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.source.service.SourceManager
@@ -23,6 +24,7 @@ class GlobalSearchViewModel(
     extensionManager: ExtensionManager,
     networkToLocalManga: NetworkToLocalManga,
     getManga: GetManga,
+    getProtectedMangaIds: GetProtectedMangaIds,
     preferences: SourcePreferences,
 ) : SearchViewModel(
     initialState = State(searchQuery = initialQuery),
@@ -31,6 +33,7 @@ class GlobalSearchViewModel(
     extensionManager = extensionManager,
     networkToLocalManga = networkToLocalManga,
     getManga = getManga,
+    getProtectedMangaIds = getProtectedMangaIds,
     preferences = preferences,
 ) {
 

@@ -43,4 +43,10 @@ dependencies {
 
     implementation(libs.androidx.sqlite.bundled)
     implementation(libs.bundles.sqldelight)
+
+    testImplementation(libs.bundles.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+    // The app's own driver only runs on a device, so the queries are tested against an in-memory JDBC database
+    testImplementation("app.cash.sqldelight:sqlite-driver:${libs.versions.sqldelight.asProvider().get()}")
+    testRuntimeOnly(libs.junit.platform.launcher)
 }

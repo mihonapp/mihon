@@ -16,6 +16,11 @@ import eu.kanade.tachiyomi.util.lang.chop
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import mihon.core.metro.AppCoroutineScope
+import mihon.domain.protectedfolder.interactor.GetProtectedMangaIds
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.util.regex.Pattern
@@ -30,7 +35,12 @@ import mihon.icons.materialsymbols.R as MaterialSymbolsR
 class DownloadNotifier(
     private val context: Context,
     private val preferences: SecurityPreferences,
+    getProtectedMangaIds: GetProtectedMangaIds,
+    @AppCoroutineScope scope: CoroutineScope,
 ) {
+
+    private val protectedMangaIds = getProtectedMangaIds.subscribe()
+        .stateIn(scope, SharingStarted.Eagerly, emptySet())
 
     private val progressNotificationBuilder by lazy {
         context.notificationBuilder(Notifications.CHANNEL_DOWNLOADER_PROGRESS) {
@@ -94,11 +104,13 @@ class DownloadNotifier(
                     context.stringResource(MR.strings.action_pause),
                     NotificationReceiver.pauseDownloadsPendingBroadcast(context),
                 )
-                addAction(
-                    MaterialSymbolsR.drawable.rounded_book,
-                    context.stringResource(MR.strings.action_show_manga),
-                    NotificationReceiver.openEntryPendingActivity(context, download.manga.id),
-                )
+                if (download.manga.id !in protectedMangaIds.value) {
+                    addAction(
+                        MaterialSymbolsR.drawable.rounded_book,
+                        context.stringResource(MR.strings.action_show_manga),
+                        NotificationReceiver.openEntryPendingActivity(context, download.manga.id),
+                    )
+                }
             }
 
             val downloadingProgressText = context.stringResource(
@@ -107,7 +119,7 @@ class DownloadNotifier(
                 download.pages!!.size,
             )
 
-            if (preferences.hideNotificationContent.get()) {
+            if (preferences.hideNotificationContent.get() || download.manga.id in protectedMangaIds.value) {
                 setContentTitle(downloadingProgressText)
                 setContentText(null)
             } else {
@@ -192,7 +204,7 @@ class DownloadNotifier(
             setSmallIcon(MaterialSymbolsR.drawable.rounded_filled_warning)
             setAutoCancel(true)
             setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
-            if (mangaId != null) {
+            if (mangaId != null && mangaId !in protectedMangaIds.value) {
                 addAction(
                     MaterialSymbolsR.drawable.rounded_book,
                     context.stringResource(MR.strings.action_show_manga),
@@ -216,18 +228,20 @@ class DownloadNotifier(
      * @param mangaId the id of the entry that the error occurred on
      */
     fun onError(error: String? = null, chapter: String? = null, mangaTitle: String? = null, mangaId: Long? = null) {
+        val isProtected = mangaId != null && mangaId in protectedMangaIds.value
         // Create notification
         context.notify(
             Notifications.ID_DOWNLOAD_CHAPTER_ERROR,
             Notifications.CHANNEL_DOWNLOADER_ERROR,
         ) {
             setContentTitle(
-                mangaTitle?.plus(": $chapter") ?: context.stringResource(MR.strings.download_notifier_downloader_title),
+                mangaTitle?.takeUnless { isProtected }?.plus(": $chapter")
+                    ?: context.stringResource(MR.strings.download_notifier_downloader_title),
             )
             setContentText(error ?: context.stringResource(MR.strings.download_notifier_unknown_error))
             setSmallIcon(MaterialSymbolsR.drawable.rounded_filled_warning)
             setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))
-            if (mangaId != null) {
+            if (mangaId != null && !isProtected) {
                 addAction(
                     MaterialSymbolsR.drawable.rounded_book,
                     context.stringResource(MR.strings.action_show_manga),
