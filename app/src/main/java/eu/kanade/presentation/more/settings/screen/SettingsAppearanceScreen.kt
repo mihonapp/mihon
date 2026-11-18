@@ -166,6 +166,20 @@ object SettingsAppearanceScreen : SearchableSettings {
                     preference = uiPreferences.imagesInDescription,
                     title = stringResource(MR.strings.pref_display_images_description),
                 ),
+                Preference.PreferenceItem.MultiSelectListPreference(
+                    preference = uiPreferences.mainScreenTabs,
+                    entries = mapOf(
+                        "library" to stringResource(MR.strings.label_library),
+                        "updates" to stringResource(MR.strings.label_recent_updates),
+                        "history" to stringResource(MR.strings.history),
+                        "browse" to stringResource(MR.strings.browse),
+                        "more" to stringResource(MR.strings.label_more),
+                    ),
+                    title = stringResource(MR.strings.tabs_header),
+                    onValueChanged = { selected ->
+                        selected.isNotEmpty()
+                    },
+                ),
             ),
         )
     }
