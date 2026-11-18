@@ -14,7 +14,6 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -136,8 +135,7 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.materialsymbols.roundedfilled.VolunteerActivism
 import mihon.presentation.core.util.isTabletUi
-import soup.compose.material.motion.animation.materialSharedAxisXIn
-import soup.compose.material.motion.animation.materialSharedAxisXOut
+import soup.compose.material.motion.animation.materialSharedAxisX
 import soup.compose.material.motion.animation.rememberSlideDistance
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.system.logcat
@@ -305,32 +303,10 @@ class MainActivity : BaseActivity() {
                         NavigatorDisplay(
                             navigator = navigator,
                             sceneStrategies = listOf(twoPaneStrategy, overlaySheetSceneStrategy),
-                            transitionSpec = {
-                                materialSharedAxisXIn(
-                                    forward = true,
-                                    slideDistance = slideDistance,
-                                ) togetherWith materialSharedAxisXOut(
-                                    forward = true,
-                                    slideDistance = slideDistance,
-                                )
-                            },
-                            popTransitionSpec = {
-                                materialSharedAxisXIn(
-                                    forward = false,
-                                    slideDistance = slideDistance,
-                                ) togetherWith materialSharedAxisXOut(
-                                    forward = false,
-                                    slideDistance = slideDistance,
-                                )
-                            },
+                            transitionSpec = { materialSharedAxisX(forward = true, slideDistance = slideDistance) },
+                            popTransitionSpec = { materialSharedAxisX(forward = false, slideDistance = slideDistance) },
                             predictivePopTransitionSpec = {
-                                materialSharedAxisXIn(
-                                    forward = false,
-                                    slideDistance = slideDistance,
-                                ) togetherWith materialSharedAxisXOut(
-                                    forward = false,
-                                    slideDistance = slideDistance,
-                                )
+                                materialSharedAxisX(forward = false, slideDistance = slideDistance)
                             },
                             entryDecorators = listOf(
                                 rememberSaveableStateHolderNavEntryDecorator(),
