@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.library
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.ReportDrawnWhen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -26,7 +27,7 @@ import eu.kanade.presentation.library.components.LibraryContent
 import eu.kanade.presentation.library.components.LibraryToolbar
 import eu.kanade.presentation.manga.components.LibraryBottomActionMenu
 import eu.kanade.presentation.more.onboarding.GETTING_STARTED_URL
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.ui.home.ShowBottomNavEvent
 import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.main.MainActivity
@@ -41,7 +42,6 @@ import mihon.core.navigation.util.LocalBackStack
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
@@ -67,8 +67,8 @@ fun LibraryTab() {
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val onClickRefresh: (Category?) -> Boolean = { category ->
-        val started = LibraryUpdateJob.startNow(context.workManager, category)
+    val onClickRefresh: suspend (Category?) -> Boolean = { category ->
+        val started = LibraryUpdateWorker.startNow(context.workManager, category)
         scope.launch {
             val msgRes = when {
                 !started -> MR.strings.update_already_running
@@ -95,8 +95,8 @@ fun LibraryTab() {
                 onClickSelectAll = viewModel::selectAll,
                 onClickInvertSelection = viewModel::invertSelection,
                 onClickFilter = viewModel::showSettingsDialog,
-                onClickRefresh = { onClickRefresh(state.activeCategory) },
-                onClickGlobalUpdate = { onClickRefresh(null) },
+                onClickRefresh = { scope.launch { onClickRefresh(state.activeCategory) } },
+                onClickGlobalUpdate = { scope.launch { onClickRefresh(null) } },
                 onClickOpenRandomManga = {
                     scope.launch {
                         val randomItem = viewModel.getRandomLibraryItemForCurrentCategory()
@@ -163,7 +163,7 @@ fun LibraryTab() {
                     onChangeCurrentPage = viewModel::updateActiveCategoryIndex,
                     onClickManga = { backStack.add(MangaRoute(it)) },
                     onContinueReadingClicked = { it: LibraryManga ->
-                        scope.launchIO {
+                        scope.launch {
                             val chapter = viewModel.getNextUnreadChapter(it.manga)
                             if (chapter != null) {
                                 context.startActivity(
@@ -247,6 +247,8 @@ fun LibraryTab() {
             (context as? MainActivity)?.ready = true
         }
     }
+    // Lets startup be measured up to the library, not just its loading screen
+    ReportDrawnWhen { !state.isLoading }
 
     ResultEffect<String>(resultKey = LibraryTabSearchEventKey) {
         viewModel.search(it)

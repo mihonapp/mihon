@@ -1,0 +1,15 @@
+-- Remove the sync scaffolding: version, is_syncing and last_modified_at.
+
+DROP TRIGGER update_manga_version;
+DROP TRIGGER update_last_modified_at_mangas;
+DROP TRIGGER update_chapter_and_manga_version;
+DROP TRIGGER update_last_modified_at_chapters;
+DROP TRIGGER insert_manga_category_update_version;
+
+ALTER TABLE mangas DROP COLUMN version;
+ALTER TABLE mangas DROP COLUMN is_syncing;
+ALTER TABLE mangas DROP COLUMN last_modified_at;
+
+ALTER TABLE chapters DROP COLUMN version;
+ALTER TABLE chapters DROP COLUMN is_syncing;
+ALTER TABLE chapters DROP COLUMN last_modified_at;

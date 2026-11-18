@@ -34,9 +34,6 @@ fun FastScrollLazyVerticalGrid(
 ) {
     VerticalGridFastScroller(
         state = state,
-        columns = columns,
-        arrangement = horizontalArrangement,
-        contentPadding = contentPadding,
         modifier = modifier,
         thumbAllowed = thumbAllowed,
         thumbColor = thumbColor,

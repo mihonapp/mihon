@@ -36,8 +36,6 @@ object SettingsDownloadRoute : SearchableRoute {
         val allCategories by getCategories.subscribe().collectAsState(initial = emptyList())
 
         val downloadPreferences = remember { context.appGraph.downloadPreferences }
-        val parallelSourceLimit by downloadPreferences.parallelSourceLimit.collectAsState()
-        val parallelPageLimit by downloadPreferences.parallelPageLimit.collectAsState()
         return listOf(
             Preference.PreferenceItem.SwitchPreference(
                 preference = downloadPreferences.downloadOnlyOverWifi,
@@ -47,23 +45,16 @@ object SettingsDownloadRoute : SearchableRoute {
                 preference = downloadPreferences.saveChaptersAsCBZ,
                 title = stringResource(MR.strings.save_chapter_as_cbz),
             ),
-            Preference.PreferenceItem.SwitchPreference(
-                preference = downloadPreferences.splitTallImages,
-                title = stringResource(MR.strings.split_tall_images),
-                subtitle = stringResource(MR.strings.split_tall_images_summary),
-            ),
             Preference.PreferenceItem.SliderPreference(
-                value = parallelSourceLimit,
+                preference = downloadPreferences.parallelSourceLimit,
                 valueRange = 1..10,
                 title = stringResource(MR.strings.pref_download_concurrent_sources),
-                onValueChanged = { downloadPreferences.parallelSourceLimit.set(it) },
             ),
             Preference.PreferenceItem.SliderPreference(
-                value = parallelPageLimit,
+                preference = downloadPreferences.parallelPageLimit,
                 valueRange = 1..15,
                 title = stringResource(MR.strings.pref_download_concurrent_pages),
                 subtitle = stringResource(MR.strings.pref_download_concurrent_pages_summary),
-                onValueChanged = { downloadPreferences.parallelPageLimit.set(it) },
             ),
             getDeleteChaptersGroup(
                 downloadPreferences = downloadPreferences,
@@ -168,7 +159,7 @@ object SettingsDownloadRoute : SearchableRoute {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = downloadNewUnreadChaptersOnlyPref,
                     title = stringResource(MR.strings.pref_download_new_unread_chapters_only),
-                    enabled = downloadNewChapters,
+                    visible = downloadNewChapters,
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.categories),
@@ -177,7 +168,7 @@ object SettingsDownloadRoute : SearchableRoute {
                         included = included,
                         excluded = excluded,
                     ),
-                    enabled = downloadNewChapters,
+                    visible = downloadNewChapters,
                     onClick = { showDialog = true },
                 ),
             ),

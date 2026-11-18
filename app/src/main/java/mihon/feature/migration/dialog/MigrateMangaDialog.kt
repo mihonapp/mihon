@@ -29,14 +29,15 @@ import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mihon.domain.migration.models.MigrationFlag
 import mihon.domain.migration.usecases.MigrateMangaUseCase
 import mihon.feature.common.utils.getLabel
-import tachiyomi.core.common.util.lang.launchIO
-import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
@@ -104,9 +105,9 @@ internal fun MigrateMangaDialog(
 
                 TextButton(
                     onClick = {
-                        scope.launchIO {
+                        scope.launch(Dispatchers.IO) {
                             viewModel.migrateManga(replace = false)
-                            withUIContext { onComplete() }
+                            withContext(Dispatchers.Main) { onComplete() }
                         }
                     },
                 ) {
@@ -114,9 +115,9 @@ internal fun MigrateMangaDialog(
                 }
                 TextButton(
                     onClick = {
-                        scope.launchIO {
+                        scope.launch(Dispatchers.IO) {
                             viewModel.migrateManga(replace = true)
-                            withUIContext { onComplete() }
+                            withContext(Dispatchers.Main) { onComplete() }
                         }
                     },
                 ) {

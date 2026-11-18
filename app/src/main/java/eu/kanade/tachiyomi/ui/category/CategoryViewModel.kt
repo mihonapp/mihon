@@ -9,6 +9,8 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import mihon.core.metro.AppCoroutineScope
 import tachiyomi.domain.category.interactor.CreateCategoryWithName
 import tachiyomi.domain.category.interactor.DeleteCategory
 import tachiyomi.domain.category.interactor.GetCategories
@@ -32,6 +35,7 @@ import kotlin.time.Duration.Companion.seconds
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding = binding<ViewModel>())
 class CategoryViewModel(
+    @AppCoroutineScope private val appScope: CoroutineScope,
     private val getCategories: GetCategories,
     private val createCategoryWithName: CreateCategoryWithName,
     private val deleteCategory: DeleteCategory,
@@ -66,7 +70,8 @@ class CategoryViewModel(
 
     fun deleteCategory(categoryId: Long) {
         viewModelScope.launch {
-            when (deleteCategory.await(categoryId = categoryId)) {
+            // The deletion finishes even if the screen is left while it runs
+            when (appScope.async { deleteCategory.await(categoryId = categoryId) }.await()) {
                 is DeleteCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }

@@ -38,6 +38,8 @@ import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel.Listing
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.SourcePreferencesRoute
@@ -47,11 +49,10 @@ import mihon.core.navigation.util.LocalBackStack
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
-import mihon.icons.materialsymbols.rounded.NewReleases
+import mihon.icons.materialsymbols.rounded.Verified
 import mihon.icons.materialsymbols.roundedfilled.Favorite
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
-import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -168,7 +169,7 @@ fun BrowseSourceScreen(
                             },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = MaterialSymbols.Rounded.NewReleases,
+                                    imageVector = MaterialSymbols.Rounded.Verified,
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(FilterChipDefaults.IconSize),
@@ -215,7 +216,7 @@ fun BrowseSourceScreen(
             onLocalSourceHelpClick = onHelpClick,
             onMangaClick = { backStack.add(MangaRoute(it.id, true)) },
             onMangaLongClick = { manga ->
-                scope.launchIO {
+                scope.launch(Dispatchers.IO) {
                     val duplicates = viewModel.getDuplicateLibraryManga(manga)
                     when {
                         manga.favorite -> viewModel.setDialog(BrowseSourceViewModel.Dialog.RemoveManga(manga))

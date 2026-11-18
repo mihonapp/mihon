@@ -60,9 +60,9 @@ class MangaCoverFetcher(
         get() = diskCacheKeyLazy.value
 
     override suspend fun fetch(): FetchResult {
-        // Use custom cover if exists
+        // Use custom cover if exists, which only library manga can have
         val useCustomCover = options.extras.getOrDefault(USE_CUSTOM_COVER_KEY)
-        if (useCustomCover) {
+        if (useCustomCover && isLibraryManga) {
             val customCoverFile = customCoverFileLazy.value
             if (customCoverFile.exists()) {
                 return fileLoader(customCoverFile)
@@ -74,7 +74,8 @@ class MangaCoverFetcher(
         return when (getResourceType(url)) {
             Type.File -> fileLoader(File(url.substringAfter("file://")))
             Type.URI -> fileUriLoader(url)
-            Type.URL -> httpLoader()
+            // Requests for the same cover at different sizes or through Manga and MangaCover would each download it
+            Type.URL -> concurrentRequests.apply(diskCacheKey) { httpLoader() }
             null -> error("Invalid image")
         }
     }
@@ -346,5 +347,7 @@ class MangaCoverFetcher(
         private val CACHE_CONTROL_NO_NETWORK_NO_CACHE = CacheControl.Builder().noCache().onlyIfCached().build()
 
         private const val HTTP_NOT_MODIFIED = 304
+
+        private val concurrentRequests = DeDupeConcurrentRequests<FetchResult>()
     }
 }

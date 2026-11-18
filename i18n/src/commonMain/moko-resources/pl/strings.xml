@@ -739,7 +739,6 @@
     <string name="ext_permission_install_apps_warning">Uprawnienia są wymagane aby zainstalować rozszerzenia. Kliknij tutaj aby je przyznać.</string>
     <string name="onboarding_storage_info">Wybierz folder gdzie %1$s będzie zapisywał pobrane rozdziały, kopie zapasowe i inne. \n \nZalecany jest dedykowany folder. \n \nWybrany folder:%2$s</string>
     <string name="ext_revoke_trust">Unieważnij zaufanie nieznanym rozszerzeniom</string>
-    <string name="action_open_repo">Repozytorium open source</string>
     <string name="pref_flash_page_summ">Redukuje ghosting na wyświetlaczach e-ink</string>
     <string name="no_location_set">Brak ustawionej ścieżki pamięci</string>
     <string name="pref_storage_location">Miejsce przechowywania danych</string>

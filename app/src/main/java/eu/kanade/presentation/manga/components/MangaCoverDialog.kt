@@ -18,6 +18,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.SuccessResult
 import coil3.size.Size
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
@@ -53,7 +55,7 @@ import eu.kanade.tachiyomi.data.coil.ImageDecoder
 import eu.kanade.tachiyomi.data.coil.newDecoder
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import mihon.app.di.appGraph
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
@@ -65,6 +67,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.clickableNoIndication
+import tachiyomi.source.local.isLocal
 
 @Composable
 fun MangaCoverDialog(
@@ -125,10 +128,12 @@ fun MangaCoverDialog(
                                 var expanded by remember { mutableStateOf(false) }
                                 IconButton(
                                     onClick = {
-                                        if (isCustomCover) {
-                                            expanded = true
-                                        } else {
-                                            onEditClick(EditCoverAction.EDIT)
+                                        when {
+                                            !manga.favorite && !manga.isLocal() -> {
+                                                onEditClick(EditCoverAction.ADD_TO_LIBRARY)
+                                            }
+                                            isCustomCover -> expanded = true
+                                            else -> onEditClick(EditCoverAction.EDIT)
                                         }
                                     },
                                 ) {
@@ -164,16 +169,20 @@ fun MangaCoverDialog(
             },
         ) { contentPadding ->
             if (useNewRenderer) {
-                val state = ImageViewerState()
-
-                ImageRequest.Builder(view.context)
-                    .data(manga)
-                    .size(Size.ORIGINAL)
-                    .memoryCachePolicy(CachePolicy.DISABLED)
-                    .newDecoder(true)
-                    .target { result ->
-                        val res = (result as ImageDecoder.DecodeResultImage).res
-                        val page = runBlocking(Dispatchers.Default) {
+                val state = remember(manga) { ImageViewerState() }
+                LaunchedEffect(manga) {
+                    val request = ImageRequest.Builder(view.context)
+                        .data(manga)
+                        .size(Size.ORIGINAL)
+                        .memoryCachePolicy(CachePolicy.DISABLED)
+                        .newDecoder(true)
+                        .build()
+                    val result = view.context.imageLoader.execute(request) as? SuccessResult ?: return@LaunchedEffect
+                    val res = result.image as? ImageDecoder.DecodeResultImage ?: return@LaunchedEffect
+                    // Held, then freed, around the upload: its buffer alone doesn't keep
+                    // the frame's native pixels alive.
+                    val page = res.frame.use {
+                        withContext(Dispatchers.Default) {
                             ImagePage.ImageSingle(
                                 Image(
                                     res.image,
@@ -199,15 +208,14 @@ fun MangaCoverDialog(
                                 ),
                             )
                         }
-                        state.apply {
-                            fetchPage = { index ->
-                                if (index == 0) page else null
-                            }
-                            invalidate()
-                        }
                     }
-                    .build()
-                    .let(view.context.imageLoader::enqueue)
+                    state.apply {
+                        fetchPage = { index ->
+                            if (index == 0) page else null
+                        }
+                        invalidate()
+                    }
+                }
 
                 ImageViewer(state = state)
                 return@Scaffold

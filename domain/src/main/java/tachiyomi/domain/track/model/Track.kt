@@ -1,6 +1,7 @@
 package tachiyomi.domain.track.model
 
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
 
 @Serializable
 data class Track(
@@ -15,7 +16,7 @@ data class Track(
     val status: Long,
     val score: Double,
     val remoteUrl: String,
-    val startDate: Long,
-    val finishDate: Long,
+    val startDate: Instant?,
+    val finishDate: Instant?,
     val private: Boolean,
 )

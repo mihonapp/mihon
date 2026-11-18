@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import dev.zacsweers.metro.AppScope
@@ -20,7 +21,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.WarningBanner
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateWorker
 import eu.kanade.tachiyomi.data.backup.create.BackupCreator
 import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -28,6 +29,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import mihon.core.navigation.util.LocalBackStack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
@@ -42,6 +44,7 @@ fun CreateBackupScreen() {
     val backStack = LocalBackStack.current
     val viewModel = metroViewModel<CreateBackupViewModel>()
     val state by viewModel.state.collectAsState()
+    val scope = rememberCoroutineScope()
 
     val chooseBackupDir = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/*"),
@@ -71,14 +74,16 @@ fun CreateBackupScreen() {
             actionLabel = stringResource(MR.strings.action_create),
             actionEnabled = state.options.canCreate(),
             onClickAction = {
-                if (!BackupCreateJob.isManualJobRunning(context)) {
-                    try {
-                        chooseBackupDir.launch(BackupCreator.getFilename())
-                    } catch (_: ActivityNotFoundException) {
-                        context.toast(MR.strings.file_picker_error)
+                scope.launch {
+                    if (!BackupCreateWorker.isManualJobRunning(context)) {
+                        try {
+                            chooseBackupDir.launch(BackupCreator.getFilename())
+                        } catch (_: ActivityNotFoundException) {
+                            context.toast(MR.strings.file_picker_error)
+                        }
+                    } else {
+                        context.toast(MR.strings.backup_in_progress)
                     }
-                } else {
-                    context.toast(MR.strings.backup_in_progress)
                 }
             },
         ) {
@@ -138,7 +143,7 @@ class CreateBackupViewModel : ViewModel() {
     }
 
     fun createBackup(context: Context, uri: Uri) {
-        BackupCreateJob.startNow(context, uri, state.value.options)
+        BackupCreateWorker.startNow(context, uri, state.value.options)
     }
 
     @Immutable

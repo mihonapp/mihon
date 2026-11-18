@@ -1,0 +1,21 @@
+mutation AniListUpdateManga(
+  $library_id: Int!,
+  $progress: Int!,
+  $status: MediaListStatus!,
+  $private: Boolean!,
+  $score: Int!,
+  $startedAt: FuzzyDateInput!,
+  $completedAt: FuzzyDateInput!,
+) {
+  SaveMediaListEntry(
+    id: $library_id,
+    progress: $progress,
+    status: $status,
+    private: $private,
+    scoreRaw: $score,
+    startedAt: $startedAt,
+    completedAt: $completedAt,
+  ) {
+    id
+  }
+}

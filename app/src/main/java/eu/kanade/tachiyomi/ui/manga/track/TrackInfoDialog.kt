@@ -7,8 +7,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import eu.kanade.presentation.components.AdaptiveSheet
 import mihon.core.navigation.util.LocalBackStack
@@ -34,6 +36,11 @@ fun TrackInfoDialog(
                 transitionSpec = { fade },
                 popTransitionSpec = { fade },
                 predictivePopTransitionSpec = { fade },
+                // Otherwise every picker reuses the first one's ViewModel, keyed only by class
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator(),
+                ),
                 entryProvider = entryProvider {
                     entry<TrackerRemoveRoute> { route ->
                         TrackerRemoveScreen(route.mangaId, route.track, route.serviceId)

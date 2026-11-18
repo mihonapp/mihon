@@ -5,12 +5,12 @@ import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
-import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 
-class MyAnimeListInterceptor(private val myanimelist: MyAnimeList) : Interceptor {
-
-    private val json: Json by injectLazy()
+class MyAnimeListInterceptor(
+    private val myanimelist: MyAnimeList,
+    private val json: Json,
+) : Interceptor {
 
     private var oauth: MALOAuth? = myanimelist.loadOAuth()
     private val tokenExpired get() = myanimelist.getIfAuthExpired()

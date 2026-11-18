@@ -50,20 +50,6 @@ object NotificationHandler {
         )
     }
 
-    /**
-     * Returns [PendingIntent] that prompts user with apk install intent
-     *
-     * @param context context
-     * @param uri uri of apk that is installed
-     */
-    fun installApkPendingActivity(context: Context, uri: Uri): PendingIntent {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(uri, ExtensionInstaller.APK_MIME)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-        }
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    }
-
     fun openUrl(context: Context, url: String): PendingIntent {
         val notificationIntent = Intent(Intent.ACTION_VIEW, url.toUri())
         return PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)

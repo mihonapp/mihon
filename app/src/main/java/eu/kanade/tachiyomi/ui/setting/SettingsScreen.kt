@@ -260,7 +260,7 @@ private val items = listOf(
     Item(
         titleRes = MR.strings.pref_category_about,
         formatSubtitle = {
-            "${stringResource(MR.strings.app_name)} ${getVersionName(withBuildDate = false)}"
+            "${stringResource(MR.strings.app_name)} ${getVersionName(buildTime = null)}"
         },
         icon = MaterialSymbols.Rounded.Info,
         route = AboutRoute,

@@ -31,6 +31,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.ui.NavDisplay
+import eu.kanade.presentation.util.rememberAnimatedVectorPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.BrowseSwitchToExtensionEventKey
 import eu.kanade.tachiyomi.ui.browse.BrowseTab
@@ -65,7 +66,7 @@ sealed interface TopLevelRoute : NavKey {
     data object Library : TopLevelRoute {
         @Composable
         override fun options(isSelected: Boolean): TabOptions {
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_library_enter)
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.animated_library)
             return TabOptions(
                 title = stringResource(MR.strings.label_library),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
@@ -77,7 +78,7 @@ sealed interface TopLevelRoute : NavKey {
     data object Updates : TopLevelRoute {
         @Composable
         override fun options(isSelected: Boolean): TabOptions {
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_updates_enter)
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.animated_updates)
             return TabOptions(
                 title = stringResource(MR.strings.label_recent_updates),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
@@ -89,7 +90,7 @@ sealed interface TopLevelRoute : NavKey {
     data object History : TopLevelRoute {
         @Composable
         override fun options(isSelected: Boolean): TabOptions {
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_history_enter)
+            val image = AnimatedImageVector.animatedVectorResource(R.drawable.animated_history)
             return TabOptions(
                 title = stringResource(MR.strings.label_recent_manga),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
@@ -101,10 +102,11 @@ sealed interface TopLevelRoute : NavKey {
     data object Browse : TopLevelRoute {
         @Composable
         override fun options(isSelected: Boolean): TabOptions {
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_browse_enter)
+            val enter = AnimatedImageVector.animatedVectorResource(R.drawable.animated_browse_enter)
+            val exit = AnimatedImageVector.animatedVectorResource(R.drawable.animated_browse_exit)
             return TabOptions(
                 title = stringResource(MR.strings.browse),
-                icon = rememberAnimatedVectorPainter(image, isSelected),
+                icon = rememberAnimatedVectorPainter(enter, exit, isSelected),
             )
         }
     }
@@ -113,10 +115,11 @@ sealed interface TopLevelRoute : NavKey {
     data object More : TopLevelRoute {
         @Composable
         override fun options(isSelected: Boolean): TabOptions {
-            val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_more_enter)
+            val enter = AnimatedImageVector.animatedVectorResource(R.drawable.animated_more_enter)
+            val exit = AnimatedImageVector.animatedVectorResource(R.drawable.animated_more_exit)
             return TabOptions(
                 title = stringResource(MR.strings.label_more),
-                icon = rememberAnimatedVectorPainter(image, isSelected),
+                icon = rememberAnimatedVectorPainter(enter, exit, isSelected),
             )
         }
     }

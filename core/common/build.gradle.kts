@@ -33,6 +33,8 @@ dependencies {
     api(libs.okhttp.dnsOverHttps)
     api(libs.okio)
 
+    api(libs.apollo)
+
     implementation(libs.image.decoder)
 
     implementation(libs.unifile)
@@ -54,6 +56,7 @@ dependencies {
     implementation(libs.quickJs)
 
     testImplementation(libs.bundles.test)
+    testImplementation(libs.kotlinx.coroutines.test)
     testRuntimeOnly(libs.junit.platform.launcher)
 
     implementation(libs.metro.runtime)

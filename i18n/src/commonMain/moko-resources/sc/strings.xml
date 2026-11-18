@@ -727,7 +727,6 @@
     <string name="manga_interval_expected_update_null">Custu manga est acabbadu o non b\'at una data de publicatzione previdida.</string>
     <string name="file_picker_uri_permission_unsupported">Non s\'est pòdidu otènnere s\'atzessu permanente a sa cartella. S\'aplicatzione si diat pòdere cumportare in manera no isetada.</string>
     <string name="ext_permission_install_apps_warning">B\'at bisòngiu de sos permissos pro installare estensiones. Toca inoghe pro los frunire.</string>
-    <string name="action_open_repo">Depòsitu a còdighe abertu</string>
     <string name="no_location_set">Perunu logu de archiviatzione isseberadu</string>
     <string name="pref_flash_duration">Durada de su flash</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>

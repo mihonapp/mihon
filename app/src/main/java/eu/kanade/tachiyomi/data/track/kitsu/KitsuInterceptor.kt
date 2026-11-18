@@ -6,15 +6,16 @@ import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
-import uy.kohesive.injekt.injectLazy
 
-class KitsuInterceptor(private val kitsu: Kitsu) : Interceptor {
-
-    private val json: Json by injectLazy()
+class KitsuInterceptor(
+    private val kitsu: Kitsu,
+    private val json: Json,
+) : Interceptor {
 
     /**
      * OAuth object used for authenticated requests.
      */
+    @Volatile
     private var oauth: KitsuOAuth? = kitsu.restoreToken()
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -22,18 +23,19 @@ class KitsuInterceptor(private val kitsu: Kitsu) : Interceptor {
 
         var currAuth = oauth ?: throw Exception("Not authenticated with Kitsu")
 
-        val refreshToken = currAuth.refreshToken!!
-
-        // Refresh access token if expired.
+        // Refresh access token if expired, once for all the requests that found it expired.
         if (currAuth.isExpired()) {
-            val response = chain.proceed(KitsuApi.refreshTokenRequest(refreshToken))
-            if (response.isSuccessful) {
-                currAuth = with(json) {
-                    response.parseAs<KitsuOAuth>()
+            currAuth = synchronized(this) {
+                val latest = oauth ?: throw Exception("Not authenticated with Kitsu")
+                if (!latest.isExpired()) return@synchronized latest
+
+                val response = chain.proceed(KitsuApi.refreshTokenRequest(latest.refreshToken!!))
+                if (response.isSuccessful) {
+                    with(json) { response.parseAs<KitsuOAuth>() }.also(::newAuth)
+                } else {
+                    response.close()
+                    latest
                 }
-                newAuth(currAuth)
-            } else {
-                response.close()
             }
         }
 

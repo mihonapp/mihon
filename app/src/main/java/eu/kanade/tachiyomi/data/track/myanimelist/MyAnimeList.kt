@@ -1,18 +1,27 @@
 package eu.kanade.tachiyomi.data.track.myanimelist
 
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.TrackerDependencies
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.data.track.myanimelist.dto.MALOAuth
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class MyAnimeList(id: Long) : BaseTracker(id, "MyAnimeList"), DeletableTracker {
+@Inject
+@SingleIn(AppScope::class)
+class MyAnimeList(
+    dependencies: TrackerDependencies,
+    private val json: Json,
+) : BaseTracker(1L, "MyAnimeList", dependencies),
+    DeletableTracker {
 
     companion object {
         const val READING = 1L
@@ -29,10 +38,8 @@ class MyAnimeList(id: Long) : BaseTracker(id, "MyAnimeList"), DeletableTracker {
             .map(Int::toString)
     }
 
-    private val json: Json by injectLazy()
-
-    private val interceptor by lazy { MyAnimeListInterceptor(this) }
-    private val api by lazy { MyAnimeListApi(id, client, interceptor) }
+    private val interceptor by lazy { MyAnimeListInterceptor(this, json) }
+    private val api by lazy { MyAnimeListApi(id, client, interceptor, json) }
 
     override val supportsReadingDates: Boolean = true
 

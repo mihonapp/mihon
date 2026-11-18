@@ -76,7 +76,7 @@
         <item quantity="other">Faltando %1$s capítulos</item>
     </plurals>
     <plurals name="day">
-        <item quantity="one">%d dia(s)</item>
+        <item quantity="one">%d dia</item>
         <item quantity="many">%d dias</item>
         <item quantity="other">%d dias</item>
     </plurals>

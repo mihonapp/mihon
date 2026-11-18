@@ -706,7 +706,6 @@
     <string name="ext_remove">Odstrániť</string>
     <string name="ext_permission_install_apps_warning">Na inštaláciu rozšírení sú potrebné povolenia. Ťuknite sem, aby ste ich udelili.</string>
     <string name="ext_revoke_trust">Odstrániť status \"dôveryhodné\" z neznámych rozšírení</string>
-    <string name="action_open_repo">Open-source repozitár</string>
     <string name="pref_page_rotate">Otočiť široké strany, aby sa zmestili</string>
     <string name="pref_page_rotate_invert">Preklopiť orientáciu otočených širokých strán</string>
     <string name="pref_double_tap_zoom">Dvojťuk pre priblíženie</string>

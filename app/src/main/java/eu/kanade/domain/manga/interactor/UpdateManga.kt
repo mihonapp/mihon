@@ -9,6 +9,7 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 @Inject
 class UpdateManga(
@@ -28,33 +29,43 @@ class UpdateManga(
         manga: Manga,
         timeZone: TimeZone = TimeZone.currentSystemDefault(),
         dateTime: LocalDateTime = Clock.System.now().toLocalDateTime(timeZone),
-        window: Pair<Long, Long> = fetchInterval.getWindow(dateTime.date, timeZone),
+        window: ClosedRange<Instant>? = fetchInterval.getWindow(dateTime.date, timeZone),
     ): Boolean {
         return mangaRepository.update(
-            fetchInterval.toMangaUpdate(manga, dateTime, timeZone, window),
+            fetchInterval.withFetchInterval(manga, dateTime, timeZone, window),
         )
     }
 
-    suspend fun awaitUpdateLastUpdate(mangaId: Long): Boolean {
-        return mangaRepository.update(MangaUpdate(id = mangaId, lastUpdate = Clock.System.now().toEpochMilliseconds()))
+    /**
+     * Updates the fetch interval and marks the chapter list as changed in a single write.
+     */
+    suspend fun awaitUpdateFetchIntervalAndLastUpdate(
+        manga: Manga,
+        timeZone: TimeZone,
+        dateTime: LocalDateTime,
+        window: ClosedRange<Instant>?,
+        foundRelease: Boolean,
+    ): Boolean {
+        return mangaRepository.update(
+            fetchInterval.withFetchInterval(manga, dateTime, timeZone, window, foundRelease).apply {
+                lastUpdate = Clock.System.now()
+            },
+        )
     }
 
     suspend fun awaitUpdateCoverLastModified(mangaId: Long): Boolean {
         return mangaRepository.update(
-            MangaUpdate(
-                id = mangaId,
-                coverLastModified = Clock.System.now().toEpochMilliseconds(),
-            ),
+            MangaUpdate(mangaId) {
+                coverLastModified = Clock.System.now()
+            },
         )
     }
 
     suspend fun awaitUpdateFavorite(mangaId: Long, favorite: Boolean): Boolean {
-        val dateAdded = when (favorite) {
-            true -> Clock.System.now().toEpochMilliseconds()
-            false -> 0
+        val update = when (favorite) {
+            true -> MangaUpdate(mangaId) { favoriteAt = Clock.System.now() }
+            false -> MangaUpdate(mangaId) { favoriteAt = null }
         }
-        return mangaRepository.update(
-            MangaUpdate(id = mangaId, favorite = favorite, dateAdded = dateAdded),
-        )
+        return mangaRepository.update(update)
     }
 }

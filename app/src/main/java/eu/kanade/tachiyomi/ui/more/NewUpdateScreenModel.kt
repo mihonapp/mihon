@@ -12,6 +12,7 @@ import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
 import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -21,13 +22,14 @@ import eu.kanade.tachiyomi.network.newCachelessCallWithProgress
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.storage.saveTo
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
-import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import java.io.File
 
@@ -37,6 +39,7 @@ class NewUpdateScreenModel(
     @Assisted private val downloadLink: String,
     private val context: Context,
     private val network: NetworkHelper,
+    private val preferences: BasePreferences,
 ) : ViewModel() {
 
     val state: StateFlow<NewUpdateScreenModel.State>
@@ -60,7 +63,7 @@ class NewUpdateScreenModel(
         downloadJob = viewModelScope.launch {
             state.update { it.copy(downloadProgress = 0, stage = Stage.Downloading) }
             try {
-                withIOContext { downloadApk() }
+                withContext(Dispatchers.IO) { downloadApk() }
                 state.update { it.copy(downloadProgress = 100, stage = Stage.Downloaded) }
             } catch (e: CancellationException) {
                 throw e
@@ -93,6 +96,11 @@ class NewUpdateScreenModel(
 
         val response = network.client.newCachelessCallWithProgress(GET(downloadLink), progressListener).awaitSuccess()
         response.body.source().saveTo(apkFile)
+    }
+
+    fun skipUpdate(versionName: String) {
+        downloadJob?.cancel()
+        preferences.skippedAppUpdate.set(versionName)
     }
 
     fun installUpdate() {

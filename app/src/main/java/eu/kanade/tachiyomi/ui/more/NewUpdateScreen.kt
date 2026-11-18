@@ -39,5 +39,9 @@ fun NewUpdateScreen(
             }
         },
         onRejectUpdate = backStack::removeLastOrNull,
+        onSkipUpdate = {
+            viewModel.skipUpdate(versionName)
+            backStack.removeLastOrNull()
+        },
     )
 }

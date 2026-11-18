@@ -4,7 +4,8 @@ import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.util.system.isFossBuildType
 import eu.kanade.tachiyomi.util.system.isNightlyBuildType
-import tachiyomi.core.common.util.lang.withIOContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import tachiyomi.domain.release.interactor.GetApplicationRelease
 
 @Inject
@@ -18,7 +19,7 @@ class AppUpdateChecker(
         //     return GetApplicationRelease.Result.OsTooOld
         // }
 
-        return withIOContext {
+        return withContext(Dispatchers.IO) {
             val result = getApplicationRelease.await(
                 GetApplicationRelease.Arguments(
                     isFossBuildType,

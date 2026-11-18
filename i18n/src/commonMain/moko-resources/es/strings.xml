@@ -755,7 +755,6 @@
     <string name="theme_nord">Norteño</string>
     <string name="manga_interval_expected_update_soon">Pronto</string>
     <string name="ext_revoke_trust">Dejar de marcar todas la extensiones desconocidas como de confianza</string>
-    <string name="action_open_repo">Abrir repositorio</string>
     <string name="pref_webtoon_disable_zoom_out">Desactivar alejar</string>
     <string name="pref_display_profile">Perfil de visualización personalizado</string>
     <string name="action_add_anyway">Añadir de todos modos</string>

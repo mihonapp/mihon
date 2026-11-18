@@ -48,7 +48,7 @@ class SourceRepositoryImpl(
     }
 
     override fun getSourcesWithFavoriteCount(): Flow<List<Pair<DomainSource, Long>>> {
-        val sourceIdWithFavoriteCountFlow = database.mangasQueries
+        val sourceIdWithFavoriteCountFlow = database.mangaQueries
             .getSourceIdWithFavoriteCount()
             .subscribeToList()
         return combine(sourceIdWithFavoriteCountFlow, sourceManager.sources) { sourceIdWithFavoriteCount, _ ->
@@ -66,7 +66,7 @@ class SourceRepositoryImpl(
     }
 
     override fun getSourcesWithNonLibraryManga(): Flow<List<SourceWithCount>> {
-        return database.mangasQueries
+        return database.mangaQueries
             .getSourceIdsWithNonLibraryManga()
             .subscribeToList()
             .map { sourceId ->

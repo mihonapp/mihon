@@ -1,18 +1,28 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.TrackerDependencies
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
+@Inject
+@SingleIn(AppScope::class)
+class Anilist(
+    dependencies: TrackerDependencies,
+    private val json: Json,
+) : BaseTracker(2L, "AniList", dependencies),
+    DeletableTracker {
 
     companion object {
         const val READING = 1L
@@ -30,8 +40,6 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
         private const val SEARCH_ID_PREFIX = "id:"
     }
-
-    private val json: Json by lazy { appGraph.json }
 
     private val interceptor by lazy { AnilistInterceptor(this, getPassword()) }
 
@@ -134,7 +142,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
                 else -> "😊"
             }
 
-            else -> track.toApiScore(appGraph.trackPreferences)
+            else -> track.toApiScore(trackPreferences)
         }
     }
 
@@ -207,7 +215,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.getLibManga(track, getUsername().toInt())
+        val remoteTrack = api.findLibManga(track, getUsername().toInt()) ?: throw Exception("Could not find manga")
         track.copyPersonalFrom(remoteTrack)
         track.title = remoteTrack.title
         track.total_chapters = remoteTrack.total_chapters
@@ -216,7 +224,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override suspend fun updateUserConfig() {
         val currentUser = api.getCurrentUser()
-        scorePreference.set(currentUser.mediaListOptions.scoreFormat)
+        scorePreference.set(currentUser.scoreFormat)
         saveDisplayUsername(currentUser.name)
     }
 
@@ -227,7 +235,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
             val oauth = ALOAuth(token)
             interceptor.setAuth(oauth)
             val currentUser = api.getCurrentUser()
-            scorePreference.set(currentUser.mediaListOptions.scoreFormat)
+            scorePreference.set(currentUser.scoreFormat)
             saveDisplayUsername(currentUser.name)
             saveCredentials(currentUser.id.toString(), oauth.accessToken)
         } catch (_: Throwable) {

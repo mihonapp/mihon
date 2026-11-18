@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.DownloadQueueRoute
 import mihon.core.navigation.SettingsRoute
@@ -31,7 +32,6 @@ import mihon.core.navigation.SupportUsRoute
 import mihon.core.navigation.domain.SettingsDestination
 import mihon.core.navigation.util.LocalBackStack
 import mihon.presentation.core.util.isTabletUi
-import tachiyomi.core.common.util.lang.launchIO
 
 @Composable
 fun MoreTab() {
@@ -77,7 +77,7 @@ class MoreViewModel(
 
     init {
         // Handle running/paused status change and queue progress updating
-        viewModelScope.launchIO {
+        viewModelScope.launch {
             combine(
                 downloadManager.isDownloaderRunning,
                 downloadManager.queueState,

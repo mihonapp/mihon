@@ -1,0 +1,22 @@
+fragment MangaFragment on Manga {
+  id
+  name
+  chapters
+  kind
+  poster {
+    mainUrl
+  }
+  score
+  url
+  status
+  airedOn {
+    date
+  }
+  description
+  personRoles {
+    person {
+      name
+    }
+    rolesEn
+  }
+}

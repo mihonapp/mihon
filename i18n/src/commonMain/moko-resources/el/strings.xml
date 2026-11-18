@@ -755,7 +755,6 @@
     <string name="pref_library_update_smart_update">Έξυπνη ενημέρωση</string>
     <string name="manga_interval_expected_update_soon">Σύντομα</string>
     <string name="ext_revoke_trust">Ανάκληση αξιόπιστων άγνωστων επεκτάσεων</string>
-    <string name="action_open_repo">Αποθετήριο ανοικτού κώδικα</string>
     <string name="pref_webtoon_disable_zoom_out">Απενεργοποίηση σμίκρυνσης εικόνας</string>
     <string name="action_add_anyway">Προσθέστε ούτως ή άλλως</string>
     <string name="label_upcoming">Ανερχόμενο</string>

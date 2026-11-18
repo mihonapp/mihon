@@ -9,12 +9,16 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.util.storage.DiskUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -27,7 +31,9 @@ fun StorageInfo(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val storages = remember { DiskUtil.getExternalStorages(context) }
+    val storages by produceState(emptyList<File>()) {
+        value = withContext(Dispatchers.IO) { DiskUtil.getExternalStorages(context) }
+    }
 
     Column(
         modifier = modifier,
@@ -45,9 +51,14 @@ private fun StorageInfo(
 ) {
     val context = LocalContext.current
 
-    val available = remember(file) { DiskUtil.getAvailableStorageSpace(file) }
+    val space by produceState(0L to 0L, file) {
+        value =
+            withContext(Dispatchers.IO) {
+                DiskUtil.getAvailableStorageSpace(file) to DiskUtil.getTotalStorageSpace(file)
+            }
+    }
+    val (available, total) = space
     val availableText = remember(available) { Formatter.formatFileSize(context, available) }
-    val total = remember(file) { DiskUtil.getTotalStorageSpace(file) }
     val totalText = remember(total) { Formatter.formatFileSize(context, total) }
 
     Column(
@@ -63,7 +74,7 @@ private fun StorageInfo(
                 .clip(MaterialTheme.shapes.small)
                 .fillMaxWidth()
                 .height(12.dp),
-            progress = { (1 - (available / total.toFloat())) },
+            progress = { if (total > 0) 1 - (available / total.toFloat()) else 0f },
         )
 
         Text(

@@ -1,0 +1,31 @@
+query AniListGetLibManga(
+  $user_id: Int!,
+  $manga_id: Int!,
+) {
+  Page {
+    mediaList(
+      userId: $user_id,
+      type: MANGA,
+      mediaId: $manga_id,
+    ) {
+      id
+      status
+      scoreRaw: score(format: POINT_100)
+      progress
+      private
+      startedAt {
+        year
+        month
+        day
+      }
+      completedAt {
+        year
+        month
+        day
+      }
+      media {
+        ...MangaFragment
+      }
+    }
+  }
+}

@@ -424,7 +424,6 @@
     <string name="ext_permission_install_apps_warning">Для ўсталёўкі пашырэнняў патрабуюцца дазволы. Націсніце сюды, каб даць іх.</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Усталюйце і запусціце Shizuku, каб выкарыстоўваць яго як усталёўнік пашырэнняў.</string>
     <string name="ext_revoke_trust">Адклікаць давер да ненадзейных пашырэнняў</string>
-    <string name="action_open_repo">Адкрыць рэпазітар крыніцы</string>
     <string name="pref_page_rotate">Паварочваць шырокія старонкі пад памер экрана</string>
     <string name="pref_page_rotate_invert">Адлюстроўваць арыентацыю павернутых шырокіх старонак</string>
     <string name="pref_double_tap_zoom">Падвойны дотык для павелічэння</string>

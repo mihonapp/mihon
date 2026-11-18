@@ -16,6 +16,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
 import eu.kanade.presentation.more.settings.screen.about.getFormattedBuildTime
 import eu.kanade.presentation.more.settings.screen.about.getVersionName
+import eu.kanade.presentation.util.rememberIs24HourSystem
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -58,6 +59,7 @@ fun DebugInfoScreen() {
 private fun getAppInfoGroup(): Preference.PreferenceGroup {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val is24HourSystem = rememberIs24HourSystem()
 
     val installationIdPref = remember { context.appGraph.basePreferences.installationId }
     val installationId by installationIdPref.collectAsState()
@@ -67,11 +69,13 @@ private fun getAppInfoGroup(): Preference.PreferenceGroup {
         preferenceItems = listOf(
             Preference.PreferenceItem.TextPreference(
                 title = "Version",
-                subtitle = getVersionName(false),
+                subtitle = getVersionName(buildTime = null),
             ),
             Preference.PreferenceItem.TextPreference(
                 title = "Build time",
-                subtitle = getFormattedBuildTime(),
+                // Keyed on the system 12/24h setting, which can change while the app is backgrounded.
+                // Date/time prefs only change in Appearance, which recreates this screen on return.
+                subtitle = remember(is24HourSystem) { getFormattedBuildTime(context) },
             ),
             Preference.PreferenceItem.TextPreference(
                 title = "Installation ID",

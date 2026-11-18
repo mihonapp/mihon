@@ -5,7 +5,9 @@ import android.net.Uri
 import androidx.annotation.CallSuper
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.InstallStep
+import logcat.LogPriority
 import mihon.app.di.appGraph
+import tachiyomi.core.common.util.system.logcat
 import java.util.Collections
 import java.util.concurrent.CopyOnWriteArraySet
 import kotlin.concurrent.atomics.AtomicReference
@@ -20,6 +22,8 @@ abstract class Installer(private val service: Service) {
     private val extensionManager: ExtensionManager by lazy { service.appGraph.extensionManager }
 
     private var waitingInstall = AtomicReference<Entry?>(null)
+
+    // Guarded by itself: cancellation comes from any thread, not only main
     private val queue = Collections.synchronizedList(mutableListOf<Entry>())
 
     private val cancelListener: (Long) -> Unit = { downloadId -> cancelQueue(downloadId) }
@@ -89,15 +93,15 @@ abstract class Installer(private val service: Service) {
         if (!ready) {
             return
         }
-        if (queue.isEmpty()) {
-            service.stopSelf()
-            return
-        }
-        val nextEntry = queue.first()
-        if (waitingInstall.compareAndSet(null, nextEntry)) {
+        val nextEntry = synchronized(queue) {
+            if (queue.isEmpty()) {
+                service.stopSelf()
+                return
+            }
+            if (!waitingInstall.compareAndSet(null, queue.first())) return
             queue.removeAt(0)
-            processEntry(nextEntry)
         }
+        processEntry(nextEntry)
     }
 
     /**
@@ -106,8 +110,11 @@ abstract class Installer(private val service: Service) {
     @CallSuper
     open fun onDestroy() {
         cancelListeners -= cancelListener
-        queue.forEach { extensionManager.updateInstallStep(it.downloadId, InstallStep.Error) }
-        queue.clear()
+        val remaining = synchronized(queue) { queue.toList().also { queue.clear() } }
+        remaining.forEach {
+            logcat(LogPriority.INFO) { "The installer stopped before installing ${it.downloadId}" }
+            extensionManager.updateInstallStep(it.downloadId, InstallStep.Error)
+        }
         waitingInstall.store(null)
     }
 
@@ -120,7 +127,10 @@ abstract class Installer(private val service: Service) {
      */
     private fun cancelQueue(downloadId: Long) {
         val waitingInstall = this.waitingInstall.load()
-        val toCancel = queue.find { it.downloadId == downloadId } ?: waitingInstall ?: return
+        // Every new install cancels its own previous attempt first, which mustn't hit another extension's install
+        val toCancel = synchronized(queue) { queue.find { it.downloadId == downloadId } }
+            ?: waitingInstall?.takeIf { it.downloadId == downloadId }
+            ?: return
         if (cancelEntry(toCancel)) {
             queue.remove(toCancel)
             if (waitingInstall == toCancel) {

@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.backup.create.creators
 
 import dev.zacsweers.metro.Inject
-import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.source.Source
 import tachiyomi.domain.source.service.SourceManager
@@ -11,11 +10,8 @@ class SourcesBackupCreator(
     private val sourceManager: SourceManager,
 ) {
 
-    suspend operator fun invoke(mangas: List<BackupManga>): List<BackupSource> {
-        return mangas
-            .map(BackupManga::source)
-            .distinct()
-            .map { sourceManager.getOrStub(it).toBackupSource() }
+    suspend operator fun invoke(sourceIds: Set<Long>): List<BackupSource> {
+        return sourceIds.map { sourceManager.getOrStub(it).toBackupSource() }
     }
 }
 

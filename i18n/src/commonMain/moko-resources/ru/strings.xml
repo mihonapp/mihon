@@ -755,7 +755,6 @@
     <string name="manga_interval_expected_update_soon">Скоро</string>
     <string name="theme_nord">Север</string>
     <string name="ext_revoke_trust">Убрать доверие к ненадёжным расширениям</string>
-    <string name="action_open_repo">Открыть репозиторий источника</string>
     <string name="pref_webtoon_disable_zoom_out">Отключить уменьшение масштаба</string>
     <string name="action_add_anyway">Добавить в любом случае</string>
     <string name="pref_display_profile">Пользовательский профиль отображения</string>
@@ -926,7 +925,7 @@
     <string name="pref_category_extensions">Расширения</string>
     <string name="pref_apply_content_warnings_to_installed">Также применять на установленные расширения</string>
     <string name="pref_apply_content_warnings_to_installed_summary">Когда выключенно, расширения которые вы уже установили будут загружаться и обновляться независимо от предупреждения</string>
-    <string name="content_warnings_info">Перезапустите приложение для применения изменений. Установленные расширения, которые не загружены, остаются в списке без указания источников. Расширения, которые вы не устанавливали, скрываются. Это не предотвращает появления в приложении контента категории «18+» со стороны неофициальных или потенциально неправильно помеченных расширений.</string>
+    <string name="content_warnings_info">Установленные расширения, которые не загружены, остаются в списке без указания источников. Расширения, которые вы не устанавливали, скрываются. Это не предотвращает появления в приложении контента категории «18+» со стороны неофициальных или потенциально неправильно помеченных расширений.</string>
     <string name="ext_filtered">Отфильтровано</string>
     <string name="ext_not_loaded">Не загружено</string>
     <string name="ext_not_loaded_dialog">Не удалось загрузить</string>
@@ -950,4 +949,23 @@
     <string name="pref_continuous_minwidth">Минимальная ширина</string>
     <string name="pref_continuous_gap">Зазор</string>
     <string name="pref_allowed_content_warnings">Разрешенное предупреждение об контенте</string>
+    <string name="app_migrating_summary">Подготовка после обновления. Это может занять несколько минут, поэтому не закрывайте приложение.</string>
+    <string name="pref_enable_chapter_name_hash">Включить суффикс хэша в название главы</string>
+    <string name="pref_enable_chapter_name_hash_details">Обеспечивает добавление уникального хэш-суффикса к названиям глав во избежание конфликтов имён. Если эта функция отключена, загрузка глав с одинаковыми названиями будет невозможна.</string>
+    <string name="ext_not_loaded_details">Почему это не загрузилось</string>
+    <string name="app_migrating_title">Завершение обновления</string>
+    <string name="pref_load_ahead_only_over_wifi">Загрузить наперёд только с Wi-Fi</string>
+    <string name="pref_load_ahead_only_over_wifi_summary">Экономит мобильный трафик, загружая только те страницы, которые находятся рядом с той, которую вы читаете</string>
+    <string name="refresh_tracker_success">%s профилей обновлено</string>
+    <string name="refresh_tracker_error">%1$s ошибка при обновлении: %2$s</string>
+    <string name="update_check_skip">Пропустить эту версию</string>
+    <string name="update_check_skip_title">Пропустить %s?</string>
+    <string name="update_check_skip_message">Обновления часто могут иметь исправления ошибок и улучшения стабильности. Вам больше не будут напоминать об этой версии, но вы по прежнему будете получать уведомления об новой версии, когда она будет выпущена.</string>
+    <string name="information_webview_crashed">WebView перестало работать, и страница была закрыта</string>
+    <string name="refresh_tracker_profile">Обновить профиль сервиса отслеживания</string>
+    <string name="pref_time_format">Формат времени</string>
+    <string name="follow_system">Как в системе</string>
+    <string name="follow_language">Как на устройстве</string>
+    <string name="time_24_hours">24 часа</string>
+    <string name="time_12_hours">12 часов</string>
 </resources>
