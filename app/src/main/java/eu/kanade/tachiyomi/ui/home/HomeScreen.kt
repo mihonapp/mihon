@@ -19,6 +19,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -50,6 +51,7 @@ import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
+import tachiyomi.presentation.core.util.collectAsState
 
 object HomeScreen : Screen() {
 
@@ -74,10 +76,35 @@ object HomeScreen : Screen() {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val context = LocalContext.current
+        val uiPreferences = remember { context.appGraph.uiPreferences }
+        val mainScreenTabsPref = remember { uiPreferences.mainScreenTabs }
+        val mainScreenTabs by mainScreenTabsPref.collectAsState()
+
+        val tabs = remember(mainScreenTabs) {
+            TABS.filter { tab ->
+                val key = when (tab) {
+                    LibraryTab -> "library"
+                    UpdatesTab -> "updates"
+                    HistoryTab -> "history"
+                    BrowseTab -> "browse"
+                    MoreTab -> "more"
+                    else -> ""
+                }
+                key in mainScreenTabs
+            }.ifEmpty { listOf(LibraryTab, MoreTab) }
+        }
+
         TabNavigator(
             tab = LibraryTab,
             key = TabNavigatorKey,
         ) { tabNavigator ->
+            LaunchedEffect(tabs) {
+                if (tabNavigator.current !in tabs) {
+                    tabNavigator.current = tabs.first()
+                }
+            }
+
             // Provide usable navigator to content screen
             CompositionLocalProvider(LocalNavigator provides navigator) {
                 val tabletUi = isTabletUi()
@@ -107,7 +134,7 @@ object HomeScreen : Screen() {
                     ),
                     navigationItemVerticalArrangement = Arrangement.Center,
                     navigationItems = {
-                        TABS.fastForEach { NavigationSuiteItem(it, navigationSuiteType) }
+                        tabs.fastForEach { NavigationSuiteItem(it, navigationSuiteType) }
                     },
                 ) {
                     AnimatedContent(
@@ -127,14 +154,15 @@ object HomeScreen : Screen() {
                 }
             }
 
-            val goToLibraryTab = { tabNavigator.current = LibraryTab }
+            val defaultTab = tabs.firstOrNull { it == LibraryTab } ?: tabs.first()
+            val goToDefaultTab = { tabNavigator.current = defaultTab }
 
-            BackHandler(enabled = tabNavigator.current != LibraryTab, onBack = goToLibraryTab)
+            BackHandler(enabled = tabNavigator.current != defaultTab, onBack = goToDefaultTab)
 
             LaunchedEffect(Unit) {
                 launch {
                     librarySearchEvent.receiveAsFlow().collectLatest {
-                        goToLibraryTab()
+                        tabNavigator.current = LibraryTab
                         LibraryTab.search(it)
                     }
                 }
