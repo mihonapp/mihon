@@ -236,7 +236,6 @@ class MainActivity : BaseActivity() {
             val downloadOnly by preferences.downloadedOnly.collectAsState()
             val indexing by downloadCache.isInitializing.collectAsState()
 
-            val isTabletUi = isTabletUi()
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val statusBarBackgroundColor = when {
                 indexing -> IndexingBannerBackgroundColor
@@ -271,7 +270,7 @@ class MainActivity : BaseActivity() {
 
                     if (isLaunch) {
                         // Set start screen
-                        handleIntentAction(intent, navigator, resultEventBus, isTabletUi)
+                        handleIntentAction(intent, navigator, resultEventBus)
 
                         // Reset Incognito Mode on relaunch
                         preferences.incognitoMode.set(false)
@@ -355,7 +354,6 @@ class MainActivity : BaseActivity() {
                     context = context,
                     navigator = navigator,
                     resultEventBus = resultEventBus,
-                    isTabletUi = isTabletUi,
                 )
 
                 if (!isBenchmarkBuildType) {
@@ -400,7 +398,6 @@ class MainActivity : BaseActivity() {
         context: Context,
         navigator: Navigator,
         resultEventBus: ResultEventBus,
-        isTabletUi: Boolean,
     ) {
         LaunchedEffect(Unit) {
             callbackFlow {
@@ -410,7 +407,7 @@ class MainActivity : BaseActivity() {
                 awaitClose { componentActivity.removeOnNewIntentListener(consumer) }
             }
                 .collectLatest {
-                    handleIntentAction(it, navigator, resultEventBus, isTabletUi)
+                    handleIntentAction(it, navigator, resultEventBus)
                 }
         }
     }
@@ -645,7 +642,6 @@ class MainActivity : BaseActivity() {
         intent: Intent,
         navigator: Navigator,
         resultEventBus: ResultEventBus,
-        isTabletUi: Boolean,
     ): Boolean {
         val notificationId = intent.getIntExtra("notificationId", -1)
         if (notificationId > -1) {
@@ -673,7 +669,7 @@ class MainActivity : BaseActivity() {
             }
             Intent.ACTION_APPLICATION_PREFERENCES -> {
                 navigator.popToRoot()
-                navigator.openSettings(twoPane = isTabletUi)
+                navigator.openSettings(twoPane = resources.configuration.isTabletUi())
                 null
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {
