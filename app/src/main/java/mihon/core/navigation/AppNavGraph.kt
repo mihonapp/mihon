@@ -56,12 +56,9 @@ fun EntryProviderScope<NavKey>.appEntries() {
         DeepLinkScreen(route.query)
     }
     entry<WebViewRoute> { route ->
+        val navigator = LocalNavigator.current
         LocalAssistContentManager.current.Provide(route) {
-            WebViewScreen(
-                url = route.url,
-                initialTitle = route.initialTitle,
-                sourceId = route.sourceId,
-            )
+            WebViewScreen(route, onNavigateUp = navigator::pop)
         }
     }
 
