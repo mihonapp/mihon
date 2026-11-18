@@ -74,7 +74,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
 @Serializable
-data object SettingsDataRoute : SearchableRoute {
+data object SettingsDataScreen : SearchableSettings {
 
     @Transient
     val restorePreferenceKeyString = MR.strings.label_backup

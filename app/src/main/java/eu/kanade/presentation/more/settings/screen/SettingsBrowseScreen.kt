@@ -20,7 +20,7 @@ import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Serializable
-data object SettingsBrowseRoute : SearchableRoute {
+data object SettingsBrowseScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

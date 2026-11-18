@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.presentation.more.onboarding.OnboardingScreen
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
-import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
+import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
 import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import mihon.app.di.appGraph
 import mihon.core.navigation.SettingsRoute
@@ -31,7 +31,7 @@ fun OnboardingScreen() {
         navigator.pop()
     }
 
-    val restoreSettingKey = stringResource(SettingsDataRoute.restorePreferenceKeyString)
+    val restoreSettingKey = stringResource(SettingsDataScreen.restorePreferenceKeyString)
 
     BackHandler(enabled = !shownOnboardingFlow) {
         // Prevent exiting if onboarding hasn't been completed

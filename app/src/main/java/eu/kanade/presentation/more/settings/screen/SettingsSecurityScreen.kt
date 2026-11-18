@@ -21,7 +21,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
 @Serializable
-data object SettingsSecurityRoute : SearchableRoute {
+data object SettingsSecurityScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

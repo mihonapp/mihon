@@ -289,16 +289,16 @@ private fun getLocalizedBreadcrumb(path: String, node: String?, isLtr: Boolean):
     }
 }
 
-private val settingScreens: List<SearchableRoute> = listOf(
-    SettingsAppearanceRoute,
-    SettingsLibraryRoute,
-    SettingsReaderRoute,
-    SettingsDownloadRoute,
-    SettingsTrackingRoute,
-    SettingsBrowseRoute,
-    SettingsDataRoute,
-    SettingsSecurityRoute,
-    SettingsAdvancedRoute,
+private val settingScreens = listOf(
+    SettingsAppearanceScreen,
+    SettingsLibraryScreen,
+    SettingsReaderScreen,
+    SettingsDownloadScreen,
+    SettingsTrackingScreen,
+    SettingsBrowseScreen,
+    SettingsDataScreen,
+    SettingsSecurityScreen,
+    SettingsAdvancedScreen,
 )
 
 private data class SettingsData(

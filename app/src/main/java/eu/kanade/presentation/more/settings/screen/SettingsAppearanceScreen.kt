@@ -32,7 +32,7 @@ import tachiyomi.presentation.core.util.collectAsState
 import kotlin.time.Clock
 
 @Serializable
-data object SettingsAppearanceRoute : SearchableRoute {
+data object SettingsAppearanceScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

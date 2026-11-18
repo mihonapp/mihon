@@ -68,7 +68,7 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Serializable
-data object SettingsTrackingRoute : SearchableRoute {
+data object SettingsTrackingScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

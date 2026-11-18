@@ -2,16 +2,16 @@ package mihon.core.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import eu.kanade.presentation.more.settings.screen.SettingsAdvancedRoute
-import eu.kanade.presentation.more.settings.screen.SettingsAppearanceRoute
-import eu.kanade.presentation.more.settings.screen.SettingsBrowseRoute
-import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
-import eu.kanade.presentation.more.settings.screen.SettingsDownloadRoute
-import eu.kanade.presentation.more.settings.screen.SettingsLibraryRoute
-import eu.kanade.presentation.more.settings.screen.SettingsReaderRoute
+import eu.kanade.presentation.more.settings.screen.SettingsAdvancedScreen
+import eu.kanade.presentation.more.settings.screen.SettingsAppearanceScreen
+import eu.kanade.presentation.more.settings.screen.SettingsBrowseScreen
+import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
+import eu.kanade.presentation.more.settings.screen.SettingsDownloadScreen
+import eu.kanade.presentation.more.settings.screen.SettingsLibraryScreen
+import eu.kanade.presentation.more.settings.screen.SettingsReaderScreen
 import eu.kanade.presentation.more.settings.screen.SettingsSearchScreen
-import eu.kanade.presentation.more.settings.screen.SettingsSecurityRoute
-import eu.kanade.presentation.more.settings.screen.SettingsTrackingRoute
+import eu.kanade.presentation.more.settings.screen.SettingsSecurityScreen
+import eu.kanade.presentation.more.settings.screen.SettingsTrackingScreen
 import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.more.settings.screen.about.OpenSourceLicensesScreen
 import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
@@ -196,31 +196,31 @@ fun EntryProviderScope<NavKey>.appEntries() {
     }
 
     // Searchable settings
-    entry<SettingsAdvancedRoute> {
-        SettingsAdvancedRoute.Content()
+    entry<SettingsAdvancedScreen> {
+        SettingsAdvancedScreen.Content()
     }
-    entry<SettingsAppearanceRoute> {
-        SettingsAppearanceRoute.Content()
+    entry<SettingsAppearanceScreen> {
+        SettingsAppearanceScreen.Content()
     }
-    entry<SettingsBrowseRoute> {
-        SettingsBrowseRoute.Content()
+    entry<SettingsBrowseScreen> {
+        SettingsBrowseScreen.Content()
     }
-    entry<SettingsDataRoute> {
-        SettingsDataRoute.Content()
+    entry<SettingsDataScreen> {
+        SettingsDataScreen.Content()
     }
-    entry<SettingsDownloadRoute> {
-        SettingsDownloadRoute.Content()
+    entry<SettingsDownloadScreen> {
+        SettingsDownloadScreen.Content()
     }
-    entry<SettingsLibraryRoute> {
-        SettingsLibraryRoute.Content()
+    entry<SettingsLibraryScreen> {
+        SettingsLibraryScreen.Content()
     }
-    entry<SettingsReaderRoute> {
-        SettingsReaderRoute.Content()
+    entry<SettingsReaderScreen> {
+        SettingsReaderScreen.Content()
     }
-    entry<SettingsSecurityRoute> {
-        SettingsSecurityRoute.Content()
+    entry<SettingsSecurityScreen> {
+        SettingsSecurityScreen.Content()
     }
-    entry<SettingsTrackingRoute> {
-        SettingsTrackingRoute.Content()
+    entry<SettingsTrackingScreen> {
+        SettingsTrackingScreen.Content()
     }
 }

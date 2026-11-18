@@ -38,7 +38,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
 @Serializable
-data object SettingsLibraryRoute : SearchableRoute {
+data object SettingsLibraryScreen : SearchableSettings {
 
     @Composable
     @ReadOnlyComposable

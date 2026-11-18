@@ -10,9 +10,7 @@ import eu.kanade.presentation.more.settings.PreferenceScaffold
 import mihon.core.navigation.util.LocalBackButtonVisibility
 import mihon.core.navigation.util.LocalNavigator
 
-interface SearchableRoute : NavKey, SearchableSettings
-
-interface SearchableSettings {
+interface SearchableSettings : NavKey {
 
     @Composable
     @ReadOnlyComposable

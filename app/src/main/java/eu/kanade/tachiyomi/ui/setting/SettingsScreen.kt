@@ -26,15 +26,15 @@ import androidx.navigation3.runtime.NavKey
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
-import eu.kanade.presentation.more.settings.screen.SettingsAdvancedRoute
-import eu.kanade.presentation.more.settings.screen.SettingsAppearanceRoute
-import eu.kanade.presentation.more.settings.screen.SettingsBrowseRoute
-import eu.kanade.presentation.more.settings.screen.SettingsDataRoute
-import eu.kanade.presentation.more.settings.screen.SettingsDownloadRoute
-import eu.kanade.presentation.more.settings.screen.SettingsLibraryRoute
-import eu.kanade.presentation.more.settings.screen.SettingsReaderRoute
-import eu.kanade.presentation.more.settings.screen.SettingsSecurityRoute
-import eu.kanade.presentation.more.settings.screen.SettingsTrackingRoute
+import eu.kanade.presentation.more.settings.screen.SettingsAdvancedScreen
+import eu.kanade.presentation.more.settings.screen.SettingsAppearanceScreen
+import eu.kanade.presentation.more.settings.screen.SettingsBrowseScreen
+import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
+import eu.kanade.presentation.more.settings.screen.SettingsDownloadScreen
+import eu.kanade.presentation.more.settings.screen.SettingsLibraryScreen
+import eu.kanade.presentation.more.settings.screen.SettingsReaderScreen
+import eu.kanade.presentation.more.settings.screen.SettingsSecurityScreen
+import eu.kanade.presentation.more.settings.screen.SettingsTrackingScreen
 import eu.kanade.presentation.more.settings.screen.about.getVersionName
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import mihon.core.navigation.AboutRoute
@@ -63,9 +63,9 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun Navigator.addSettingsRoute(settingsRoute: SettingsRoute, isTabletUi: Boolean) {
     val route = when (settingsRoute.settingsDestination) {
         SettingsDestination.About -> AboutRoute
-        SettingsDestination.DataAndStorage -> SettingsDataRoute
-        SettingsDestination.Tracking -> SettingsTrackingRoute
-        null if isTabletUi -> SettingsAppearanceRoute
+        SettingsDestination.DataAndStorage -> SettingsDataScreen
+        SettingsDestination.Tracking -> SettingsTrackingScreen
+        null if isTabletUi -> SettingsAppearanceScreen
         null -> null
     }
     if (route != null) {
@@ -204,55 +204,55 @@ private val items = listOf(
         titleRes = MR.strings.pref_category_appearance,
         subtitleRes = MR.strings.pref_appearance_summary,
         icon = MaterialSymbols.Rounded.Palette,
-        route = SettingsAppearanceRoute,
+        route = SettingsAppearanceScreen,
     ),
     Item(
         titleRes = MR.strings.pref_category_library,
         subtitleRes = MR.strings.pref_library_summary,
         icon = MaterialSymbols.Rounded.CollectionsBookmark,
-        route = SettingsLibraryRoute,
+        route = SettingsLibraryScreen,
     ),
     Item(
         titleRes = MR.strings.pref_category_reader,
         subtitleRes = MR.strings.pref_reader_summary,
         icon = MaterialSymbols.AutoMirroredRounded.ChromeReaderMode,
-        route = SettingsReaderRoute,
+        route = SettingsReaderScreen,
     ),
     Item(
         titleRes = MR.strings.pref_category_downloads,
         subtitleRes = MR.strings.pref_downloads_summary,
         icon = MaterialSymbols.Rounded.Download,
-        route = SettingsDownloadRoute,
+        route = SettingsDownloadScreen,
     ),
     Item(
         titleRes = MR.strings.pref_category_tracking,
         subtitleRes = MR.strings.pref_tracking_summary,
         icon = MaterialSymbols.Rounded.Sync,
-        route = SettingsTrackingRoute,
+        route = SettingsTrackingScreen,
     ),
     Item(
         titleRes = MR.strings.browse,
         subtitleRes = MR.strings.pref_browse_summary,
         icon = MaterialSymbols.Rounded.Explore,
-        route = SettingsBrowseRoute,
+        route = SettingsBrowseScreen,
     ),
     Item(
         titleRes = MR.strings.label_data_storage,
         subtitleRes = MR.strings.pref_backup_summary,
         icon = MaterialSymbols.Rounded.Storage,
-        route = SettingsDataRoute,
+        route = SettingsDataScreen,
     ),
     Item(
         titleRes = MR.strings.pref_category_security,
         subtitleRes = MR.strings.pref_security_summary,
         icon = MaterialSymbols.Rounded.Security,
-        route = SettingsSecurityRoute,
+        route = SettingsSecurityScreen,
     ),
     Item(
         titleRes = MR.strings.pref_category_advanced,
         subtitleRes = MR.strings.pref_advanced_summary,
         icon = MaterialSymbols.Rounded.Code,
-        route = SettingsAdvancedRoute,
+        route = SettingsAdvancedScreen,
     ),
     Item(
         titleRes = MR.strings.pref_category_about,
