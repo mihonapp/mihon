@@ -34,6 +34,10 @@ class MangaRepositoryImpl(
     private val database: Database,
 ) : MangaRepository {
 
+    override suspend fun getAll(): List<Manga> {
+        return database.mangaQueries.getAll(MangaMapper::mapManga).awaitAsList()
+    }
+
     override suspend fun getMangaById(id: Long): Manga {
         return database.mangaQueries
             .getMangaById(id, MangaMapper::mapManga)

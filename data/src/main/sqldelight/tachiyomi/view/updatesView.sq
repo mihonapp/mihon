@@ -23,7 +23,8 @@ ON manga.id = chapter.manga_id
 LEFT JOIN excluded_scanlator
 ON manga.id = excluded_scanlator.manga_id
 AND chapter.remote_scanlator = excluded_scanlator.scanlator
-WHERE user_favorite_at IS NOT NULL
+WHERE chapter.user_hidden = 0
+AND user_favorite_at IS NOT NULL
 AND state_date_fetch > user_favorite_at
 ORDER BY state_date_fetch DESC;
 

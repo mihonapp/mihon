@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.drop
@@ -27,11 +28,15 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
+import tachiyomi.source.local.isLocal
+import java.io.IOException
 
 /**
  * This class is used to manage chapter downloads in the application. It must be instantiated once
@@ -47,10 +52,12 @@ class DownloadManager(
     private val getCategories: GetCategories,
     private val getManga: GetManga,
     private val getChapter: GetChapter,
+    private val chapterRepository: ChapterRepository,
     private val sourceManager: SourceManager,
     private val downloadPreferences: DownloadPreferences,
     private val downloader: Downloader,
     private val pendingDeleter: DownloadPendingDeleter,
+    private val mangaRepository: MangaRepository,
 ) {
 
     val queueState
@@ -112,6 +119,7 @@ class DownloadManager(
 
     private suspend fun downloadFromChapterId(chapterId: Long): Download? {
         val chapter = getChapter.await(chapterId) ?: return null
+        if (chapter.hidden) return null
         val manga = getManga.await(chapter.mangaId) ?: return null
         val source = sourceManager.get(manga.source) as? HttpSource ?: return null
 
@@ -140,7 +148,7 @@ class DownloadManager(
      * @param autoStart whether to start the downloader after enqueing the chapters.
      */
     suspend fun downloadChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean = true) {
-        if (downloader.queueChapters(manga, chapters, autoStart)) {
+        if (downloader.queueChapters(manga, chapters.filterNot { it.hidden }, autoStart)) {
             startDownloads()
         }
     }
@@ -257,6 +265,66 @@ class DownloadManager(
 
     suspend fun cancelQueuedDownloads(downloads: List<Download>) {
         downloader.dequeue(downloads.map { it.chapter })
+    }
+
+    /** Hiding cancels every selected writer and respects deletion exclusions, preserving local source originals. */
+    suspend fun deleteHiddenChapters(chapters: List<Chapter>, manga: Manga, source: Source) {
+        downloader.dequeueAndAwait(chapters)
+        if (manga.isLocal() || source.isLocal()) return
+        withContext(Dispatchers.IO) {
+            // Query the canonical repository: GetChaptersByMangaId swallows errors and cannot authorize deletion.
+            val mangaChapters = chapterRepository.getChapterByMangaId(manga.id)
+            val selectedIds = chapters.mapTo(HashSet()) { it.id }
+            val currentChapters = mangaChapters.filter { it.id in selectedIds }
+            if (currentChapters.mapTo(HashSet()) { it.id } != selectedIds ||
+                chapters.any { it.mangaId != manga.id }
+            ) {
+                throw IOException("Cannot establish hidden chapter download ownership")
+            }
+            val allManga = mangaRepository.getAll()
+            val currentManga = allManga.firstOrNull { it.id == manga.id }
+                ?: throw IOException("Cannot establish hidden chapter manga ownership")
+            if (currentManga.source != source.id) {
+                throw IOException("Cannot establish hidden chapter source ownership")
+            }
+            val chaptersToDelete = getChaptersToDelete(currentChapters, currentManga)
+            if (chaptersToDelete.isEmpty()) return@withContext
+
+            val sources = allManga.filterNot { it.isLocal() }.map { it.source }.distinct().associateWith {
+                if (it == source.id) source else sourceManager.getOrStub(it)
+            }
+            val owners = provider.findMangaIdsSharingDownloadDirectory(
+                currentManga,
+                source,
+                allManga.filterNot { it.isLocal() }.map { it to sources.getValue(it.source) },
+            )
+            val otherOwners = owners.filter { it != manga.id }
+            val directoryChapters = mangaChapters + if (otherOwners.isEmpty()) {
+                emptyList()
+            } else {
+                chapterRepository.getChaptersByMangaIds(otherOwners).values.flatten()
+            }
+            // Protected selections remain owners of their completed and unfinished download names.
+            val paths = provider.findChapterPathsForHide(chaptersToDelete, directoryChapters, currentManga, source)
+            val directoryOwners = allManga.filter { it.id == currentManga.id || it.id in owners }
+            var failed = false
+            var deletionFailure: Exception? = null
+            try {
+                paths.forEach { if (!it.delete()) failed = true }
+                if (failed) throw IOException("Failed to remove hidden chapter downloads")
+            } catch (e: Exception) {
+                deletionFailure = e
+            }
+            // Finish the affected cache refresh even if navigation cancels this hide after files were removed.
+            withContext(NonCancellable) {
+                try {
+                    cache.refreshMangaDirectories(directoryOwners)
+                } catch (e: Exception) {
+                    deletionFailure?.addSuppressed(e) ?: throw e
+                }
+            }
+            deletionFailure?.let { throw it }
+        }
     }
 
     /**
@@ -433,7 +501,7 @@ class DownloadManager(
 
         val categoriesForManga = getCategories.await(manga.id)
             .map { it.id }
-            .ifEmpty { listOf(0) }
+            .ifEmpty { listOf(0L) }
         val filteredCategoryManga = if (categoriesForManga.intersect(categoriesToExclude).isNotEmpty()) {
             chapters.filterNot { it.read }
         } else {

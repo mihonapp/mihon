@@ -173,6 +173,7 @@ class SyncChaptersWithSource(
         val deletedChapterNumbers = TreeSet<Double>()
         val deletedReadChapterNumbers = TreeSet<Double>()
         val deletedBookmarkedChapterNumbers = TreeSet<Double>()
+        val deletedHiddenChapterNumbers = TreeSet<Double>()
 
         val readChapterNumbers = dbChapters
             .asSequence()
@@ -183,6 +184,7 @@ class SyncChaptersWithSource(
         removedChapters.forEach { chapter ->
             if (chapter.read) deletedReadChapterNumbers.add(chapter.chapterNumber)
             if (chapter.bookmark) deletedBookmarkedChapterNumbers.add(chapter.chapterNumber)
+            if (chapter.hidden) deletedHiddenChapterNumbers.add(chapter.chapterNumber)
             deletedChapterNumbers.add(chapter.chapterNumber)
         }
 
@@ -208,6 +210,7 @@ class SyncChaptersWithSource(
             chapter = chapter.copy(
                 read = chapter.chapterNumber in deletedReadChapterNumbers,
                 bookmark = chapter.chapterNumber in deletedBookmarkedChapterNumbers,
+                hidden = chapter.chapterNumber in deletedHiddenChapterNumbers,
             )
 
             // Try to to use the fetch date of the original entry to not pollute 'Updates' tab

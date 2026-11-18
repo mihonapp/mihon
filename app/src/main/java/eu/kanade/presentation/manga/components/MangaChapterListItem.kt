@@ -2,10 +2,12 @@ package eu.kanade.presentation.manga.components
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -24,6 +26,9 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.data.download.model.Download
@@ -38,9 +43,11 @@ import mihon.icons.materialsymbols.rounded.FileDownloadOff
 import mihon.icons.materialsymbols.rounded.RemoveDone
 import mihon.icons.materialsymbols.roundedfilled.Bookmark
 import mihon.icons.materialsymbols.roundedfilled.Circle
+import mihon.icons.materialsymbols.roundedfilled.VisibilityOff
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
+import tachiyomi.presentation.core.components.material.IconButtonTokens
 import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
@@ -63,10 +70,12 @@ fun MangaChapterListItem(
     onClick: () -> Unit,
     onDownloadClick: ((ChapterDownloadAction) -> Unit)?,
     onChapterSwipe: (LibraryPreferences.ChapterSwipeAction) -> Unit,
+    hidden: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
+    val hiddenDescription = stringResource(MR.strings.chapter_hidden)
     val start = getSwipeAction(
-        action = chapterSwipeStartAction,
+        action = chapterSwipeStartAction.takeUnless { hidden } ?: LibraryPreferences.ChapterSwipeAction.Disabled,
         read = read,
         bookmark = bookmark,
         downloadState = downloadStateProvider(),
@@ -74,7 +83,7 @@ fun MangaChapterListItem(
         onSwipe = { onChapterSwipe(chapterSwipeStartAction) },
     )
     val end = getSwipeAction(
-        action = chapterSwipeEndAction,
+        action = chapterSwipeEndAction.takeUnless { hidden } ?: LibraryPreferences.ChapterSwipeAction.Disabled,
         read = read,
         bookmark = bookmark,
         downloadState = downloadStateProvider(),
@@ -92,6 +101,8 @@ fun MangaChapterListItem(
         Row(
             modifier = modifier
                 .selectedBackground(selected)
+                .semantics { if (hidden) stateDescription = hiddenDescription }
+                // Hidden chapters must still accept long presses and selection taps to unhide them.
                 .combinedClickable(
                     onClick = onClick,
                     onLongClick = onLongClick,
@@ -132,7 +143,7 @@ fun MangaChapterListItem(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         onTextLayout = { textHeight = it.size.height },
-                        color = LocalContentColor.current.copy(alpha = if (read) DISABLED_ALPHA else 1f),
+                        color = LocalContentColor.current.copy(alpha = if (read || hidden) DISABLED_ALPHA else 1f),
                     )
                 }
 
@@ -140,7 +151,7 @@ fun MangaChapterListItem(
                     val subtitleStyle = MaterialTheme.typography.bodySmall
                         .merge(
                             color = LocalContentColor.current
-                                .copy(alpha = if (read) DISABLED_ALPHA else SECONDARY_ALPHA),
+                                .copy(alpha = if (read || hidden) DISABLED_ALPHA else SECONDARY_ALPHA),
                         )
                     ProvideTextStyle(value = subtitleStyle) {
                         if (date != null) {
@@ -148,6 +159,17 @@ fun MangaChapterListItem(
                                 text = date,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
+                            )
+                            if (hidden || readProgress != null || scanlator != null) DotSeparatorText()
+                        }
+                        if (hidden) {
+                            Text(
+                                text = hiddenDescription,
+                                // The row's state description already announces Hidden.
+                                modifier = Modifier.clearAndSetSemantics {},
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             if (readProgress != null || scanlator != null) DotSeparatorText()
                         }
@@ -171,13 +193,27 @@ fun MangaChapterListItem(
                 }
             }
 
-            ChapterDownloadIndicator(
-                enabled = downloadIndicatorEnabled,
-                modifier = Modifier.padding(start = 4.dp),
-                downloadStateProvider = downloadStateProvider,
-                downloadProgressProvider = downloadProgressProvider,
-                onClick = { onDownloadClick?.invoke(it) },
-            )
+            if (hidden) {
+                Box(
+                    modifier = Modifier.padding(start = 4.dp).size(IconButtonTokens.StateLayerSize),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = MaterialSymbols.RoundedFilled.VisibilityOff,
+                        contentDescription = null, // The row already announces its hidden state.
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            } else {
+                ChapterDownloadIndicator(
+                    enabled = downloadIndicatorEnabled,
+                    modifier = Modifier.padding(start = 4.dp),
+                    downloadStateProvider = downloadStateProvider,
+                    downloadProgressProvider = downloadProgressProvider,
+                    onClick = { onDownloadClick?.invoke(it) },
+                )
+            }
         }
     }
 }

@@ -17,18 +17,16 @@ fun List<Double>.missingChaptersCount(): Int {
         .distinct()
         .sorted()
 
-    if (chapters.isEmpty()) {
-        return 0
-    }
+    return chapters.asIterable().missingChaptersCount()
+}
 
+/** Counts gaps in chapter numbers that have already been normalized, deduplicated and sorted. */
+fun Iterable<Int>.missingChaptersCount(): Int {
     var missingChaptersCount = 0
-    var previousChapter = 0 // The actual chapter number, not the array index
+    var previousChapter = 0
 
-    // We go from 0 to lastChapter - Make sure to use the current index instead of the value
-    for (i in chapters.indices) {
-        val currentChapter = chapters[i]
+    for (currentChapter in this) {
         if (currentChapter > previousChapter + 1) {
-            // Add the amount of missing chapters
             missingChaptersCount += currentChapter - previousChapter - 1
         }
         previousChapter = currentChapter

@@ -148,6 +148,7 @@ class RestoreRepositoryImpl(
                     kept.copy(
                         read = kept.read || other.read,
                         bookmark = kept.bookmark || other.bookmark,
+                        hidden = kept.hidden || other.hidden,
                         lastPageRead = max(kept.lastPageRead, other.lastPageRead),
                     )
                 }
@@ -170,6 +171,7 @@ class RestoreRepositoryImpl(
                         id = dbChapter.id,
                         read = chapter.read || dbChapter.read,
                         bookmark = chapter.bookmark || dbChapter.bookmark,
+                        hidden = chapter.hidden || dbChapter.hidden,
                         lastPageRead = max(chapter.lastPageRead, dbChapter.lastPageRead),
                         dateFetch = dbChapter.dateFetch,
                         sourceOrder = dbChapter.sourceOrder,
@@ -187,6 +189,7 @@ class RestoreRepositoryImpl(
                 remoteScanlator = chapter.scanlator,
                 userRead = chapter.read,
                 userBookmark = chapter.bookmark,
+                userHidden = chapter.hidden,
                 userLastPageRead = chapter.lastPageRead,
                 remoteChapterNumber = chapter.chapterNumber,
                 remoteOrder = chapter.sourceOrder,
@@ -200,6 +203,7 @@ class RestoreRepositoryImpl(
             database.chapterQueries.updateFromBackup(
                 userRead = chapter.read,
                 userBookmark = chapter.bookmark,
+                userHidden = chapter.hidden,
                 userLastPageRead = chapter.lastPageRead,
                 id = chapter.id,
                 remoteMemo = chapter.memo,
