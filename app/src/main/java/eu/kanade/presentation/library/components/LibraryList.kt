@@ -23,6 +23,8 @@ internal fun LibraryList(
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
+    showUpdateErrors: Boolean,
+    showSourceRating: Boolean,
 ) {
     FastScrollLazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -56,9 +58,10 @@ internal fun LibraryList(
                 badge = {
                     DownloadsBadge(count = libraryItem.badges.downloadCount)
                     UnreadBadge(count = libraryItem.badges.unreadCount)
-                    LanguageBadge(
-                        isLocal = libraryItem.badges.isLocal,
-                        sourceLanguage = libraryItem.badges.sourceLanguage,
+                    LibraryEndBadges(
+                        item = libraryItem,
+                        showUpdateErrors = showUpdateErrors,
+                        showSourceRating = showSourceRating,
                     )
                 },
                 onLongClick = { onLongClick(libraryItem.libraryManga) },

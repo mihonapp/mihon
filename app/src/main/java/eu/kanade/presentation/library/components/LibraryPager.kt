@@ -17,14 +17,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import eu.kanade.core.preference.PreferenceMutableState
 import eu.kanade.tachiyomi.ui.library.LibraryItem
+import mihon.app.di.appGraph
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.EmptyScreen
+import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.plus
 
 @Composable
@@ -43,6 +46,12 @@ fun LibraryPager(
     onLongClickManga: (Category, LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
 ) {
+    val context = LocalContext.current
+    val showUpdateErrorsPreference = remember { context.appGraph.libraryPreferences.showUpdateErrors }
+    val showUpdateErrors by showUpdateErrorsPreference.collectAsState()
+    val showSourceRatingPreference = remember { context.appGraph.libraryPreferences.showSourceRating }
+    val showSourceRating by showSourceRatingPreference.collectAsState()
+
     HorizontalPager(
         modifier = Modifier.fillMaxSize(),
         state = state,
@@ -89,6 +98,8 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
+                    showUpdateErrors = showUpdateErrors,
+                    showSourceRating = showSourceRating,
                 )
             }
             LibraryDisplayMode.CompactGrid, LibraryDisplayMode.CoverOnlyGrid -> {
@@ -103,6 +114,8 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
+                    showUpdateErrors = showUpdateErrors,
+                    showSourceRating = showSourceRating,
                 )
             }
             LibraryDisplayMode.ComfortableGrid -> {
@@ -116,6 +129,8 @@ fun LibraryPager(
                     onClickContinueReading = onClickContinueReading,
                     searchQuery = searchQuery,
                     onGlobalSearchClicked = onGlobalSearchClicked,
+                    showUpdateErrors = showUpdateErrors,
+                    showSourceRating = showSourceRating,
                 )
             }
         }

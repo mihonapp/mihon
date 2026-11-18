@@ -21,6 +21,8 @@ internal fun LibraryCompactGrid(
     onClickContinueReading: ((LibraryManga) -> Unit)?,
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
+    showUpdateErrors: Boolean,
+    showSourceRating: Boolean,
 ) {
     LazyLibraryGrid(
         modifier = Modifier.fillMaxSize(),
@@ -49,9 +51,10 @@ internal fun LibraryCompactGrid(
                     UnreadBadge(count = libraryItem.badges.unreadCount)
                 },
                 coverBadgeEnd = {
-                    LanguageBadge(
-                        isLocal = libraryItem.badges.isLocal,
-                        sourceLanguage = libraryItem.badges.sourceLanguage,
+                    LibraryEndBadges(
+                        item = libraryItem,
+                        showUpdateErrors = showUpdateErrors,
+                        showSourceRating = showSourceRating,
                     )
                 },
                 onLongClick = { onLongClick(libraryItem.libraryManga) },

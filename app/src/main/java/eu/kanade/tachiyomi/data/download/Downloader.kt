@@ -115,6 +115,10 @@ class Downloader(
     @Volatile
     var isPaused: Boolean = false
 
+    // Chapters already being downloaded, including one started ahead of a paused queue
+    private val downloadingChapterIds = ConcurrentHashMap.newKeySet<Long>()
+    private val forceJobs = ConcurrentHashMap<Long, Job>()
+
     init {
         scope.launch(Dispatchers.Main, CoroutineStart.UNDISPATCHED) {
             addAllToQueue(withContext(Dispatchers.IO) { store.restore() })
@@ -181,7 +185,10 @@ class Downloader(
         cancelDownloaderJob()
         queueState.value
             .filter { it.status == Download.State.DOWNLOADING }
-            .forEach { it.status = Download.State.ERROR }
+            .forEach { download ->
+                download.status = Download.State.ERROR
+                if (reason != null) download.recordFailure(reason)
+            }
 
         if (reason != null) {
             notifier.onWarning(reason)
@@ -290,7 +297,8 @@ class Downloader(
                     queue.firstOrNull {
                         it.source == source &&
                             (it.status == Download.State.QUEUE || it.status == Download.State.DOWNLOADING) &&
-                            it !in downloadJobs
+                            it !in downloadJobs &&
+                            it.chapter.id !in downloadingChapterIds
                     }
                 }
                 .filterNotNull()
@@ -313,6 +321,8 @@ class Downloader(
         pagesStarted: CompletableDeferred<Unit>,
         owner: Job,
     ) = launch(Dispatchers.IO) {
+        val claimed = downloadingChapterIds.add(download.chapter.id)
+        if (!claimed) return@launch
         try {
             // Removed from the queue between being picked and starting
             if (download !in queueState.value) return@launch
@@ -330,6 +340,7 @@ class Downloader(
             notifier.onError(e.message)
             stopIfCurrent(owner)
         } finally {
+            if (claimed) downloadingChapterIds.remove(download.chapter.id)
             // Also when the chapter fails before its pages, so the source moves on to the next one
             pagesStarted.complete(Unit)
         }
@@ -340,6 +351,7 @@ class Downloader(
      */
     private fun cancelDownloaderJob() {
         downloaderJob?.cancel()
+        forceJobs.values.forEach { it.cancel() }
     }
 
     /**
@@ -410,20 +422,18 @@ class Downloader(
      */
     private suspend fun downloadChapter(download: Download, slots: Semaphore, pagesStarted: CompletableDeferred<Unit>) {
         val mangaDir = provider.getMangaDir(download.manga.title, download.source).getOrElse { e ->
-            download.status = Download.State.ERROR
+            download.beginAttempt()
+            download.fail(e.message)
             notifier.onError(e.message, download.chapter.name, download.manga.title, download.manga.id)
             return
         }
 
         val availSpace = DiskUtil.getAvailableStorageSpace(mangaDir)
         if (availSpace != -1L && availSpace < MIN_DISK_SPACE) {
-            download.status = Download.State.ERROR
-            notifier.onError(
-                context.stringResource(MR.strings.download_insufficient_space),
-                download.chapter.name,
-                download.manga.title,
-                download.manga.id,
-            )
+            val message = context.stringResource(MR.strings.download_insufficient_space)
+            download.beginAttempt()
+            download.fail(message)
+            notifier.onError(message, download.chapter.name, download.manga.title, download.manga.id)
             return
         }
 
@@ -438,11 +448,13 @@ class Downloader(
         if (mangaDir.findFile("$chapterDirname.cbz") != null || mangaDir.findFile(chapterDirname) != null) {
             mangaDir.findFile(chapterDirname + TMP_DIR_SUFFIX)?.delete()
             cache.addChapter(chapterDirname, mangaDir, download.manga)
+            download.clearFailure()
             download.status = Download.State.DOWNLOADED
             return
         }
 
         val tmpDir = mangaDir.createDirectory(chapterDirname + TMP_DIR_SUFFIX)!!
+        download.beginAttempt()
 
         try {
             // If the page list already exists, start from the file
@@ -487,7 +499,10 @@ class Downloader(
             // Do after download completes
 
             if (!isDownloadSuccessful(download, tmpDir)) {
-                download.status = Download.State.ERROR
+                val pageError = download.pages?.firstNotNullOfOrNull { page ->
+                    (page.status as? Page.State.Error)?.error
+                }
+                download.fail(pageError?.shortDownloadError())
                 return
             }
 
@@ -508,14 +523,60 @@ class Downloader(
 
             DiskUtil.createNoMediaFile(tmpDir, context)
 
+            download.clearFailure()
             download.status = Download.State.DOWNLOADED
         } catch (error: Throwable) {
-            if (error is CancellationException) throw error
+            if (error is CancellationException) {
+                download.undoAttempt()
+                throw error
+            }
             // If the page list threw, it will resume here
             logcat(LogPriority.ERROR, error)
-            download.status = Download.State.ERROR
+            download.fail(error.shortDownloadError())
             notifier.onError(error.message, download.chapter.name, download.manga.title, download.manga.id)
         }
+    }
+
+    /**
+     * Moves [download] to the front and downloads it immediately, even when the queue is paused
+     * and other chapters are waiting on the source limit.
+     */
+    suspend fun forceDownload(download: Download) = lock.withLock {
+        var target: Download? = null
+        _queueState.update { queue ->
+            val current = queue.find { it.chapter.id == download.chapter.id } ?: return@update queue
+            if (current.status == Download.State.ERROR) current.status = Download.State.QUEUE
+            target = current
+            val updated = listOf(current) + queue.filter { it.chapter.id != current.chapter.id }
+            store.clear()
+            store.addAll(updated)
+            updated
+        }
+        val chapter = target ?: return@withLock
+        if (!downloadingChapterIds.add(chapter.chapter.id)) return@withLock
+
+        val job = scope.launch(Dispatchers.IO) {
+            val slots = Semaphore(downloadPreferences.parallelPageLimit.get())
+            val pagesStarted = CompletableDeferred<Unit>()
+            try {
+                if (chapter !in queueState.value) return@launch
+                downloadChapter(chapter, slots, pagesStarted)
+                if (chapter.status == Download.State.DOWNLOADED) {
+                    removeFromQueue(chapter)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                logcat(LogPriority.ERROR, e)
+                chapter.fail(e.shortDownloadError())
+                notifier.onError(e.message, chapter.chapter.name, chapter.manga.title, chapter.manga.id)
+            } finally {
+                pagesStarted.complete(Unit)
+                downloadingChapterIds.remove(chapter.chapter.id)
+            }
+        }
+        forceJobs[chapter.chapter.id] = job
+        job.invokeOnCompletion { forceJobs.remove(chapter.chapter.id, job) }
     }
 
     /**
@@ -847,6 +908,17 @@ class Downloader(
         const val CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 15
         private const val DOWNLOADS_QUEUED_WARNING_THRESHOLD = 30
     }
+}
+
+private fun Download.fail(message: String?) {
+    status = Download.State.ERROR
+    recordFailure(message)
+}
+
+private fun Throwable.shortDownloadError(): String {
+    if (this is HttpException) return "HTTP $code"
+    return message?.lineSequence()?.map { it.trim() }?.firstOrNull { it.isNotEmpty() }?.take(120)
+        ?: javaClass.simpleName
 }
 
 // Arbitrary minimum required space to start a download: 200 MB

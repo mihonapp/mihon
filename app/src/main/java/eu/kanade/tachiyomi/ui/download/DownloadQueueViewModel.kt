@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import tachiyomi.core.common.preference.toggle
+import tachiyomi.domain.download.service.DownloadPreferences
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
@@ -24,6 +26,7 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesIntoMap(AppScope::class)
 class DownloadQueueViewModel(
     private val downloadManager: DownloadManager,
+    private val downloadPreferences: DownloadPreferences,
 ) : ViewModel() {
 
     val state: StateFlow<List<DownloadQueueSection>> = downloadManager.queueState
@@ -37,6 +40,21 @@ class DownloadQueueViewModel(
 
     val isDownloaderRunning = downloadManager.isDownloaderRunning
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), false)
+
+    val showDownloadErrors = downloadPreferences.showDownloadErrors.changes()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5.seconds),
+            downloadPreferences.showDownloadErrors.get(),
+        )
+
+    fun toggleShowDownloadErrors() {
+        downloadPreferences.showDownloadErrors.toggle()
+    }
+
+    fun force(download: Download) {
+        viewModelScope.launch { downloadManager.forceDownload(download) }
+    }
 
     fun startDownloads() {
         downloadManager.startDownloads()

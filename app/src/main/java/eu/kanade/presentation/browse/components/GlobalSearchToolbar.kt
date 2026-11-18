@@ -46,6 +46,8 @@ fun GlobalSearchToolbar(
     onChangeSearchFilter: (SourceFilter) -> Unit,
     onlyShowHasResults: Boolean,
     onToggleResults: () -> Unit,
+    sortByChapterCount: Boolean,
+    onToggleChapterCountSort: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
@@ -110,6 +112,22 @@ fun GlobalSearchToolbar(
 
                 VerticalDivider(modifier = Modifier.height(FilterChipDefaults.Height))
             }
+
+            FilterChip(
+                selected = sortByChapterCount,
+                onClick = onToggleChapterCountSort,
+                leadingIcon = {
+                    Icon(
+                        imageVector = MaterialSymbols.Rounded.FilterList,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(FilterChipDefaults.IconSize),
+                    )
+                },
+                label = {
+                    Text(text = stringResource(MR.strings.search_sort_by_chapter_count))
+                },
+            )
 
             FilterChip(
                 selected = onlyShowHasResults,

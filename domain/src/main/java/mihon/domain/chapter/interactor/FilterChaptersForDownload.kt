@@ -1,10 +1,13 @@
 package mihon.domain.chapter.interactor
 
 import dev.zacsweers.metro.Inject
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
+import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
 
 /**
@@ -19,6 +22,7 @@ class FilterChaptersForDownload(
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val downloadPreferences: DownloadPreferences,
     private val getCategories: GetCategories,
+    private val getHistory: GetHistory,
 ) {
 
     /**
@@ -37,15 +41,37 @@ class FilterChaptersForDownload(
             return emptyList()
         }
 
-        if (!downloadPreferences.downloadNewUnreadChaptersOnly.get()) return newChapters
+        val chapters = if (downloadPreferences.downloadNewUnreadChaptersOnly.get()) {
+            val readChapterNumbers = getChaptersByMangaId.await(manga.id)
+                .asSequence()
+                .filter { it.read && it.isRecognizedNumber }
+                .map { it.chapterNumber }
+                .toSet()
 
-        val readChapterNumbers = getChaptersByMangaId.await(manga.id)
-            .asSequence()
-            .filter { it.read && it.isRecognizedNumber }
-            .map { it.chapterNumber }
+            newChapters.filterNot { it.chapterNumber in readChapterNumbers }
+        } else {
+            newChapters
+        }
+
+        val readingWindow = downloadPreferences.downloadNewReadingWindow.get()
+        if (readingWindow <= 0 || chapters.isEmpty()) return chapters
+
+        // Canonical reading order (oldest to newest), independent of how the user sorted the chapter list:
+        // sources list chapters newest first, so the lowest sourceOrder is the newest chapter.
+        val inReadingOrder = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true)
+            .sortedByDescending { it.sourceOrder }
+        val openedChapterIds = getHistory.await(manga.id)
+            .map { it.chapterId }
             .toSet()
-
-        return newChapters.filterNot { it.chapterNumber in readChapterNumbers }
+        val allowedIds = readingWindowChapterIds(inReadingOrder, openedChapterIds, readingWindow)
+        val selected = chapters.filter { it.id in allowedIds }
+        if (selected.size != chapters.size) {
+            logcat(LogPriority.INFO) {
+                "Reading window ($readingWindow) skipped ${chapters.size - selected.size} of ${chapters.size} " +
+                    "new chapters for manga ${manga.id}"
+            }
+        }
+        return selected
     }
 
     /**
