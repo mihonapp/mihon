@@ -346,7 +346,6 @@ private val spec = materialFadeThroughIn(
     durationMillis = TabFadeDuration,
 ) togetherWith materialFadeThroughOut(durationMillis = TabFadeDuration)
 
-// Home screen
 private val TABS: List<TopLevelRoute> = listOf(
     TopLevelRoute.Library,
     TopLevelRoute.Updates,

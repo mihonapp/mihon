@@ -105,12 +105,20 @@ fun NavigatorDisplay(
         defaultPredictivePopTransitionSpec(),
     entryProvider: (NavKey) -> NavEntry<NavKey>,
 ) {
-    val entries = rememberDecoratedNavEntries(
-        // Keyed by position so equal routes don't share state; stable as the navigator only changes the top
-        entries = navigator.backStack.mapIndexed { index, route ->
+    val routes = navigator.backStack.toList()
+    // Remembered like NavDisplay does, as new entries make a new scene and restart the transition
+    val navEntries = remember(routes) {
+        val counts = mutableMapOf<Any, Int>()
+        routes.map { route ->
             val entry = entryProvider(route)
-            NavEntry(route, "$index:${entry.contentKey}", entry.metadata) { entry.Content() }
-        },
+            val count = (counts[entry.contentKey] ?: 0) + 1
+            counts[entry.contentKey] = count
+            if (count == 1) return@map entry
+            NavEntry(route, contentKey = "${entry.contentKey}#$count", metadata = entry.metadata) { entry.Content() }
+        }
+    }
+    val entries = rememberDecoratedNavEntries(
+        entries = navEntries,
         entryDecorators = entryDecorators + rememberLeavingEntryInputNavEntryDecorator(),
     )
     NavDisplay(

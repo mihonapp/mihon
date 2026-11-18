@@ -65,7 +65,6 @@ fun EntryProviderScope<NavKey>.appEntries() {
         }
     }
 
-    // Entry
     entry<MangaNotesRoute> { route ->
         MangaNotesScreen(route.mangaId)
     }
@@ -84,17 +83,14 @@ fun EntryProviderScope<NavKey>.appEntries() {
         )
     }
 
-    // Library tab
     entry<GlobalSearchRoute> { route ->
         GlobalSearchScreen(route.searchQuery, route.extensionFilter)
     }
 
-    // Updates tab
     entry<UpcomingRoute> {
         UpcomingScreen()
     }
 
-    // Browse tab
     entry<BrowseSourceRoute> { route ->
         LocalAssistContentManager.current.Provide(route) {
             BrowseSourceScreen(route.sourceId, route.listingQuery)
@@ -128,7 +124,6 @@ fun EntryProviderScope<NavKey>.appEntries() {
         SourcePreferencesScreen(route.sourceId)
     }
 
-    // More tab
     entry<CategoryRoute> {
         CategoryScreen()
     }
@@ -156,7 +151,6 @@ fun EntryProviderScope<NavKey>.appEntries() {
         SupportUsScreen()
     }
 
-    // Settings
     entry<AboutRoute> {
         AboutScreen()
     }
@@ -191,7 +185,6 @@ fun EntryProviderScope<NavKey>.appEntries() {
         WorkerInfoScreen()
     }
 
-    // Searchable settings
     entry<SettingsAdvancedScreen> {
         SettingsAdvancedScreen.Content()
     }

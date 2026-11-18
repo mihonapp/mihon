@@ -16,7 +16,6 @@ data class WebViewRoute(
     val sourceId: Long? = null,
 ) : NavKey
 
-// Entry
 @Serializable
 data class MangaNotesRoute(val mangaId: Long) : NavKey
 
@@ -33,18 +32,15 @@ data class TrackInfoDialogRoute(
     val sourceId: Long,
 ) : NavKey
 
-// Library tab
 @Serializable
 data class GlobalSearchRoute(
     val searchQuery: String = "",
     val extensionFilter: String? = null,
 ) : NavKey
 
-// Updates tab
 @Serializable
 data object UpcomingRoute : NavKey
 
-// Browse tab
 @Serializable
 data class BrowseSourceRoute(
     val sourceId: Long,
@@ -87,7 +83,6 @@ data object SourcesFilterRoute : NavKey
 @Serializable
 data class SourcePreferencesRoute(val sourceId: Long) : NavKey
 
-// More tab
 @Serializable
 data object CategoryRoute : NavKey
 
@@ -111,7 +106,6 @@ data object StatsRoute : NavKey
 @Serializable
 data object SupportUsRoute : NavKey
 
-// Settings
 @Serializable
 data object AboutRoute : NavKey
 
