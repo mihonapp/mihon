@@ -8,7 +8,8 @@ CREATE TABLE extension_store(
     contact_website TEXT NOT NULL,
     contact_discord TEXT,
     is_legacy INTEGER AS Boolean NOT NULL,
-    extension_list_url TEXT
+    extension_list_url TEXT,
+    is_enabled INTEGER AS Boolean NOT NULL DEFAULT 1
 );
 
 contains:
@@ -17,8 +18,15 @@ SELECT EXISTS(SELECT 0 FROM extension_store WHERE index_url = :indexUrl);
 getAll:
 SELECT
     index_url, name, badge_label, signing_key,
-    contact_website, contact_discord, is_legacy, extension_list_url
+    contact_website, contact_discord, is_legacy, extension_list_url, is_enabled
 FROM extension_store;
+
+getEnabled:
+SELECT
+    index_url, name, badge_label, signing_key,
+    contact_website, contact_discord, is_legacy, extension_list_url, is_enabled
+FROM extension_store
+WHERE is_enabled = 1;
 
 getCount:
 SELECT count(*)
@@ -27,11 +35,11 @@ FROM extension_store;
 upsert:
 INSERT INTO extension_store(
     index_url, name, badge_label, signing_key, contact_website, contact_discord, is_legacy,
-    extension_list_url
+    extension_list_url, is_enabled
 )
 VALUES (
     :indexUrl, :name, :badgeLabel, :signingKey, :contactWebsite, :contactDiscord, :isLegacy,
-    :extensionListUrl
+    :extensionListUrl, :isEnabled
 )
 ON CONFLICT(index_url) DO UPDATE SET
     name = excluded.name,
@@ -41,6 +49,11 @@ ON CONFLICT(index_url) DO UPDATE SET
     contact_discord = excluded.contact_discord,
     is_legacy = excluded.is_legacy,
     extension_list_url = excluded.extension_list_url;
+
+setEnabled:
+UPDATE extension_store
+SET is_enabled = :isEnabled
+WHERE index_url = :indexUrl;
 
 delete:
 DELETE FROM extension_store

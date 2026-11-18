@@ -8,6 +8,7 @@ data class ExtensionStore(
     val contact: Contact,
     val isLegacy: Boolean,
     val extensionListUrl: String?,
+    val isEnabled: Boolean = true,
 ) {
     data class Contact(
         val website: String,

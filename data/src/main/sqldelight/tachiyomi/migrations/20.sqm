@@ -1,0 +1,2 @@
+-- Add is_enabled to extension_store to persist whether each extension is enabled.
+ALTER TABLE extension_store ADD COLUMN is_enabled INTEGER AS Boolean NOT NULL DEFAULT 1;
