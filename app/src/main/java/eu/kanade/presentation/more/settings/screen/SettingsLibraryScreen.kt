@@ -140,6 +140,18 @@ object SettingsLibraryScreen : SearchableSettings {
             )
         }
 
+        val autoUpdateTimeOfDayPref = libraryPreferences.autoUpdateTimeOfDay
+        val autoUpdateTimeOfDay by autoUpdateTimeOfDayPref.collectAsState()
+
+        val timeOfDayFormatted = remember(autoUpdateTimeOfDay) {
+            val hours = autoUpdateTimeOfDay / 60
+            val minutes = autoUpdateTimeOfDay % 60
+            val time = java.time.LocalTime.of(hours, minutes)
+            time.format(java.time.format.DateTimeFormatter.ofPattern("hh:mm a"))
+        }
+
+        val customLabel = "${stringResource(MR.strings.action_filter_interval_custom)} ($timeOfDayFormatted)"
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_library_update),
             preferenceItems = listOf(
@@ -147,6 +159,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     preference = autoUpdateIntervalPref,
                     entries = mapOf(
                         0 to stringResource(MR.strings.update_never),
+                        -1 to customLabel,
                         12 to stringResource(MR.strings.update_12hour),
                         24 to stringResource(MR.strings.update_24hour),
                         48 to stringResource(MR.strings.update_48hour),
@@ -154,8 +167,22 @@ object SettingsLibraryScreen : SearchableSettings {
                         168 to stringResource(MR.strings.update_weekly),
                     ),
                     title = stringResource(MR.strings.pref_library_update_interval),
-                    onValueChanged = {
-                        LibraryUpdateWorker.setupTask(context, it)
+                    onValueChanged = { newValue ->
+                        if (newValue == -1) {
+                            val currentMinutes = autoUpdateTimeOfDayPref.get()
+                            android.app.TimePickerDialog(
+                                context,
+                                { _, hourOfDay, minute ->
+                                    autoUpdateTimeOfDayPref.set(hourOfDay * 60 + minute)
+                                    LibraryUpdateWorker.setupTask(context, -1)
+                                },
+                                currentMinutes / 60,
+                                currentMinutes % 60,
+                                false,
+                            ).show()
+                        } else {
+                            LibraryUpdateWorker.setupTask(context, newValue)
+                        }
                         true
                     },
                 ),
@@ -168,7 +195,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     ),
                     title = stringResource(MR.strings.pref_library_update_restriction),
                     subtitle = stringResource(MR.strings.restrictions),
-                    visible = autoUpdateInterval > 0,
+                    visible = autoUpdateInterval != 0,
                     onValueChanged = {
                         // Post to event looper to allow the preference to be updated.
                         ContextCompat.getMainExecutor(context).execute {
