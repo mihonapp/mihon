@@ -81,6 +81,7 @@ import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
 import eu.kanade.presentation.more.AppMigratingScreen
+import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoreDeepLinkEvent
 import eu.kanade.presentation.more.settings.screen.openSettings
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -727,7 +728,7 @@ class MainActivity : BaseActivity() {
                 else if (intent.isAddExtensionStoreIntent()) {
                     intent.data?.getQueryParameter("url")?.let { repoUrl ->
                         navigator.replaceAll(ExtensionStoresRoute)
-                        resultEventBus.sendResult(ExtensionStoresRoute.DEEP_LINK_RESULT_KEY, repoUrl)
+                        resultEventBus.sendResult(ExtensionStoreDeepLinkEvent(repoUrl))
                     }
                 }
                 null
@@ -736,7 +737,7 @@ class MainActivity : BaseActivity() {
         }
 
         if (tabToOpen != null) {
-            resultEventBus.sendResult(tabToOpen)
+            resultEventBus.sendResult<TabEvent>(tabToOpen)
         }
 
         ready = true

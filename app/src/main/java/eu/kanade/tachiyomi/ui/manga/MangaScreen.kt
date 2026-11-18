@@ -36,9 +36,8 @@ import eu.kanade.presentation.more.settings.screen.openSettings
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSearchEventKey
-import eu.kanade.tachiyomi.ui.browse.source.browse.browseSearchGenreEventKey
-import eu.kanade.tachiyomi.ui.home.LibrarySearchEventKey
+import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSearchEvent
+import eu.kanade.tachiyomi.ui.home.TabEvent
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toShareIntent
@@ -357,17 +356,11 @@ private fun performSearch(
     when (navigator.previous) {
         is HomeRoute -> {
             navigator.pop()
-            resultEventBus.sendResult(
-                resultKey = LibrarySearchEventKey,
-                result = query,
-            )
+            resultEventBus.sendResult<TabEvent>(TabEvent.Library(query = query))
         }
         is BrowseSourceRoute -> {
             navigator.pop()
-            resultEventBus.sendResult(
-                resultKey = BrowseSearchEventKey,
-                result = query,
-            )
+            resultEventBus.sendResult(BrowseSearchEvent(query))
         }
     }
 }
@@ -385,10 +378,7 @@ private fun performGenreSearch(
 ) {
     if (navigator.previous is BrowseSourceRoute && source is HttpSource) {
         navigator.pop()
-        resultEventBus.sendResult(
-            resultKey = browseSearchGenreEventKey,
-            result = genreName,
-        )
+        resultEventBus.sendResult(BrowseSearchEvent(genreName, genre = true))
     } else {
         performSearch(navigator, resultEventBus, genreName, global = false)
     }

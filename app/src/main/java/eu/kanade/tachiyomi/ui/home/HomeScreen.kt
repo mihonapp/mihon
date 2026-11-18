@@ -35,11 +35,11 @@ import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
 import eu.kanade.presentation.util.rememberAnimatedVectorPainter
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.browse.BrowseSwitchToExtensionEventKey
+import eu.kanade.tachiyomi.ui.browse.BrowseShowExtensionsEvent
 import eu.kanade.tachiyomi.ui.browse.BrowseTab
 import eu.kanade.tachiyomi.ui.history.HistoryTab
+import eu.kanade.tachiyomi.ui.library.LibrarySearchEvent
 import eu.kanade.tachiyomi.ui.library.LibraryTab
-import eu.kanade.tachiyomi.ui.library.LibraryTabSearchEventKey
 import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
 import kotlinx.coroutines.flow.collectLatest
@@ -205,26 +205,16 @@ fun HomeScreen() {
         )
     }
 
-    ResultEffect<String>(resultKey = LibrarySearchEventKey) {
-        tabNavigator.replaceAll(TopLevelRoute.Library)
-        resultEventBus.sendResult(
-            resultKey = LibraryTabSearchEventKey,
-            result = it,
-        )
-    }
-
     ResultEffect<TabEvent> {
         val route = when (it) {
-            is TabEvent.Library -> TopLevelRoute.Library
+            is TabEvent.Library -> {
+                if (it.query != null) resultEventBus.sendResult(LibrarySearchEvent(it.query))
+                TopLevelRoute.Library
+            }
             TabEvent.Updates -> TopLevelRoute.Updates
             TabEvent.History -> TopLevelRoute.History
             is TabEvent.Browse -> {
-                if (it.toExtensions) {
-                    resultEventBus.sendResult(
-                        resultKey = BrowseSwitchToExtensionEventKey,
-                        result = Unit,
-                    )
-                }
+                if (it.toExtensions) resultEventBus.sendResult(BrowseShowExtensionsEvent)
                 TopLevelRoute.Browse
             }
             is TabEvent.More -> TopLevelRoute.More
@@ -334,15 +324,12 @@ private fun tabBadge(tab: TopLevelRoute): (@Composable () -> Unit)? {
 }
 
 sealed interface TabEvent {
-    data class Library(val mangaIdToOpen: Long? = null) : TabEvent
+    data class Library(val mangaIdToOpen: Long? = null, val query: String? = null) : TabEvent
     data object Updates : TabEvent
     data object History : TabEvent
     data class Browse(val toExtensions: Boolean = false) : TabEvent
     data class More(val toDownloads: Boolean) : TabEvent
 }
-
-@Suppress("ConstPropertyName")
-const val LibrarySearchEventKey = "LibrarySearchEventKey"
 
 @Suppress("ConstPropertyName")
 private const val TabFadeDuration = 200

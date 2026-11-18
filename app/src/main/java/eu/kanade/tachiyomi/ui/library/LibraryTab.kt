@@ -250,8 +250,8 @@ fun LibraryTab() {
     // Lets startup be measured up to the library, not just its loading screen
     ReportDrawnWhen { !state.isLoading }
 
-    ResultEffect<String>(resultKey = LibraryTabSearchEventKey) {
-        viewModel.search(it)
+    ResultEffect<LibrarySearchEvent> {
+        viewModel.search(it.query)
     }
 
     ResultEffect<Unit>(resultKey = TopLevelRoute.Library.reselectEventKey) {
@@ -259,5 +259,4 @@ fun LibraryTab() {
     }
 }
 
-@Suppress("ConstPropertyName")
-const val LibraryTabSearchEventKey = "LibraryTabSearchEventKey"
+data class LibrarySearchEvent(val query: String)

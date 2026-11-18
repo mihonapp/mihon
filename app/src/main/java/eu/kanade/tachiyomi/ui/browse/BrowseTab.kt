@@ -48,7 +48,7 @@ fun BrowseTab() {
         (context as? MainActivity)?.ready = true
     }
 
-    ResultEffect<Unit>(resultKey = BrowseSwitchToExtensionEventKey) {
+    ResultEffect<BrowseShowExtensionsEvent> {
         state.scrollToPage(1)
     }
 
@@ -57,5 +57,4 @@ fun BrowseTab() {
     }
 }
 
-@Suppress("ConstPropertyName")
-const val BrowseSwitchToExtensionEventKey = "BrowseSwitchToExtensionEventKey"
+data object BrowseShowExtensionsEvent

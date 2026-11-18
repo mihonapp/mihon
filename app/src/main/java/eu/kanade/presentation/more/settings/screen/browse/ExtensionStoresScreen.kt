@@ -12,7 +12,6 @@ import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionSt
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoresScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
-import mihon.core.navigation.ExtensionStoresRoute
 import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
@@ -24,8 +23,8 @@ fun ExtensionStoresScreen() {
     val viewModel = metroViewModel<ExtensionStoresViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    ResultEffect<String>(resultKey = ExtensionStoresRoute.DEEP_LINK_RESULT_KEY) {
-        viewModel.addFromDeeplink(it)
+    ResultEffect<ExtensionStoreDeepLinkEvent> {
+        viewModel.addFromDeeplink(it.url)
     }
 
     if (state is ExtensionStoreScreenState.Loading) {
@@ -77,3 +76,5 @@ fun ExtensionStoresScreen() {
         }
     }
 }
+
+data class ExtensionStoreDeepLinkEvent(val url: String)

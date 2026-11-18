@@ -284,17 +284,9 @@ fun BrowseSourceScreen(
         else -> {}
     }
 
-    ResultEffect<String>(resultKey = BrowseSearchEventKey) {
-        viewModel.search(it)
-    }
-
-    ResultEffect<String>(resultKey = browseSearchGenreEventKey) {
-        viewModel.searchGenre(it)
+    ResultEffect<BrowseSearchEvent> {
+        if (it.genre) viewModel.searchGenre(it.query) else viewModel.search(it.query)
     }
 }
 
-@Suppress("ConstPropertyName")
-const val BrowseSearchEventKey = "BrowseSearchEventKey"
-
-@Suppress("ConstPropertyName")
-const val browseSearchGenreEventKey = "BrowseSearchGenreEventKey"
+data class BrowseSearchEvent(val query: String, val genre: Boolean = false)
