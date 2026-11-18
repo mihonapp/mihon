@@ -22,6 +22,7 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -51,7 +52,6 @@ import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.util.LocalNavigator
 import mihon.core.navigation.util.Navigator
 import mihon.core.navigation.util.NavigatorDisplay
-import mihon.core.navigation.util.TabOptions
 import mihon.core.navigation.util.rememberNavigator
 import mihon.presentation.core.util.isTabletUi
 import soup.compose.material.motion.animation.materialFadeThroughIn
@@ -335,6 +335,11 @@ sealed interface TabEvent {
 private const val TabFadeDuration = 200
 
 data class ShowBottomNavEvent(val visible: Boolean)
+
+data class TabOptions(
+    val title: String,
+    val icon: Painter,
+)
 
 private val spec = materialFadeThroughIn(
     initialScale = 1f,
