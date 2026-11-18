@@ -1,5 +1,6 @@
 package mihon.domain.source.interactor
 
+import android.content.Context
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.model.toSChapter
@@ -9,24 +10,32 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import mihon.domain.source.models.RemoteMangaUpdate
+import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaRemoteUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.updates.interactor.DeleteMangaUpdateError
+import tachiyomi.domain.updates.interactor.InsertMangaUpdateError
+import tachiyomi.i18n.MR
 import tachiyomi.source.local.isLocal
 import kotlin.time.Clock
 import kotlin.time.Instant
 
 @Inject
 class UpdateMangaFromRemote(
+    private val context: Context,
     private val sourceManager: SourceManager,
     private val chapterRepository: ChapterRepository,
     private val mangaRepository: MangaRepository,
@@ -34,6 +43,8 @@ class UpdateMangaFromRemote(
     private val coverCache: CoverCache,
     private val libraryPreferences: LibraryPreferences,
     private val downloadManager: DownloadManager,
+    private val deleteMangaUpdateError: DeleteMangaUpdateError,
+    private val insertMangaUpdateError: InsertMangaUpdateError,
 ) {
     suspend operator fun invoke(
         manga: Manga,
@@ -60,7 +71,7 @@ class UpdateMangaFromRemote(
         manualFetch: Boolean = false,
         fetchWindow: ClosedRange<Instant>? = null,
     ): Result<RemoteMangaUpdate> = withContext(Dispatchers.IO) {
-        try {
+        val result = try {
             val chapters = chapterRepository.getChapterByMangaId(manga.id)
                 .sortedBy { it.sourceOrder }
             val update = source.getMangaUpdate(
@@ -70,20 +81,48 @@ class UpdateMangaFromRemote(
                 fetchChapters = fetchChapters,
             )
             awaitUpdateFromSource(manga, update.manga, manualFetch)
-            val newChapters = syncChaptersWithSource.await(
-                rawSourceChapters = update.chapters,
-                manga = manga,
-                source = source,
-                manualFetch = manualFetch,
-                fetchWindow = fetchWindow,
-            )
+            val newChapters = if (!fetchChapters && chapters.isEmpty() && update.chapters.isEmpty()) {
+                emptyList()
+            } else {
+                syncChaptersWithSource.await(
+                    rawSourceChapters = update.chapters,
+                    manga = manga,
+                    source = source,
+                    manualFetch = manualFetch,
+                    fetchWindow = fetchWindow,
+                )
+            }
             val updatedManga = mangaRepository.getMangaById(manga.id)
 
             Result.success(RemoteMangaUpdate(manga = updatedManga, newChapters = newChapters))
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             Result.failure(e)
         }
+
+        if (!fetchChapters) return@withContext result
+
+        try {
+            val error = result.exceptionOrNull()
+            if (error == null) {
+                deleteMangaUpdateError.await(manga.id)
+            } else {
+                val message = when (error) {
+                    is NoChaptersException -> context.stringResource(MR.strings.no_chapters_error)
+                    is SourceNotInstalledException -> context.stringResource(MR.strings.loader_not_implemented_error)
+                    else -> error.message
+                }
+                insertMangaUpdateError.await(manga.id, message, Clock.System.now())
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to update stored error for manga ${manga.title}" }
+        }
+
+        result
     }
 
     private suspend fun awaitUpdateFromSource(
