@@ -43,7 +43,7 @@ import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import eu.kanade.tachiyomi.ui.stats.StatsScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.core.navigation.util.OverlaySheetScene
 import mihon.core.navigation.util.TwoPaneSettingsScene
 import mihon.feature.migration.config.MigrationConfigScreen
@@ -74,12 +74,12 @@ fun EntryProviderScope<NavKey>.appEntries() {
         MangaScreen(route.mangaId, route.fromSource)
     }
     entry<TrackInfoDialogRoute>(metadata = OverlaySheetScene.overlaySheet()) { route ->
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
         TrackInfoDialog(
             mangaId = route.mangaId,
             mangaTitle = route.mangaTitle,
             sourceId = route.sourceId,
-            onDismissRequest = { backStack.removeLastOrNull() },
+            onDismissRequest = { navigator.pop() },
         )
     }
 

@@ -38,7 +38,7 @@ import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.GlobalSearchRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationConfigRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
@@ -55,7 +55,7 @@ import tachiyomi.source.local.isLocal
 
 @Composable
 fun LibraryTab() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val resultBus = LocalResultEventBus.current
     val scope = rememberCoroutineScope()
@@ -101,7 +101,7 @@ fun LibraryTab() {
                     scope.launch {
                         val randomItem = viewModel.getRandomLibraryItemForCurrentCategory()
                         if (randomItem != null) {
-                            backStack.add(MangaRoute(randomItem.libraryManga.manga.id))
+                            navigator.push(MangaRoute(randomItem.libraryManga.manga.id))
                         } else {
                             snackbarHostState.showSnackbar(
                                 context.stringResource(MR.strings.information_no_entries_found),
@@ -127,7 +127,7 @@ fun LibraryTab() {
                 onMigrateClicked = {
                     val selection = state.selection
                     viewModel.clearSelection()
-                    backStack.add(MigrationConfigRoute(selection))
+                    navigator.push(MigrationConfigRoute(selection))
                 },
             )
         },
@@ -161,7 +161,7 @@ fun LibraryTab() {
                     hasActiveFilters = state.hasActiveFilters,
                     showPageTabs = state.showCategoryTabs || !state.searchQuery.isNullOrEmpty(),
                     onChangeCurrentPage = viewModel::updateActiveCategoryIndex,
-                    onClickManga = { backStack.add(MangaRoute(it)) },
+                    onClickManga = { navigator.push(MangaRoute(it)) },
                     onContinueReadingClicked = { it: LibraryManga ->
                         scope.launch {
                             val chapter = viewModel.getNextUnreadChapter(it.manga)
@@ -182,7 +182,7 @@ fun LibraryTab() {
                     },
                     onRefresh = { onClickRefresh(state.activeCategory) },
                     onGlobalSearchClicked = {
-                        backStack.add(GlobalSearchRoute(viewModel.state.value.searchQuery ?: ""))
+                        navigator.push(GlobalSearchRoute(viewModel.state.value.searchQuery ?: ""))
                     },
                     getItemCountForCategory = { state.getItemCountForCategory(it) },
                     getDisplayMode = { viewModel.getDisplayMode() },
@@ -208,7 +208,7 @@ fun LibraryTab() {
                 onDismissRequest = onDismissRequest,
                 onEditCategories = {
                     viewModel.clearSelection()
-                    backStack.add(CategoryRoute)
+                    navigator.push(CategoryRoute)
                 },
                 onConfirm = { include, exclude ->
                     viewModel.clearSelection()

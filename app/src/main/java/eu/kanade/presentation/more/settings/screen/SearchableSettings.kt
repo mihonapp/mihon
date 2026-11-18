@@ -8,7 +8,7 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
 import mihon.core.navigation.util.LocalBackButtonVisibility
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 
 interface SearchableRoute : NavKey, SearchableSettings
 
@@ -27,13 +27,13 @@ interface SearchableSettings {
 
     @Composable
     fun Content() {
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
         val backVisibility = LocalBackButtonVisibility.current
 
         PreferenceScaffold(
             titleRes = getTitleRes(),
             onBackPressed = {
-                backStack.removeLastOrNull()
+                navigator.pop()
                 Unit
             }.takeIf { backVisibility },
             actions = { AppBarAction() },

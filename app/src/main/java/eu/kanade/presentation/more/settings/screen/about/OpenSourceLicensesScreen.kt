@@ -9,19 +9,19 @@ import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.variant.LibraryDetailMode
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.tachiyomi.R
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun OpenSourceLicensesScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     Scaffold(
         topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(MR.strings.licenses),
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 scrollBehavior = scrollBehavior,
             )
         },

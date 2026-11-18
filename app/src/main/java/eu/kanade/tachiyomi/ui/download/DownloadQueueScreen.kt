@@ -35,7 +35,7 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.download.DownloadQueueList
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Sort
 import mihon.icons.materialsymbols.roundedfilled.Pause
@@ -48,7 +48,7 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 
 @Composable
 fun DownloadQueueScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = metroViewModel<DownloadQueueViewModel>()
     val downloadList by viewModel.state.collectAsStateWithLifecycle()
     val downloadCount by remember {
@@ -102,7 +102,7 @@ fun DownloadQueueScreen() {
                         }
                     }
                 },
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 actions = {
                     if (downloadList.isNotEmpty()) {
                         var sortExpanded by remember { mutableStateOf(false) }

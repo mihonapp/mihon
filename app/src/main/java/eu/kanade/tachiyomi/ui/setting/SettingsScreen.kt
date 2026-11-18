@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.components.AppBar
@@ -42,8 +41,8 @@ import mihon.core.navigation.AboutRoute
 import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.SettingsSearchRoute
 import mihon.core.navigation.domain.SettingsDestination
-import mihon.core.navigation.util.LocalBackStack
-import mihon.core.navigation.util.replace
+import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.util.Navigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ChromeReaderMode
 import mihon.icons.materialsymbols.rounded.Code
@@ -61,7 +60,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 
-fun NavBackStack<NavKey>.addSettingsRoute(settingsRoute: SettingsRoute, isTabletUi: Boolean) {
+fun Navigator.addSettingsRoute(settingsRoute: SettingsRoute, isTabletUi: Boolean) {
     val route = when (settingsRoute.settingsDestination) {
         SettingsDestination.About -> AboutRoute
         SettingsDestination.DataAndStorage -> SettingsDataRoute
@@ -71,17 +70,17 @@ fun NavBackStack<NavKey>.addSettingsRoute(settingsRoute: SettingsRoute, isTablet
     }
     if (route != null) {
         if (isTabletUi) {
-            add(SettingsRoute())
+            push(SettingsRoute())
         }
-        add(route)
+        push(route)
     } else {
-        add(SettingsRoute())
+        push(SettingsRoute())
     }
 }
 
 @Composable
 fun SettingsScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val isTabletUi = isTabletUi()
 
     val containerColor = if (isTabletUi) getPalerSurface() else MaterialTheme.colorScheme.surface
@@ -93,8 +92,8 @@ fun SettingsScreen() {
             AppBar(
                 title = stringResource(MR.strings.label_settings),
                 navigateUp = {
-                    if (isTabletUi) backStack.removeLastOrNull()
-                    backStack.removeLastOrNull()
+                    if (isTabletUi) navigator.pop()
+                    navigator.pop()
                 },
                 actions = {
                     AppBarActions(
@@ -102,7 +101,7 @@ fun SettingsScreen() {
                             AppBar.Action(
                                 title = stringResource(MR.strings.action_search),
                                 icon = MaterialSymbols.Rounded.Search,
-                                onClick = { backStack.navigate(SettingsSearchRoute, isTabletUi) },
+                                onClick = { navigator.navigate(SettingsSearchRoute, isTabletUi) },
                             ),
                         ),
                     )
@@ -114,7 +113,7 @@ fun SettingsScreen() {
         content = { contentPadding ->
             val state = rememberLazyListState()
             val indexSelected = if (isTabletUi) {
-                items.indexOfFirst { it.route == backStack.last() }
+                items.indexOfFirst { it.route == navigator.current }
                     .takeIf { it > -1 } // Don't trigger if route for right side hasn't been added yet
                     ?.also {
                         LaunchedEffect(Unit) {
@@ -161,7 +160,7 @@ fun SettingsScreen() {
                             title = stringResource(item.titleRes),
                             subtitle = item.formatSubtitle(),
                             icon = item.icon,
-                            onPreferenceClick = { backStack.navigate(item.route, isTabletUi) },
+                            onPreferenceClick = { navigator.navigate(item.route, isTabletUi) },
                         )
                     }
                 }
@@ -170,11 +169,11 @@ fun SettingsScreen() {
     )
 }
 
-fun NavBackStack<NavKey>.navigate(route: NavKey, isTabletUi: Boolean) {
+fun Navigator.navigate(route: NavKey, isTabletUi: Boolean) {
     if (isTabletUi) {
         replace(route)
     } else {
-        add(route)
+        push(route)
     }
 }
 

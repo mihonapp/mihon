@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.ExtensionStoresRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.domain.extension.model.ContentWarning
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
@@ -29,7 +29,7 @@ object SettingsBrowseRoute : SearchableRoute {
     @Composable
     override fun getPreferences(): List<Preference> {
         val context = LocalContext.current
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
 
         val sourcePreferences = remember { context.appGraph.sourcePreferences }
         val getExtensionStoreCountAsFlow = remember { context.appGraph.getExtensionStoreCountAsFlow }
@@ -48,7 +48,7 @@ object SettingsBrowseRoute : SearchableRoute {
                         title = stringResource(MR.strings.extensionStores),
                         subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.toInt(), reposCount),
                         onClick = {
-                            backStack.add(ExtensionStoresRoute())
+                            navigator.push(ExtensionStoresRoute())
                         },
                     ),
                 ),

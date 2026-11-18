@@ -21,20 +21,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mihon.core.metro.AppCoroutineScope
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.domain.manga.interactor.UpdateMangaNotes
 import tachiyomi.domain.manga.model.Manga
 
 @Composable
 fun MangaNotesScreen(manga: Manga) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val viewModel = assistedMetroViewModel<MangaNotesViewModel, MangaNotesViewModel.Factory> { create(manga = manga) }
     val state by viewModel.state.collectAsState()
 
     MangaNotesScreen(
         state = state,
-        navigateUp = backStack::removeLastOrNull,
+        navigateUp = navigator::pop,
         onUpdate = viewModel::updateNotes,
     )
 }

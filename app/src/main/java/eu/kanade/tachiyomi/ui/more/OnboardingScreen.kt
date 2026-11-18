@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import mihon.app.di.appGraph
 import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.domain.SettingsDestination
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.presentation.core.util.isTabletUi
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -20,7 +20,7 @@ import tachiyomi.presentation.core.util.collectAsState
 @Composable
 fun OnboardingScreen() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val isTabletUi = isTabletUi()
 
     val basePreferences = remember { context.appGraph.basePreferences }
@@ -28,7 +28,7 @@ fun OnboardingScreen() {
 
     val finishOnboarding: () -> Unit = {
         basePreferences.shownOnboardingFlow.set(true)
-        backStack.removeLastOrNull()
+        navigator.pop()
     }
 
     val restoreSettingKey = stringResource(SettingsDataRoute.restorePreferenceKeyString)
@@ -42,7 +42,7 @@ fun OnboardingScreen() {
         onRestoreBackup = {
             finishOnboarding()
             SearchableSettings.highlightKey = restoreSettingKey
-            backStack.addSettingsRoute(SettingsRoute(SettingsDestination.DataAndStorage), isTabletUi)
+            navigator.addSettingsRoute(SettingsRoute(SettingsDestination.DataAndStorage), isTabletUi)
         },
     )
 }

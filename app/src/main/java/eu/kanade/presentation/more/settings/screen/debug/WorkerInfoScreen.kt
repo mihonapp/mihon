@@ -42,7 +42,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import mihon.app.di.appGraph
 import mihon.core.navigation.WorkerInfoRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.ContentCopy
 import tachiyomi.i18n.MR
@@ -56,7 +56,7 @@ import kotlin.time.Instant
 @Composable
 fun WorkerInfoScreen() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val viewModel = metroViewModel<WorkerInfoViewModel>()
 
@@ -73,7 +73,7 @@ fun WorkerInfoScreen() {
         topBar = {
             AppBar(
                 title = WorkerInfoRoute.TITLE,
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 actions = {
                     AppBarActions(
                         listOf(

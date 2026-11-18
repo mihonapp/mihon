@@ -30,12 +30,12 @@ import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.StatsRoute
 import mihon.core.navigation.SupportUsRoute
 import mihon.core.navigation.domain.SettingsDestination
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.presentation.core.util.isTabletUi
 
 @Composable
 fun MoreTab() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val isTabletUi = isTabletUi()
     val viewModel = metroViewModel<MoreViewModel>()
     val downloadQueueState by viewModel.downloadQueueState.collectAsState()
@@ -45,19 +45,19 @@ fun MoreTab() {
         onDownloadedOnlyChange = { viewModel.downloadedOnly = it },
         incognitoMode = viewModel.incognitoMode,
         onIncognitoModeChange = { viewModel.incognitoMode = it },
-        onClickDownloadQueue = { backStack.add(DownloadQueueRoute) },
-        onClickCategories = { backStack.add(CategoryRoute) },
-        onClickStats = { backStack.add(StatsRoute) },
+        onClickDownloadQueue = { navigator.push(DownloadQueueRoute) },
+        onClickCategories = { navigator.push(CategoryRoute) },
+        onClickStats = { navigator.push(StatsRoute) },
         onClickDataAndStorage = {
-            backStack.addSettingsRoute(SettingsRoute(SettingsDestination.DataAndStorage), isTabletUi)
+            navigator.addSettingsRoute(SettingsRoute(SettingsDestination.DataAndStorage), isTabletUi)
         },
-        onClickSettings = { backStack.addSettingsRoute(SettingsRoute(), isTabletUi) },
-        onClickSupport = { backStack.add(SupportUsRoute) },
-        onClickAbout = { backStack.addSettingsRoute(SettingsRoute(SettingsDestination.About), isTabletUi) },
+        onClickSettings = { navigator.addSettingsRoute(SettingsRoute(), isTabletUi) },
+        onClickSupport = { navigator.push(SupportUsRoute) },
+        onClickAbout = { navigator.addSettingsRoute(SettingsRoute(SettingsDestination.About), isTabletUi) },
     )
 
     ResultEffect<Unit>(resultKey = TabReselectEventKey) {
-        backStack.addSettingsRoute(SettingsRoute(), isTabletUi)
+        navigator.addSettingsRoute(SettingsRoute(), isTabletUi)
     }
 }
 

@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.more.NewUpdateScreen
 import eu.kanade.tachiyomi.util.system.openInBrowser
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 
 @Composable
 fun NewUpdateScreen(
@@ -16,7 +16,7 @@ fun NewUpdateScreen(
     releaseLink: String,
     downloadLink: String,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val viewModel =
         assistedMetroViewModel<NewUpdateScreenModel, NewUpdateScreenModel.Factory> {
@@ -38,10 +38,10 @@ fun NewUpdateScreen(
                 else -> Unit
             }
         },
-        onRejectUpdate = backStack::removeLastOrNull,
+        onRejectUpdate = navigator::pop,
         onSkipUpdate = {
             viewModel.skipUpdate(versionName)
-            backStack.removeLastOrNull()
+            navigator.pop()
         },
     )
 }

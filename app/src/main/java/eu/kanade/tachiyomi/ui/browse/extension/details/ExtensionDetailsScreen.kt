@@ -7,7 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.ExtensionDetailsScreen
 import mihon.core.navigation.SourcePreferencesRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -20,19 +20,19 @@ fun ExtensionDetailsScreen(pkgName: String) {
         }
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     when (val state = state) {
         ExtensionDetailsViewModel.State.Loading -> LoadingScreen()
         ExtensionDetailsViewModel.State.Uninstalled -> {
-            LaunchedEffect(Unit) { backStack.removeLastOrNull() }
+            LaunchedEffect(Unit) { navigator.pop() }
             EmptyScreen(MR.strings.empty_screen)
         }
         is ExtensionDetailsViewModel.State.Success -> {
             ExtensionDetailsScreen(
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 state = state,
-                onClickSourcePreferences = { backStack.add(SourcePreferencesRoute(it)) },
+                onClickSourcePreferences = { navigator.push(SourcePreferencesRoute(it)) },
                 onClickEnableAll = { viewModel.toggleSources(true) },
                 onClickDisableAll = { viewModel.toggleSources(false) },
                 onClickClearCookies = viewModel::clearCookies,

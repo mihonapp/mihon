@@ -9,11 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
 import eu.kanade.presentation.components.AdaptiveSheet
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.util.NavigatorDisplay
+import mihon.core.navigation.util.rememberNavigator
 
 @Composable
 fun TrackInfoDialog(
@@ -22,16 +22,15 @@ fun TrackInfoDialog(
     sourceId: Long,
     onDismissRequest: () -> Unit,
 ) {
-    val sheetBackStack = rememberNavBackStack(TrackInfoDialogHomeRoute(mangaId, mangaTitle, sourceId))
+    val sheetNavigator = rememberNavigator(TrackInfoDialogHomeRoute(mangaId, mangaTitle, sourceId))
 
-    CompositionLocalProvider(LocalBackStack provides sheetBackStack) {
+    CompositionLocalProvider(LocalNavigator provides sheetNavigator) {
         AdaptiveSheet(
             onDismissRequest = onDismissRequest,
-            enableImplicitDismiss = sheetBackStack.size == 1,
+            enableImplicitDismiss = !sheetNavigator.canPop,
         ) {
-            NavDisplay(
-                backStack = sheetBackStack,
-                onBack = { sheetBackStack.removeLastOrNull() },
+            NavigatorDisplay(
+                navigator = sheetNavigator,
                 sizeTransform = SizeTransform(),
                 transitionSpec = { fade },
                 popTransitionSpec = { fade },

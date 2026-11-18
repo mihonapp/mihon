@@ -21,14 +21,14 @@ import kotlinx.coroutines.flow.collectLatest
 import mihon.core.navigation.DownloadQueueRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.UpcomingRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 
 @Composable
 fun UpdatesTab() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val resultBus = LocalResultEventBus.current
     val viewModel = metroViewModel<UpdatesViewModel>()
     val settingsViewModel = metroViewModel<UpdatesSettingsViewModel>()
@@ -38,7 +38,7 @@ fun UpdatesTab() {
         state = state,
         snackbarHostState = viewModel.snackbarHostState,
         lastUpdated = viewModel.lastUpdated,
-        onClickCover = { item -> backStack.add(MangaRoute(item.update.mangaId)) },
+        onClickCover = { item -> navigator.push(MangaRoute(item.update.mangaId)) },
         onSelectAll = viewModel::toggleAllSelection,
         onInvertSelection = viewModel::invertSelection,
         onUpdateLibrary = viewModel::updateLibrary,
@@ -51,7 +51,7 @@ fun UpdatesTab() {
             val intent = ReaderActivity.newIntent(context, it.update.mangaId, it.update.chapterId)
             context.startActivity(intent)
         },
-        onCalendarClicked = { backStack.add(UpcomingRoute) },
+        onCalendarClicked = { navigator.push(UpcomingRoute) },
         onFilterClicked = viewModel::showFilterDialog,
         hasActiveFilters = state.hasActiveFilters,
     )
@@ -104,7 +104,7 @@ fun UpdatesTab() {
     }
 
     ResultEffect<Unit>(resultKey = TabReselectEventKey) {
-        backStack.add(DownloadQueueRoute)
+        navigator.push(DownloadQueueRoute)
     }
 
     DisposableEffect(Unit) {

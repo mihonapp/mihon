@@ -59,7 +59,7 @@ import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.core.navigation.CreateBackupRoute
 import mihon.core.navigation.RestoreBackupRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
@@ -185,7 +185,7 @@ object SettingsDataRoute : SearchableRoute {
     @Composable
     private fun getBackupAndRestoreGroup(backupPreferences: BackupPreferences): Preference.PreferenceGroup {
         val context = LocalContext.current
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
         val scope = rememberCoroutineScope()
 
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp.collectAsState()
@@ -207,7 +207,7 @@ object SettingsDataRoute : SearchableRoute {
                 logcat(LogPriority.ERROR, e)
             }
 
-            backStack.add(RestoreBackupRoute(it.toString()))
+            navigator.push(RestoreBackupRoute(it.toString()))
         }
 
         return Preference.PreferenceGroup(
@@ -228,7 +228,7 @@ object SettingsDataRoute : SearchableRoute {
                                 SegmentedButton(
                                     modifier = Modifier.fillMaxHeight(),
                                     checked = false,
-                                    onCheckedChange = { backStack.add(CreateBackupRoute) },
+                                    onCheckedChange = { navigator.push(CreateBackupRoute) },
                                     shape = SegmentedButtonDefaults.itemShape(0, 2),
                                 ) {
                                     Text(stringResource(MR.strings.pref_create_backup))

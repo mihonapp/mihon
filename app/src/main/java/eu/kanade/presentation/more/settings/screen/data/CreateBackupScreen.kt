@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.LazyColumnWithAction
@@ -41,7 +41,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun CreateBackupScreen() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = metroViewModel<CreateBackupViewModel>()
     val state by viewModel.state.collectAsState()
     val scope = rememberCoroutineScope()
@@ -56,7 +56,7 @@ fun CreateBackupScreen() {
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
             )
             viewModel.createBackup(context, it)
-            backStack.removeLastOrNull()
+            navigator.pop()
         }
     }
 
@@ -64,7 +64,7 @@ fun CreateBackupScreen() {
         topBar = {
             AppBar(
                 title = stringResource(MR.strings.pref_create_backup),
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 scrollBehavior = it,
             )
         },

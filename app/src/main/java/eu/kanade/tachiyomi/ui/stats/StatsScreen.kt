@@ -7,7 +7,7 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.stats.StatsScreenContent
 import eu.kanade.presentation.more.stats.StatsScreenState
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -15,7 +15,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable
 fun StatsScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val viewModel = metroViewModel<StatsViewModel>()
     val state by viewModel.state.collectAsState()
@@ -24,7 +24,7 @@ fun StatsScreen() {
         topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(MR.strings.label_stats),
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 scrollBehavior = scrollBehavior,
             )
         },

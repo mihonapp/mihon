@@ -21,7 +21,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.coroutines.flow.collectLatest
 import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.domain.chapter.model.Chapter
@@ -29,7 +29,7 @@ import tachiyomi.i18n.MR
 
 @Composable
 fun HistoryTab() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -40,7 +40,7 @@ fun HistoryTab() {
         state = state,
         snackbarHostState = snackbarHostState,
         onSearchQueryChange = viewModel::updateSearchQuery,
-        onClickCover = { backStack.add(MangaRoute(it)) },
+        onClickCover = { navigator.push(MangaRoute(it)) },
         onClickResume = viewModel::getNextChapterForManga,
         onDialogChange = viewModel::setDialog,
         onClickFavorite = viewModel::addFavorite,
@@ -71,7 +71,7 @@ fun HistoryTab() {
                 duplicates = dialog.duplicates,
                 onDismissRequest = onDismissRequest,
                 onConfirm = { viewModel.addFavorite(dialog.manga) },
-                onOpenManga = { backStack.add(MangaRoute(it.id)) },
+                onOpenManga = { navigator.push(MangaRoute(it.id)) },
                 onMigrate = { viewModel.showMigrateDialog(dialog.manga, it) },
             )
         }
@@ -79,7 +79,7 @@ fun HistoryTab() {
             ChangeCategoryDialog(
                 initialSelection = dialog.initialSelection,
                 onDismissRequest = onDismissRequest,
-                onEditCategories = { backStack.add(CategoryRoute) },
+                onEditCategories = { navigator.push(CategoryRoute) },
                 onConfirm = { include, _ ->
                     viewModel.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
                 },
@@ -90,7 +90,7 @@ fun HistoryTab() {
                 current = dialog.current,
                 target = dialog.target,
                 // Initiated from the context of [dialog.target] so we show [dialog.current].
-                onClickTitle = { backStack.add(MangaRoute(dialog.current.id)) },
+                onClickTitle = { navigator.push(MangaRoute(dialog.current.id)) },
                 onDismissRequest = onDismissRequest,
             )
         }

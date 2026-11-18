@@ -16,13 +16,13 @@ import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
 import eu.kanade.tachiyomi.ui.home.TabReselectEventKey
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import mihon.core.navigation.GlobalSearchRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 
 @Composable
 fun BrowseTab() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     // Hoisted for extensions tab's search bar
     val extensionsViewModel = metroViewModel<ExtensionsViewModel>()
@@ -53,7 +53,7 @@ fun BrowseTab() {
     }
 
     ResultEffect<Unit>(resultKey = TabReselectEventKey) {
-        backStack.add(GlobalSearchRoute())
+        navigator.push(GlobalSearchRoute())
     }
 }
 

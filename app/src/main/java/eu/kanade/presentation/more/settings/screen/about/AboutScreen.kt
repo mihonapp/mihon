@@ -43,7 +43,7 @@ import mihon.app.di.appGraph
 import mihon.core.navigation.NewUpdateRoute
 import mihon.core.navigation.OpenSourceLicensesRoute
 import mihon.core.navigation.util.LocalBackButtonVisibility
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Public
 import mihon.icons.simpleicons.Discord
@@ -69,7 +69,7 @@ fun AboutScreen() {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val backVisibility = LocalBackButtonVisibility.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     var isCheckingUpdates by remember { mutableStateOf(false) }
     val crashLogUtil = remember { context.appGraph.crashLogUtil }
     val is24HourSystem = rememberIs24HourSystem()
@@ -79,7 +79,7 @@ fun AboutScreen() {
             AppBar(
                 title = stringResource(MR.strings.pref_category_about),
                 navigateUp = {
-                    backStack.removeLastOrNull()
+                    navigator.pop()
                     Unit
                 }.takeIf { backVisibility },
                 scrollBehavior = scrollBehavior,
@@ -136,7 +136,7 @@ fun AboutScreen() {
                                                 releaseLink = result.release.releaseLink,
                                                 downloadLink = result.release.downloadLink,
                                             )
-                                            backStack.add(updateRoute)
+                                            navigator.push(updateRoute)
                                         },
                                         onFinish = {
                                             isCheckingUpdates = false
@@ -161,7 +161,7 @@ fun AboutScreen() {
             item {
                 TextPreferenceWidget(
                     title = stringResource(MR.strings.licenses),
-                    onPreferenceClick = { backStack.add(OpenSourceLicensesRoute) },
+                    onPreferenceClick = { navigator.push(OpenSourceLicensesRoute) },
                 )
             }
 

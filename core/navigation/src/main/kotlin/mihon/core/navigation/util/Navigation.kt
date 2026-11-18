@@ -9,7 +9,6 @@ import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.serialization.NavKeySerializer
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
@@ -17,10 +16,6 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-
-val LocalBackStack = compositionLocalOf<NavBackStack<NavKey>> {
-    error("LocalBackStack not initialized!")
-}
 
 val LocalTopLevelBackStack = compositionLocalOf<TopLevelBackStack> {
     error("LocalTopLevelBackStack not initialized!")
@@ -30,23 +25,6 @@ data class TabOptions(
     val title: String,
     val icon: Painter,
 )
-
-fun NavBackStack<NavKey>.replace(source: NavKey) {
-    if (isNotEmpty()) removeLastOrNull()
-    add(source)
-}
-
-fun NavBackStack<NavKey>.popUntil(predicate: (NavKey) -> Boolean) {
-    while (isNotEmpty() && !predicate(last())) {
-        removeLastOrNull()
-    }
-}
-
-fun NavBackStack<NavKey>.popUntilRoot() {
-    while (size > 1) {
-        removeLastOrNull()
-    }
-}
 
 class TopLevelBackStack(val startKey: NavKey) {
 

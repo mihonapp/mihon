@@ -46,7 +46,7 @@ import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.DownloadQueueRoute
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.core.navigation.util.LocalTopLevelBackStack
 import mihon.core.navigation.util.TabOptions
 import mihon.presentation.core.util.isTabletUi
@@ -128,7 +128,7 @@ sealed interface TopLevelRoute : NavKey {
 @Composable
 fun HomeScreen() {
     val topLevelBackStack = LocalTopLevelBackStack.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val resultEventBus = LocalResultEventBus.current
     val tabletUi = isTabletUi()
     val navigationSuiteType = if (tabletUi) {
@@ -220,10 +220,10 @@ fun HomeScreen() {
         topLevelBackStack.setTopLevel(route)
 
         if (it is TabEvent.Library && it.mangaIdToOpen != null) {
-            backStack.add(MangaRoute(it.mangaIdToOpen))
+            navigator.push(MangaRoute(it.mangaIdToOpen))
         }
         if (it is TabEvent.More && it.toDownloads) {
-            backStack.add(DownloadQueueRoute)
+            navigator.push(DownloadQueueRoute)
         }
     }
 }

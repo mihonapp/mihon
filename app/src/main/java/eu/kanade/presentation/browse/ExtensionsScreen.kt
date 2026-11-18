@@ -50,7 +50,7 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import mihon.core.navigation.ExtensionStoresRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.domain.extension.model.ExtensionStore
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
@@ -89,7 +89,7 @@ fun ExtensionScreen(
     onClickUpdateAll: () -> Unit,
     onRefresh: () -> Unit,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     PullRefresh(
         refreshing = state.isRefreshing,
@@ -111,7 +111,7 @@ fun ExtensionScreen(
                         EmptyScreenAction(
                             stringRes = MR.strings.extensionStores,
                             icon = MaterialSymbols.Rounded.Settings,
-                            onClick = { backStack.add(ExtensionStoresRoute()) },
+                            onClick = { navigator.push(ExtensionStoresRoute()) },
                         ),
                     ),
                 )

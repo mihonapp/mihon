@@ -8,7 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.ExtensionFilterScreen
 import kotlinx.coroutines.flow.collectLatest
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -16,7 +16,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 @Composable
 fun ExtensionFilterScreen() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = metroViewModel<ExtensionFilterViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -28,7 +28,7 @@ fun ExtensionFilterScreen() {
     val successState = state as ExtensionFilterState.Success
 
     ExtensionFilterScreen(
-        navigateUp = backStack::removeLastOrNull,
+        navigateUp = navigator::pop,
         state = successState,
         onClickToggle = viewModel::toggle,
     )

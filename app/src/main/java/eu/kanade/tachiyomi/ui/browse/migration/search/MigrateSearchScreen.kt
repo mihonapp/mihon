@@ -10,15 +10,13 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrateSourceSearchRoute
 import mihon.core.navigation.MigrationListRoute
-import mihon.core.navigation.util.LocalBackStack
-import mihon.core.navigation.util.popUntil
-import mihon.core.navigation.util.replace
+import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
 
 @Composable
 fun MigrateSearchScreen(mangaId: Long) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val resultEventBus = LocalResultEventBus.current
 
     val viewModel =
@@ -28,16 +26,16 @@ fun MigrateSearchScreen(mangaId: Long) {
     MigrateSearchScreen(
         state = state,
         fromSourceId = state.from?.source,
-        navigateUp = backStack::removeLastOrNull,
+        navigateUp = navigator::pop,
         onChangeSearchQuery = viewModel::updateSearchQuery,
         onSearch = { viewModel.search() },
         getManga = { viewModel.getManga(it) },
         onChangeSearchFilter = viewModel::setSourceFilter,
         onToggleResults = viewModel::toggleFilterResults,
-        onClickSource = { backStack.add(MigrateSourceSearchRoute(state.from!!, it.id, state.searchQuery)) },
+        onClickSource = { navigator.push(MigrateSourceSearchRoute(state.from!!, it.id, state.searchQuery)) },
         onClickItem = {
-            val migrateListRoute = backStack
-                .filterIsInstance<MigrationListRoute>()
+            val migrateListRoute = navigator
+                .routes.filterIsInstance<MigrationListRoute>()
                 .lastOrNull()
 
             if (migrateListRoute == null) {
@@ -46,10 +44,10 @@ fun MigrateSearchScreen(mangaId: Long) {
                 resultEventBus.sendResult(
                     result = MatchOverrideEvent(current = mangaId, target = it.id),
                 )
-                backStack.popUntil { screen -> screen is MigrationListRoute }
+                navigator.popTo { screen -> screen is MigrationListRoute }
             }
         },
-        onLongClickItem = { backStack.add(MangaRoute(it.id, true)) },
+        onLongClickItem = { navigator.push(MangaRoute(it.id, true)) },
     )
 
     when (val dialog = state.dialog) {
@@ -58,15 +56,15 @@ fun MigrateSearchScreen(mangaId: Long) {
                 current = dialog.current,
                 target = dialog.target,
                 // Initiated from the context of [dialog.current] so we show [dialog.target].
-                onClickTitle = { backStack.add(MangaRoute(dialog.target.id, true)) },
+                onClickTitle = { navigator.push(MangaRoute(dialog.target.id, true)) },
                 onDismissRequest = { viewModel.clearDialog() },
                 onComplete = {
-                    if (backStack.last() is MangaRoute) {
-                        val lastItem = backStack.last()
-                        backStack.popUntil { backStack.contains(lastItem) }
-                        backStack.add(MangaRoute(dialog.target.id))
+                    if (navigator.current is MangaRoute) {
+                        val lastItem = navigator.current
+                        navigator.popTo { navigator.routes.contains(lastItem) }
+                        navigator.push(MangaRoute(dialog.target.id))
                     } else {
-                        backStack.replace(MangaRoute(dialog.target.id))
+                        navigator.replace(MangaRoute(dialog.target.id))
                     }
                 },
             )

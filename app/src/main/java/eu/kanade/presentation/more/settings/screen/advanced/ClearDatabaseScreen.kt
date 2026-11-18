@@ -47,7 +47,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mihon.core.metro.AppCoroutineScope
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FlipToBack
 import mihon.icons.materialsymbols.rounded.SelectAll
@@ -68,7 +68,7 @@ import tachiyomi.presentation.core.util.selectedBackground
 @Composable
 fun ClearDatabaseScreen() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = metroViewModel<ClearDatabaseViewModel>()
     val state by viewModel.state.collectAsState()
     val scope = rememberCoroutineScope()
@@ -137,7 +137,7 @@ fun ClearDatabaseScreen() {
                 topBar = { scrollBehavior ->
                     AppBar(
                         title = stringResource(MR.strings.pref_clear_database),
-                        navigateUp = backStack::removeLastOrNull,
+                        navigateUp = navigator::pop,
                         actions = {
                             if (s.items.isNotEmpty()) {
                                 AppBarActions(

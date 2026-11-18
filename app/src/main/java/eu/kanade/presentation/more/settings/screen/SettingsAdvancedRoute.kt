@@ -51,7 +51,7 @@ import mihon.app.di.appGraph
 import mihon.core.navigation.ClearDatabaseRoute
 import mihon.core.navigation.DebugInfoRoute
 import mihon.core.navigation.OnboardingRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import okhttp3.Headers
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -71,7 +71,7 @@ object SettingsAdvancedRoute : SearchableRoute {
     override fun getPreferences(): List<Preference> {
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
 
         val graph = remember { context.appGraph }
         val basePreferences = remember { graph.basePreferences }
@@ -109,11 +109,11 @@ object SettingsAdvancedRoute : SearchableRoute {
             ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_debug_info),
-                onClick = { backStack.add(DebugInfoRoute) },
+                onClick = { navigator.push(DebugInfoRoute) },
             ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_onboarding_guide),
-                onClick = { backStack.add(OnboardingRoute) },
+                onClick = { navigator.push(OnboardingRoute) },
             ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_manage_notifications),
@@ -175,7 +175,7 @@ object SettingsAdvancedRoute : SearchableRoute {
     @Composable
     private fun getDataGroup(): Preference.PreferenceGroup {
         val context = LocalContext.current
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_data),
@@ -191,7 +191,7 @@ object SettingsAdvancedRoute : SearchableRoute {
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_clear_database),
                     subtitle = stringResource(MR.strings.pref_clear_database_summary),
-                    onClick = { backStack.add(ClearDatabaseRoute) },
+                    onClick = { navigator.push(ClearDatabaseRoute) },
                 ),
             ),
         )

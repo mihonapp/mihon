@@ -13,13 +13,13 @@ import eu.kanade.presentation.category.components.CategoryDeleteDialog
 import eu.kanade.presentation.category.components.CategoryRenameDialog
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable
 fun CategoryScreen() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = metroViewModel<CategoryViewModel>()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -37,7 +37,7 @@ fun CategoryScreen() {
         onClickRename = { viewModel.showDialog(CategoryDialog.Rename(it)) },
         onClickDelete = { viewModel.showDialog(CategoryDialog.Delete(it)) },
         onChangeOrder = viewModel::changeOrder,
-        navigateUp = backStack::removeLastOrNull,
+        navigateUp = navigator::pop,
     )
 
     when (val dialog = successState.dialog) {

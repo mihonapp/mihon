@@ -12,7 +12,7 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.tachiyomi.util.system.toast
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrateSearchRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.list.components.MigrationExitDialog
 import mihon.feature.migration.list.components.MigrationMangaDialog
 import mihon.feature.migration.list.components.MigrationProgressDialog
@@ -23,7 +23,7 @@ fun MigrationListScreen(
     mangaIds: Collection<Long>,
     extraSearchQuery: String?,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel =
         assistedMetroViewModel<MigrationListViewModel, MigrationListViewModel.Factory> {
             create(mangaIds = mangaIds, extraSearchQuery = extraSearchQuery)
@@ -43,7 +43,7 @@ fun MigrationListScreen(
 
     LaunchedEffect(viewModel) {
         viewModel.navigateBackEvent.collect {
-            backStack.removeLastOrNull()
+            navigator.pop()
         }
     }
     MigrationListScreenContent(
@@ -51,10 +51,10 @@ fun MigrationListScreen(
         migrationComplete = state.migrationComplete,
         finishedCount = state.finishedCount,
         onItemClick = {
-            backStack.add(MangaRoute(it.id, true))
+            navigator.push(MangaRoute(it.id, true))
         },
         onSearchManually = { migrationItem ->
-            backStack.add(MigrateSearchRoute(migrationItem.manga.id))
+            navigator.push(MigrateSearchRoute(migrationItem.manga.id))
         },
         onSkip = { viewModel.removeManga(it) },
         onMigrate = { viewModel.migrateNow(mangaId = it, replace = true) },
@@ -87,7 +87,7 @@ fun MigrationListScreen(
         MigrationListViewModel.Dialog.Exit -> {
             MigrationExitDialog(
                 onDismissRequest = viewModel::dismissDialog,
-                exitMigration = backStack::removeLastOrNull,
+                exitMigration = navigator::pop,
             )
         }
         null -> Unit

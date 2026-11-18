@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.CategoryRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_CHARGING
@@ -64,7 +64,7 @@ object SettingsLibraryRoute : SearchableRoute {
         libraryPreferences: LibraryPreferences,
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
         val scope = rememberCoroutineScope()
         val userCategoriesCount = allCategories.filterNot(Category::isSystemCategory).size
 
@@ -84,7 +84,7 @@ object SettingsLibraryRoute : SearchableRoute {
                         count = userCategoriesCount,
                         userCategoriesCount,
                     ),
-                    onClick = { backStack.add(CategoryRoute) },
+                    onClick = { navigator.push(CategoryRoute) },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = libraryPreferences.defaultCategory,

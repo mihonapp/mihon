@@ -25,7 +25,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import mihon.app.di.appGraph
 import mihon.core.navigation.AppLanguageRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -104,7 +104,7 @@ object SettingsAppearanceRoute : SearchableRoute {
         uiPreferences: UiPreferences,
     ): Preference.PreferenceGroup {
         val context = LocalContext.current
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
         val locale = LocalLocale.current
         val is24HourSystem = rememberIs24HourSystem()
 
@@ -120,7 +120,7 @@ object SettingsAppearanceRoute : SearchableRoute {
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_app_language),
-                    onClick = { backStack.add(AppLanguageRoute) },
+                    onClick = { navigator.push(AppLanguageRoute) },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = uiPreferences.tabletUiMode,

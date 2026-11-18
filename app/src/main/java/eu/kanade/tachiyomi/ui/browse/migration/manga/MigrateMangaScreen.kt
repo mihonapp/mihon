@@ -24,7 +24,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationConfigRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
 import tachiyomi.domain.manga.model.Manga
@@ -40,7 +40,7 @@ import tachiyomi.presentation.core.util.shouldExpandFAB
 @Composable
 fun MigrateMangaScreen(sourceId: Long) {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel =
         assistedMetroViewModel<MigrateMangaViewModel, MigrateMangaViewModel.Factory> { create(sourceId = sourceId) }
 
@@ -65,7 +65,7 @@ fun MigrateMangaScreen(sourceId: Long) {
                     if (state.selectionMode) {
                         viewModel.clearSelection()
                     } else {
-                        backStack.removeLastOrNull()
+                        navigator.pop()
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -80,7 +80,7 @@ fun MigrateMangaScreen(sourceId: Long) {
                 onClick = {
                     val selection = state.selection
                     viewModel.clearSelection()
-                    backStack.add(MigrationConfigRoute(selection))
+                    navigator.push(MigrationConfigRoute(selection))
                 },
                 expanded = lazyListState.shouldExpandFAB(),
                 modifier = Modifier.animateFloatingActionButton(
@@ -103,7 +103,7 @@ fun MigrateMangaScreen(sourceId: Long) {
             contentPadding = contentPadding,
             state = state,
             onClickItem = viewModel::toggleSelection,
-            onClickCover = { backStack.add(MangaRoute(it.id)) },
+            onClickCover = { navigator.push(MangaRoute(it.id)) },
         )
     }
 

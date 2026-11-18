@@ -20,7 +20,7 @@ import mihon.core.navigation.ExtensionDetailsRoute
 import mihon.core.navigation.ExtensionFilterRoute
 import mihon.core.navigation.ExtensionStoresRoute
 import mihon.core.navigation.WebViewRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -28,7 +28,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun extensionsTab(
     extensionsViewModel: ExtensionsViewModel,
 ): TabContent {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
 
     val updatesCount by extensionsViewModel.updatesCount.collectAsStateWithLifecycle()
@@ -41,11 +41,11 @@ fun extensionsTab(
         actions = listOf(
             AppBar.OverflowAction(
                 title = stringResource(MR.strings.action_filter),
-                onClick = { backStack.add(ExtensionFilterRoute) },
+                onClick = { navigator.push(ExtensionFilterRoute) },
             ),
             AppBar.OverflowAction(
                 title = stringResource(MR.strings.extensionStores),
-                onClick = { backStack.add(ExtensionStoresRoute()) },
+                onClick = { navigator.push(ExtensionStoresRoute()) },
             ),
         ),
         content = { contentPadding, _ ->
@@ -75,7 +75,7 @@ fun extensionsTab(
                 onClickUpdateAll = extensionsViewModel::updateAllExtensions,
                 onOpenWebView = { extension ->
                     extension.sources.getOrNull(0)?.let {
-                        backStack.add(
+                        navigator.push(
                             WebViewRoute(
                                 url = it.baseUrl,
                                 initialTitle = it.name,
@@ -85,7 +85,7 @@ fun extensionsTab(
                     }
                 },
                 onInstallExtension = extensionsViewModel::installExtension,
-                onOpenExtension = { backStack.add(ExtensionDetailsRoute(it.pkgName)) },
+                onOpenExtension = { navigator.push(ExtensionDetailsRoute(it.pkgName)) },
                 onTrustExtension = { extensionsViewModel.trustExtension(it) },
                 onUninstallExtension = { extensionsViewModel.uninstallExtension(it) },
                 onUpdateExtension = extensionsViewModel::updateExtension,

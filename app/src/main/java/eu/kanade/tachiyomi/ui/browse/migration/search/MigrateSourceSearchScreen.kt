@@ -27,9 +27,7 @@ import kotlinx.coroutines.launch
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationListRoute
 import mihon.core.navigation.WebViewRoute
-import mihon.core.navigation.util.LocalBackStack
-import mihon.core.navigation.util.popUntil
-import mihon.core.navigation.util.popUntilRoot
+import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -50,7 +48,7 @@ fun MigrateSourceSearchScreen(
     query: String?,
 ) {
     val uriHandler = LocalUriHandler.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val resultEventBus = LocalResultEventBus.current
     val scope = rememberCoroutineScope()
 
@@ -73,7 +71,7 @@ fun MigrateSourceSearchScreen(
             SearchToolbar(
                 searchQuery = state.toolbarQuery ?: "",
                 onChangeSearchQuery = viewModel::setToolbarQuery,
-                onClickCloseSearch = backStack::removeLastOrNull,
+                onClickCloseSearch = navigator::pop,
                 onSearch = viewModel::search,
                 scrollBehavior = scrollBehavior,
             )
@@ -92,8 +90,8 @@ fun MigrateSourceSearchScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { paddingValues ->
         val openMigrateDialog: (Manga) -> Unit = {
-            val migrateListRoute = backStack
-                .filterIsInstance<MigrationListRoute>()
+            val migrateListRoute = navigator
+                .routes.filterIsInstance<MigrationListRoute>()
                 .lastOrNull()
 
             if (migrateListRoute == null) {
@@ -102,7 +100,7 @@ fun MigrateSourceSearchScreen(
                 resultEventBus.sendResult(
                     result = MatchOverrideEvent(current = currentManga.id, target = it.id),
                 )
-                backStack.popUntil { screen -> screen is MigrationListRoute }
+                navigator.popTo { screen -> screen is MigrationListRoute }
             }
         }
         BrowseSourceContent(
@@ -114,7 +112,7 @@ fun MigrateSourceSearchScreen(
             contentPadding = paddingValues,
             onWebViewClick = {
                 val httpSource = source as? HttpSource ?: return@BrowseSourceContent
-                backStack.add(
+                navigator.push(
                     WebViewRoute(
                         url = httpSource.getHomeUrl(),
                         initialTitle = httpSource.name,
@@ -125,7 +123,7 @@ fun MigrateSourceSearchScreen(
             onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
             onLocalSourceHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) },
             onMangaClick = openMigrateDialog,
-            onMangaLongClick = { backStack.add(MangaRoute(it.id, true)) },
+            onMangaLongClick = { navigator.push(MangaRoute(it.id, true)) },
         )
     }
 
@@ -145,15 +143,15 @@ fun MigrateSourceSearchScreen(
                 current = currentManga,
                 target = dialog.target,
                 // Initiated from the context of [currentManga] so we show [dialog.target].
-                onClickTitle = { backStack.add(MangaRoute(dialog.target.id)) },
+                onClickTitle = { navigator.push(MangaRoute(dialog.target.id)) },
                 onDismissRequest = onDismissRequest,
                 onComplete = {
                     scope.launch {
-                        backStack.popUntilRoot()
+                        navigator.popToRoot()
                         resultEventBus.sendResult(
                             result = TabEvent.Browse(),
                         )
-                        backStack.add(MangaRoute(dialog.target.id))
+                        navigator.push(MangaRoute(dialog.target.id))
                     }
                 },
             )

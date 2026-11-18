@@ -11,8 +11,7 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.GlobalSearchScreen
 import mihon.core.navigation.BrowseSourceRoute
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalBackStack
-import mihon.core.navigation.util.replace
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable
@@ -20,7 +19,7 @@ fun GlobalSearchScreen(
     searchQuery: String,
     extensionFilter: String?,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val viewModel =
         assistedMetroViewModel<GlobalSearchViewModel, GlobalSearchViewModel.Factory> {
@@ -40,7 +39,7 @@ fun GlobalSearchScreen(
                 is SearchItemResult.Success -> {
                     val manga = result.result.singleOrNull()
                     if (manga != null) {
-                        backStack.replace(MangaRoute(manga.id, true))
+                        navigator.replace(MangaRoute(manga.id, true))
                     } else {
                         // Backoff to result screen
                         showSingleLoadingScreen = false
@@ -52,17 +51,17 @@ fun GlobalSearchScreen(
     } else {
         GlobalSearchScreen(
             state = state,
-            navigateUp = backStack::removeLastOrNull,
+            navigateUp = navigator::pop,
             onChangeSearchQuery = viewModel::updateSearchQuery,
             onSearch = { viewModel.search() },
             getManga = { viewModel.getManga(it) },
             onChangeSearchFilter = viewModel::setSourceFilter,
             onToggleResults = viewModel::toggleFilterResults,
             onClickSource = {
-                backStack.add(BrowseSourceRoute(it.id, state.searchQuery))
+                navigator.push(BrowseSourceRoute(it.id, state.searchQuery))
             },
-            onClickItem = { backStack.add(MangaRoute(it.id, true)) },
-            onLongClickItem = { backStack.add(MangaRoute(it.id, true)) },
+            onClickItem = { navigator.push(MangaRoute(it.id, true)) },
+            onLongClickItem = { navigator.push(MangaRoute(it.id, true)) },
         )
     }
 }

@@ -61,7 +61,7 @@ import eu.kanade.tachiyomi.util.view.setIncognito
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mihon.app.di.appGraph
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -71,7 +71,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 @Composable
 fun SourcePreferencesScreen(sourceId: Long) {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     // The preferences are made anew after a configuration change, so an open dialog is restored by key
     var savedDialogKey by rememberSaveable { mutableStateOf<String?>(null) }
@@ -100,7 +100,7 @@ fun SourcePreferencesScreen(sourceId: Long) {
         topBar = {
             AppBar(
                 title = preferenceScreen.title,
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 scrollBehavior = it,
             )
         },

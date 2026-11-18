@@ -8,13 +8,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.browse.SourcesFilterScreen
 import eu.kanade.tachiyomi.util.system.toast
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable
 fun SourcesFilterScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = metroViewModel<SourcesFilterViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -27,7 +27,7 @@ fun SourcesFilterScreen() {
         val context = LocalContext.current
         LaunchedEffect(Unit) {
             context.toast(MR.strings.internal_error)
-            backStack.removeLastOrNull()
+            navigator.pop()
         }
         return
     }
@@ -35,7 +35,7 @@ fun SourcesFilterScreen() {
     val successState = state as SourcesFilterViewModel.State.Success
 
     SourcesFilterScreen(
-        navigateUp = backStack::removeLastOrNull,
+        navigateUp = navigator::pop,
         state = successState,
         onClickLanguage = viewModel::toggleLanguage,
         onClickSource = viewModel::toggleSource,

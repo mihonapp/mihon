@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.serialization.protobuf.schema.ProtoBufSchemaGenerator
 import mihon.core.navigation.BackupSchemaRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.ContentCopy
 import tachiyomi.i18n.MR
@@ -26,7 +26,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun BackupSchemaScreen() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val schema = remember { ProtoBufSchemaGenerator.generateSchemaText(Backup.serializer().descriptor) }
 
@@ -34,7 +34,7 @@ fun BackupSchemaScreen() {
         topBar = {
             AppBar(
                 title = BackupSchemaRoute.TITLE,
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 actions = {
                     AppBarActions(
                         listOf(

@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import mihon.core.navigation.BrowseSourceRoute
 import mihon.core.navigation.GlobalSearchRoute
 import mihon.core.navigation.SourcesFilterRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.icons.materialsymbols.rounded.TravelExplore
@@ -23,7 +23,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun sourcesTab(): TabContent {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = metroViewModel<SourcesViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -33,12 +33,12 @@ fun sourcesTab(): TabContent {
             AppBar.Action(
                 title = stringResource(MR.strings.action_global_search),
                 icon = MaterialSymbols.Rounded.TravelExplore,
-                onClick = { backStack.add(GlobalSearchRoute()) },
+                onClick = { navigator.push(GlobalSearchRoute()) },
             ),
             AppBar.Action(
                 title = stringResource(MR.strings.action_filter),
                 icon = MaterialSymbols.Rounded.FilterList,
-                onClick = { backStack.add(SourcesFilterRoute) },
+                onClick = { navigator.push(SourcesFilterRoute) },
             ),
         ),
         content = { contentPadding, snackbarHostState ->
@@ -46,7 +46,7 @@ fun sourcesTab(): TabContent {
                 state = state,
                 contentPadding = contentPadding,
                 onClickItem = { source, listing ->
-                    backStack.add(BrowseSourceRoute(source.id, listing.query))
+                    navigator.push(BrowseSourceRoute(source.id, listing.query))
                 },
                 onClickPin = viewModel::togglePin,
                 onLongClickItem = viewModel::showSourceDialog,

@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.webview.WebViewScreenContent
 import mihon.core.navigation.util.LocalAssistContentManager
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable
@@ -16,7 +16,7 @@ fun WebViewScreen(
     initialTitle: String?,
     sourceId: Long?,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val assistContentManager = LocalAssistContentManager.current
     val context = LocalContext.current
     val viewModel =
@@ -29,7 +29,7 @@ fun WebViewScreen(
     }
 
     WebViewScreenContent(
-        onNavigateUp = backStack::removeLastOrNull,
+        onNavigateUp = navigator::pop,
         initialTitle = initialTitle,
         url = url,
         headers = headers.orEmpty(),

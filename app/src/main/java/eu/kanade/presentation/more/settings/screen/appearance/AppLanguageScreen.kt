@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.LocaleListCompat
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Check
 import org.xmlpull.v1.XmlPullParser
@@ -34,7 +34,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun AppLanguageScreen() {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val langs = remember { getLangs(context) }
     var currentLanguage by remember {
@@ -54,7 +54,7 @@ fun AppLanguageScreen() {
         topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(MR.strings.pref_app_language),
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 scrollBehavior = scrollBehavior,
             )
         },

@@ -66,15 +66,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.runtime.result.ResultEventBus
 import androidx.navigation3.runtime.result.rememberResultEventBus
 import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.interactor.GetIncognitoState
@@ -127,9 +124,11 @@ import mihon.core.navigation.SupportUsRoute
 import mihon.core.navigation.appEntries
 import mihon.core.navigation.util.AssistContentManager
 import mihon.core.navigation.util.LocalAssistContentManager
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.core.navigation.util.LocalTopLevelBackStack
-import mihon.core.navigation.util.popUntilRoot
+import mihon.core.navigation.util.Navigator
+import mihon.core.navigation.util.NavigatorDisplay
+import mihon.core.navigation.util.rememberNavigator
 import mihon.core.navigation.util.rememberOverlaySheetSceneStrategy
 import mihon.core.navigation.util.rememberTopLevelBackStack
 import mihon.core.navigation.util.rememberTwoPaneSettingsSceneStrategy
@@ -182,7 +181,7 @@ class MainActivity : BaseActivity() {
     // To be checked by splash screen. If true then splash screen will be removed.
     var ready = false
 
-    private var backStack: NavBackStack<NavKey>? = null
+    private var navigator: Navigator? = null
 
     private val assistContentManager = AssistContentManager()
 
@@ -259,7 +258,7 @@ class MainActivity : BaseActivity() {
                 )
             }
 
-            val backStack = rememberNavBackStack(HomeRoute)
+            val navigator = rememberNavigator(HomeRoute)
             val topLevelBackStack = rememberTopLevelBackStack(TopLevelRoute.Library)
             val twoPaneStrategy = rememberTwoPaneSettingsSceneStrategy<NavKey>()
             val overlaySheetSceneStrategy = rememberOverlaySheetSceneStrategy<NavKey>()
@@ -269,23 +268,23 @@ class MainActivity : BaseActivity() {
             )
 
             CompositionLocalProvider(
-                LocalBackStack provides backStack,
+                LocalNavigator provides navigator,
                 LocalTopLevelBackStack provides topLevelBackStack,
                 LocalAssistContentManager provides assistContentManager,
             ) {
-                LaunchedEffect(backStack) {
-                    this@MainActivity.backStack = backStack
+                LaunchedEffect(navigator) {
+                    this@MainActivity.navigator = navigator
 
                     if (isLaunch) {
                         // Set start screen
-                        handleIntentAction(intent, backStack, resultEventBus, isTabletUi)
+                        handleIntentAction(intent, navigator, resultEventBus, isTabletUi)
 
                         // Reset Incognito Mode on relaunch
                         preferences.incognitoMode.set(false)
                     }
                 }
 
-                val currentRoute = backStack.lastOrNull()
+                val currentRoute = navigator.current
                 LaunchedEffect(currentRoute) {
                     (currentRoute as? BrowseSourceRoute)?.sourceId
                         .let(getIncognitoState::subscribe)
@@ -307,9 +306,8 @@ class MainActivity : BaseActivity() {
                     // Consume insets already used by app state banners
                     Box {
                         val slideDistance = rememberSlideDistance()
-                        NavDisplay(
-                            backStack = backStack,
-                            onBack = { backStack.removeLastOrNull() },
+                        NavigatorDisplay(
+                            navigator = navigator,
                             sceneStrategies = listOf(twoPaneStrategy, overlaySheetSceneStrategy),
                             transitionSpec = {
                                 materialSharedAxisXIn(
@@ -371,13 +369,11 @@ class MainActivity : BaseActivity() {
                         .drop(1)
                         .filter { !it }
                         .onEach {
-                            val currentRoute = backStack.lastOrNull()
+                            val currentRoute = navigator.current
                             if (currentRoute is BrowseSourceRoute ||
                                 (currentRoute is MangaRoute && currentRoute.fromSource)
                             ) {
-                                while (backStack.size > 1) {
-                                    backStack.removeAll { it != HomeRoute }
-                                }
+                                navigator.popToRoot()
                             }
                         }
                         .launchIn(this)
@@ -385,7 +381,7 @@ class MainActivity : BaseActivity() {
 
                 HandleOnNewIntent(
                     context = context,
-                    backStack = backStack,
+                    navigator = navigator,
                     resultEventBus = resultEventBus,
                     isTabletUi = isTabletUi,
                 )
@@ -412,7 +408,7 @@ class MainActivity : BaseActivity() {
 
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        when (backStack?.lastOrNull()) {
+        when (navigator?.current) {
             is AssistContentRoute -> {
                 assistContentManager.currentAssistUrl?.let {
                     outContent.webUri = it.toUri()
@@ -434,7 +430,7 @@ class MainActivity : BaseActivity() {
     @Composable
     private fun HandleOnNewIntent(
         context: Context,
-        backStack: NavBackStack<NavKey>,
+        navigator: Navigator,
         resultEventBus: ResultEventBus,
         isTabletUi: Boolean,
     ) {
@@ -446,7 +442,7 @@ class MainActivity : BaseActivity() {
                 awaitClose { componentActivity.removeOnNewIntentListener(consumer) }
             }
                 .collectLatest {
-                    handleIntentAction(it, backStack, resultEventBus, isTabletUi)
+                    handleIntentAction(it, navigator, resultEventBus, isTabletUi)
                 }
         }
     }
@@ -454,7 +450,7 @@ class MainActivity : BaseActivity() {
     @Composable
     private fun CheckForUpdates() {
         val context = LocalContext.current
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
 
         // App updates
         LaunchedEffect(Unit) {
@@ -473,7 +469,7 @@ class MainActivity : BaseActivity() {
                         if (
                             result is GetApplicationRelease.Result.NewUpdate &&
                             result.release.version != preferences.skippedAppUpdate.get() &&
-                            backStack.none { it is NewUpdateRoute }
+                            navigator.routes.none { it is NewUpdateRoute }
                         ) {
                             val updateRoute = NewUpdateRoute(
                                 versionName = result.release.version,
@@ -481,7 +477,7 @@ class MainActivity : BaseActivity() {
                                 releaseLink = result.release.releaseLink,
                                 downloadLink = result.release.downloadLink,
                             )
-                            backStack.add(updateRoute)
+                            navigator.push(updateRoute)
                         }
                     } catch (e: CancellationException) {
                         throw e
@@ -504,18 +500,18 @@ class MainActivity : BaseActivity() {
 
     @Composable
     private fun ShowOnboarding() {
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
 
         LaunchedEffect(Unit) {
-            if (!preferences.shownOnboardingFlow.get() && backStack.lastOrNull() !is OnboardingRoute) {
-                backStack.add(OnboardingRoute)
+            if (!preferences.shownOnboardingFlow.get() && navigator.current !is OnboardingRoute) {
+                navigator.push(OnboardingRoute)
             }
         }
     }
 
     @Composable
     private fun ShowDonationCampaign() {
-        val backStack = LocalBackStack.current
+        val navigator = LocalNavigator.current
 
         var showCampaign by remember { mutableStateOf(false) }
         if (showCampaign) {
@@ -565,7 +561,7 @@ class MainActivity : BaseActivity() {
                             .padding(horizontal = MaterialTheme.padding.medium)
                             .fillMaxWidth(),
                         onClick = {
-                            backStack.add(SupportUsRoute)
+                            navigator.push(SupportUsRoute)
                             dismissSupportMessage()
                         },
                     ) {
@@ -679,7 +675,7 @@ class MainActivity : BaseActivity() {
 
     private fun handleIntentAction(
         intent: Intent,
-        backStack: NavBackStack<NavKey>,
+        navigator: Navigator,
         resultEventBus: ResultEventBus,
         isTabletUi: Boolean,
     ): Boolean {
@@ -696,7 +692,7 @@ class MainActivity : BaseActivity() {
             Constants.SHORTCUT_LIBRARY -> TabEvent.Library()
             Constants.SHORTCUT_MANGA -> {
                 val idToOpen = intent.extras?.getLong(Constants.MANGA_EXTRA) ?: return false
-                backStack.popUntilRoot()
+                navigator.popToRoot()
                 TabEvent.Library(idToOpen)
             }
             Constants.SHORTCUT_UPDATES -> TabEvent.Updates
@@ -704,12 +700,12 @@ class MainActivity : BaseActivity() {
             Constants.SHORTCUT_SOURCES -> TabEvent.Browse(false)
             Constants.SHORTCUT_EXTENSIONS -> TabEvent.Browse(true)
             Constants.SHORTCUT_DOWNLOADS -> {
-                backStack.popUntilRoot()
+                navigator.popToRoot()
                 TabEvent.More(toDownloads = true)
             }
             Intent.ACTION_APPLICATION_PREFERENCES -> {
-                backStack.popUntilRoot()
-                backStack.addSettingsRoute(SettingsRoute(), isTabletUi)
+                navigator.popToRoot()
+                navigator.addSettingsRoute(SettingsRoute(), isTabletUi)
                 null
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {
@@ -719,8 +715,7 @@ class MainActivity : BaseActivity() {
                 // Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY) ?: intent.getStringExtra(Intent.EXTRA_TEXT)
                 if (!query.isNullOrEmpty()) {
-                    backStack.popUntilRoot()
-                    backStack.add(DeepLinkRoute(query))
+                    navigator.replaceAll(DeepLinkRoute(query))
                 }
                 null
             }
@@ -728,22 +723,19 @@ class MainActivity : BaseActivity() {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
                 if (!query.isNullOrEmpty()) {
                     val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
-                    backStack.popUntilRoot()
-                    backStack.add(GlobalSearchRoute(query, filter))
+                    navigator.replaceAll(GlobalSearchRoute(query, filter))
                 }
                 null
             }
             Intent.ACTION_VIEW -> {
                 // Handling opening of backup files
                 if (intent.data.toString().endsWith(".tachibk")) {
-                    backStack.popUntilRoot()
-                    backStack.add(RestoreBackupRoute(intent.data.toString()))
+                    navigator.replaceAll(RestoreBackupRoute(intent.data.toString()))
                 }
                 // Deep link to add extension store
                 else if (intent.isAddExtensionStoreIntent()) {
                     intent.data?.getQueryParameter("url")?.let { repoUrl ->
-                        backStack.popUntilRoot()
-                        backStack.add(ExtensionStoresRoute(repoUrl))
+                        navigator.replaceAll(ExtensionStoresRoute(repoUrl))
                     }
                 }
                 null

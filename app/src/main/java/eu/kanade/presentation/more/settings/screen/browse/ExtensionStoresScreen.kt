@@ -12,13 +12,13 @@ import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionSt
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionStoresScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 @Composable
 fun ExtensionStoresScreen(url: String?) {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val viewModel = metroViewModel<ExtensionStoresViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -42,7 +42,7 @@ fun ExtensionStoresScreen(url: String?) {
         onOpenDiscord = { it.contact.discord?.let(context::openInBrowser) },
         onClickDelete = { viewModel.showDialog(ExtensionStoreDialog.Delete(it)) },
         onClickRefresh = { viewModel.refreshRepos() },
-        navigateUp = backStack::removeLastOrNull,
+        navigateUp = navigator::pop,
     )
 
     when (val dialog = successState.dialog) {

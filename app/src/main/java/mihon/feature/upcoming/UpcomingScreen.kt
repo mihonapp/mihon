@@ -23,7 +23,7 @@ import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.SettingsItemsPaddings
@@ -35,7 +35,7 @@ import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
 fun UpcomingScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val viewModel = metroViewModel<UpcomingViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -53,7 +53,7 @@ fun UpcomingScreen() {
     UpcomingScreenContent(
         state = state,
         setSelectedYearMonth = viewModel::setSelectedYearMonth,
-        onClickUpcoming = { backStack.add(MangaRoute(it.id)) },
+        onClickUpcoming = { navigator.push(MangaRoute(it.id)) },
         hasActiveFilters = state.hasActiveFilters,
         onClickFilter = viewModel::showFilterDialog,
     )

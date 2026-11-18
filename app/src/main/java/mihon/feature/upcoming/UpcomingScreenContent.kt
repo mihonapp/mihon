@@ -23,7 +23,7 @@ import eu.kanade.presentation.components.relativeDateText
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.upcoming.components.UpcomingItem
 import mihon.feature.upcoming.components.calendar.Calendar
 import mihon.icons.materialsymbols.MaterialSymbols
@@ -98,12 +98,12 @@ private fun UpcomingToolbar(
     hasFilters: Boolean,
     onClickFilter: () -> Unit,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val uriHandler = LocalUriHandler.current
 
     AppBar(
         title = stringResource(MR.strings.label_upcoming),
-        navigateUp = backStack::removeLastOrNull,
+        navigateUp = navigator::pop,
         actions = {
             AppBarActions(
                 listOf(

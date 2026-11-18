@@ -49,8 +49,7 @@ import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
 import kotlinx.coroutines.flow.collectLatest
 import mihon.core.navigation.util.LocalBackButtonVisibility
-import mihon.core.navigation.util.LocalBackStack
-import mihon.core.navigation.util.replace
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Close
 import tachiyomi.i18n.MR
@@ -61,7 +60,7 @@ import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 
 @Composable
 fun SettingsSearchScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val softKeyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -93,7 +92,7 @@ fun SettingsSearchScreen() {
                 TopAppBar(
                     navigationIcon = {
                         if (LocalBackButtonVisibility.current) {
-                            IconButton(onClick = backStack::removeLastOrNull) {
+                            IconButton(onClick = navigator::pop) {
                                 UpIcon()
                             }
                         }
@@ -145,7 +144,7 @@ fun SettingsSearchScreen() {
             contentPadding = contentPadding,
         ) { result ->
             SearchableSettings.highlightKey = result.highlightKey
-            backStack.replace(result.route)
+            navigator.replace(result.route)
         }
     }
 }

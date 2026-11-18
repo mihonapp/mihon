@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.simpleicons.Discord
@@ -37,14 +37,14 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun SupportUsScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val uriHandler = LocalUriHandler.current
 
     Scaffold(
         topBar = {
             AppBar(
                 title = stringResource(MR.strings.label_support_us),
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
             )
         },
     ) { paddingValues ->

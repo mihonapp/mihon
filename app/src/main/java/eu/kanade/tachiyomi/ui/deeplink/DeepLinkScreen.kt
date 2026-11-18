@@ -11,8 +11,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import mihon.core.navigation.GlobalSearchRoute
 import mihon.core.navigation.MangaRoute
-import mihon.core.navigation.util.LocalBackStack
-import mihon.core.navigation.util.replace
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
@@ -21,7 +20,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 @Composable
 fun DeepLinkScreen(query: String) {
     val context = LocalContext.current
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val viewModel = assistedMetroViewModel<DeepLinkViewModel, DeepLinkViewModel.Factory> { create(query = query) }
     val state by viewModel.state.collectAsState()
@@ -29,7 +28,7 @@ fun DeepLinkScreen(query: String) {
         topBar = { scrollBehavior ->
             AppBar(
                 title = stringResource(MR.strings.action_search_hint),
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -39,19 +38,19 @@ fun DeepLinkScreen(query: String) {
                 LoadingScreen(Modifier.padding(contentPadding))
             }
             is DeepLinkViewModel.State.NoResults -> {
-                backStack.replace(GlobalSearchRoute(query))
+                navigator.replace(GlobalSearchRoute(query))
             }
             is DeepLinkViewModel.State.Result -> {
                 val resultState = state as DeepLinkViewModel.State.Result
                 if (resultState.chapterId == null) {
-                    backStack.replace(
+                    navigator.replace(
                         MangaRoute(
                             resultState.manga.id,
                             true,
                         ),
                     )
                 } else {
-                    backStack.removeLastOrNull()
+                    navigator.pop()
                     ReaderActivity.newIntent(
                         context,
                         resultState.manga.id,

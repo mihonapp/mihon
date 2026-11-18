@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.LazyColumnWithAction
@@ -52,7 +52,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun RestoreBackupScreen(uri: String) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel =
         assistedMetroViewModel<RestoreBackupViewModel, RestoreBackupViewModel.Factory> { create(uri = uri) }
     val state by viewModel.state.collectAsState()
@@ -61,7 +61,7 @@ fun RestoreBackupScreen(uri: String) {
         topBar = {
             AppBar(
                 title = stringResource(MR.strings.pref_restore_backup),
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 scrollBehavior = it,
             )
         },
@@ -72,7 +72,7 @@ fun RestoreBackupScreen(uri: String) {
             actionEnabled = state.canRestore && state.options.canRestore(),
             onClickAction = {
                 viewModel.startRestore()
-                backStack.removeLastOrNull()
+                navigator.pop()
             },
         ) {
             if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {

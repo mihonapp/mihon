@@ -52,8 +52,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mihon.core.navigation.MigrateSearchRoute
 import mihon.core.navigation.MigrationListRoute
-import mihon.core.navigation.util.LocalBackStack
-import mihon.core.navigation.util.replace
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.ArrowForward
 import mihon.icons.materialsymbols.rounded.Deselect
@@ -76,7 +75,7 @@ import tachiyomi.presentation.core.util.shouldExpandFAB
 
 @Composable
 fun MigrationConfigScreen(mangaIds: Collection<Long>) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
 
     val viewModel = metroViewModel<MigrationConfigViewModel>()
     val state by viewModel.state.collectAsState()
@@ -94,7 +93,7 @@ fun MigrationConfigScreen(mangaIds: Collection<Long>) {
         } else {
             MigrateSearchRoute(mangaId)
         }
-        backStack.replace(route)
+        navigator.replace(route)
     }
 
     if (state.isLoading) {
@@ -114,7 +113,7 @@ fun MigrationConfigScreen(mangaIds: Collection<Long>) {
         topBar = {
             AppBar(
                 title = null,
-                navigateUp = backStack::removeLastOrNull,
+                navigateUp = navigator::pop,
                 scrollBehavior = it,
                 actions = {
                     AppBarActions(

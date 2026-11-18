@@ -26,7 +26,7 @@ import mihon.app.di.appGraph
 import mihon.core.common.FeatureFlags
 import mihon.core.navigation.BackupSchemaRoute
 import mihon.core.navigation.WorkerInfoRoute
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Autorenew
 import tachiyomi.i18n.MR
@@ -34,19 +34,19 @@ import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
 fun DebugInfoScreen() {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     PreferenceScaffold(
         titleRes = MR.strings.pref_debug_info,
-        onBackPressed = backStack::removeLastOrNull,
+        onBackPressed = navigator::pop,
         itemsProvider = {
             listOf(
                 Preference.PreferenceItem.TextPreference(
                     title = WorkerInfoRoute.TITLE,
-                    onClick = { backStack.add(WorkerInfoRoute) },
+                    onClick = { navigator.push(WorkerInfoRoute) },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = BackupSchemaRoute.TITLE,
-                    onClick = { backStack.add(BackupSchemaRoute) },
+                    onClick = { navigator.push(BackupSchemaRoute) },
                 ),
                 getAppInfoGroup(),
                 getDeviceInfoGroup(),

@@ -30,7 +30,6 @@ import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import dev.icerock.moko.resources.StringResource
 import dev.zacsweers.metro.AppScope
@@ -77,8 +76,8 @@ import kotlinx.serialization.Serializable
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.core.metro.AppCoroutineScope
-import mihon.core.navigation.util.LocalBackStack
-import mihon.core.navigation.util.popUntil
+import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.util.Navigator
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.roundedfilled.Delete
 import tachiyomi.core.common.i18n.stringResource
@@ -109,7 +108,7 @@ fun TrackInfoDialogHomeScreen(
     mangaTitle: String,
     sourceId: Long,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val locale = LocalLocale.current
     val viewModel = assistedMetroViewModel<TrackInfoDialogHomeViewModel, TrackInfoDialogHomeViewModel.Factory> {
@@ -128,7 +127,7 @@ fun TrackInfoDialogHomeScreen(
         trackItems = state.trackItems,
         dateFormat = dateFormat,
         onStatusClick = {
-            backStack.add(
+            navigator.push(
                 TrackStatusSelectorRoute(
                     track = it.track!!,
                     serviceId = it.tracker.id,
@@ -136,7 +135,7 @@ fun TrackInfoDialogHomeScreen(
             )
         },
         onChapterClick = {
-            backStack.add(
+            navigator.push(
                 TrackChapterSelectorRoute(
                     track = it.track!!,
                     serviceId = it.tracker.id,
@@ -144,7 +143,7 @@ fun TrackInfoDialogHomeScreen(
             )
         },
         onScoreClick = {
-            backStack.add(
+            navigator.push(
                 TrackScoreSelectorRoute(
                     track = it.track!!,
                     serviceId = it.tracker.id,
@@ -152,7 +151,7 @@ fun TrackInfoDialogHomeScreen(
             )
         },
         onStartDateEdit = {
-            backStack.add(
+            navigator.push(
                 TrackDateSelectorRoute(
                     track = it.track!!,
                     serviceId = it.tracker.id,
@@ -161,7 +160,7 @@ fun TrackInfoDialogHomeScreen(
             )
         },
         onEndDateEdit = {
-            backStack.add(
+            navigator.push(
                 TrackDateSelectorRoute(
                     track = it.track!!,
                     serviceId = it.tracker.id,
@@ -173,7 +172,7 @@ fun TrackInfoDialogHomeScreen(
             if (it.tracker is EnhancedTracker) {
                 viewModel.registerEnhancedTracking(it)
             } else {
-                backStack.add(
+                navigator.push(
                     TrackerSearchRoute(
                         mangaId = mangaId,
                         initialQuery = it.track?.title ?: mangaTitle,
@@ -185,7 +184,7 @@ fun TrackInfoDialogHomeScreen(
         },
         onOpenInBrowser = { openTrackerInBrowser(context, it) },
         onRemoved = {
-            backStack.add(
+            navigator.push(
                 TrackerRemoveRoute(
                     mangaId = mangaId,
                     track = it.track!!,
@@ -316,7 +315,7 @@ data class TrackStatusSelectorRoute(
 
 @Composable
 fun TrackStatusSelectorScreen(track: Track, serviceId: Long) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel =
         assistedMetroViewModel<TrackStatusSelectorViewModel, TrackStatusSelectorViewModel.Factory> {
             create(track = track, trackerId = serviceId)
@@ -328,9 +327,9 @@ fun TrackStatusSelectorScreen(track: Track, serviceId: Long) {
         selections = remember { viewModel.getSelections() },
         onConfirm = {
             viewModel.setStatus()
-            backStack.removeLastOrNull()
+            navigator.pop()
         },
-        onDismissRequest = backStack::removeLastOrNull,
+        onDismissRequest = navigator::pop,
     )
 }
 
@@ -382,7 +381,7 @@ data class TrackChapterSelectorRoute(
 
 @Composable
 fun TrackChapterSelectorScreen(track: Track, serviceId: Long) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel =
         assistedMetroViewModel<TrackChapterSelectorViewModel, TrackChapterSelectorViewModel.Factory> {
             create(track = track, trackerId = serviceId)
@@ -395,9 +394,9 @@ fun TrackChapterSelectorScreen(track: Track, serviceId: Long) {
         range = remember { viewModel.getRange() },
         onConfirm = {
             viewModel.setChapter()
-            backStack.removeLastOrNull()
+            navigator.pop()
         },
-        onDismissRequest = backStack::removeLastOrNull,
+        onDismissRequest = navigator::pop,
     )
 }
 
@@ -454,7 +453,7 @@ data class TrackScoreSelectorRoute(
 
 @Composable
 fun TrackScoreSelectorScreen(track: Track, serviceId: Long) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel =
         assistedMetroViewModel<TrackScoreSelectorViewModel, TrackScoreSelectorViewModel.Factory> {
             create(track = track, trackerId = serviceId)
@@ -467,9 +466,9 @@ fun TrackScoreSelectorScreen(track: Track, serviceId: Long) {
         selections = remember { viewModel.getSelections() },
         onConfirm = {
             viewModel.setScore()
-            backStack.removeLastOrNull()
+            navigator.pop()
         },
-        onDismissRequest = backStack::removeLastOrNull,
+        onDismissRequest = navigator::pop,
     )
 }
 
@@ -530,7 +529,7 @@ fun TrackDateSelectorScreen(
     serviceId: Long,
     start: Boolean,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = assistedMetroViewModel<TrackDateSelectorViewModel, TrackDateSelectorViewModel.Factory> {
         create(track = track, trackerId = serviceId, start = start)
     }
@@ -598,10 +597,10 @@ fun TrackDateSelectorScreen(
         selectableDates = selectableDates,
         onConfirm = {
             viewModel.setDate(it)
-            backStack.removeLastOrNull()
+            navigator.pop()
         },
-        onRemove = { viewModel.confirmRemoveDate(backStack) }.takeIf { canRemove },
-        onDismissRequest = backStack::removeLastOrNull,
+        onRemove = { viewModel.confirmRemoveDate(navigator) }.takeIf { canRemove },
+        onDismissRequest = navigator::pop,
     )
 }
 
@@ -643,8 +642,8 @@ class TrackDateSelectorViewModel(
         }
     }
 
-    fun confirmRemoveDate(backStack: NavBackStack<NavKey>) {
-        backStack.add(TrackDateRemoverRoute(track, tracker.id, start))
+    fun confirmRemoveDate(navigator: Navigator) {
+        navigator.push(TrackDateRemoverRoute(track, tracker.id, start))
     }
 }
 
@@ -661,7 +660,7 @@ fun TrackDateRemoverScreen(
     serviceId: Long,
     start: Boolean,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = assistedMetroViewModel<TrackDateRemoverViewModel, TrackDateRemoverViewModel.Factory> {
         create(track = track, trackerId = serviceId, start = start)
     }
@@ -694,13 +693,13 @@ fun TrackDateRemoverScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small, Alignment.End),
             ) {
-                TextButton(onClick = backStack::removeLastOrNull) {
+                TextButton(onClick = navigator::pop) {
                     Text(text = stringResource(MR.strings.action_cancel))
                 }
                 FilledTonalButton(
                     onClick = {
                         viewModel.removeDate()
-                        backStack.popUntil { it is TrackInfoDialogHomeRoute }
+                        navigator.popTo { it is TrackInfoDialogHomeRoute }
                     },
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -760,7 +759,7 @@ fun TrackerSearchScreen(
     currentUrl: String?,
     serviceId: Long,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = assistedMetroViewModel<TrackerSearchViewModel, TrackerSearchViewModel.Factory> {
         create(
             mangaId = mangaId,
@@ -783,9 +782,9 @@ fun TrackerSearchScreen(
             val selected = state.selected ?: return@f
             selected.private = private
             viewModel.registerTracking(selected)
-            backStack.removeLastOrNull()
+            navigator.pop()
         },
-        onDismissRequest = backStack::removeLastOrNull,
+        onDismissRequest = navigator::pop,
         supportsPrivateTracking = viewModel.supportsPrivateTracking,
     )
 }
@@ -880,7 +879,7 @@ fun TrackerRemoveScreen(
     track: Track,
     serviceId: Long,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val viewModel = assistedMetroViewModel<TrackerRemoveViewModel, TrackerRemoveViewModel.Factory> {
         create(mangaId = mangaId, track = track, trackerId = serviceId)
     }
@@ -925,14 +924,14 @@ fun TrackerRemoveScreen(
                     Alignment.End,
                 ),
             ) {
-                TextButton(onClick = backStack::removeLastOrNull) {
+                TextButton(onClick = navigator::pop) {
                     Text(text = stringResource(MR.strings.action_cancel))
                 }
                 FilledTonalButton(
                     onClick = {
                         viewModel.unregisterTracking(serviceId)
                         if (removeRemoteTrack) viewModel.deleteMangaFromService()
-                        backStack.removeLastOrNull()
+                        navigator.pop()
                     },
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,

@@ -17,8 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEventBus
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
@@ -60,7 +58,8 @@ import mihon.core.navigation.TrackInfoDialogRoute
 import mihon.core.navigation.WebViewRoute
 import mihon.core.navigation.domain.SettingsDestination
 import mihon.core.navigation.util.LocalAssistContentManager
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
+import mihon.core.navigation.util.Navigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.presentation.core.util.isTabletUi
 import tachiyomi.core.common.util.system.logcat
@@ -73,7 +72,7 @@ fun MangaScreen(
     mangaId: Long,
     fromSource: Boolean,
 ) {
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val resultEventBus = LocalResultEventBus.current
     val assistContentManager = LocalAssistContentManager.current
     val context = LocalContext.current
@@ -114,7 +113,7 @@ fun MangaScreen(
         isTabletUi = isTabletUi(),
         chapterSwipeStartAction = viewModel.chapterSwipeStartAction,
         chapterSwipeEndAction = viewModel.chapterSwipeEndAction,
-        navigateUp = backStack::removeLastOrNull,
+        navigateUp = navigator::pop,
         onChapterClicked = { openChapter(context, it) },
         onDownloadChapter = viewModel::runChapterDownloadActions.takeIf { !successState.source.isLocalOrStub() },
         downloadProgressProvider = viewModel::getDownloadProgress,
@@ -128,7 +127,7 @@ fun MangaScreen(
         },
         onWebViewClicked = {
             openMangaInWebView(
-                backStack,
+                navigator,
                 viewModel.manga,
                 viewModel.source,
             )
@@ -142,9 +141,9 @@ fun MangaScreen(
         }.takeIf { isHttpSource },
         onTrackingClicked = {
             if (!successState.hasLoggedInTrackers) {
-                backStack.addSettingsRoute(SettingsRoute(SettingsDestination.Tracking), isTabletUi)
+                navigator.addSettingsRoute(SettingsRoute(SettingsDestination.Tracking), isTabletUi)
             } else {
-                backStack.add(
+                navigator.push(
                     TrackInfoDialogRoute(
                         mangaId = successState.manga.id,
                         mangaTitle = successState.manga.title,
@@ -153,11 +152,11 @@ fun MangaScreen(
                 )
             }
         },
-        onTagSearch = { scope.launch { performGenreSearch(backStack, resultEventBus, it, viewModel.source!!) } },
+        onTagSearch = { scope.launch { performGenreSearch(navigator, resultEventBus, it, viewModel.source!!) } },
         onFilterButtonClicked = viewModel::showSettingsDialog,
         onRefresh = viewModel::fetchAllFromSource,
         onContinueReading = { continueReading(context, viewModel.getNextUnreadChapter()) },
-        onSearch = { query, global -> scope.launch { performSearch(backStack, resultEventBus, query, global) } },
+        onSearch = { query, global -> scope.launch { performSearch(navigator, resultEventBus, query, global) } },
         onCoverClicked = viewModel::showCoverDialog,
         onShareClicked = { shareManga(context, viewModel.manga, viewModel.source) }.takeIf { isHttpSource },
         onDownloadActionClicked = viewModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
@@ -166,10 +165,10 @@ fun MangaScreen(
             successState.manga.favorite
         },
         onMigrateClicked = {
-            backStack.add(MigrationConfigRoute(successState.manga.id))
+            navigator.push(MigrationConfigRoute(successState.manga.id))
             Unit
         }.takeIf { successState.manga.favorite },
-        onEditNotesClicked = { backStack.add(MangaNotesRoute(manga = successState.manga)) },
+        onEditNotesClicked = { navigator.push(MangaNotesRoute(manga = successState.manga)) },
         onMultiBookmarkClicked = viewModel::bookmarkChapters,
         onMultiMarkAsReadClicked = viewModel::markChaptersRead,
         onMarkPreviousAsReadClicked = viewModel::markPreviousChapterRead,
@@ -198,7 +197,7 @@ fun MangaScreen(
             ChangeCategoryDialog(
                 initialSelection = dialog.initialSelection,
                 onDismissRequest = onDismissRequest,
-                onEditCategories = { backStack.add(CategoryRoute) },
+                onEditCategories = { navigator.push(CategoryRoute) },
                 onConfirm = { include, _ ->
                     viewModel.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
                 },
@@ -219,7 +218,7 @@ fun MangaScreen(
                 duplicates = dialog.duplicates,
                 onDismissRequest = onDismissRequest,
                 onConfirm = { viewModel.toggleFavorite(onRemoved = {}, checkDuplicate = false) },
-                onOpenManga = { backStack.add(MangaRoute(it.id)) },
+                onOpenManga = { navigator.push(MangaRoute(it.id)) },
                 onMigrate = { viewModel.showMigrateDialog(it) },
             )
         }
@@ -229,7 +228,7 @@ fun MangaScreen(
                 current = dialog.current,
                 target = dialog.target,
                 // Initiated from the context of [dialog.target] so we show [dialog.current].
-                onClickTitle = { backStack.add(MangaRoute(dialog.current.id)) },
+                onClickTitle = { navigator.push(MangaRoute(dialog.current.id)) },
                 onDismissRequest = onDismissRequest,
             )
         }
@@ -317,9 +316,9 @@ private fun getMangaUrl(manga_: Manga?, source_: Source?): String? {
     }
 }
 
-private fun openMangaInWebView(backStack: NavBackStack<NavKey>, manga_: Manga?, source_: Source?) {
+private fun openMangaInWebView(navigator: Navigator, manga_: Manga?, source_: Source?) {
     getMangaUrl(manga_, source_)?.let { url ->
-        backStack.add(
+        navigator.push(
             WebViewRoute(
                 url = url,
                 initialTitle = manga_?.title,
@@ -346,30 +345,26 @@ private fun shareManga(context: Context, manga_: Manga?, source_: Source?) {
  * @param query the search query to the parent controller
  */
 private fun performSearch(
-    backStack: NavBackStack<NavKey>,
+    navigator: Navigator,
     resultEventBus: ResultEventBus,
     query: String,
     global: Boolean,
 ) {
     if (global) {
-        backStack.add(GlobalSearchRoute(query))
+        navigator.push(GlobalSearchRoute(query))
         return
     }
 
-    if (backStack.size < 2) {
-        return
-    }
-
-    when (backStack[backStack.lastIndex - 1]) {
+    when (navigator.previous) {
         is HomeRoute -> {
-            backStack.removeLastOrNull()
+            navigator.pop()
             resultEventBus.sendResult(
                 resultKey = LibrarySearchEventKey,
                 result = query,
             )
         }
         is BrowseSourceRoute -> {
-            backStack.removeLastOrNull()
+            navigator.pop()
             resultEventBus.sendResult(
                 resultKey = BrowseSearchEventKey,
                 result = query,
@@ -384,24 +379,19 @@ private fun performSearch(
  * @param genreName the search genre to the parent controller
  */
 private fun performGenreSearch(
-    backStack: NavBackStack<NavKey>,
+    navigator: Navigator,
     resultEventBus: ResultEventBus,
     genreName: String,
     source: Source,
 ) {
-    if (backStack.size < 2) {
-        return
-    }
-
-    val previousController = backStack[backStack.size - 2]
-    if (previousController is BrowseSourceRoute && source is HttpSource) {
-        backStack.removeLastOrNull()
+    if (navigator.previous is BrowseSourceRoute && source is HttpSource) {
+        navigator.pop()
         resultEventBus.sendResult(
             resultKey = browseSearchGenreEventKey,
             result = genreName,
         )
     } else {
-        performSearch(backStack, resultEventBus, genreName, global = false)
+        performSearch(navigator, resultEventBus, genreName, global = false)
     }
 }
 

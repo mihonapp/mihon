@@ -45,7 +45,7 @@ import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.SourcePreferencesRoute
 import mihon.core.navigation.WebViewRoute
 import mihon.core.navigation.util.LocalAssistContentManager
-import mihon.core.navigation.util.LocalBackStack
+import mihon.core.navigation.util.LocalNavigator
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
@@ -72,12 +72,12 @@ fun BrowseSourceScreen(
         }
     val state by viewModel.state.collectAsState()
 
-    val backStack = LocalBackStack.current
+    val navigator = LocalNavigator.current
     val assistContentManager = LocalAssistContentManager.current
     val navigateUp: () -> Unit = {
         when {
             !state.isUserQuery && state.toolbarQuery != null -> viewModel.setToolbarQuery(null)
-            else -> backStack.removeLastOrNull()
+            else -> navigator.pop()
         }
     }
 
@@ -103,7 +103,7 @@ fun BrowseSourceScreen(
     val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
     val onWebViewClick = f@{
         val httpSource = source as? HttpSource ?: return@f
-        backStack.add(
+        navigator.push(
             WebViewRoute(
                 url = httpSource.getHomeUrl(),
                 initialTitle = httpSource.name,
@@ -132,7 +132,7 @@ fun BrowseSourceScreen(
                     navigateUp = navigateUp,
                     onWebViewClick = onWebViewClick,
                     onHelpClick = onHelpClick,
-                    onSettingsClick = { backStack.add(SourcePreferencesRoute(sourceId)) },
+                    onSettingsClick = { navigator.push(SourcePreferencesRoute(sourceId)) },
                     onSearch = viewModel::search,
                 )
 
@@ -214,7 +214,7 @@ fun BrowseSourceScreen(
             onWebViewClick = onWebViewClick,
             onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
             onLocalSourceHelpClick = onHelpClick,
-            onMangaClick = { backStack.add(MangaRoute(it.id, true)) },
+            onMangaClick = { navigator.push(MangaRoute(it.id, true)) },
             onMangaLongClick = { manga ->
                 scope.launch(Dispatchers.IO) {
                     val duplicates = viewModel.getDuplicateLibraryManga(manga)
@@ -247,7 +247,7 @@ fun BrowseSourceScreen(
                 duplicates = dialog.duplicates,
                 onDismissRequest = onDismissRequest,
                 onConfirm = { viewModel.addFavorite(dialog.manga) },
-                onOpenManga = { backStack.add(MangaRoute(it.id)) },
+                onOpenManga = { navigator.push(MangaRoute(it.id)) },
                 onMigrate = { viewModel.setDialog(BrowseSourceViewModel.Dialog.Migrate(dialog.manga, it)) },
             )
         }
@@ -257,7 +257,7 @@ fun BrowseSourceScreen(
                 current = dialog.current,
                 target = dialog.target,
                 // Initiated from the context of [dialog.target] so we show [dialog.current].
-                onClickTitle = { backStack.add(MangaRoute(dialog.current.id)) },
+                onClickTitle = { navigator.push(MangaRoute(dialog.current.id)) },
                 onDismissRequest = onDismissRequest,
             )
         }
@@ -274,7 +274,7 @@ fun BrowseSourceScreen(
             ChangeCategoryDialog(
                 initialSelection = dialog.initialSelection,
                 onDismissRequest = onDismissRequest,
-                onEditCategories = { backStack.add(CategoryRoute) },
+                onEditCategories = { navigator.push(CategoryRoute) },
                 onConfirm = { include, _ ->
                     viewModel.changeMangaFavorite(dialog.manga)
                     viewModel.moveMangaToCategories(dialog.manga, include)
