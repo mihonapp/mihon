@@ -11,7 +11,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.domain)
     implementation(projects.presentationCore)
     implementation(libs.bundles.androidx.navigation)
 
