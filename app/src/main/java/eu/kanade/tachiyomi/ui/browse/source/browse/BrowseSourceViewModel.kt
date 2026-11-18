@@ -188,6 +188,23 @@ class BrowseSourceViewModel(
         }
     }
 
+    /**
+     * Applies [filters] using the current search field text as the query. Both the listing and the
+     * field are normalized, so a blank field means no query and filters only.
+     */
+    fun searchWithFilters(filters: FilterList) {
+        state.update {
+            val query = it.toolbarQuery?.takeIf(String::isNotBlank)
+            it.copy(
+                listing = Listing.Search(
+                    query = query,
+                    filters = filters,
+                ),
+                toolbarQuery = query,
+            )
+        }
+    }
+
     fun searchGenre(genreName: String) {
         val defaultFilters = source?.getFilterList() ?: return
         var genreExists = false
