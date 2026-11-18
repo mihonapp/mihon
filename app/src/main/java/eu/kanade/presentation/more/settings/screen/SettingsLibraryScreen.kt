@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import kotlinx.coroutines.launch
 import mihon.app.di.appGraph
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.library.model.ChapterNavigationControls
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_CHARGING
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_NETWORK_NOT_METERED
@@ -216,6 +217,16 @@ object SettingsLibraryScreen : SearchableSettings {
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_behavior),
             preferenceItems = listOf(
+                Preference.PreferenceItem.ListPreference(
+                    preference = libraryPreferences.chapterNavigationControls,
+                    entries = mapOf(
+                        ChapterNavigationControls.Disabled to stringResource(MR.strings.disabled),
+                        ChapterNavigationControls.Arrows to stringResource(MR.strings.pref_chapter_controls_arrows),
+                        ChapterNavigationControls.JumpToTop to stringResource(MR.strings.library_jump_to_top),
+                        ChapterNavigationControls.Both to stringResource(MR.strings.pref_chapter_controls_both),
+                    ),
+                    title = stringResource(MR.strings.pref_chapter_navigation_controls),
+                ),
                 Preference.PreferenceItem.ListPreference(
                     preference = libraryPreferences.swipeToStartAction,
                     entries = mapOf(

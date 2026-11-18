@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -121,22 +122,30 @@ fun BaseSortItem(label: String, icon: ImageVector?, onClick: () -> Unit) {
 }
 
 @Composable
-fun CheckboxItem(label: String, pref: Preference<Boolean>) {
+fun CheckboxItem(label: String, pref: Preference<Boolean>, enabled: Boolean = true) {
     val checked by pref.collectAsState()
-    CheckboxItem(
+    CheckboxItemImpl(
         label = label,
         checked = checked,
+        enabled = enabled,
         onClick = { pref.toggle() },
     )
 }
 
 @Composable
 fun CheckboxItem(label: String, checked: Boolean, onClick: () -> Unit) {
+    CheckboxItemImpl(label, checked, true, onClick)
+}
+
+@Composable
+private fun CheckboxItemImpl(label: String, checked: Boolean, enabled: Boolean, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
+        enabled = enabled,
         widget = {
             Checkbox(
                 checked = checked,
+                enabled = enabled,
                 onCheckedChange = null,
             )
         },
@@ -422,10 +431,11 @@ private fun BaseSettingsItem(
     label: String,
     widget: @Composable RowScope.() -> Unit,
     onClick: () -> Unit,
+    enabled: Boolean = true,
 ) {
     Row(
         modifier = Modifier
-            .clickable(onClick = onClick)
+            .clickable(enabled = enabled, onClick = onClick)
             .fillMaxWidth()
             .padding(
                 horizontal = SettingsItemsPaddings.Horizontal,
@@ -438,6 +448,7 @@ private fun BaseSettingsItem(
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.alpha(if (enabled) 1f else DISABLED_ALPHA),
         )
     }
 }

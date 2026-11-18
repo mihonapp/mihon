@@ -2,6 +2,7 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
@@ -13,20 +14,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import eu.kanade.core.preference.PreferenceMutableState
 import eu.kanade.tachiyomi.ui.library.LibraryItem
+import eu.kanade.tachiyomi.ui.library.LibraryNavigation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.library.model.LibraryPageButtons
 import tachiyomi.presentation.core.components.material.PullRefresh
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun LibraryContent(
+    navigation: LibraryNavigation,
+    paginated: Boolean,
+    pageRows: Int,
+    stretchPageSpacing: Boolean,
+    onPageRowsChange: (Int) -> Unit,
+    pageButtons: LibraryPageButtons,
+    pageSlider: Boolean,
     categories: List<Category>,
     searchQuery: String?,
     selection: Set<Long>,
@@ -58,27 +70,41 @@ fun LibraryContent(
         val scope = rememberCoroutineScope()
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
 
-        if (showPageTabs && categories.isNotEmpty() && (categories.size > 1 || !categories.first().isSystemCategory)) {
+        if (showPageTabs) {
             LaunchedEffect(categories) {
                 if (categories.size <= pagerState.currentPage) {
                     pagerState.scrollToPage(categories.size - 1)
                 }
             }
-            LibraryTabs(
-                categories = categories,
-                pagerState = pagerState,
-                getItemCountForCategory = getItemCountForCategory,
-                onTabItemClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(it)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                LibraryTabs(
+                    modifier = Modifier.weight(1f),
+                    categories = categories,
+                    pagerState = pagerState,
+                    getItemCountForCategory = getItemCountForCategory,
+                    onTabItemClick = {
+                        scope.launch {
+                            if (paginated) pagerState.scrollToPage(it) else pagerState.animateScrollToPage(it)
+                        }
+                    },
+                )
+                if (paginated && pageButtons == LibraryPageButtons.Hidden) {
+                    navigation.pageInfo?.let {
+                        LibraryPageNumber(
+                            it.index,
+                            it.count,
+                            compact = true,
+                            onClick = { navigation.showPageDialog = true },
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                        )
                     }
-                },
-            )
+                }
+            }
         }
 
         PullRefresh(
             refreshing = isRefreshing,
-            enabled = selection.isEmpty(),
+            enabled = selection.isEmpty() && !paginated,
             onRefresh = {
                 scope.launch {
                     if (!onRefresh()) return@launch
@@ -90,6 +116,13 @@ fun LibraryContent(
             },
         ) {
             LibraryPager(
+                navigation = navigation,
+                paginated = paginated,
+                pageRows = pageRows,
+                stretchPageSpacing = stretchPageSpacing,
+                onPageRowsChange = onPageRowsChange,
+                pageButtons = pageButtons,
+                pageSlider = pageSlider,
                 state = pagerState,
                 contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
                 hasActiveFilters = hasActiveFilters,
