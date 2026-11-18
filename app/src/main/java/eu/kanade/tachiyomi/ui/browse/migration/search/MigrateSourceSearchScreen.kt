@@ -10,21 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.result.LocalResultEventBus
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.ContributesIntoMap
-import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactory
-import dev.zacsweers.metrox.viewmodel.ManualViewModelAssistedFactoryKey
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.components.SearchToolbar
@@ -32,9 +22,6 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterDialog
 import eu.kanade.tachiyomi.ui.home.TabEvent
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationListRoute
 import mihon.core.navigation.WebViewRoute
@@ -45,30 +32,21 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.FilterList
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
-import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
-
 @Composable
 fun MigrateSourceSearchScreen(
     currentMangaId: Long,
     sourceId: Long,
     query: String?,
 ) {
-    val currentManga = assistedMetroViewModel<CurrentMangaViewModel, CurrentMangaViewModel.Factory> {
-        create(mangaId = currentMangaId)
-    }
-        .manga
-        .collectAsState()
-        .value
     val uriHandler = LocalUriHandler.current
     val navigator = LocalNavigator.current
     val resultEventBus = LocalResultEventBus.current
-    val scope = rememberCoroutineScope()
 
     val viewModel =
         assistedMetroViewModel<BrowseSourceViewModel, BrowseSourceViewModel.Factory> {
@@ -77,7 +55,7 @@ fun MigrateSourceSearchScreen(
     val state by viewModel.state.collectAsState()
 
     val source = state.source
-    if (source == null || currentManga == null) {
+    if (source == null) {
         LoadingScreen()
         return
     }
@@ -113,10 +91,10 @@ fun MigrateSourceSearchScreen(
                 .lastOrNull()
 
             if (migrateListRoute == null) {
-                viewModel.setDialog(BrowseSourceViewModel.Dialog.Migrate(target = it, current = currentManga))
+                viewModel.showMigrateDialog(currentMangaId = currentMangaId, target = it)
             } else {
                 resultEventBus.sendResult(
-                    result = MatchOverrideEvent(current = currentManga.id, target = it.id),
+                    result = MatchOverrideEvent(current = currentMangaId, target = it.id),
                 )
                 navigator.popTo { screen -> screen is MigrationListRoute }
             }
@@ -158,45 +136,18 @@ fun MigrateSourceSearchScreen(
         }
         is BrowseSourceViewModel.Dialog.Migrate -> {
             MigrateMangaDialog(
-                current = currentManga,
+                current = dialog.current,
                 target = dialog.target,
-                // Initiated from the context of [currentManga] so we show [dialog.target].
+                // Initiated from the context of [dialog.current] so we show [dialog.target].
                 onClickTitle = { navigator.push(MangaRoute(dialog.target.id)) },
                 onDismissRequest = onDismissRequest,
                 onComplete = {
-                    scope.launch {
-                        navigator.popToRoot()
-                        resultEventBus.sendResult<TabEvent>(
-                            result = TabEvent.Browse(),
-                        )
-                        navigator.push(MangaRoute(dialog.target.id))
-                    }
+                    navigator.popToRoot()
+                    resultEventBus.sendResult<TabEvent>(TabEvent.Browse())
+                    navigator.push(MangaRoute(dialog.target.id))
                 },
             )
         }
         else -> {}
-    }
-}
-
-@AssistedInject
-class CurrentMangaViewModel(
-    @Assisted mangaId: Long,
-    getManga: GetManga,
-) : ViewModel() {
-
-    val manga: StateFlow<Manga?>
-        field = MutableStateFlow<Manga?>(null)
-
-    init {
-        viewModelScope.launch {
-            manga.value = getManga.await(mangaId)
-        }
-    }
-
-    @AssistedFactory
-    @ManualViewModelAssistedFactoryKey
-    @ContributesIntoMap(AppScope::class)
-    interface Factory : ManualViewModelAssistedFactory {
-        fun create(mangaId: Long): CurrentMangaViewModel
     }
 }
