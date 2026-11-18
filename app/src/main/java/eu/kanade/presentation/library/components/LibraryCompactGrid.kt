@@ -12,6 +12,7 @@ import tachiyomi.domain.manga.model.MangaCover
 @Composable
 internal fun LibraryCompactGrid(
     items: List<LibraryItem>,
+    spotlightItem: LibraryItem?,
     showTitle: Boolean,
     columns: Int,
     contentPadding: PaddingValues,
@@ -28,6 +29,12 @@ internal fun LibraryCompactGrid(
         contentPadding = contentPadding,
     ) {
         globalSearchItem(searchQuery, onGlobalSearchClicked)
+        librarySpotlightItem(
+            libraryItem = spotlightItem,
+            onClick = onClick,
+            onLongClick = onLongClick,
+            onContinueReading = onClickContinueReading,
+        )
 
         items(
             items = items,

@@ -48,7 +48,7 @@ data object MoreTab : Tab {
             val enter = AnimatedImageVector.animatedVectorResource(R.drawable.animated_more_enter)
             val exit = AnimatedImageVector.animatedVectorResource(R.drawable.animated_more_exit)
             return TabOptions(
-                index = 4u,
+                index = 5u,
                 title = stringResource(MR.strings.label_more),
                 icon = rememberAnimatedVectorPainter(enter, exit, isSelected),
             )

@@ -3,6 +3,7 @@ package eu.kanade.presentation.library.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,6 +17,7 @@ import tachiyomi.presentation.core.util.plus
 @Composable
 internal fun LibraryList(
     items: List<LibraryItem>,
+    spotlightItem: LibraryItem?,
     contentPadding: PaddingValues,
     selection: Set<Long>,
     onClick: (LibraryManga) -> Unit,
@@ -34,6 +36,19 @@ internal fun LibraryList(
                     modifier = Modifier.fillMaxWidth(),
                     searchQuery = searchQuery,
                     onClick = onGlobalSearchClicked,
+                )
+            }
+            if (spotlightItem != null) {
+                LibrarySpotlightCard(
+                    libraryItem = spotlightItem,
+                    onClick = { onClick(spotlightItem.libraryManga) },
+                    onLongClick = { onLongClick(spotlightItem.libraryManga) },
+                    onContinueReading = onClickContinueReading
+                        ?.takeIf { spotlightItem.unreadCount > 0 }
+                        ?.let { callback -> { callback(spotlightItem.libraryManga) } },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
                 )
             }
         }
