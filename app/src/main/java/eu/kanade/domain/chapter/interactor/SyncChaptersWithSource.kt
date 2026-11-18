@@ -14,10 +14,16 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import mihon.domain.source.model.ChapterOrigin
+import mihon.domain.source.model.chapterOrigins
+import mihon.domain.source.model.origins
+import mihon.domain.source.model.sourceId
+import mihon.domain.source.service.MultiSourceChapterMerger
 import tachiyomi.data.chapter.ChapterSanitizer
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.ChapterRemoteUpdate
+import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.chapter.service.ChapterRecognition
@@ -64,7 +70,28 @@ class SyncChaptersWithSource(
         val now = Clock.System.now().toLocalDateTime(timeZone)
         val nowInstant = now.toInstant(timeZone)
 
-        val sourceChapters = rawSourceChapters
+        val dbChapters = chapterRepository.getChapterByMangaId(manga.id)
+        val aggregate = rawSourceChapters.any { it.memo.chapterOrigins().isNotEmpty() }
+        val incoming = if (aggregate) {
+            // Resolve against fresh progress and the actual queue after source requests finish.
+            val queued = downloadManager.queueState.value.filter { it.manga.id == manga.id }
+                .associateBy { it.chapter.id }
+            val current = dbChapters.map { chapter ->
+                queued[chapter.id]?.let { chapter.copy(memo = it.chapter.memo) } ?: chapter
+            }
+            val protected = current.filter { it.read || it.bookmark || it.lastPageRead > 0 }
+                .mapTo(mutableSetOf()) { it.id }
+            val previouslyQueuedOrDownloadedIds = downloadManager.getDownloadedChapterIds(current, manga) + queued.keys
+            protected += previouslyQueuedOrDownloadedIds
+            val bySource = rawSourceChapters.flatMap { chapter ->
+                chapter.memo.chapterOrigins().ifEmpty { listOf(ChapterOrigin.from(manga.source, chapter)) }
+            }.groupBy { it.sourceId }.map { (sourceId, origins) -> sourceId to origins.map { it.toSChapter() } }
+            MultiSourceChapterMerger.merge(manga.source, bySource, current, protected, previouslyQueuedOrDownloadedIds)
+        } else {
+            rawSourceChapters
+        }
+
+        val sourceChapters = incoming
             .distinctBy { it.url }
             .mapIndexed { i, sChapter ->
                 Chapter.create()
@@ -73,8 +100,8 @@ class SyncChaptersWithSource(
                     .copy(mangaId = manga.id, sourceOrder = i.toLong())
             }
 
-        val dbChapters = chapterRepository.getChapterByMangaId(manga.id)
         val dbChaptersByUrl = dbChapters.associateBy { it.url }
+        val sharedUserState = dbChapters.groupBy { MultiSourceChapterMerger.identity(it, manga.source) }
 
         val newChapters = mutableListOf<Chapter>()
         val updatedChapters = mutableListOf<ChapterRemoteUpdate>()
@@ -88,6 +115,7 @@ class SyncChaptersWithSource(
         val preparedChapters = if (source is HttpSource) {
             val sManga = manga.toSManga()
             sourceChapters.map { chapter ->
+                if (chapter.origins().isNotEmpty()) return@map chapter
                 val sChapter = chapter.toSChapter()
                 @Suppress("DEPRECATION")
                 source.prepareNewChapter(sChapter, sManga)
@@ -100,7 +128,17 @@ class SyncChaptersWithSource(
         // Recognize chapter numbers, from the whole list since names alone don't always tell.
         val recognizedChapters = preparedChapters
             .zip(ChapterRecognition.parseChapterNumbers(manga.title, preparedChapters)) { chapter, numbering ->
-                chapter.copy(chapterNumber = numbering.chapter?.let(ChapterRecognition::toDouble) ?: -1.0)
+                if (chapter.origins().isNotEmpty()) {
+                    val equivalents = sharedUserState[
+                        MultiSourceChapterMerger.identity(
+                            chapter,
+                            manga.source,
+                        ),
+                    ].orEmpty()
+                    chapter.copy(read = equivalents.any { it.read }, bookmark = equivalents.any { it.bookmark })
+                } else {
+                    chapter.copy(chapterNumber = numbering.chapter?.let(ChapterRecognition::toDouble) ?: -1.0)
+                }
             }
 
         for (chapter in recognizedChapters) {
@@ -124,7 +162,7 @@ class SyncChaptersWithSource(
                             dbChapter.scanlator,
                             dbChapter.url,
                             manga.title,
-                            manga.source,
+                            dbChapter.sourceId(manga.source),
                         )
 
                     if (shouldRenameChapter) {
@@ -225,6 +263,17 @@ class SyncChaptersWithSource(
             added = toAdd,
             updated = updatedChapters,
         )
+
+        // Merging existing scanlations can keep one old row and remove another. Preserve their shared flags.
+        val sharedFlagUpdates = recognizedChapters.filter { it.origins().isNotEmpty() }.mapNotNull { chapter ->
+            val old = dbChaptersByUrl[chapter.url] ?: return@mapNotNull null
+            if ((!chapter.read || old.read) && (!chapter.bookmark || old.bookmark)) return@mapNotNull null
+            ChapterUpdate(old.id) {
+                if (chapter.read) read = true
+                if (chapter.bookmark) bookmark = true
+            }
+        }
+        if (sharedFlagUpdates.isNotEmpty()) chapterRepository.updateAll(sharedFlagUpdates)
 
         val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
 

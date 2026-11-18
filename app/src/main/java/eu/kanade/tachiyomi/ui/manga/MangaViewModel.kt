@@ -47,6 +47,7 @@ import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
+import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
@@ -78,6 +79,10 @@ import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import mihon.domain.source.interactor.UpdateMangaFromRemote
+import mihon.domain.source.model.assignedSourceId
+import mihon.domain.source.model.linkedSources
+import mihon.domain.source.model.origins
+import mihon.domain.source.model.sourceId
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -370,6 +375,9 @@ class MangaViewModel(
             )
                 .getOrThrow()
 
+            if (update.sourceFailures.isNotEmpty()) {
+                viewModelScope.launch { snackbarHostState.showSnackbar(update.sourceFailures.joinToString("\n")) }
+            }
             if (manualFetch) {
                 downloadNewChapters(update.newChapters)
             }
@@ -448,6 +456,7 @@ class MangaViewModel(
                         val result = updateManga.awaitUpdateFavorite(manga.id, true)
                         if (!result) return@launch
                         moveMangaToCategory(defaultCategory)
+                        showLinkedSourceSearch()
                     }
 
                     // Automatic 'Default' or no categories
@@ -455,6 +464,7 @@ class MangaViewModel(
                         val result = updateManga.awaitUpdateFavorite(manga.id, true)
                         if (!result) return@launch
                         moveMangaToCategory(null)
+                        showLinkedSourceSearch()
                     }
 
                     // Choose a category
@@ -465,6 +475,12 @@ class MangaViewModel(
                 appScope.launch { addTracks.bindEnhancedTrackers(manga, state.source) }
             }
         }
+    }
+
+    fun showLinkedSourceSearch() {
+        val manga = manga ?: return
+        if (source !is HttpSource && manga.linkedSources().isEmpty()) return
+        dialog.value = Dialog.LinkedSources
     }
 
     fun showRemoveFromLibraryDialog() {
@@ -538,7 +554,7 @@ class MangaViewModel(
         if (manga.favorite) return
 
         viewModelScope.launch {
-            updateManga.awaitUpdateFavorite(manga.id, true)
+            if (updateManga.awaitUpdateFavorite(manga.id, true)) showLinkedSourceSearch()
         }
     }
 
@@ -593,7 +609,7 @@ class MangaViewModel(
         return downloadProgress[chapterId] ?: 0
     }
 
-    private fun List<Chapter>.toChapterListItems(manga: Manga): List<ChapterList.Item> {
+    private suspend fun List<Chapter>.toChapterListItems(manga: Manga): List<ChapterList.Item> {
         val isLocal = manga.isLocal()
         val queuedDownloads = if (isLocal) emptyMap() else downloadManager.getQueuedDownloadsByChapterId()
         val downloadedChapterIds = if (isLocal) emptySet() else downloadManager.getDownloadedChapterIds(this, manga)
@@ -609,6 +625,14 @@ class MangaViewModel(
             ChapterList.Item(
                 chapter = chapter,
                 downloadState = downloadState,
+                sourceName = chapter.origins().takeIf {
+                    it.isNotEmpty() && (
+                        chapter.assignedSourceId() != null ||
+                            chapter.id in queuedDownloads || chapter.id in downloadedChapterIds
+                        )
+                }?.let {
+                    sourceManager.getOrStub(chapter.sourceId(manga.source)).toString()
+                },
             )
         }
     }
@@ -1055,6 +1079,8 @@ class MangaViewModel(
     // Chapters list - end
 
     sealed interface Dialog {
+        data object LinkedSources : Dialog
+
         data class ChangeCategory(
             val manga: Manga,
             val initialSelection: List<CheckboxState<Category>>,
@@ -1222,6 +1248,7 @@ sealed class ChapterList {
         val chapter: Chapter,
         val downloadState: Download.State,
         val selected: Boolean = false,
+        val sourceName: String? = null,
     ) : ChapterList() {
         val id = chapter.id
         val isDownloaded = downloadState == Download.State.DOWNLOADED

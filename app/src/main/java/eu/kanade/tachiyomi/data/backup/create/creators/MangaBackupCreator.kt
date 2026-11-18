@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.backup.create.creators
 
 import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.data.backup.create.BackupOptions
+import eu.kanade.tachiyomi.data.backup.create.OfficialBackupConverter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.toBackupChapter
@@ -32,7 +33,14 @@ class MangaBackupCreator(
      */
     operator fun invoke(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> = flow {
         mangas.chunked(CHUNK_SIZE).forEach { chunk ->
-            backupMangas(chunk, options).forEach { emit(it) }
+            backupMangas(chunk, options).forEach { manga ->
+                val entries = if (options.officialCompatibility) {
+                    OfficialBackupConverter.convert(manga, options.chapters)
+                } else {
+                    listOf(manga)
+                }
+                entries.forEach { emit(it) }
+            }
         }
     }
 
@@ -60,7 +68,7 @@ class MangaBackupCreator(
 
             mangaObject.excludedScanlators = excludedScanlatorsByMangaId[manga.id].orEmpty()
 
-            if (options.chapters) {
+            if (options.chapters || (options.officialCompatibility && options.history)) {
                 mangaObject.chapters = chapters.map { it.toBackupChapter() }
             }
 

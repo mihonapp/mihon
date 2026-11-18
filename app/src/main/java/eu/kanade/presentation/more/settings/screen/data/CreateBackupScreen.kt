@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
@@ -81,7 +82,7 @@ class CreateBackupScreen : Screen() {
                     scope.launch {
                         if (!BackupCreateWorker.isManualJobRunning(context)) {
                             try {
-                                chooseBackupDir.launch(BackupCreator.getFilename())
+                                chooseBackupDir.launch(BackupCreator.getFilename(state.options.officialCompatibility))
                             } catch (_: ActivityNotFoundException) {
                                 context.toast(MR.strings.file_picker_error)
                             }
@@ -100,6 +101,10 @@ class CreateBackupScreen : Screen() {
                 item {
                     SectionCard(MR.strings.label_library) {
                         Options(BackupOptions.libraryOptions, state, viewModel)
+                        Options(BackupOptions.compatibilityOptions, state, viewModel)
+                        if (state.options.officialCompatibility) {
+                            Text(stringResource(MR.strings.backup_official_compatibility_summary))
+                        }
                     }
                 }
 

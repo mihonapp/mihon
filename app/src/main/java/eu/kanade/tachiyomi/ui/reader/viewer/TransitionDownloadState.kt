@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
+import mihon.domain.source.model.sourceId
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.isLocal
 
@@ -38,18 +39,12 @@ fun DownloadManager.transitionDownloadState(
                     chapterScanlator = it.scanlator,
                     chapterUrl = it.url,
                     mangaTitle = manga.title,
-                    sourceId = manga.source,
+                    sourceId = it.sourceId(manga.source),
                 )
             } ?: false,
         isGoingToChapterOnDisk = goingToChapter?.let {
             {
-                isChapterDownloadedOnDisk(
-                    chapterName = it.name,
-                    chapterScanlator = it.scanlator,
-                    chapterUrl = it.url,
-                    mangaTitle = manga.title,
-                    source = source,
-                )
+                isChapterDownloadedOnDisk(it, manga)
             }
         },
     )

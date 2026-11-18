@@ -12,7 +12,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.json.JsonObject
 import logcat.LogPriority
+import mihon.domain.source.model.LINKED_SOURCES_KEY
+import mihon.domain.source.model.LinkedSourceManga
+import mihon.domain.source.model.STORAGE_SOURCES_KEY
+import mihon.domain.source.model.storageSources
+import mihon.domain.source.model.withLinkedSources
+import mihon.domain.source.model.withStorageSources
+import mihon.domain.source.model.withoutLinkedSources
 import tachiyomi.core.common.util.lang.toLong
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
@@ -33,6 +41,17 @@ import kotlin.time.Clock
 class MangaRepositoryImpl(
     private val database: Database,
 ) : MangaRepository {
+
+    override suspend fun setSourceLinks(id: Long, sources: List<LinkedSourceManga>) {
+        database.transaction {
+            val manga = getMangaById(id)
+            database.mangaQueries.updateMemo(
+                manga.memo.withLinkedSources(sources)
+                    .withStorageSources(manga.storageSources() + sources.map { it.sourceId }),
+                id,
+            )
+        }
+    }
 
     override suspend fun getMangaById(id: Long): Manga {
         return database.mangaQueries
@@ -230,20 +249,26 @@ class MangaRepositoryImpl(
 
     override suspend fun updateRemote(update: MangaRemoteUpdate): Boolean {
         return try {
-            database.mangaQueries.updateRemote(
-                remoteArtist = update.artist,
-                remoteAuthor = update.author,
-                remoteDescription = update.description,
-                remoteGenre = update.genre,
-                remoteTitle = update.title,
-                remoteStatus = update.status,
-                remoteCover = update.thumbnailUrl,
-                stateInitialized = update.initialized,
-                stateCoverLastModified = update.coverLastModified,
-                remoteUpdateStrategy = update.updateStrategy,
-                remoteMemo = update.memo,
-                id = update.id,
-            )
+            database.transaction {
+                val current = getMangaById(update.id)
+                database.mangaQueries.updateRemote(
+                    remoteArtist = update.artist,
+                    remoteAuthor = update.author,
+                    remoteDescription = update.description,
+                    remoteGenre = update.genre,
+                    remoteTitle = update.title,
+                    remoteStatus = update.status,
+                    remoteCover = update.thumbnailUrl,
+                    stateInitialized = update.initialized,
+                    stateCoverLastModified = update.coverLastModified,
+                    remoteUpdateStrategy = update.updateStrategy,
+                    remoteMemo = JsonObject(
+                        update.memo.withoutLinkedSources() +
+                            current.memo.filterKeys { it == LINKED_SOURCES_KEY || it == STORAGE_SOURCES_KEY },
+                    ),
+                    id = update.id,
+                )
+            }
             true
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)

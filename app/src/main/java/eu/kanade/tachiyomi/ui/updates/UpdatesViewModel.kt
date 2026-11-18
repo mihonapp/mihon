@@ -242,7 +242,7 @@ class UpdatesViewModel(
                     update.scanlator,
                     update.chapterUrl,
                     update.mangaTitle,
-                    update.sourceId,
+                    update.downloadSourceId,
                 )
                 val downloadState = when {
                     activeDownload != null -> activeDownload.status
@@ -340,8 +340,6 @@ class UpdatesViewModel(
             for (updates in groupedUpdates) {
                 val mangaId = updates.first().update.mangaId
                 val manga = getManga.await(mangaId) ?: continue
-                // Don't download if source isn't available
-                sourceManager.get(manga.source) ?: continue
                 val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
                 downloadManager.downloadChapters(manga, chapters)
             }
@@ -360,7 +358,7 @@ class UpdatesViewModel(
                 .entries
                 .forEach { (mangaId, updates) ->
                     val manga = getManga.await(mangaId) ?: return@forEach
-                    val source = sourceManager.get(manga.source) ?: return@forEach
+                    val source = sourceManager.getOrStub(manga.source)
                     val chapters = updates.mapNotNull { getChapter.await(it.update.chapterId) }
                     downloadManager.deleteChapters(chapters, manga, source)
                 }

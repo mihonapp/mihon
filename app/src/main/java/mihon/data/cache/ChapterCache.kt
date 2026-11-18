@@ -16,6 +16,7 @@ import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import mihon.core.common.cache.TtlDiskCache
 import mihon.core.metro.AppCoroutineScope
+import mihon.domain.source.model.origins
 import okhttp3.Response
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
@@ -123,5 +124,5 @@ class ChapterCache(
     suspend fun clear(): Int = pageLists.clear() + images.clear()
 
     private val Chapter.key: String
-        get() = "$mangaId$url"
+        get() = "$mangaId$url" + origins().firstOrNull()?.let { "${it.sourceId}:${it.url}" }.orEmpty()
 }

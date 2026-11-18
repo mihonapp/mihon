@@ -34,6 +34,7 @@ import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.browse.MissingSourceScreen
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
+import eu.kanade.presentation.browse.components.LinkedSourceScanlatorDialog
 import eu.kanade.presentation.browse.components.RemoveMangaDialog
 import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
@@ -42,6 +43,8 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceViewModel.Listing
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.LinkedSourceSearchScreen
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.LinkedSourceSelectionViewModel
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
@@ -68,6 +71,8 @@ import tachiyomi.source.local.LocalSource
 data class BrowseSourceScreen(
     val sourceId: Long,
     private val listingQuery: String?,
+    private val linkedMangaId: Long? = null,
+    private val linkedSessionId: String? = null,
 ) : Screen(), AssistContentScreen {
 
     private var assistUrl: String? = null
@@ -108,6 +113,22 @@ data class BrowseSourceScreen(
         val haptic = LocalHapticFeedback.current
         val uriHandler = LocalUriHandler.current
         val snackbarHostState = remember { SnackbarHostState() }
+        val selection = linkedMangaId?.let { id ->
+            assistedMetroViewModel<LinkedSourceSelectionViewModel, LinkedSourceSelectionViewModel.Factory> {
+                create(mangaId = id, sessionId = requireNotNull(linkedSessionId))
+            }
+        }
+        selection?.let { LinkedSourceScanlatorDialog(it) }
+        val linkedManga = selection?.manga?.collectAsState()?.value
+        val draft = selection?.draft?.collectAsState()?.value
+        val pendingScanlators = selection?.scanlatorSelection?.collectAsState()?.value
+        val links = draft?.links.orEmpty()
+        LaunchedEffect(draft?.applied) {
+            if (draft?.applied == true) navigator.pop()
+        }
+        LaunchedEffect(selection) {
+            selection?.errors?.collect { snackbarHostState.showSnackbar(it) }
+        }
 
         val onHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) }
         val onWebViewClick = f@{
@@ -143,6 +164,10 @@ data class BrowseSourceScreen(
                         onHelpClick = onHelpClick,
                         onSettingsClick = { navigator.push(SourcePreferencesScreen(sourceId)) },
                         onSearch = viewModel::search,
+                        onApply = selection?.let { it::apply },
+                        onClear = selection?.let { it::clear },
+                        selectionActionsEnabled =
+                        draft?.links != null && draft.saving == false && pendingScanlators == null,
                     )
 
                     Row(
@@ -208,6 +233,13 @@ data class BrowseSourceScreen(
                         }
                     }
 
+                    if (selection != null) {
+                        Text(
+                            stringResource(MR.strings.linked_sources_search_hint, linkedManga?.title.orEmpty()),
+                            modifier = Modifier.padding(MaterialTheme.padding.small),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                     HorizontalDivider()
                 }
             },
@@ -223,18 +255,27 @@ data class BrowseSourceScreen(
                 onWebViewClick = onWebViewClick,
                 onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
                 onLocalSourceHelpClick = onHelpClick,
-                onMangaClick = { navigator.push((MangaScreen(it.id, true))) },
+                isSelected = selection?.let {
+                    { candidate -> links.any { it.sourceId == candidate.source && it.url == candidate.url } }
+                },
+                onMangaClick = {
+                    if (selection != null) selection.toggleSource(it) else navigator.push(MangaScreen(it.id, true))
+                },
                 onMangaLongClick = { manga ->
-                    scope.launch(Dispatchers.IO) {
-                        val duplicates = viewModel.getDuplicateLibraryManga(manga)
-                        when {
-                            manga.favorite -> viewModel.setDialog(BrowseSourceViewModel.Dialog.RemoveManga(manga))
-                            duplicates.isNotEmpty() -> viewModel.setDialog(
-                                BrowseSourceViewModel.Dialog.AddDuplicateManga(manga, duplicates),
-                            )
-                            else -> viewModel.addFavorite(manga)
+                    if (selection != null) {
+                        navigator.push(MangaScreen(manga.id, true))
+                    } else {
+                        scope.launch(Dispatchers.IO) {
+                            val duplicates = viewModel.getDuplicateLibraryManga(manga)
+                            when {
+                                manga.favorite -> viewModel.setDialog(BrowseSourceViewModel.Dialog.RemoveManga(manga))
+                                duplicates.isNotEmpty() -> viewModel.setDialog(
+                                    BrowseSourceViewModel.Dialog.AddDuplicateManga(manga, duplicates),
+                                )
+                                else -> viewModel.addFavorite(manga)
+                            }
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     }
                 },
             )
@@ -269,6 +310,12 @@ data class BrowseSourceScreen(
                     onClickTitle = { navigator.push(MangaScreen(dialog.current.id)) },
                     onDismissRequest = onDismissRequest,
                 )
+            }
+            is BrowseSourceViewModel.Dialog.LinkedSources -> {
+                LaunchedEffect(dialog.manga.id) {
+                    viewModel.setDialog(null)
+                    navigator.push(LinkedSourceSearchScreen(dialog.manga.id, dialog.manga.title))
+                }
             }
             is BrowseSourceViewModel.Dialog.RemoveManga -> {
                 RemoveMangaDialog(
