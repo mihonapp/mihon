@@ -2,7 +2,6 @@ package mihon.core.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
-import mihon.core.navigation.domain.SettingsDestination
 
 @Serializable
 data object HomeRoute : NavKey
@@ -105,9 +104,6 @@ data class NewUpdateRoute(
 
 @Serializable
 data object OnboardingRoute : NavKey
-
-@Serializable
-data class SettingsRoute(val settingsDestination: SettingsDestination? = null) : NavKey
 
 @Serializable
 data object StatsRoute : NavKey

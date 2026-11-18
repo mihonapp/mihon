@@ -8,6 +8,7 @@ import eu.kanade.presentation.more.settings.screen.SettingsBrowseScreen
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
 import eu.kanade.presentation.more.settings.screen.SettingsDownloadScreen
 import eu.kanade.presentation.more.settings.screen.SettingsLibraryScreen
+import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
 import eu.kanade.presentation.more.settings.screen.SettingsReaderScreen
 import eu.kanade.presentation.more.settings.screen.SettingsSearchScreen
 import eu.kanade.presentation.more.settings.screen.SettingsSecurityScreen
@@ -40,7 +41,6 @@ import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
 import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialog
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.ui.more.OnboardingScreen
-import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import eu.kanade.tachiyomi.ui.stats.StatsScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import mihon.core.navigation.util.LocalAssistContentManager
@@ -150,8 +150,8 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<OnboardingRoute> {
         OnboardingScreen()
     }
-    entry<SettingsRoute>(metadata = TwoPaneSettingsScene.listPane()) {
-        SettingsScreen()
+    entry<SettingsMainScreen>(metadata = TwoPaneSettingsScene.listPane()) {
+        SettingsMainScreen.Content()
     }
     entry<StatsRoute> {
         StatsScreen()

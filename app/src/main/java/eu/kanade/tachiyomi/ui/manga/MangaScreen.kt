@@ -31,6 +31,8 @@ import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
+import eu.kanade.presentation.more.settings.screen.SettingsTrackingScreen
+import eu.kanade.presentation.more.settings.screen.openSettings
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -38,7 +40,6 @@ import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSearchEventKey
 import eu.kanade.tachiyomi.ui.browse.source.browse.browseSearchGenreEventKey
 import eu.kanade.tachiyomi.ui.home.LibrarySearchEventKey
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
@@ -53,10 +54,8 @@ import mihon.core.navigation.HomeRoute
 import mihon.core.navigation.MangaNotesRoute
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.MigrationConfigRoute
-import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.TrackInfoDialogRoute
 import mihon.core.navigation.WebViewRoute
-import mihon.core.navigation.domain.SettingsDestination
 import mihon.core.navigation.util.LocalAssistUrl
 import mihon.core.navigation.util.LocalNavigator
 import mihon.core.navigation.util.Navigator
@@ -141,7 +140,7 @@ fun MangaScreen(
         }.takeIf { isHttpSource },
         onTrackingClicked = {
             if (!successState.hasLoggedInTrackers) {
-                navigator.addSettingsRoute(SettingsRoute(SettingsDestination.Tracking), isTabletUi)
+                navigator.openSettings(SettingsTrackingScreen, isTabletUi)
             } else {
                 navigator.push(
                     TrackInfoDialogRoute(

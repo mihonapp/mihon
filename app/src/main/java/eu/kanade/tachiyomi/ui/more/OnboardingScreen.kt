@@ -8,10 +8,8 @@ import androidx.compose.ui.platform.LocalContext
 import eu.kanade.presentation.more.onboarding.OnboardingScreen
 import eu.kanade.presentation.more.settings.screen.SearchableSettings
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
-import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
+import eu.kanade.presentation.more.settings.screen.openSettings
 import mihon.app.di.appGraph
-import mihon.core.navigation.SettingsRoute
-import mihon.core.navigation.domain.SettingsDestination
 import mihon.core.navigation.util.LocalNavigator
 import mihon.presentation.core.util.isTabletUi
 import tachiyomi.presentation.core.i18n.stringResource
@@ -42,7 +40,7 @@ fun OnboardingScreen() {
         onRestoreBackup = {
             finishOnboarding()
             SearchableSettings.highlightKey = restoreSettingKey
-            navigator.addSettingsRoute(SettingsRoute(SettingsDestination.DataAndStorage), isTabletUi)
+            navigator.openSettings(SettingsDataScreen, isTabletUi)
         },
     )
 }

@@ -15,21 +15,21 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.MoreScreen
+import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
+import eu.kanade.presentation.more.settings.screen.openSettings
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.home.TopLevelRoute
-import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import mihon.core.navigation.AboutRoute
 import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.DownloadQueueRoute
-import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.StatsRoute
 import mihon.core.navigation.SupportUsRoute
-import mihon.core.navigation.domain.SettingsDestination
 import mihon.core.navigation.util.LocalNavigator
 import mihon.presentation.core.util.isTabletUi
 
@@ -49,15 +49,15 @@ fun MoreTab() {
         onClickCategories = { navigator.push(CategoryRoute) },
         onClickStats = { navigator.push(StatsRoute) },
         onClickDataAndStorage = {
-            navigator.addSettingsRoute(SettingsRoute(SettingsDestination.DataAndStorage), isTabletUi)
+            navigator.openSettings(SettingsDataScreen, isTabletUi)
         },
-        onClickSettings = { navigator.addSettingsRoute(SettingsRoute(), isTabletUi) },
+        onClickSettings = { navigator.openSettings(twoPane = isTabletUi) },
         onClickSupport = { navigator.push(SupportUsRoute) },
-        onClickAbout = { navigator.addSettingsRoute(SettingsRoute(SettingsDestination.About), isTabletUi) },
+        onClickAbout = { navigator.openSettings(AboutRoute, isTabletUi) },
     )
 
     ResultEffect<Unit>(resultKey = TopLevelRoute.More.reselectEventKey) {
-        navigator.addSettingsRoute(SettingsRoute(), isTabletUi)
+        navigator.openSettings(twoPane = isTabletUi)
     }
 }
 

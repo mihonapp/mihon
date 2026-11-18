@@ -81,13 +81,13 @@ import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
 import eu.kanade.presentation.more.AppMigratingScreen
+import eu.kanade.presentation.more.settings.screen.openSettings
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.home.TabEvent
 import eu.kanade.tachiyomi.ui.home.TopLevelRoute
-import eu.kanade.tachiyomi.ui.setting.addSettingsRoute
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
@@ -118,7 +118,6 @@ import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.NewUpdateRoute
 import mihon.core.navigation.OnboardingRoute
 import mihon.core.navigation.RestoreBackupRoute
-import mihon.core.navigation.SettingsRoute
 import mihon.core.navigation.SupportUsRoute
 import mihon.core.navigation.TrackInfoDialogRoute
 import mihon.core.navigation.appEntries
@@ -697,7 +696,7 @@ class MainActivity : BaseActivity() {
             }
             Intent.ACTION_APPLICATION_PREFERENCES -> {
                 navigator.popToRoot()
-                navigator.addSettingsRoute(SettingsRoute(), isTabletUi)
+                navigator.openSettings(twoPane = isTabletUi)
                 null
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {
