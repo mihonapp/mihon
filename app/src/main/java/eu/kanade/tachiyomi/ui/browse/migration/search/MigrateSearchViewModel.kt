@@ -13,10 +13,15 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
+import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.source.service.SourceManager
+import kotlin.time.Instant
 
 @AssistedInject
 class MigrateSearchViewModel(
@@ -27,6 +32,7 @@ class MigrateSearchViewModel(
     getManga: GetManga,
     preferences: SourcePreferences,
     private val sourceManager: SourceManager,
+    private val getChaptersByMangaId: GetChaptersByMangaId,
 ) : SearchViewModel(
     sourcePreferences = sourcePreferences,
     sourceManager = sourceManager,
@@ -43,6 +49,9 @@ class MigrateSearchViewModel(
     }
 
     private val migrationSources by lazy { sourcePreferences.migrationSources.get() }
+
+    private val _migrationOrigin = MutableStateFlow<MigrationOriginSummary?>(null)
+    val migrationOrigin: StateFlow<MigrationOriginSummary?> = _migrationOrigin
 
     override val sortComparator = { map: Map<Source, SearchItemResult> ->
         compareBy<Source>(
@@ -61,6 +70,11 @@ class MigrateSearchViewModel(
                 )
             }
             search()
+
+            // Load the origin's metadata separately: network search can start immediately.
+            val chapters = getChaptersByMangaId.await(mangaId)
+            val sourceName = sourceManager.getOrStub(manga.source).name
+            _migrationOrigin.value = summarizeMigrationOrigin(sourceName, chapters)
         }
     }
 
@@ -68,3 +82,21 @@ class MigrateSearchViewModel(
         return migrationSources.mapNotNull { sourceManager.get(it) }
     }
 }
+
+
+/** Small, read-only comparison context shown above candidate migration sources. */
+data class MigrationOriginSummary(
+    val sourceName: String,
+    val latestChapter: Double?,
+    val latestUpload: Instant?,
+)
+
+internal fun summarizeMigrationOrigin(sourceName: String, chapters: List<Chapter>): MigrationOriginSummary =
+    MigrationOriginSummary(
+        sourceName = sourceName,
+        latestChapter = chapters.asSequence()
+            .map { it.chapterNumber }
+            .filter { it >= 0.0 && it.isFinite() }
+            .maxOrNull(),
+        latestUpload = chapters.mapNotNull { it.dateUpload }.maxOrNull(),
+    )
