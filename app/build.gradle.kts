@@ -255,7 +255,7 @@ dependencies {
     implementation(libs.androidx.profileInstaller)
 
     implementation(libs.bundles.androidx.lifecycle)
-    implementation(libs.bundles.androidx.navigation)
+    implementation(libs.bundles.androidx.navigation3)
 
     // Job scheduling
     implementation(libs.androidx.work)

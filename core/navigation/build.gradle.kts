@@ -12,7 +12,7 @@ android {
 
 dependencies {
     implementation(projects.presentationCore)
-    implementation(libs.bundles.androidx.navigation)
+    implementation(libs.bundles.androidx.navigation3)
 
     api(libs.composeMaterialMotion)
     api(libs.androidx.compose.ui)
