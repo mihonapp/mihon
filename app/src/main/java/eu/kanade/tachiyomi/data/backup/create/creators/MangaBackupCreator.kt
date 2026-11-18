@@ -108,6 +108,7 @@ private fun Manga.toBackupManga() =
         chapterFlags = this.chapterFlags.toInt(),
         updateStrategy = this.updateStrategy,
         notes = this.notes,
+        customTitle = this.customTitle,
         initialized = this.initialized,
         memo = this.memo.toByteArray(),
         nextUpdate = this.nextUpdate.toEpochMillisOrZero(),

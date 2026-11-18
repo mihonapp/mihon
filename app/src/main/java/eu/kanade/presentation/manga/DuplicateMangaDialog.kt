@@ -221,7 +221,7 @@ private fun DuplicateMangaListItem(
         Spacer(modifier = Modifier.height(MaterialTheme.padding.extraSmall))
 
         Text(
-            text = manga.title,
+            text = manga.customTitle?.takeIf { it.isNotBlank() } ?: manga.title,
             style = MaterialTheme.typography.titleSmall,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,

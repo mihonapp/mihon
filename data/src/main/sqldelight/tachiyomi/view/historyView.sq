@@ -4,6 +4,7 @@ SELECT
     manga.id AS mangaId,
     chapter.id AS chapterId,
     manga.remote_title AS title,
+    manga.user_custom_title AS customTitle,
     manga.remote_cover AS thumbnailUrl,
     manga.source_id AS sourceId,
     manga.user_favorite_at IS NOT NULL AS favorite,
@@ -31,6 +32,7 @@ id,
 mangaId,
 chapterId,
 title,
+customTitle,
 thumbnailUrl,
 sourceId,
 favorite,
@@ -41,7 +43,10 @@ readDuration
 FROM historyView
 WHERE historyView.readAt IS NOT NULL
 AND maxReadAtChapterId = historyView.chapterId
-AND lower(historyView.title) LIKE ('%' || :query || '%')
+AND (
+    lower(historyView.title) LIKE ('%' || :query || '%')
+    OR lower(COALESCE(historyView.customTitle, '')) LIKE ('%' || :query || '%')
+)
 ORDER BY readAt DESC;
 
 getLatestHistory:
@@ -50,6 +55,7 @@ history.id AS id,
 manga.id AS mangaId,
 chapter.id AS chapterId,
 manga.remote_title AS title,
+manga.user_custom_title AS customTitle,
 manga.remote_cover AS thumbnailUrl,
 manga.source_id AS sourceId,
 manga.user_favorite_at IS NOT NULL AS favorite,

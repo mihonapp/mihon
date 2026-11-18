@@ -45,6 +45,8 @@ class BackupStreamTest {
 
         val (entries, metadata) = read(encode(backup))
 
+        entries.first().customTitle shouldBe "My custom title"
+
         entries.map(::encode) shouldBe backup.backupManga.map(::encode)
         encode(metadata) shouldBe encode(backup.copy(backupManga = emptyList()))
     }
@@ -181,6 +183,7 @@ class BackupStreamTest {
                 source = 1L,
                 url = "/manga/1",
                 title = "First",
+                customTitle = "My custom title",
                 genre = listOf("Action", "Drama"),
                 chapters = listOf(
                     BackupChapter(url = "/chapter/1", name = "Chapter 1", read = true, chapterNumber = 1f),

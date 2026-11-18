@@ -49,6 +49,7 @@ class BackupManga(
     @ProtoNumber(111) var initialized: Boolean = false,
     @ProtoNumber(112) var memo: ByteArray = JsonObjectEmptyBytes,
     @ProtoNumber(113) var nextUpdate: Long = 0,
+    @ProtoNumber(114) var customTitle: String? = null,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
@@ -74,6 +75,7 @@ class BackupManga(
             chapterFlags = this@BackupManga.chapterFlags.toLong(),
             updateStrategy = this@BackupManga.updateStrategy,
             notes = this@BackupManga.notes,
+            customTitle = this@BackupManga.customTitle,
             initialized = this@BackupManga.initialized,
             memo = this@BackupManga.memo.toJsonObject(),
             nextUpdate = this@BackupManga.nextUpdate.toInstantOrNull(),
