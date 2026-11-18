@@ -65,6 +65,21 @@ class SourcePreferences(
 
     val hideInLibraryItems: Preference<Boolean> = preferenceStore.getBoolean("browse_hide_in_library_items", false)
 
+    val hideStartedItemsSources: Preference<Set<String>> = preferenceStore.getStringSet(
+        "browse_hide_started_items_sources",
+        emptySet(),
+    )
+
+    val hideFinishedItemsSources: Preference<Set<String>> = preferenceStore.getStringSet(
+        "browse_hide_finished_items_sources",
+        emptySet(),
+    )
+
+    val showReadProgressSources: Preference<Set<String>> = preferenceStore.getStringSet(
+        "browse_show_read_progress_sources",
+        emptySet(),
+    )
+
     val extensionRepos: Preference<Set<String>> = preferenceStore.getStringSet("extension_repos", emptySet())
 
     val extensionUpdatesCount: Preference<Int> = preferenceStore.getInt("ext_updates_count", 0)

@@ -81,6 +81,9 @@ data class BrowseSourceScreen(
                 create(sourceId = sourceId, listingQuery = listingQuery)
             }
         val state by viewModel.state.collectAsState()
+        val hideStartedItems by viewModel.hideStartedItems.collectAsState()
+        val hideFinishedItems by viewModel.hideFinishedItems.collectAsState()
+        val showReadProgress by viewModel.showReadProgress.collectAsState()
 
         val navigator = LocalNavigator.currentOrThrow
         val navigateUp: () -> Unit = {
@@ -138,6 +141,12 @@ data class BrowseSourceScreen(
                         source = source,
                         displayMode = viewModel.displayMode,
                         onDisplayModeChange = { viewModel.displayMode = it },
+                        hideStartedItems = hideStartedItems,
+                        onToggleHideStartedItems = viewModel::toggleHideStartedItems,
+                        hideFinishedItems = hideFinishedItems,
+                        onToggleHideFinishedItems = viewModel::toggleHideFinishedItems,
+                        showReadProgress = showReadProgress,
+                        onToggleShowReadProgress = viewModel::toggleShowReadProgress,
                         navigateUp = navigateUp,
                         onWebViewClick = onWebViewClick,
                         onHelpClick = onHelpClick,
@@ -237,6 +246,7 @@ data class BrowseSourceScreen(
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     }
                 },
+                readProgress = viewModel::readProgress.takeIf { showReadProgress },
             )
         }
 

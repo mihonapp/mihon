@@ -31,6 +31,12 @@ fun BrowseSourceToolbar(
     source: Source?,
     displayMode: LibraryDisplayMode,
     onDisplayModeChange: (LibraryDisplayMode) -> Unit,
+    hideStartedItems: Boolean,
+    onToggleHideStartedItems: () -> Unit,
+    hideFinishedItems: Boolean,
+    onToggleHideFinishedItems: () -> Unit,
+    showReadProgress: Boolean,
+    onToggleShowReadProgress: () -> Unit,
     navigateUp: () -> Unit,
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
@@ -76,6 +82,27 @@ fun BrowseSourceToolbar(
                             ),
                         )
                     } else {
+                        add(
+                            AppBar.OverflowAction(
+                                title = stringResource(MR.strings.action_hide_started_items),
+                                onClick = onToggleHideStartedItems,
+                                checked = hideStartedItems,
+                            ),
+                        )
+                        add(
+                            AppBar.OverflowAction(
+                                title = stringResource(MR.strings.action_hide_finished_items),
+                                onClick = onToggleHideFinishedItems,
+                                checked = hideFinishedItems,
+                            ),
+                        )
+                        add(
+                            AppBar.OverflowAction(
+                                title = stringResource(MR.strings.action_show_read_progress),
+                                onClick = onToggleShowReadProgress,
+                                checked = showReadProgress,
+                            ),
+                        )
                         add(
                             AppBar.OverflowAction(
                                 title = stringResource(MR.strings.action_open_in_web_view),
