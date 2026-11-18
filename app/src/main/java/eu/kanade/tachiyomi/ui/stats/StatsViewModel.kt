@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import tachiyomi.domain.history.interactor.GetReadDurationByManga
 import tachiyomi.domain.history.interactor.GetTotalReadDuration
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -41,6 +42,7 @@ class StatsViewModel(
     private val getTracksPerManga: GetTracksPerManga,
     private val preferences: LibraryPreferences,
     private val trackerManager: TrackerManager,
+    private val getReadDurationByManga: GetReadDurationByManga,
 ) : ViewModel() {
 
     val state: StateFlow<StatsScreenState>
@@ -85,12 +87,15 @@ class StatsViewModel(
                 trackerCount = loggedInTrackers.size,
             )
 
+            val readDurationByManga = getReadDurationByManga.await()
+
             state.update {
                 StatsScreenState.Success(
                     overview = overviewStatData,
                     titles = titlesStatData,
                     chapters = chaptersStatData,
                     trackers = trackersStatData,
+                    readDurationByManga = readDurationByManga,
                 )
             }
         }
