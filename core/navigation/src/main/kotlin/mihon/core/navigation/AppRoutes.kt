@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data object HomeRoute : NavKey
 
 @Serializable
-data class DeepLinkRoute(val query: String = "") : NavKey
+data class DeepLinkRoute(val query: String) : NavKey
 
 @Serializable
 data class WebViewRoute(

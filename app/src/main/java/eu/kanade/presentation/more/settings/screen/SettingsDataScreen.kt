@@ -54,7 +54,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import logcat.LogPriority
 import mihon.app.di.appGraph
 import mihon.core.navigation.CreateBackupRoute
@@ -76,10 +75,8 @@ import tachiyomi.presentation.core.util.collectAsState
 @Serializable
 data object SettingsDataScreen : SearchableSettings {
 
-    @Transient
     val restorePreferenceKeyString = MR.strings.label_backup
 
-    @Transient
     const val HELP_URL = "https://mihon.app/docs/faq/storage"
 
     @ReadOnlyComposable

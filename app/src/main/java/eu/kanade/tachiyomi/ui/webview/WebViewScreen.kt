@@ -34,9 +34,7 @@ fun WebViewScreen(
         url = url,
         headers = headers.orEmpty(),
         defaultUserAgentProvider = viewModel::defaultUserAgentProvider,
-        onUrlChange = {
-            setAssistUrl(it)
-        },
+        onUrlChange = setAssistUrl,
         onShare = { viewModel.shareWebpage(context, it) },
         onOpenInBrowser = { viewModel.openInBrowser(context, it) },
         onClearCookies = viewModel::clearCookies,

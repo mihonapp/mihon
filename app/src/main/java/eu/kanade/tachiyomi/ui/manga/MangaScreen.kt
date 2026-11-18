@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -76,7 +75,6 @@ fun MangaScreen(
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val isTabletUi = isTabletUi()
-    val scope = rememberCoroutineScope()
     val viewModel =
         assistedMetroViewModel<MangaViewModel, MangaViewModel.Factory> {
             create(mangaId = mangaId, isFromSource = fromSource)
@@ -150,11 +148,11 @@ fun MangaScreen(
                 )
             }
         },
-        onTagSearch = { scope.launch { performGenreSearch(navigator, resultEventBus, it, viewModel.source!!) } },
+        onTagSearch = { performGenreSearch(navigator, resultEventBus, it, viewModel.source!!) },
         onFilterButtonClicked = viewModel::showSettingsDialog,
         onRefresh = viewModel::fetchAllFromSource,
         onContinueReading = { continueReading(context, viewModel.getNextUnreadChapter()) },
-        onSearch = { query, global -> scope.launch { performSearch(navigator, resultEventBus, query, global) } },
+        onSearch = { query, global -> performSearch(navigator, resultEventBus, query, global) },
         onCoverClicked = viewModel::showCoverDialog,
         onShareClicked = { shareManga(context, viewModel.manga, viewModel.source) }.takeIf { isHttpSource },
         onDownloadActionClicked = viewModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
@@ -164,7 +162,6 @@ fun MangaScreen(
         },
         onMigrateClicked = {
             navigator.push(MigrationConfigRoute(successState.manga.id))
-            Unit
         }.takeIf { successState.manga.favorite },
         onEditNotesClicked = { navigator.push(MangaNotesRoute(mangaId = successState.manga.id)) },
         onMultiBookmarkClicked = viewModel::bookmarkChapters,
