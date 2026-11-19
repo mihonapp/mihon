@@ -11,10 +11,11 @@ import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.TrackerDependencies
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.serialization.json.Json
-import okhttp3.Dns
-import okhttp3.OkHttpClient
+import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
 
@@ -23,6 +24,8 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class Komga(
     dependencies: TrackerDependencies,
     private val json: Json,
+    private val getManga: Lazy<GetManga>,
+    private val sourceManager: Lazy<SourceManager>,
 ) : BaseTracker(6L, "Komga", dependencies),
     EnhancedTracker {
 
@@ -32,13 +35,7 @@ class Komga(
         const val COMPLETED = 3L
     }
 
-    override val client: OkHttpClient by lazy {
-        networkService.client.newBuilder()
-            .dns(Dns.SYSTEM) // don't use DNS over HTTPS as it breaks IP addressing
-            .build()
-    }
-
-    val api by lazy { KomgaApi(id, client, json) }
+    val api by lazy { KomgaApi(id, json) }
 
     override fun getLogo() = R.drawable.brand_komga
 
@@ -72,7 +69,7 @@ class Komga(
             }
         }
 
-        return api.updateProgress(track)
+        return api.updateProgress(getSource(track), track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
@@ -84,7 +81,7 @@ class Komga(
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteTrack = api.getTrackSearch(track.tracking_url)
+        val remoteTrack = api.getTrackSearch(getSource(track), track.tracking_url)
         track.copyPersonalFrom(remoteTrack)
         track.total_chapters = remoteTrack.total_chapters
         return track
@@ -104,7 +101,7 @@ class Komga(
 
     override suspend fun match(manga: Manga): TrackSearch? =
         try {
-            api.getTrackSearch(manga.url)
+            api.getTrackSearch(getSource(manga.source), manga.url)
         } catch (_: Exception) {
             null
         }
@@ -120,4 +117,10 @@ class Komga(
         }
 
     override suspend fun updateUserConfig() = Unit
+
+    private suspend fun getSource(track: Track): HttpSource = getSource(getManga.value.await(track.manga_id)!!.source)
+
+    // Requests go through the source so they carry the extension's authentication
+    private suspend fun getSource(sourceId: Long): HttpSource =
+        sourceManager.value.get(sourceId) as? HttpSource ?: throw Exception("Komga extension not installed")
 }
