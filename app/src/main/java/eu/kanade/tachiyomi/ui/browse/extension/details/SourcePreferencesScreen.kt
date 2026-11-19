@@ -45,8 +45,6 @@ import androidx.preference.PreferenceScreen
 import androidx.preference.TwoStatePreference
 import androidx.preference.getOnBindEditTextListener
 import androidx.preference.setOnStateChangeListener
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.settings.widget.CheckboxPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.ListPreferenceDialog
@@ -55,7 +53,6 @@ import eu.kanade.presentation.more.settings.widget.PreferenceDialogMessage
 import eu.kanade.presentation.more.settings.widget.PreferenceGroupHeader
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
-import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.preference.SharedPreferencesDataStore
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
@@ -64,63 +61,61 @@ import eu.kanade.tachiyomi.util.view.setIncognito
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mihon.app.di.appGraph
+import mihon.core.navigation.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 
-class SourcePreferencesScreen(val sourceId: Long) : Screen() {
+@Composable
+fun SourcePreferencesScreen(sourceId: Long) {
+    val context = LocalContext.current
+    val navigator = LocalNavigator.current
 
-    @Composable
-    override fun Content() {
-        val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+    // The preferences are made anew after a configuration change, so an open dialog is restored by key
+    var savedDialogKey by rememberSaveable { mutableStateOf<String?>(null) }
 
-        // The preferences are made anew after a configuration change, so an open dialog is restored by key
-        var savedDialogKey by rememberSaveable { mutableStateOf<String?>(null) }
-
-        val screen by produceState<ExtensionPreferenceScreen?>(initialValue = null) {
-            val source = context.appGraph.sourceManager.getOrStub(sourceId)
-            // Reading a value loads the file, which shouldn't happen on the main thread
-            val sourcePreferences = (source as? ConfigurableSource)?.let {
-                withContext(Dispatchers.IO) { it.sourcePreferences().apply { all } }
-            }
-            value = ExtensionPreferenceScreen(context, source, sourcePreferences, savedDialogKey)
+    val screen by produceState<ExtensionPreferenceScreen?>(initialValue = null) {
+        val source = context.appGraph.sourceManager.getOrStub(sourceId)
+        // Reading a value loads the file, which shouldn't happen on the main thread
+        val sourcePreferences = (source as? ConfigurableSource)?.let {
+            withContext(Dispatchers.IO) { it.sourcePreferences().apply { all } }
         }
+        value = ExtensionPreferenceScreen(context, source, sourcePreferences, savedDialogKey)
+    }
 
-        val preferenceScreen = screen
-        if (preferenceScreen == null) {
-            LoadingScreen()
-            return
-        }
+    val preferenceScreen = screen
+    if (preferenceScreen == null) {
+        LoadingScreen()
+        return
+    }
 
-        DisposableEffect(preferenceScreen) {
-            onDispose { preferenceScreen.dispose() }
-        }
-        SideEffect { savedDialogKey = preferenceScreen.dialogPreference?.key }
+    DisposableEffect(preferenceScreen) {
+        onDispose { preferenceScreen.dispose() }
+    }
+    SideEffect { savedDialogKey = preferenceScreen.dialogPreference?.key }
 
-        Scaffold(
-            topBar = {
-                AppBar(
-                    title = preferenceScreen.title,
-                    navigateUp = navigator::pop,
-                    scrollBehavior = it,
-                )
-            },
-        ) { contentPadding ->
-            val items = remember(preferenceScreen.version) { preferenceScreen.items() }
-            ScrollbarLazyColumn(contentPadding = contentPadding) {
-                items(items) { PreferenceRow(it) }
-            }
-        }
-
-        preferenceScreen.dialogPreference?.let {
-            PreferenceDialog(
-                preference = it,
-                onDismissRequest = { preferenceScreen.dialogPreference = null },
+    Scaffold(
+        topBar = {
+            AppBar(
+                title = preferenceScreen.title,
+                navigateUp = navigator::pop,
+                scrollBehavior = it,
             )
+        },
+    ) { contentPadding ->
+        val items = remember(preferenceScreen.version) { preferenceScreen.items() }
+        ScrollbarLazyColumn(contentPadding = contentPadding) {
+            items(items) { PreferenceRow(it) }
         }
+    }
+
+    preferenceScreen.dialogPreference?.let {
+        PreferenceDialog(
+            preference = it,
+            onDismissRequest = { preferenceScreen.dialogPreference = null },
+        )
     }
 }
 
