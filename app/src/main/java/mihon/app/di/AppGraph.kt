@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadWorker
+import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.library.LibraryUpdateReportStore
 import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.data.library.MetadataUpdateWorker
@@ -89,6 +90,7 @@ interface AppGraph : ViewModelGraph {
     val networkPreferences: NetworkPreferences
     val libraryPreferences: LibraryPreferences
     val libraryVisibility: LibraryVisibility
+    val libraryUpdateNotifier: LibraryUpdateNotifier
     val hiddenLibrarySession: HiddenLibrarySession
     val libraryUpdateReportStore: LibraryUpdateReportStore
     val sourcePreferences: SourcePreferences

@@ -1,7 +1,7 @@
 package mihon.data.extension.repository
 
 import app.cash.sqldelight.async.coroutines.awaitAsList
-import app.cash.sqldelight.async.coroutines.awaitAsOne
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
@@ -26,6 +25,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
 import tachiyomi.data.subscribeToOne
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -54,25 +54,29 @@ class ExtensionStoreRepositoryImpl(
         )
 
     override suspend fun insert(indexUrl: String): Result<Unit> {
-        return service.fetch(indexUrl).mapCatching { upsert(it) }
+        return service.fetch(indexUrl).mapCatching { saveStore(it, indexUrl) }
     }
 
     override suspend fun insertFromPreference(indexUrl: String, name: String) {
-        database.extension_storeQueries.upsert(
-            indexUrl = indexUrl,
-            name = name,
-            badgeLabel = name,
-            signingKey = "NO_SIGNING_KEY",
-            contactWebsite = indexUrl,
-            contactDiscord = null,
-            isLegacy = false,
-            extensionListUrl = null,
-        )
+        database.transaction {
+            if (getSigningKey(indexUrl) != null) return@transaction
+
+            database.extension_storeQueries.upsert(
+                indexUrl = indexUrl,
+                name = name,
+                badgeLabel = name,
+                signingKey = UNVERIFIED_SIGNING_KEY,
+                contactWebsite = indexUrl,
+                contactDiscord = null,
+                isLegacy = false,
+                extensionListUrl = null,
+            )
+        }
     }
 
     override suspend fun refreshAll() {
         try {
-            val refreshed = stores.first().mapNotNull { store ->
+            val refreshed = getAll().mapNotNull { store ->
                 service.fetch(store.indexUrl)
                     .onFailure {
                         logcat(LogPriority.ERROR, it) {
@@ -82,23 +86,35 @@ class ExtensionStoreRepositoryImpl(
                     .getOrNull()
                     ?.let { store.indexUrl to it }
             }
-            database.transaction {
-                refreshed.forEach { (indexUrl, store) ->
-                    if (!database.extension_storeQueries.contains(indexUrl).awaitAsOne()) {
-                        return@forEach
-                    }
-                    upsert(store)
-                    if (indexUrl != store.indexUrl) {
-                        database.extension_storeQueries.delete(indexUrl)
-                    }
+            refreshed.forEach { (indexUrl, store) ->
+                try {
+                    saveStore(store, indexUrl, isRefresh = true)
+                } catch (_: SigningKeyChangedException) {
+                    logcat(LogPriority.WARN) { "Ignored signing key change for extension store '${store.name}'" }
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
         }
     }
 
-    override suspend fun upsert(store: ExtensionStore) {
+    override suspend fun upsert(store: ExtensionStore) = saveStore(store)
+
+    private suspend fun saveStore(
+        store: ExtensionStore,
+        indexUrl: String = store.indexUrl,
+        isRefresh: Boolean = false,
+    ) = database.transaction {
+        val currentKey = getSigningKey(indexUrl)
+        if (isRefresh && currentKey == null) return@transaction
+
+        checkSigningKey(currentKey, store.signingKey)
+        if (indexUrl != store.indexUrl) {
+            checkSigningKey(getSigningKey(store.indexUrl), store.signingKey)
+        }
+
         database.extension_storeQueries.upsert(
             indexUrl = store.indexUrl,
             name = store.name,
@@ -109,7 +125,23 @@ class ExtensionStoreRepositoryImpl(
             isLegacy = store.isLegacy,
             extensionListUrl = store.extensionListUrl,
         )
+        if (isRefresh && indexUrl != store.indexUrl) {
+            database.extension_storeQueries.delete(indexUrl)
+        }
     }
+
+    private suspend fun getSigningKey(indexUrl: String): String? =
+        database.extension_storeQueries.getSigningKey(indexUrl).awaitAsOneOrNull()
+
+    private fun checkSigningKey(currentKey: String?, signingKey: String) {
+        if (currentKey != null && currentKey != UNVERIFIED_SIGNING_KEY && currentKey != signingKey) {
+            throw SigningKeyChangedException()
+        }
+    }
+
+    private class SigningKeyChangedException : IllegalStateException(
+        "The repository signing key changed. Verify the new key before removing and adding the repository again.",
+    )
 
     override suspend fun fetchExtensions(): List<Extension.Available> {
         return try {
@@ -171,4 +203,8 @@ class ExtensionStoreRepositoryImpl(
         isLegacy = isLegacy,
         extensionListUrl = extensionListUrl,
     )
+
+    private companion object {
+        const val UNVERIFIED_SIGNING_KEY = "NO_SIGNING_KEY"
+    }
 }

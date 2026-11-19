@@ -21,6 +21,8 @@ class ExtensionInstallActivity : Activity() {
 
     @Inject private lateinit var extensionManager: ExtensionManager
 
+    private val downloadId get() = intent.getLongExtra(ExtensionInstaller.EXTRA_DOWNLOAD_ID, -1)
+
     // MIUI package installer bug workaround
     private var ignoreUntil = 0L
     private var ignoreResult = false
@@ -47,6 +49,8 @@ class ExtensionInstallActivity : Activity() {
             // Either install package can't be found (probably bots) or there's a security exception
             // with the download manager. Nothing we can workaround.
             toast(error.message)
+            extensionManager.updateInstallStep(downloadId, InstallStep.Error)
+            finish()
         }
     }
 
@@ -75,7 +79,6 @@ class ExtensionInstallActivity : Activity() {
     }
 
     private fun checkInstallationResult(resultCode: Int) {
-        val downloadId = intent.extras!!.getLong(ExtensionInstaller.EXTRA_DOWNLOAD_ID)
         val newStep = when (resultCode) {
             RESULT_OK -> InstallStep.Installed
             RESULT_CANCELED -> InstallStep.Idle

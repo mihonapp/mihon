@@ -112,6 +112,7 @@ abstract class Installer(private val service: Service) {
         cancelListeners -= cancelListener
         val remaining = synchronized(queue) { queue.toList().also { queue.clear() } }
         remaining.forEach {
+            service.contentResolver.delete(it.uri, null, null)
             logcat(LogPriority.INFO) { "The installer stopped before installing ${it.downloadId}" }
             extensionManager.updateInstallStep(it.downloadId, InstallStep.Error)
         }
@@ -132,7 +133,9 @@ abstract class Installer(private val service: Service) {
             ?: waitingInstall?.takeIf { it.downloadId == downloadId }
             ?: return
         if (cancelEntry(toCancel)) {
-            queue.remove(toCancel)
+            if (queue.remove(toCancel)) {
+                service.contentResolver.delete(toCancel.uri, null, null)
+            }
             if (waitingInstall == toCancel) {
                 // Currently processing removed entry, continue queue
                 this.waitingInstall.store(null)

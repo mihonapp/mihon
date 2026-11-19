@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,7 +79,6 @@ import tachiyomi.i18n.pref_clear_cookies
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
-import java.util.concurrent.ConcurrentHashMap
 
 private class WebViewWindow(
     webContent: WebContent,
@@ -130,10 +130,18 @@ fun WebViewScreenContent(
 
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
+    val navigateUp by rememberUpdatedState(onNavigateUp)
+    val lifecycle = remember { WebViewLifecycle() }
 
     var showCloudflareHelp by remember { mutableStateOf(false) }
-    var isActive by remember { mutableStateOf(true) }
     var openingManga by remember { mutableStateOf(false) }
+
+    fun closeScreen(onClose: () -> Unit = {}) {
+        lifecycle.close {
+            onClose()
+            navigateUp()
+        }
+    }
 
     val mangaUrl by produceState<String?>(null, activeUrl) {
         value = null
@@ -144,31 +152,37 @@ fun WebViewScreenContent(
         onUrlChange(currentUrl)
     }
 
-    DisposableEffect(Unit) {
-        onDispose { isActive = false }
+    DisposableEffect(lifecycle) {
+        onDispose {
+            windowStack.items.forEach { it.webView = null }
+            lifecycle.dispose()
+        }
     }
 
     val headersOrigin = remember(url) { url.toHttpUrlOrNull() }
-    // Resource interception runs off the UI thread, where WebView and Compose state cannot be read.
-    val pageUrls = remember { ConcurrentHashMap<WebView, String>() }
 
     val webClient = remember {
         object : AccompanistWebViewClient() {
+            private fun canUse(view: WebView) = lifecycle.isActive && lifecycle.url(view) != null
+
             private fun updateUrl(view: WebView, url: String?) {
                 if (url != null) {
-                    pageUrls[view] = url
+                    lifecycle.updateUrl(view, url)
                     windowStack.items.find { it.webView === view }?.currentUrl = url
                 }
             }
 
             override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
+                if (!canUse(view)) return
                 super.onPageStarted(view, url, favicon)
                 updateUrl(view, url)
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
+                if (!canUse(view)) return
                 super.onPageFinished(view, url)
                 coroutineScope.launch {
+                    if (!canUse(view)) return@launch
                     val html = view.getHtml()
                     showCloudflareHelp = "window._cf_chl_opt" in html || "Ray ID is" in html
                 }
@@ -179,6 +193,7 @@ fun WebViewScreenContent(
                 url: String?,
                 isReload: Boolean,
             ) {
+                if (!canUse(view)) return
                 super.doUpdateVisitedHistory(view, url, isReload)
                 updateUrl(view, url)
             }
@@ -190,6 +205,7 @@ fun WebViewScreenContent(
                 val uri = request?.url ?: return false
                 if (uri.scheme.equals("intent", ignoreCase = true)) return true
                 if (!request.isForMainFrame || view == null) return false
+                if (!canUse(view)) return true
 
                 val popup = windowStack.lastItemOrNull
                 if ((uri.scheme == "http" || uri.scheme == "https") &&
@@ -226,7 +242,7 @@ fun WebViewScreenContent(
                     adBlocker.shouldBlock(
                         url = uri.toString(),
                         host = uri.host,
-                        sourceUrl = request.header("Referer") ?: pageUrls[view] ?: url,
+                        sourceUrl = request.header("Referer") ?: lifecycle.url(view) ?: url,
                         resourceType = request.resourceType(),
                         method = request.method,
                     )
@@ -237,13 +253,15 @@ fun WebViewScreenContent(
             }
 
             override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
-                // Not handling it kills the app along with the page
-                logcat(LogPriority.ERROR) {
-                    "WebView renderer gone: crashed=${detail.didCrash()}, " +
-                        "priority=${detail.rendererPriorityAtExit()}, url=${view.url}"
+                windowStack.items.firstOrNull { it.webView === view }?.webView = null
+                val failedUrl = lifecycle.release(view) ?: return true
+                closeScreen {
+                    logcat(LogPriority.ERROR) {
+                        "WebView renderer gone: crashed=${detail.didCrash()}, " +
+                            "priority=${detail.rendererPriorityAtExit()}, url=$failedUrl"
+                    }
+                    context.toast(MR.strings.information_webview_crashed, Toast.LENGTH_LONG)
                 }
-                view.context.toast(MR.strings.information_webview_crashed, Toast.LENGTH_LONG)
-                onNavigateUp()
                 return true
             }
         }
@@ -258,7 +276,7 @@ fun WebViewScreenContent(
                 resultMsg: Message,
             ): Boolean {
                 // if it wasn't initiated by a user gesture, we should ignore it like a normal browser would
-                if (isUserGesture) {
+                if (lifecycle.isActive && isUserGesture) {
                     windowStack.push(
                         WebViewWindow(
                             WebContent.NavigatorOnly,
@@ -273,7 +291,7 @@ fun WebViewScreenContent(
             }
 
             override fun onJsAlert(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-                if (!isActive) {
+                if (!lifecycle.isActive) {
                     result.confirm()
                     return true
                 }
@@ -281,7 +299,7 @@ fun WebViewScreenContent(
             }
 
             override fun onJsConfirm(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-                if (!isActive) {
+                if (!lifecycle.isActive) {
                     result.cancel()
                     return true
                 }
@@ -295,7 +313,7 @@ fun WebViewScreenContent(
                 defaultValue: String?,
                 result: JsPromptResult,
             ): Boolean {
-                if (!isActive) {
+                if (!lifecycle.isActive) {
                     result.cancel()
                     return true
                 }
@@ -311,24 +329,24 @@ fun WebViewScreenContent(
         return webView
     }
 
-    val popState = remember<() -> Unit> {
-        {
-            if (windowStack.size == 1) {
-                onNavigateUp()
-            } else {
-                windowStack.pop()
-            }
+    fun popWindow() {
+        if (!lifecycle.isActive) return
+        if (windowStack.size == 1) {
+            closeScreen()
+        } else {
+            windowStack.pop()
         }
     }
 
-    BackHandler(windowStack.size > 1, popState)
+    BackHandler(lifecycle.isActive, ::popWindow)
 
     fun openMangaInApp() {
-        if (openingManga) return
+        if (!lifecycle.isActive || openingManga) return
         openingManga = true
         coroutineScope.launch {
             try {
                 val mangaId = resolveManga(currentUrl)
+                if (!lifecycle.isActive) return@launch
                 if (mangaId == null) {
                     context.toast(MR.strings.no_results_found)
                 } else {
@@ -347,7 +365,7 @@ fun WebViewScreenContent(
                     AppBar(
                         title = currentWindow.state.pageTitle ?: initialTitle,
                         subtitle = currentUrl,
-                        navigateUp = onNavigateUp,
+                        navigateUp = { closeScreen() },
                         navigationIcon = MaterialSymbols.Rounded.Close,
                         actions = {
                             AppBarActions(
@@ -403,7 +421,7 @@ fun WebViewScreenContent(
                                             AppBar.Action(
                                                 title = stringResource(MR.strings.action_webview_close_tab),
                                                 icon = MaterialSymbols.Rounded.TabClose,
-                                                onClick = popState,
+                                                onClick = ::popWindow,
                                             ),
                                         )
                                     }
@@ -447,6 +465,8 @@ fun WebViewScreenContent(
             }
         },
     ) { contentPadding ->
+        if (!lifecycle.isActive) return@Scaffold
+
         // We need to key the WebView composable to the window object since simply updating the WebView composable will
         // not cause it to re-invoke the WebView factory and render the new current window's WebView. This lets us
         // completely reset the WebView composable when the current window switches.
@@ -470,17 +490,13 @@ fun WebViewScreenContent(
                     webView.setUserAgent(headers["user-agent"] ?: defaultUserAgentProvider())
                 },
                 onDispose = { webView ->
-                    val window = windowStack.items.find { it.webView == webView }
-                    if (window == null) {
-                        // If we couldn't find any window on the stack that owns this WebView, it means that we can
-                        // safely dispose of it because the window containing it has been closed.
-                        pageUrls.remove(webView)
-                        webView.destroy()
-                    } else {
-                        // The composable is being disposed but the WebView object is not.
-                        // When the WebView element is recomposed, we will want the WebView to resume from its state
-                        // before it was unmounted, we won't want it to reset back to its original target.
+                    val window = windowStack.items.firstOrNull { it.webView === webView }
+                    if (window != null && lifecycle.isActive) {
+                        // A parked tab must resume without reloading its starting page.
                         window.state.content = WebContent.NavigatorOnly
+                    } else {
+                        window?.webView = null
+                        lifecycle.release(webView)
                     }
                 },
                 client = webClient,
@@ -489,7 +505,7 @@ fun WebViewScreenContent(
                     currentWindow.webView
                         ?: WebView(context).also { webView ->
                             currentWindow.webView = webView
-                            pageUrls[webView] = currentWindow.currentUrl ?: currentWindow.openerUrl ?: url
+                            lifecycle.register(webView, currentWindow.currentUrl ?: currentWindow.openerUrl ?: url)
                             currentWindow.popupMessage?.let {
                                 initializePopup(webView, it)
                             }

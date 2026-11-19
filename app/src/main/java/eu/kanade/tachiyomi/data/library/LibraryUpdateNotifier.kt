@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
 import coil3.asDrawable
 import coil3.imageLoader
 import coil3.request.ImageRequest
@@ -217,24 +218,71 @@ class LibraryUpdateNotifier(
         } else {
             candidates.map { (manga, chapters) -> manga.id to createNewChaptersNotification(manga, chapters) }
         }
-        val hiddenAtPost = visibility.hiddenMangaIds()
-        val updates = candidates.filterNot { it.first.id in hiddenAtPost }
-        if (updates.isEmpty()) return
-        val titles = if (securityPreferences.hideNotificationContent.get()) {
-            emptyList()
-        } else {
-            updates.map { it.first.title.chop(NOTIF_TITLE_MAX_LEN) }
+        chapterNotificationsMutex.withLock {
+            val hiddenAtPost = visibility.hiddenMangaIds()
+            val updates = candidates.filterNot { it.first.id in hiddenAtPost }
+            if (updates.isEmpty()) return@withLock
+
+            val hideDetails = securityPreferences.hideNotificationContent.get()
+            val titles = if (hideDetails) emptyList() else updates.map { it.first.title.chop(NOTIF_TITLE_MAX_LEN) }
+            postChapterSummary(updates.map { it.first.id }, titles)
+
+            if (!hideDetails) {
+                context.notify(
+                    notifications.filterNot { it.first in hiddenAtPost }.map { (mangaId, notification) ->
+                        NotificationManagerCompat.NotificationWithIdAndTag(mangaId.hashCode(), notification)
+                    },
+                )
+            }
         }
-        val summary = context.pluralStringResource(
-            MR.plurals.notification_new_chapters_summary,
-            updates.size,
-            updates.size,
-        )
-        // Parent group notification
+    }
+
+    internal suspend fun removeHiddenChapterNotifications(hiddenIds: Set<Long>) {
+        chapterNotificationsMutex.withLock {
+            val manager = NotificationManagerCompat.from(context)
+            val group = manager.activeNotifications.filter { it.notification.group == Notifications.GROUP_NEW_CHAPTERS }
+            val summary = group.firstOrNull { it.notification.flags and Notification.FLAG_GROUP_SUMMARY != 0 }
+            val privacy = ChapterNotificationPrivacy(hiddenIds)
+            val (hidden, visible) = group.filterNot { it === summary }
+                .map { posted ->
+                    val mangaId = posted.notification.extras
+                        ?.takeIf { it.containsKey(EXTRA_MANGA_ID) }
+                        ?.getLong(EXTRA_MANGA_ID)
+                    posted to mangaId
+                }
+                .partition { (posted, mangaId) -> privacy.isHidden(posted.id, mangaId) }
+
+            hidden.forEach { (posted, _) -> manager.cancel(posted.tag, posted.id) }
+            if (summary == null) return@withLock
+
+            val summaryMangaIds = summary.notification.extras?.getLongArray(EXTRA_SUMMARY_MANGA_IDS)?.asList()
+            when (val change = privacy.summaryChange(summaryMangaIds, visible.map { it.second }, hidden.isNotEmpty())) {
+                ChapterNotificationPrivacy.SummaryChange.Cancel -> manager.cancel(summary.tag, summary.id)
+                is ChapterNotificationPrivacy.SummaryChange.Replace -> postChapterSummary(
+                    mangaIds = change.mangaIds,
+                    titles = emptyList(),
+                    mangaCount = change.mangaCount,
+                    previousTime = summary.notification.`when`,
+                )
+                null -> Unit
+            }
+        }
+    }
+
+    private fun postChapterSummary(
+        mangaIds: List<Long>,
+        titles: List<String>,
+        mangaCount: Int = mangaIds.size,
+        previousTime: Long? = null,
+    ) {
+        val summary = mangaCount.takeIf { it > 0 }?.let {
+            context.pluralStringResource(MR.plurals.notification_new_chapters_summary, it, it)
+        }
         context.notify(
             Notifications.ID_NEW_CHAPTERS,
             Notifications.CHANNEL_NEW_CHAPTERS,
         ) {
+            addExtras(bundleOf(EXTRA_SUMMARY_MANGA_IDS to mangaIds.toLongArray()))
             setContentTitle(context.stringResource(MR.strings.notification_new_chapters))
             setContentText(if (titles.isEmpty()) summary else titles.joinToString(", "))
             if (titles.size > 1) {
@@ -251,18 +299,10 @@ class LibraryUpdateNotifier(
 
             setContentIntent(getNotificationIntent())
             setAutoCancel(true)
-        }
-
-        // Per-manga notification
-        if (!securityPreferences.hideNotificationContent.get()) {
-            context.notify(
-                notifications.filterNot { it.first in hiddenAtPost }.map { (mangaId, notification) ->
-                    NotificationManagerCompat.NotificationWithIdAndTag(
-                        mangaId.hashCode(),
-                        notification,
-                    )
-                },
-            )
+            if (previousTime != null) {
+                setWhen(previousTime)
+                setOnlyAlertOnce(true)
+            }
         }
     }
 
@@ -270,6 +310,7 @@ class LibraryUpdateNotifier(
         val icon = getMangaIcon(manga)
         val nextChapter = getNextChapters.await(manga.id).firstOrNull()
         return context.notificationBuilder(Notifications.CHANNEL_NEW_CHAPTERS) {
+            addExtras(bundleOf(EXTRA_MANGA_ID to manga.id))
             setContentTitle(manga.title)
 
             val description = getNewChaptersDescription(chapters)
@@ -435,6 +476,10 @@ class LibraryUpdateNotifier(
     companion object {
         const val HELP_WARNING_URL =
             "https://mihon.app/docs/faq/library#why-am-i-warned-about-large-bulk-updates-and-downloads"
+
+        private const val EXTRA_MANGA_ID = "chapter_manga_id"
+        private const val EXTRA_SUMMARY_MANGA_IDS = "chapter_summary_manga_ids"
+        private val chapterNotificationsMutex = Mutex()
     }
 }
 

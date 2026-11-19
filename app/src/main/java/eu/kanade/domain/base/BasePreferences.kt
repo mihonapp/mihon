@@ -11,6 +11,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.i18n.ext_installer_legacy
 import tachiyomi.i18n.ext_installer_packageinstaller
 import tachiyomi.i18n.ext_installer_private
+import tachiyomi.i18n.ext_installer_root
 import tachiyomi.i18n.ext_installer_shizuku
 
 @Inject
@@ -38,6 +39,7 @@ class BasePreferences(
         LEGACY(MR.strings.ext_installer_legacy, true),
         PACKAGEINSTALLER(MR.strings.ext_installer_packageinstaller, true),
         SHIZUKU(MR.strings.ext_installer_shizuku, false),
+        ROOT(MR.strings.ext_installer_root, false),
         PRIVATE(MR.strings.ext_installer_private, false),
     }
 

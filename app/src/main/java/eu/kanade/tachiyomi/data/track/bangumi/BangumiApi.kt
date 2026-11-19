@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.track.bangumi
 import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.OAuthState
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMCollectionResponse
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMSearchResult
@@ -189,11 +190,14 @@ class BangumiApi(
 
         private const val APP_JSON = "application/json"
 
+        internal val oauthState = OAuthState()
+
         fun authUrl(): Uri =
             LOGIN_URL.toUri().buildUpon()
                 .appendQueryParameter("client_id", CLIENT_ID)
                 .appendQueryParameter("response_type", "code")
                 .appendQueryParameter("redirect_uri", REDIRECT_URL)
+                .appendQueryParameter("state", oauthState.begin())
                 .build()
 
         fun refreshTokenRequest(token: String) = POST(

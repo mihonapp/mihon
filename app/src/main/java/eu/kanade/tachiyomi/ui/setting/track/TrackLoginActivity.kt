@@ -4,7 +4,10 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.data.track.Tracker
+import eu.kanade.tachiyomi.data.track.anilist.AnilistApi
+import eu.kanade.tachiyomi.data.track.bangumi.BangumiApi
 import eu.kanade.tachiyomi.data.track.comick.ComickMissingScopesException
+import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +34,15 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
                 if (put(key, value) != null) return finish()
             }
         }
+
+        val oauthState = when (authority) {
+            "anilist-auth" -> AnilistApi.oauthState
+            "bangumi-auth" -> BangumiApi.oauthState
+            "shikimori-auth" -> ShikimoriApi.oauthState
+            else -> null
+        }
+        if (oauthState != null && !oauthState.consume(data["state"])) return finish()
+
         if ("error" in data) return returnToSettings()
 
         lifecycleScope.launch {

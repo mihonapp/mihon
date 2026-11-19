@@ -46,5 +46,6 @@ dependencies {
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation("app.cash.sqldelight:sqlite-driver:${libs.versions.sqldelight.asProvider().get()}")
     testRuntimeOnly(libs.junit.platform.launcher)
 }

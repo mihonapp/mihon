@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import androidx.core.content.ContextCompat
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.net.toUri
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.extension.installer.Installer
+import eu.kanade.tachiyomi.extension.installer.RootInstaller
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -49,7 +51,7 @@ class ExtensionInstaller(
     private val activeSteps = ConcurrentHashMap<Long, MutableStateFlow<InstallStep>>()
     private val extensionInstaller = basePreferences.extensionInstaller
 
-    private val httpClient: OkHttpClient by lazy { networkHelper.client }
+    private val httpClient: OkHttpClient by lazy { networkHelper.extensionClient }
 
     /**
      * Adds the given extension to the downloads queue and returns an observable containing its
@@ -69,8 +71,11 @@ class ExtensionInstaller(
         activeSteps[downloadId] = step
 
         val job = scope.launch {
-            val tmpFile = File(context.cacheDir, "extension_${extension.pkgName}.apk")
+            var downloadedFile: File? = null
             try {
+                // A retry must not replace the verified APK of an install already in progress.
+                val tmpFile = File.createTempFile("extension_", ".apk", context.cacheDir)
+                downloadedFile = tmpFile
                 step.value = InstallStep.Downloading
                 val request = Request.Builder().url(extension.apkUrl).build()
                 httpClient.newCall(request).await().use { response ->
@@ -87,18 +92,21 @@ class ExtensionInstaller(
                     }
                 }
 
-                // The store's index names the apk, but nothing ties what's served there to the store's key
                 val packageInfo = ExtensionLoader.getArchivePackageInfo(context, tmpFile)
                     ?.takeIf { extension.store.signingKey in ExtensionLoader.getSignatures(it).orEmpty() }
-                if (packageInfo == null) {
-                    tmpFile.delete()
-                    throw Exception("Extension isn't signed with the key of ${extension.store.name}")
+                    ?: throw Exception("Extension isn't signed with the key of ${extension.store.name}")
+                check(
+                    packageInfo.packageName == extension.pkgName &&
+                        PackageInfoCompat.getLongVersionCode(packageInfo) == extension.versionCode,
+                ) {
+                    "The APK package or version does not match the selected extension"
                 }
 
                 ensureActive()
                 step.value = InstallStep.Installing
                 installApk(downloadId, tmpFile, packageInfo, isUpdateForPrivatelyInstalled)
             } catch (e: Exception) {
+                downloadedFile?.delete()
                 if (e is CancellationException) throw e
                 logcat(LogPriority.INFO, e)
                 step.value = InstallStep.Error
@@ -109,8 +117,8 @@ class ExtensionInstaller(
 
         return step.asStateFlow()
             .onCompletion {
-                activeJobs.remove(extension.pkgName)
-                activeSteps.remove(downloadId)
+                activeJobs.remove(extension.pkgName, job)
+                activeSteps.remove(downloadId, step)
                 job.cancel()
             }
     }
@@ -122,7 +130,7 @@ class ExtensionInstaller(
      * @param packageInfo The package info already read from [tempFile].
      * @param isUpdateForPrivatelyInstalled If this install is an update for a privately installed extension
      */
-    private fun installApk(
+    private suspend fun installApk(
         downloadId: Long,
         tempFile: File,
         packageInfo: PackageInfo,
@@ -133,8 +141,18 @@ class ExtensionInstaller(
             return
         }
 
-        when (val installer = extensionInstaller.get()) {
-            BasePreferences.ExtensionInstaller.LEGACY -> {
+        val installer = extensionInstaller.get()
+        if (installer == BasePreferences.ExtensionInstaller.ROOT) {
+            val result = RootInstaller.install(context, tempFile)
+            if (result != null) {
+                tempFile.delete()
+                updateInstallStep(downloadId, result)
+                return
+            }
+        }
+
+        when (installer) {
+            BasePreferences.ExtensionInstaller.LEGACY, BasePreferences.ExtensionInstaller.ROOT -> {
                 val intent = Intent(context, ExtensionInstallActivity::class.java)
                     .setDataAndType(tempFile.getUriCompat(context), APK_MIME)
                     .putExtra(EXTRA_DOWNLOAD_ID, downloadId)
@@ -147,7 +165,7 @@ class ExtensionInstaller(
                 installApkPrivately(downloadId, tempFile, packageInfo)
             }
 
-            else -> {
+            BasePreferences.ExtensionInstaller.PACKAGEINSTALLER, BasePreferences.ExtensionInstaller.SHIZUKU -> {
                 val intent = ExtensionInstallService.getIntent(
                     context,
                     downloadId,

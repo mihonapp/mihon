@@ -37,7 +37,7 @@ class ExtensionStoreService(
     private suspend fun fetchStore(indexUrl: String): Result<ExtensionStore> {
         var updatedIndexUrl: String = indexUrl
         return try {
-            val response = network.client.newCall(GET(updatedIndexUrl)).awaitSuccess()
+            val response = network.extensionClient.newCall(GET(updatedIndexUrl)).awaitSuccess()
             val store = response.body.source().decompressIfGzipped().use { source ->
                 val networkStore = when (source.peek().readByte()) {
                     // "[..."
@@ -46,7 +46,7 @@ class ExtensionStoreService(
                             throw IllegalArgumentException("Provided legacy store url is not valid")
                         }
                         updatedIndexUrl = indexUrl.replace("/index.min.json", "/repo.json")
-                        network.client.newCall(GET(updatedIndexUrl)).awaitSuccess().body.source().use {
+                        network.extensionClient.newCall(GET(updatedIndexUrl)).awaitSuccess().body.source().use {
                             json.decodeFromBufferedSource<NetworkLegacyExtensionRepo>(it)
                         }
                     }
@@ -79,7 +79,7 @@ class ExtensionStoreService(
     suspend fun getExtensions(store: ExtensionStore): Result<List<Extension.Available>> = withContext(Dispatchers.IO) {
         try {
             val extensions = if (store.extensionListUrl != null) {
-                val response = network.client.newCall(GET(store.extensionListUrl!!)).awaitSuccess()
+                val response = network.extensionClient.newCall(GET(store.extensionListUrl!!)).awaitSuccess()
                 response.body.source().decompressIfGzipped().use { source ->
                     when (source.peek().readByte()) {
                         // "{..."
@@ -91,7 +91,7 @@ class ExtensionStoreService(
                         .toAvailableExtensions(store)
                 }
             } else if (!store.isLegacy) {
-                val response = network.client.newCall(GET(store.indexUrl)).awaitSuccess()
+                val response = network.extensionClient.newCall(GET(store.indexUrl)).awaitSuccess()
                 response.body.source().decompressIfGzipped().use { source ->
                     when (source.peek().readByte()) {
                         // "{..."
@@ -103,7 +103,7 @@ class ExtensionStoreService(
                 }
             } else {
                 val storeBaseUrl = store.indexUrl.removeSuffix("/repo.json")
-                val response = network.client.newCall(GET("$storeBaseUrl/index.min.json")).awaitSuccess()
+                val response = network.extensionClient.newCall(GET("$storeBaseUrl/index.min.json")).awaitSuccess()
                 response.body.source().use { source ->
                     json.decodeFromBufferedSource<List<NetworkLegacyExtension>>(source)
                         .map { it.toAvailableExtension(store, storeBaseUrl) }

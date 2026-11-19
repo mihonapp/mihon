@@ -5,6 +5,7 @@ import androidx.core.net.toUri
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.network.okHttpClient
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.OAuthState
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.data.track.shikimori.dto.SMLibraryIdResponse
 import eu.kanade.tachiyomi.data.track.shikimori.dto.SMOAuth
@@ -221,10 +222,13 @@ class ShikimoriApi(
         private const val CLIENT_ID = "PB9dq8DzI405s7wdtwTdirYqHiyVMh--djnP7lBUqSA"
         private const val CLIENT_SECRET = "NajpZcOBKB9sJtgNcejf8OB9jBN1OYYoo-k4h2WWZus"
 
+        internal val oauthState = OAuthState()
+
         fun authUrl(): Uri = LOGIN_URL.toUri().buildUpon()
             .appendQueryParameter("client_id", CLIENT_ID)
             .appendQueryParameter("redirect_uri", REDIRECT_URL)
             .appendQueryParameter("response_type", "code")
+            .appendQueryParameter("state", oauthState.begin())
             .build()
 
         fun refreshTokenRequest(token: String) = POST(

@@ -13,6 +13,7 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
+import java.io.IOException
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -74,6 +75,17 @@ class NetworkHelper(
             .addInterceptor(
                 CloudflareInterceptor(context, cookieJar, scope, ::defaultUserAgentProvider),
             )
+            .build()
+    }
+
+    val extensionClient: OkHttpClient by lazy {
+        client.newBuilder()
+            .followSslRedirects(false)
+            .addInterceptor { chain ->
+                val request = chain.request()
+                if (!request.url.isHttps) throw IOException("Extension repository and APK URLs must use HTTPS")
+                chain.proceed(request)
+            }
             .build()
     }
 

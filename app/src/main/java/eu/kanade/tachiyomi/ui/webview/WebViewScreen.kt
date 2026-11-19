@@ -37,7 +37,9 @@ class WebViewScreen(
         }
 
         WebViewScreenContent(
-            onNavigateUp = { navigator.pop() },
+            onNavigateUp = {
+                if (navigator.lastItem === this) navigator.pop()
+            },
             initialTitle = initialTitle,
             url = url,
             headers = headers.orEmpty(),
