@@ -1,9 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.kanade.presentation.browse.ExtensionScreen
+import eu.kanade.presentation.browse.PrivateExtensionUninstallDialog
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -93,9 +91,9 @@ fun extensionsTab(
             )
 
             privateExtensionToUninstall?.let { extension ->
-                ExtensionUninstallConfirmation(
-                    extensionName = extension.name,
-                    onClickConfirm = {
+                PrivateExtensionUninstallDialog(
+                    extension = extension,
+                    onConfirm = {
                         extensionsViewModel.uninstallExtension(extension)
                     },
                     onDismissRequest = {
@@ -104,37 +102,5 @@ fun extensionsTab(
                 )
             }
         },
-    )
-}
-
-@Composable
-private fun ExtensionUninstallConfirmation(
-    extensionName: String,
-    onClickConfirm: () -> Unit,
-    onDismissRequest: () -> Unit,
-) {
-    AlertDialog(
-        title = {
-            Text(text = stringResource(MR.strings.ext_confirm_remove))
-        },
-        text = {
-            Text(text = stringResource(MR.strings.remove_private_extension_message, extensionName))
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onClickConfirm()
-                    onDismissRequest()
-                },
-            ) {
-                Text(text = stringResource(MR.strings.ext_remove))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(MR.strings.action_cancel))
-            }
-        },
-        onDismissRequest = onDismissRequest,
     )
 }
