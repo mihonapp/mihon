@@ -40,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -63,10 +64,13 @@ import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
-import cafe.adriel.voyager.navigator.currentOrThrow
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.runtime.result.ResultEventBus
+import androidx.navigation3.runtime.result.rememberResultEventBus
+import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.interactor.GetIncognitoState
@@ -76,22 +80,14 @@ import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
 import eu.kanade.presentation.more.AppMigratingScreen
-import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
-import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
-import eu.kanade.presentation.util.AssistContentScreen
-import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
+import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoreDeepLinkEvent
+import eu.kanade.presentation.more.settings.screen.openSettings
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
-import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
-import eu.kanade.tachiyomi.ui.deeplink.DeepLinkScreen
-import eu.kanade.tachiyomi.ui.home.HomeScreen
-import eu.kanade.tachiyomi.ui.manga.MangaScreen
-import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
-import eu.kanade.tachiyomi.ui.more.OnboardingScreen
-import eu.kanade.tachiyomi.ui.setting.SettingsScreen
+import eu.kanade.tachiyomi.ui.home.TabEvent
+import eu.kanade.tachiyomi.ui.home.TopLevelRoute
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isBenchmarkBuildType
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
@@ -113,12 +109,34 @@ import mihon.app.di.AppGraph
 import mihon.app.di.appGraph
 import mihon.core.metro.metroGraph
 import mihon.core.migration.Migrator
+import mihon.core.navigation.AssistContentManager
+import mihon.core.navigation.BrowseSourceRoute
+import mihon.core.navigation.DeepLinkRoute
+import mihon.core.navigation.ExtensionStoresRoute
+import mihon.core.navigation.GlobalSearchRoute
+import mihon.core.navigation.HomeRoute
+import mihon.core.navigation.LocalAssistContentManager
+import mihon.core.navigation.LocalNavigator
+import mihon.core.navigation.MangaRoute
+import mihon.core.navigation.Navigator
+import mihon.core.navigation.NavigatorDisplay
+import mihon.core.navigation.NewUpdateRoute
+import mihon.core.navigation.OnboardingRoute
+import mihon.core.navigation.RestoreBackupRoute
+import mihon.core.navigation.SupportUsRoute
+import mihon.core.navigation.TrackInfoDialogRoute
+import mihon.core.navigation.appEntries
+import mihon.core.navigation.rememberNavigator
+import mihon.core.navigation.rememberOverlaySheetSceneStrategy
+import mihon.core.navigation.rememberTwoPaneSettingsSceneStrategy
 import mihon.data.cache.ChapterCache
 import mihon.domain.database.repository.DatabaseRepository
-import mihon.feature.support.SupportUsScreen
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.OpenInNew
 import mihon.icons.materialsymbols.roundedfilled.VolunteerActivism
+import mihon.presentation.core.util.isTabletUi
+import soup.compose.material.motion.animation.materialSharedAxisX
+import soup.compose.material.motion.animation.rememberSlideDistance
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -160,6 +178,8 @@ class MainActivity : BaseActivity() {
     var ready = false
 
     private var navigator: Navigator? = null
+
+    private val assistContentManager = AssistContentManager()
 
     init {
         registerSecureActivity(this)
@@ -233,23 +253,33 @@ class MainActivity : BaseActivity() {
                 )
             }
 
-            Navigator(
-                screen = HomeScreen,
-                disposeBehavior = NavigatorDisposeBehavior(disposeNestedNavigators = false, disposeSteps = true),
-            ) { navigator ->
+            val navigator = rememberNavigator(HomeRoute)
+            val twoPaneStrategy = rememberTwoPaneSettingsSceneStrategy<NavKey>()
+            val overlaySheetSceneStrategy = rememberOverlaySheetSceneStrategy<NavKey>()
+            val resultEventBus = rememberResultEventBus()
+            val resultEventBusNavEntryDecorator = rememberResultEventBusNavEntryDecorator<NavKey>(
+                resultEventBus = resultEventBus,
+            )
+
+            CompositionLocalProvider(
+                LocalNavigator provides navigator,
+                LocalAssistContentManager provides assistContentManager,
+            ) {
                 LaunchedEffect(navigator) {
                     this@MainActivity.navigator = navigator
 
                     if (isLaunch) {
                         // Set start screen
-                        handleIntentAction(intent, navigator)
+                        handleIntentAction(intent, navigator, resultEventBus)
 
                         // Reset Incognito Mode on relaunch
                         preferences.incognitoMode.set(false)
                     }
                 }
-                LaunchedEffect(navigator.lastItem) {
-                    (navigator.lastItem as? BrowseSourceScreen)?.sourceId
+
+                val currentRoute = navigator.current
+                LaunchedEffect(currentRoute) {
+                    (currentRoute as? BrowseSourceRoute)?.sourceId
                         .let(getIncognitoState::subscribe)
                         .collectLatest { incognito = it }
                 }
@@ -268,9 +298,23 @@ class MainActivity : BaseActivity() {
                 ) { contentPadding ->
                     // Consume insets already used by app state banners
                     Box {
-                        // Shows current screen
-                        DefaultNavigatorScreenTransition(
+                        val slideDistance = rememberSlideDistance()
+                        NavigatorDisplay(
                             navigator = navigator,
+                            sceneStrategies = listOf(twoPaneStrategy, overlaySheetSceneStrategy),
+                            transitionSpec = { materialSharedAxisX(forward = true, slideDistance = slideDistance) },
+                            popTransitionSpec = { materialSharedAxisX(forward = false, slideDistance = slideDistance) },
+                            predictivePopTransitionSpec = {
+                                materialSharedAxisX(forward = false, slideDistance = slideDistance)
+                            },
+                            entryDecorators = listOf(
+                                rememberSaveableStateHolderNavEntryDecorator(),
+                                rememberViewModelStoreNavEntryDecorator(),
+                                resultEventBusNavEntryDecorator,
+                            ),
+                            entryProvider = entryProvider {
+                                appEntries()
+                            },
                             modifier = Modifier
                                 .padding(contentPadding)
                                 .consumeWindowInsets(contentPadding),
@@ -290,23 +334,27 @@ class MainActivity : BaseActivity() {
                     }
                 }
 
-                // Pop source-related screens when incognito mode is turned off
+                // Pop source-related routes when incognito mode is turned off
                 LaunchedEffect(Unit) {
                     preferences.incognitoMode.changes()
                         .drop(1)
                         .filter { !it }
                         .onEach {
-                            val currentScreen = navigator.lastItem
-                            if (currentScreen is BrowseSourceScreen ||
-                                (currentScreen is MangaScreen && currentScreen.fromSource)
+                            val currentRoute = navigator.current
+                            if (currentRoute is BrowseSourceRoute ||
+                                (currentRoute is MangaRoute && currentRoute.fromSource)
                             ) {
-                                navigator.popUntilRoot()
+                                navigator.popToRoot()
                             }
                         }
                         .launchIn(this)
                 }
 
-                HandleOnNewIntent(context = context, navigator = navigator)
+                HandleOnNewIntent(
+                    context = context,
+                    navigator = navigator,
+                    resultEventBus = resultEventBus,
+                )
 
                 if (!isBenchmarkBuildType) {
                     if (isLaunch) CheckForUpdates()
@@ -330,11 +378,9 @@ class MainActivity : BaseActivity() {
 
     override fun onProvideAssistContent(outContent: AssistContent) {
         super.onProvideAssistContent(outContent)
-        when (val screen = navigator?.lastItem) {
-            is AssistContentScreen -> {
-                screen.onProvideAssistUrl()?.let { outContent.webUri = it.toUri() }
-            }
-        }
+        val navigator = navigator ?: return
+        val route = navigator.routes.lastOrNull { it !is TrackInfoDialogRoute } ?: return
+        assistContentManager.urlFor(route, navigator.routes)?.let { outContent.webUri = it.toUri() }
     }
 
     override fun reportFullyDrawn() {
@@ -348,7 +394,11 @@ class MainActivity : BaseActivity() {
     }
 
     @Composable
-    private fun HandleOnNewIntent(context: Context, navigator: Navigator) {
+    private fun HandleOnNewIntent(
+        context: Context,
+        navigator: Navigator,
+        resultEventBus: ResultEventBus,
+    ) {
         LaunchedEffect(Unit) {
             callbackFlow {
                 val componentActivity = context as ComponentActivity
@@ -356,14 +406,16 @@ class MainActivity : BaseActivity() {
                 componentActivity.addOnNewIntentListener(consumer)
                 awaitClose { componentActivity.removeOnNewIntentListener(consumer) }
             }
-                .collectLatest { handleIntentAction(it, navigator) }
+                .collectLatest {
+                    handleIntentAction(it, navigator, resultEventBus)
+                }
         }
     }
 
     @Composable
     private fun CheckForUpdates() {
         val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+        val navigator = LocalNavigator.current
 
         // App updates
         LaunchedEffect(Unit) {
@@ -382,15 +434,15 @@ class MainActivity : BaseActivity() {
                         if (
                             result is GetApplicationRelease.Result.NewUpdate &&
                             result.release.version != preferences.skippedAppUpdate.get() &&
-                            navigator.items.none { it is NewUpdateScreen }
+                            navigator.routes.none { it is NewUpdateRoute }
                         ) {
-                            val updateScreen = NewUpdateScreen(
+                            val updateRoute = NewUpdateRoute(
                                 versionName = result.release.version,
                                 changelogInfo = result.release.info,
                                 releaseLink = result.release.releaseLink,
                                 downloadLink = result.release.downloadLink,
                             )
-                            navigator.push(updateScreen)
+                            navigator.push(updateRoute)
                         }
                     } catch (e: CancellationException) {
                         throw e
@@ -413,18 +465,18 @@ class MainActivity : BaseActivity() {
 
     @Composable
     private fun ShowOnboarding() {
-        val navigator = LocalNavigator.currentOrThrow
+        val navigator = LocalNavigator.current
 
         LaunchedEffect(Unit) {
-            if (!preferences.shownOnboardingFlow.get() && navigator.lastItem !is OnboardingScreen) {
-                navigator.push(OnboardingScreen())
+            if (!preferences.shownOnboardingFlow.get() && OnboardingRoute !in navigator.routes) {
+                navigator.push(OnboardingRoute)
             }
         }
     }
 
     @Composable
     private fun ShowDonationCampaign() {
-        val navigator = LocalNavigator.currentOrThrow
+        val navigator = LocalNavigator.current
 
         var showCampaign by remember { mutableStateOf(false) }
         if (showCampaign) {
@@ -474,7 +526,7 @@ class MainActivity : BaseActivity() {
                             .padding(horizontal = MaterialTheme.padding.medium)
                             .fillMaxWidth(),
                         onClick = {
-                            navigator.push(SupportUsScreen())
+                            navigator.push(SupportUsRoute)
                             dismissSupportMessage()
                         },
                     ) {
@@ -586,7 +638,11 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun handleIntentAction(intent: Intent, navigator: Navigator): Boolean {
+    private fun handleIntentAction(
+        intent: Intent,
+        navigator: Navigator,
+        resultEventBus: ResultEventBus,
+    ): Boolean {
         val notificationId = intent.getIntExtra("notificationId", -1)
         if (notificationId > -1) {
             NotificationReceiver.dismissNotification(
@@ -597,23 +653,23 @@ class MainActivity : BaseActivity() {
         }
 
         val tabToOpen = when (intent.action) {
-            Constants.SHORTCUT_LIBRARY -> HomeScreen.Tab.Library()
+            Constants.SHORTCUT_LIBRARY -> TabEvent.Library()
             Constants.SHORTCUT_MANGA -> {
                 val idToOpen = intent.extras?.getLong(Constants.MANGA_EXTRA) ?: return false
-                navigator.popUntilRoot()
-                HomeScreen.Tab.Library(idToOpen)
+                navigator.popToRoot()
+                TabEvent.Library(idToOpen)
             }
-            Constants.SHORTCUT_UPDATES -> HomeScreen.Tab.Updates
-            Constants.SHORTCUT_HISTORY -> HomeScreen.Tab.History
-            Constants.SHORTCUT_SOURCES -> HomeScreen.Tab.Browse(false)
-            Constants.SHORTCUT_EXTENSIONS -> HomeScreen.Tab.Browse(true)
+            Constants.SHORTCUT_UPDATES -> TabEvent.Updates
+            Constants.SHORTCUT_HISTORY -> TabEvent.History
+            Constants.SHORTCUT_SOURCES -> TabEvent.Browse(false)
+            Constants.SHORTCUT_EXTENSIONS -> TabEvent.Browse(true)
             Constants.SHORTCUT_DOWNLOADS -> {
-                navigator.popUntilRoot()
-                HomeScreen.Tab.More(toDownloads = true)
+                navigator.popToRoot()
+                TabEvent.More(toDownloads = true)
             }
             Intent.ACTION_APPLICATION_PREFERENCES -> {
-                navigator.popUntilRoot()
-                navigator.push(SettingsScreen())
+                navigator.popToRoot()
+                navigator.openSettings(twoPane = resources.configuration.isTabletUi())
                 null
             }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {
@@ -623,8 +679,7 @@ class MainActivity : BaseActivity() {
                 // Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY) ?: intent.getStringExtra(Intent.EXTRA_TEXT)
                 if (!query.isNullOrEmpty()) {
-                    navigator.popUntilRoot()
-                    navigator.push(DeepLinkScreen(query))
+                    navigator.replaceAll(DeepLinkRoute(query))
                 }
                 null
             }
@@ -632,22 +687,20 @@ class MainActivity : BaseActivity() {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
                 if (!query.isNullOrEmpty()) {
                     val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
-                    navigator.popUntilRoot()
-                    navigator.push(GlobalSearchScreen(query, filter))
+                    navigator.replaceAll(GlobalSearchRoute(query, filter))
                 }
                 null
             }
             Intent.ACTION_VIEW -> {
                 // Handling opening of backup files
                 if (intent.data.toString().endsWith(".tachibk")) {
-                    navigator.popUntilRoot()
-                    navigator.push(RestoreBackupScreen(intent.data.toString()))
+                    navigator.replaceAll(RestoreBackupRoute(intent.data.toString()))
                 }
                 // Deep link to add extension store
                 else if (intent.isAddExtensionStoreIntent()) {
                     intent.data?.getQueryParameter("url")?.let { repoUrl ->
-                        navigator.popUntilRoot()
-                        navigator.push(ExtensionStoresScreen(repoUrl))
+                        navigator.replaceAll(ExtensionStoresRoute)
+                        resultEventBus.sendResult(ExtensionStoreDeepLinkEvent(repoUrl))
                     }
                 }
                 null
@@ -656,7 +709,7 @@ class MainActivity : BaseActivity() {
         }
 
         if (tabToOpen != null) {
-            lifecycleScope.launch { HomeScreen.openTab(tabToOpen) }
+            resultEventBus.sendResult<TabEvent>(tabToOpen)
         }
 
         ready = true
