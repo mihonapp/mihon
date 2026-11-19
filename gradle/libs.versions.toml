@@ -1,20 +1,21 @@
 [versions]
 aboutLibraries = "15.3.0"
 android-desugar = "2.1.5"
-android-gradle = "9.5.0"
+android-gradle = "9.5.1"
 androidx-activity-compose = "1.13.0"
 androidx-annotation = "1.11.0"
 androidx-appCompat = "1.8.0"
 androidx-baselineProfile = "1.5.0"
 androidx-benchmark = "1.5.0"
 androidx-biometric = "1.2.0-alpha05"
-androidx-compose-bom = "2026.10.01"
+androidx-compose-bom = "2026.11.00"
 androidx-constraintLayout = "2.2.2"
 androidx-core = "1.19.1"
 androidx-coreSplashScreen = "1.2.0"
 androidx-glance = "1.2.0"
 androidx-interpolator = "1.0.0"
 androidx-lifecycle = "2.11.0"
+androidx-navigation3 = "1.2.1"
 androidx-navigationEvent = "1.2.0"
 androidx-paging = "3.5.3"
 androidx-preference = "1.2.1"
@@ -23,7 +24,7 @@ androidx-recyclerView = "1.4.0"
 androidx-sqlite = "2.7.1"
 androidx-test-espresso = "3.7.0"
 androidx-test-junit = "1.3.0"
-androidx-test-uiautomator = "2.4.0"
+androidx-test-uiautomator = "2.4.1"
 androidx-viewPager = "1.1.0"
 androidx-webkit = "1.18.0"
 androidx-work = "2.12.0"
@@ -35,28 +36,28 @@ composeGrid = "2.9.0"
 composeMaterialMotion = "2.0.1"
 composeRichEditor = "1.2.1"
 composeWebview = "0.33.6"
-conscrypt = "2.8.0"
+conscrypt = "2.9.0"
 directionalViewPager = "1.0.0"
-firebase-bom = "35.1.0"
+firebase-bom = "35.2.0"
 firebase-crashlytics = "3.0.8"
-google-services = "4.5.0"
+google-services = "4.6.0"
 image-decoder = "18"
 injekt = "1.16.1"
 jsoup = "1.24.1"
 junit = "6.1.3"
-kotest-assertions = "6.2.6"
+kotest-assertions = "6.2.7"
 kotlin-gradle = "2.4.21"
 kotlinx-coroutines = "1.11.0"
 kotlinx-datetime = "0.8.0"
-kotlinx-serialization = "1.12.0"
+kotlinx-serialization = "1.13.0"
 ktlint = "1.8.0"
 leakCanary = "2.14"
 logcat = "0.4"
 markdown = "0.46.0"
 material = "1.14.0"
 materialKolor = "5.0.1"
-metro = "1.5.2"
-mockk = "1.14.11"
+metro = "1.6.0"
+mockk = "1.14.12"
 moko-resources = "0.26.4"
 okhttp = "5.5.1"
 okio = "3.18.2"
@@ -74,8 +75,7 @@ swipe = "1.3.0"
 tapmoc = "0.5.0"
 unifile = "08f224c8f9"
 valkyrie = "0.5.2"
-voyager = "2.2.21-1.10.3"
-webgpuviewer = "57"
+webgpuviewer = "58"
 xmlutil = "1.0.2"
 
 [libraries]
@@ -109,6 +109,9 @@ androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", 
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodelNavigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "androidx-navigation3" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "androidx-navigation3" }
 androidx-navigationEvent = { module = "androidx.navigationevent:navigationevent", version.ref = "androidx-navigationEvent" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
@@ -192,9 +195,6 @@ subsamplingScaleImageView = { module = "com.github.mihonapp:subsampling-scale-im
 swipe = { module = "me.saket.swipe:swipe", version.ref = "swipe" }
 tapmoc-gradle = { module = "com.gradleup.tapmoc:tapmoc-gradle-plugin", version.ref = "tapmoc" }
 unifile = { module = "com.github.mihon:unifile", version.ref = "unifile" }
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
-voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
-voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 webgpuviewer = { module = "ca.mpreg:webgpuviewer", version.ref = "webgpuviewer" }
 xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xmlutil" }
 xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil" }
@@ -221,7 +221,8 @@ sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 valkyrie = { id = "io.github.composegears.valkyrie", version.ref = "valkyrie" }
 
 [bundles]
-androidx-lifecycle = ["androidx-lifecycle-common", "androidx-lifecycle-process", "androidx-lifecycle-runtime", "androidx-lifecycle-viewmodel", "androidx-lifecycle-viewmodelCompose"]
+androidx-lifecycle = ["androidx-lifecycle-common", "androidx-lifecycle-process", "androidx-lifecycle-runtime", "androidx-lifecycle-viewmodel", "androidx-lifecycle-viewmodelCompose", "androidx-lifecycle-viewmodelNavigation3"]
+androidx-navigation3 = ["androidx-navigation3-runtime", "androidx-navigation3-ui"]
 coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 kotlinx-coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-android", "kotlinx-coroutines-guava"]
 markdown = ["markdown-core", "markdown-coil"]
@@ -230,4 +231,3 @@ serialization = ["kotlinx-serialization-json", "kotlinx-serialization-jsonOkio",
 shizuku = ["shizuku-api", "shizuku-provider"]
 sqldelight = ["sqldelight-androidxDriver", "sqldelight-async", "sqldelight-coroutines", "sqldelight-androidxPaging"]
 test = ["junit-jupiter", "kotest-assertions", "mockk"]
-voyager = ["voyager-navigator", "voyager-tabNavigator", "voyager-transitions"]

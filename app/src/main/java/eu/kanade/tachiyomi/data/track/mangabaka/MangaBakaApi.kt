@@ -33,7 +33,6 @@ import okhttp3.FormBody
 import okhttp3.Headers.Companion.headersOf
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
-import uy.kohesive.injekt.injectLazy
 import java.math.RoundingMode
 import java.security.SecureRandom
 import java.util.Base64
@@ -44,9 +43,8 @@ class MangaBakaApi(
     private val trackerId: Long,
     baseClient: OkHttpClient,
     interceptor: MangaBakaInterceptor,
+    private val json: Json,
 ) {
-
-    private val json: Json by injectLazy()
 
     private val client = baseClient.newBuilder().addInterceptor {
         it.request().newBuilder()

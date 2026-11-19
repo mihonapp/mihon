@@ -22,8 +22,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -32,7 +30,6 @@ import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.rememberIs24HourSystem
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -44,6 +41,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import mihon.app.di.appGraph
+import mihon.core.navigation.LocalNavigator
+import mihon.core.navigation.WorkerInfoRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.ContentCopy
 import tachiyomi.i18n.MR
@@ -54,154 +53,147 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.time.Instant
 
-class WorkerInfoScreen : Screen() {
+@Composable
+fun WorkerInfoScreen() {
+    val context = LocalContext.current
+    val navigator = LocalNavigator.current
 
-    companion object {
-        const val TITLE = "Worker info"
-    }
+    val viewModel = metroViewModel<WorkerInfoViewModel>()
 
-    @Composable
-    override fun Content() {
-        val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+    val is24HourSystem = rememberIs24HourSystem()
+    // Keyed on the system 12/24h setting, which can change while the app is backgrounded.
+    // Date/time prefs only change in Appearance, which recreates this screen on return.
+    LaunchedEffect(is24HourSystem) { viewModel.onSystemTimeFormatChanged(is24HourSystem) }
 
-        val viewModel = metroViewModel<WorkerInfoViewModel>()
+    val enqueued by viewModel.enqueued.collectAsState()
+    val finished by viewModel.finished.collectAsState()
+    val running by viewModel.running.collectAsState()
 
-        val is24HourSystem = rememberIs24HourSystem()
-        // Keyed on the system 12/24h setting, which can change while the app is backgrounded.
-        // Date/time prefs only change in Appearance, which recreates this screen on return.
-        LaunchedEffect(is24HourSystem) { viewModel.onSystemTimeFormatChanged(is24HourSystem) }
-
-        val enqueued by viewModel.enqueued.collectAsState()
-        val finished by viewModel.finished.collectAsState()
-        val running by viewModel.running.collectAsState()
-
-        Scaffold(
-            topBar = {
-                AppBar(
-                    title = TITLE,
-                    navigateUp = navigator::pop,
-                    actions = {
-                        AppBarActions(
-                            listOf(
-                                AppBar.Action(
-                                    title = stringResource(MR.strings.action_copy_to_clipboard),
-                                    icon = MaterialSymbols.Rounded.ContentCopy,
-                                    onClick = {
-                                        context.copyToClipboard(TITLE, enqueued + finished + running)
-                                    },
-                                ),
+    Scaffold(
+        topBar = {
+            AppBar(
+                title = WorkerInfoRoute.TITLE,
+                navigateUp = navigator::pop,
+                actions = {
+                    AppBarActions(
+                        listOf(
+                            AppBar.Action(
+                                title = stringResource(MR.strings.action_copy_to_clipboard),
+                                icon = MaterialSymbols.Rounded.ContentCopy,
+                                onClick = {
+                                    context.copyToClipboard(WorkerInfoRoute.TITLE, enqueued + finished + running)
+                                },
                             ),
-                        )
-                    },
-                    scrollBehavior = it,
-                )
-            },
-        ) { contentPadding ->
-            LazyColumn(
-                contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-            ) {
-                item { SectionTitle(title = "Enqueued") }
-                item { SectionText(text = enqueued) }
+                        ),
+                    )
+                },
+                scrollBehavior = it,
+            )
+        },
+    ) { contentPadding ->
+        LazyColumn(
+            contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+        ) {
+            item { SectionTitle(title = "Enqueued") }
+            item { SectionText(text = enqueued) }
 
-                item { SectionTitle(title = "Finished") }
-                item { SectionText(text = finished) }
+            item { SectionTitle(title = "Finished") }
+            item { SectionText(text = finished) }
 
-                item { SectionTitle(title = "Running") }
-                item { SectionText(text = running) }
-            }
+            item { SectionTitle(title = "Running") }
+            item { SectionText(text = running) }
         }
     }
+}
 
-    @Composable
-    private fun SectionTitle(title: String) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(vertical = 8.dp),
-        )
+@Composable
+private fun SectionTitle(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.padding(vertical = 8.dp),
+    )
+}
+
+@Composable
+private fun SectionText(text: String) {
+    Text(
+        text = text,
+        softWrap = false,
+        fontFamily = FontFamily.Monospace,
+    )
+}
+
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
+class WorkerInfoViewModel(
+    context: Context,
+) : ViewModel() {
+
+    private val workManager = context.workManager
+    private val dateFormatPref = context.appGraph.uiPreferences.dateFormat
+    private val timeFormatPref = context.appGraph.uiPreferences.timeFormat
+    private val is24HourSystem = MutableStateFlow(DateFormat.is24HourFormat(context))
+
+    private val dateTimeFormatter = combine(
+        dateFormatPref.changes(),
+        timeFormatPref.changes(),
+        is24HourSystem,
+    ) { date, time, is24 ->
+        UiPreferences.dateTimeFormat(date, time, Locale.getDefault(), is24)
     }
 
-    @Composable
-    private fun SectionText(text: String) {
-        Text(
-            text = text,
-            softWrap = false,
-            fontFamily = FontFamily.Monospace,
-        )
+    fun onSystemTimeFormatChanged(value: Boolean) {
+        is24HourSystem.value = value
     }
 
-    @Inject
-    @ViewModelKey
-    @ContributesIntoMap(AppScope::class)
-    class WorkerInfoViewModel(
-        context: Context,
-    ) : ViewModel() {
+    val finished = combine(
+        workManager.getWorkInfosFlow(
+            WorkQuery.fromStates(WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED, WorkInfo.State.CANCELLED),
+        ),
+        dateTimeFormatter,
+        ::constructString,
+    )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
 
-        private val workManager = context.workManager
-        private val dateFormatPref = context.appGraph.uiPreferences.dateFormat
-        private val timeFormatPref = context.appGraph.uiPreferences.timeFormat
-        private val is24HourSystem = MutableStateFlow(DateFormat.is24HourFormat(context))
+    val running = combine(
+        workManager.getWorkInfosFlow(WorkQuery.fromStates(WorkInfo.State.RUNNING)),
+        dateTimeFormatter,
+        ::constructString,
+    )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
 
-        private val dateTimeFormatter = combine(
-            dateFormatPref.changes(),
-            timeFormatPref.changes(),
-            is24HourSystem,
-        ) { date, time, is24 ->
-            UiPreferences.dateTimeFormat(date, time, Locale.getDefault(), is24)
-        }
+    val enqueued = combine(
+        workManager.getWorkInfosFlow(WorkQuery.fromStates(WorkInfo.State.ENQUEUED)),
+        dateTimeFormatter,
+        ::constructString,
+    )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
 
-        fun onSystemTimeFormatChanged(value: Boolean) {
-            is24HourSystem.value = value
-        }
-
-        val finished = combine(
-            workManager.getWorkInfosFlow(
-                WorkQuery.fromStates(WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED, WorkInfo.State.CANCELLED),
-            ),
-            dateTimeFormatter,
-            ::constructString,
-        )
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
-
-        val running = combine(
-            workManager.getWorkInfosFlow(WorkQuery.fromStates(WorkInfo.State.RUNNING)),
-            dateTimeFormatter,
-            ::constructString,
-        )
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
-
-        val enqueued = combine(
-            workManager.getWorkInfosFlow(WorkQuery.fromStates(WorkInfo.State.ENQUEUED)),
-            dateTimeFormatter,
-            ::constructString,
-        )
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
-
-        private fun constructString(
-            list: List<WorkInfo>,
-            dateTimeFormatter: DateTimeFormatter,
-        ) = buildString {
-            if (list.isEmpty()) {
-                appendLine("-")
-            } else {
-                list.fastForEach { workInfo ->
-                    appendLine("Id: ${workInfo.id}")
-                    appendLine("Tags:")
-                    workInfo.tags.forEach {
-                        appendLine(" - $it")
-                    }
-                    appendLine("State: ${workInfo.state}")
-                    if (workInfo.state == WorkInfo.State.ENQUEUED) {
-                        val timestamp = Instant.fromEpochMilliseconds(workInfo.nextScheduleTimeMillis)
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
-                            .toDateTimestampString(dateTimeFormatter)
-                        appendLine("Next scheduled run: $timestamp")
-                        appendLine("Attempt #${workInfo.runAttemptCount + 1}")
-                    }
-                    appendLine()
+    private fun constructString(
+        list: List<WorkInfo>,
+        dateTimeFormatter: DateTimeFormatter,
+    ) = buildString {
+        if (list.isEmpty()) {
+            appendLine("-")
+        } else {
+            list.fastForEach { workInfo ->
+                appendLine("Id: ${workInfo.id}")
+                appendLine("Tags:")
+                workInfo.tags.forEach {
+                    appendLine(" - $it")
                 }
+                appendLine("State: ${workInfo.state}")
+                if (workInfo.state == WorkInfo.State.ENQUEUED) {
+                    val timestamp = Instant.fromEpochMilliseconds(workInfo.nextScheduleTimeMillis)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                        .toDateTimestampString(dateTimeFormatter)
+                    appendLine("Next scheduled run: $timestamp")
+                    appendLine("Attempt #${workInfo.runAttemptCount + 1}")
+                }
+                appendLine()
             }
         }
     }
