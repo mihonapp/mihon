@@ -28,11 +28,12 @@ class KomgaApi(
         .set("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
         .build()
 
-    suspend fun getTrackSearch(source: HttpSource, url: String): TrackSearch =
+    suspend fun getTrackSearch(source: HttpSource, storedUrl: String): TrackSearch =
         withContext(Dispatchers.IO) {
             val client = source.client
             val headers = source.trackerHeaders()
             try {
+                val url = source.komgaUrl(storedUrl)
                 val track = with(json) {
                     if (url.contains(READLIST_API)) {
                         client.newCall(GET(url, headers))
@@ -73,27 +74,28 @@ class KomgaApi(
                     last_chapter_read = progress.lastReadContinuousNumberSort
                 }
             } catch (e: Exception) {
-                logcat(LogPriority.WARN, e) { "Could not get item: $url" }
+                logcat(LogPriority.WARN, e) { "Could not get item: $storedUrl" }
                 throw e
             }
         }
 
     suspend fun updateProgress(source: HttpSource, track: Track): Track =
         withContext(Dispatchers.IO) {
-            val payload = if (track.tracking_url.contains("/api/v1/series/")) {
+            val url = source.komgaUrl(track.tracking_url)
+            val payload = if (url.contains("/api/v1/series/")) {
                 json.encodeToString(ReadProgressUpdateV2Dto(track.last_chapter_read))
             } else {
                 json.encodeToString(ReadProgressUpdateDto(track.last_chapter_read.toInt()))
             }
             source.client.newCall(
                 Request.Builder()
-                    .url("${track.tracking_url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi")
+                    .url("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi")
                     .headers(source.trackerHeaders())
                     .put(payload.toRequestBody("application/json".toMediaType()))
                     .build(),
             )
                 .awaitSuccess().close()
-            getTrackSearch(source, track.tracking_url)
+            getTrackSearch(source, url)
         }
 
     private fun SeriesDto.toTrack(): TrackSearch = TrackSearch.create(trackerId).also {
@@ -106,3 +108,14 @@ class KomgaApi(
         it.title = name
     }
 }
+
+/**
+ * Stored URLs are absolute, but the server address can change: keep the path from `/api/` and
+ * take the host from the source's current address.
+ */
+internal fun HttpSource.komgaUrl(url: String): String {
+    val path = url.komgaPath() ?: throw IllegalArgumentException("Not a Komga API URL: $url")
+    return baseUrl.trimEnd('/') + path
+}
+
+internal fun String.komgaPath(): String? = lastIndexOf("/api/").takeIf { it >= 0 }?.let { substring(it) }

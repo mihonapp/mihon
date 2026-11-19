@@ -107,10 +107,12 @@ class Komga(
         }
 
     override fun isTrackFrom(track: DomainTrack, manga: Manga, source: Source?): Boolean =
-        track.remoteUrl == manga.url && source?.let { accept(it) } == true
+        track.trackerId == id &&
+            track.remoteUrl.komgaPath()?.let { it == manga.url.komgaPath() } == true &&
+            source?.let { accept(it) } == true
 
     override fun migrateTrack(track: DomainTrack, manga: Manga, newSource: Source): DomainTrack? =
-        if (accept(newSource)) {
+        if (accept(newSource) && manga.url.komgaPath() != null) {
             track.copy(remoteUrl = manga.url)
         } else {
             null
