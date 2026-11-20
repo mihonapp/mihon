@@ -42,6 +42,16 @@ ON C.id = MC.category_id
 WHERE MC.manga_id IN :mangaIds
 ORDER BY MC.manga_id, C.`order`;
 
+getUserCategoryNamesOfFavoritesBySourceId:
+SELECT MC.manga_id, C.name
+FROM category C
+JOIN manga_category MC
+ON C.id = MC.category_id
+JOIN manga M
+ON M.id = MC.manga_id
+WHERE C.id > 0 AND M.source_id = :sourceId AND M.user_favorite_at IS NOT NULL
+ORDER BY MC.manga_id, C.`order`;
+
 insert:
 -- The position is taken inside the insert, so two categories created at once cannot claim the same one
 INSERT INTO category(name, `order`, flags)

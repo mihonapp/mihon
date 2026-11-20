@@ -39,6 +39,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -145,6 +148,19 @@ class BrowseSourceViewModel(
                 .cachedIn(viewModelScope)
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyFlow())
+
+    /**
+     * Display label of the user categories of each library manga from this source, keyed by manga id.
+     * Empty when [SourcePreferences.showInLibraryCategories] is disabled.
+     */
+    val mangaCategories: StateFlow<Map<Long, String>> = sourcePreferences.showInLibraryCategories.changes()
+        .flatMapLatest { enabled ->
+            if (!enabled) return@flatMapLatest flowOf(emptyMap())
+            getCategories.subscribeUserCategoryNamesOfFavorites(sourceId)
+                .map { namesByManga -> namesByManga.mapValues { (_, names) -> names.joinToString() } }
+        }
+        .flowOn(Dispatchers.IO)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), emptyMap())
 
     fun getColumnsPreference(orientation: Int): GridCells {
         val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE

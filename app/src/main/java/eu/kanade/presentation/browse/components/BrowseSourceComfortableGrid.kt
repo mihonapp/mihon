@@ -21,6 +21,7 @@ import tachiyomi.presentation.core.util.plus
 @Composable
 fun BrowseSourceComfortableGrid(
     mangaList: LazyPagingItems<StateFlow<Manga>>,
+    mangaCategories: Map<Long, String>,
     columns: GridCells,
     contentPadding: PaddingValues,
     onMangaClick: (Manga) -> Unit,
@@ -42,6 +43,7 @@ fun BrowseSourceComfortableGrid(
             val manga by mangaList[index]?.collectAsState() ?: return@items
             BrowseSourceComfortableGridItem(
                 manga = manga,
+                categories = mangaCategories[manga.id],
                 onClick = { onMangaClick(manga) },
                 onLongClick = { onMangaLongClick(manga) },
             )
@@ -58,6 +60,7 @@ fun BrowseSourceComfortableGrid(
 @Composable
 private fun BrowseSourceComfortableGridItem(
     manga: Manga,
+    categories: String?,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = onClick,
 ) {
@@ -73,6 +76,9 @@ private fun BrowseSourceComfortableGridItem(
         coverAlpha = if (manga.favorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,
         coverBadgeStart = {
             InLibraryBadge(enabled = manga.favorite)
+        },
+        coverBadgeStartLabel = {
+            CategoriesLabel(categories = categories, onCover = true)
         },
         onLongClick = onLongClick,
         onClick = onClick,

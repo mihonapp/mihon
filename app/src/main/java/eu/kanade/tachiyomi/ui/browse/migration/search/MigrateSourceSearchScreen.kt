@@ -102,6 +102,7 @@ fun MigrateSourceSearchScreen(
         BrowseSourceContent(
             source = source,
             mangaList = viewModel.mangaPagerFlowFlow.collectAsLazyPagingItems(),
+            mangaCategories = viewModel.mangaCategories.collectAsState().value,
             columns = viewModel.getColumnsPreference(LocalConfiguration.current.orientation),
             displayMode = viewModel.displayMode,
             snackbarHostState = snackbarHostState,

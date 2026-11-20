@@ -1,10 +1,12 @@
 package eu.kanade.presentation.browse.components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -18,6 +20,7 @@ import tachiyomi.presentation.core.util.plus
 @Composable
 fun BrowseSourceList(
     mangaList: LazyPagingItems<StateFlow<Manga>>,
+    mangaCategories: Map<Long, String>,
     contentPadding: PaddingValues,
     onMangaClick: (Manga) -> Unit,
     onMangaLongClick: (Manga) -> Unit,
@@ -35,6 +38,7 @@ fun BrowseSourceList(
             val manga by mangaList[index]?.collectAsState() ?: return@items
             BrowseSourceListItem(
                 manga = manga,
+                categories = mangaCategories[manga.id],
                 onClick = { onMangaClick(manga) },
                 onLongClick = { onMangaLongClick(manga) },
             )
@@ -51,6 +55,7 @@ fun BrowseSourceList(
 @Composable
 private fun BrowseSourceListItem(
     manga: Manga,
+    categories: String?,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = onClick,
 ) {
@@ -66,6 +71,13 @@ private fun BrowseSourceListItem(
         coverAlpha = if (manga.favorite) CommonMangaItemDefaults.BrowseFavoriteCoverAlpha else 1f,
         badge = {
             InLibraryBadge(enabled = manga.favorite)
+        },
+        badgeLabel = {
+            CategoriesLabel(
+                categories = categories,
+                onCover = false,
+                modifier = Modifier.widthIn(max = 120.dp),
+            )
         },
         onLongClick = onLongClick,
         onClick = onClick,

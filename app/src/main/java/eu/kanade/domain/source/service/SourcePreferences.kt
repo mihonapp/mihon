@@ -65,6 +65,11 @@ class SourcePreferences(
 
     val hideInLibraryItems: Preference<Boolean> = preferenceStore.getBoolean("browse_hide_in_library_items", false)
 
+    val showInLibraryCategories: Preference<Boolean> = preferenceStore.getBoolean(
+        "browse_show_in_library_categories",
+        false,
+    )
+
     val extensionRepos: Preference<Set<String>> = preferenceStore.getStringSet("extension_repos", emptySet())
 
     val extensionUpdatesCount: Preference<Int> = preferenceStore.getInt("ext_updates_count", 0)

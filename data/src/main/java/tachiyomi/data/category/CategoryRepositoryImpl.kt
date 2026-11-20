@@ -7,6 +7,7 @@ import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import tachiyomi.data.Database
 import tachiyomi.data.subscribeToList
 import tachiyomi.domain.category.model.Category
@@ -57,6 +58,13 @@ class CategoryRepositoryImpl(
             }
             .awaitAsList()
             .groupBy({ it.first }, { it.second })
+    }
+
+    override fun getUserCategoryNamesOfFavoritesAsFlow(sourceId: Long): Flow<Map<Long, List<String>>> {
+        return database.categoryQueries
+            .getUserCategoryNamesOfFavoritesBySourceId(sourceId) { mangaId, name -> mangaId to name }
+            .subscribeToList()
+            .map { rows -> rows.groupBy({ it.first }, { it.second }) }
     }
 
     override suspend fun insert(category: NewCategory) {

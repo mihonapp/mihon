@@ -18,6 +18,10 @@ class GetCategories(
         return categoryRepository.getCategoriesByMangaIdAsFlow(mangaId)
     }
 
+    fun subscribeUserCategoryNamesOfFavorites(sourceId: Long): Flow<Map<Long, List<String>>> {
+        return categoryRepository.getUserCategoryNamesOfFavoritesAsFlow(sourceId)
+    }
+
     suspend fun await(): List<Category> {
         return categoryRepository.getAll()
     }

@@ -18,6 +18,11 @@ interface CategoryRepository {
 
     suspend fun getCategoriesByMangaIds(mangaIds: List<Long>): Map<Long, List<Category>>
 
+    /**
+     * Names of the user categories of each library manga from [sourceId], keyed by manga id
+     */
+    fun getUserCategoryNamesOfFavoritesAsFlow(sourceId: Long): Flow<Map<Long, List<String>>>
+
     suspend fun insert(category: NewCategory)
 
     suspend fun insertAll(categories: List<NewCategory>)
