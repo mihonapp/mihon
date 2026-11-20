@@ -18,6 +18,7 @@ data class SimpleLongStripSettings(
     data class Page(
         val sidePadding: Int,
         override val dualPageSplit: Boolean,
+        override val splitAllPages: Boolean,
         override val dualPageInvert: Boolean,
         override val dualPageRotateToFit: Boolean,
         override val dualPageRotateToFitInvert: Boolean,

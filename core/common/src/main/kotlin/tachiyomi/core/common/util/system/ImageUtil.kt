@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.BitmapRegionDecoder
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Rect
@@ -183,6 +182,39 @@ object ImageUtil {
     enum class Side {
         RIGHT,
         LEFT,
+    }
+
+    /**
+     * Whether [imageSource] has a light vertical gutter down its middle, as a two-column 4-koma page does.
+     */
+    fun hasCenterGutter(imageSource: BufferedSource): Boolean {
+        return try {
+            val options = extractImageOptions(imageSource)
+            val width = options.outWidth
+            val height = options.outHeight
+            if (width < 16 || height < 16) return false
+
+            // A small copy is enough, and the page never becomes a full-size bitmap here
+            val decodeOptions = BitmapFactory.Options().apply {
+                inSampleSize = generateSequence(1) { it * 2 }.first { maxOf(width, height) / it <= 300 }
+            }
+            val bitmap = BitmapFactory.decodeStream(imageSource.peek().inputStream(), null, decodeOptions)
+                ?: return false
+
+            try {
+                val pixels = IntArray(bitmap.width * bitmap.height)
+                bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+                hasVerticalGutter(bitmap.width, bitmap.height) { x, y ->
+                    val pixel = pixels[y * bitmap.width + x]
+                    pixel.red >= 225 && pixel.green >= 225 && pixel.blue >= 225 && pixel.alpha >= 200
+                }
+            } finally {
+                bitmap.recycle()
+            }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR) { "hasCenterGutter: ${e.message}" }
+            false
+        }
     }
 
     /**
@@ -439,4 +471,30 @@ object ImageUtil {
         BitmapFactory.decodeStream(imageSource.peek().inputStream(), null, options)
         return options
     }
+}
+
+/**
+ * Whether the sampled band has a light gutter down its middle. [isLight] tells whether the pixel at a
+ * column and row is light.
+ */
+internal fun hasVerticalGutter(
+    width: Int,
+    height: Int,
+    isLight: (x: Int, y: Int) -> Boolean,
+): Boolean {
+    if (width < 8 || height < 8) return false
+
+    val hasDark = { columns: IntRange ->
+        columns.any { x -> (0 until height).any { y -> !isLight(x, y) } }
+    }
+    if (!hasDark(0 until width * 5 / 100) || !hasDark(width * 95 / 100 until width)) return false
+
+    val centerColumns = width * 47 / 100..width * 53 / 100
+    var passingRows = 0
+    for (y in 0 until height) {
+        if (centerColumns.all { x -> isLight(x, y) }) {
+            passingRows++
+        }
+    }
+    return passingRows * 100 >= height * 98
 }
