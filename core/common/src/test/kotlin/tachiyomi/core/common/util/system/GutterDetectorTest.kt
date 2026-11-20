@@ -78,4 +78,35 @@ class GutterDetectorTest {
 
         detect(page) shouldBe false
     }
+
+    @Test
+    fun `keeps a gutter with dark rows just under the limit`() {
+        val page = page { x, _ -> x in centerColumns }
+        for (y in 140..144) page[98][y] = false
+
+        detect(page) shouldBe true
+    }
+
+    @Test
+    fun `rejects a gutter with dark rows just over the limit`() {
+        val page = page { x, _ -> x in centerColumns }
+        for (y in 140..145) page[98][y] = false
+
+        detect(page) shouldBe false
+    }
+
+    @Test
+    fun `accepts dark pixels at the outermost edge columns`() {
+        val page = page { x, _ -> x in centerColumns || x == 0 || x == width - 1 }
+
+        detect(page) shouldBe true
+    }
+
+    @Test
+    fun `rejects dark pixels just outside the edge ranges`() {
+        // The edge bands are light; the nearest dark columns sit one past each band
+        val page = page { x, _ -> x != 9 && x != 187 }
+
+        detect(page) shouldBe false
+    }
 }
