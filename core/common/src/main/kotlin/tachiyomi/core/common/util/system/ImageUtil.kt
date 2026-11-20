@@ -196,21 +196,23 @@ object ImageUtil {
 
             // A small copy is enough, and the page never becomes a full-size bitmap here
             val decodeOptions = BitmapFactory.Options().apply {
-                inSampleSize = generateSequence(1) { it * 2 }.first { height / it <= 300 }
+                inSampleSize = generateSequence(1) { it * 2 }.first { maxOf(width, height) / it <= 300 }
             }
             val bitmap = BitmapFactory.decodeStream(imageSource.peek().inputStream(), null, decodeOptions)
                 ?: return false
 
             try {
+                val pixels = IntArray(bitmap.width * bitmap.height)
+                bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
                 hasVerticalGutter(bitmap.width, bitmap.height) { x, y ->
-                    val pixel = bitmap.getPixel(x, y)
+                    val pixel = pixels[y * bitmap.width + x]
                     pixel.red >= 225 && pixel.green >= 225 && pixel.blue >= 225 && pixel.alpha >= 200
                 }
             } finally {
                 bitmap.recycle()
             }
-        } catch (e: Throwable) {
-            logcat(LogPriority.ERROR, e) { "hasCenterGutter" }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR) { "hasCenterGutter: ${e.message}" }
             false
         }
     }
