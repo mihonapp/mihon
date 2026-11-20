@@ -189,7 +189,7 @@ class BackupStreamTest {
                 categories = listOf(0L, 1L),
                 tracking = listOf(BackupTracking(syncId = 2, libraryId = 3L, title = "First", mediaId = 7L)),
                 history = listOf(BackupHistory(url = "/chapter/1", lastRead = 1_700_000_000_000L, readDuration = 60)),
-                excludedScanlators = listOf("Group"),
+                filteredScanlators = listOf("Group"),
             ),
             BackupManga(source = 2L, url = "/manga/2", title = "Second", favorite = false),
             BackupManga(

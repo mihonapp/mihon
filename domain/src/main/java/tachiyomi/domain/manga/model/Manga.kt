@@ -75,6 +75,17 @@ data class Manga(
             else -> TriState.DISABLED
         }
 
+    val scanlatorFilterInclude: Boolean
+        get() = chapterFlags and CHAPTER_SCANLATOR_INCLUDE != 0L
+
+    fun hidesScanlator(scanlator: String?, filteredScanlators: Set<String>): Boolean {
+        return when {
+            filteredScanlators.isEmpty() -> false
+            scanlatorFilterInclude -> scanlator !in filteredScanlators
+            else -> scanlator in filteredScanlators
+        }
+    }
+
     fun sortDescending(): Boolean {
         return chapterFlags and CHAPTER_SORT_DIR_MASK == CHAPTER_SORT_DESC
     }
@@ -98,6 +109,8 @@ data class Manga(
         const val CHAPTER_SHOW_BOOKMARKED = 0x00000020L
         const val CHAPTER_SHOW_NOT_BOOKMARKED = 0x00000040L
         const val CHAPTER_BOOKMARKED_MASK = 0x00000060L
+
+        const val CHAPTER_SCANLATOR_INCLUDE = 0x00000080L
 
         const val CHAPTER_SORTING_SOURCE = 0x00000000L
         const val CHAPTER_SORTING_NUMBER = 0x00000100L
