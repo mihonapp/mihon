@@ -73,6 +73,7 @@ class MangaBackupCreator(
             }
 
             if (options.history) {
+                mangaObject.lastReadAt = manga.lastReadAt
                 val chapterUrlsById = chapters.associate { it.id to it.url }
                 mangaObject.history = historyByMangaId[manga.id].orEmpty().mapNotNull { history ->
                     // A chapter removed since its history was read takes that history with it

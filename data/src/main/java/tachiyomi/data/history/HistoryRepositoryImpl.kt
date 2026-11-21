@@ -83,6 +83,10 @@ class HistoryRepositoryImpl(
         }
     }
 
+    override suspend fun updateLastReadFromHistory(mangaId: Long?) {
+        database.historyQueries.updateLastReadFromHistory(mangaId)
+    }
+
     override suspend fun deleteResetHistory() {
         database.historyQueries.removeResettedHistory()
     }
@@ -93,7 +97,7 @@ class HistoryRepositoryImpl(
                 chapterId = historyUpdate.chapterId,
                 readAt = historyUpdate.readAt,
                 readDuration = historyUpdate.sessionReadDuration,
-            )
+            ).await()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, throwable = e)
         }
