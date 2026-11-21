@@ -115,6 +115,49 @@ class GetApplicationReleaseTest {
         result shouldBe GetApplicationRelease.Result.NoNewUpdate
     }
 
+    private suspend fun checkRelease(
+        installed: String,
+        latestTag: String,
+        isPreview: Boolean = false,
+        commitCount: Int = 0,
+    ): GetApplicationRelease.Result {
+        every { preference.get() } returns 0
+        every { preference.set(any()) }.answers { }
+        coEvery { releaseService.latest(any()) } returns Release(
+            latestTag,
+            "info",
+            "http://example.com/release_link",
+            "http://example.com/release_link.apk",
+        )
+        return getApplicationRelease.await(
+            GetApplicationRelease.Arguments(
+                isFoss = false,
+                isPreview = isPreview,
+                commitCount = commitCount,
+                versionName = installed,
+                repository = "test",
+            ),
+        )
+    }
+
+    @Test
+    fun `When a later component is bigger but an earlier one smaller expect no new update`() = runTest {
+        checkRelease(installed = "1.2.0", latestTag = "v1.1.9") shouldBe GetApplicationRelease.Result.NoNewUpdate
+    }
+
+    @Test
+    fun `When the release has fewer components than the installed version compare them as zeros`() = runTest {
+        checkRelease(installed = "1.1", latestTag = "v1.0") shouldBe GetApplicationRelease.Result.NoNewUpdate
+        checkRelease(installed = "1.1.0", latestTag = "v1.1") shouldBe GetApplicationRelease.Result.NoNewUpdate
+        (checkRelease(installed = "1.1", latestTag = "v1.1.1") is GetApplicationRelease.Result.NewUpdate) shouldBe true
+    }
+
+    @Test
+    fun `When a preview build sees a non preview tag expect no new update instead of a crash`() = runTest {
+        checkRelease(installed = "", latestTag = "v1.1", isPreview = true, commitCount = 10) shouldBe
+            GetApplicationRelease.Result.NoNewUpdate
+    }
+
     @Test
     fun `When now is before three days expect no new update`() = runTest {
         every { preference.get() } returns Instant.now().toEpochMilli()

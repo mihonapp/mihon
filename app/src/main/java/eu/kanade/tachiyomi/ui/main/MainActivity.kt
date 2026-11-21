@@ -230,7 +230,7 @@ class MainActivity : BaseActivity() {
 
                 HandleOnNewIntent(context = context, navigator = navigator)
 
-                CheckForUpdates()
+                if (isLaunch) CheckForUpdates()
                 ShowOnboarding()
             }
         }

@@ -40,13 +40,11 @@ class AppUpdateChecker {
     }
 }
 
-val GITHUB_REPO: String by lazy {
-    if (isPreviewBuildType) {
-        "mihonapp/mihon-preview"
-    } else {
-        "mihonapp/mihon"
-    }
-}
+/**
+ * Repository this fork's releases are published to. Upstream Mihon releases are signed with a different key, so they
+ * can't be installed over this build and must never be offered as updates.
+ */
+const val GITHUB_REPO: String = "alias-rgb/mihon"
 
 val RELEASE_TAG: String by lazy {
     if (isPreviewBuildType) {

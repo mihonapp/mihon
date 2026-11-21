@@ -51,25 +51,28 @@ class GetApplicationRelease(
         // Removes prefixes like "r" or "v"
         val newVersion = versionTag.replace("[^\\d.]".toRegex(), "")
         return if (isPreview) {
-            // Preview builds: based on releases in "mihonapp/mihon-preview" repo
-            // tagged as something like "r1234"
-            newVersion.toInt() > commitCount
+            // Preview builds: based on releases tagged as something like "r1234"
+            val newCommitCount = newVersion.toIntOrNull() ?: return false
+            newCommitCount > commitCount
         } else {
-            // Release builds: based on releases in "mihonapp/mihon" repo
-            // tagged as something like "v0.1.2"
+            // Release builds: based on releases tagged as something like "v0.1.2"
             val oldVersion = versionName.replace("[^\\d.]".toRegex(), "")
-
-            val newSemVer = newVersion.split(".").map { it.toInt() }
-            val oldSemVer = oldVersion.split(".").map { it.toInt() }
-
-            oldSemVer.mapIndexed { index, i ->
-                if (newSemVer[index] > i) {
-                    return true
-                }
-            }
-
-            false
+            compareVersions(newVersion, oldVersion) > 0
         }
+    }
+
+    /**
+     * Compares dotted version numbers component by component, treating missing components as 0, so "1.1" equals
+     * "1.1.0" and "1.2" is newer than "1.1.9". Components that aren't numbers count as 0.
+     */
+    private fun compareVersions(a: String, b: String): Int {
+        val aParts = a.split(".").map { it.toIntOrNull() ?: 0 }
+        val bParts = b.split(".").map { it.toIntOrNull() ?: 0 }
+        for (i in 0..<maxOf(aParts.size, bParts.size)) {
+            val diff = aParts.getOrElse(i) { 0 }.compareTo(bParts.getOrElse(i) { 0 })
+            if (diff != 0) return diff
+        }
+        return 0
     }
 
     data class Arguments(
