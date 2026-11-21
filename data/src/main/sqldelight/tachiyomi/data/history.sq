@@ -23,7 +23,7 @@ JOIN chapters C
 ON H.chapter_id = C._id
 WHERE C.manga_id = :mangaId AND C._id = H.chapter_id;
 
-getHistoryByChapterUrl:
+getHistoryByChapterUrlAndMangaId:
 SELECT
 H._id,
 H.chapter_id,
@@ -32,7 +32,8 @@ H.time_read
 FROM history H
 JOIN chapters C
 ON H.chapter_id = C._id
-WHERE C.url = :chapterUrl AND C._id = H.chapter_id;
+WHERE C.url = :chapterUrl AND C.manga_id = :mangaId AND C._id = H.chapter_id
+LIMIT 1;
 
 resetHistoryById:
 UPDATE history
