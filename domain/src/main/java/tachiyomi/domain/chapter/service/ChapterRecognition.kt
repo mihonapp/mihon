@@ -165,8 +165,10 @@ object ChapterRecognition {
         val sharedNumbers = MutableList(names.size) { emptyList<IntRange>() }
         names.indices
             .filterNot { chapters[it].chapterNumber.isKnown() }
-            // Grouped by all but their numbers, so that the nth number of each name means the same thing
-            .groupBy { names[it].replace(anyNumber, "#") }
+            // Grouped by the text around their numbers, so that the nth number of each name means the
+            // same thing. Split rather than replaced: a name already holding the replacement would be
+            // grouped with names that have a number in its place, and have fewer numbers than its group.
+            .groupBy { anyNumber.split(names[it]) }
             .values
             // Fewer names could share a number by chance
             .filter { it.size >= 3 }
