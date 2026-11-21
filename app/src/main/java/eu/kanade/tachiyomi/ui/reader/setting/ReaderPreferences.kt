@@ -167,6 +167,12 @@ class ReaderPreferences(
 
     val invertedColors: Preference<Boolean> = preferenceStore.getBoolean("pref_inverted_colors", false)
 
+    val nightFilterSchedule: Preference<Boolean> = preferenceStore.getBoolean("pref_night_filter_schedule", false)
+
+    val nightFilterStart: Preference<Int> = preferenceStore.getInt("night_filter_start", 22 * 60)
+
+    val nightFilterEnd: Preference<Int> = preferenceStore.getInt("night_filter_end", 6 * 60)
+
     // endregion
 
     // region Controls
@@ -450,6 +456,18 @@ class ReaderPreferences(
                         MR.strings.filter_mode_darken to BlendMode.Darken,
                     ),
                 )
+            }
+        }
+
+        fun isInNightWindow(nowMinutes: Int, startMinutes: Int, endMinutes: Int): Boolean {
+            val now = nowMinutes.mod(24 * 60)
+            val start = startMinutes.coerceIn(0, 24 * 60 - 1)
+            val end = endMinutes.coerceIn(0, 24 * 60 - 1)
+            if (start == end) return false
+            return if (start < end) {
+                now in start until end
+            } else {
+                now >= start || now < end
             }
         }
     }
