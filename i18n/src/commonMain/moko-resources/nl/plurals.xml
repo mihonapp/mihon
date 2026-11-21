@@ -73,8 +73,8 @@
         <item quantity="other">%1$s pagina\'s</item>
     </plurals>
     <plurals name="num_repos">
-        <item quantity="one">%d repo</item>
-        <item quantity="other">%d repo\'s</item>
+        <item quantity="one">%d winkel</item>
+        <item quantity="other">%d winkels</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.migrateTitle">
         <item quantity="one">%1$d item migreren?</item>

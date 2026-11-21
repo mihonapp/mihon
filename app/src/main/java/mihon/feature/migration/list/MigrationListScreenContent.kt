@@ -55,8 +55,6 @@ import eu.kanade.presentation.util.animateItemFastScroll
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import mihon.feature.migration.list.models.MigratingManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
@@ -71,7 +69,7 @@ import tachiyomi.presentation.core.util.plus
 
 @Composable
 fun MigrationListScreenContent(
-    items: ImmutableList<MigratingManga>,
+    items: List<MigratingManga>,
     migrationComplete: Boolean,
     finishedCount: Int,
     onItemClick: (Manga) -> Unit,
@@ -91,7 +89,7 @@ fun MigrationListScreenContent(
                 },
                 actions = {
                     AppBarActions(
-                        persistentListOf(
+                        listOf(
                             AppBar.Action(
                                 title = stringResource(MR.strings.migrationListScreen_copyActionLabel),
                                 icon = if (items.size == 1) Icons.Outlined.ContentCopy else Icons.Outlined.CopyAll,

@@ -44,7 +44,6 @@ import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
@@ -111,7 +110,7 @@ data class BrowseSourceScreen(
             val source = screenModel.source as? HttpSource ?: return@f
             navigator.push(
                 WebViewScreen(
-                    url = source.baseUrl,
+                    url = source.getHomeUrl(),
                     initialTitle = source.name,
                     sourceId = source.id,
                 ),
@@ -119,7 +118,7 @@ data class BrowseSourceScreen(
         }
 
         LaunchedEffect(screenModel.source) {
-            assistUrl = (screenModel.source as? HttpSource)?.baseUrl
+            assistUrl = (screenModel.source as? HttpSource)?.getHomeUrl()
         }
 
         Scaffold(
@@ -166,7 +165,7 @@ data class BrowseSourceScreen(
                                 Text(text = stringResource(MR.strings.popular))
                             },
                         )
-                        if ((screenModel.source as CatalogueSource).supportsLatest) {
+                        if (screenModel.source.supportsLatest) {
                             FilterChip(
                                 selected = state.listing == Listing.Latest,
                                 onClick = {

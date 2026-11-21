@@ -20,11 +20,8 @@ import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
@@ -68,7 +65,7 @@ class BrowseSourceScreenModel(
     private val getManga: GetManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
-    private val getIncognitoState: GetIncognitoState = Injekt.get(),
+    getIncognitoState: GetIncognitoState = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
     var displayMode by sourcePreferences.sourceDisplayMode.asState(screenModelScope)
@@ -76,22 +73,20 @@ class BrowseSourceScreenModel(
     val source = sourceManager.getOrStub(sourceId)
 
     init {
-        if (source is CatalogueSource) {
-            mutableState.update {
-                var query: String? = null
-                var listing = it.listing
+        mutableState.update {
+            var query: String? = null
+            var listing = it.listing
 
-                if (listing is Listing.Search) {
-                    query = listing.query
-                    listing = Listing.Search(query, source.getFilterList())
-                }
-
-                it.copy(
-                    listing = listing,
-                    filters = source.getFilterList(),
-                    toolbarQuery = query,
-                )
+            if (listing is Listing.Search) {
+                query = listing.query
+                listing = Listing.Search(query, source.getFilterList())
             }
+
+            it.copy(
+                listing = listing,
+                filters = source.getFilterList(),
+                toolbarQuery = query,
+            )
         }
 
         if (!getIncognitoState.await(source.id)) {
@@ -131,8 +126,6 @@ class BrowseSourceScreenModel(
     }
 
     fun resetFilters() {
-        if (source !is CatalogueSource) return
-
         mutableState.update { it.copy(filters = source.getFilterList()) }
     }
 
@@ -141,8 +134,6 @@ class BrowseSourceScreenModel(
     }
 
     fun setFilters(filters: FilterList) {
-        if (source !is CatalogueSource) return
-
         mutableState.update {
             it.copy(
                 filters = filters,
@@ -151,8 +142,6 @@ class BrowseSourceScreenModel(
     }
 
     fun search(query: String? = null, filters: FilterList? = null) {
-        if (source !is CatalogueSource) return
-
         val input = state.value.listing as? Listing.Search
             ?: Listing.Search(query = null, filters = source.getFilterList())
 
@@ -168,8 +157,6 @@ class BrowseSourceScreenModel(
     }
 
     fun searchGenre(genreName: String) {
-        if (source !is CatalogueSource) return
-
         val defaultFilters = source.getFilterList()
         var genreExists = false
 
@@ -265,7 +252,7 @@ class BrowseSourceScreenModel(
                     setDialog(
                         Dialog.ChangeMangaCategory(
                             manga,
-                            categories.mapAsCheckboxState { it.id in preselectedIds }.toImmutableList(),
+                            categories.mapAsCheckboxState { it.id in preselectedIds },
                         ),
                     )
                 }
@@ -339,7 +326,7 @@ class BrowseSourceScreenModel(
         data class AddDuplicateManga(val manga: Manga, val duplicates: List<MangaWithChapterCount>) : Dialog
         data class ChangeMangaCategory(
             val manga: Manga,
-            val initialSelection: ImmutableList<CheckboxState.State<Category>>,
+            val initialSelection: List<CheckboxState.State<Category>>,
         ) : Dialog
         data class Migrate(val target: Manga, val current: Manga) : Dialog
     }

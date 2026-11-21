@@ -21,8 +21,8 @@
         <item quantity="one">فصل جديد</item>
         <item quantity="two">فصلان جديدان</item>
         <item quantity="few">%1$d فصول جديدة</item>
-        <item quantity="many">%1$d فصول جديدة</item>
-        <item quantity="other">%1$d فصول جديدة</item>
+        <item quantity="many">%1$d فصل جديد</item>
+        <item quantity="other">%1$d فصل جديد</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="zero">لا شيء</item>
@@ -33,36 +33,36 @@
         <item quantity="other">ادخالات %d ل</item>
     </plurals>
     <plurals name="download_queue_summary">
-        <item quantity="zero">%1$s عنصر متبقي</item>
+        <item quantity="zero">لا عناصر متبقية</item>
         <item quantity="one">عنصر واحد متبقي</item>
         <item quantity="two">عنصران متبقيان</item>
         <item quantity="few">%1$s عناصر متبقية</item>
-        <item quantity="many">%1$s عناصر متبقية</item>
-        <item quantity="other">%1$s عناصر متبقية</item>
+        <item quantity="many">%1$s عنصر متبقي</item>
+        <item quantity="other">%1$s عنصر متبقي</item>
     </plurals>
     <plurals name="lock_after_mins">
         <item quantity="zero">بعد أقل من دقيقة</item>
         <item quantity="one">بعد دقيقة</item>
         <item quantity="two">بعد دقيقتين</item>
         <item quantity="few">بعد %1$s دقائق</item>
-        <item quantity="many">بعد %1$s دقائق</item>
-        <item quantity="other">بعد %1$s دقائق</item>
+        <item quantity="many">بعد %1$s دقيقة</item>
+        <item quantity="other">بعد %1$s دقيقية</item>
     </plurals>
     <plurals name="num_categories">
         <item quantity="zero">لا يوجد فئات</item>
         <item quantity="one">فئة</item>
         <item quantity="two">فئتان</item>
         <item quantity="few">%d فئات</item>
-        <item quantity="many">%d فئات</item>
-        <item quantity="other">%d فئات</item>
+        <item quantity="many">%d فئة</item>
+        <item quantity="other">%d فئة</item>
     </plurals>
     <plurals name="restore_completed_message">
         <item quantity="zero">تمَّ في %1$s وبدون أخطاء</item>
-        <item quantity="one">تمَّ في %1$s وفيه خطأ</item>
-        <item quantity="two">تمَّ في %1$s وفيه خطآن</item>
-        <item quantity="few">تمَّ في %1$s وفيه %2$s أخطاء</item>
-        <item quantity="many">تمَّ في %1$s وفيه %2$s خطأً</item>
-        <item quantity="other">تمَّ في %1$s وفيه %2$s خطأ</item>
+        <item quantity="one">تمَّ في %1$s بخطأ واحد</item>
+        <item quantity="two">تمَّ في %1$s بخطأين</item>
+        <item quantity="few">تمَّ في %1$s وبه %2$s أخطاء</item>
+        <item quantity="many">تمَّ في %1$s وبه %2$s خطأً</item>
+        <item quantity="other">تمَّ في %1$s وبه %2$s خطأ</item>
     </plurals>
     <plurals name="num_trackers">
         <item quantity="zero">لا متتبّع</item>
@@ -77,8 +77,8 @@
         <item quantity="one">فصل واحد</item>
         <item quantity="two">فصلين</item>
         <item quantity="few">%1$s فصول</item>
-        <item quantity="many">%1$s فصول</item>
-        <item quantity="other">%1$s فصول</item>
+        <item quantity="many">%1$s فصل</item>
+        <item quantity="other">%1$s فصل</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="zero">لا يُتخطَّى أيُّ فصل</item>
@@ -93,19 +93,19 @@
         <item quantity="one">منذ يوم</item>
         <item quantity="two">منذ يومين</item>
         <item quantity="few">منذ %1$d أيام</item>
-        <item quantity="many">منذ %1$d أيام</item>
-        <item quantity="other">منذ %1$d أيام</item>
+        <item quantity="many">منذ %1$d يوم</item>
+        <item quantity="other">منذ %1$d يوم</item>
     </plurals>
     <plurals name="next_unread_chapters">
         <item quantity="zero">لا يوجد فصل تالٍ لم يُقرأ</item>
         <item quantity="one">الفصل غير المقروء التالي</item>
         <item quantity="two">الفصلان غير المقروءين التاليان</item>
         <item quantity="few">%d فصول تالية لم تُقرأ</item>
-        <item quantity="many">%d فصلًا تاليًا لم يُقرؤوا</item>
-        <item quantity="other">%d فصل تالٍ لم يُقرؤوا</item>
+        <item quantity="many">%d فصلًا تاليًا لم يُقرأ</item>
+        <item quantity="other">%d فصل تالٍ لم يُقرأ</item>
     </plurals>
     <plurals name="download_amount">
-        <item quantity="zero">لا فصل تالي</item>
+        <item quantity="zero">نهاية الفصول</item>
         <item quantity="one">الفصل التالي</item>
         <item quantity="two">%d فصول تالية</item>
         <item quantity="few">%d فصول تالية</item>
@@ -121,7 +121,7 @@
         <item quantity="other">%1$s فصل مفقود</item>
     </plurals>
     <plurals name="day">
-        <item quantity="zero">لا يوم</item>
+        <item quantity="zero">أقل من يوم</item>
         <item quantity="one">يوم واحد</item>
         <item quantity="two">يومان</item>
         <item quantity="few">%d أيام</item>
@@ -137,20 +137,20 @@
         <item quantity="other">%d مستودعات</item>
     </plurals>
     <plurals name="pref_pages">
-        <item quantity="zero">%1$s صفحات</item>
+        <item quantity="zero">بدون صفحات</item>
         <item quantity="one">صفحة</item>
         <item quantity="two">صفحتان</item>
         <item quantity="few">%1$s صفحات</item>
-        <item quantity="many">%1$s صفحات</item>
-        <item quantity="other">%1$s صفحات</item>
+        <item quantity="many">%1$s صفحة</item>
+        <item quantity="other">%1$s صفحة</item>
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="zero">اليوم</item>
         <item quantity="one">غداً</item>
         <item quantity="two">بعد غد</item>
         <item quantity="few">بعد %1$d أيام</item>
-        <item quantity="many">بعد %1$d أيام</item>
-        <item quantity="other">بعد %1$d أيام</item>
+        <item quantity="many">بعد %1$d يوم</item>
+        <item quantity="other">بعد %1$d يوم</item>
     </plurals>
     <plurals name="migrationListScreen.migrateDialog.migrateTitle">
         <item quantity="zero">نقل %1$d مدخل؟</item>
@@ -175,5 +175,13 @@
         <item quantity="few">%1$d مدخل ثم تجاوزه</item>
         <item quantity="many">%1$d مدخل ثم تجاوزه</item>
         <item quantity="other">%1$d مدخل ثم تجاوزه</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="zero">لم تفشل اي تحديثات</item>
+        <item quantity="one">فشل تحديث</item>
+        <item quantity="two">فشل تحديثان</item>
+        <item quantity="few">فشل %1$d تحديثات</item>
+        <item quantity="many">فشل %1$d تحديث</item>
+        <item quantity="other">فشل %1$d تحديث</item>
     </plurals>
 </resources>

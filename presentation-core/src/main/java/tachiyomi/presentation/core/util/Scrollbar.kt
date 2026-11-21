@@ -69,6 +69,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.sample
 import tachiyomi.presentation.core.components.Scroller.STICKY_HEADER_KEY_PREFIX
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Draws horizontal scrollbar to a LazyList.
@@ -216,10 +218,10 @@ private fun Modifier.drawScrollbar(
     val alpha = remember { Animatable(0f) }
     LaunchedEffect(scrolled, alpha) {
         scrolled
-            .sample(100)
+            .sample(0.1.seconds)
             .collectLatest {
                 alpha.snapTo(1f)
-                delay(ScrollBarVisibilityDurationMillis)
+                delay(ScrollBarVisibilityDurationMillis.milliseconds)
                 alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
             }
     }

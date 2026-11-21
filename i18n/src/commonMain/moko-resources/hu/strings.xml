@@ -749,15 +749,6 @@
     <string name="pref_library_update_smart_update">Intelligens frissítés</string>
     <string name="ext_permission_install_apps_warning">A bővítmények telepítéséhez engedélyek szükségesek. Az engedélyezéshez koppintson ide.</string>
     <string name="ext_revoke_trust">Megbízható ismeretlen kiterjesztések visszavonása</string>
-    <string name="label_extension_repos">Bővítmény tárolók</string>
-    <string name="information_empty_repos">Nincsenek beállítva tárolók.</string>
-    <string name="action_add_repo">Tároló felvétele</string>
-    <string name="label_add_repo_input">Tároló URL</string>
-    <string name="action_add_repo_message">További tárolók hozzáadása a %shoz. Ennek az URL-nek \"index.min.json\"-ra végződő URL-nek kell lennie.</string>
-    <string name="error_repo_exists">Ez a tároló már létezik!</string>
-    <string name="action_delete_repo">Tároló törlése</string>
-    <string name="invalid_repo_name">Érvénytelen tároló URL</string>
-    <string name="delete_repo_confirmation">Szeretné törölni a(z) \"%s\" tárolót?</string>
     <string name="action_open_repo">Nyílt forráskódú tároló</string>
     <string name="no_location_set">Nincs tárolási hely beállítva</string>
     <string name="action_create">Létrehoz</string>
@@ -786,10 +777,6 @@
     <string name="manga_interval_custom_amount">Egyedi frissítési időköz:</string>
     <string name="action_add_anyway">Hozzáadás mindenképp</string>
     <string name="pref_display_profile">Egyedi megjelenítési profil</string>
-    <string name="action_replace_repo">Lecserélés</string>
-    <string name="action_replace_repo_title">Aláíró kulcs ujjlenyomat már létezik</string>
-    <string name="action_replace_repo_message">A(z) %1$s tárolónak ugyanaz az aláíró kulcs ujjlenyomat, mint a(z) %2$s tárolónak.
-\nHa ez várható volt, akkor a(z) %2$s lecserélődik, ellenkező esetben lépjen kapcsolatba a tároló karbantartójával.</string>
     <string name="label_upcoming">Közelgő</string>
     <string name="upcoming_calendar_next">Következő hónap</string>
     <string name="action_view_upcoming">Közelgő frissítések megtekintése</string>
@@ -806,7 +793,6 @@
     <string name="pref_hardware_bitmap_threshold_summary">Ha az olvasó üres képet tölt be, fokozatosan csökkentse a küszöbértéket.\nKijelölt: %s</string>
     <string name="pref_always_decode_long_strip_with_ssiv_2">Hosszú szalagolvasóhoz régi dekóder használata</string>
     <string name="invalid_backup_file_json">JSON biztonsági mentés nem támogatott</string>
-    <string name="extensionRepo_settings">Bővítmény repók</string>
     <string name="non_library_settings">Minden olvasott elem</string>
     <string name="library_exported">Könyvtár exportálva</string>
     <string name="pref_incognito_mode_extension_summary">Olvasási előzmények szüneteltetése ehhez bővítményhez</string>
@@ -822,7 +808,6 @@
     <string name="pref_flash_style_white">Fehér</string>
     <string name="library_list">Könyvtár lista</string>
     <string name="trackers_updated_summary">Nyilvántartók frissítve a(z) %d. fejezetre</string>
-    <string name="add_repo_confirmation">Szeretné hozzáadni a \"%s\" repót?</string>
     <string name="pref_mark_duplicate_read_chapter_read">Jelölje meg a duplikált olvasott fejezetet olvasottként</string>
     <string name="action_edit_notes">Jegyzetek szerkesztése</string>
     <string name="action_notes">Jegyzetek</string>

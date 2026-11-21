@@ -212,4 +212,25 @@ sealed class AndroidPreference<T>(
             putInt(key, serializer(value))
         }
     }
+
+    class ObjectSetAsStringSet<T>(
+        preferences: SharedPreferences,
+        keyFlow: Flow<String?>,
+        key: String,
+        defaultValue: Set<T>,
+        private val serializer: (T) -> String,
+        private val deserializer: (String) -> T?,
+    ) : AndroidPreference<Set<T>>(preferences, keyFlow, key, defaultValue) {
+        override fun read(preferences: SharedPreferences, key: String, defaultValue: Set<T>): Set<T> {
+            return try {
+                preferences.getStringSet(key, null)?.mapNotNull(deserializer)?.toSet() ?: defaultValue
+            } catch (_: Exception) {
+                defaultValue
+            }
+        }
+
+        override fun write(key: String, value: Set<T>): Editor.() -> Unit = {
+            putStringSet(key, value.map(serializer).toSet())
+        }
+    }
 }

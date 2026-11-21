@@ -49,7 +49,6 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.update
 import mihon.feature.migration.list.MigrationListScreen
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -118,7 +117,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
                     scrollBehavior = it,
                     actions = {
                         AppBarActions(
-                            persistentListOf(
+                            listOf(
                                 AppBar.Action(
                                     title = stringResource(MR.strings.migrationConfigScreen_selectAllLabel),
                                     icon = Icons.Outlined.SelectAll,
@@ -269,27 +268,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
         onClick: () -> Unit,
     ) {
         ListItem(
-            headlineContent = {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    SourceIcon(source = source.source)
-                    Text(
-                        text = source.name,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f),
-                    )
-                    if (showLanguage) {
-                        Pill(
-                            text = LocaleHelper.getShortDisplayName(source.shortLanguage, uppercase = true),
-                            style = MaterialTheme.typography.bodySmall,
-                        )
-                    }
-                }
-            },
+            modifier = Modifier.clickable(onClick = onClick),
             trailingContent = if (dragEnabled) {
                 {
                     Icon(
@@ -303,11 +282,28 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             } else {
                 null
             },
-            colors = ListItemDefaults.colors(
-                containerColor = Color.Transparent,
-            ),
-            modifier = Modifier.clickable(onClick = onClick),
-        )
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                SourceIcon(source = source.source)
+                Text(
+                    text = source.name,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f),
+                )
+                if (showLanguage) {
+                    Pill(
+                        text = LocaleHelper.getShortDisplayName(source.shortLanguage, uppercase = true),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+            }
+        }
     }
 
     private class ScreenModel(
@@ -345,7 +341,7 @@ class MigrationConfigScreen(private val mangaIds: Collection<Long>) : Screen() {
             val includedSources = sourcePreferences.migrationSources.get()
             val disabledSources = sourcePreferences.disabledSources.get()
                 .mapNotNull { it.toLongOrNull() }
-            val sources = sourceManager.getCatalogueSources()
+            val sources = sourceManager.getAll()
                 .asSequence()
                 .filterIsInstance<HttpSource>()
                 .filter { it.lang in languages }

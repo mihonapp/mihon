@@ -81,9 +81,10 @@
         <item quantity="other">%d dní</item>
     </plurals>
     <plurals name="num_repos">
-        <item quantity="one">%d repozitář</item>
-        <item quantity="few">%d repozitáře</item>
-        <item quantity="other">%d repozitářů</item>
+        <item quantity="one">%d obchod</item>
+        <item quantity="few">%d obchody</item>
+        <item quantity="many">%d obchodů</item>
+        <item quantity="other">%d obchodů</item>
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">Zítra</item>
@@ -112,5 +113,11 @@
         <item quantity="few">%1$d položky byly přeskočeny</item>
         <item quantity="many">%1$d položek bylo přeskočeno</item>
         <item quantity="other">%1$d položek bylo přeskočeno</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d aktualizace se nezdařila</item>
+        <item quantity="few">%1$d aktualizace se nezdařily</item>
+        <item quantity="many">%1$d aktualizací se nezdařilo</item>
+        <item quantity="other">%1$d aktualizací se nezdařilo</item>
     </plurals>
 </resources>

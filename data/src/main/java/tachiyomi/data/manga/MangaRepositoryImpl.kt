@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
+import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.data.StringListColumnAdapter
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.data.subscribeToList
@@ -154,6 +155,7 @@ class MangaRepositoryImpl(
                     dateAdded = it.dateAdded,
                     updateStrategy = it.updateStrategy,
                     version = it.version,
+                    memo = it.memo,
                     updateTitle = it.title.isNotBlank(),
                     updateCover = !it.thumbnailUrl.isNullOrBlank(),
                     updateDetails = it.initialized,
@@ -191,6 +193,7 @@ class MangaRepositoryImpl(
                     version = value.version,
                     isSyncing = 0,
                     notes = value.notes,
+                    memo = value.memo?.let(MemoColumnAdapter::encode),
                 )
             }
         }

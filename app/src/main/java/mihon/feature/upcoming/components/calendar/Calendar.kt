@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import io.woong.compose.grid.SimpleGridCells
 import io.woong.compose.grid.VerticalGrid
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.toImmutableList
 import mihon.core.designsystem.utils.isExpandedWidthWindow
 import mihon.core.designsystem.utils.isMediumWidthWindow
 import tachiyomi.presentation.core.components.material.padding
@@ -37,7 +35,7 @@ private const val DAYS_OF_WEEK = 7
 @Composable
 fun Calendar(
     selectedYearMonth: YearMonth,
-    events: ImmutableMap<LocalDate, Int>,
+    events: Map<LocalDate, Int>,
     setSelectedYearMonth: (YearMonth) -> Unit,
     onClickDay: (day: LocalDate) -> Unit,
     modifier: Modifier = Modifier,
@@ -67,14 +65,13 @@ fun Calendar(
 @Composable
 private fun CalendarGrid(
     selectedYearMonth: YearMonth,
-    events: ImmutableMap<LocalDate, Int>,
+    events: Map<LocalDate, Int>,
     onClickDay: (day: LocalDate) -> Unit,
 ) {
     val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
     val weekDays = remember {
         (0 until DAYS_OF_WEEK)
             .map { DayOfWeek.of((localeFirstDayOfWeek - 1 + it) % DAYS_OF_WEEK + 1) }
-            .toImmutableList()
     }
 
     val emptyFieldCount = weekDays.indexOf(selectedYearMonth.atDay(1).dayOfWeek)

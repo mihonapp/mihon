@@ -92,8 +92,8 @@
     </plurals>
 
     <plurals name="num_repos">
-        <item quantity="one">%d repo</item>
-        <item quantity="other">%d repos</item>
+        <item quantity="one">%d store</item>
+        <item quantity="other">%d stores</item>
     </plurals>
 
     <!--Migration-->

@@ -749,11 +749,6 @@
     <string name="onboarding_permission_action_grant">Acordă</string>
     <string name="onboarding_guides_returning_user">Reinstalare %s?</string>
     <string name="pref_library_update_smart_update">Actualizare inteligentă</string>
-    <string name="label_extension_repos">Repozitoriu extensii</string>
-    <string name="information_empty_repos">Nu aveți nici un repozitoriu configurat.</string>
-    <string name="action_add_repo">Adăugați repozitoriu</string>
-    <string name="action_add_repo_message">Adăugați repozitorii adiționale pentru %s. Acestea ar trebuii să fie URL-uri care se încheie cu \"index.min.json\".</string>
-    <string name="delete_repo_confirmation">Doriți să ștergeți repozitoriul \"%s\"?</string>
     <string name="action_open_repo">Repozitoriu open source</string>
     <string name="no_location_set">Nici o locație pentru stocare nu a fost setată</string>
     <string name="invalid_backup_file_error">Eroarea completă:</string>
@@ -776,24 +771,15 @@
     <string name="onboarding_guides_new_user">Nou pe %s? Vă recomandăm să consultați ghidul introductiv.</string>
     <string name="ext_permission_install_apps_warning">Sunt necesare permisiuni pentru instalarea de extensii. Atingeți aici pentru a permite.</string>
     <string name="ext_revoke_trust">Revocați încrederea extensiilor necunoscute</string>
-    <string name="label_add_repo_input">URL repozitoriu</string>
-    <string name="error_repo_exists">Acest repozitoriu există deja!</string>
-    <string name="action_delete_repo">Șterge repozitoriu</string>
-    <string name="invalid_repo_name">URL repozitoriu invalid</string>
     <string name="label_upcoming">Viitoare</string>
     <string name="theme_nord">Nord</string>
-    <string name="action_replace_repo_message">Repozitoriul %1$s are acceeași amprenta digitală a cheii de semnare ca și %2$s
-\nÎn cazul în care asta este la ce vă așteptați, %2$s va fi înlocuit, altfel contatati întreținătorul repozitoriului.</string>
     <string name="pref_display_profile">Profil de afișare personalizat</string>
     <string name="action_add_anyway">Adăugați oricum</string>
-    <string name="action_replace_repo">Înlocuiți</string>
-    <string name="action_replace_repo_title">Amprenta digitală a cheii de semnare există deja</string>
     <string name="pref_webtoon_disable_zoom_out">Dezactivați funcția de zoom-out</string>
     <string name="action_view_upcoming">Vizualizați actualizările viitoare</string>
     <string name="upcoming_guide">Ghidul viitor</string>
     <string name="upcoming_calendar_next">Luna următoare</string>
     <string name="upcoming_calendar_prev">Luna anterioară</string>
-    <string name="extensionRepo_settings">Repo-uri extensii</string>
     <string name="manga_interval_expected_update_null">Această manga este fie finalizată, fie nu există preconizare pentru data lansării.</string>
     <string name="pref_flash_style_black">Negru</string>
     <string name="pref_flash_with">Luminează cu</string>
@@ -805,7 +791,6 @@
     <string name="pref_flash_duration">Durată luminare</string>
     <string name="pref_flash_page">Luminează la schimbarea paginii</string>
     <string name="overlay_header">Strat acoperitor</string>
-    <string name="add_repo_confirmation">Doriți să adăugați repo-ul „%s”?</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="pref_download_new_unread_chapters_only">Omiteți descărcarea duplicatelor pentru capitolele deja citite</string>
     <string name="invalid_backup_file_json">Copie de rezervă JSON nu este admisibilă</string>
@@ -902,4 +887,20 @@
     <string name="migrationListScreen.matchWithoutChapterToast">Nu s-au găsit capitole, această intrare nu poate fi utilizată pentru migrare</string>
     <string name="pref_disallow_non_ascii_filenames">Nu permiteți nume de fișiere non-ASCII</string>
     <string name="pref_disallow_non_ascii_filenames_details">Asigurți compatibilitatea cu anumite medii de stocare care nu suportă Unicode. Când această opțiune este activată, va trebui să redenumiți manual directoarele sursă și cele de manga, înlocuind caracterele non-ASCII cu reprezentările lor hexadecimale UTF-8 cu litere mici. Fișierele capitolelor nu trebuie redenumite.</string>
+    <string name="label_support_us">Sustineti-ne</string>
+    <string name="action_webview_close_tab">Inchide tab-ul</string>
+    <string name="pref_download_concurrent_pages_summary">Pagini descarcate simultan pe sursa</string>
+    <string name="download_bookmarked">Adaugat la preferate</string>
+    <string name="action_filter_excluded_scanlators">Filtreaza scanatorii exclusi</string>
+    <string name="supportUsScreen.perks">Abonatii au acces la canale exclusive, iar in viitor vor beneficia de si mai multe beneficii.</string>
+    <string name="supportUsScreen.donationPlatform.patreon">Patreon (preferabil)</string>
+    <string name="supportUsScreen.currentlySupportedBy">Mihon este sustinut de %d+ contribuitori. Va multumim tuturor pentru sustinere. Haideti sa imbunatatim impreuna Mihon.</string>
+    <string name="supportUsScreen.contactForDetailsMessage">Pentru optiuni alternative, sau orice intrebare despre subiect, alatura-te serverului nostru de Discord.</string>
+    <string name="supportUsScreen.contactPlatform">Discord</string>
+    <string name="donationCampaign.title">Iti place aplicatia?</string>
+    <string name="donationCampaign.paragraph1">Salut! Sunt dezvoltatorul principal al Mihon si as dori sa va rog sa luati in considerare sprijinirea financiara a proiectului. Cu un sprijin suficient, voi putea lucra la Mihon cu norma intreaga si ma voi puteam concentra atat pe probleme vechi, cat si pe functii noi solicitatate de comunitate.</string>
+    <string name="donationCampaign.paragraph2">Puteti face o donatie fie prin Patreon (metoda preferata), fie prin OpenCollective. Daca aveti intrebari sau doriti sa ne sprijiniti prin alte metode, nu ezitati sa ma contactati pe serverul de Discord al aplicatie Mihon.</string>
+    <string name="donationCampaign.paragraph3">In orice caz, Mihon va continua sa fie intretinut de mine si de voluntari si va ramane open source.</string>
+    <string name="donationCampaign.contactPlatform">Discord</string>
+    <string name="donationCampaign.dismiss">Ignora</string>
 </resources>

@@ -6,12 +6,6 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.insertSeparatorsReversed
 import eu.kanade.tachiyomi.util.lang.toLocalDate
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -41,7 +35,7 @@ class UpcomingScreenModel(
         }
     }
 
-    private fun List<Manga>.toUpcomingUIModels(): ImmutableList<UpcomingUIModel> {
+    private fun List<Manga>.toUpcomingUIModels(): List<UpcomingUIModel> {
         var mangaCount = 0
         return fastMap { UpcomingUIModel.Item(it) }
             .insertSeparatorsReversed { before, after ->
@@ -56,16 +50,14 @@ class UpcomingScreenModel(
                     null
                 }
             }
-            .toImmutableList()
     }
 
-    private fun List<UpcomingUIModel>.toEvents(): ImmutableMap<LocalDate, Int> {
+    private fun List<UpcomingUIModel>.toEvents(): Map<LocalDate, Int> {
         return filterIsInstance<UpcomingUIModel.Header>()
             .associate { it.date to it.mangaCount }
-            .toImmutableMap()
     }
 
-    private fun List<UpcomingUIModel>.getHeaderIndexes(): ImmutableMap<LocalDate, Int> {
+    private fun List<UpcomingUIModel>.getHeaderIndexes(): Map<LocalDate, Int> {
         return fastMapIndexedNotNull { index, upcomingUIModel ->
             if (upcomingUIModel is UpcomingUIModel.Header) {
                 upcomingUIModel.date to index
@@ -74,7 +66,6 @@ class UpcomingScreenModel(
             }
         }
             .toMap()
-            .toImmutableMap()
     }
 
     fun setSelectedYearMonth(yearMonth: YearMonth) {
@@ -83,8 +74,8 @@ class UpcomingScreenModel(
 
     data class State(
         val selectedYearMonth: YearMonth = YearMonth.now(),
-        val items: ImmutableList<UpcomingUIModel> = persistentListOf(),
-        val events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
-        val headerIndexes: ImmutableMap<LocalDate, Int> = persistentMapOf(),
+        val items: List<UpcomingUIModel> = listOf(),
+        val events: Map<LocalDate, Int> = mapOf(),
+        val headerIndexes: Map<LocalDate, Int> = mapOf(),
     )
 }

@@ -12,6 +12,7 @@ bin/
 /captures
 
 # Configuration files
+keystore.properties
 local.properties
 
 # macOS specific files

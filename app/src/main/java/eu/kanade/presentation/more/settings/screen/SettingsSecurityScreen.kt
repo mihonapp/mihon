@@ -12,8 +12,6 @@ import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
 import eu.kanade.tachiyomi.util.system.telemetryIncluded
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableMap
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
@@ -50,7 +48,7 @@ object SettingsSecurityScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_security),
-            preferenceItems = persistentListOf(
+            preferenceItems = listOf(
                 Preference.PreferenceItem.SwitchPreference(
                     preference = useAuthPref,
                     title = stringResource(MR.strings.lock_with_biometrics),
@@ -70,8 +68,7 @@ object SettingsSecurityScreen : SearchableSettings {
                                 0 -> stringResource(MR.strings.lock_always)
                                 else -> pluralStringResource(MR.plurals.lock_after_mins, count = it, it)
                             }
-                        }
-                        .toImmutableMap(),
+                        },
                     title = stringResource(MR.strings.lock_when_idle),
                     enabled = authSupported && useAuth,
                     onValueChanged = {
@@ -88,8 +85,7 @@ object SettingsSecurityScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     preference = securityPreferences.secureScreen,
                     entries = SecurityPreferences.SecureScreenMode.entries
-                        .associateWith { stringResource(it.titleRes) }
-                        .toImmutableMap(),
+                        .associateWith { stringResource(it.titleRes) },
                     title = stringResource(MR.strings.secure_screen),
                 ),
                 Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.secure_screen_summary)),
@@ -103,7 +99,7 @@ object SettingsSecurityScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_firebase),
-            preferenceItems = persistentListOf(
+            preferenceItems = listOf(
                 Preference.PreferenceItem.SwitchPreference(
                     preference = privacyPreferences.crashlytics,
                     title = stringResource(MR.strings.onboarding_permission_crashlytics),
@@ -120,7 +116,7 @@ object SettingsSecurityScreen : SearchableSettings {
     }
 }
 
-private val LockAfterValues = persistentListOf(
+private val LockAfterValues = listOf(
     0, // Always
     1,
     2,

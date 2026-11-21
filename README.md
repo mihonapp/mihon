@@ -18,6 +18,8 @@ Download the latest APK from the [Releases](https://github.com/alias-rgb/mihon/r
 
 Tuned for reading manhwa and webtoons on large tablets like the Galaxy Tab S7.
 
+Based on Mihon v0.20.1, so it works with current extension stores (TachiyomiX 1.6 extensions), such as Keiyoushi.
+
 ### Reader
 - Vertical seekbar for vertical reading modes, on either side, optionally in landscape too. It fills exactly the
   space between the reader's top and bottom bars.

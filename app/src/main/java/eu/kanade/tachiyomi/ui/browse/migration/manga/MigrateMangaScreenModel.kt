@@ -4,9 +4,6 @@ import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.tachiyomi.source.Source
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -44,13 +41,12 @@ class MigrateMangaScreenModel(
                     logcat(LogPriority.ERROR, it)
                     _events.send(MigrationMangaEvent.FailedFetchingFavorites)
                     mutableState.update { state ->
-                        state.copy(titleList = persistentListOf())
+                        state.copy(titleList = listOf())
                     }
                 }
                 .map { manga ->
                     manga
                         .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
-                        .toImmutableList()
                 }
                 .collectLatest { list ->
                     mutableState.update { it.copy(titleList = list) }
@@ -75,11 +71,11 @@ class MigrateMangaScreenModel(
     data class State(
         val source: Source? = null,
         val selection: Set<Long> = emptySet(),
-        private val titleList: ImmutableList<Manga>? = null,
+        private val titleList: List<Manga>? = null,
     ) {
 
-        val titles: ImmutableList<Manga>
-            get() = titleList ?: persistentListOf()
+        val titles: List<Manga>
+            get() = titleList ?: listOf()
 
         val isLoading: Boolean
             get() = source == null || titleList == null

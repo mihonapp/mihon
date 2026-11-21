@@ -14,7 +14,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
@@ -223,6 +222,7 @@ private val markdownComponents = markdownComponents(
         if (type in DISALLOWED_MARKDOWN_TYPES) {
             MarkdownText(
                 content = model.content.substring(model.node.startOffset, model.node.endOffset),
+                node = model.node,
                 style = model.typography.text,
             )
         }

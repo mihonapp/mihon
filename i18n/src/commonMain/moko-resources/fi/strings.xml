@@ -644,13 +644,6 @@
     <string name="pref_relative_format">Suhteelliset aikaleimat</string>
     <string name="pref_relative_format_summary">Käytä muotoa \"%1$s\", kuin muotoa \"%2$s\"</string>
     <string name="ext_permission_install_apps_warning">Laajennosten asentamiseen tarvitaan lupia. Napauta tästä myöntääksesi luvat.</string>
-    <string name="action_add_repo">Lisää laajennosten lähde</string>
-    <string name="label_add_repo_input">Laajennosten lähteen URL</string>
-    <string name="action_add_repo_message">Lisää laajennosten lähteitä %siin. URL-osoitteen tulisi päättyä \"index.min.json\".</string>
-    <string name="error_repo_exists">Tämä laajennosten lähde on jo lisättynä!</string>
-    <string name="action_delete_repo">Poista laajennosten lähde</string>
-    <string name="invalid_repo_name">Epäkelpo laajennosten lähteen URL-osoite</string>
-    <string name="delete_repo_confirmation">Haluatko poistaa laajennosten lähteen \"%s\"?</string>
     <string name="pref_page_rotate_invert">Peilaa käännetyt leveät sivut</string>
     <string name="pref_double_tap_zoom">Tuplanapauta lähentääksesi</string>
     <string name="pref_flash_page_summ">Vähentää haamujälkiä e-paperi näytöillä</string>

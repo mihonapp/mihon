@@ -765,36 +765,23 @@
     <string name="manga_interval_expected_update">新章は%1$sぐらいでリリースされると予測しており、%2$sごとに確認する予定です。</string>
     <string name="invalid_backup_file_error">詳細なエラー情報：</string>
     <string name="ext_permission_install_apps_warning">拡張機能をインストールするためには権限が必要です。タップで許可してください。</string>
-    <string name="error_repo_exists">このリポジトリは既に存在しています！</string>
     <string name="manga_interval_custom_amount">カスタム更新頻度：</string>
-    <string name="action_delete_repo">リポジトリを削除</string>
-    <string name="delete_repo_confirmation">リポジトリ「%s」を削除してもよろしいですか？</string>
     <string name="onboarding_storage_help_action">ストレージ ガイド</string>
     <string name="private_settings">トラッカーログイン情報などの機密性の高い情報を含む</string>
     <string name="manga_interval_expected_update_soon">間もなく</string>
     <string name="ext_revoke_trust">不明な拡張機能の信頼を取り消す</string>
-    <string name="label_extension_repos">拡張機能リポジトリ</string>
-    <string name="invalid_repo_name">リポジトリURLが無効です</string>
-    <string name="action_add_repo_message">%sにリポジトリを追加します。「index.min.json」で終わるURLを入力してください。</string>
-    <string name="action_add_repo">リポジトリを追加</string>
     <string name="action_open_repo">ソース リポジトリを開く</string>
     <string name="onboarding_storage_help_info">古いバージョンからバージョンアップしたばかりで、選択に悩んでいますか？ストレージ ガイドにご参照ください。</string>
-    <string name="information_empty_repos">リポジトリを設定していません。</string>
-    <string name="label_add_repo_input">リポジトリURL</string>
     <string name="theme_nord">Nord</string>
     <string name="pref_library_update_smart_update">スマート・アップデート</string>
     <string name="pref_webtoon_disable_zoom_out">ズームアウトを無効にする</string>
     <string name="action_add_anyway">追加</string>
-    <string name="action_replace_repo">交換</string>
     <string name="pref_display_profile">カスタムディスプレイプロファイル</string>
     <string name="upcoming_calendar_prev">前月</string>
     <string name="upcoming_calendar_next">翌月</string>
     <string name="label_upcoming">近々公開</string>
     <string name="action_view_upcoming">今後のアップデート</string>
-    <string name="action_replace_repo_title">署名キーのフィンガープリントはすでに存在します</string>
     <string name="upcoming_guide">今後のご案内</string>
-    <string name="action_replace_repo_message">リポジトリ %1$s は %2$s と同じ署名キー指紋を持っています。
-\nこれが予想される場合は %2$s が置換されますが、そうでない場合はリポジトリのメンテナーに連絡してください。</string>
     <string name="pref_flash_duration">閃光時間</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="pref_flash_page_interval">フラッシュ・エブリ</string>
@@ -805,7 +792,6 @@
     <string name="manga_interval_expected_update_null">このマンガは完結しているか、あるいは発売予定日が決まっていない。</string>
     <string name="file_picker_uri_permission_unsupported">永続フォルダアクセスの取得に失敗しました。 アプリが予期しない動作をする可能性があります。</string>
     <string name="action_copy_link">リンクをコピーする</string>
-    <string name="extensionRepo_settings">拡張機能リポジトリ</string>
     <string name="invalid_backup_file_json">JSONバックアップはサポートされていません</string>
     <string name="invalid_backup_file_unknown">バックアップファイルが壊れている</string>
     <string name="trackers_updated_summary">トラッカーが章 %d に更新されました</string>
@@ -823,7 +809,6 @@
     <string name="ext_remove">取り除く</string>
     <string name="ext_confirm_remove">拡張機能を削除しますか?</string>
     <string name="remove_private_extension_message">本当に\"%s\"拡張機能を削除しますか？</string>
-    <string name="add_repo_confirmation">リポジトリ\"%s\"を追加しますか？</string>
     <string name="confirm_tracker_update">トラッカーを章 %d に更新しますか？</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">パフォーマンスに影響する。 ビットマップのしきい値を下げてもブランク画像の問題が解決しない場合のみ有効にしてください。</string>
     <string name="pref_hardware_bitmap_threshold_default">デフォルト (%d)</string>
@@ -873,4 +858,6 @@
     <string name="migrationConfigScreen.selectPinnedLabel">固定されたソースを選択</string>
     <string name="migrationConfigScreen.dataToMigrateHeader">移行するデータ</string>
     <string name="download_bookmarked">ブックマーク済み</string>
+    <string name="migrationConfigScreen.continueButtonText">移行</string>
+    <string name="migrationConfigScreen.removeDownloadsTitle">移行後に既存のダウンロード済みデータを削除する</string>
 </resources>

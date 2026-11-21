@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.data.Database
+import tachiyomi.data.MemoColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
@@ -107,4 +108,5 @@ private fun Manga.toBackupManga() =
         version = this.version,
         notes = this.notes,
         initialized = this.initialized,
+        memo = MemoColumnAdapter.encode(this.memo),
     )

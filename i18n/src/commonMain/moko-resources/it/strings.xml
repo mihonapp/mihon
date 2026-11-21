@@ -765,12 +765,6 @@
     <string name="onboarding_permission_action_grant">Consenti</string>
     <string name="exclude_scanlators">Escludi scanlator</string>
     <string name="onboarding_storage_help_action">Guida all\'archiviazione</string>
-    <string name="label_extension_repos">Repository delle estensioni</string>
-    <string name="action_add_repo">Aggiungi repository</string>
-    <string name="label_add_repo_input">URL repository</string>
-    <string name="error_repo_exists">Questa repository esiste già!</string>
-    <string name="action_delete_repo">Elimina repository</string>
-    <string name="invalid_repo_name">URL repository non valida</string>
     <string name="action_open_repo">Repository open source</string>
     <string name="manga_interval_expected_update_soon">Presto</string>
     <string name="manga_interval_custom_amount">Frequenza di aggiornamento personalizzata:</string>
@@ -778,17 +772,10 @@
     <string name="theme_nord">Nord</string>
     <string name="pref_library_update_smart_update">Aggiornamento intelligente</string>
     <string name="ext_revoke_trust">Revoca le estensioni sconosciute affidabili</string>
-    <string name="information_empty_repos">Non hai repository impostate.</string>
-    <string name="action_add_repo_message">Aggiungi altri repository a %s. Questo dovrebbe essere un URL che termina con \"index.min.json\".</string>
-    <string name="delete_repo_confirmation">Vuoi eleminare la repository \"%s\"?</string>
     <string name="invalid_backup_file_error">Errore completo:</string>
     <string name="manga_interval_expected_update">Si prevede che i nuovi capitoli saranno rilasciati tra circa %1$s, con controlli ogni %2$s.</string>
     <string name="action_add_anyway">Aggiungere comunque</string>
-    <string name="action_replace_repo_title">La Firma dell\'Impronta Digitale della Chiave Esiste Già</string>
     <string name="pref_display_profile">Profilo di visualizzazione personalizzato</string>
-    <string name="action_replace_repo_message">La repository %1$s ha la stessa Firma d\'Impronta Digitale della Chiave %2$s.
-\nSe è quello che si desidera, %2$s verrà sostituita, altrimenti contatta il manutentore della repository.</string>
-    <string name="action_replace_repo">Sostituisci</string>
     <string name="pref_webtoon_disable_zoom_out">Disattiva zoom indietro</string>
     <string name="label_upcoming">Prossimamente</string>
     <string name="action_view_upcoming">Controlla i Prossimi Aggiornamenti</string>
@@ -812,11 +799,9 @@
     <string name="onboarding_permission_crashlytics_description">Invia registri anonimizzati dei crash agli sviluppatori.</string>
     <string name="pref_security">Sicurezza</string>
     <string name="pref_firebase">Analitica e registri di crash</string>
-    <string name="extensionRepo_settings">Repository delle estensioni</string>
     <string name="confirm_tracker_update">Aggiornare i tracker al capitolo %d?</string>
     <string name="pref_download_new_unread_chapters_only">Salta il download dei capitoli letti duplicati</string>
     <string name="firebase_summary">L\'invio dei registri dei crash e delle analitiche ci consentirà di identificare e risolvere i problemi, migliorare le prestazioni e rendere gli aggiornamenti futuri più pertinenti alle tue esigenze</string>
-    <string name="add_repo_confirmation">Vuoi aggiungere il repository \"%s\"?</string>
     <string name="ext_remove">Rimuovi</string>
     <string name="ext_confirm_remove">Rimuovere l\'estensione?</string>
     <string name="remove_private_extension_message">Vuoi davvero rimuovere l\'estensione \"%s\"?</string>

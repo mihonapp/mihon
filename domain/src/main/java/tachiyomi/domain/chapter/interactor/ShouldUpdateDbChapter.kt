@@ -9,6 +9,7 @@ class ShouldUpdateDbChapter {
             dbChapter.name != sourceChapter.name ||
             dbChapter.dateUpload != sourceChapter.dateUpload ||
             dbChapter.chapterNumber != sourceChapter.chapterNumber ||
-            dbChapter.sourceOrder != sourceChapter.sourceOrder
+            dbChapter.sourceOrder != sourceChapter.sourceOrder ||
+            dbChapter.memo != sourceChapter.memo
     }
 }

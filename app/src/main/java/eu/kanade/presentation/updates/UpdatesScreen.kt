@@ -30,7 +30,6 @@ import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
 import eu.kanade.tachiyomi.ui.updates.UpdatesScreenModel
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
@@ -156,7 +155,7 @@ private fun UpdatesAppBar(
         title = stringResource(MR.strings.label_recent_updates),
         actions = {
             AppBarActions(
-                persistentListOf(
+                listOf(
                     AppBar.Action(
                         title = stringResource(MR.strings.action_filter),
                         icon = Icons.Outlined.FilterList,
@@ -180,7 +179,7 @@ private fun UpdatesAppBar(
         onCancelActionMode = onCancelActionMode,
         actionModeActions = {
             AppBarActions(
-                persistentListOf(
+                listOf(
                     AppBar.Action(
                         title = stringResource(MR.strings.action_select_all),
                         icon = Icons.Outlined.SelectAll,

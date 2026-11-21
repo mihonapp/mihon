@@ -8,7 +8,6 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.source.service.SourcePreferences
-import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
@@ -56,7 +55,7 @@ class ExtensionsScreenModel(
             combine(
                 state.map { it.searchQuery }
                     .distinctUntilChanged()
-                    .debounce(SEARCH_DEBOUNCE_MILLIS)
+                    .debounce(0.25.seconds)
                     .map { searchQueryPredicate(it ?: "") },
                 currentDownloads,
                 getExtensions.subscribe(),
@@ -121,7 +120,7 @@ class ExtensionsScreenModel(
                 when (extension) {
                     is Extension.Installed -> extension.sources.any { source ->
                         source.name.contains(subquery, ignoreCase = true) ||
-                            (source as? HttpSource)?.baseUrl?.contains(subquery, ignoreCase = true) == true ||
+                            (source as? HttpSource)?.getHomeUrl()?.contains(subquery, ignoreCase = true) == true ||
                             source.id == subquery.toLongOrNull()
                     }
 

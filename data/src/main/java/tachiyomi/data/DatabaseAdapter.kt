@@ -2,6 +2,10 @@ package tachiyomi.data
 
 import app.cash.sqldelight.ColumnAdapter
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonObject
 import java.util.Date
 
 object DateColumnAdapter : ColumnAdapter<Date, Long> {
@@ -26,4 +30,14 @@ object UpdateStrategyColumnAdapter : ColumnAdapter<UpdateStrategy, Long> {
         UpdateStrategy.entries.getOrElse(databaseValue.toInt()) { UpdateStrategy.ALWAYS_UPDATE }
 
     override fun encode(value: UpdateStrategy): Long = value.ordinal.toLong()
+}
+
+object MemoColumnAdapter : ColumnAdapter<JsonObject, ByteArray> {
+    override fun decode(databaseValue: ByteArray): JsonObject {
+        return Json.decodeFromString<JsonObject>(databaseValue.decodeToString())
+    }
+
+    override fun encode(value: JsonObject): ByteArray {
+        return value.toString().encodeToByteArray()
+    }
 }

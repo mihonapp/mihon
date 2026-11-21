@@ -75,7 +75,6 @@
     <string name="last_read_chapter">கடைசியாக படித்த அத்தியாயம்</string>
     <string name="second_to_last">இரண்டாவது முதல் கடைசியாக படிக்க அத்தியாயம்</string>
     <string name="third_to_last">மூன்றாவது முதல் கடைசியாக படிக்க அத்தியாயம்</string>
-    <string name="extensionRepo_settings">நீட்டிப்பு களஞ்சியங்கள்</string>
     <string name="private_settings">உணர்திறன் அமைப்புகளைச் சேர்க்கவும் (எ.கா., டிராக்கர் உள்நுழைவு டோக்கன்கள்)</string>
     <string name="non_library_settings">உள்ளீடுகள் அனைத்தும்</string>
     <string name="creating_backup">காப்புப்பிரதியை உருவாக்குதல்</string>
@@ -343,20 +342,8 @@
     <string name="ext_installer_shizuku_stopped">சிசுகு ஓடவில்லை</string>
     <string name="ext_installer_shizuku_unavailable_dialog">சிசுகுவை நீட்டிப்பு நிறுவியாகப் பயன்படுத்த சிசுகுவை நிறுவி தொடங்கவும்.</string>
     <string name="ext_revoke_trust">நம்பகமான அறியப்படாத நீட்டிப்புகளைத் திரும்பப் பெறுங்கள்</string>
-    <string name="label_extension_repos">நீட்டிப்பு களஞ்சியங்கள்</string>
-    <string name="information_empty_repos">உங்களிடம் எந்த களஞ்சியமும் இல்லை.</string>
-    <string name="action_add_repo">ரெப்போ சேர்க்கவும்</string>
-    <string name="label_add_repo_input">முகவரி களஞ்சி</string>
     <string name="untrusted_extension_message">தீங்கிழைக்கும் நீட்டிப்புகள் சேமிக்கப்பட்ட உள்நுழைவு நற்சான்றிதழ்களைப் படிக்கலாம் அல்லது தன்னிச்சையான குறியீட்டை இயக்கலாம்.\n\n இந்த நீட்டிப்பை நம்புவதன் மூலம், இந்த அபாயங்களை நீங்கள் ஏற்றுக்கொள்கிறீர்கள்.</string>
-    <string name="action_add_repo_message">%s இல் கூடுதல் களஞ்சியங்களைச் சேர்க்கவும். இது \"index.min.json\" என்று முடிவடையும் முகவரி ஆக இருக்க வேண்டும்.</string>
-    <string name="error_repo_exists">இந்த ரெப்போ ஏற்கனவே உள்ளது!</string>
-    <string name="action_delete_repo">ரெப்போவை நீக்கு</string>
-    <string name="invalid_repo_name">தவறான ரெப்போ முகவரி</string>
-    <string name="delete_repo_confirmation">ரெப்போ \"%s\" ஐ நீக்க விரும்புகிறீர்களா?</string>
-    <string name="add_repo_confirmation">ரெப்போ \"%s\" சேர்க்க விரும்புகிறீர்களா?</string>
     <string name="action_open_repo">திறந்த மூல ரெப்போ</string>
-    <string name="action_replace_repo">மாற்றவும்</string>
-    <string name="action_replace_repo_title">முக்கிய கைரேகை கையொப்பமிடுவது ஏற்கனவே உள்ளது</string>
     <string name="pref_dual_page_split">பரந்த பக்கங்களைப் பிரிக்கவும்</string>
     <string name="pref_dual_page_invert">பிளவு பக்க வேலைவாய்ப்பு தலைகீழ்</string>
     <string name="pref_dual_page_invert_summary">பிளவு அகலமான பக்கங்களின் இடம் வாசிப்பு திசையுடன் பொருந்தவில்லை என்றால்</string>
@@ -368,7 +355,6 @@
     <string name="pref_flash_page">பக்க மாற்றத்தில் ஃபிளாச்</string>
     <string name="pref_flash_page_summ">ஈ-மை காட்சிகளில் பேயைக் குறைக்கிறது</string>
     <string name="pref_flash_duration">ஃபிளாச் காலம்</string>
-    <string name="action_replace_repo_message">களஞ்சியம் %1$s %2$s போன்ற கையொப்பமிடும் விசை கைரேகையைக் கொண்டுள்ளது.\n இது எதிர்பார்க்கப்பட்டால், %2$s மாற்றப்படும், இல்லையெனில் உங்கள் ரெப்போ பராமரிப்பாளரைத் தொடர்பு கொள்ளுங்கள்.</string>
     <string name="pref_fullscreen">முழு திரை</string>
     <string name="pref_show_navigation_mode">குழாய் மண்டலங்கள் மேலடுக்கைக் காட்டு</string>
     <string name="pref_show_navigation_mode_summary">வாசகர் திறக்கப்படும்போது சுருக்கமாகக் காட்டுங்கள்</string>

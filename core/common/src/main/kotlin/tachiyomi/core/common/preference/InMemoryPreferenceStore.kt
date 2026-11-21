@@ -48,7 +48,11 @@ class InMemoryPreferenceStore(
     }
 
     override fun getStringSet(key: String, defaultValue: Set<String>): Preference<Set<String>> {
-        TODO("Not yet implemented")
+        val default = InMemoryPreference(key, null, defaultValue)
+
+        @Suppress("UNCHECKED_CAST")
+        val data: Set<String>? = preferences[key]?.get() as? Set<String>
+        return if (data == null) default else InMemoryPreference(key, data, defaultValue)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -72,6 +76,18 @@ class InMemoryPreferenceStore(
     ): Preference<T> {
         val default = InMemoryPreference(key, null, defaultValue)
         val data: T? = preferences[key]?.get() as? T
+        return if (data == null) default else InMemoryPreference(key, data, defaultValue)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T> getObjectSetFromStringSet(
+        key: String,
+        defaultValue: Set<T>,
+        serializer: (T) -> String,
+        deserializer: (String) -> T?,
+    ): Preference<Set<T>> {
+        val default = InMemoryPreference(key, null, defaultValue)
+        val data: Set<T>? = preferences[key]?.get() as? Set<T>
         return if (data == null) default else InMemoryPreference(key, data, defaultValue)
     }
 

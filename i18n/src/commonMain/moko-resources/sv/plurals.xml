@@ -76,4 +76,20 @@
         <item quantity="one">1 sida</item>
         <item quantity="other">%1$s sidor</item>
     </plurals>
+    <plurals name="migrationListScreen.migrateDialog.migrateTitle">
+        <item quantity="one">Migrera %1$d artikel?</item>
+        <item quantity="other">Migrera %1$d artiklar?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.copyTitle">
+        <item quantity="one">Kopiera %1$d artikel?</item>
+        <item quantity="other">Kopiera %1$d artiklar?</item>
+    </plurals>
+    <plurals name="migrationListScreen.migrateDialog.skipText">
+        <item quantity="one">En artikel hoppades över</item>
+        <item quantity="other">%1$d artiklar hoppades över</item>
+    </plurals>
+    <plurals name="notification_update_error">
+        <item quantity="one">%1$d uppdatering misslyckades</item>
+        <item quantity="other">%1$d uppdateringar misslyckades</item>
+    </plurals>
 </resources>

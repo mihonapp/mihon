@@ -767,21 +767,12 @@
 \n
 \nโฟลเดอร์ที่เลือก: %2$s</string>
     <string name="pref_library_update_smart_update">อัปเดตอัจฉริยะ</string>
-    <string name="label_extension_repos">รีโพส่วนขยาย</string>
-    <string name="error_repo_exists">มีรีโพนี้อยู่แล้ว!</string>
-    <string name="action_add_repo_message">เพิ่มรีโพเพิ่มเติมให้กับ %s - ควรเป็น URL ที่ลงท้ายด้วย \"index.min.json\"</string>
     <string name="manga_interval_custom_amount">ความถี่ในการอัปเดตกำหนดเอง:</string>
-    <string name="information_empty_repos">คุณไม่มีรีโพที่ตั้งค่าไว้</string>
     <string name="onboarding_storage_help_action">คู่มือการจัดเก็บข้อมูล</string>
     <string name="ext_revoke_trust">เพิกถอนส่วนขยายที่ไม่รู้จักที่เชื่อถือไว้</string>
-    <string name="action_add_repo">เพิ่มรีโพ</string>
-    <string name="action_delete_repo">ลบรีโพ</string>
-    <string name="invalid_repo_name">URL ของรีโพไม่ถูกต้อง</string>
     <string name="manga_interval_expected_update_soon">เร็ว ๆ นี้</string>
     <string name="onboarding_storage_help_info">กำลังอัปเดตจากเวอร์ชันเก่าและไม่แน่ใจว่าจะเลือกอะไรใช่ไหม? โปรดดูคู่มือการจัดเก็บข้อมูลสำหรับข้อมูลเพิ่มเติม</string>
     <string name="theme_nord">นอร์ด</string>
-    <string name="label_add_repo_input">URL รีโพ</string>
-    <string name="delete_repo_confirmation">ต้องการจะลบรีโพ \"%s\" หรือไม่?</string>
     <string name="action_open_repo">เปิดที่มาของรีโพ</string>
     <string name="action_copy_link">คัดลอกลิงก์</string>
     <string name="action_sort_random">สุ่ม</string>
@@ -810,19 +801,14 @@
     <string name="pref_flash_style_black">สีดำ</string>
     <string name="upcoming_calendar_prev">เดือนก่อนหน้า</string>
     <string name="invalid_backup_file_json">ไม่รองรับการสำรองข้อมูลเป็น JSON</string>
-    <string name="extensionRepo_settings">รีโพส่วนขยาย</string>
     <string name="manga_interval_expected_update_null">มังงะเรื่องนี้เสร็จแล้ว หรือไม่มีกำหนดวางจำหน่ายที่แน่ชัด</string>
     <string name="file_picker_uri_permission_unsupported">ไม่สามารถรับสิทธิ์การเข้าถึงโฟลเดอร์ถาวรได้ แอปอาจทำงานผิดปกติ</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
     <string name="pref_flash_style_white_black">สีขาวและสีดำ</string>
     <string name="pref_download_new_unread_chapters_only">ข้ามการดาวน์โหลดบทที่ซ้ำ</string>
-    <string name="action_replace_repo_title">กุญแจลายเซ็นระบุตัวตนนี้มีอยู่แล้ว</string>
     <string name="pref_display_profile">โปรไฟล์การแสดงผลแบบกำหนดเอง</string>
-    <string name="action_replace_repo">แทนที่</string>
     <string name="pref_webtoon_disable_zoom_out">ปิดการใช้งานการซูมออก</string>
     <string name="action_view_upcoming">ดูการอัปเดตที่กำลังจะมีขึ้น</string>
-    <string name="action_replace_repo_message">รีโพสิทอรี %1$s มีกุญแจลายเซ็นระบุตัวตนเดียวกันกับ %2$s\nหากต้องการ %2$s จะถูกแทนที่ มิฉะนั้น โปรดติดต่อผู้ดูแลรีโพนี้</string>
-    <string name="add_repo_confirmation">คุณต้องการเพิ่มรีโพ \"%s\" หรือไม่?</string>
     <string name="confirm_tracker_update">อัปเดตตัวติดตามของบท %d หรือไม่?</string>
     <string name="label_auto">อัตโนมัติ</string>
     <string name="action_display_unread_badge">ตอนที่ยังไม่ได้อ่าน</string>

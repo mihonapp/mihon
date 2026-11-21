@@ -14,9 +14,6 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.LocaleHelper
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -78,10 +75,10 @@ class ExtensionDetailsScreenModel(
                         }
                         .catch { throwable ->
                             logcat(LogPriority.ERROR, throwable)
-                            mutableState.update { it.copy(_sources = persistentListOf()) }
+                            mutableState.update { it.copy(_sources = listOf()) }
                         }
                         .collectLatest { sources ->
-                            mutableState.update { it.copy(_sources = sources.toImmutableList()) }
+                            mutableState.update { it.copy(_sources = sources) }
                         }
                 }
             }
@@ -102,7 +99,8 @@ class ExtensionDetailsScreenModel(
 
         val urls = extension.sources
             .filterIsInstance<HttpSource>()
-            .mapNotNull { it.baseUrl.takeUnless { url -> url.isEmpty() } }
+            .flatMap { listOf(it.baseUrl, it.getHomeUrl()) }
+            .filter { it.isNotEmpty() }
             .distinct()
 
         val cleared = urls.sumOf {
@@ -142,11 +140,11 @@ class ExtensionDetailsScreenModel(
     data class State(
         val extension: Extension.Installed? = null,
         val isIncognito: Boolean = false,
-        private val _sources: ImmutableList<ExtensionSourceItem>? = null,
+        private val _sources: List<ExtensionSourceItem>? = null,
     ) {
 
-        val sources: ImmutableList<ExtensionSourceItem>
-            get() = _sources ?: persistentListOf()
+        val sources: List<ExtensionSourceItem>
+            get() = _sources ?: listOf()
 
         val isLoading: Boolean
             get() = extension == null || _sources == null

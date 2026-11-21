@@ -110,7 +110,7 @@ data class MigrateSourceSearchScreen(
                     val source = screenModel.source as? HttpSource ?: return@BrowseSourceContent
                     navigator.push(
                         WebViewScreen(
-                            url = source.baseUrl,
+                            url = source.getHomeUrl(),
                             initialTitle = source.name,
                             sourceId = source.id,
                         ),

@@ -9,8 +9,6 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.sourcePreferences
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -50,7 +48,7 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
 
     override fun getCompletionStatus(): Long = COMPLETED
 
-    override fun getScoreList(): ImmutableList<String> = persistentListOf()
+    override fun getScoreList(): List<String> = listOf()
 
     override fun displayScore(track: DomainTrack): String = ""
 
