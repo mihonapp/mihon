@@ -12,7 +12,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 
-## [v1.1] - fork release
+## [v2.0] - fork release
 Changes in this fork since v1.0. Upstream fixes are credited to their authors in the commit history.
 
 ### Added
