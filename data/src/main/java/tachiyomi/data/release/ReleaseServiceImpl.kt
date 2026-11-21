@@ -54,7 +54,12 @@ class ReleaseServiceImpl(
         return if (!isFoss) {
             map[Build.SUPPORTED_ABIS[0]] ?: map[null]
         } else {
-            map[FOSS]
+            val fossAssets = release.assets.filter { "-$FOSS" in it.name }
+            fossAssets.firstOrNull { "-${Build.SUPPORTED_ABIS[0]}-" in it.name }?.downloadLink
+                ?: fossAssets.firstOrNull { asset ->
+                    BUILD_TYPES.none { type -> type != FOSS && "-$type-" in asset.name }
+                }?.downloadLink
+                ?: map[FOSS]
         }
     }
 

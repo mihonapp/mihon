@@ -118,12 +118,21 @@ jobs:
           set -e
 
           mv app/build/outputs/apk/foss/app-universal-foss.apk mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
+          mv app/build/outputs/apk/foss/app-arm64-v8a-foss.apk mihon-arm64-v8a-${{ needs.get_tag.outputs.tag }}-foss.apk
+          mv app/build/outputs/apk/foss/app-armeabi-v7a-foss.apk mihon-armeabi-v7a-${{ needs.get_tag.outputs.tag }}-foss.apk
+          mv app/build/outputs/apk/foss/app-x86-foss.apk mihon-x86-${{ needs.get_tag.outputs.tag }}-foss.apk
+          mv app/build/outputs/apk/foss/app-x86_64-foss.apk mihon-x86_64-${{ needs.get_tag.outputs.tag }}-foss.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: mihon-foss
-          path: mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
+          path: |
+            mihon-${{ needs.get_tag.outputs.tag }}-foss.apk
+            mihon-arm64-v8a-${{ needs.get_tag.outputs.tag }}-foss.apk
+            mihon-armeabi-v7a-${{ needs.get_tag.outputs.tag }}-foss.apk
+            mihon-x86-${{ needs.get_tag.outputs.tag }}-foss.apk
+            mihon-x86_64-${{ needs.get_tag.outputs.tag }}-foss.apk
 
   release:
     if: github.repository == 'mihonapp/mihon'
@@ -171,6 +180,10 @@ jobs:
             mihon-armeabi-v7a-${{ needs.get_tag.outputs.tag }}.apk
             mihon-x86-${{ needs.get_tag.outputs.tag }}.apk
             mihon-x86_64-${{ needs.get_tag.outputs.tag }}.apk
+            mihon-arm64-v8a-${{ needs.get_tag.outputs.tag }}-foss.apk
+            mihon-armeabi-v7a-${{ needs.get_tag.outputs.tag }}-foss.apk
+            mihon-x86-${{ needs.get_tag.outputs.tag }}-foss.apk
+            mihon-x86_64-${{ needs.get_tag.outputs.tag }}-foss.apk
           draft: true
           prerelease: false
           token: ${{ secrets.MIHON_BOT_TOKEN }}
