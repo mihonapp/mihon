@@ -606,10 +606,12 @@ class LibraryScreenModel(
         mutableState.update { it.copy(dialog = Dialog.SettingsSheet) }
     }
 
-    private var lastSelectionCategory: Long? = null
+    private data class LastSelection(val categoryId: Long, val mangaId: Long)
+
+    private var lastSelection: LastSelection? = null
 
     fun clearSelection() {
-        lastSelectionCategory = null
+        lastSelection = null
         mutableState.update { it.copy(selection = setOf()) }
     }
 
@@ -618,7 +620,7 @@ class LibraryScreenModel(
             val newSelection = state.selection.mutate { set ->
                 if (!set.remove(manga.id)) set.add(manga.id)
             }
-            lastSelectionCategory = category.id.takeIf { newSelection.isNotEmpty() }
+            lastSelection = LastSelection(category.id, manga.id).takeIf { manga.id in newSelection }
             state.copy(selection = newSelection)
         }
     }
@@ -630,31 +632,32 @@ class LibraryScreenModel(
     fun toggleRangeSelection(category: Category, manga: LibraryManga) {
         mutableState.update { state ->
             val newSelection = state.selection.mutate { list ->
-                val lastSelected = list.lastOrNull()
-                if (lastSelectionCategory != category.id) {
+                // The anchor is the entry last toggled in this category, as long as it's still selected. A set has
+                // no reliable "last" element, and it may belong to another category.
+                val items = state.getItemsForCategoryId(category.id).fastMap { it.id }
+                val lastMangaIndex = lastSelection
+                    ?.takeIf { it.categoryId == category.id && it.mangaId in list }
+                    ?.let { items.indexOf(it.mangaId) }
+                    ?: -1
+                val curMangaIndex = items.indexOf(manga.id)
+                if (lastMangaIndex == -1 || curMangaIndex == -1) {
                     list.add(manga.id)
                     return@mutate
                 }
 
-                val items = state.getItemsForCategoryId(category.id).fastMap { it.id }
-                val lastMangaIndex = items.indexOf(lastSelected)
-                val curMangaIndex = items.indexOf(manga.id)
-
                 val selectionRange = when {
                     lastMangaIndex < curMangaIndex -> lastMangaIndex..curMangaIndex
-                    curMangaIndex < lastMangaIndex -> curMangaIndex..lastMangaIndex
-                    // We shouldn't reach this point
-                    else -> return@mutate
+                    else -> curMangaIndex..lastMangaIndex
                 }
-                selectionRange.mapNotNull { items[it] }.let(list::addAll)
+                list.addAll(items.subList(selectionRange.first, selectionRange.last + 1))
             }
-            lastSelectionCategory = category.id
+            lastSelection = LastSelection(category.id, manga.id)
             state.copy(selection = newSelection)
         }
     }
 
     fun selectAll() {
-        lastSelectionCategory = null
+        lastSelection = null
         mutableState.update { state ->
             val newSelection = state.selection.mutate { list ->
                 state.getItemsForCategoryId(state.activeCategory?.id).map { it.id }.let(list::addAll)
@@ -664,7 +667,7 @@ class LibraryScreenModel(
     }
 
     fun invertSelection() {
-        lastSelectionCategory = null
+        lastSelection = null
         mutableState.update { state ->
             val newSelection = state.selection.mutate { list ->
                 val itemIds = state.getItemsForCategoryId(state.activeCategory?.id).fastMap { it.id }

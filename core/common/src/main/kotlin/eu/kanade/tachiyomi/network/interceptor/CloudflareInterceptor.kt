@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.network.AndroidCookieJar
 import eu.kanade.tachiyomi.util.system.isOutdated
 import eu.kanade.tachiyomi.util.system.toast
+import logcat.LogPriority
 import okhttp3.Cookie
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
@@ -18,6 +20,7 @@ import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.Jsoup
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
@@ -80,6 +83,7 @@ class CloudflareInterceptor(
         var challengeFound = false
         var cloudflareBypassed = false
         var isWebViewOutdated = false
+        var isRenderProcessGone = false
 
         val origRequestUrl = originalRequest.url.toString()
         val headers = parseHeaders(originalRequest.headers)
@@ -121,6 +125,17 @@ class CloudflareInterceptor(
                         }
                     }
                 }
+
+                override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
+                    // Not handling it kills the app, failing the bypass is enough
+                    logcat(LogPriority.ERROR) {
+                        "WebView renderer gone during Cloudflare bypass: crashed=${detail.didCrash()}, " +
+                            "priority=${detail.rendererPriorityAtExit()}, url=$origRequestUrl"
+                    }
+                    isRenderProcessGone = true
+                    latch.countDown()
+                    return true
+                }
             }
 
             webview.loadUrl(origRequestUrl, headers)
@@ -129,12 +144,13 @@ class CloudflareInterceptor(
         latch.awaitFor30Seconds()
 
         executor.execute {
-            if (!cloudflareBypassed) {
+            // Only destroy can be called on a WebView whose renderer is gone
+            if (!cloudflareBypassed && !isRenderProcessGone) {
                 isWebViewOutdated = webview?.isOutdated() == true
             }
 
             webview?.run {
-                stopLoading()
+                if (!isRenderProcessGone) stopLoading()
                 destroy()
             }
         }
