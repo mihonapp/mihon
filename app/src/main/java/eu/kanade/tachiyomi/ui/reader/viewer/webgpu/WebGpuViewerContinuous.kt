@@ -90,7 +90,12 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
     }
 
     private fun scrollByHalfPage(direction: Int) {
-        state.animateScroll(direction * state.height / 2f)
+        val delta = direction * state.height / 2f
+        if (general.usePageTransitions) {
+            state.animateScroll(delta)
+        } else {
+            state.scrollBy(delta)
+        }
     }
 
     override fun moveRight() = scrollByHalfPage(1)
@@ -106,6 +111,10 @@ class WebGpuViewerContinuous(activity: ReaderActivity, val useGap: Boolean = fal
     }
 
     override fun animateTurn(direction: Int, fromSpread: ImagePage) {
-        state.animateSlideIn(direction)
+        if (general.usePageTransitions) {
+            state.animateSlideIn(direction)
+        } else {
+            state.invalidate()
+        }
     }
 }

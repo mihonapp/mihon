@@ -42,6 +42,7 @@ import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.webtoonStrips
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonStripImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
+import eu.kanade.tachiyomi.util.system.scaledByAnimatorDuration
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
 
@@ -455,7 +456,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     }
 
     private fun Int.getSystemScaledDuration(): Int {
-        return (this * context.animatorDurationScale).toInt().coerceAtLeast(1)
+        return scaledByAnimatorDuration(context.animatorDurationScale)
     }
 
     /**
