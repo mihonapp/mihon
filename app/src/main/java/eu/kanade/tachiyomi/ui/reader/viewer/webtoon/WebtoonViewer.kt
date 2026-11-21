@@ -259,6 +259,18 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         }
     }
 
+    fun autoScrollStep(pixels: Int) {
+        if (recycler.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
+            recycler.scrollBy(0, pixels)
+        }
+    }
+
+    fun autoScrollPage() {
+        if (recycler.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
+            moveForward()
+        }
+    }
+
     /**
      * Notifies adapter of changes around the current page to trigger a relayout in the recycler.
      * Used when an image configuration is changed.

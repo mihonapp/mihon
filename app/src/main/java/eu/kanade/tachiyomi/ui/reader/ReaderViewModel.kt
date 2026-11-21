@@ -893,6 +893,12 @@ class ReaderViewModel(
         }
     }
 
+    fun toggleAutoScroll(): Boolean {
+        val enabled = !state.value.autoScroll
+        mutableState.update { it.copy(autoScroll = enabled) }
+        return enabled
+    }
+
     /**
      * Generate a filename for the given [manga] and [page]
      */
@@ -1096,6 +1102,7 @@ class ReaderViewModel(
         val currentPage: Int = -1,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
+        val autoScroll: Boolean = false,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
