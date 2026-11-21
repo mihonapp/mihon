@@ -15,6 +15,46 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Support resumable image downloads if supported by source ([@xMohnad](https://github.com/xMohnad)) ([#3167](https://github.com/mihonapp/mihon/pull/3167))
   - Fix HTTP Error 416 not being handled properly ([@AntsyLich](https://github.com/AntsyLich)) ([#3563](https://github.com/mihonapp/mihon/pull/3563))
 
+## [v2.0] - fork release
+Changes in this fork since v1.0. Upstream fixes are credited to their authors in the commit history.
+
+Now based on Mihon **v0.20.1** (see its entries below), which brings the new extension store format and
+TachiyomiX 1.6 extensions, required by current extension repositories such as Keiyoushi. Mihon's own vertical
+chapter navigator from that release is left out in favour of this fork's vertical seekbar.
+
+### Added
+- Auto-scroll for long strip reading modes, started from the reader's bottom bar or the A key, with an adjustable speed
+- Separate long strip side padding for landscape
+- "Load ahead only on Wi-Fi" reader setting
+- Space and Shift+Space keyboard navigation in all reading modes
+- Tokyo Night theme (from upstream [#3502](https://github.com/mihonapp/mihon/pull/3502))
+
+### Improved
+- Online chapters load pages in parallel around the current page (from upstream [#2986](https://github.com/mihonapp/mihon/pull/2986))
+- Vertical seekbar fills exactly the space between the reader's bars and respects side insets
+- Long strip side padding and tap scrolling follow the window size, so they work in split screen and pop-up view
+- Backup file picker uses the modern document picker (from upstream [#3948](https://github.com/mihonapp/mihon/pull/3948))
+- Manga notes no longer have a length limit (from upstream [#3410](https://github.com/mihonapp/mihon/pull/3410))
+- Catppuccin and Nord theme tweaks (from upstream [#3436](https://github.com/mihonapp/mihon/pull/3436), [#3184](https://github.com/mihonapp/mihon/pull/3184))
+
+### Changed
+- App updates are checked against this fork's releases, and only on a cold start rather than on every rotation
+
+### Fixed
+- Reader bars staying visible after using the page slider and then tapping to turn pages
+- Zoomed long strip pages could be panned into the side padding (from upstream [#4072](https://github.com/mihonapp/mihon/pull/4072))
+- Long strip leaving a gap after zooming in a resized window (from upstream)
+- Tap navigation staying off after a cancelled button press (from upstream [#3655](https://github.com/mihonapp/mihon/pull/3655))
+- Long strip taps landing after the reader was closed (from upstream)
+- Paged reader jumping pages when chapters are added before layout, and split pages landing in the wrong chapter (from upstream)
+- App update check offering versions that aren't newer, or crashing on some version tags
+- App crashing when a WebView renderer dies, including during Cloudflare challenges (from upstream)
+- Library range selection crashing across categories (from upstream)
+- Backup restore failing for entries sharing chapter URLs (from upstream [#3667](https://github.com/mihonapp/mihon/pull/3667))
+- Random `FileNotFoundException` when reading chapters (from upstream [#3154](https://github.com/mihonapp/mihon/pull/3154))
+- Downloads in excluded categories being deleted when marked read, downloads not found for sources sharing a name, and
+  entries wrongly flagged as duplicates by some trackers (from upstream)
+
 ## [v0.20.1] - 2026-07-09
 ### Added
 - [Hikka](https://hikka.io/) tracker support ([@Lorg0n](https://github.com/Lorg0n)) ([#1386](https://github.com/mihonapp/mihon/pull/1386))
@@ -62,46 +102,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add missing `outlineVariant` color to Nord theme ([@CompileConnected](https://github.com/CompileConnected)) ([#3184](https://github.com/mihonapp/mihon/pull/3184))
 - Continue reading button missing when unread filter is off ([@AntsyLich](https://github.com/AntsyLich)) ([#3382](https://github.com/mihonapp/mihon/pull/3382))
 - Fix random `FileNotFoundException` when reading chapters ([@leodyversemilla07](https://github.com/leodyversemilla07)) ([#3154](https://github.com/mihonapp/mihon/pull/3154))
-
-## [v2.0] - fork release
-Changes in this fork since v1.0. Upstream fixes are credited to their authors in the commit history.
-
-Now based on Mihon **v0.20.1** (see its entries below), which brings the new extension store format and
-TachiyomiX 1.6 extensions, required by current extension repositories such as Keiyoushi. Mihon's own vertical
-chapter navigator from that release is left out in favour of this fork's vertical seekbar.
-
-### Added
-- Auto-scroll for long strip reading modes, started from the reader's bottom bar or the A key, with an adjustable speed
-- Separate long strip side padding for landscape
-- "Load ahead only on Wi-Fi" reader setting
-- Space and Shift+Space keyboard navigation in all reading modes
-- Tokyo Night theme (from upstream [#3502](https://github.com/mihonapp/mihon/pull/3502))
-
-### Improved
-- Online chapters load pages in parallel around the current page (from upstream [#2986](https://github.com/mihonapp/mihon/pull/2986))
-- Vertical seekbar fills exactly the space between the reader's bars and respects side insets
-- Long strip side padding and tap scrolling follow the window size, so they work in split screen and pop-up view
-- Backup file picker uses the modern document picker (from upstream [#3948](https://github.com/mihonapp/mihon/pull/3948))
-- Manga notes no longer have a length limit (from upstream [#3410](https://github.com/mihonapp/mihon/pull/3410))
-- Catppuccin and Nord theme tweaks (from upstream [#3436](https://github.com/mihonapp/mihon/pull/3436), [#3184](https://github.com/mihonapp/mihon/pull/3184))
-
-### Changed
-- App updates are checked against this fork's releases, and only on a cold start rather than on every rotation
-
-### Fixed
-- Reader bars staying visible after using the page slider and then tapping to turn pages
-- Zoomed long strip pages could be panned into the side padding (from upstream [#4072](https://github.com/mihonapp/mihon/pull/4072))
-- Long strip leaving a gap after zooming in a resized window (from upstream)
-- Tap navigation staying off after a cancelled button press (from upstream [#3655](https://github.com/mihonapp/mihon/pull/3655))
-- Long strip taps landing after the reader was closed (from upstream)
-- Paged reader jumping pages when chapters are added before layout, and split pages landing in the wrong chapter (from upstream)
-- App update check offering versions that aren't newer, or crashing on some version tags
-- App crashing when a WebView renderer dies, including during Cloudflare challenges (from upstream)
-- Library range selection crashing across categories (from upstream)
-- Backup restore failing for entries sharing chapter URLs (from upstream [#3667](https://github.com/mihonapp/mihon/pull/3667))
-- Random `FileNotFoundException` when reading chapters (from upstream [#3154](https://github.com/mihonapp/mihon/pull/3154))
-- Downloads in excluded categories being deleted when marked read, downloads not found for sources sharing a name, and
-  entries wrongly flagged as duplicates by some trackers (from upstream)
 
 ## [v0.19.9] - 2026-04-11
 ### Fixed
