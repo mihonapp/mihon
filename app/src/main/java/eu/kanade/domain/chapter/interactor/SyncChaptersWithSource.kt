@@ -128,7 +128,6 @@ class SyncChaptersWithSource(
                         chapterNumber = chapter.chapterNumber,
                         scanlator = chapter.scanlator,
                         sourceOrder = chapter.sourceOrder,
-                        memo = chapter.memo,
                     )
 
                     if (chapter.dateUpload != 0L) {
