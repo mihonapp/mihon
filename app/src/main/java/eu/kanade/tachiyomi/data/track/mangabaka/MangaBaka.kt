@@ -124,6 +124,7 @@ class MangaBaka(
         track.copyPersonalFrom(remoteTrack)
         track.remote_id = remoteTrack.remote_id
         track.title = remoteTrack.title
+        track.total_chapters = remoteTrack.total_chapters
         return track
     }
 
