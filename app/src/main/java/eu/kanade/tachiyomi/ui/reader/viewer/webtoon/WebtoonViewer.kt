@@ -244,7 +244,13 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     override fun destroy() {
         super.destroy()
-        autoScroller.stop()
+        if (autoScroller.isRunning.value) {
+            autoScroller.stop()
+            // The scope is cancelled below before the stop above is collected, so release the screen here
+            if (!readerPreferences.keepScreenOn.get()) {
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
         scope.cancel()
     }
 

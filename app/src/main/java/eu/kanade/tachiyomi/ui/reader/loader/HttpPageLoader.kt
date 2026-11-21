@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -46,6 +47,12 @@ internal class HttpPageLoader(
     private var chunkProcessJob: Job? = null
     private val downloadJobs = ConcurrentHashMap<Int, Job>()
 
+    /**
+     * How many [loadPage] calls are waiting on each page index. A page holder keeps its call running for as long as
+     * it shows the page, so these pages are never cancelled when the chunks are re-planned around another page.
+     */
+    private val subscribedPages = ConcurrentHashMap<Int, Int>()
+
     override var isLocal: Boolean = false
 
     /**
@@ -73,9 +80,22 @@ internal class HttpPageLoader(
     }
 
     /**
-     * Loads a page through the queue. Handles re-enqueueing pages if they were evicted from the cache.
+     * Loads a page and plans the loading of the rest of the chapter around it. Handles re-enqueueing pages if they
+     * were evicted from the cache. Suspends until cancelled, which is when the caller no longer shows the page.
      */
-    override suspend fun loadPage(page: ReaderPage) = withIOContext {
+    override suspend fun loadPage(page: ReaderPage) {
+        withIOContext {
+            subscribedPages.merge(page.index, 1, Int::plus)
+            try {
+                startLoading(page)
+                awaitCancellation()
+            } finally {
+                subscribedPages.computeIfPresent(page.index) { _, count -> (count - 1).takeIf { it > 0 } }
+            }
+        }
+    }
+
+    private fun startLoading(page: ReaderPage) {
         val imageUrl = page.imageUrl
 
         // Check if the image has been deleted
@@ -93,10 +113,10 @@ internal class HttpPageLoader(
         launchLoadOnce(page)
 
         val pages = page.chapter.pages.orEmpty()
-        if (page.index !in pages.indices) return@withIOContext
+        if (page.index !in pages.indices) return
         pages.loadByRollingChunked(page.index, 3, 5) { chunks ->
             val continueLoading = chunks.take(2).flatten().map { it.index }.toSet()
-            downloadJobs.keys.filter { it !in continueLoading }
+            downloadJobs.keys.filter { it !in continueLoading && !subscribedPages.containsKey(it) }
                 .forEach { downloadJobs.remove(it)?.cancel() }
         }
     }
