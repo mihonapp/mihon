@@ -149,6 +149,9 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             if (old != null && old.theme != new.theme) {
                 ActivityCompat.recreate(activity)
             }
+            if (old != null && old.highQualityUpscaling != new.highQualityUpscaling) {
+                refreshAdapter()
+            }
         }
         settingsViewModel.longStrip.collectChanges(scope) { old, new ->
             if (old != null && old.cropBorders != new.cropBorders) {

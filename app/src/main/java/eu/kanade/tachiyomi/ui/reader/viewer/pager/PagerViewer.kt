@@ -138,7 +138,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
 
         settingsViewModel.general.collectChanges(scope) { old, new ->
-            if (old != null && old.theme != new.theme) {
+            if (old != null && (old.theme != new.theme || old.highQualityUpscaling != new.highQualityUpscaling)) {
                 refreshAdapter()
             }
         }
