@@ -23,6 +23,20 @@ object WebViewUtil {
 
     const val MINIMUM_WEBVIEW_VERSION = 118
 
+    private const val MINIMUM_USER_AGENT_CHROME_VERSION = 149
+
+    fun getDefaultUserAgent(): String {
+        val webViewVersion = try {
+            WebView.getCurrentWebViewPackage()?.versionName?.substringBefore('.')?.toIntOrNull()
+        } catch (e: Throwable) {
+            logcat(LogPriority.ERROR, e)
+            null
+        }
+        val chromeVersion = maxOf(webViewVersion ?: 0, MINIMUM_USER_AGENT_CHROME_VERSION)
+        return "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) " +
+            "Chrome/$chromeVersion.0.0.0 Mobile Safari/537.36"
+    }
+
     /**
      * Uses the WebView's user agent string to create something similar to what Chrome on Android
      * would return.
@@ -120,6 +134,10 @@ fun WebView.setUserAgent(userAgent: String) {
 
     try {
         val metadata = WebSettingsCompat.getUserAgentMetadata(settings)
+        // Chrome reports the exact version in client hints despite the reduced user agent
+        val hintFullVersion = metadata.fullVersion
+            ?.takeIf { it.substringBefore('.') == majorVersion }
+            ?: fullVersion
         val brandVersionList = metadata.brandVersionList.map { brandVersion ->
             val brand = when (brandVersion.brand) {
                 WEBVIEW_BRAND -> CHROME_BRAND
@@ -130,7 +148,7 @@ fun WebView.setUserAgent(userAgent: String) {
             UserAgentMetadata.BrandVersion.Builder()
                 .setBrand(brand)
                 .setMajorVersion(majorVersion)
-                .setFullVersion(fullVersion)
+                .setFullVersion(hintFullVersion)
                 .build()
         }
 
@@ -138,7 +156,7 @@ fun WebView.setUserAgent(userAgent: String) {
             settings,
             UserAgentMetadata.Builder(metadata)
                 .setBrandVersionList(brandVersionList)
-                .setFullVersion(fullVersion)
+                .setFullVersion(hintFullVersion)
                 .build(),
         )
     } catch (e: Exception) {

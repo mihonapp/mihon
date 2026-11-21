@@ -18,10 +18,12 @@ sealed class AndroidPreference<T>(
     private val preferences: SharedPreferences,
     private val keyFlow: Flow<String?>,
     private val key: String,
-    private val defaultValue: T,
+    defaultValue: () -> T,
 ) : Preference<T> {
 
-    abstract fun read(preferences: SharedPreferences, key: String, defaultValue: T): T
+    protected val defaultValue: T by lazy(defaultValue)
+
+    abstract fun read(preferences: SharedPreferences, key: String): T
 
     abstract fun write(key: String, value: T): Editor.() -> Unit
 
@@ -31,7 +33,7 @@ sealed class AndroidPreference<T>(
 
     override fun get(): T {
         return try {
-            read(preferences, key, defaultValue)
+            read(preferences, key)
         } catch (e: ClassCastException) {
             logcat { "Invalid value for $key; deleting" }
             delete()
@@ -73,14 +75,10 @@ sealed class AndroidPreference<T>(
         preferences: SharedPreferences,
         keyFlow: Flow<String?>,
         key: String,
-        defaultValue: String,
+        defaultValue: () -> String,
     ) : AndroidPreference<String>(preferences, keyFlow, key, defaultValue) {
-        override fun read(
-            preferences: SharedPreferences,
-            key: String,
-            defaultValue: String,
-        ): String {
-            return preferences.getString(key, defaultValue) ?: defaultValue
+        override fun read(preferences: SharedPreferences, key: String): String {
+            return preferences.getString(key, null) ?: defaultValue
         }
 
         override fun write(key: String, value: String): Editor.() -> Unit = {
@@ -93,8 +91,8 @@ sealed class AndroidPreference<T>(
         keyFlow: Flow<String?>,
         key: String,
         defaultValue: Long,
-    ) : AndroidPreference<Long>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: Long): Long {
+    ) : AndroidPreference<Long>(preferences, keyFlow, key, { defaultValue }) {
+        override fun read(preferences: SharedPreferences, key: String): Long {
             return preferences.getLong(key, defaultValue)
         }
 
@@ -108,8 +106,8 @@ sealed class AndroidPreference<T>(
         keyFlow: Flow<String?>,
         key: String,
         defaultValue: Int,
-    ) : AndroidPreference<Int>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: Int): Int {
+    ) : AndroidPreference<Int>(preferences, keyFlow, key, { defaultValue }) {
+        override fun read(preferences: SharedPreferences, key: String): Int {
             return preferences.getInt(key, defaultValue)
         }
 
@@ -123,8 +121,8 @@ sealed class AndroidPreference<T>(
         keyFlow: Flow<String?>,
         key: String,
         defaultValue: Float,
-    ) : AndroidPreference<Float>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: Float): Float {
+    ) : AndroidPreference<Float>(preferences, keyFlow, key, { defaultValue }) {
+        override fun read(preferences: SharedPreferences, key: String): Float {
             return preferences.getFloat(key, defaultValue)
         }
 
@@ -138,12 +136,8 @@ sealed class AndroidPreference<T>(
         keyFlow: Flow<String?>,
         key: String,
         defaultValue: Boolean,
-    ) : AndroidPreference<Boolean>(preferences, keyFlow, key, defaultValue) {
-        override fun read(
-            preferences: SharedPreferences,
-            key: String,
-            defaultValue: Boolean,
-        ): Boolean {
+    ) : AndroidPreference<Boolean>(preferences, keyFlow, key, { defaultValue }) {
+        override fun read(preferences: SharedPreferences, key: String): Boolean {
             return preferences.getBoolean(key, defaultValue)
         }
 
@@ -157,13 +151,9 @@ sealed class AndroidPreference<T>(
         keyFlow: Flow<String?>,
         key: String,
         defaultValue: Set<String>,
-    ) : AndroidPreference<Set<String>>(preferences, keyFlow, key, defaultValue) {
-        override fun read(
-            preferences: SharedPreferences,
-            key: String,
-            defaultValue: Set<String>,
-        ): Set<String> {
-            return preferences.getStringSet(key, defaultValue) ?: defaultValue
+    ) : AndroidPreference<Set<String>>(preferences, keyFlow, key, { defaultValue }) {
+        override fun read(preferences: SharedPreferences, key: String): Set<String> {
+            return preferences.getStringSet(key, null) ?: defaultValue
         }
 
         override fun write(key: String, value: Set<String>): Editor.() -> Unit = {
@@ -178,8 +168,8 @@ sealed class AndroidPreference<T>(
         defaultValue: T,
         private val serializer: (T) -> String,
         private val deserializer: (String) -> T,
-    ) : AndroidPreference<T>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: T): T {
+    ) : AndroidPreference<T>(preferences, keyFlow, key, { defaultValue }) {
+        override fun read(preferences: SharedPreferences, key: String): T {
             return try {
                 preferences.getString(key, null)?.let(deserializer) ?: defaultValue
             } catch (e: Exception) {
@@ -199,8 +189,8 @@ sealed class AndroidPreference<T>(
         defaultValue: T,
         private val serializer: (T) -> Int,
         private val deserializer: (Int) -> T,
-    ) : AndroidPreference<T>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: T): T {
+    ) : AndroidPreference<T>(preferences, keyFlow, key, { defaultValue }) {
+        override fun read(preferences: SharedPreferences, key: String): T {
             return try {
                 if (preferences.contains(key)) preferences.getInt(key, 0).let(deserializer) else defaultValue
             } catch (e: Exception) {
@@ -220,8 +210,8 @@ sealed class AndroidPreference<T>(
         defaultValue: Set<T>,
         private val serializer: (T) -> String,
         private val deserializer: (String) -> T?,
-    ) : AndroidPreference<Set<T>>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: Set<T>): Set<T> {
+    ) : AndroidPreference<Set<T>>(preferences, keyFlow, key, { defaultValue }) {
+        override fun read(preferences: SharedPreferences, key: String): Set<T> {
             return try {
                 preferences.getStringSet(key, null)?.mapNotNull(deserializer)?.toSet() ?: defaultValue
             } catch (_: Exception) {

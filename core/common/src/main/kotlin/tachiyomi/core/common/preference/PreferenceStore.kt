@@ -4,6 +4,8 @@ interface PreferenceStore {
 
     fun getString(key: String, defaultValue: String = ""): Preference<String>
 
+    fun getString(key: String, defaultValue: () -> String): Preference<String> = getString(key, defaultValue())
+
     fun getLong(key: String, defaultValue: Long = 0): Preference<Long>
 
     fun getInt(key: String, defaultValue: Int = 0): Preference<Int>
