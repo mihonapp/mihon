@@ -16,11 +16,6 @@ class ReaderPreferences(
 
     val pageTransitions: Preference<Boolean> = preferenceStore.getBoolean("pref_enable_transitions_key", true)
 
-    val loadAheadOnlyOverWifi: Preference<Boolean> = preferenceStore.getBoolean(
-        "pref_reader_load_ahead_only_over_wifi",
-        true,
-    )
-
     val flashOnPageChange: Preference<Boolean> = preferenceStore.getBoolean("pref_reader_flash", false)
 
     val flashDurationMillis: Preference<Int> = preferenceStore.getInt("pref_reader_flash_duration", MILLI_CONVERSION)
@@ -88,23 +83,6 @@ class ReaderPreferences(
     val cropBordersWebtoon: Preference<Boolean> = preferenceStore.getBoolean("crop_borders_webtoon", false)
 
     val webtoonSidePadding: Preference<Int> = preferenceStore.getInt("webtoon_side_padding", WEBTOON_PADDING_MIN)
-
-    /**
-     * Side padding used by the long strip viewers while the screen is in landscape. A negative value means the
-     * portrait value in [webtoonSidePadding] is used.
-     */
-    val webtoonSidePaddingLandscape: Preference<Int> = preferenceStore.getInt(
-        "webtoon_side_padding_landscape",
-        WEBTOON_PADDING_FOLLOW_PORTRAIT,
-    )
-
-    /**
-     * Auto-scroll speed of the long strip viewers, in steps of [AUTO_SCROLL_DP_PER_STEP] dp per second.
-     */
-    val webtoonAutoScrollSpeed: Preference<Int> = preferenceStore.getInt(
-        "webtoon_auto_scroll_speed",
-        AUTO_SCROLL_SPEED_DEFAULT,
-    )
 
     val readerHideThreshold: Preference<ReaderHideThreshold> = preferenceStore.getEnum(
         "reader_hide_threshold",
@@ -234,13 +212,6 @@ class ReaderPreferences(
     companion object {
         const val WEBTOON_PADDING_MIN = 0
         const val WEBTOON_PADDING_MAX = 25
-        const val WEBTOON_PADDING_LANDSCAPE_MAX = 40
-        const val WEBTOON_PADDING_FOLLOW_PORTRAIT = -1
-
-        const val AUTO_SCROLL_SPEED_MIN = 1
-        const val AUTO_SCROLL_SPEED_MAX = 30
-        const val AUTO_SCROLL_SPEED_DEFAULT = 10
-        const val AUTO_SCROLL_DP_PER_STEP = 10f
 
         const val MILLI_CONVERSION = 100
 

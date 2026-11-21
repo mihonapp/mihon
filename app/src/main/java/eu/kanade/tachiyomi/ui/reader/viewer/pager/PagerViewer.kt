@@ -416,10 +416,6 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             KeyEvent.KEYCODE_DPAD_UP -> if (isUp) moveUp()
             KeyEvent.KEYCODE_PAGE_DOWN -> if (isUp) moveDown()
             KeyEvent.KEYCODE_PAGE_UP -> if (isUp) moveUp()
-            // Keyboard covers and Bluetooth keyboards: Space reads forward, Shift+Space goes back
-            KeyEvent.KEYCODE_SPACE -> if (isUp) {
-                if (event.isShiftPressed) moveToPrevious() else moveToNext()
-            }
             KeyEvent.KEYCODE_MENU -> if (isUp) activity.toggleMenu()
             else -> return false
         }

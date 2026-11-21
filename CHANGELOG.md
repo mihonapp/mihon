@@ -23,16 +23,12 @@ TachiyomiX 1.6 extensions, required by current extension repositories such as Ke
 chapter navigator from that release is left out in favour of this fork's vertical seekbar.
 
 ### Added
-- Auto-scroll for long strip reading modes, started from the reader's bottom bar or the A key, with an adjustable speed
-- Separate long strip side padding for landscape
-- "Load ahead only on Wi-Fi" reader setting
-- Space and Shift+Space keyboard navigation in all reading modes
 - Tokyo Night theme (from upstream [#3502](https://github.com/mihonapp/mihon/pull/3502))
 
 ### Improved
 - Online chapters load pages in parallel around the current page (from upstream [#2986](https://github.com/mihonapp/mihon/pull/2986))
 - Vertical seekbar fills exactly the space between the reader's bars and respects side insets
-- Long strip side padding and tap scrolling follow the window size, so they work in split screen and pop-up view
+- Long strip tap scrolling follows the window size, so it works in split screen and pop-up view
 - Backup file picker uses the modern document picker (from upstream [#3948](https://github.com/mihonapp/mihon/pull/3948))
 - Manga notes no longer have a length limit (from upstream [#3410](https://github.com/mihonapp/mihon/pull/3410))
 - Catppuccin and Nord theme tweaks (from upstream [#3436](https://github.com/mihonapp/mihon/pull/3436), [#3184](https://github.com/mihonapp/mihon/pull/3184))
@@ -42,7 +38,6 @@ chapter navigator from that release is left out in favour of this fork's vertica
 
 ### Fixed
 - Reader bars staying visible after using the page slider and then tapping to turn pages
-- Zoomed long strip pages could be panned into the side padding (from upstream [#4072](https://github.com/mihonapp/mihon/pull/4072))
 - Long strip leaving a gap after zooming in a resized window (from upstream)
 - Tap navigation staying off after a cancelled button press (from upstream [#3655](https://github.com/mihonapp/mihon/pull/3655))
 - Long strip taps landing after the reader was closed (from upstream)

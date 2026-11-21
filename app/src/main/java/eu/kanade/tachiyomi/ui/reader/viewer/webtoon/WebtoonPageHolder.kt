@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -103,8 +104,9 @@ class WebtoonPageHolder(
                 bottomMargin = 15.dpToPx
             }
 
-            marginEnd = viewer.recycler.sidePaddingPixels
-            marginStart = viewer.recycler.sidePaddingPixels
+            val margin = Resources.getSystem().displayMetrics.widthPixels * (viewer.config.sidePadding / 100f)
+            marginEnd = margin.toInt()
+            marginStart = margin.toInt()
         }
     }
 

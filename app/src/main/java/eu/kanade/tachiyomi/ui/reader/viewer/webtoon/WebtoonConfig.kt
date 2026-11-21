@@ -21,7 +21,6 @@ import uy.kohesive.injekt.api.get
  */
 class WebtoonConfig(
     scope: CoroutineScope,
-    private val isLandscape: Boolean = false,
     readerPreferences: ReaderPreferences = Injekt.get(),
 ) : ViewerConfig(readerPreferences, scope) {
 
@@ -35,21 +34,7 @@ class WebtoonConfig(
 
     var zoomPropertyChangedListener: ((Boolean) -> Unit)? = null
 
-    private var portraitSidePadding = 0
-    private var landscapeSidePadding = ReaderPreferences.WEBTOON_PADDING_FOLLOW_PORTRAIT
-
-    /**
-     * Side padding, in percent of the viewer width, for the current screen orientation.
-     */
-    val sidePadding: Int
-        get() = if (isLandscape && landscapeSidePadding >= 0) landscapeSidePadding else portraitSidePadding
-
-    var sidePaddingChangedListener: ((Int) -> Unit)? = null
-
-    /**
-     * Auto-scroll speed in dp per second.
-     */
-    var autoScrollSpeed = ReaderPreferences.AUTO_SCROLL_SPEED_DEFAULT * ReaderPreferences.AUTO_SCROLL_DP_PER_STEP
+    var sidePadding = 0
         private set
 
     var doubleTapZoom = true
@@ -64,13 +49,7 @@ class WebtoonConfig(
             .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
 
         readerPreferences.webtoonSidePadding
-            .register({ portraitSidePadding = it }, { sidePaddingChangedListener?.invoke(sidePadding) })
-
-        readerPreferences.webtoonSidePaddingLandscape
-            .register({ landscapeSidePadding = it }, { sidePaddingChangedListener?.invoke(sidePadding) })
-
-        readerPreferences.webtoonAutoScrollSpeed
-            .register({ autoScrollSpeed = it * ReaderPreferences.AUTO_SCROLL_DP_PER_STEP })
+            .register({ sidePadding = it }, { imagePropertyChangedListener?.invoke() })
 
         readerPreferences.navigationModeWebtoon
             .register({ navigationMode = it }, { updateNavigation(it) })

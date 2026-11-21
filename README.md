@@ -23,15 +23,8 @@ Based on Mihon v0.20.1, so it works with current extension stores (TachiyomiX 1.
 ### Reader
 - Vertical seekbar for vertical reading modes, on either side, optionally in landscape too. It fills exactly the
   space between the reader's top and bottom bars.
-- Auto-scroll for long strip modes: tap the play button in the reader's bottom bar (or press <kbd>A</kbd> on a
-  keyboard). It's frame-synced so it stays smooth at 120 Hz, holds while you touch the screen or open the menu,
-  keeps the screen awake, and stops at the end of the strip. Speed is in the reader settings.
-- Separate long strip side padding for landscape (up to 40%), so strips aren't blown up on wide screens.
-- Side padding follows the window size, so it's right in split screen and pop-up view.
+- Tapping to scroll a long strip moves by the window's height, so it's right in split screen and pop-up view.
 - Online chapters load several pages in parallel around the page you're reading, instead of one at a time.
-  Loading the whole chapter ahead happens only on Wi-Fi by default.
-- Keyboard cover / Bluetooth keyboard support: <kbd>Space</kbd> / <kbd>Shift</kbd>+<kbd>Space</kbd> to read forward
-  and back in every mode, on top of the arrow and page keys.
 
 ### Other
 - App updates come from this fork's releases, not upstream Mihon's.

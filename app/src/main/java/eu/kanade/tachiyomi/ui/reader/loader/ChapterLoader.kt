@@ -6,8 +6,6 @@ import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
-import eu.kanade.tachiyomi.util.system.activeNetworkState
 import mihon.core.archive.archiveReader
 import mihon.core.archive.epubReader
 import tachiyomi.core.common.i18n.stringResource
@@ -18,8 +16,6 @@ import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.LocalSource
 import tachiyomi.source.local.io.Format
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 /**
  * Loader used to retrieve the [PageLoader] for a given chapter.
@@ -30,7 +26,6 @@ class ChapterLoader(
     private val downloadProvider: DownloadProvider,
     private val manga: Manga,
     private val source: Source,
-    private val readerPreferences: ReaderPreferences = Injekt.get(),
 ) {
 
     /**
@@ -105,15 +100,9 @@ class ChapterLoader(
                     is Format.Epub -> EpubPageLoader(format.file.epubReader(context))
                 }
             }
-            source is HttpSource -> HttpPageLoader(chapter, source, ::canLoadAhead)
+            source is HttpSource -> HttpPageLoader(chapter, source)
             source is StubSource -> error(context.stringResource(MR.strings.source_not_installed, source.toString()))
             else -> error(context.stringResource(MR.strings.loader_not_implemented_error))
         }
     }
-
-    /**
-     * Whether online chapters may load past the pages near the one being read.
-     */
-    private fun canLoadAhead(): Boolean =
-        !readerPreferences.loadAheadOnlyOverWifi.get() || context.activeNetworkState().isWifi
 }

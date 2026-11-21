@@ -349,7 +349,6 @@ class ReaderActivity : BaseActivity() {
     }
 
     override fun onPause() {
-        (viewModel.state.value.viewer as? WebtoonViewer)?.stopAutoScroll()
         lifecycleScope.launchNonCancellable {
             viewModel.updateHistory()
         }
@@ -479,8 +478,6 @@ class ReaderActivity : BaseActivity() {
             leftHandedVerticalSeekbar -> NavBarType.VerticalLeft
             else -> NavBarType.VerticalRight
         }
-        val webtoonViewer = state.viewer as? WebtoonViewer
-        val autoScrolling = webtoonViewer?.isAutoScrolling?.collectAsState()?.value
 
         ReaderAppBars(
             visible = state.menuVisible,
@@ -526,8 +523,6 @@ class ReaderActivity : BaseActivity() {
             },
             onClickSettings = viewModel::openSettingsDialog,
             navBarType = navBarType,
-            autoScrolling = autoScrolling,
-            onClickAutoScroll = { webtoonViewer?.toggleAutoScroll() },
         )
     }
 

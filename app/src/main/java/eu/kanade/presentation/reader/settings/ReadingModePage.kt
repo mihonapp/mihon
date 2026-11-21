@@ -163,33 +163,6 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
         pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
     )
 
-    val webtoonSidePaddingLandscape by screenModel.preferences.webtoonSidePaddingLandscape.collectAsState()
-    SliderItem(
-        value = webtoonSidePaddingLandscape,
-        valueRange = ReaderPreferences.let { it.WEBTOON_PADDING_FOLLOW_PORTRAIT..it.WEBTOON_PADDING_LANDSCAPE_MAX },
-        label = stringResource(MR.strings.pref_webtoon_side_padding_landscape),
-        valueString = if (webtoonSidePaddingLandscape < 0) {
-            stringResource(MR.strings.pref_webtoon_side_padding_landscape_follow)
-        } else {
-            numberFormat.format(webtoonSidePaddingLandscape / 100f)
-        },
-        onChange = {
-            screenModel.preferences.webtoonSidePaddingLandscape.set(it)
-        },
-        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-    )
-
-    val autoScrollSpeed by screenModel.preferences.webtoonAutoScrollSpeed.collectAsState()
-    SliderItem(
-        value = autoScrollSpeed,
-        valueRange = ReaderPreferences.let { it.AUTO_SCROLL_SPEED_MIN..it.AUTO_SCROLL_SPEED_MAX },
-        label = stringResource(MR.strings.pref_webtoon_auto_scroll_speed),
-        onChange = {
-            screenModel.preferences.webtoonAutoScrollSpeed.set(it)
-        },
-        pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-    )
-
     CheckboxItem(
         label = stringResource(MR.strings.pref_crop_borders),
         pref = screenModel.preferences.cropBordersWebtoon,
