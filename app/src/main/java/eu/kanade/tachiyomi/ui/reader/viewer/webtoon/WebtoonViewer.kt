@@ -59,6 +59,13 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     private val scrollDistance = activity.resources.displayMetrics.heightPixels * 3 / 4
 
     /**
+     * Distance to scroll for taps and keys: three quarters of the viewer itself, so it stays right in split screen
+     * and pop-up windows that are shorter than the display.
+     */
+    private val tapScrollDistance: Int
+        get() = recycler.originalHeight.takeIf { it > 0 }?.let { it * 3 / 4 } ?: scrollDistance
+
+    /**
      * Layout manager of the recycler view.
      */
     private val layoutManager = WebtoonLayoutManager(activity, scrollDistance)
@@ -334,24 +341,24 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     }
 
     /**
-     * Scrolls up by [scrollDistance].
+     * Scrolls up by [tapScrollDistance].
      */
     private fun scrollUp() {
         if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, -scrollDistance)
+            recycler.smoothScrollBy(0, -tapScrollDistance)
         } else {
-            recycler.scrollBy(0, -scrollDistance)
+            recycler.scrollBy(0, -tapScrollDistance)
         }
     }
 
     /**
-     * Scrolls down by [scrollDistance].
+     * Scrolls down by [tapScrollDistance].
      */
     private fun scrollDown() {
         if (config.usePageTransitions) {
-            recycler.smoothScrollBy(0, scrollDistance)
+            recycler.smoothScrollBy(0, tapScrollDistance)
         } else {
-            recycler.scrollBy(0, scrollDistance)
+            recycler.scrollBy(0, tapScrollDistance)
         }
     }
 
