@@ -2,6 +2,8 @@
 .gradle
 .kotlin
 build
+# IDE (VS Code / Eclipse) compiler output
+bin/
 
 # IDE files
 *.iml
