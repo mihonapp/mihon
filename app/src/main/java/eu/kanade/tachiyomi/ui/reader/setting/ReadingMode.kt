@@ -4,6 +4,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
+import eu.kanade.tachiyomi.ui.reader.viewer.compose.pager.ComposeL2RPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.compose.pager.ComposeR2LPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.compose.pager.ComposeVerticalPagerViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.compose.webtoon.ComposeWebtoonViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
@@ -84,6 +88,16 @@ enum class ReadingMode(
                     VERTICAL -> WebGpuViewer(activity, isReversed = false, isVertical = true)
                     WEBTOON -> WebGpuViewerContinuous(activity, useGap = false)
                     CONTINUOUS_VERTICAL -> WebGpuViewerContinuous(activity, useGap = true)
+                    DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
+                }
+            }
+            if (activity.appGraph.readerPreferences.composeViewer.get()) {
+                return when (fromPreference(preference)) {
+                    LEFT_TO_RIGHT -> ComposeL2RPagerViewer(activity)
+                    RIGHT_TO_LEFT -> ComposeR2LPagerViewer(activity)
+                    VERTICAL -> ComposeVerticalPagerViewer(activity)
+                    WEBTOON -> ComposeWebtoonViewer(activity)
+                    CONTINUOUS_VERTICAL -> ComposeWebtoonViewer(activity, isContinuous = false)
                     DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
                 }
             }
