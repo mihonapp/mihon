@@ -47,7 +47,31 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private val listener = GestureListener()
     private val detector = Detector()
 
+    /**
+     * Side padding of the pages, in percent of the viewer width.
+     */
+    var sidePaddingPercent = 0
+        set(value) {
+            field = value
+            x = getPositionX(x)
+        }
+
+    /**
+     * Side padding of the pages in pixels. Based on the viewer's own width rather than the display's so it stays
+     * right in split screen and pop-up windows.
+     */
+    val sidePaddingPixels: Int
+        get() {
+            val viewerWidth = if (width > 0) width else resources.displayMetrics.widthPixels
+            return (viewerWidth * (sidePaddingPercent / 100f)).toInt()
+        }
+
     var doubleTapZoom = true
+
+    /**
+     * Called with true when a finger touches the list and false when the last one leaves it.
+     */
+    var touchStateListener: ((Boolean) -> Unit)? = null
 
     var tapListener: ((MotionEvent) -> Unit)? = null
     var longTapListener: ((MotionEvent) -> Boolean)? = null
@@ -63,6 +87,15 @@ class WebtoonRecyclerView @JvmOverloads constructor(
             originalHeight = MeasureSpec.getSize(heightSpec)
         }
         super.onMeasure(widthSpec, heightSpec)
+        x = getPositionX(x)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        when (ev.actionMasked) {
+            MotionEvent.ACTION_DOWN -> touchStateListener?.invoke(true)
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> touchStateListener?.invoke(false)
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     override fun onTouchEvent(e: MotionEvent): Boolean {
@@ -99,7 +132,8 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         if (currentScale < 1) {
             return 0f
         }
-        val maxPositionX = halfWidth * (currentScale - 1)
+        // Pages are inset by the side padding, so only the pages themselves may be panned into view
+        val maxPositionX = ((halfWidth - sidePaddingPixels) * currentScale - halfWidth).coerceAtLeast(0f)
         return positionX.coerceIn(-maxPositionX, maxPositionX)
     }
 
@@ -122,7 +156,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         isZooming = true
         val animatorSet = AnimatorSet()
         val translationXAnimator = ValueAnimator.ofFloat(fromX, toX)
-        translationXAnimator.addUpdateListener { animation -> x = animation.animatedValue as Float }
+        translationXAnimator.addUpdateListener { animation -> x = getPositionX(animation.animatedValue as Float) }
 
         val translationYAnimator = ValueAnimator.ofFloat(fromY, toY)
         translationYAnimator.addUpdateListener { animation -> y = animation.animatedValue as Float }
@@ -182,6 +216,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private fun setScaleRate(rate: Float) {
         scaleX = rate
         scaleY = rate
+        x = getPositionX(x)
     }
 
     fun onScale(scaleFactor: Float) {

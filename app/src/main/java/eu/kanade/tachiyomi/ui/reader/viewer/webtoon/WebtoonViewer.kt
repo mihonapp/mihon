@@ -1,11 +1,13 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
+import android.content.res.Configuration
 import android.graphics.PointF
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -21,6 +23,10 @@ import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -60,7 +66,10 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     /**
      * Configuration used by this viewer, like allow taps, or crop image borders.
      */
-    val config = WebtoonConfig(scope)
+    val config = WebtoonConfig(
+        scope = scope,
+        isLandscape = activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE,
+    )
 
     /**
      * Adapter of the recycler view.
@@ -72,13 +81,26 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     private var currentPage: Any? = null
 
-    private val threshold: Int =
-        Injekt.get<ReaderPreferences>()
-            .readerHideThreshold
-            .get()
-            .threshold
+    private val readerPreferences = Injekt.get<ReaderPreferences>()
+
+    private val threshold: Int = readerPreferences.readerHideThreshold.get().threshold
+
+    /**
+     * Scrolls the strip on its own while enabled, holding still while the menu is open.
+     */
+    private val autoScroller = WebtoonAutoScroller(
+        recycler = recycler,
+        speedProvider = { config.autoScrollSpeed },
+        shouldHold = { activity.viewModel.state.value.menuVisible },
+    )
+
+    /**
+     * Whether auto-scroll is on.
+     */
+    val isAutoScrolling: StateFlow<Boolean> = autoScroller.isRunning
 
     init {
+        recycler.sidePaddingPercent = config.sidePadding
         recycler.setItemViewCacheSize(RECYCLER_VIEW_CACHE_SIZE)
         recycler.isVisible = false // Don't let the recycler layout yet
         recycler.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
@@ -145,6 +167,23 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             refreshAdapter()
         }
 
+        config.sidePaddingChangedListener = {
+            recycler.sidePaddingPercent = it
+            refreshAdapter()
+        }
+
+        // Keep the screen awake while the strip scrolls on its own
+        autoScroller.isRunning
+            .drop(1)
+            .onEach { running ->
+                if (running) {
+                    activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                } else if (!readerPreferences.keepScreenOn.get()) {
+                    activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                }
+            }
+            .launchIn(scope)
+
         config.themeChangedListener = {
             ActivityCompat.recreate(activity)
         }
@@ -198,7 +237,22 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      */
     override fun destroy() {
         super.destroy()
+        autoScroller.stop()
         scope.cancel()
+    }
+
+    /**
+     * Turns auto-scroll on or off. Turning it on hides the menu so the strip starts moving right away.
+     */
+    fun toggleAutoScroll() {
+        autoScroller.toggle()
+        if (autoScroller.isRunning.value) {
+            activity.hideMenu()
+        }
+    }
+
+    fun stopAutoScroll() {
+        autoScroller.stop()
     }
 
     /**
@@ -324,6 +378,12 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                 }
             }
             KeyEvent.KEYCODE_MENU -> if (isUp) activity.toggleMenu()
+
+            // Keyboard covers and Bluetooth keyboards
+            KeyEvent.KEYCODE_SPACE -> if (isUp) {
+                if (event.isShiftPressed) scrollUp() else scrollDown()
+            }
+            KeyEvent.KEYCODE_A -> if (isUp) toggleAutoScroll()
 
             KeyEvent.KEYCODE_DPAD_LEFT,
             KeyEvent.KEYCODE_DPAD_UP,

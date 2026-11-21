@@ -3,6 +3,8 @@ package eu.kanade.presentation.reader.appbars
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PauseCircle
+import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +29,8 @@ fun ReaderBottomBar(
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
     modifier: Modifier = Modifier,
+    autoScrolling: Boolean? = null,
+    onClickAutoScroll: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -53,6 +57,18 @@ fun ReaderBottomBar(
                 painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
                 contentDescription = stringResource(MR.strings.pref_crop_borders),
             )
+        }
+
+        // Only offered by the long strip viewers
+        if (autoScrolling != null) {
+            IconButton(onClick = onClickAutoScroll) {
+                Icon(
+                    imageVector = if (autoScrolling) Icons.Outlined.PauseCircle else Icons.Outlined.PlayCircle,
+                    contentDescription = stringResource(
+                        if (autoScrolling) MR.strings.action_stop_auto_scroll else MR.strings.action_start_auto_scroll,
+                    ),
+                )
+            }
         }
 
         IconButton(onClick = onClickSettings) {

@@ -36,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.core.graphics.Insets
@@ -348,6 +349,7 @@ class ReaderActivity : BaseActivity() {
     }
 
     override fun onPause() {
+        (viewModel.state.value.viewer as? WebtoonViewer)?.stopAutoScroll()
         lifecycleScope.launchNonCancellable {
             viewModel.updateHistory()
         }
@@ -464,7 +466,7 @@ class ReaderActivity : BaseActivity() {
         val forceHorizontalSeekbar by readerPreferences.forceHorizontalSeekbar.collectAsState()
         val landscapeVerticalSeekbar by readerPreferences.landscapeVerticalSeekbar.collectAsState()
         val leftHandedVerticalSeekbar by readerPreferences.leftVerticalSeekbar.collectAsState()
-        val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+        val configuration = LocalConfiguration.current
         val showVerticalSeekbarInPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
         val showVerticalSeekbarInLandscape =
             configuration.orientation == Configuration.ORIENTATION_LANDSCAPE && landscapeVerticalSeekbar
@@ -477,6 +479,8 @@ class ReaderActivity : BaseActivity() {
             leftHandedVerticalSeekbar -> NavBarType.VerticalLeft
             else -> NavBarType.VerticalRight
         }
+        val webtoonViewer = state.viewer as? WebtoonViewer
+        val autoScrolling = webtoonViewer?.isAutoScrolling?.collectAsState()?.value
 
         ReaderAppBars(
             visible = state.menuVisible,
@@ -502,6 +506,9 @@ class ReaderActivity : BaseActivity() {
                 isScrollingThroughPages = true
                 moveToPageIndex(it)
             },
+            onPageIndexChangeFinished = {
+                isScrollingThroughPages = false
+            },
 
             readingMode = ReadingMode.fromPreference(
                 viewModel.getMangaReadingMode(resolveDefault = false),
@@ -519,6 +526,8 @@ class ReaderActivity : BaseActivity() {
             },
             onClickSettings = viewModel::openSettingsDialog,
             navBarType = navBarType,
+            autoScrolling = autoScrolling,
+            onClickAutoScroll = { webtoonViewer?.toggleAutoScroll() },
         )
     }
 

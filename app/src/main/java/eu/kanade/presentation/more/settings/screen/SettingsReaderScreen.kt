@@ -332,6 +332,10 @@ object SettingsReaderScreen : SearchableSettings {
         val dualPageSplit by dualPageSplitPref.collectAsState()
         val rotateToFit by rotateToFitPref.collectAsState()
         val webtoonSidePadding by webtoonSidePaddingPref.collectAsState()
+        val webtoonSidePaddingLandscapePref = readerPreferences.webtoonSidePaddingLandscape
+        val webtoonSidePaddingLandscape by webtoonSidePaddingLandscapePref.collectAsState()
+        val autoScrollSpeedPref = readerPreferences.webtoonAutoScrollSpeed
+        val autoScrollSpeed by autoScrollSpeedPref.collectAsState()
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.webtoon_viewer),
@@ -365,6 +369,27 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_webtoon_side_padding),
                     valueString = numberFormat.format(webtoonSidePadding / 100f),
                     onValueChanged = { webtoonSidePaddingPref.set(it) },
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = webtoonSidePaddingLandscape,
+                    valueRange = ReaderPreferences.let {
+                        it.WEBTOON_PADDING_FOLLOW_PORTRAIT..it.WEBTOON_PADDING_LANDSCAPE_MAX
+                    },
+                    title = stringResource(MR.strings.pref_webtoon_side_padding_landscape),
+                    valueString = if (webtoonSidePaddingLandscape < 0) {
+                        stringResource(MR.strings.pref_webtoon_side_padding_landscape_follow)
+                    } else {
+                        numberFormat.format(webtoonSidePaddingLandscape / 100f)
+                    },
+                    onValueChanged = { webtoonSidePaddingLandscapePref.set(it) },
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = autoScrollSpeed,
+                    valueRange = ReaderPreferences.let { it.AUTO_SCROLL_SPEED_MIN..it.AUTO_SCROLL_SPEED_MAX },
+                    title = stringResource(MR.strings.pref_webtoon_auto_scroll_speed),
+                    subtitle = stringResource(MR.strings.pref_webtoon_auto_scroll_speed_summary),
+                    valueString = autoScrollSpeed.toString(),
+                    onValueChanged = { autoScrollSpeedPref.set(it) },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     preference = readerPreferences.readerHideThreshold,

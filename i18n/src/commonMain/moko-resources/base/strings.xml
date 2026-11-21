@@ -102,6 +102,8 @@
     <string name="action_pause">Pause</string>
     <string name="action_previous_chapter">Previous chapter</string>
     <string name="action_next_chapter">Next chapter</string>
+    <string name="action_start_auto_scroll">Start auto-scroll</string>
+    <string name="action_stop_auto_scroll">Stop auto-scroll</string>
     <string name="action_retry">Retry</string>
     <string name="action_remove">Remove</string>
     <string name="action_remove_everything">Remove everything</string>
@@ -497,6 +499,10 @@
     <string name="pref_category_reading_mode">Reading mode</string>
     <string name="pref_category_reading">Reading</string>
     <string name="pref_webtoon_side_padding">Side padding</string>
+    <string name="pref_webtoon_side_padding_landscape">Side padding in landscape</string>
+    <string name="pref_webtoon_side_padding_landscape_follow">Same as portrait</string>
+    <string name="pref_webtoon_auto_scroll_speed">Auto-scroll speed</string>
+    <string name="pref_webtoon_auto_scroll_speed_summary">Start or stop auto-scroll from the reader menu, or press A on a keyboard</string>
     <string name="pref_hide_threshold">Sensitivity for hiding menu on scroll</string>
     <string name="pref_highest">Highest</string>
     <string name="pref_high">High</string>
