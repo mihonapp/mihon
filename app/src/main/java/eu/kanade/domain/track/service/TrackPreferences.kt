@@ -58,4 +58,6 @@ class TrackPreferences(
         "pref_auto_update_manga_on_mark_read",
         AutoTrackState.ALWAYS,
     )
+
+    val twoWaySync: Preference<Boolean> = preferenceStore.getBoolean("pref_two_way_sync", true)
 }
