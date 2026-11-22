@@ -127,7 +127,7 @@ class LibraryPreferences(
 
     // region Category
 
-    val defaultCategory: Preference<Int> = preferenceStore.getInt(DEFAULT_CATEGORY_PREF_KEY, -1)
+    val defaultCategory: Preference<Int> = preferenceStore.getInt(DEFAULT_CATEGORY_PREF_KEY, DEFAULT_CATEGORY_ASK)
 
     val lastUsedCategory: Preference<Int> = preferenceStore.getInt(Preference.appStateKey("last_used_category"), 0)
 
@@ -247,6 +247,7 @@ class LibraryPreferences(
         const val MARK_DUPLICATE_CHAPTER_READ_EXISTING = "existing"
 
         const val DEFAULT_CATEGORY_PREF_KEY = "default_category"
+        const val DEFAULT_CATEGORY_ASK = -1
         private const val LIBRARY_UPDATE_CATEGORIES_PREF_KEY = "library_update_categories"
         private const val LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY = "library_update_categories_exclude"
         val categoryPreferenceKeys = setOf(
