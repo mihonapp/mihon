@@ -41,6 +41,23 @@ internal fun LanguageBadge(
     } else if (sourceLanguage.isNotEmpty()) {
         Badge(
             text = sourceLanguage.uppercase(),
+            color = MaterialTheme.colorScheme.secondary,
+            textColor = MaterialTheme.colorScheme.onSecondary,
+        )
+    }
+}
+
+@Composable
+internal fun SourceNameBadge(sourceName: String) {
+    if (sourceName.isNotEmpty()) {
+        val displayName = if (sourceName.length > 14) {
+            "${sourceName.take(11)}..."
+        } else {
+            sourceName
+        }
+
+        Badge(
+            text = displayName,
             color = MaterialTheme.colorScheme.tertiary,
             textColor = MaterialTheme.colorScheme.onTertiary,
         )
