@@ -24,6 +24,7 @@ import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.system.getBitmapOrNull
 import eu.kanade.tachiyomi.util.system.toShareIntent
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +40,7 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.source.local.image.LocalCoverManager
+import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
 @AssistedInject
@@ -137,13 +139,17 @@ class MangaCoverViewModel(
     fun editCover(context: Context, data: Uri) {
         val manga = state.value ?: return
         viewModelScope.launch(Dispatchers.IO) {
-            context.contentResolver.openInputStream(data)?.use {
-                try {
+            try {
+                val input = context.contentResolver.openInputStream(data)
+                    ?: throw IOException("Could not open the selected cover")
+                input.use {
                     manga.editCover(coverManager, it, updateManga, coverCache)
-                    notifyCoverUpdated(context)
-                } catch (e: Exception) {
-                    notifyFailedCoverUpdate(context, e)
                 }
+                notifyCoverUpdated(context)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                notifyFailedCoverUpdate(context, e)
             }
         }
     }
