@@ -65,8 +65,13 @@ class PreferenceRestorer(
                     is IntPreferenceValue -> {
                         if (prefs[key] is Int?) {
                             val newValue = if (key == LibraryPreferences.DEFAULT_CATEGORY_PREF_KEY) {
-                                backupCategoriesById[value.value.toString()]
-                                    ?.let { categoriesByName[it.name]?.id?.toInt() }
+                                when (value.value) {
+                                    LibraryPreferences.DEFAULT_CATEGORY_ASK,
+                                    Category.UNCATEGORIZED_ID.toInt(),
+                                    -> value.value
+                                    else -> backupCategoriesById[value.value.toString()]
+                                        ?.let { categoriesByName[it.name]?.id?.toInt() }
+                                }
                             } else {
                                 value.value
                             }
