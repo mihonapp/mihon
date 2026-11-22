@@ -9,10 +9,10 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import eu.kanade.core.util.fastCountNot
 import eu.kanade.presentation.more.stats.StatsScreenState
 import eu.kanade.presentation.more.stats.data.StatsData
 import eu.kanade.tachiyomi.data.download.DownloadManager
+import eu.kanade.tachiyomi.data.library.LibraryUpdateFilter
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.source.model.SManga
 import kotlinx.coroutines.Dispatchers
@@ -22,10 +22,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.domain.history.interactor.GetTotalReadDuration
 import tachiyomi.domain.library.model.LibraryManga
-import tachiyomi.domain.library.service.LibraryPreferences
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_HAS_UNREAD
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_COMPLETED
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_READ
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.track.interactor.GetTracksPerManga
 import tachiyomi.domain.track.model.Track
@@ -39,7 +35,7 @@ class StatsViewModel(
     private val getLibraryManga: GetLibraryManga,
     private val getTotalReadDuration: GetTotalReadDuration,
     private val getTracksPerManga: GetTracksPerManga,
-    private val preferences: LibraryPreferences,
+    private val libraryUpdateFilter: LibraryUpdateFilter,
     private val trackerManager: TrackerManager,
 ) : ViewModel() {
 
@@ -68,7 +64,7 @@ class StatsViewModel(
             )
 
             val titlesStatData = StatsData.Titles(
-                globalUpdateItemCount = getGlobalUpdateItemCount(libraryManga),
+                globalUpdateItemCount = libraryUpdateFilter.filter(libraryManga).size,
                 startedMangaCount = distinctLibraryManga.count { it.hasStarted },
                 localMangaCount = distinctLibraryManga.count { it.manga.isLocal() },
             )
@@ -94,23 +90,6 @@ class StatsViewModel(
                 )
             }
         }
-    }
-
-    private fun getGlobalUpdateItemCount(libraryManga: List<LibraryManga>): Int {
-        val includedCategories = preferences.updateCategories.get().map { it.toLong() }
-        val excludedCategories = preferences.updateCategoriesExclude.get().map { it.toLong() }
-        val updateRestrictions = preferences.autoUpdateMangaRestrictions.get()
-
-        return libraryManga.filter {
-            val included = includedCategories.isEmpty() || it.categories.intersect(includedCategories).isNotEmpty()
-            val excluded = it.categories.intersect(excludedCategories).isNotEmpty()
-            included && !excluded
-        }
-            .fastCountNot {
-                (MANGA_NON_COMPLETED in updateRestrictions && it.manga.status.toInt() == SManga.COMPLETED) ||
-                    (MANGA_HAS_UNREAD in updateRestrictions && it.unreadCount != 0L) ||
-                    (MANGA_NON_READ in updateRestrictions && it.totalChapters > 0 && !it.hasStarted)
-            }
     }
 
     private suspend fun getMangaTrackMap(libraryManga: List<LibraryManga>): Map<Long, List<Track>> {
