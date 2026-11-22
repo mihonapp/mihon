@@ -216,23 +216,27 @@ class MigrationListViewModel(
     }
 
     private suspend fun updateMigrationProgress() {
-        state.update { state ->
-            state.copy(
-                finishedCount = items.count { it.searchResult.value != SearchResult.Searching },
-                migrationComplete = migrationComplete(),
-            )
-        }
+        refreshMigrationProgress()
         if (items.isEmpty()) {
             navigateBack()
         }
     }
 
-    private fun migrationComplete() = items.all { it.searchResult.value != SearchResult.Searching } &&
-        items.any { it.searchResult.value is SearchResult.Success }
+    private fun refreshMigrationProgress() {
+        state.update { state ->
+            val results = state.items.map { it.searchResult.value }
+            val finishedCount = results.count { it != SearchResult.Searching }
+            state.copy(
+                finishedCount = finishedCount,
+                migrationComplete = finishedCount == results.size && results.any { it is SearchResult.Success },
+            )
+        }
+    }
 
     fun useMangaForMigration(current: Long, target: Long, onMissingChapters: () -> Unit) {
         val migratingManga = items.find { it.manga.id == current } ?: return
         migratingManga.searchResult.value = SearchResult.Searching
+        refreshMigrationProgress()
         viewModelScope.launch(Dispatchers.IO) {
             val result = migratingManga.migrationScope.async {
                 val manga = getManga.await(target) ?: return@async null
@@ -245,14 +249,11 @@ class MigrationListViewModel(
             }
                 .await()
 
+            migratingManga.searchResult.value = result?.toSuccessSearchResult() ?: SearchResult.NotFound
+            refreshMigrationProgress()
             if (result == null) {
-                migratingManga.searchResult.value = SearchResult.NotFound
                 withContext(Dispatchers.Main) { onMissingChapters() }
-                return@launch
             }
-
-            migratingManga.searchResult.value = result.toSuccessSearchResult()
-            updateMigrationProgress()
         }
     }
 
