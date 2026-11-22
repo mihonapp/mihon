@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil3.asDrawable
 import coil3.imageLoader
+import coil3.request.ErrorResult
 import coil3.request.ImageRequest
 import coil3.size.Size
 import dev.zacsweers.metro.AppScope
@@ -24,6 +25,7 @@ import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.system.getBitmapOrNull
 import eu.kanade.tachiyomi.util.system.toShareIntent
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -73,6 +75,8 @@ class MangaCoverViewModel(
                     context.stringResource(MR.strings.cover_saved),
                     withDismissAction = true,
                 )
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Throwable) {
                 logcat(LogPriority.ERROR, e)
                 snackbarHostState.showSnackbar(
@@ -86,10 +90,12 @@ class MangaCoverViewModel(
     fun shareCover(context: Context) {
         viewModelScope.launch {
             try {
-                val uri = saveCoverInternal(context, temp = true) ?: return@launch
+                val uri = saveCoverInternal(context, temp = true)
                 withContext(Dispatchers.Main) {
                     context.startActivity(uri.toShareIntent(context))
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Throwable) {
                 logcat(LogPriority.ERROR, e)
                 snackbarHostState.showSnackbar(
@@ -106,18 +112,21 @@ class MangaCoverViewModel(
      * @param context The context for building and executing the ImageRequest
      * @return the uri to saved file
      */
-    private suspend fun saveCoverInternal(context: Context, temp: Boolean): Uri? {
-        val manga = state.value ?: return null
+    private suspend fun saveCoverInternal(context: Context, temp: Boolean): Uri {
+        val manga = checkNotNull(state.value) { "Manga cover is not available" }
         val req = ImageRequest.Builder(context)
             .data(manga)
             .size(Size.ORIGINAL)
             .build()
 
         return withContext(Dispatchers.IO) {
-            val result = context.imageLoader.execute(req).image?.asDrawable(context.resources)
+            val result = context.imageLoader.execute(req)
+            if (result is ErrorResult) throw result.throwable
 
             // TODO: Handle animated cover
-            val bitmap = result?.getBitmapOrNull() ?: return@withContext null
+            val bitmap = checkNotNull(result.image?.asDrawable(context.resources)?.getBitmapOrNull()) {
+                "Cover could not be converted to a bitmap"
+            }
             imageSaver.save(
                 Image.Cover(
                     bitmap = bitmap,
