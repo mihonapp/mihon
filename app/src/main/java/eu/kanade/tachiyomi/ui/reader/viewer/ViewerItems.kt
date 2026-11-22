@@ -24,7 +24,7 @@ fun viewerItems(
     // Add previous chapter pages and transition
     chapters.prevChapter?.pages?.let(items::addAll)
 
-    // Skip transition page if the chapter is loaded & current page is not a transition page
+    // Show transitions for chapter gaps, unloaded adjacent chapters, or when explicitly forced.
     if (prevHasMissingChapters || forceTransition || chapters.prevChapter?.state !is ReaderChapter.State.Loaded) {
         items.add(ChapterTransition.Prev(chapters.currChapter, chapters.prevChapter))
     }
