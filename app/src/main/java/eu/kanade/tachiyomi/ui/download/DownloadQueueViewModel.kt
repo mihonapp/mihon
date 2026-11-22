@@ -99,7 +99,7 @@ class DownloadQueueViewModel(
     fun <R : Comparable<R>> reorderQueue(selector: (Download) -> R?, reverse: Boolean = false) {
         reorder(
             state.value.flatMap { section ->
-                section.downloads.sortedBy(selector).let { if (reverse) it.reversed() else it }
+                if (reverse) section.downloads.sortedByDescending(selector) else section.downloads.sortedBy(selector)
             },
         )
     }
