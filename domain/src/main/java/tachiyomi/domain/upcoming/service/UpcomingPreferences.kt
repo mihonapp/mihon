@@ -14,12 +14,17 @@ class UpcomingPreferences(
 ) {
 
     val filterIncludedCategories: Preference<List<Long>> = preferenceStore.getLongArray(
-        "pref_filter_upcoming_included_categories",
+        FILTER_INCLUDED_CATEGORIES_KEY,
         emptyList(),
     )
 
     val filterExcludedCategories: Preference<List<Long>> = preferenceStore.getLongArray(
-        "pref_filter_upcoming_excluded_categories",
+        FILTER_EXCLUDED_CATEGORIES_KEY,
         emptyList(),
     )
+
+    companion object {
+        const val FILTER_INCLUDED_CATEGORIES_KEY = "pref_filter_upcoming_included_categories"
+        const val FILTER_EXCLUDED_CATEGORIES_KEY = "pref_filter_upcoming_excluded_categories"
+    }
 }
