@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.GlobalSearchScreen
@@ -26,26 +26,22 @@ fun GlobalSearchScreen(
             create(initialQuery = searchQuery, initialExtensionFilter = extensionFilter)
         }
     val state by viewModel.state.collectAsState()
-    var showSingleLoadingScreen by remember {
-        mutableStateOf(searchQuery.isNotEmpty() && !extensionFilter.isNullOrEmpty() && state.total == 1)
+    var autoOpenPending by rememberSaveable(searchQuery, extensionFilter) {
+        mutableStateOf(searchQuery.isNotBlank() && !extensionFilter.isNullOrBlank())
     }
 
-    if (showSingleLoadingScreen) {
+    if (autoOpenPending) {
         LoadingScreen()
 
-        LaunchedEffect(state.items) {
-            when (val result = state.items.values.singleOrNull()) {
-                SearchItemResult.Loading -> return@LaunchedEffect
-                is SearchItemResult.Success -> {
-                    val manga = result.result.singleOrNull()
-                    if (manga != null) {
-                        navigator.replace(MangaRoute(manga.id, true))
-                    } else {
-                        // Backoff to result screen
-                        showSingleLoadingScreen = false
-                    }
-                }
-                else -> showSingleLoadingScreen = false
+        val result = state.items.values.singleOrNull()
+        LaunchedEffect(state.hasResolvedSources, result) {
+            if (!state.hasResolvedSources || result == SearchItemResult.Loading) return@LaunchedEffect
+
+            val manga = (result as? SearchItemResult.Success)?.result?.singleOrNull()
+            if (manga != null) {
+                navigator.replace(MangaRoute(manga.id, true))
+            } else {
+                autoOpenPending = false
             }
         }
     } else {
