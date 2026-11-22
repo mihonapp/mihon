@@ -135,9 +135,6 @@ fun DownloadQueueList(
         onReorder(sectionsState.flatMap { it.downloads })
     }
 
-    val firstDownload = sectionsState.firstOrNull()?.downloads?.firstOrNull()
-    val lastDownload = sectionsState.lastOrNull()?.downloads?.lastOrNull()
-
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -157,6 +154,8 @@ fun DownloadQueueList(
                 }
             }
             if (!isSectionDragging) {
+                val firstDownload = section.downloads.firstOrNull()
+                val lastDownload = section.downloads.lastOrNull()
                 items(
                     items = section.downloads,
                     key = { it.key },
