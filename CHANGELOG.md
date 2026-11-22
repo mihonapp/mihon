@@ -175,6 +175,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed default category and manga sometimes not getting their category set when restoring a backup ([@Secozzi](https://github.com/Secozzi)) ([#3891](https://github.com/mihonapp/mihon/pull/3891))
 - Fixed text between dollar signs disappearing from descriptions and notes ([@renovate](https://github.com/apps/renovate)) ([#3806](https://github.com/mihonapp/mihon/pull/3806))
 - Fixed AniList requests failing with rate limit errors by lowering the request rate to AniList's current limit ([@MajorTanya](https://github.com/MajorTanya)) ([#3942](https://github.com/mihonapp/mihon/pull/3942))
+- Fixed permission checkboxes not being checked during onboarding if using custom theme ([@Secozzi](https://github.com/Secozzi)) ([#3984](https://github.com/mihonapp/mihon/pull/3984))
 - Fixed library search when clicking source name in manga info screen ([@choppeh](https://github.com/choppeh)) ([#4002](https://github.com/mihonapp/mihon/pull/4002))
 - Fixed entries being incorrectly marked as duplicates when tracked with some trackers ([@Secozzi](https://github.com/Secozzi)) ([#4008](https://github.com/mihonapp/mihon/pull/4008))
 - Fixed the default chapter settings not being applied to entries added to the library from a source by long pressing them ([@AntsyLich](https://github.com/AntsyLich)) ([`f8fff31`](https://github.com/mihonapp/mihon/commit/f8fff31))

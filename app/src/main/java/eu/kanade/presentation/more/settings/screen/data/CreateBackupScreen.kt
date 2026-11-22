@@ -13,8 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
@@ -23,7 +21,6 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.WarningBanner
-import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateWorker
 import eu.kanade.tachiyomi.data.backup.create.BackupCreator
 import eu.kanade.tachiyomi.data.backup.create.BackupOptions
@@ -33,6 +30,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import mihon.core.navigation.LocalNavigator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.LazyColumnWithAction
@@ -40,94 +38,91 @@ import tachiyomi.presentation.core.components.SectionCard
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 
-class CreateBackupScreen : Screen() {
+@Composable
+fun CreateBackupScreen() {
+    val context = LocalContext.current
+    val navigator = LocalNavigator.current
+    val viewModel = metroViewModel<CreateBackupViewModel>()
+    val state by viewModel.state.collectAsState()
+    val scope = rememberCoroutineScope()
 
-    @Composable
-    override fun Content() {
-        val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
-        val viewModel = metroViewModel<CreateBackupViewModel>()
-        val state by viewModel.state.collectAsState()
-        val scope = rememberCoroutineScope()
-
-        val chooseBackupDir = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.CreateDocument("application/*"),
-        ) {
-            if (it != null) {
-                context.contentResolver.takePersistableUriPermission(
-                    it,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
-                )
-                viewModel.createBackup(context, it)
-                navigator.pop()
-            }
+    val chooseBackupDir = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/*"),
+    ) {
+        if (it != null) {
+            context.contentResolver.takePersistableUriPermission(
+                it,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
+            )
+            viewModel.createBackup(context, it)
+            navigator.pop()
         }
+    }
 
-        Scaffold(
-            topBar = {
-                AppBar(
-                    title = stringResource(MR.strings.pref_create_backup),
-                    navigateUp = navigator::pop,
-                    scrollBehavior = it,
-                )
-            },
-        ) { contentPadding ->
-            LazyColumnWithAction(
-                contentPadding = contentPadding,
-                actionLabel = stringResource(MR.strings.action_create),
-                actionEnabled = state.options.canCreate(),
-                onClickAction = {
-                    scope.launch {
-                        if (!BackupCreateWorker.isManualJobRunning(context)) {
-                            try {
-                                chooseBackupDir.launch(BackupCreator.getFilename())
-                            } catch (_: ActivityNotFoundException) {
-                                context.toast(MR.strings.file_picker_error)
-                            }
-                        } else {
-                            context.toast(MR.strings.backup_in_progress)
+    Scaffold(
+        topBar = {
+            AppBar(
+                title = stringResource(MR.strings.pref_create_backup),
+                navigateUp = navigator::pop,
+                scrollBehavior = it,
+            )
+        },
+    ) { contentPadding ->
+        LazyColumnWithAction(
+            contentPadding = contentPadding,
+            actionLabel = stringResource(MR.strings.action_create),
+            actionEnabled = state.options.canCreate(),
+            onClickAction = {
+                scope.launch {
+                    if (!BackupCreateWorker.isManualJobRunning(context)) {
+                        try {
+                            chooseBackupDir.launch(BackupCreator.getFilename())
+                        } catch (_: ActivityNotFoundException) {
+                            context.toast(MR.strings.file_picker_error)
                         }
-                    }
-                },
-            ) {
-                if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                    item {
-                        WarningBanner(MR.strings.restore_miui_warning)
+                    } else {
+                        context.toast(MR.strings.backup_in_progress)
                     }
                 }
-
+            },
+        ) {
+            if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
                 item {
-                    SectionCard(MR.strings.label_library) {
-                        Options(BackupOptions.libraryOptions, state, viewModel)
-                    }
+                    WarningBanner(MR.strings.restore_miui_warning)
                 }
+            }
 
-                item {
-                    SectionCard(MR.strings.label_settings) {
-                        Options(BackupOptions.settingsOptions, state, viewModel)
-                    }
+            item {
+                SectionCard(MR.strings.label_library) {
+                    Options(BackupOptions.libraryOptions, state, viewModel)
+                }
+            }
+
+            item {
+                SectionCard(MR.strings.label_settings) {
+                    Options(BackupOptions.settingsOptions, state, viewModel)
                 }
             }
         }
     }
+}
 
-    @Composable
-    private fun Options(
-        options: List<BackupOptions.Entry>,
-        state: CreateBackupViewModel.State,
-        model: CreateBackupViewModel,
-    ) {
-        options.forEach { option ->
-            LabeledCheckbox(
-                label = stringResource(option.label),
-                checked = option.getter(state.options),
-                onCheckedChange = {
-                    model.toggle(option.setter, it)
-                },
-                enabled = option.enabled(state.options),
-            )
-        }
+@Composable
+private fun Options(
+    options: List<BackupOptions.Entry>,
+    state: CreateBackupViewModel.State,
+    model: CreateBackupViewModel,
+) {
+    options.forEach { option ->
+        LabeledCheckbox(
+            label = stringResource(option.label),
+            checked = option.getter(state.options),
+            onCheckedChange = {
+                model.toggle(option.setter, it)
+            },
+            enabled = option.enabled(state.options),
+        )
     }
 }
 

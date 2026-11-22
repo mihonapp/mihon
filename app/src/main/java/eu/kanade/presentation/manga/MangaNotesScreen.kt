@@ -8,14 +8,14 @@ import androidx.compose.ui.Modifier
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.manga.components.MangaNotesTextArea
-import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
+import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesViewModel
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun MangaNotesScreen(
-    state: MangaNotesScreen.State,
+    state: MangaNotesViewModel.State,
     navigateUp: () -> Unit,
     onUpdate: (String) -> Unit,
 ) {
