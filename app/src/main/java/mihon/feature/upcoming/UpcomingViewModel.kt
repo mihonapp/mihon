@@ -153,10 +153,12 @@ class UpcomingViewModel(
         return combine(
             upcomingPreferences.filterExcludedCategories.changes(),
             upcomingPreferences.filterIncludedCategories.changes(),
-        ) { excluded, included ->
+            getCategories.subscribe(),
+        ) { excluded, included, categories ->
+            val categoryIds = categories.mapTo(HashSet()) { it.id }
             ItemPreferences(
-                filterExcludedCategories = excluded,
-                filterIncludedCategories = included,
+                filterExcludedCategories = excluded.filter { it in categoryIds },
+                filterIncludedCategories = included.filter { it in categoryIds },
             )
         }
     }
