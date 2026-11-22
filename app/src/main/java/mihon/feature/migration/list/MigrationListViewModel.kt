@@ -78,6 +78,9 @@ class MigrationListViewModel(
     private val navigateBackChannel = Channel<Unit>()
     val navigateBackEvent = navigateBackChannel.receiveAsFlow()
 
+    private val migrationFailureChannel = Channel<Unit>(Channel.CONFLATED)
+    val migrationFailureEvent = migrationFailureChannel.receiveAsFlow()
+
     private var migrateJob: Job? = null
 
     init {
@@ -216,14 +219,18 @@ class MigrationListViewModel(
     }
 
     private suspend fun updateMigrationProgress() {
+        refreshMigrationProgress()
+        if (items.isEmpty()) {
+            navigateBack()
+        }
+    }
+
+    private fun refreshMigrationProgress() {
         state.update { state ->
             state.copy(
                 finishedCount = items.count { it.searchResult.value != SearchResult.Searching },
                 migrationComplete = migrationComplete(),
             )
-        }
-        if (items.isEmpty()) {
-            navigateBack()
         }
     }
 
@@ -265,43 +272,39 @@ class MigrationListViewModel(
     }
 
     private fun migrateMangas(replace: Boolean) {
+        if (migrateJob?.isCompleted == false) return
         migrateJob = viewModelScope.launch(Dispatchers.IO) {
             state.update { it.copy(dialog = Dialog.Progress(0f)) }
             val items = items
+            var hasFailures = false
             try {
                 items.forEachIndexed { index, manga ->
-                    try {
-                        ensureActive()
-                        val target = manga.searchResult.value.let {
-                            if (it is SearchResult.Success) {
-                                it.manga
-                            } else {
-                                null
-                            }
+                    ensureActive()
+                    val target = (manga.searchResult.value as? SearchResult.Success)?.manga
+                    if (target != null) {
+                        if (migrateManga(current = manga.manga, target = target, replace = replace)) {
+                            removeManga(manga)
+                            manga.migrationScope.cancel()
+                        } else {
+                            hasFailures = true
                         }
-                        if (target != null) {
-                            migrateManga(current = manga.manga, target = target, replace = replace)
-                        }
-                    } catch (e: Exception) {
-                        if (e is CancellationException) throw e
-                        logcat(LogPriority.WARN, throwable = e)
                     }
                     state.update {
                         it.copy(dialog = Dialog.Progress((index.toFloat() / items.size).coerceAtMost(1f)))
                     }
                 }
 
-                navigateBack()
+                if (!hasFailures) navigateBack()
             } finally {
+                refreshMigrationProgress()
                 state.update { it.copy(dialog = null) }
-                migrateJob = null
+                if (hasFailures) migrationFailureChannel.trySend(Unit)
             }
         }
     }
 
     fun cancelMigrate() {
         migrateJob?.cancel()
-        migrateJob = null
     }
 
     private suspend fun navigateBack() {
@@ -309,12 +312,17 @@ class MigrationListViewModel(
     }
 
     fun migrateNow(mangaId: Long, replace: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        if (migrateJob?.isCompleted == false) return
+        migrateJob = viewModelScope.launch(Dispatchers.IO) {
             val manga = items.find { it.manga.id == mangaId } ?: return@launch
             val target = (manga.searchResult.value as? SearchResult.Success)?.manga ?: return@launch
-            migrateManga(current = manga.manga, target = target, replace = replace)
-
-            removeManga(mangaId)
+            if (migrateManga(current = manga.manga, target = target, replace = replace)) {
+                removeManga(manga)
+                manga.migrationScope.cancel()
+                updateMigrationProgress()
+            } else {
+                migrationFailureChannel.trySend(Unit)
+            }
         }
     }
 
