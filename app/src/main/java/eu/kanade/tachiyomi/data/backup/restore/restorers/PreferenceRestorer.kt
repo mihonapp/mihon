@@ -17,11 +17,13 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.source.sourcePreferences
 import tachiyomi.core.common.preference.AndroidPreferenceStore
 import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.preference.getLongArray
 import tachiyomi.core.common.preference.plusAssign
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.domain.upcoming.service.UpcomingPreferences
 
 @Inject
 class PreferenceRestorer(
@@ -86,7 +88,22 @@ class PreferenceRestorer(
                     }
                     is StringPreferenceValue -> {
                         if (prefs[key] is String?) {
-                            preferenceStore.getString(key).set(value.value)
+                            when (key) {
+                                UpcomingPreferences.FILTER_INCLUDED_CATEGORIES_KEY,
+                                UpcomingPreferences.FILTER_EXCLUDED_CATEGORIES_KEY,
+                                -> {
+                                    if (backupCategories == null) return@forEach
+                                    val categoryIds = value.value.split(",").mapNotNull { id ->
+                                        if (id == Category.UNCATEGORIZED_ID.toString()) {
+                                            Category.UNCATEGORIZED_ID
+                                        } else {
+                                            backupCategoriesById[id]?.let { categoriesByName[it.name]?.id }
+                                        }
+                                    }
+                                    preferenceStore.getLongArray(key, emptyList()).set(categoryIds)
+                                }
+                                else -> preferenceStore.getString(key).set(value.value)
+                            }
                         }
                     }
                     is BooleanPreferenceValue -> {
