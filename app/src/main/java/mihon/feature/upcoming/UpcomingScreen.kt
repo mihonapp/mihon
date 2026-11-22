@@ -12,11 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastForEachIndexed
+import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.visualName
@@ -85,27 +84,20 @@ private fun ColumnScope.CategoryFilterSheet(
     val excluded by viewModel.upcomingPreferences.filterExcludedCategories.collectAsState()
     val included by viewModel.upcomingPreferences.filterIncludedCategories.collectAsState()
 
-    val selected = remember {
-        allCategories.map { category ->
-            when (category.id) {
-                in included -> TriState.ENABLED_IS
-                in excluded -> TriState.ENABLED_NOT
-                else -> TriState.DISABLED
-            }
-        }.toMutableStateList()
-    }
-
     Column {
-        allCategories.fastForEachIndexed { idx, category ->
-            val state = selected[idx]
-            TriStateItem(
-                label = category.visualName,
-                state = state,
-                onClick = {
-                    selected[idx] = state.next()
-                    viewModel.cycleCategory(category)
-                },
-            )
+        allCategories.fastForEach { category ->
+            key(category.id) {
+                val state = when (category.id) {
+                    in included -> TriState.ENABLED_IS
+                    in excluded -> TriState.ENABLED_NOT
+                    else -> TriState.DISABLED
+                }
+                TriStateItem(
+                    label = category.visualName,
+                    state = state,
+                    onClick = { viewModel.cycleCategory(category) },
+                )
+            }
         }
     }
 }
