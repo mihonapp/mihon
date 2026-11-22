@@ -17,6 +17,7 @@ data class GeneralSettings(
     val volumeKeysInverted: Boolean,
     val alwaysShowChapterTransition: Boolean,
     val navigationOverlayOnStart: Boolean,
+    val highQualityUpscaling: Boolean,
 ) {
     val automaticBackground: Boolean
         get() = theme == ReaderPreferences.ReaderTheme.AUTOMATIC
