@@ -7,12 +7,14 @@ import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.domain.upcoming.service.UpcomingPreferences
 
 @Inject
 class DeleteCategory(
     private val categoryRepository: CategoryRepository,
     private val libraryPreferences: LibraryPreferences,
     private val downloadPreferences: DownloadPreferences,
+    private val upcomingPreferences: UpcomingPreferences,
 ) {
 
     suspend fun await(categoryId: Long): Result {
@@ -45,6 +47,12 @@ class DeleteCategory(
             if (categoryIdString !in ids) return@forEach
             preference.set(ids.minus(categoryIdString))
         }
+
+        listOf(upcomingPreferences.filterIncludedCategories, upcomingPreferences.filterExcludedCategories)
+            .forEach { preference ->
+                val ids = preference.get()
+                if (categoryId in ids) preference.set(ids - categoryId)
+            }
 
         return try {
             categoryRepository.updateAllOrders(orderedIds = orderedIds)
