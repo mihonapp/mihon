@@ -131,7 +131,11 @@ abstract class SearchViewModel(
         if (query.isNullOrBlank()) return
 
         val sameQuery = this.lastQuery == query
-        if (sameQuery && this.lastSourceFilter == sourceFilter) return
+        val sameSearch = sameQuery && this.lastSourceFilter == sourceFilter
+        if (sameSearch) {
+            if (searchJob?.isActive == true) return
+            if (state.value.items.values.none { it is SearchItemResult.Error }) return
+        }
 
         this.lastQuery = query
         this.lastSourceFilter = sourceFilter
@@ -146,7 +150,11 @@ abstract class SearchViewModel(
                 val existingResults = state.value.items
                 updateItems(
                     sources
-                        .associateWith { existingResults[it] ?: SearchItemResult.Loading },
+                        .associateWith { source ->
+                            existingResults[source]
+                                ?.takeUnless { sameSearch && it is SearchItemResult.Error }
+                                ?: SearchItemResult.Loading
+                        },
                 )
             } else {
                 updateItems(
