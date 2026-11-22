@@ -188,6 +188,7 @@ abstract class SearchViewModel(
     private fun updateItems(items: Map<Source, SearchItemResult>) {
         state.update {
             it.copy(
+                hasResolvedSources = true,
                 items = items
                     .toSortedMap(sortComparator(items)),
             )
@@ -221,6 +222,7 @@ abstract class SearchViewModel(
         val sourceFilter: SourceFilter = SourceFilter.PinnedOnly,
         val onlyShowHasResults: Boolean = false,
         val items: Map<Source, SearchItemResult> = mapOf(),
+        val hasResolvedSources: Boolean = false,
         val dialog: Dialog? = null,
     ) {
         val progress: Int = items.count { it.value !is SearchItemResult.Loading }
