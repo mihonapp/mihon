@@ -733,8 +733,9 @@ class ReaderActivity : BaseActivity() {
      */
     private fun loadNextChapter() {
         lifecycleScope.launch {
-            viewModel.loadNextChapter()
-            moveToPageIndex(0)
+            if (viewModel.loadNextChapter()) {
+                moveToPageIndex(0)
+            }
         }
     }
 
@@ -744,8 +745,9 @@ class ReaderActivity : BaseActivity() {
      */
     private fun loadPreviousChapter() {
         lifecycleScope.launch {
-            viewModel.loadPreviousChapter()
-            moveToPageIndex(0)
+            if (viewModel.loadPreviousChapter()) {
+                moveToPageIndex(0)
+            }
         }
     }
 

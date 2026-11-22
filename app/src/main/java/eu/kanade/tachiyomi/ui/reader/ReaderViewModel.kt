@@ -435,21 +435,23 @@ class ReaderViewModel(
     /**
      * Called when the user is going to load the prev/next chapter through the toolbar buttons.
      */
-    private suspend fun loadAdjacent(chapter: ReaderChapter) {
-        val loader = loader ?: return
+    private suspend fun loadAdjacent(chapter: ReaderChapter): Boolean {
+        val loader = loader ?: return false
 
         logcat { "Loading adjacent ${chapter.chapter.url}" }
 
         mutableState.update { it.copy(isLoadingAdjacentChapter = true) }
-        try {
+        return try {
             withContext(Dispatchers.IO) {
                 loadChapter(loader, chapter)
             }
+            true
         } catch (e: Throwable) {
             if (e is CancellationException) {
                 throw e
             }
             logcat(LogPriority.ERROR, e)
+            false
         } finally {
             mutableState.update { it.copy(isLoadingAdjacentChapter = false) }
         }
@@ -753,17 +755,17 @@ class ReaderViewModel(
     /**
      * Called from the activity to load and set the next chapter as active.
      */
-    suspend fun loadNextChapter() {
-        val nextChapter = state.value.viewerChapters?.nextChapter ?: return
-        loadAdjacent(nextChapter)
+    suspend fun loadNextChapter(): Boolean {
+        val nextChapter = state.value.viewerChapters?.nextChapter ?: return false
+        return loadAdjacent(nextChapter)
     }
 
     /**
      * Called from the activity to load and set the previous chapter as active.
      */
-    suspend fun loadPreviousChapter() {
-        val prevChapter = state.value.viewerChapters?.prevChapter ?: return
-        loadAdjacent(prevChapter)
+    suspend fun loadPreviousChapter(): Boolean {
+        val prevChapter = state.value.viewerChapters?.prevChapter ?: return false
+        return loadAdjacent(prevChapter)
     }
 
     /**
