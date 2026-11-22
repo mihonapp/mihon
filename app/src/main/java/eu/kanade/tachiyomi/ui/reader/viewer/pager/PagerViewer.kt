@@ -144,10 +144,12 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
         settingsViewModel.simplePaged.collectChanges(scope) { old, new ->
             if (old != null) {
+                val oldSplit = old.dualPageSplit || old.splitAllPages
+                val newSplit = new.dualPageSplit || new.splitAllPages
+                if ((oldSplit && !newSplit) || (old.splitAllPages && !new.splitAllPages)) {
+                    cleanupPageSplit()
+                }
                 refreshAdapter()
-            }
-            if (old?.dualPageSplit != new.dualPageSplit && !new.dualPageSplit) {
-                cleanupPageSplit()
             }
         }
         settingsViewModel.paged.collectChanges(scope) { old, new ->

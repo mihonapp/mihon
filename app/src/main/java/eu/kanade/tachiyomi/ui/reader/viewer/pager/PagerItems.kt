@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.viewerItems
 
 /**
  * Items of a pager, where [ViewerChapters] updates are posted, inverted when the pager [isReversed] reads right to
- * left. Wide pages split in two get an [InsertPage] for their second half.
+ * left. Pages split in two, whether wide or every page, get an [InsertPage] for their second half.
  */
 class PagerItems(private val isReversed: Boolean) {
 
@@ -110,6 +110,7 @@ class PagerItems(private val isReversed: Boolean) {
     }
 
     fun cleanupPageSplit() {
+        preprocessed = emptyList()
         items = items.filterNot { it is InsertPage }
     }
 

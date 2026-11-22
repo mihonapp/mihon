@@ -64,6 +64,13 @@ enum class ReadingMode(
         Direction.Vertical,
         ViewerType.Webtoon,
     ),
+    FOUR_KOMA(
+        MR.strings.four_koma_viewer,
+        CustomMaterialSymbols.Rounded.ReaderLongStrip,
+        0x00000006,
+        Direction.Vertical,
+        ViewerType.Webtoon,
+    ),
     ;
 
     companion object {
@@ -84,6 +91,7 @@ enum class ReadingMode(
                     VERTICAL -> WebGpuViewer(activity, isReversed = false, isVertical = true)
                     WEBTOON -> WebGpuViewerContinuous(activity, useGap = false)
                     CONTINUOUS_VERTICAL -> WebGpuViewerContinuous(activity, useGap = true)
+                    FOUR_KOMA -> WebGpuViewerContinuous(activity, useGap = false)
                     DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
                 }
             }
@@ -93,6 +101,7 @@ enum class ReadingMode(
                 VERTICAL -> VerticalPagerViewer(activity)
                 WEBTOON -> WebtoonViewer(activity)
                 CONTINUOUS_VERTICAL -> WebtoonViewer(activity, isContinuous = false)
+                FOUR_KOMA -> WebtoonViewer(activity)
                 DEFAULT -> throw IllegalStateException("Preference value must be resolved: $preference")
             }
         }
