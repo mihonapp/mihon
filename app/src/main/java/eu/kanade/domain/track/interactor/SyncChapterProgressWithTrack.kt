@@ -2,8 +2,10 @@ package eu.kanade.domain.track.interactor
 
 import dev.zacsweers.metro.Inject
 import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.Tracker
+import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
@@ -18,6 +20,7 @@ class SyncChapterProgressWithTrack(
     private val updateChapter: UpdateChapter,
     private val upsertTrack: UpsertTrack,
     private val getChaptersByMangaId: GetChaptersByMangaId,
+    private val trackPreferences: TrackPreferences,
 ) {
 
     suspend fun await(
@@ -25,7 +28,9 @@ class SyncChapterProgressWithTrack(
         remoteTrack: Track,
         tracker: Tracker,
     ) {
-        if (tracker !is EnhancedTracker) {
+        val isTwoWaySyncSupported = tracker is EnhancedTracker ||
+            (trackPreferences.twoWaySync.get() && tracker is Anilist)
+        if (!isTwoWaySyncSupported) {
             return
         }
 
@@ -43,8 +48,12 @@ class SyncChapterProgressWithTrack(
         val updatedTrack = remoteTrack.copy(lastChapterRead = lastRead)
 
         try {
-            tracker.update(updatedTrack.toDbTrack())
-            updateChapter.awaitAll(chapterUpdates)
+            if (localLastRead.toDouble() > remoteTrack.lastChapterRead || tracker is EnhancedTracker) {
+                tracker.update(updatedTrack.toDbTrack())
+            }
+            if (chapterUpdates.isNotEmpty()) {
+                updateChapter.awaitAll(chapterUpdates)
+            }
             upsertTrack.await(updatedTrack)
         } catch (e: Throwable) {
             logcat(LogPriority.WARN, e)

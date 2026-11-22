@@ -20,6 +20,8 @@ import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dev.zacsweers.metro.Inject
+import eu.kanade.domain.track.interactor.RefreshTracks
+import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.source.model.SManga
@@ -101,6 +103,10 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
     @Inject private lateinit var filterChaptersForDownload: FilterChaptersForDownload
 
     @Inject private lateinit var updateMangaFromRemote: UpdateMangaFromRemote
+
+    @Inject private lateinit var refreshTracks: RefreshTracks
+
+    @Inject private lateinit var trackPreferences: TrackPreferences
 
     @Inject private lateinit var notifier: LibraryUpdateNotifier
 
@@ -297,6 +303,16 @@ class LibraryUpdateWorker(private val context: Context, workerParams: WorkerPara
 
                                             // Convert to the manga that contains new chapters
                                             newUpdates.add(manga to newChapters.toTypedArray())
+                                        }
+
+                                        if (trackPreferences.twoWaySync.get()) {
+                                            try {
+                                                refreshTracks.await(manga.id)
+                                            } catch (e: Throwable) {
+                                                logcat(LogPriority.WARN, e) {
+                                                    "Failed to sync tracks for ${manga.title}"
+                                                }
+                                            }
                                         }
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
