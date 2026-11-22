@@ -43,7 +43,7 @@ class BackupManga(
     // @ProtoNumber(106) var lastModifiedAt: Long, artifact of the abandoned sync attempt
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     // Mihon values start here
-    @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
+    @ProtoNumber(108) var filteredScanlators: List<String> = emptyList(),
     // @ProtoNumber(109) var version: Long, artifact of the abandoned sync attempt
     @ProtoNumber(110) var notes: String = "",
     @ProtoNumber(111) var initialized: Boolean = false,

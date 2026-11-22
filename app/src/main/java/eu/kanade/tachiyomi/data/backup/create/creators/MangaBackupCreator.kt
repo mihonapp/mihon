@@ -39,7 +39,7 @@ class MangaBackupCreator(
     private suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
         val mangaIds = mangas.map { it.id }
 
-        val excludedScanlatorsByMangaId = mangaRepository.getExcludedScanlatorsByMangaIds(mangaIds)
+        val filteredScanlatorsByMangaId = mangaRepository.getFilteredScanlatorsByMangaIds(mangaIds)
         // History is backed up by chapter URL, so it needs the chapters too
         val chaptersByMangaId = if (options.chapters || options.history) {
             chapterRepository.getChaptersByMangaIds(mangaIds)
@@ -58,7 +58,7 @@ class MangaBackupCreator(
             val mangaObject = manga.toBackupManga()
             val chapters = chaptersByMangaId[manga.id].orEmpty()
 
-            mangaObject.excludedScanlators = excludedScanlatorsByMangaId[manga.id].orEmpty()
+            mangaObject.filteredScanlators = filteredScanlatorsByMangaId[manga.id].orEmpty()
 
             if (options.chapters) {
                 mangaObject.chapters = chapters.map { it.toBackupChapter() }

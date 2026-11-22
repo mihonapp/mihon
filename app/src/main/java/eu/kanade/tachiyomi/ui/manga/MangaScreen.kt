@@ -285,7 +285,8 @@ fun MangaScreen(
     if (showScanlatorsDialog) {
         ScanlatorFilterDialog(
             availableScanlators = successState.availableScanlators,
-            excludedScanlators = successState.excludedScanlators,
+            filteredScanlators = successState.filteredScanlators,
+            include = successState.manga.scanlatorFilterInclude,
             onDismissRequest = { showScanlatorsDialog = false },
             onConfirm = viewModel::setExcludedScanlators,
         )
