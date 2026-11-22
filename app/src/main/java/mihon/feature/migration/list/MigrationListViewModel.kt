@@ -287,7 +287,7 @@ class MigrationListViewModel(
                         logcat(LogPriority.WARN, throwable = e)
                     }
                     state.update {
-                        it.copy(dialog = Dialog.Progress((index.toFloat() / items.size).coerceAtMost(1f)))
+                        it.copy(dialog = Dialog.Progress((index + 1).toFloat() / items.size))
                     }
                 }
 
