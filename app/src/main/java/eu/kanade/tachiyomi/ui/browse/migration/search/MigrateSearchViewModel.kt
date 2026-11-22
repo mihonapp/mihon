@@ -13,6 +13,8 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
@@ -44,6 +46,9 @@ class MigrateSearchViewModel(
 
     private val migrationSources by lazy { sourcePreferences.migrationSources.get() }
 
+    val mangaMissing: StateFlow<Boolean>
+        field = MutableStateFlow(false)
+
     override val sortComparator = { map: Map<Source, SearchItemResult> ->
         compareBy<Source>(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
@@ -53,7 +58,11 @@ class MigrateSearchViewModel(
 
     init {
         viewModelScope.launch {
-            val manga = getManga.await(mangaId)!!
+            val manga = getManga.await(mangaId)
+            if (manga == null) {
+                mangaMissing.value = true
+                return@launch
+            }
             updateState {
                 it.copy(
                     from = manga,
