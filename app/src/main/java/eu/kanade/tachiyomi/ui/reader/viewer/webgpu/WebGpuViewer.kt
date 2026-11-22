@@ -750,6 +750,15 @@ open class WebGpuViewer(
         return spreadPartner(readerPage) ?: readerPage
     }
 
+    private fun selectPage(page: ViewerPage) {
+        val progress = progressPage(page) ?: return
+        activity.onPageSelected(progress.page)
+        // That made the spread's later page the loader's current one, but the earlier one goes first
+        if (progress !== page && page is ViewerReaderPage) {
+            (page.page.chapter.pageLoader as? HttpPageLoader)?.onPageSelected(page.page)
+        }
+    }
+
     private fun buildSpreadPage(page: ViewerPage): ImagePage {
         if (page !is ViewerReaderPage) {
             return page.imagePage
@@ -1064,7 +1073,10 @@ open class WebGpuViewer(
      */
     private fun requestDownload(page: ViewerReaderPage) {
         val loader = page.page.chapter.pageLoader ?: return
-        if (page.page.downloadStream == null) page.page.downloadStream = DownloadStream()
+        // Not once downloading: nothing would feed it, hanging its stream decode
+        if (page.page.downloadStream == null && page.page.status == Page.State.Queue) {
+            page.page.downloadStream = DownloadStream()
+        }
         synchronized(lock) {
             loadJobs.remove(pageKey(page))?.cancel()
             // Undispatched for the HTTP loader, which queues before suspending, so requests queue in
@@ -1116,9 +1128,8 @@ open class WebGpuViewer(
             page.state = PageState.LOADING
         }
 
-        if (page.page.status == Page.State.Queue) {
-            requestDownload(page)
-        }
+        // Even once downloading: the HTTP loader only prioritises requested pages
+        requestDownload(page)
 
         val watch = scope.launch(start = CoroutineStart.LAZY) {
             try {
@@ -1757,7 +1768,7 @@ open class WebGpuViewer(
             when (cachedPage.state) {
                 // Watched already: only re-request, in this order.
                 PageState.LOADING -> {
-                    if (cachedPage.page.status == Page.State.Queue) requestDownload(cachedPage)
+                    requestDownload(cachedPage)
                     return
                 }
 
@@ -1819,7 +1830,7 @@ open class WebGpuViewer(
         val page = currentPage ?: getPage(pages[min(chapters.currChapter.requestedPage, pages.lastIndex)])
         val anchor = getSpreadAnchor(page)
         currentPage = anchor
-        progressPage(anchor)?.let { activity.onPageSelected(it.page) }
+        selectPage(anchor)
         preloadPages(anchor)
 
         viewerState.apply {
@@ -1848,7 +1859,7 @@ open class WebGpuViewer(
                         if (!activity.isScrollingThroughPages) {
                             activity.hideMenu()
                         }
-                        progressPage(settled)?.let { activity.onPageSelected(it.page) }
+                        selectPage(settled)
                     }
                     preloadPages(settled)
 
@@ -1884,7 +1895,7 @@ open class WebGpuViewer(
         synchronized(lock) { flushDeferredCleanup() }
 
         currentPage = newPage
-        progressPage(newPage)?.let { activity.onPageSelected(it.page) }
+        selectPage(newPage)
         preloadPages(newPage)
 
         (newPage as? ViewerTransitionPage)?.let { ViewerTransitionPage ->
