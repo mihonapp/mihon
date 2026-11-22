@@ -393,6 +393,11 @@ class ReaderViewModel(
 
         withContext(Dispatchers.Main) {
             val toDownload = cancelQueuedDownloads(newChapters.currChapter)
+            val previousChapterId = getCurrentChapter()?.chapter?.id
+            if (previousChapterId != null && previousChapterId != chapter.chapter.id && chapterReadStartTime != null) {
+                saveHistory()
+                restartReadTimer()
+            }
             mutableState.update {
                 // Add new references first to avoid unnecessary recycling
                 newChapters.ref()
@@ -417,9 +422,6 @@ class ReaderViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             logcat { "Loading ${chapter.chapter.url}" }
-
-            updateHistory()
-            restartReadTimer()
 
             try {
                 loadChapter(loader, chapter)
@@ -729,7 +731,7 @@ class ReaderViewModel(
      * Saves the chapter last read history on the app scope, so it's written even when the reader is closing.
      */
     fun saveHistory() {
-        // Immediate so the read time is taken when the reader pauses
+        // Capture the chapter and elapsed time before the reader pauses or switches chapters
         appScope.launch(Dispatchers.Main.immediate) { updateHistory() }
     }
 
