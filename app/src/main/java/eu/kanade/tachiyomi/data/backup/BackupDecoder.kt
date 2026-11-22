@@ -68,10 +68,7 @@ class BackupDecoder(
         return context.contentResolver.openInputStream(uri)!!.use { inputStream ->
             val source = inputStream.source().buffer()
 
-            val peeked = source.peek().apply {
-                require(2)
-            }
-            val id1id2 = peeked.readShort()
+            val id1id2 = orInvalid { source.peek().readShort() }
             val backupSource: BufferedSource = when (id1id2.toInt()) {
                 0x1f8b -> source.gzip().buffer() // 0x1f8b is gzip magic bytes
                 MAGIC_JSON_SIGNATURE1, MAGIC_JSON_SIGNATURE2, MAGIC_JSON_SIGNATURE3 -> {
