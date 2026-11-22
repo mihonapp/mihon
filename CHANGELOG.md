@@ -39,6 +39,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix extension settings showing duplicate entries after the app is restored from the background ([@AntsyLich](https://github.com/AntsyLich))
+- Fix a crash refreshing a manga whose chapter names contain a number sign ([@Darkslayer3324j](https://github.com/Darkslayer3324j)) ([#4107](https://github.com/mihonapp/mihon/pull/4107))
 
 ## [v0.21.3] - 2026-10-26
 ### Added
