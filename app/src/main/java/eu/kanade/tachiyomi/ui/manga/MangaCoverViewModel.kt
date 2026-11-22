@@ -63,6 +63,8 @@ class MangaCoverViewModel(
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), null)
 
+    fun hasCustomCover(): Boolean = coverCache.hasCustomCover(mangaId)
+
     fun saveCover(context: Context) {
         viewModelScope.launch {
             try {

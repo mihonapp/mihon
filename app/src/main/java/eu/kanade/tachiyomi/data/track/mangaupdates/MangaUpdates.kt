@@ -1,17 +1,28 @@
 package eu.kanade.tachiyomi.data.track.mangaupdates
 
 import dev.icerock.moko.resources.StringResource
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.TrackerDependencies
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUListItem
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MURating
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker {
+@Inject
+@SingleIn(AppScope::class)
+class MangaUpdates(
+    dependencies: TrackerDependencies,
+    private val json: Json,
+) : BaseTracker(7L, "MangaUpdates", dependencies),
+    DeletableTracker {
 
     companion object {
         const val READING_LIST = 0L
@@ -36,7 +47,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
 
     private val interceptor by lazy { MangaUpdatesInterceptor(this) }
 
-    private val api by lazy { MangaUpdatesApi(client, interceptor) }
+    private val api by lazy { MangaUpdatesApi(client, interceptor, json) }
 
     override fun getLogo(): Int = R.drawable.brand_mangaupdates
 

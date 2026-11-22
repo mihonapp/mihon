@@ -210,6 +210,11 @@ class ReaderSettingsViewModel(
         preferences.disableDoubleTapGestures,
         preferences.imageFilters,
         preferences.tileFilters,
+        preferences.upscaler,
+        preferences.downscaler,
+        preferences.fastRenderingOnly,
+        preferences.holdUntilFinal,
+        preferences.cropInsteadOfZoom,
     ) {
         WebGpuPagedSettings(
             page = WebGpuPagedSettings.Page(
@@ -218,11 +223,16 @@ class ReaderSettingsViewModel(
                 transitionAnimationDual = transitionAnimationDual.get(),
                 cutoutMode = cutoutMode.get(),
                 cutoutModeDual = cutoutModeDual.get(),
+                cropInsteadOfZoom = cropInsteadOfZoom.get(),
             ),
             common = WebGpuSettings(
                 doubleTapGesturesDisabled = disableDoubleTapGestures.get(),
+                fastRenderingOnly = fastRenderingOnly.get(),
+                holdUntilFinal = holdUntilFinal.get(),
                 imageFilters = imageFilters.get(),
                 tileFilters = tileFilters.get(),
+                upscaler = upscaler.get().firstOrNull(),
+                downscaler = downscaler.get().firstOrNull(),
             ),
         )
     }
@@ -236,6 +246,10 @@ class ReaderSettingsViewModel(
         preferences.disableDoubleTapGestures,
         preferences.imageFilters,
         preferences.tileFilters,
+        preferences.upscaler,
+        preferences.downscaler,
+        preferences.fastRenderingOnly,
+        preferences.holdUntilFinal,
     ) {
         WebGpuLongStripSettings(
             page = WebGpuLongStripSettings.Page(
@@ -244,8 +258,12 @@ class ReaderSettingsViewModel(
             ),
             common = WebGpuSettings(
                 doubleTapGesturesDisabled = disableDoubleTapGestures.get(),
+                fastRenderingOnly = fastRenderingOnly.get(),
+                holdUntilFinal = holdUntilFinal.get(),
                 imageFilters = imageFilters.get(),
                 tileFilters = tileFilters.get(),
+                upscaler = upscaler.get().firstOrNull(),
+                downscaler = downscaler.get().firstOrNull(),
             ),
         )
     }

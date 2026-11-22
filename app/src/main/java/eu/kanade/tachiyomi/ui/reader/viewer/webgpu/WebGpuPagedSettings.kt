@@ -19,5 +19,6 @@ data class WebGpuPagedSettings(
         val transitionAnimationDual: ReaderPreferences.TransitionAnimation,
         val cutoutMode: ReaderPreferences.CutoutMode,
         val cutoutModeDual: ReaderPreferences.CutoutMode,
+        val cropInsteadOfZoom: Boolean,
     )
 }
