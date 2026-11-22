@@ -39,6 +39,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix extension settings showing duplicate entries after the app is restored from the background ([@AntsyLich](https://github.com/AntsyLich))
+- Fix Komga tracker not finding entries when the Komga source uses an API key ([@hazptr](https://github.com/hazptr)) ([#4314](https://github.com/mihonapp/mihon/pull/4314))
+- Fix Komga tracking breaking after the Komga server address changes ([@hazptr](https://github.com/hazptr)) ([#4314](https://github.com/mihonapp/mihon/pull/4314))
 
 ## [v0.21.3] - 2026-10-26
 ### Added
