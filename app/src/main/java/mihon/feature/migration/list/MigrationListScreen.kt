@@ -46,6 +46,11 @@ fun MigrationListScreen(
             navigator.pop()
         }
     }
+    LaunchedEffect(viewModel, context) {
+        viewModel.migrationFailureEvent.collect {
+            context.toast(MR.strings.migration_failed, Toast.LENGTH_LONG)
+        }
+    }
     MigrationListScreenContent(
         items = state.items,
         migrationComplete = state.migrationComplete,
