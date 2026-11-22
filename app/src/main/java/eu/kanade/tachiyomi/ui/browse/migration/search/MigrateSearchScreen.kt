@@ -1,11 +1,15 @@
 package eu.kanade.tachiyomi.ui.browse.migration.search
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
 import eu.kanade.presentation.browse.MigrateSearchScreen
+import eu.kanade.presentation.components.AppBar
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
 import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
@@ -13,6 +17,11 @@ import mihon.core.navigation.MigrateSourceSearchRoute
 import mihon.core.navigation.MigrationListRoute
 import mihon.feature.migration.dialog.MigrateMangaDialog
 import mihon.feature.migration.list.MatchOverrideEvent
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.EmptyScreen
+import tachiyomi.presentation.core.screens.LoadingScreen
+
 @Composable
 fun MigrateSearchScreen(mangaId: Long) {
     val navigator = LocalNavigator.current
@@ -21,17 +30,37 @@ fun MigrateSearchScreen(mangaId: Long) {
     val viewModel =
         assistedMetroViewModel<MigrateSearchViewModel, MigrateSearchViewModel.Factory> { create(mangaId = mangaId) }
     val state by viewModel.state.collectAsState()
+    val mangaMissing by viewModel.mangaMissing.collectAsState()
+    val from = state.from
+
+    if (from == null) {
+        Scaffold(
+            topBar = {
+                AppBar(title = stringResource(MR.strings.migrate), navigateUp = navigator::pop)
+            },
+        ) { contentPadding ->
+            if (mangaMissing) {
+                EmptyScreen(
+                    stringRes = MR.strings.migration_manga_not_found,
+                    modifier = Modifier.padding(contentPadding),
+                )
+            } else {
+                LoadingScreen(modifier = Modifier.padding(contentPadding))
+            }
+        }
+        return
+    }
 
     MigrateSearchScreen(
         state = state,
-        fromSourceId = state.from?.source,
+        fromSourceId = from.source,
         navigateUp = navigator::pop,
         onChangeSearchQuery = viewModel::updateSearchQuery,
         onSearch = { viewModel.search() },
         getManga = { viewModel.getManga(it) },
         onChangeSearchFilter = viewModel::setSourceFilter,
         onToggleResults = viewModel::toggleFilterResults,
-        onClickSource = { navigator.push(MigrateSourceSearchRoute(state.from!!.id, it.id, state.searchQuery)) },
+        onClickSource = { navigator.push(MigrateSourceSearchRoute(from.id, it.id, state.searchQuery)) },
         onClickItem = {
             val migrateListRoute = navigator
                 .routes.filterIsInstance<MigrationListRoute>()
