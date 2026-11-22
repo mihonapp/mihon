@@ -93,22 +93,26 @@ class ImageSaver(
             MediaStore.MediaColumns.DATE_MODIFIED to Clock.System.now().epochSeconds,
         )
 
-        val picture = findUriOrDefault(relativePath, filename) {
-            context.contentResolver.insert(
-                pictureDir,
-                contentValues,
-            ) ?: throw IOException(context.stringResource(MR.strings.error_saving_picture))
-        }
+        val resolver = context.contentResolver
+        val existingPicture = findExistingUri(relativePath, filename)
+        val picture = existingPicture ?: resolver.insert(pictureDir, contentValues)
+            ?: throw IOException(context.stringResource(MR.strings.error_saving_picture))
 
         try {
             data().use { input ->
-                context.contentResolver.openOutputStream(picture, "w").use { output ->
-                    input.copyTo(output!!)
-                }
+                val output = resolver.openOutputStream(picture, "w") ?: throw IOException("Could not open image output")
+                output.use { input.copyTo(it) }
             }
         } catch (e: Exception) {
+            if (existingPicture == null) {
+                try {
+                    resolver.delete(picture, null, null)
+                } catch (cleanupError: Exception) {
+                    e.addSuppressed(cleanupError)
+                }
+            }
             logcat(LogPriority.ERROR, e)
-            throw IOException(context.stringResource(MR.strings.error_saving_picture))
+            throw IOException(context.stringResource(MR.strings.error_saving_picture), e)
         }
 
         DiskUtil.scanMedia(context, picture)
@@ -117,7 +121,7 @@ class ImageSaver(
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun findUriOrDefault(path: String, filename: String, default: () -> Uri): Uri {
+    private fun findExistingUri(path: String, filename: String): Uri? {
         val projection = arrayOf(
             MediaStore.MediaColumns._ID,
             MediaStore.MediaColumns.DISPLAY_NAME,
@@ -144,7 +148,7 @@ class ImageSaver(
             }
         }
 
-        return default()
+        return null
     }
 }
 
