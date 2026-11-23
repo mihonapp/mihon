@@ -7,6 +7,10 @@
     <string name="off">Off</string>
     <string name="selected">Selected</string>
     <string name="not_selected">Not selected</string>
+    <string name="action_hide">Hide</string>
+    <string name="action_unhide">Unhide</string>
+    <string name="chapter_hidden">Hidden</string>
+    <string name="chapter_hide_error">Could not update chapter visibility or remove downloads. Try again.</string>
     <string name="action_menu_overflow_description">More options</string>
     <string name="action_bar_up_description">Navigate up</string>
 
@@ -324,6 +328,9 @@
     <string name="pref_mark_duplicate_read_chapter_read_existing">After reading a chapter</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
 
+    <string name="pref_hide_hidden_chapters">Hide hidden chapters</string>
+    <string name="hidden_chapters">Hidden chapters</string>
+    <string name="hidden_chapters_empty">No hidden chapters</string>
     <string name="pref_hide_missing_chapter_indicators">Hide missing chapter indicators</string>
     <string name="pref_disallow_non_ascii_filenames">Disallow non-ASCII filenames</string>
     <string name="pref_disallow_non_ascii_filenames_details">Ensures compatibility with certain storage media that don't support Unicode. When this is enabled, you'll need to manually rename source and manga folders by replacing non-ASCII characters with their lowercase UTF-8 hexadecimal representations. Chapter files don't need to be renamed.</string>

@@ -112,8 +112,10 @@ fun MangaScreen(
     onEditFetchIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onHiddenChaptersClicked: () -> Unit,
 
     // For bottom action menu
+    onMultiHideClicked: (List<Chapter>, hidden: Boolean) -> Unit,
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
     onMultiMarkAsReadClicked: (List<Chapter>, markAsRead: Boolean) -> Unit,
     onMarkPreviousAsReadClicked: (Chapter) -> Unit,
@@ -162,6 +164,8 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onEditNotesClicked = onEditNotesClicked,
+            onHiddenChaptersClicked = onHiddenChaptersClicked,
+            onMultiHideClicked = onMultiHideClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
             onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -199,6 +203,8 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onEditNotesClicked = onEditNotesClicked,
+            onHiddenChaptersClicked = onHiddenChaptersClicked,
+            onMultiHideClicked = onMultiHideClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
             onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -246,8 +252,10 @@ private fun MangaScreenSmallImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onHiddenChaptersClicked: () -> Unit,
 
     // For bottom action menu
+    onMultiHideClicked: (List<Chapter>, hidden: Boolean) -> Unit,
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
     onMultiMarkAsReadClicked: (List<Chapter>, markAsRead: Boolean) -> Unit,
     onMarkPreviousAsReadClicked: (Chapter) -> Unit,
@@ -302,6 +310,8 @@ private fun MangaScreenSmallImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
+                hasHiddenChapters = state.hasHiddenChapters,
+                onHiddenChaptersClicked = onHiddenChaptersClicked,
                 actionModeCounter = state.selectedChapters.size,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 onSelectAll = { onAllChapterSelected(true) },
@@ -313,6 +323,7 @@ private fun MangaScreenSmallImpl(
         bottomBar = {
             SharedMangaBottomActionMenu(
                 selected = state.selectedChapters,
+                onMultiHideClicked = onMultiHideClicked,
                 onMultiBookmarkClicked = onMultiBookmarkClicked,
                 onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
                 onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -479,8 +490,10 @@ fun MangaScreenLargeImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onEditNotesClicked: () -> Unit,
+    onHiddenChaptersClicked: () -> Unit,
 
     // For bottom action menu
+    onMultiHideClicked: (List<Chapter>, hidden: Boolean) -> Unit,
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
     onMultiMarkAsReadClicked: (List<Chapter>, markAsRead: Boolean) -> Unit,
     onMarkPreviousAsReadClicked: (Chapter) -> Unit,
@@ -528,6 +541,8 @@ fun MangaScreenLargeImpl(
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
                 onClickEditNotes = onEditNotesClicked,
+                hasHiddenChapters = state.hasHiddenChapters,
+                onHiddenChaptersClicked = onHiddenChaptersClicked,
                 onCancelActionMode = { onAllChapterSelected(false) },
                 actionModeCounter = state.selectedChapters.size,
                 onSelectAll = { onAllChapterSelected(true) },
@@ -541,6 +556,7 @@ fun MangaScreenLargeImpl(
             // navigation bar inset under the FAB
             SharedMangaBottomActionMenu(
                 selected = state.selectedChapters,
+                onMultiHideClicked = onMultiHideClicked,
                 onMultiBookmarkClicked = onMultiBookmarkClicked,
                 onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
                 onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -675,6 +691,7 @@ fun MangaScreenLargeImpl(
 @Composable
 private fun SharedMangaBottomActionMenu(
     selected: List<ChapterList.Item>,
+    onMultiHideClicked: (List<Chapter>, hidden: Boolean) -> Unit,
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
     onMultiMarkAsReadClicked: (List<Chapter>, markAsRead: Boolean) -> Unit,
     onMarkPreviousAsReadClicked: (Chapter) -> Unit,
@@ -702,10 +719,18 @@ private fun SharedMangaBottomActionMenu(
             onMarkPreviousAsReadClicked(selected[0].chapter)
         }.takeIf { selected.size == 1 },
         onDownloadClicked = {
-            onDownloadChapter!!(selected.toList(), ChapterDownloadAction.START)
+            onDownloadChapter!!(selected.filterNot { it.chapter.hidden }, ChapterDownloadAction.START)
         }.takeIf {
-            onDownloadChapter != null && selected.fastAny { it.downloadState != Download.State.DOWNLOADED }
+            onDownloadChapter != null && selected.fastAny {
+                !it.chapter.hidden && it.downloadState != Download.State.DOWNLOADED
+            }
         },
+        onHideClicked = {
+            onMultiHideClicked(selected.fastMap { it.chapter }, true)
+        }.takeIf { selected.fastAny { !it.chapter.hidden } },
+        onUnhideClicked = {
+            onMultiHideClicked(selected.fastMap { it.chapter }, false)
+        }.takeIf { selected.isNotEmpty() && selected.fastAll { it.chapter.hidden } },
         onDeleteClicked = {
             onMultiDeleteClicked(selected.fastMap { it.chapter })
         }.takeIf {
@@ -763,9 +788,10 @@ private fun LazyListScope.sharedChapterItems(
                         },
                     scanlator = item.chapter.scanlator.takeIf { !it.isNullOrBlank() },
                     read = item.chapter.read,
+                    hidden = item.chapter.hidden,
                     bookmark = item.chapter.bookmark,
                     selected = item.selected,
-                    downloadIndicatorEnabled = !isAnyChapterSelected && !manga.isLocal(),
+                    downloadIndicatorEnabled = !isAnyChapterSelected && !manga.isLocal() && !item.chapter.hidden,
                     downloadStateProvider = { item.downloadState },
                     downloadProgressProvider = { downloadProgressProvider(item.id) },
                     chapterSwipeStartAction = chapterSwipeStartAction,
@@ -782,7 +808,7 @@ private fun LazyListScope.sharedChapterItems(
                             onChapterClicked = onChapterClicked,
                         )
                     },
-                    onDownloadClick = if (onDownloadChapter != null) {
+                    onDownloadClick = if (onDownloadChapter != null && !item.chapter.hidden) {
                         { onDownloadChapter(listOf(item), it) }
                     } else {
                         null
@@ -796,7 +822,7 @@ private fun LazyListScope.sharedChapterItems(
     }
 }
 
-private fun onChapterItemClick(
+internal fun onChapterItemClick(
     chapterItem: ChapterList.Item,
     isAnyChapterSelected: Boolean,
     onToggleSelection: (Boolean) -> Unit,
@@ -805,6 +831,6 @@ private fun onChapterItemClick(
     when {
         chapterItem.selected -> onToggleSelection(false)
         isAnyChapterSelected -> onToggleSelection(true)
-        else -> onChapterClicked(chapterItem.chapter)
+        !chapterItem.chapter.hidden -> onChapterClicked(chapterItem.chapter)
     }
 }

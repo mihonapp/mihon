@@ -1,0 +1,311 @@
+package eu.kanade.tachiyomi.data.download
+
+import com.hippo.unifile.UniFile
+import eu.kanade.tachiyomi.source.Source
+import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
+import tachiyomi.core.common.preference.InMemoryPreferenceStore
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.repository.ChapterRepository
+import tachiyomi.domain.download.service.DownloadPreferences
+import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.storage.service.StorageManager
+import tachiyomi.source.local.LocalSource
+import java.io.IOException
+
+class DownloadSharedDirectoryTest {
+    @ParameterizedTest
+    @CsvSource(
+        "Manga,Manga,7,Source/Name",
+        "Manga/Title,Manga:Title,7,Source/Name",
+        "Manga/Title,Manga:Title,8,Source:Name",
+        "Manga/Title,Manga:Title,8,Different source alias",
+        "Manga,manga,7,Source/Name",
+    )
+    fun `hiding preserves other manga downloads sharing sanitized names or actual storage identity`(
+        title: String,
+        otherTitle: String,
+        otherSourceId: Long,
+        otherSourceName: String,
+    ) = runTest {
+        val fixture = SharedStorage(title, otherTitle, otherSourceId, otherSourceName)
+
+        fixture.hide()
+
+        verify(exactly = 0) { fixture.shared.delete() }
+        verify(exactly = 0) { fixture.partial.delete() }
+        verify(exactly = 0) { fixture.archive.delete() }
+        verify(exactly = 0) { fixture.unrelatedFile.delete() }
+        verify(exactly = 1) { fixture.owned.delete() }
+        coVerify(exactly = 1) { fixture.cache.refreshMangaDirectories(any()) }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["manga", "chapter", "source", "storage"])
+    fun `ownership lookup failures prevent every deletion and preserve cached state`(failedLookup: String) = runTest {
+        val fixture = SharedStorage("Manga/Title", "Manga:Title", 8, "Source:Name")
+        val failure = IOException("$failedLookup ownership unavailable")
+        when (failedLookup) {
+            "manga" -> coEvery { fixture.mangas.getAll() } throws failure
+            "chapter" -> coEvery { fixture.chapters.getChaptersByMangaIds(listOf(2)) } throws failure
+            "source" -> coEvery { fixture.sources.getOrStub(8) } throws failure
+            "storage" -> every { fixture.sourceDir.canRead() } returns false
+        }
+
+        val thrown = assertThrows<IOException> { fixture.hide() }
+        if (failedLookup != "storage") thrown shouldBe failure
+        verify(exactly = 0) { fixture.shared.delete() }
+        verify(exactly = 0) { fixture.partial.delete() }
+        verify(exactly = 0) { fixture.owned.delete() }
+        coVerify(exactly = 0) { fixture.cache.refreshMangaDirectories(any()) }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "Chapter 1,false",
+        "Chapter 1,true",
+        "Chapter 1_tmp,false",
+        "Chapter 1_tmp,true",
+        "Chapter 1.cbz_tmp,false",
+        "Chapter 1.cbz_tmp,true",
+        "CHAPTER 1_TMP,false",
+        "CHAPTER 1_TMP,true",
+    )
+    fun `selected protected chapters retain every shared filename claim`(protectedTitle: String, hashEnabled: Boolean) =
+        runTest {
+            val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name", hashEnabled)
+
+            val (retained, deleted) = fixture.hideWithProtectedChapter(protectedTitle)
+
+            retained.isNotEmpty() shouldBe true
+            deleted.isNotEmpty() shouldBe true
+            retained.forEach { path -> verify(exactly = 0) { path.delete() } }
+            deleted.forEach { path -> verify(exactly = 1) { path.delete() } }
+            coVerify(exactly = 1) { fixture.cache.refreshMangaDirectories(any()) }
+        }
+
+    @Test
+    fun `directory scan resolves each source once including absent sources and checks every candidate`() = runTest {
+        val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name")
+        val absentSource = mockk<Source>()
+        every { absentSource.toString() } returns "Absent"
+        every { fixture.root.findFile("Absent") } returns null
+        val sameSource = (10L..109L).map { fixture.manga.copy(id = it, title = "Candidate $it") to fixture.source }
+        val absent = (110L..209L).map { fixture.manga.copy(id = it) to absentSource }
+
+        val owners = fixture.provider.findMangaIdsSharingDownloadDirectory(
+            fixture.manga,
+            fixture.source,
+            sameSource + absent,
+        )
+
+        owners shouldBe sameSource.map { it.first.id }.toSet()
+        verify(exactly = 1) { fixture.root.findFile("Source_Name") }
+        verify(exactly = 1) { fixture.root.findFile("Absent") }
+        verify(atMost = 4) { fixture.root.canRead() }
+        sameSource.forEach { (manga, _) ->
+            verify(exactly = 1) { fixture.sourceDir.findFile(manga.title) }
+        }
+    }
+
+    @Test
+    fun `multiple directory owners use one chapter batch and tolerate owners without chapters`() = runTest {
+        val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name")
+        val third = fixture.manga.copy(id = 5)
+        val empty = fixture.manga.copy(id = 6)
+        coEvery { fixture.mangas.getAll() } returns listOf(fixture.manga, fixture.otherManga, third, empty)
+        val thirdChapter = fixture.otherChapter.copy(id = 50, mangaId = third.id)
+        coEvery { fixture.chapters.getChaptersByMangaIds(any()) } returns mapOf(
+            fixture.otherManga.id to listOf(fixture.otherChapter),
+            third.id to listOf(thirdChapter),
+        )
+
+        fixture.hide()
+
+        coVerify(exactly = 1) { fixture.chapters.getChaptersByMangaIds(match { it.toSet() == setOf(2L, 5L, 6L) }) }
+        coVerify(exactly = 1) { fixture.chapters.getChapterByMangaId(1, false) }
+        coVerify(exactly = 0) { fixture.chapters.getChapterByMangaId(neq(1L), any()) }
+        coVerify(exactly = 1) {
+            fixture.cache.refreshMangaDirectories(
+                match {
+                    it.map { owner -> owner.id }.toSet() == setOf(1L, 2L, 5L, 6L)
+                },
+            )
+        }
+        verify(exactly = 0) { fixture.cache.invalidateCache() }
+        verify(exactly = 0) { fixture.shared.delete() }
+        verify(exactly = 1) { fixture.owned.delete() }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["source", "manga"])
+    fun `resolved distinct unreadable directory does not block target cleanup`(level: String) = runTest {
+        val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name")
+        val unrelated = if (level == "source") fixture.unrelatedSourceDir else fixture.unrelatedMangaDir
+        every { unrelated.canRead() } returns false
+
+        fixture.hide()
+
+        verify(exactly = 1) { fixture.owned.delete() }
+        verify(exactly = 0) { fixture.unrelatedFile.delete() }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `unreadable source with unresolved manga identity fails closed`(lookupThrows: Boolean) = runTest {
+        val fixture = SharedStorage("Manga", "Manga", 7, "Source/Name")
+        every { fixture.unrelatedSourceDir.canRead() } returns false
+        if (lookupThrows) {
+            every { fixture.unrelatedSourceDir.findFile(any()) } throws IOException("Ownership lookup failed")
+        } else {
+            every { fixture.unrelatedSourceDir.findFile(any()) } returns null
+        }
+
+        assertThrows<IOException> { fixture.hide() }
+
+        verify(exactly = 0) { fixture.owned.delete() }
+        coVerify(exactly = 0) { fixture.cache.refreshMangaDirectories(any()) }
+    }
+
+    private class SharedStorage(
+        title: String,
+        otherTitle: String,
+        otherSourceId: Long,
+        otherSourceName: String,
+        hashEnabled: Boolean = true,
+    ) {
+        val source = mockk<Source> {
+            every { id } returns 7
+        }
+        private val otherSource = if (otherSourceId == 7L) {
+            source
+        } else {
+            mockk<Source> {
+                every { id } returns otherSourceId
+            }
+        }
+        private val unrelatedSource = mockk<Source> {
+            every { id } returns 9
+        }
+        val manga = Manga.create().copy(id = 1, source = 7, title = title)
+        val otherManga = manga.copy(id = 2, source = otherSourceId, title = otherTitle, url = "/other")
+        private val unrelatedManga = manga.copy(id = 3, source = 9)
+        private val localManga = manga.copy(id = 4, source = LocalSource.ID)
+        private val target = Chapter.create().copy(
+            id = 10,
+            mangaId = 1,
+            name = "Chapter 1",
+            url = "/a/1",
+            hidden = true,
+        )
+        val otherChapter = target.copy(id = 20, mangaId = 2, url = "/b/1", hidden = false)
+        val root = directory()
+        val sourceDir = directory()
+        private val mangaDir = directory()
+        val unrelatedSourceDir = directory()
+        val unrelatedMangaDir = directory()
+        private val storage = mockk<StorageManager> { every { getDownloadsDirectory() } returns root }
+        val provider = DownloadProvider(
+            mockk(),
+            storage,
+            LibraryPreferences(InMemoryPreferenceStore()).apply { enableChapterNameHash.set(hashEnabled) },
+        )
+        val shared = file()
+        val partial = file()
+        val archive = file()
+        val owned = file()
+        val unrelatedFile = file()
+        val cache = mockk<DownloadCache>(relaxUnitFun = true)
+        val chapters = mockk<ChapterRepository> {
+            coEvery { getChapterByMangaId(1, false) } returns listOf(target)
+            coEvery { getChaptersByMangaIds(listOf(2)) } returns mapOf(2L to listOf(otherChapter))
+        }
+        val mangas = mockk<MangaRepository> {
+            coEvery { getAll() } returns listOf(manga, otherManga, unrelatedManga, localManga)
+        }
+        val sources = mockk<SourceManager> {
+            coEvery { getOrStub(otherSourceId) } returns otherSource
+            coEvery { getOrStub(9) } returns unrelatedSource
+        }
+        private val preferences = DownloadPreferences(InMemoryPreferenceStore())
+        private val categories = mockk<GetCategories> { coEvery { await(manga.id) } returns emptyList() }
+        private val downloader = mockk<Downloader>(relaxUnitFun = true)
+        private val manager = DownloadManager(
+            mockk(), provider, cache, categories, mockk(), mockk(), chapters,
+            sources, preferences, downloader, mockk(), mangas,
+        )
+
+        init {
+            every { source.toString() } returns "Source/Name"
+            every { otherSource.toString() } returns otherSourceName
+            every { unrelatedSource.toString() } returns "Unrelated"
+            every { root.findFile(any()) } answers {
+                if (firstArg<String>() == "Unrelated") unrelatedSourceDir else sourceDir
+            }
+            every { sourceDir.findFile(any()) } returns mangaDir
+            every { unrelatedSourceDir.findFile(any()) } returns unrelatedMangaDir
+            every { unrelatedMangaDir.findFile(any()) } returns unrelatedFile
+            val ownedName = provider.getChapterDirName(target.name, target.scanlator, target.url)
+            every { mangaDir.findFile(any()) } answers {
+                when (firstArg<String>()) {
+                    "Chapter 1" -> shared
+                    "Chapter 1_tmp" -> partial
+                    "Chapter 1.cbz" -> archive
+                    ownedName -> owned
+                    else -> null
+                }
+            }
+        }
+
+        suspend fun hide() = manager.deleteHiddenChapters(listOf(target), manga, source)
+
+        suspend fun hideWithProtectedChapter(protectedTitle: String): Pair<List<UniFile>, List<UniFile>> {
+            val protectedChapter = target.copy(id = 11, name = protectedTitle, url = "/a/protected", bookmark = true)
+            coEvery { chapters.getChapterByMangaId(manga.id, false) } returns listOf(target, protectedChapter)
+            // The collision in this regression belongs to another selected chapter in the same manga.
+            coEvery { chapters.getChaptersByMangaIds(listOf(otherManga.id)) } returns
+                mapOf(otherManga.id to listOf(otherChapter.copy(name = "Other manga chapter")))
+            val protectedNames = provider.getValidChapterDirNames(
+                protectedChapter.name,
+                protectedChapter.scanlator,
+                protectedChapter.url,
+            )
+                .flatMap { listOf(it, it + "_tmp") }.toCollection(sortedSetOf(String.CASE_INSENSITIVE_ORDER))
+            val files = provider.getValidChapterDirNames(target.name, target.scanlator, target.url)
+                .flatMap { listOf(it, it + "_tmp") }.distinct().associateWith { file() }
+            every { mangaDir.findFile(any()) } answers { files[firstArg<String>()] }
+
+            manager.deleteHiddenChapters(listOf(target, protectedChapter), manga, source)
+
+            coVerify(exactly = 1) { downloader.dequeueAndAwait(listOf(target, protectedChapter)) }
+            return files.filterKeys { it in protectedNames }.values.toList() to
+                files.filterKeys { it !in protectedNames }.values.toList()
+        }
+
+        private fun directory() = mockk<UniFile> {
+            every { exists() } returns true
+            every { isDirectory } returns true
+            every { canRead() } returns true
+            every { uri } returns mockk(relaxed = true)
+        }
+
+        private fun file() = mockk<UniFile> {
+            every { uri } returns mockk()
+            every { delete() } returns true
+        }
+    }
+}
