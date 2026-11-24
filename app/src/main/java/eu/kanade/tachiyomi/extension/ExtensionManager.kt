@@ -82,6 +82,9 @@ class ExtensionManager(
     @Volatile
     private var failedSigningKeys = emptySet<String>()
 
+    // A fetch that finishes after a newer one would replace its listings with older ones
+    private val fetchMutex = Mutex()
+
     // Stores sharing a signing key serve the same apks, so only the newest of their listings is shown. Stores
     // with different keys offer different apks, each installable, so each keeps its own.
     val availableExtensionsFlow = availableExtensionListFlow
@@ -190,15 +193,17 @@ class ExtensionManager(
      * Finds the available extensions in the stores and updates [availableExtensionListFlow].
      */
     suspend fun findAvailableExtensions() {
-        val listings = try {
-            fetchExtensions()
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            withContext(Dispatchers.Main) { context.toast(MR.strings.extension_api_error) }
-            return
-        }
+        fetchMutex.withLock {
+            val listings = try {
+                fetchExtensions()
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
+                withContext(Dispatchers.Main) { context.toast(MR.strings.extension_api_error) }
+                return
+            }
 
-        setAvailableExtensions(listings)
+            setAvailableExtensions(listings)
+        }
     }
 
     /**
@@ -206,16 +211,18 @@ class ExtensionManager(
      * installed extensions that have an update. Stays silent when the stores can't be reached.
      */
     suspend fun checkForUpdates() {
-        val listings = try {
-            updateExtensionStores()
-            fetchExtensions()
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            return
-        }
+        fetchMutex.withLock {
+            val listings = try {
+                updateExtensionStores()
+                fetchExtensions()
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e)
+                return
+            }
 
-        initialized.await()
-        setAvailableExtensions(listings)
+            initialized.await()
+            setAvailableExtensions(listings)
+        }
 
         val names = (loadedExtensionMapFlow.value.values + notLoadedExtensionMapFlow.value.values)
             .filter { it.hasUpdate }
@@ -371,6 +378,7 @@ class ExtensionManager(
 
         override suspend fun onPackageUninstalled(pkgName: String) = loadMutex.withLock {
             ExtensionLoader.uninstallPrivateExtension(context, pkgName)
+            trustExtension.forgetObsolete(pkgName)
             unregisterExtension(pkgName)
             updatePendingUpdatesCount()
         }
@@ -407,8 +415,22 @@ class ExtensionManager(
                     )
                 }
             }
+            updateObsolete(available, failedKeys)
         }
         updatePendingUpdatesCount()
+    }
+
+    /**
+     * An extension signed with a store's key that no such store lists is obsolete and only loads once the
+     * user trusts it. Changing which extensions are obsolete reloads them.
+     */
+    private fun updateObsolete(available: List<Extension.Available>, failedKeys: Set<String>) {
+        val (obsolete, listed) = (loadedExtensionMapFlow.value.values + notLoadedExtensionMapFlow.value.values)
+            .filter { it.store != null && it.signatures.none { key -> key in failedKeys } }
+            .partition { it.findListing(available) == null }
+        if (trustExtension.updateObsolete(obsolete, listed)) {
+            scope.launch(Dispatchers.IO) { loadExtensions() }
+        }
     }
 
     /**

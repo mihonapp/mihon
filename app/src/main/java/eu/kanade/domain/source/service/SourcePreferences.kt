@@ -74,6 +74,11 @@ class SourcePreferences(
         emptySet(),
     )
 
+    val obsoleteExtensions: Preference<Set<String>> = preferenceStore.getStringSet(
+        Preference.appStateKey("obsolete_extensions"),
+        emptySet(),
+    )
+
     val globalSearchFilterState: Preference<Boolean> = preferenceStore.getBoolean(
         Preference.appStateKey("has_filters_toggle_state"),
         false,
