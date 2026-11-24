@@ -1,8 +1,8 @@
 package mihon.domain.extension.repository
 
-import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.coroutines.flow.Flow
 import mihon.domain.extension.model.ExtensionStore
+import mihon.domain.extension.model.ExtensionStoreListings
 
 interface ExtensionStoreRepository {
     suspend fun insert(indexUrl: String): Result<Unit>
@@ -13,7 +13,7 @@ interface ExtensionStoreRepository {
 
     suspend fun refreshAll()
 
-    suspend fun fetchExtensions(): List<Extension.Available>
+    suspend fun fetchExtensions(): ExtensionStoreListings
 
     suspend fun getAll(): List<ExtensionStore>
 

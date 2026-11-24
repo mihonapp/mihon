@@ -371,7 +371,11 @@ internal object ExtensionLoader {
             return notLoaded(Extension.NotLoaded.Reason.Unsigned, libVersion)
         } else if (!trustExtension.isTrusted(pkgInfo, signatures, stores)) {
             logcat(LogPriority.WARN) { "Extension $pkgName isn't trusted" }
-            return notLoaded(Extension.NotLoaded.Reason.Untrusted(signatures.last()), libVersion)
+            val reason = Extension.NotLoaded.Reason.Untrusted(
+                signatureHash = signatures.last(),
+                isObsolete = trustExtension.isObsolete(pkgName, signatures),
+            )
+            return notLoaded(reason, libVersion)
         }
 
         if (applyContentWarningsToInstalled && contentWarning !in enabledContentWarnings) {

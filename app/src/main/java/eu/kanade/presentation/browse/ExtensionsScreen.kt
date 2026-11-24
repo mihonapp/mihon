@@ -267,8 +267,10 @@ private fun ExtensionContent(
     }
     notLoadedState?.let { extension ->
         val dismiss = { notLoadedState = null }
-        if (extension.reason is Extension.NotLoaded.Reason.Untrusted) {
+        val reason = extension.reason
+        if (reason is Extension.NotLoaded.Reason.Untrusted) {
             ExtensionTrustDialog(
+                isObsolete = reason.isObsolete,
                 onClickConfirm = {
                     onTrustExtension(extension)
                     dismiss()
@@ -281,7 +283,7 @@ private fun ExtensionContent(
             )
         } else {
             ExtensionNotLoadedDialog(
-                reason = extension.reason,
+                reason = reason,
                 onClickUninstall = {
                     onUninstallExtension(extension)
                     dismiss()
@@ -552,7 +554,7 @@ private fun ExtensionHeader(
  */
 private val Extension.NotLoaded.Reason.labelRes: StringResource?
     get() = when (this) {
-        is Extension.NotLoaded.Reason.Untrusted -> MR.strings.ext_untrusted
+        is Extension.NotLoaded.Reason.Untrusted -> if (isObsolete) MR.strings.ext_obsolete else MR.strings.ext_untrusted
         Extension.NotLoaded.Reason.Filtered -> MR.strings.ext_filtered
         // The section header already says these aren't loaded; the dialog says why
         Extension.NotLoaded.Reason.Unsigned,
@@ -625,6 +627,7 @@ private fun ExtensionNotLoadedDialog(
 
 @Composable
 private fun ExtensionTrustDialog(
+    isObsolete: Boolean,
     onClickConfirm: () -> Unit,
     onClickDismiss: () -> Unit,
     onDismissRequest: () -> Unit,
@@ -634,7 +637,12 @@ private fun ExtensionTrustDialog(
             Text(text = stringResource(MR.strings.untrusted_extension))
         },
         text = {
-            Text(text = stringResource(MR.strings.untrusted_extension_message))
+            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)) {
+                if (isObsolete) {
+                    Text(text = stringResource(MR.strings.obsolete_untrusted_extension_message))
+                }
+                Text(text = stringResource(MR.strings.untrusted_extension_message))
+            }
         },
         confirmButton = {
             TextButton(onClick = onClickConfirm) {

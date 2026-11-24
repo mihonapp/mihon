@@ -119,8 +119,11 @@ sealed interface Extension {
     ) : Installed {
 
         sealed interface Reason {
-            /** Signature isn't trusted yet. Resolvable by the user accepting it. */
-            data class Untrusted(val signatureHash: String) : Reason
+            /**
+             * Signature isn't trusted yet. Resolvable by the user accepting it. [isObsolete] when it's signed
+             * with a store's key but no such store lists it any more.
+             */
+            data class Untrusted(val signatureHash: String, val isObsolete: Boolean) : Reason
 
             /** Its [contentWarning] isn't one the user chose to load. */
             data object Filtered : Reason
