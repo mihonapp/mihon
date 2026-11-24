@@ -1,4 +1,4 @@
-﻿package eu.kanade.tachiyomi.ui.anilistwishlist
+package eu.kanade.tachiyomi.ui.anilistwishlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -71,6 +71,13 @@ class AnilistWishlistViewModel(
 
                 val entries = aniList.getPlanToRead()
 
+                try {
+                    reconcileMappings(entries.map { it.mediaId }.toSet())
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    _events.emit("Wishlist loaded, but local cleanup failed: ${e.message}")
+                }
+
                 _state.value = AnilistWishlistScreenState.Success(entries)
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
@@ -78,6 +85,42 @@ class AnilistWishlistViewModel(
                 _state.value = AnilistWishlistScreenState.Error(
                     e.message ?: "Failed to load AniList Plan to Read",
                 )
+            }
+        }
+    }
+
+    private suspend fun reconcileMappings(activeMediaIds: Set<Long>) {
+        importMutex.withLock {
+            val mappings = anilistWishlistRepository.getAll()
+            val allCategories = getCategories.await()
+            val savedCategoryId = anilistWishlistPreferences.categoryId.get()
+            val category = allCategories.firstOrNull {
+                it.id == savedCategoryId && savedCategoryId > 0L
+            } ?: allCategories.firstOrNull { it.name == CATEGORY_NAME }
+
+            for (mapping in mappings) {
+                if (mapping.anilistMediaId in activeMediaIds) continue
+
+                try {
+                    if (category != null) {
+                        val categoryIds = getCategories.await(mapping.mangaId)
+                            .map { it.id }
+
+                        if (category.id in categoryIds) {
+                            mangaRepository.setMangaCategories(
+                                mangaId = mapping.mangaId,
+                                categoryIds = categoryIds.filterNot { it == category.id },
+                            )
+                        }
+                    }
+
+                    anilistWishlistRepository.delete(mapping.anilistMediaId)
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    _events.emit(
+                        "Could not clean up an AniList Wishlist entry: ${e.message}",
+                    )
+                }
             }
         }
     }

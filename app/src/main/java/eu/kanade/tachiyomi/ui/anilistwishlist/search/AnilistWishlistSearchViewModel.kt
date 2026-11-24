@@ -39,6 +39,7 @@ import kotlinx.coroutines.withContext
 import mihon.domain.manga.model.toDomainManga
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
+import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import kotlin.time.Duration.Companion.seconds
@@ -53,6 +54,7 @@ class AnilistWishlistSearchViewModel(
     sourcePreferences: SourcePreferences,
     private val libraryPreferences: LibraryPreferences,
     private val getManga: GetManga,
+    private val networkToLocalManga: NetworkToLocalManga,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -115,6 +117,7 @@ class AnilistWishlistSearchViewModel(
                     source = loadedSource!!,
                     queries = (listing as Listing.Search).searchQueries,
                     filters = listing.filters,
+                    networkToLocalManga = networkToLocalManga,
                 )
             }.flow.map { pagingData ->
                 pagingData.map { manga ->
@@ -205,6 +208,7 @@ private class WishlistSearchPagingSource(
     private val source: Source,
     private val queries: List<String>,
     private val filters: FilterList,
+    private val networkToLocalManga: NetworkToLocalManga,
 ) : PagingSource<WishlistSearchPagingSource.SearchPageKey, Manga>() {
 
     data class SearchPageKey(
@@ -240,7 +244,7 @@ private class WishlistSearchPagingSource(
             }
 
             LoadResult.Page(
-                data = results.distinctBy { it.url },
+                data = networkToLocalManga(results.distinctBy { it.url }),
                 prevKey = null,
                 nextKey = nextPages.takeIf { pages -> pages.any { it != null } }
                     ?.let(::SearchPageKey),
