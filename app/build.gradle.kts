@@ -1,4 +1,4 @@
-import com.android.build.api.variant.ApplicationVariant
+﻿import com.android.build.api.variant.ApplicationVariant
 import com.android.build.api.variant.BuildConfigField
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import mihon.gradle.Config
@@ -449,4 +449,14 @@ androidComponents {
         // Layout Inspector's Compose tree
         it.packaging.resources.excludes.add("META-INF/*.version")
     }
+}
+
+val copyArm64DebugApk = tasks.register<Copy>("copyArm64DebugApk") {
+    from(layout.buildDirectory.file("outputs/apk/debug/app-arm64-v8a-debug.apk"))
+    into(layout.buildDirectory.dir("outputs/apk/mihon"))
+    rename { "Mihon-arm64-v8a-debug.apk" }
+}
+
+tasks.matching { it.name == "assembleDebug" }.configureEach {
+    finalizedBy(copyArm64DebugApk)
 }

@@ -1,4 +1,4 @@
-package eu.kanade.presentation.more
+﻿package eu.kanade.presentation.more
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.HorizontalDivider
@@ -12,6 +12,7 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import mihon.icons.materialsymbols.automirroredrounded.Label
 import mihon.icons.materialsymbols.rounded.CloudOff
+import mihon.icons.materialsymbols.rounded.CollectionsBookmark
 import mihon.icons.materialsymbols.rounded.Download
 import mihon.icons.materialsymbols.rounded.Eyeglasses2
 import mihon.icons.materialsymbols.rounded.Info
@@ -36,6 +37,7 @@ fun MoreScreen(
     onClickDownloadQueue: () -> Unit,
     onClickCategories: () -> Unit,
     onClickStats: () -> Unit,
+    onClickAnilistWishlist: () -> Unit,
     onClickDataAndStorage: () -> Unit,
     onClickSettings: () -> Unit,
     onClickSupport: () -> Unit,
@@ -82,7 +84,7 @@ fun MoreScreen(
                             if (pending == 0) {
                                 stringResource(MR.strings.paused)
                             } else {
-                                "${stringResource(MR.strings.paused)} • ${
+                                "${stringResource(MR.strings.paused)} â€¢ ${
                                     pluralStringResource(
                                         MR.plurals.download_queue_summary,
                                         count = pending,
@@ -112,6 +114,13 @@ fun MoreScreen(
                     title = stringResource(MR.strings.label_stats),
                     icon = MaterialSymbols.Rounded.QueryStats,
                     onPreferenceClick = onClickStats,
+                )
+            }
+            item {
+                TextPreferenceWidget(
+                    title = "AniList Plan to Read",
+                    icon = MaterialSymbols.Rounded.CollectionsBookmark,
+                    onPreferenceClick = onClickAnilistWishlist,
                 )
             }
             item {
@@ -155,3 +164,5 @@ fun MoreScreen(
         }
     }
 }
+
+

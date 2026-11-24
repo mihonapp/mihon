@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.track.TrackerDependencies
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.json.Json
+import tachiyomi.domain.anilist.model.AnilistWishlistEntry
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
 
@@ -222,6 +223,39 @@ class Anilist(
         return track
     }
 
+
+    suspend fun getPlanToRead(): List<AnilistWishlistEntry> {
+        val userId = getUsername().toIntOrNull()
+            ?: throw Exception("Invalid AniList user ID")
+
+        val result = mutableListOf<AnilistWishlistEntry>()
+        var page = 1
+
+        while (true) {
+            val pageData = api.getPlanToRead(userId, page).Page
+                ?: throw Exception("Failed to load AniList Plan to Read page")
+
+            result += pageData.mediaList.orEmpty().filterNotNull().mapNotNull { entry ->
+                val media = entry.media ?: return@mapNotNull null
+                val title = media.title?.userPreferred ?: return@mapNotNull null
+
+                AnilistWishlistEntry(
+                    mediaId = media.id.toLong(),
+                    malId = media.idMal,
+                    title = title,
+                    englishTitle = media.title?.english,
+                    romajiTitle = media.title?.romaji,
+                    totalChapters = media.chapters,
+                    coverUrl = media.coverImage?.large,
+                )
+            }
+
+            if (pageData.pageInfo?.hasNextPage != true) break
+            page++
+        }
+
+        return result
+    }
     override suspend fun updateUserConfig() {
         val currentUser = api.getCurrentUser()
         scorePreference.set(currentUser.scoreFormat)
@@ -261,3 +295,7 @@ class Anilist(
         }
     }
 }
+
+
+
+

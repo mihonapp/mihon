@@ -19,6 +19,7 @@ import mihon.graphql.anilist.AniListDeleteMangaMutation
 import mihon.graphql.anilist.AniListGetCurrentUserQuery
 import mihon.graphql.anilist.AniListGetLibMangaQuery
 import mihon.graphql.anilist.AniListGetMangaDetailsQuery
+import mihon.graphql.anilist.AniListGetPlanToReadQuery
 import mihon.graphql.anilist.AniListSearchMangaQuery
 import mihon.graphql.anilist.AniListUpdateMangaMutation
 import mihon.graphql.anilist.type.FuzzyDateInput
@@ -187,6 +188,25 @@ class AnilistApi(
             }
     }
 
+
+    suspend fun getPlanToRead(userId: Int, page: Int, perPage: Int = 50): AniListGetPlanToReadQuery.Data {
+        return graphQlClient
+            .query(
+                AniListGetPlanToReadQuery(
+                    userId = userId,
+                    page = page,
+                    perPage = perPage,
+                ),
+            )
+            .execute()
+            .dataOrElse(
+                errorLog = "AniList: Failed to get Plan to Read",
+                default = { null },
+            ) {
+                it
+            }
+            ?: throw Exception("Failed to get AniList Plan to Read")
+    }
     private fun createFuzzyDate(dateValue: Long): FuzzyDateInput {
         // all absent/null
         if (dateValue == 0L) return FuzzyDateInput()
@@ -208,3 +228,4 @@ class AnilistApi(
             .build()
     }
 }
+

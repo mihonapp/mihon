@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.more
+﻿package eu.kanade.tachiyomi.ui.more
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mihon.core.navigation.AboutRoute
+import mihon.core.navigation.AnilistWishlistRoute
 import mihon.core.navigation.CategoryRoute
 import mihon.core.navigation.DownloadQueueRoute
 import mihon.core.navigation.LocalNavigator
@@ -48,6 +49,7 @@ fun MoreTab() {
         onClickDownloadQueue = { navigator.push(DownloadQueueRoute) },
         onClickCategories = { navigator.push(CategoryRoute) },
         onClickStats = { navigator.push(StatsRoute) },
+        onClickAnilistWishlist = { navigator.push(AnilistWishlistRoute) },
         onClickDataAndStorage = {
             navigator.openSettings(SettingsDataScreen, isTabletUi)
         },
@@ -99,3 +101,4 @@ sealed interface DownloadQueueState {
     data class Paused(val pending: Int) : DownloadQueueState
     data class Downloading(val pending: Int) : DownloadQueueState
 }
+

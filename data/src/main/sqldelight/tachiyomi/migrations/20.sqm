@@ -1,0 +1,5 @@
+CREATE TABLE anilist_wishlist_mapping(
+    anilist_media_id INTEGER NOT NULL PRIMARY KEY,
+    manga_id INTEGER NOT NULL UNIQUE,
+    FOREIGN KEY(manga_id) REFERENCES manga(id) ON DELETE CASCADE
+);

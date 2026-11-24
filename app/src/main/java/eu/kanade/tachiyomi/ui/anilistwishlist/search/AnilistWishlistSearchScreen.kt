@@ -1,0 +1,139 @@
+package eu.kanade.tachiyomi.ui.anilistwishlist.search
+
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SmallExtendedFloatingActionButton
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.animateFloatingActionButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.navigation3.runtime.result.LocalResultEventBus
+import dev.zacsweers.metrox.viewmodel.assistedMetroViewModel
+import eu.kanade.presentation.browse.BrowseSourceContent
+import eu.kanade.presentation.components.SearchToolbar
+import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterDialog
+import mihon.core.navigation.LocalNavigator
+import mihon.core.navigation.MangaRoute
+import mihon.core.navigation.WebViewRoute
+import mihon.icons.materialsymbols.MaterialSymbols
+import mihon.icons.materialsymbols.rounded.FilterList
+import mihon.presentation.core.util.collectAsLazyPagingItems
+import tachiyomi.core.common.Constants
+import tachiyomi.domain.manga.model.Manga
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.source.local.LocalSource
+
+@Composable
+fun AnilistWishlistSearchScreen(
+    mediaId: Long,
+    sourceId: Long,
+    query: String,
+    englishTitle: String? = null,
+    romajiTitle: String? = null,
+) {
+    val uriHandler = LocalUriHandler.current
+    val navigator = LocalNavigator.current
+    val resultEventBus = LocalResultEventBus.current
+
+    val viewModel =
+        assistedMetroViewModel<AnilistWishlistSearchViewModel, AnilistWishlistSearchViewModel.Factory> {
+            create(sourceId = sourceId, listingQuery = query, englishTitle = englishTitle, romajiTitle = romajiTitle)
+        }
+    val state by viewModel.state.collectAsState()
+
+    val source = state.source
+    if (source == null) {
+        LoadingScreen()
+        return
+    }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        topBar = { scrollBehavior ->
+            SearchToolbar(
+                searchQuery = state.toolbarQuery ?: "",
+                onChangeSearchQuery = viewModel::setToolbarQuery,
+                onClickCloseSearch = navigator::pop,
+                onSearch = viewModel::search,
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        floatingActionButton = {
+            SmallExtendedFloatingActionButton(
+                text = { Text(text = stringResource(MR.strings.action_filter)) },
+                icon = {
+                    Icon(
+                        MaterialSymbols.Rounded.FilterList,
+                        contentDescription = null,
+                    )
+                },
+                onClick = viewModel::openFilterSheet,
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = state.filters.isNotEmpty(),
+                    alignment = Alignment.BottomEnd,
+                ),
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+    ) { paddingValues ->
+        BrowseSourceContent(
+            source = source,
+            mangaList = viewModel.mangaPagerFlowFlow.collectAsLazyPagingItems(),
+            columns = viewModel.getColumnsPreference(LocalConfiguration.current.orientation),
+            displayMode = viewModel.displayMode,
+            snackbarHostState = snackbarHostState,
+            contentPadding = paddingValues,
+            onWebViewClick = {
+                val httpSource = source as? HttpSource ?: return@BrowseSourceContent
+                navigator.push(
+                    WebViewRoute(
+                        url = httpSource.getHomeUrl(),
+                        initialTitle = httpSource.name,
+                        sourceId = httpSource.id,
+                    ),
+                )
+            },
+            onHelpClick = { uriHandler.openUri(Constants.URL_HELP) },
+            onLocalSourceHelpClick = { uriHandler.openUri(LocalSource.HELP_URL) },
+            onMangaClick = { manga ->
+                resultEventBus.sendResult(
+                    result = AnilistWishlistMangaSelectedEvent(
+                        mediaId = mediaId,
+                        manga = manga,
+                    ),
+                )
+                navigator.pop()
+            },
+            onMangaLongClick = { navigator.push(MangaRoute(it.id, true)) },
+        )
+    }
+
+    if (state.isFilterDialogOpen) {
+        SourceFilterDialog(
+            onDismissRequest = viewModel::closeFilterSheet,
+            filters = state.filters,
+            onReset = viewModel::resetFilters,
+            onFilter = { viewModel.search(filters = state.filters) },
+            onUpdate = viewModel::setFilters,
+        )
+    }
+}
+
+data class AnilistWishlistMangaSelectedEvent(
+    val mediaId: Long,
+    val manga: Manga,
+)
+
+

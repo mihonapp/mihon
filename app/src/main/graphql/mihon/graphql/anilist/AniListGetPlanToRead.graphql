@@ -1,0 +1,29 @@
+query AniListGetPlanToRead($userId: Int!, $page: Int!, $perPage: Int!) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+    }
+    mediaList(
+      userId: $userId
+      type: MANGA
+      status: PLANNING
+    ) {
+      id
+      status
+      progress
+      media {
+        id
+        idMal
+        title {
+          userPreferred
+          english
+          romaji
+        }
+        chapters
+        coverImage {
+          large
+        }
+      }
+    }
+  }
+}

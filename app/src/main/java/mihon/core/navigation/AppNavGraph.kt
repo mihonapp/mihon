@@ -42,6 +42,9 @@ import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialog
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.ui.stats.StatsScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.AnilistWishlistScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.sources.AnilistWishlistSourcesScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.search.AnilistWishlistSearchScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.list.MigrationListScreen
@@ -144,6 +147,26 @@ fun EntryProviderScope<NavKey>.appEntries() {
     entry<StatsRoute> {
         StatsScreen()
     }
+    entry<AnilistWishlistRoute> {
+        AnilistWishlistScreen()
+    }
+    entry<AnilistWishlistSourcesRoute> { route ->
+        AnilistWishlistSourcesScreen(
+            mediaId = route.mediaId,
+            query = route.query,
+            englishTitle = route.englishTitle,
+            romajiTitle = route.romajiTitle,
+        )
+    }
+    entry<AnilistWishlistSearchRoute> { route ->
+        AnilistWishlistSearchScreen(
+            mediaId = route.mediaId,
+            sourceId = route.sourceId,
+            query = route.query,
+            englishTitle = route.englishTitle,
+            romajiTitle = route.romajiTitle,
+        )
+    }
     entry<SupportUsRoute>(metadata = TwoPaneSettingsScene.fullScreen()) {
         SupportUsScreen()
     }
@@ -210,3 +233,9 @@ fun EntryProviderScope<NavKey>.appEntries() {
         SettingsTrackingScreen.Content()
     }
 }
+
+
+
+
+
+
