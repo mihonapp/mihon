@@ -37,6 +37,7 @@ import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import mihon.domain.extension.interactor.UpdateExtensionStores
 import mihon.domain.extension.model.ExtensionStore
+import mihon.domain.extension.model.ExtensionStoreListings
 import mihon.domain.extension.repository.ExtensionStoreRepository
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
@@ -76,6 +77,10 @@ class ExtensionManager(
 
     // Every store's listing, since more than one store can list the same extension
     private val availableExtensionListFlow = MutableStateFlow(emptyList<Extension.Available>())
+
+    // Keys of the stores whose listing failed in the last fetch, so a missing extension may still be listed
+    @Volatile
+    private var failedSigningKeys = emptySet<String>()
 
     // Stores sharing a signing key serve the same apks, so only the newest of their listings is shown. Stores
     // with different keys offer different apks, each installable, so each keeps its own.
@@ -185,7 +190,7 @@ class ExtensionManager(
      * Finds the available extensions in the stores and updates [availableExtensionListFlow].
      */
     suspend fun findAvailableExtensions() {
-        val extensions: List<Extension.Available> = try {
+        val listings = try {
             fetchExtensions()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
@@ -193,7 +198,7 @@ class ExtensionManager(
             return
         }
 
-        setAvailableExtensions(extensions)
+        setAvailableExtensions(listings)
     }
 
     /**
@@ -201,7 +206,7 @@ class ExtensionManager(
      * installed extensions that have an update. Stays silent when the stores can't be reached.
      */
     suspend fun checkForUpdates() {
-        val extensions = try {
+        val listings = try {
             updateExtensionStores()
             fetchExtensions()
         } catch (e: Exception) {
@@ -210,7 +215,7 @@ class ExtensionManager(
         }
 
         initialized.await()
-        setAvailableExtensions(extensions)
+        setAvailableExtensions(listings)
 
         val names = (loadedExtensionMapFlow.value.values + notLoadedExtensionMapFlow.value.values)
             .filter { it.hasUpdate }
@@ -220,16 +225,17 @@ class ExtensionManager(
         }
     }
 
-    private suspend fun fetchExtensions(): List<Extension.Available> {
+    private suspend fun fetchExtensions(): ExtensionStoreListings {
         return extensionStoreRepository.fetchExtensions()
     }
 
-    private fun setAvailableExtensions(extensions: List<Extension.Available>) {
-        enableAdditionalSubLanguages(extensions)
+    private fun setAvailableExtensions(listings: ExtensionStoreListings) {
+        enableAdditionalSubLanguages(listings.extensions)
 
-        availableExtensionListFlow.value = extensions
+        failedSigningKeys = listings.failedSigningKeys
+        availableExtensionListFlow.value = listings.extensions
         refreshStatuses()
-        setupAvailableExtensionsSourcesDataMap(extensions)
+        setupAvailableExtensionsSourcesDataMap(listings.extensions)
     }
 
     /**
@@ -372,17 +378,23 @@ class ExtensionManager(
 
     /**
      * Derives what the store listings say about every installed extension, loaded or not. Without any
-     * listing there's nothing to derive from, so they're left as they are rather than marked obsolete.
+     * listing there's nothing to derive from, so they're left as they are rather than marked obsolete,
+     * and so is an extension whose store's listing failed.
      */
     private fun refreshStatuses() {
         val available = availableExtensionListFlow.value
         if (available.isNotEmpty()) {
+            val failedKeys = failedSigningKeys
             loadedExtensionMapFlow.update { current ->
                 current.mapValues { (_, extension) ->
                     val listing = extension.findListing(available)
                     extension.copy(
                         hasUpdate = extension.findUpdate(available) != null,
-                        isObsolete = listing == null,
+                        isObsolete = if (extension.signatures.any { it in failedKeys }) {
+                            extension.isObsolete
+                        } else {
+                            listing == null
+                        },
                         store = if (stores.isEmpty()) extension.store else extension.pickStore(),
                     )
                 }

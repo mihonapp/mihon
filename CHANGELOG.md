@@ -39,6 +39,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 - Fix extension settings showing duplicate entries after the app is restored from the background ([@AntsyLich](https://github.com/AntsyLich))
+- Fix extensions showing as orphaned when their store fails to load ([@hazptr](https://github.com/hazptr)) ([#4353](https://github.com/mihonapp/mihon/pull/4353))
 
 ## [v0.21.3] - 2026-10-26
 ### Added
