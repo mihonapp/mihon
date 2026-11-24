@@ -6,7 +6,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import eu.kanade.tachiyomi.extension.model.Extension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -21,6 +20,7 @@ import logcat.LogPriority
 import mihon.core.metro.AppCoroutineScope
 import mihon.data.extension.service.ExtensionStoreService
 import mihon.domain.extension.model.ExtensionStore
+import mihon.domain.extension.model.ExtensionStoreListings
 import mihon.domain.extension.repository.ExtensionStoreRepository
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Database
@@ -111,10 +111,11 @@ class ExtensionStoreRepositoryImpl(
         )
     }
 
-    override suspend fun fetchExtensions(): List<Extension.Available> {
+    override suspend fun fetchExtensions(): ExtensionStoreListings {
         return try {
             supervisorScope {
-                database.extension_storeQueries.getAll(::extensionStoreMapper).awaitAsList().map { store ->
+                val stores = database.extension_storeQueries.getAll(::extensionStoreMapper).awaitAsList()
+                val listings = stores.map { store ->
                     async {
                         service.getExtensions(store).onFailure {
                             this@ExtensionStoreRepositoryImpl.logcat(LogPriority.ERROR, it) {
@@ -124,11 +125,17 @@ class ExtensionStoreRepositoryImpl(
                     }
                 }
                     .awaitAll()
-                    .flatMap { it.getOrDefault(emptyList()) }
+                    .map { it.getOrDefault(emptyList()) }
+                ExtensionStoreListings(
+                    extensions = listings.flatten(),
+                    failedSigningKeys = stores.zip(listings)
+                        .filter { (_, listing) -> listing.isEmpty() }
+                        .mapTo(HashSet()) { (store, _) -> store.signingKey },
+                )
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-            emptyList()
+            ExtensionStoreListings(emptyList(), emptySet())
         }
     }
 
