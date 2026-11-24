@@ -114,4 +114,9 @@
         <item quantity="one">%1$d update failed</item>
         <item quantity="other">%1$d updates failed</item>
     </plurals>
+
+    <plurals name="cloudflare_challenge_waiting">
+        <item quantity="one">%1$d more waiting: %2$s</item>
+        <item quantity="other">%1$d more waiting: %2$s</item>
+    </plurals>
 </resources>

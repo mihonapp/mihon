@@ -1,10 +1,13 @@
 package eu.kanade.tachiyomi.network.interceptor
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
+import android.view.ContextThemeWrapper
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
@@ -81,10 +84,24 @@ abstract class WebViewInterceptor(
     }
 
     fun createWebView(request: Request): WebView {
-        return WebView(context).apply {
+        return WebView(themedContext()).apply {
             setDefaultSettings()
             // Avoid sending empty User-Agent, Chromium WebView will reset to default if empty
             setUserAgent(request.header("User-Agent") ?: defaultUserAgentProvider())
         }
+    }
+
+    // Pages are light or dark by the theme of the context, and the application's is always light
+    private fun themedContext(): Context {
+        val isDark = when (AppCompatDelegate.getDefaultNightMode()) {
+            AppCompatDelegate.MODE_NIGHT_YES -> true
+            AppCompatDelegate.MODE_NIGHT_NO -> false
+            else -> {
+                val nightMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                nightMode == Configuration.UI_MODE_NIGHT_YES
+            }
+        }
+        val theme = if (isDark) android.R.style.Theme_DeviceDefault else android.R.style.Theme_DeviceDefault_Light
+        return ContextThemeWrapper(context, theme)
     }
 }
