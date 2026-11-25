@@ -11,6 +11,7 @@ import eu.kanade.presentation.browse.components.GlobalSearchLoadingResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchStatus
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchViewModel
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
@@ -30,6 +31,9 @@ fun GlobalSearchScreen(
     onClickSource: (Source) -> Unit,
     onClickItem: (Manga) -> Unit,
     onLongClickItem: (Manga) -> Unit,
+    onToggleStatusFilter: (GlobalSearchStatus) -> Unit = {},
+    onToggleTagFilter: (String) -> Unit = {},
+    onClearFilters: () -> Unit = {},
 ) {
     Scaffold(
         topBar = { scrollBehavior ->
@@ -46,6 +50,11 @@ fun GlobalSearchScreen(
                 onlyShowHasResults = state.onlyShowHasResults,
                 onToggleResults = onToggleResults,
                 scrollBehavior = scrollBehavior,
+                activeFilters = state.activeFilters,
+                availableTags = state.availableTags,
+                onToggleStatusFilter = onToggleStatusFilter,
+                onToggleTagFilter = onToggleTagFilter,
+                onClearFilters = onClearFilters,
             )
         },
     ) { paddingValues ->

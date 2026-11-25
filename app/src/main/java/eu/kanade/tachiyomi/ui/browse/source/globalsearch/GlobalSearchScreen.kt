@@ -57,8 +57,12 @@ fun GlobalSearchScreen(
             getManga = { viewModel.getManga(it) },
             onChangeSearchFilter = viewModel::setSourceFilter,
             onToggleResults = viewModel::toggleFilterResults,
+            onToggleStatusFilter = viewModel::toggleStatusFilter,
+            onToggleTagFilter = viewModel::toggleTagFilter,
+            onClearFilters = viewModel::clearGlobalFilters,
             onClickSource = {
-                navigator.push(BrowseSourceRoute(it.id, state.searchQuery))
+                val cleanQuery = parseGlobalSearchQuery(state.searchQuery.orEmpty()).cleanQuery
+                navigator.push(BrowseSourceRoute(it.id, cleanQuery))
             },
             onClickItem = { navigator.push(MangaRoute(it.id, true)) },
             onLongClickItem = { navigator.push(MangaRoute(it.id, true)) },

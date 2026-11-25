@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.source.globalsearch
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.produceState
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
+import eu.kanade.tachiyomi.source.model.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -36,6 +38,7 @@ abstract class SearchViewModel(
     private val networkToLocalManga: NetworkToLocalManga,
     private val getManga: GetManga,
     private val preferences: SourcePreferences,
+    private val context: Context? = null,
 ) : ViewModel() {
 
     val state: StateFlow<State>
@@ -56,6 +59,7 @@ abstract class SearchViewModel(
 
     private var lastQuery: String? = null
     private var lastSourceFilter: SourceFilter? = null
+    private var lastActiveFilters: GlobalSearchFilters? = null
 
     protected var extensionFilter: String? = null
 
@@ -72,6 +76,9 @@ abstract class SearchViewModel(
             preferences.globalSearchFilterState.changes().collectLatest { onlyShowHasResults ->
                 state.update { it.copy(onlyShowHasResults = onlyShowHasResults) }
             }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAvailableFilterOptions()
         }
     }
 
@@ -111,12 +118,78 @@ abstract class SearchViewModel(
             .filter { it in enabledSources }
     }
 
+    /**
+     * Collects tag/genre names exposed by enabled extensions' filter lists so the UI chip sheet
+     * automatically adapts to the user's installed sources and active extension languages.
+     */
+    private suspend fun loadAvailableFilterOptions() {
+        val tagCounts = mutableMapOf<String, Int>()
+        val displayNames = mutableMapOf<String, String>()
+
+        for (source in getSelectedSources()) {
+            val filters = runCatching { source.getFilterList() }.getOrNull() ?: continue
+            val seenInSource = mutableSetOf<String>()
+
+            fun collectFrom(filter: Filter<*>, insideExcludedGroup: Boolean) {
+                val lowerName = filter.name.lowercase()
+                val excludedGroup = insideExcludedGroup ||
+                    lowerName.contains("status") ||
+                    lowerName.contains("scanlation") ||
+                    lowerName.contains("translation") ||
+                    lowerName.contains("upload")
+                if (excludedGroup) return
+
+                when (filter) {
+                    is Filter.Group<*> -> {
+                        filter.state.filterIsInstance<Filter<*>>().forEach {
+                            collectFrom(it, insideExcludedGroup = false)
+                        }
+                    }
+                    is Filter.TriState, is Filter.CheckBox -> {
+                        val trimmed = filter.name.trim()
+                        val key = trimmed.lowercase()
+                        if (trimmed.isNotEmpty() &&
+                            GlobalSearchStatus.fromString(trimmed, context) == null &&
+                            seenInSource.add(key)
+                        ) {
+                            tagCounts[key] = (tagCounts[key] ?: 0) + 1
+                            displayNames.putIfAbsent(key, trimmed)
+                        }
+                    }
+                    else -> {}
+                }
+            }
+
+            filters.forEach { collectFrom(it, insideExcludedGroup = false) }
+        }
+
+        val sortedTags = tagCounts.entries
+            .sortedWith(
+                compareBy(
+                    { -it.value },
+                    { it.key },
+                ),
+            )
+            .mapNotNull { displayNames[it.key] }
+
+        state.update { it.copy(availableTags = sortedTags) }
+    }
+
     fun updateSearchQuery(query: String?) {
-        state.update { it.copy(searchQuery = query) }
+        val parsed = parseGlobalSearchQuery(query.orEmpty(), context)
+        state.update {
+            it.copy(
+                searchQuery = query,
+                invalidFilterTokens = parsed.invalidTokens,
+            )
+        }
     }
 
     fun setSourceFilter(filter: SourceFilter) {
         state.update { it.copy(sourceFilter = filter) }
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAvailableFilterOptions()
+        }
         search()
     }
 
@@ -124,34 +197,98 @@ abstract class SearchViewModel(
         preferences.globalSearchFilterState.toggle()
     }
 
-    fun search() {
-        val query = state.value.searchQuery
+    fun toggleStatusFilter(status: GlobalSearchStatus) {
+        state.update { current ->
+            val updated = if (status in current.activeFilters.statuses) {
+                current.activeFilters.statuses - status
+            } else {
+                current.activeFilters.statuses + status
+            }
+            current.copy(activeFilters = current.activeFilters.copy(statuses = updated))
+        }
+        search(forceRefresh = true)
+    }
+
+    fun toggleTagFilter(tag: String) {
+        state.update { current ->
+            val filters = current.activeFilters
+            val existingInclude = filters.includedTags.firstOrNull { it.equals(tag, ignoreCase = true) }
+            val existingExclude = filters.excludedTags.firstOrNull { it.equals(tag, ignoreCase = true) }
+
+            val updatedFilters = when {
+                existingInclude != null -> filters.copy(
+                    includedTags = filters.includedTags - existingInclude,
+                    excludedTags = filters.excludedTags + tag,
+                )
+                existingExclude != null -> filters.copy(
+                    excludedTags = filters.excludedTags - existingExclude,
+                )
+                else -> filters.copy(
+                    includedTags = filters.includedTags + tag,
+                )
+            }
+            current.copy(activeFilters = updatedFilters)
+        }
+        search(forceRefresh = true)
+    }
+
+    fun setSortKeyword(sortKeyword: String?) {
+        state.update { current ->
+            current.copy(activeFilters = current.activeFilters.copy(sortKeyword = sortKeyword))
+        }
+        search(forceRefresh = true)
+    }
+
+    fun clearGlobalFilters() {
+        val cleanedQuery = state.value.searchQuery
+            ?.let { parseGlobalSearchQuery(it, context).cleanQuery }
+        state.update {
+            it.copy(
+                searchQuery = cleanedQuery,
+                activeFilters = GlobalSearchFilters(),
+                invalidFilterTokens = emptyList(),
+            )
+        }
+        search(forceRefresh = true)
+    }
+
+    fun search(forceRefresh: Boolean = false) {
+        val rawQuery = state.value.searchQuery.orEmpty()
         val sourceFilter = state.value.sourceFilter
+        val uiFilters = state.value.activeFilters
 
-        if (query.isNullOrBlank()) return
+        val parsed = parseGlobalSearchQuery(rawQuery, context)
+        val effectiveFilters = GlobalSearchFilters(
+            statuses = uiFilters.statuses + parsed.filters.statuses,
+            includedTags = uiFilters.includedTags + parsed.filters.includedTags,
+            excludedTags = uiFilters.excludedTags + parsed.filters.excludedTags,
+            sortKeyword = parsed.filters.sortKeyword ?: uiFilters.sortKeyword,
+        )
 
-        val sameQuery = this.lastQuery == query
+        if (parsed.cleanQuery.isBlank() && effectiveFilters.isEmpty) return
+
+        val sameQuery = !forceRefresh &&
+            this.lastQuery == parsed.cleanQuery &&
+            this.lastActiveFilters == effectiveFilters
         if (sameQuery && this.lastSourceFilter == sourceFilter) return
 
-        this.lastQuery = query
+        this.lastQuery = parsed.cleanQuery
         this.lastSourceFilter = sourceFilter
+        this.lastActiveFilters = effectiveFilters
+
+        state.update { it.copy(invalidFilterTokens = parsed.invalidTokens) }
 
         searchJob?.cancel()
-
         searchJob = viewModelScope.launch(Dispatchers.IO) {
             val sources = getSelectedSources()
-
-            // Reuse previous results if possible
             if (sameQuery) {
                 val existingResults = state.value.items
                 updateItems(
-                    sources
-                        .associateWith { existingResults[it] ?: SearchItemResult.Loading },
+                    sources.associateWith { existingResults[it] ?: SearchItemResult.Loading },
                 )
             } else {
                 updateItems(
-                    sources
-                        .associateWith { SearchItemResult.Loading },
+                    sources.associateWith { SearchItemResult.Loading },
                 )
             }
 
@@ -160,16 +297,18 @@ abstract class SearchViewModel(
                     if (state.value.items[source] !is SearchItemResult.Loading) {
                         return@async
                     }
-
                     try {
-                        val page = withContext(coroutineDispatcher) {
-                            source.getSearchManga(1, query, source.getFilterList())
+                        val (page, report) = withContext(coroutineDispatcher) {
+                            val filters = source.getFilterList()
+                            val applyReport = filters.applyGlobalFilters(effectiveFilters, context)
+                            val searchPage = source.getSearchManga(1, parsed.cleanQuery, filters)
+                            searchPage to applyReport
                         }
-
                         val titles = page.mangas
                             .map { it.toDomainManga(source.id) }
                             .distinctBy { it.url }
                             .let { networkToLocalManga(it) }
+                            .applyClientSideFallback(effectiveFilters, report)
 
                         if (isActive) {
                             updateItem(source, SearchItemResult.Success(titles))
@@ -188,8 +327,7 @@ abstract class SearchViewModel(
     private fun updateItems(items: Map<Source, SearchItemResult>) {
         state.update {
             it.copy(
-                items = items
-                    .toSortedMap(sortComparator(items)),
+                items = items.toSortedMap(sortComparator(items)),
             )
         }
     }
@@ -220,12 +358,17 @@ abstract class SearchViewModel(
         val searchQuery: String? = null,
         val sourceFilter: SourceFilter = SourceFilter.PinnedOnly,
         val onlyShowHasResults: Boolean = false,
+        val activeFilters: GlobalSearchFilters = GlobalSearchFilters(),
+        val availableTags: List<String> = emptyList(),
+        val invalidFilterTokens: List<String> = emptyList(),
         val items: Map<Source, SearchItemResult> = mapOf(),
         val dialog: Dialog? = null,
     ) {
         val progress: Int = items.count { it.value !is SearchItemResult.Loading }
         val total: Int = items.size
         val filteredItems = items.filter { (_, result) -> result.isVisible(onlyShowHasResults) }
+        val hasActiveFilters: Boolean
+            get() = !activeFilters.isEmpty
     }
 
     sealed interface Dialog {
