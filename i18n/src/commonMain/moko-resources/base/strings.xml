@@ -653,6 +653,8 @@
       <!-- Advanced section -->
     <string name="label_network">Networking</string>
     <string name="pref_clear_cookies">Clear cookies</string>
+    <string name="pref_show_cloudflare_challenges">Show Cloudflare challenges</string>
+    <string name="pref_show_cloudflare_challenges_summary">Show a dialog when a site needs you to verify that you\'re human</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_user_agent_string">Default user agent string</string>
     <string name="error_user_agent_string_invalid">Invalid user agent string</string>

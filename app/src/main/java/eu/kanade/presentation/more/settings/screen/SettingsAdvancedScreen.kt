@@ -240,6 +240,11 @@ data object SettingsAdvancedScreen : SearchableSettings {
                         }
                     },
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = networkPreferences.showCloudflareChallenges,
+                    title = stringResource(MR.strings.pref_show_cloudflare_challenges),
+                    subtitle = stringResource(MR.strings.pref_show_cloudflare_challenges_summary),
+                ),
                 Preference.PreferenceItem.ListPreference(
                     preference = networkPreferences.dohProvider,
                     entries = mapOf(

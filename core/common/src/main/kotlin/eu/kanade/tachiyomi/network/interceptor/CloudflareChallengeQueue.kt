@@ -5,6 +5,7 @@ import android.webkit.WebView
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import eu.kanade.tachiyomi.network.NetworkPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,16 +16,18 @@ import kotlinx.coroutines.flow.update
  */
 @Inject
 @SingleIn(AppScope::class)
-class CloudflareChallengeQueue {
+class CloudflareChallengeQueue(
+    private val preferences: NetworkPreferences,
+) {
 
     private val _challenges = MutableStateFlow(emptyList<CloudflareChallenge>())
     val challenges: StateFlow<List<CloudflareChallenge>> = _challenges.asStateFlow()
 
     /**
-     * Returns false if the app isn't in the foreground to show it.
+     * Returns false if the user turned it off or the app isn't in the foreground to show it.
      */
     fun add(challenge: CloudflareChallenge): Boolean {
-        if (_challenges.subscriptionCount.value == 0) return false
+        if (!preferences.showCloudflareChallenges.get() || _challenges.subscriptionCount.value == 0) return false
         _challenges.update { it + challenge }
         return true
     }
