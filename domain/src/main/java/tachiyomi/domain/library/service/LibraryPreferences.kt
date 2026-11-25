@@ -131,6 +131,8 @@ class LibraryPreferences(
 
     val lastUsedCategory: Preference<Int> = preferenceStore.getInt(Preference.appStateKey("last_used_category"), 0)
 
+    val parentChildLayout = preferenceStore.getBoolean("pref_library_parent_child_layout", false)
+
     val categoryTabs: Preference<Boolean> = preferenceStore.getBoolean("display_category_tabs", true)
 
     val categoryNumberOfItems: Preference<Boolean> = preferenceStore.getBoolean("display_number_of_items", false)

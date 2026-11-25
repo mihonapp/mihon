@@ -11,17 +11,19 @@ class RenameCategory(
     private val categoryRepository: CategoryRepository,
 ) {
 
-    suspend fun await(categoryId: Long, name: String): Result {
+    suspend fun await(category: Category, name: String, parentId: Long? = category.parentId): Result {
         return try {
-            categoryRepository.updateName(categoryId = categoryId, name = name)
+            if (category.parentId == parentId) {
+                categoryRepository.updateName(category.id, name)
+            } else {
+                categoryRepository.updateNameAndParent(category.id, name, parentId)
+            }
             Result.Success
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             Result.InternalError(e)
         }
     }
-
-    suspend fun await(category: Category, name: String) = await(category.id, name)
 
     sealed interface Result {
         data object Success : Result

@@ -17,6 +17,7 @@ import eu.kanade.core.util.fastFilterNot
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.presentation.category.buildCategoryDescendants
 import eu.kanade.presentation.library.components.LibraryToolbarTitle
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -108,6 +109,8 @@ class LibraryViewModel(
 
     private val dialog = MutableStateFlow<Dialog?>(null)
 
+    private val subcategoryFilter = MutableStateFlow<Long?>(null)
+
     private val activeCategoryIndex = MutableStateFlow(libraryPreferences.lastUsedCategory.get())
 
     private val displayPreferences = combine(
@@ -174,11 +177,22 @@ class LibraryViewModel(
         )
     }
         .distinctUntilChanged()
-        .map { data ->
+        .combine(libraryPreferences.parentChildLayout.changes()) { data, parentChildLayout ->
+            val groups = data.favorites.applyGrouping(data.categories, data.showSystemCategory)
+            val descendants = if (parentChildLayout) buildCategoryDescendants(groups.keys.toList()) else emptyMap()
+            val aggregates = groups.keys.mapNotNull { category ->
+                val children = descendants[category.id].orEmpty()
+                if (children.isEmpty()) return@mapNotNull null
+                category to buildSet<Long> {
+                    addAll(groups[category].orEmpty())
+                    children.forEach { addAll(groups[it].orEmpty()) }
+                }.toList()
+            }.toMap()
             Library(
                 data = data,
-                groupedFavorites = data.favorites
-                    .applyGrouping(data.categories, data.showSystemCategory)
+                descendants = descendants,
+                aggregates = aggregates.applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds),
+                groupedFavorites = groups
                     .applySort(data.favoritesById, data.tracksMap, data.loggedInTrackerIds),
             )
         }
@@ -189,7 +203,8 @@ class LibraryViewModel(
         library,
         combine(searchQuery, selection, dialog, ::Triple),
         combine(activeCategoryIndex, displayPreferences, hasActiveFilters, ::Triple),
-    ) { library, (searchQuery, selection, dialog), (activeCategoryIndex, display, hasActiveFilters) ->
+        subcategoryFilter,
+    ) { library, (searchQuery, selection, dialog), (activeCategoryIndex, display, hasActiveFilters), filter ->
         State(
             isLoading = library == null,
             searchQuery = searchQuery,
@@ -202,6 +217,9 @@ class LibraryViewModel(
             libraryData = library?.data ?: LibraryData(),
             activeCategoryIndex = activeCategoryIndex,
             groupedFavorites = library?.groupedFavorites.orEmpty(),
+            descendants = library?.descendants.orEmpty(),
+            aggregates = library?.aggregates.orEmpty(),
+            subcategoryFilter = filter,
         )
     }
         .stateIn(viewModelScope + subscriberGate, subscriberGate.whileSubscribed(5.seconds), State())
@@ -214,6 +232,8 @@ class LibraryViewModel(
 
     private data class Library(
         val data: LibraryData,
+        val descendants: Map<Long, List<Category>>,
+        val aggregates: Map<Category, List<Long>>,
         val groupedFavorites: Map<Category, List</* LibraryItem */ Long>>,
     )
 
@@ -710,6 +730,10 @@ class LibraryViewModel(
         searchQuery.update { query }
     }
 
+    fun filterSubcategory(id: Long?) {
+        subcategoryFilter.value = id
+    }
+
     fun updateActiveCategoryIndex(index: Int) {
         activeCategoryIndex.update { index }
         // Coerce here rather than reading it back off [state], which is derived asynchronously
@@ -724,7 +748,7 @@ class LibraryViewModel(
             val mangaList = selectedManga
 
             // Hide the default category because it has a different behavior than the ones from db.
-            val categories = state.value.displayedCategories.filter { it.id != 0L }
+            val categories = state.value.libraryData.categories.filterNot { it.isSystemCategory }
 
             val mangaCategoryIds = mangaList.map { getCategoryIds(it) }
             val common = mangaCategoryIds.reduceOrNull { set1, set2 -> set1 intersect set2 }.orEmpty()
@@ -802,9 +826,16 @@ class LibraryViewModel(
         val dialog: Dialog? = null,
         val libraryData: LibraryData = LibraryData(),
         private val activeCategoryIndex: Int = 0,
+        val descendants: Map<Long, List<Category>> = emptyMap(),
+        private val aggregates: Map<Category, List<Long>> = emptyMap(),
+        val subcategoryFilter: Long? = null,
         private val groupedFavorites: Map<Category, List</* LibraryItem */ Long>> = emptyMap(),
     ) {
-        val displayedCategories: List<Category> = groupedFavorites.keys.toList()
+        val displayedCategories: List<Category> = if (descendants.isEmpty()) {
+            groupedFavorites.keys.toList()
+        } else {
+            groupedFavorites.keys.filter { it.parentId == null }
+        }
 
         val coercedActiveCategoryIndex = activeCategoryIndex.coerceIn(
             minimumValue = 0,
@@ -825,12 +856,19 @@ class LibraryViewModel(
             return getItemsForCategory(category)
         }
 
+        private fun visibleItemIds(category: Category): List<Long> {
+            val children = descendants[category.id].orEmpty()
+            if (children.isEmpty() || subcategoryFilter == category.id) return groupedFavorites[category].orEmpty()
+            val selected = children.firstOrNull { it.id == subcategoryFilter } ?: category
+            return aggregates[selected] ?: groupedFavorites[selected].orEmpty()
+        }
+
         fun getItemsForCategory(category: Category): List<LibraryItem> {
-            return groupedFavorites[category].orEmpty().mapNotNull { libraryData.favoritesById[it] }
+            return visibleItemIds(category).mapNotNull { libraryData.favoritesById[it] }
         }
 
         fun getItemCountForCategory(category: Category): Int? {
-            return if (showMangaCount || !searchQuery.isNullOrEmpty()) groupedFavorites[category]?.size else null
+            return if (showMangaCount || !searchQuery.isNullOrEmpty()) visibleItemIds(category).size else null
         }
 
         fun getToolbarTitle(

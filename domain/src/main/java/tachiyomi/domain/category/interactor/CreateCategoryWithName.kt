@@ -19,9 +19,9 @@ class CreateCategoryWithName(
             return sort.type.flag or sort.direction.flag
         }
 
-    suspend fun await(name: String): Result {
+    suspend fun await(name: String, parentId: Long? = null): Result {
         return try {
-            categoryRepository.insert(NewCategory(name = name, flags = initialFlags))
+            categoryRepository.insert(NewCategory(name = name, flags = initialFlags, parentId = parentId))
             Result.Success
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)

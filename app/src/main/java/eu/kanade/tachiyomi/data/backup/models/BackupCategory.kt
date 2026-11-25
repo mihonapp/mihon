@@ -11,6 +11,7 @@ class BackupCategory(
     @ProtoNumber(3) var id: Long = 0,
     // @ProtoNumber(3) val updateInterval: Int = 0, 1.x value not used in 0.x
     @ProtoNumber(100) var flags: Long = 0,
+    @ProtoNumber(901) var parentId: Long? = null,
 )
 
 val backupCategoryMapper = { category: Category ->
@@ -19,5 +20,6 @@ val backupCategoryMapper = { category: Category ->
         name = category.name,
         order = category.order,
         flags = category.flags,
+        parentId = category.parentId ?: Category.UNCATEGORIZED_ID,
     )
 }

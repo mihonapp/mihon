@@ -16,6 +16,8 @@ import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.rounded.Delete
 import mihon.icons.materialsymbols.rounded.DragHandle
 import mihon.icons.materialsymbols.rounded.Edit
+import mihon.icons.materialsymbols.rounded.KeyboardArrowDown
+import mihon.icons.materialsymbols.rounded.KeyboardArrowRight
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
@@ -25,6 +27,11 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun ReorderableCollectionItemScope.CategoryListItem(
     category: Category,
+    indentLevel: Int,
+    hasChildren: Boolean,
+    isExpanded: Boolean,
+    onToggleExpand: () -> Unit,
+    onDragStopped: () -> Unit,
     onRename: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -36,7 +43,7 @@ fun ReorderableCollectionItemScope.CategoryListItem(
                 .clickable(onClick = onRename)
                 .padding(vertical = MaterialTheme.padding.small)
                 .padding(
-                    start = MaterialTheme.padding.small,
+                    start = MaterialTheme.padding.small + MaterialTheme.padding.medium * indentLevel,
                     end = MaterialTheme.padding.medium,
                 ),
             verticalAlignment = Alignment.CenterVertically,
@@ -46,8 +53,11 @@ fun ReorderableCollectionItemScope.CategoryListItem(
                 contentDescription = null,
                 modifier = Modifier
                     .padding(MaterialTheme.padding.medium)
-                    .draggableHandle(),
+                    .draggableHandle(onDragStopped = onDragStopped),
             )
+            if (hasChildren) {
+                CategoryExpandButton(isExpanded, onToggleExpand)
+            }
             Text(
                 text = category.name,
                 modifier = Modifier.weight(1f),
@@ -65,5 +75,21 @@ fun ReorderableCollectionItemScope.CategoryListItem(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun CategoryExpandButton(expanded: Boolean, onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = if (expanded) {
+                MaterialSymbols.Rounded.KeyboardArrowDown
+            } else {
+                MaterialSymbols.Rounded.KeyboardArrowRight
+            },
+            contentDescription = stringResource(
+                if (expanded) MR.strings.action_collapse_category else MR.strings.action_expand_category,
+            ),
+        )
     }
 }

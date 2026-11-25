@@ -20,9 +20,11 @@ interface CategoryRepository {
 
     suspend fun insert(category: NewCategory)
 
-    suspend fun insertAll(categories: List<NewCategory>)
+    suspend fun restore(categories: List<NewCategory>, parentNames: Map<String, String?>): Set<Long>
 
     suspend fun updateName(categoryId: Long, name: String)
+
+    suspend fun updateNameAndParent(categoryId: Long, name: String, parentId: Long?)
 
     suspend fun updateFlags(categoryId: Long, flags: Long)
 

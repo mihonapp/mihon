@@ -154,6 +154,9 @@ fun LibraryTab() {
             else -> {
                 LibraryContent(
                     categories = state.displayedCategories,
+                    descendants = state.descendants,
+                    subcategoryFilter = state.subcategoryFilter,
+                    onFilterSubcategory = viewModel::filterSubcategory,
                     searchQuery = state.searchQuery,
                     selection = state.selection,
                     contentPadding = contentPadding,

@@ -1,3 +1,6 @@
+// Adapted from https://github.com/komikku-app/komikku/pull/1356
+// Copyright Komikku contributors, Apache-2.0
+
 package eu.kanade.presentation.category
 
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +14,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import eu.kanade.presentation.category.components.CategoryFloatingActionButton
@@ -35,7 +42,7 @@ fun CategoryScreen(
     onClickCreate: () -> Unit,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
-    onChangeOrder: (Category, Int) -> Unit,
+    onChangeOrder: (List<Category>) -> Unit,
     navigateUp: () -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
@@ -80,20 +87,36 @@ private fun CategoryContent(
     paddingValues: PaddingValues,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
-    onChangeOrder: (Category, Int) -> Unit,
+    onChangeOrder: (List<Category>) -> Unit,
 ) {
-    val categoriesState = remember { categories.toMutableStateList() }
+    var expanded by rememberSaveable { mutableStateOf(emptySet<Long>()) }
+    val hierarchyState = remember { buildCategoryHierarchy(categories).toMutableStateList() }
+    val visibleEntries = visibleCategoryHierarchy(hierarchyState, expanded)
+    var hasPendingOrderChange by remember { mutableStateOf(false) }
+
     val reorderableState = rememberReorderableLazyListState(lazyListState, paddingValues) { from, to ->
-        val item = categoriesState.removeAt(from.index)
-        categoriesState.add(to.index, item)
-        onChangeOrder(item, to.index)
+        val currentVisibleEntries = visibleCategoryHierarchy(hierarchyState, expanded)
+        val fromCategoryId = currentVisibleEntries.getOrNull(from.index)?.category?.id
+            ?: return@rememberReorderableLazyListState
+        val toCategoryId = currentVisibleEntries.getOrNull(to.index)?.category?.id
+            ?: return@rememberReorderableLazyListState
+        val reordered = moveCategoryHierarchy(hierarchyState, fromCategoryId, toCategoryId)
+        if (reordered == hierarchyState) return@rememberReorderableLazyListState
+
+        hierarchyState.clear()
+        hierarchyState.addAll(reordered)
+        hasPendingOrderChange = true
     }
 
     LaunchedEffect(categories) {
         if (!reorderableState.isAnyItemDragging) {
-            categoriesState.clear()
-            categoriesState.addAll(categories)
+            hierarchyState.clear()
+            hierarchyState.addAll(buildCategoryHierarchy(categories))
         }
+    }
+
+    val categoriesWithChildren = remember(categories) {
+        categories.mapNotNullTo(mutableSetOf()) { it.parentId }
     }
 
     LazyColumn(
@@ -105,15 +128,31 @@ private fun CategoryContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
         items(
-            items = categoriesState,
-            key = { category -> category.key },
-        ) { category ->
-            ReorderableItem(reorderableState, category.key) {
+            items = visibleEntries,
+            key = { entry -> entry.category.key },
+        ) { entry ->
+            ReorderableItem(reorderableState, entry.category.key) {
+                val hasChildren = entry.category.id in categoriesWithChildren
+                val isExpanded = expanded.contains(entry.category.id)
+
                 CategoryListItem(
                     modifier = Modifier.animateItem(),
-                    category = category,
-                    onRename = { onClickRename(category) },
-                    onDelete = { onClickDelete(category) },
+                    category = entry.category,
+                    indentLevel = entry.depth,
+                    onRename = { onClickRename(entry.category) },
+                    onDelete = { onClickDelete(entry.category) },
+                    hasChildren = hasChildren,
+                    isExpanded = isExpanded,
+                    onToggleExpand = {
+                        expanded =
+                            if (isExpanded) expanded - entry.category.id else expanded + entry.category.id
+                    },
+                    onDragStopped = {
+                        if (hasPendingOrderChange) {
+                            hasPendingOrderChange = false
+                            onChangeOrder(hierarchyState.map { it.category })
+                        }
+                    },
                 )
             }
         }
