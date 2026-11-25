@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.extension.util.ExtensionInstallActivity
 import eu.kanade.tachiyomi.network.JavaScriptEngine
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
+import eu.kanade.tachiyomi.network.interceptor.CloudflareChallengeQueue
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegateImpl
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -112,6 +113,7 @@ interface AppGraph : ViewModelGraph {
     val protoBuf: ProtoBuf
     val xml: XML
     val networkHelper: NetworkHelper
+    val cloudflareChallengeQueue: CloudflareChallengeQueue
     val javaScriptEngine: JavaScriptEngine
 
     val getFavorites: GetFavorites

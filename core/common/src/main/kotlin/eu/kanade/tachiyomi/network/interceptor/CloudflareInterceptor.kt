@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
+import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceRequest
@@ -29,6 +31,7 @@ import tachiyomi.i18n.MR
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -36,6 +39,7 @@ import kotlin.concurrent.write
 class CloudflareInterceptor(
     private val context: Context,
     private val cookieManager: AndroidCookieJar,
+    private val challengeQueue: CloudflareChallengeQueue,
     scope: CoroutineScope,
     defaultUserAgentProvider: () -> String,
 ) : WebViewInterceptor(context, scope, defaultUserAgentProvider) {
@@ -46,11 +50,29 @@ class CloudflareInterceptor(
     // one WebView instead of each opening their own
     private val hostLocks = ConcurrentHashMap<String, ReentrantReadWriteLock>()
 
+    // How often the user cancelled a host's challenge
+    private val hostCancels = ConcurrentHashMap<String, Int>()
+
     private val listenerScript = """
         addEventListener("message", ({data}) => {
             if (data?.source === "cloudflare-challenge") {
                 mihon?.postMessage(data.event);
             }
+        })
+    """.trimIndent()
+
+    // Only for an isolated world: Cloudflare fails a challenge whose page is queried for the widget from its own world
+    private val widgetScript = """
+        addEventListener("message", ({data}) => {
+            if (data?.source !== "cloudflare-challenge" || data.event !== "interactiveBegin") return;
+            setInterval(() => {
+                const widget = document.querySelector("input[name=cf-turnstile-response]")?.parentElement;
+                if (!widget) return;
+                widget.scrollIntoView({block: "center"});
+                const {left, top, width, height} = widget.getBoundingClientRect();
+                const rect = [left, top, left + Math.min(width, 300), top + height];
+                mihon.postMessage(rect.map(edge => Math.round(edge * devicePixelRatio)).join());
+            }, 200);
         })
     """.trimIndent()
 
@@ -64,6 +86,7 @@ class CloudflareInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val lock = hostLocks.computeIfAbsent(request.url.host) { ReentrantReadWriteLock() }
+        val cancels = hostCancels[request.url.host]
 
         val (response, clearance) = lock.read {
             val response = chain.proceed(request)
@@ -78,6 +101,11 @@ class CloudflareInterceptor(
             if (isCleared(request.url, clearance)) {
                 response.close()
             } else {
+                // The user was asked while this one waited, don't ask again
+                if (hostCancels[request.url.host] != cancels) {
+                    response.close()
+                    throw bypassFailure(CloudflareBypassException())
+                }
                 if (!prepareWebView()) return response
                 solve(request, response, clearance)
             }
@@ -109,10 +137,14 @@ class CloudflareInterceptor(
         // Because OkHttp's enqueue only handles IOExceptions, wrap the exception so that
         // we don't crash the entire app
         catch (e: CloudflareBypassException) {
-            throw IOException(context.stringResource(MR.strings.information_cloudflare_bypass_failure), e)
+            throw bypassFailure(e)
         } catch (e: Exception) {
             throw IOException(e)
         }
+    }
+
+    private fun bypassFailure(cause: CloudflareBypassException): IOException {
+        return IOException(context.stringResource(MR.strings.information_cloudflare_bypass_failure), cause)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -122,6 +154,7 @@ class CloudflareInterceptor(
         val latch = CountDownLatch(1)
 
         var webview: WebView? = null
+        var challenge: CloudflareChallenge? = null
         var listenerScriptHandler: ScriptHandler? = null
         val useIsolatedWorld = WebViewFeature.isFeatureSupported(WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD)
 
@@ -147,11 +180,25 @@ class CloudflareInterceptor(
 
             fun onChallengeEvent(event: String) {
                 when (event) {
-                    // The challenge cannot be solved non-interactively, abort.
-                    "interactiveBegin" -> latch.countDown()
+                    // The challenge cannot be solved non-interactively, leave it to the user or abort.
+                    "interactiveBegin" -> {
+                        if (challenge != null) return
+                        val host = originalRequest.url.host
+                        val interactive = CloudflareChallenge(host, webview) {
+                            hostCancels.merge(host, 1, Int::plus)
+                            latch.countDown()
+                        }
+                        if (challengeQueue.add(interactive)) challenge = interactive else latch.countDown()
+                    }
                     "fail" -> {
                         challengeFailed = true
                         latch.countDown()
+                    }
+                    else -> {
+                        val edges = event.split(',').mapNotNull { it.toIntOrNull() }
+                        if (edges.size == 4) {
+                            challenge?.widget?.value = Rect(edges[0], edges[1], edges[2], edges[3])
+                        }
                     }
                 }
             }
@@ -165,7 +212,7 @@ class CloudflareInterceptor(
                 }
                 listenerScriptHandler = WebViewCompat.addJavaScriptOnEvent(
                     webview,
-                    listenerScript,
+                    listenerScript + "\n" + widgetScript,
                     WebViewCompat.INJECTION_EVENT_DOCUMENT_START,
                     origins,
                     world,
@@ -230,8 +277,11 @@ class CloudflareInterceptor(
         }
 
         latch.awaitFor30Seconds()
+        if (challenge != null) latch.await(3, TimeUnit.MINUTES)
 
         executor.execute {
+            challenge?.let(challengeQueue::remove)
+
             // Only destroy can be called on a WebView whose renderer is gone
             if (!cloudflareBypassed && !isRenderProcessGone) {
                 isWebViewOutdated = webview?.isOutdated() == true
@@ -251,6 +301,7 @@ class CloudflareInterceptor(
                     listenerScriptHandler?.remove()
                     stopLoading()
                 }
+                (parent as? ViewGroup)?.removeView(this)
                 destroy()
             }
         }

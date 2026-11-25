@@ -24,6 +24,11 @@ class NetworkPreferences(
         isDebugBuild,
     )
 
+    val showCloudflareChallenges: Preference<Boolean> = preferenceStore.getBoolean(
+        "show_cloudflare_challenges",
+        true,
+    )
+
     val dohProvider: Preference<Int> = preferenceStore.getInt("doh_provider", -1)
 
     val defaultUserAgent: Preference<String> = preferenceStore.getString(
