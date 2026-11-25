@@ -3,11 +3,14 @@ package eu.kanade.tachiyomi.ui.category
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.util.fastMap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.zacsweers.metrox.viewmodel.metroViewModel
 import eu.kanade.presentation.category.CategoryScreen
+import eu.kanade.presentation.category.buildCategoryDescendants
+import eu.kanade.presentation.category.buildCategoryHierarchy
 import eu.kanade.presentation.category.components.CategoryCreateDialog
 import eu.kanade.presentation.category.components.CategoryDeleteDialog
 import eu.kanade.presentation.category.components.CategoryRenameDialog
@@ -40,19 +43,27 @@ fun CategoryScreen() {
         navigateUp = navigator::pop,
     )
 
+    val parentOptions =
+        remember(successState.categories) { buildCategoryHierarchy(successState.categories).map { it.category } }
     when (val dialog = successState.dialog) {
         null -> {}
         CategoryDialog.Create -> {
             CategoryCreateDialog(
                 onDismissRequest = viewModel::dismissDialog,
                 onCreate = viewModel::createCategory,
+                parentOptions = parentOptions,
                 categories = successState.categories.fastMap { it.name },
             )
         }
         is CategoryDialog.Rename -> {
+            val descendants = remember(dialog.category.id, parentOptions) {
+                buildCategoryDescendants(parentOptions)[dialog.category.id].orEmpty()
+            }
             CategoryRenameDialog(
                 onDismissRequest = viewModel::dismissDialog,
-                onRename = { viewModel.renameCategory(dialog.category, it) },
+                onRename = { name, parent -> viewModel.renameCategory(dialog.category, name, parent) },
+                initialParentId = dialog.category.parentId,
+                parentOptions = parentOptions.filter { it.id != dialog.category.id && it !in descendants },
                 categories = successState.categories.fastMap { it.name },
                 category = dialog.category.name,
             )

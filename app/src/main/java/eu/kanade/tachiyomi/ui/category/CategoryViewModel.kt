@@ -59,9 +59,9 @@ class CategoryViewModel(
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5.seconds), CategoryScreenState.Loading)
 
-    fun createCategory(name: String) {
+    fun createCategory(name: String, parentId: Long?) {
         viewModelScope.launch {
-            when (createCategoryWithName.await(name)) {
+            when (createCategoryWithName.await(name, parentId)) {
                 is CreateCategoryWithName.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }
@@ -78,18 +78,18 @@ class CategoryViewModel(
         }
     }
 
-    fun changeOrder(category: Category, newIndex: Int) {
+    fun changeOrder(categories: List<Category>) {
         viewModelScope.launch {
-            when (reorderCategory.await(category, newIndex)) {
+            when (reorderCategory.await(categories)) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }
         }
     }
 
-    fun renameCategory(category: Category, name: String) {
+    fun renameCategory(category: Category, name: String, parentId: Long?) {
         viewModelScope.launch {
-            when (renameCategory.await(category, name)) {
+            when (renameCategory.await(category, name, parentId)) {
                 is RenameCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }

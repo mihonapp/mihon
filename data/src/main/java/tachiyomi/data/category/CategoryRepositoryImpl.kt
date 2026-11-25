@@ -52,25 +52,64 @@ class CategoryRepositoryImpl(
 
     override suspend fun getCategoriesByMangaIds(mangaIds: List<Long>): Map<Long, List<Category>> {
         return database.categoryQueries
-            .getCategoriesByMangaIds(mangaIds) { mangaId, id, name, order, flags ->
-                mangaId to mapCategory(id, name, order, flags)
+            .getCategoriesByMangaIds(mangaIds) { mangaId, id, name, order, flags, parentId ->
+                mangaId to mapCategory(id, name, order, flags, parentId)
             }
             .awaitAsList()
             .groupBy({ it.first }, { it.second })
     }
 
     override suspend fun insert(category: NewCategory) {
-        database.categoryQueries.insert(name = category.name, flags = category.flags)
+        database.categoryQueries.insert(name = category.name, flags = category.flags, parentId = category.parentId)
     }
 
-    override suspend fun insertAll(categories: List<NewCategory>) {
-        database.transaction {
-            categories.forEach { insert(it) }
+    override suspend fun restore(categories: List<NewCategory>, parentNames: Map<String, String?>): Set<Long> {
+        return database.transactionWithResult {
+            val existing = getAll().mapTo(mutableSetOf()) { it.name }
+            categories.filter { existing.add(it.name) }.forEach { insert(it) }
+
+            val byName = getAll().associateBy { it.name }
+            val parents = byName.values.associate { it.id to it.parentId }.toMutableMap()
+            val restored = parentNames.mapNotNull { (name, parentName) ->
+                val category = byName[name]?.takeUnless { it.isSystemCategory } ?: return@mapNotNull null
+                parents[category.id] = byName[parentName]?.takeUnless { it.isSystemCategory }?.id
+                category
+            }
+            for (category in restored) {
+                val visited = mutableSetOf(category.id)
+                var ancestor = parents[category.id]
+                while (ancestor != null) {
+                    if (!visited.add(ancestor)) {
+                        parents[category.id] = null
+                        break
+                    }
+                    ancestor = parents[ancestor]
+                }
+                if (parents[category.id] != category.parentId) {
+                    database.categoryQueries.updateParent(id = category.id, parentId = parents[category.id])
+                }
+            }
+            byName.values.mapTo(mutableSetOf()) { it.flags }
         }
     }
 
     override suspend fun updateName(categoryId: Long, name: String) {
         database.categoryQueries.updateName(name = name, id = categoryId)
+    }
+
+    override suspend fun updateNameAndParent(categoryId: Long, name: String, parentId: Long?) {
+        database.transaction {
+            if (parentId != null) {
+                val visited = mutableSetOf(categoryId)
+                var ancestor: Long? = parentId
+                while (ancestor != null) {
+                    require(ancestor != Category.UNCATEGORIZED_ID && visited.add(ancestor))
+                    ancestor = requireNotNull(get(ancestor)).parentId
+                }
+            }
+            updateName(categoryId, name)
+            database.categoryQueries.updateParent(id = categoryId, parentId = parentId)
+        }
     }
 
     override suspend fun updateFlags(categoryId: Long, flags: Long) {
@@ -103,12 +142,14 @@ class CategoryRepositoryImpl(
         name: String,
         order: Long,
         flags: Long,
+        parentId: Long?,
     ): Category {
         return Category(
             id = id,
             name = name,
             order = order,
             flags = flags,
+            parentId = parentId,
         )
     }
 }

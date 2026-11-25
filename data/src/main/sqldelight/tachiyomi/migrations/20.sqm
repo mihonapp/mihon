@@ -1,0 +1,2 @@
+ALTER TABLE category ADD COLUMN parent_id INTEGER REFERENCES category(id) ON DELETE SET NULL;
+CREATE INDEX category_parent_id_index ON category(parent_id);

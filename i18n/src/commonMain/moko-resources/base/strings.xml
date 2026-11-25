@@ -12,6 +12,12 @@
 
     <!-- Models -->
     <string name="name">Name</string>
+    <string name="parent_category">Parent category</string>
+    <string name="action_expand_category">Expand category</string>
+    <string name="action_collapse_category">Collapse category</string>
+    <string name="pref_library_parent_child_layout">Parent and subcategory layout</string>
+    <string name="pref_library_parent_child_layout_summary">Show parent categories as library tabs and subcategories as filters</string>
+    <string name="library_filter_parent_only">Parent only</string>
     <string name="categories">Categories</string>
     <string name="manga">Library entries</string>
     <string name="chapters">Chapters</string>

@@ -1,11 +1,17 @@
 package eu.kanade.presentation.library.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,18 +22,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import eu.kanade.core.preference.PreferenceMutableState
+import eu.kanade.presentation.category.visualName
 import eu.kanade.tachiyomi.ui.library.LibraryItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.PullRefresh
+import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.stringResource
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun LibraryContent(
     categories: List<Category>,
+    descendants: Map<Long, List<Category>>,
+    subcategoryFilter: Long?,
+    onFilterSubcategory: (Long?) -> Unit,
     searchQuery: String?,
     selection: Set<Long>,
     contentPadding: PaddingValues,
@@ -74,6 +87,37 @@ fun LibraryContent(
                     }
                 },
             )
+        }
+
+        val parent = categories.getOrNull(pagerState.currentPage)
+        val children = descendants[parent?.id].orEmpty()
+        if (parent != null && children.isNotEmpty()) {
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = MaterialTheme.padding.medium),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            ) {
+                item {
+                    FilterChip(
+                        selected = subcategoryFilter != parent.id && children.none { it.id == subcategoryFilter },
+                        onClick = { onFilterSubcategory(null) },
+                        label = { Text(stringResource(MR.strings.all)) },
+                    )
+                }
+                item {
+                    FilterChip(
+                        selected = subcategoryFilter == parent.id,
+                        onClick = { onFilterSubcategory(parent.id) },
+                        label = { Text(stringResource(MR.strings.library_filter_parent_only)) },
+                    )
+                }
+                items(children, key = { it.id }) { child ->
+                    FilterChip(
+                        selected = subcategoryFilter == child.id,
+                        onClick = { onFilterSubcategory(child.id.takeUnless { it == subcategoryFilter }) },
+                        label = { Text(child.visualName) },
+                    )
+                }
+            }
         }
 
         PullRefresh(
