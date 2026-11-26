@@ -23,6 +23,9 @@ import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.debug.BackupSchemaScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.AnilistWishlistScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.search.AnilistWishlistSearchScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.sources.AnilistWishlistSourcesScreen
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterScreen
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
@@ -42,9 +45,6 @@ import eu.kanade.tachiyomi.ui.manga.track.TrackInfoDialog
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.ui.stats.StatsScreen
-import eu.kanade.tachiyomi.ui.anilistwishlist.AnilistWishlistScreen
-import eu.kanade.tachiyomi.ui.anilistwishlist.sources.AnilistWishlistSourcesScreen
-import eu.kanade.tachiyomi.ui.anilistwishlist.search.AnilistWishlistSearchScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import mihon.feature.migration.config.MigrationConfigScreen
 import mihon.feature.migration.list.MigrationListScreen
@@ -233,9 +233,3 @@ fun EntryProviderScope<NavKey>.appEntries() {
         SettingsTrackingScreen.Content()
     }
 }
-
-
-
-
-
-
