@@ -188,7 +188,6 @@ class AnilistApi(
             }
     }
 
-
     suspend fun getPlanToRead(userId: Int, page: Int, perPage: Int = 50): AniListGetPlanToReadQuery.Data {
         return graphQlClient
             .query(
@@ -207,6 +206,7 @@ class AnilistApi(
             }
             ?: throw Exception("Failed to get AniList Plan to Read")
     }
+
     private fun createFuzzyDate(dateValue: Long): FuzzyDateInput {
         // all absent/null
         if (dateValue == 0L) return FuzzyDateInput()
@@ -228,4 +228,3 @@ class AnilistApi(
             .build()
     }
 }
-

@@ -223,7 +223,6 @@ class Anilist(
         return track
     }
 
-
     suspend fun getPlanToRead(): List<AnilistWishlistEntry> {
         val userId = getUsername().toIntOrNull()
             ?: throw Exception("Invalid AniList user ID")
@@ -256,6 +255,7 @@ class Anilist(
 
         return result
     }
+
     override suspend fun updateUserConfig() {
         val currentUser = api.getCurrentUser()
         scorePreference.set(currentUser.scoreFormat)
@@ -295,7 +295,3 @@ class Anilist(
         }
     }
 }
-
-
-
-

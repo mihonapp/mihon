@@ -101,4 +101,3 @@ sealed interface DownloadQueueState {
     data class Paused(val pending: Int) : DownloadQueueState
     data class Downloading(val pending: Int) : DownloadQueueState
 }
-

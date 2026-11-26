@@ -241,4 +241,3 @@ class AnilistWishlistViewModel(
         const val CATEGORY_NAME = "AniList Plan to Read"
     }
 }
-

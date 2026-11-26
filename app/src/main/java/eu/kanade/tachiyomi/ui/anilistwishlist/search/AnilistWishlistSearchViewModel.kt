@@ -256,4 +256,3 @@ private class WishlistSearchPagingSource(
         }
     }
 }
-

@@ -91,13 +91,13 @@ fun AnilistWishlistScreen() {
                     onRefresh = viewModel::refresh,
                     onFindInSource = { entry ->
                         navigator.push(
-    AnilistWishlistSourcesRoute(
-        mediaId = entry.mediaId,
-        query = entry.title,
-        englishTitle = entry.englishTitle,
-        romajiTitle = entry.romajiTitle,
-    ),
-)
+                            AnilistWishlistSourcesRoute(
+                                mediaId = entry.mediaId,
+                                query = entry.title,
+                                englishTitle = entry.englishTitle,
+                                romajiTitle = entry.romajiTitle,
+                            ),
+                        )
                     },
                 )
             }
@@ -129,4 +129,3 @@ private fun StateMessage(
         }
     }
 }
-

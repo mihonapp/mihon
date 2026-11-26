@@ -162,6 +162,3 @@ data object SettingsSearchRoute : NavKey
 data object WorkerInfoRoute : NavKey {
     const val TITLE = "Worker info"
 }
-
-
-
