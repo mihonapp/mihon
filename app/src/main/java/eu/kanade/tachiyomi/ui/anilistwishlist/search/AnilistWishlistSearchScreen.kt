@@ -20,6 +20,7 @@ import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.source.browse.SourceFilterDialog
+import mihon.core.navigation.AnilistWishlistRoute
 import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.MangaRoute
 import mihon.core.navigation.WebViewRoute
@@ -114,7 +115,9 @@ fun AnilistWishlistSearchScreen(
                         manga = manga,
                     ),
                 )
-                navigator.pop()
+                if (!navigator.popTo { it is AnilistWishlistRoute }) {
+                    navigator.pop()
+                }
             },
             onMangaLongClick = { navigator.push(MangaRoute(it.id, true)) },
         )
@@ -135,5 +138,3 @@ data class AnilistWishlistMangaSelectedEvent(
     val mediaId: Long,
     val manga: Manga,
 )
-
-
