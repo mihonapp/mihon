@@ -20,12 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.core.net.toUri
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
-import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.tachiyomi.data.library.MetadataUpdateWorker
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.network.PREF_DOH_360
@@ -40,7 +36,6 @@ import eu.kanade.tachiyomi.network.PREF_DOH_NJALLA
 import eu.kanade.tachiyomi.network.PREF_DOH_QUAD101
 import eu.kanade.tachiyomi.network.PREF_DOH_QUAD9
 import eu.kanade.tachiyomi.network.PREF_DOH_SHECAN
-import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import eu.kanade.tachiyomi.util.system.isShizukuInstalled
 import eu.kanade.tachiyomi.util.system.powerManager
@@ -50,8 +45,13 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 import logcat.LogPriority
 import mihon.app.di.appGraph
+import mihon.core.navigation.ClearDatabaseRoute
+import mihon.core.navigation.DebugInfoRoute
+import mihon.core.navigation.LocalNavigator
+import mihon.core.navigation.OnboardingRoute
 import okhttp3.Headers
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -60,7 +60,8 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import java.io.File
 
-object SettingsAdvancedScreen : SearchableSettings {
+@Serializable
+data object SettingsAdvancedScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
@@ -70,7 +71,7 @@ object SettingsAdvancedScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+        val navigator = LocalNavigator.current
 
         val graph = remember { context.appGraph }
         val basePreferences = remember { graph.basePreferences }
@@ -108,11 +109,11 @@ object SettingsAdvancedScreen : SearchableSettings {
             ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_debug_info),
-                onClick = { navigator.push(DebugInfoScreen()) },
+                onClick = { navigator.push(DebugInfoRoute) },
             ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_onboarding_guide),
-                onClick = { navigator.push(OnboardingScreen()) },
+                onClick = { navigator.push(OnboardingRoute) },
             ),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_manage_notifications),
@@ -174,7 +175,7 @@ object SettingsAdvancedScreen : SearchableSettings {
     @Composable
     private fun getDataGroup(): Preference.PreferenceGroup {
         val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow
+        val navigator = LocalNavigator.current
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_data),
@@ -190,7 +191,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_clear_database),
                     subtitle = stringResource(MR.strings.pref_clear_database_summary),
-                    onClick = { navigator.push(ClearDatabaseScreen()) },
+                    onClick = { navigator.push(ClearDatabaseRoute) },
                 ),
             ),
         )

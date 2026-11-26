@@ -1,8 +1,9 @@
 package tachiyomi.domain.track.model
 
-import java.io.Serializable
+import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+@Serializable
 data class Track(
     val id: Long,
     val mangaId: Long,
@@ -18,4 +19,4 @@ data class Track(
     val startDate: Instant?,
     val finishDate: Instant?,
     val private: Boolean,
-) : Serializable
+)
