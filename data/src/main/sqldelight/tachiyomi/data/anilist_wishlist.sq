@@ -9,6 +9,12 @@ SELECT anilist_media_id, manga_id
 FROM anilist_wishlist_mapping
 ORDER BY anilist_media_id;
 
+getAllWithMangaIdentity:
+SELECT anilist_wishlist_mapping.anilist_media_id, manga.source_id, manga.remote_url
+FROM anilist_wishlist_mapping
+LEFT JOIN manga ON manga.id = anilist_wishlist_mapping.manga_id
+ORDER BY anilist_wishlist_mapping.anilist_media_id;
+
 getByAniListMediaId:
 SELECT anilist_media_id, manga_id
 FROM anilist_wishlist_mapping
@@ -18,6 +24,18 @@ getByMangaId:
 SELECT anilist_media_id, manga_id
 FROM anilist_wishlist_mapping
 WHERE manga_id = :mangaId;
+
+getMangaForMapping:
+SELECT id
+FROM manga
+WHERE id = :mangaId;
+
+insertIfAbsent:
+INSERT INTO anilist_wishlist_mapping(anilist_media_id, manga_id)
+SELECT :anilistMediaId, :mangaId
+WHERE EXISTS (SELECT 1 FROM manga WHERE id = :mangaId)
+ON CONFLICT DO NOTHING
+RETURNING anilist_media_id;
 
 upsert:
 INSERT INTO anilist_wishlist_mapping(anilist_media_id, manga_id)

@@ -1,3 +1,5 @@
+import com.android.build.api.variant.HasUnitTest
+
 plugins {
     alias(mihonx.plugins.android.library)
     alias(mihonx.plugins.spotless)
@@ -6,6 +8,8 @@ plugins {
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.metro)
 }
+
+val sqliteVersion = libs.versions.androidx.sqlite.get()
 
 android {
     namespace = "tachiyomi.data"
@@ -17,6 +21,17 @@ android {
                 dialect(libs.sqldelight.sqliteDialect338)
                 schemaOutputDirectory.set(project.file("./src/main/sqldelight"))
                 generateAsync.set(true)
+            }
+        }
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        (variant as? HasUnitTest)?.unitTest?.let { unitTest ->
+            with(unitTest.runtimeConfiguration.resolutionStrategy.dependencySubstitution) {
+                substitute(module("androidx.sqlite:sqlite-bundled:$sqliteVersion"))
+                    .using(module("androidx.sqlite:sqlite-bundled-jvm:$sqliteVersion"))
             }
         }
     }
@@ -43,4 +58,8 @@ dependencies {
 
     implementation(libs.androidx.sqlite.bundled)
     implementation(libs.bundles.sqldelight)
+
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
