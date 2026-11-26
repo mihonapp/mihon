@@ -609,6 +609,11 @@
     <string name="pref_backup_interval">Automatic backup frequency</string>
     <string name="action_create">Create</string>
     <string name="backup_created">Backup created</string>
+    <string name="wishlist_backup_skipped_mappings">AniList Wishlist mappings skipped: %1$d</string>
+    <string name="wishlist_backup_skipped_notification">Backup created with %1$d AniList Wishlist mappings skipped</string>
+    <string name="wishlist_restore_summary">AniList Wishlist mappings - restored: %1$d, skipped: %2$d, conflicted: %3$d</string>
+    <string name="wishlist_restore_category_warnings">AniList Wishlist category warnings: %1$d</string>
+    <string name="wishlist_restore_incomplete">AniList Wishlist mapping restore incomplete</string>
     <string name="invalid_backup_file">Invalid backup file:</string>
     <string name="invalid_backup_file_error">Full error:</string>
     <string name="invalid_backup_file_json">JSON backup not supported</string>

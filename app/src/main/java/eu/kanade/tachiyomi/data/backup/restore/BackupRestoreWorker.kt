@@ -51,18 +51,23 @@ class BackupRestoreWorker(private val context: Context, workerParams: WorkerPara
 
         setForegroundSafely()
 
+        var backupRestorer: BackupRestorer? = null
         return try {
             withContext(Dispatchers.IO) {
-                backupRestorerFactory.create(notifier = notifier, isSync = isSync).restore(uri, options)
+                backupRestorer = backupRestorerFactory.create(notifier = notifier, isSync = isSync)
+                backupRestorer.restore(uri, options)
             }
             Result.success()
         } catch (e: Exception) {
             if (e is CancellationException) {
-                notifier.showRestoreError(context.stringResource(MR.strings.restoring_backup_canceled))
+                notifier.showRestoreError(
+                    context.stringResource(MR.strings.restoring_backup_canceled),
+                    backupRestorer?.wishlistRestoreReport,
+                )
                 Result.success()
             } else {
                 logcat(LogPriority.ERROR, e)
-                notifier.showRestoreError(e.message)
+                notifier.showRestoreError(e.message, backupRestorer?.wishlistRestoreReport)
                 Result.failure()
             }
         } finally {

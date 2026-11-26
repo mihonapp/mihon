@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.data.backup
 
 import eu.kanade.tachiyomi.data.backup.models.Backup
+import eu.kanade.tachiyomi.data.backup.models.BackupAnilistWishlist
+import eu.kanade.tachiyomi.data.backup.models.BackupAnilistWishlistMapping
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionStore
@@ -10,6 +12,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import eu.kanade.tachiyomi.data.backup.models.BackupTracking
+import eu.kanade.tachiyomi.data.backup.models.BackupWishlistCategory
 import eu.kanade.tachiyomi.data.backup.models.BooleanPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
@@ -92,6 +95,9 @@ class BackupStreamTest {
             .write(encode(Backup(listOf(second), backupCategories = backup.backupCategories)))
             .writeByte(5 shl 3 or 5).writeIntLe(42)
             .write(encode(Backup(emptyList(), backupPreferences = backup.backupPreferences)))
+            .write(encode(Backup(emptyList(), backupAnilistWishlist = backup.backupAnilistWishlist)))
+            // Unknown length-delimited metadata is preserved by framing and ignored by the model decoder.
+            .writeByte(8 shl 3 or 2).writeByte(3).write(byteArrayOf(1, 2, 3))
             .write(encode(Backup(listOf(third), backupExtensionStores = backup.backupExtensionStores)))
             .write(encode(Backup(emptyList(), backupSourcePreferences = backup.backupSourcePreferences)))
             .readByteArray()
@@ -100,6 +106,35 @@ class BackupStreamTest {
 
         entries.map(::encode) shouldBe backup.backupManga.map(::encode)
         encode(metadata) shouldBe encode(backup.copy(backupManga = emptyList()))
+    }
+
+    @Test
+    fun `reader retains wishlist metadata interleaved with manga entries`() {
+        val backup = backup()
+        val (first, second, third) = backup.backupManga
+        val metadata = backup.copy(backupManga = emptyList())
+        val input = Buffer()
+            .write(encode(Backup(emptyList(), backupAnilistWishlist = metadata.backupAnilistWishlist)))
+            .write(encode(Backup(listOf(first))))
+            .write(encode(Backup(emptyList(), backupCategories = metadata.backupCategories)))
+            .write(encode(Backup(listOf(second, third))))
+            .write(encode(metadata.copy(backupAnilistWishlist = null, backupCategories = emptyList())))
+            .readByteArray()
+
+        val (entries, decodedMetadata) = read(input)
+
+        entries.map(::encode) shouldBe backup.backupManga.map(::encode)
+        decodedMetadata.backupAnilistWishlist shouldBe metadata.backupAnilistWishlist
+    }
+
+    @Test
+    fun `older backup without wishlist metadata decodes with an absent section`() {
+        val oldBackup = Backup(backupManga = emptyList(), backupCategories = backup().backupCategories)
+
+        val decoded = parser.decodeFromByteArray(Backup.serializer(), encode(oldBackup))
+
+        decoded.backupAnilistWishlist shouldBe null
+        decoded.backupCategories.map(::encode) shouldBe oldBackup.backupCategories.map(::encode)
     }
 
     @Test
@@ -168,6 +203,8 @@ class BackupStreamTest {
 
     private fun encode(tracking: BackupTracking) = parser.encodeToByteArray(BackupTracking.serializer(), tracking)
 
+    private fun encode(category: BackupCategory) = parser.encodeToByteArray(BackupCategory.serializer(), category)
+
     @Serializable
     private class PartialManga(
         @ProtoNumber(1) val source: Long,
@@ -223,6 +260,10 @@ class BackupStreamTest {
                 isLegacy = false,
                 extensionListUrl = null,
             ),
+        ),
+        backupAnilistWishlist = BackupAnilistWishlist(
+            mappings = listOf(BackupAnilistWishlistMapping(42, 7, "/manga/7")),
+            category = BackupWishlistCategory(12, "AniList Plan to Read"),
         ),
     )
 }
