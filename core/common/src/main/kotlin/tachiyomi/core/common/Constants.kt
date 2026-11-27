@@ -19,4 +19,5 @@ object Constants {
     const val SHORTCUT_SOURCES = "eu.kanade.tachiyomi.SHOW_CATALOGUES"
     const val SHORTCUT_EXTENSIONS = "eu.kanade.tachiyomi.EXTENSIONS"
     const val SHORTCUT_DOWNLOADS = "eu.kanade.tachiyomi.SHOW_DOWNLOADS"
+    const val SHORTCUT_WEBDAV_SYNC = "eu.kanade.tachiyomi.SHOW_WEBDAV_SYNC"
 }

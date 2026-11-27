@@ -139,6 +139,9 @@ data class RestoreBackupRoute(val uri: String) : NavKey
 data object SettingsSearchRoute : NavKey
 
 @Serializable
+data object WebDavSyncRoute : NavKey
+
+@Serializable
 data object WorkerInfoRoute : NavKey {
     const val TITLE = "Worker info"
 }
