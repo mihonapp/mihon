@@ -642,6 +642,11 @@
     <string name="cache_deleted">Cache cleared, %1$d files deleted</string>
     <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
+    <string name="pref_delete_downloads_not_in_library">Delete downloads not in library</string>
+    <string name="pref_delete_downloads_not_in_library_summary">Free up space used by entries you\'ve removed from your library</string>
+    <string name="delete_downloads_not_in_library_confirm">Delete all downloaded chapters of these entries? They aren\'t in your library.</string>
+    <string name="no_downloads_not_in_library">All downloads belong to entries in your library</string>
+    <string name="downloads_not_in_library_deleted">Downloads deleted</string>
     <string name="export">Export</string>
     <string name="library_list">Library List</string>
     <string name="library_exported">Library Exported</string>

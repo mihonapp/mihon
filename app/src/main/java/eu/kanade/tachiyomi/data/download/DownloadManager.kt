@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
+import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -30,6 +31,7 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 
@@ -51,6 +53,7 @@ class DownloadManager(
     private val downloadPreferences: DownloadPreferences,
     private val downloader: Downloader,
     private val pendingDeleter: DownloadPendingDeleter,
+    private val mangaRepository: MangaRepository,
 ) {
 
     val queueState
@@ -308,6 +311,25 @@ class DownloadManager(
                 cache.removeSource(source)
             }
         }
+    }
+
+    /**
+     * Returns the downloaded manga directories that belong to none of the given manga nor to a queued download,
+     * each with the title of its entry, or its name if the entry is no longer known.
+     */
+    suspend fun getMangaDirsExcept(manga: List<Manga>): List<Pair<UniFile, String>> {
+        val dirs = cache.getMangaDirsExcept(manga + queueState.value.map { it.manga })
+        val titlesByDirName = mangaRepository.getNonLibraryMangaTitles()
+            .flatMap { title -> provider.getPossibleMangaDirNames(title).map { it to title } }
+            .toMap()
+        return dirs.map { dir -> dir to (titlesByDirName[dir.name] ?: dir.name.orEmpty()) }
+    }
+
+    suspend fun deleteMangaDirs(dirs: List<UniFile>) {
+        withContext(Dispatchers.IO) {
+            dirs.forEach { it.delete() }
+        }
+        cache.invalidateCache()
     }
 
     /**

@@ -217,6 +217,15 @@ class DownloadProvider(
     }
 
     /**
+     * Returns the mangas directory name under either non-ASCII filename setting.
+     */
+    fun getPossibleMangaDirNames(mangaTitle: String): Set<String> {
+        return setOf(false, true).mapTo(HashSet()) {
+            DiskUtil.buildValidFilename(mangaTitle, disallowNonAscii = it)
+        }
+    }
+
+    /**
      * Returns the chapter directory name for a chapter.
      *
      * @param chapterName the name of the chapter to query.
