@@ -34,7 +34,19 @@ Discover and read manga, webtoons, comics, and more – easier than ever on your
 * Light and dark themes.
 * Schedule updating your library for new chapters.
 * Create backups locally to read offline or to your desired cloud service.
+* Bidirectional **WebDAV sync** for extension stores, installed extensions, library entries, categories, reading progress, history, and tracking.
 * Plus much more...
+
+### WebDAV Sync (mihon-webdav)
+
+This fork ([WguguW/mihon-webdav](https://github.com/WguguW/mihon-webdav)) adds built-in **WebDAV bidirectional synchronization** on top of Mihon:
+
+* **Extensions**: Syncs configured extension stores (`Extension Stores`) and records installed extensions; detects missing extensions on other devices and supports one-tap individual or batch installation.
+* **Library & Reading Progress**: Syncs library manga, categories, read chapters, page progress, reading history, and tracking records.
+* **3-Way Smart Merge**: Uses a local baseline snapshot so single-side changes (including unfavoriting, marking unread, and removing bookmarks) propagate cleanly across devices; concurrent reading progress conflicts resolve by latest read timestamp with additive reading duration.
+* **Flexible Triggers**: Manual sync, periodic background sync (with optional Wi-Fi-only constraint), automatic debounced sync on exiting the reader, and optional sync on app startup.
+* **Setup**: Open **More → Settings → Data and storage → WebDAV sync**, enter your WebDAV server URL, username, password, and remote directory, then tap **Test connection** and **Sync now**.
+* **APK Download**: Download the signed ARM64 release APK from [Releases](https://github.com/WguguW/mihon-webdav/releases).
 
 </div>
 
