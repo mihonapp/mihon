@@ -43,6 +43,17 @@ fun LibraryPager(
     onLongClickManga: (Category, LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
 ) {
+    // An empty library without user categories has no pages, so the pager would show nothing
+    if (state.pageCount == 0) {
+        LibraryPagerEmptyScreen(
+            searchQuery = searchQuery,
+            hasActiveFilters = hasActiveFilters,
+            contentPadding = contentPadding,
+            onGlobalSearchClicked = onGlobalSearchClicked,
+        )
+        return
+    }
+
     HorizontalPager(
         modifier = Modifier.fillMaxSize(),
         state = state,
