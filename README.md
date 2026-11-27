@@ -48,6 +48,17 @@ This fork ([WguguW/mihon-webdav](https://github.com/WguguW/mihon-webdav)) adds b
 * **Setup**: Open **More → Settings → Data and storage → WebDAV sync**, enter your WebDAV server URL, username, password, and remote directory, then tap **Test connection** and **Sync now**.
 * **APK Download**: Download the signed ARM64 release APK from [Releases](https://github.com/WguguW/mihon-webdav/releases).
 
+#### WebDAV 同步（中文说明）
+
+本项目（[WguguW/mihon-webdav](https://github.com/WguguW/mihon-webdav)）基于 Mihon 新增了内置 **WebDAV 双向智能同步** 功能：
+
+* **插件同步**：同步已配置的插件仓库源（Extension Stores）并记录已安装插件清单；在其他设备同步后自动检测缺失插件，支持逐个或一键批量安装。
+* **书架漫画与阅读进度**：同步收藏漫画、分类、已读章节、页码进度、阅读历史与追踪记录。
+* **三方智能合并（3-Way Merge）**：基于本地基线快照合并变更，支持取消收藏、标为未读、取消书签等跨设备同步；双端并发阅读冲突时按最新阅读时间自动合并，阅读时长按增量叠加。
+* **多种触发方式**：支持手动立即同步、定时后台同步（可限制仅 Wi-Fi）、退出阅读器自动同步及启动应用自动同步。
+* **配置入口**：进入 **更多 → 设置 → 数据和存储 → WebDAV 同步**，填写 WebDAV 服务器地址、用户名、密码和远程目录，点击 **测试连接** 与 **立即同步** 即可。
+* **安装包下载**：前往 [Releases](https://github.com/WguguW/mihon-webdav/releases) 页面下载 ARM64 正式版 APK。
+
 </div>
 
 ## Contributing
