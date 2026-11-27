@@ -242,6 +242,27 @@ class DownloadCache(
     }
 
     /**
+     * Returns the downloaded manga directories that belong to none of the given manga.
+     * Directories of sources that aren't installed are left out.
+     */
+    fun getMangaDirsExcept(manga: List<Manga>): List<UniFile> {
+        renewCache()
+
+        // The non-ASCII filename setting may have changed since the download
+        val keptDirNames = manga.groupBy({ it.source }, { provider.getPossibleMangaDirNames(it.title) })
+            .mapValues { (_, names) -> names.flatten().toSet() }
+        val sourceDirs = rootDownloadsDir.sourceDirs.filterValues { it.dir != null }
+        return mangaDirsExcept(
+            sourceDirKeys = sourceDirs.mapValues { (_, sourceDir) -> sourceDir.dir!!.uri.toString() },
+            mangaDirsBySourceDirKey = sourceDirs.values.associate { sourceDir ->
+                sourceDir.dir!!.uri.toString() to sourceDir.mangaDirs.mapValues { (_, mangaDir) -> mangaDir.dir }
+            },
+            keptDirNames = keptDirNames,
+        )
+            .filterNotNull()
+    }
+
+    /**
      * Adds a chapter that has just been download to this cache.
      *
      * @param chapterDirName the downloaded chapter's directory name.
@@ -488,6 +509,22 @@ class DownloadCache(
                 )
             }
         }
+    }
+}
+
+/**
+ * Returns the manga directories not named in [keptDirNames]. Sources sharing a directory share their kept
+ * names, as the disk index stores that directory once per source id.
+ */
+internal fun <T> mangaDirsExcept(
+    sourceDirKeys: Map<Long, String>,
+    mangaDirsBySourceDirKey: Map<String, Map<String, T>>,
+    keptDirNames: Map<Long, Set<String>>,
+): List<T> {
+    val keptBySourceDirKey = sourceDirKeys.entries.groupBy({ it.value }, { keptDirNames[it.key].orEmpty() })
+    return mangaDirsBySourceDirKey.flatMap { (key, mangaDirs) ->
+        val kept = keptBySourceDirKey[key].orEmpty().flatten().toSet()
+        mangaDirs.filterKeys { it !in kept }.values
     }
 }
 

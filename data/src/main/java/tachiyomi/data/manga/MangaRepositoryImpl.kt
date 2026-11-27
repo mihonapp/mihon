@@ -70,6 +70,12 @@ class MangaRepositoryImpl(
             .awaitAsList()
     }
 
+    override suspend fun getNonLibraryMangaTitles(): List<String> {
+        return database.mangaQueries
+            .getNonLibraryMangaTitles()
+            .awaitAsList()
+    }
+
     override suspend fun getLibraryManga(): List<LibraryManga> {
         return database.libraryViewQueries
             .library(MangaMapper::mapLibraryManga)

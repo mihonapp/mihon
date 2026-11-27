@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.util.storage.DiskUtil
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -53,6 +54,16 @@ class DownloadProviderTest {
 
         provider(disallowNonAscii).getValidChapterDirNames(name, scanlator, URL) shouldContain
             dirName0210(name, scanlator, URL, disallowNonAscii)
+    }
+
+    @Test
+    fun `possible manga directory names include both non-ASCII filename settings`() {
+        val title = "日本語 Title"
+
+        provider(disallowNonAscii = true).getPossibleMangaDirNames(title) shouldBe setOf(
+            DiskUtil.buildValidFilename(title, disallowNonAscii = false),
+            DiskUtil.buildValidFilename(title, disallowNonAscii = true),
+        )
     }
 
     companion object {

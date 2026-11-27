@@ -14,10 +14,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -69,6 +72,7 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.TextButton
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
@@ -286,9 +290,25 @@ data object SettingsDataScreen : SearchableSettings {
         val libraryPreferences = remember { context.appGraph.libraryPreferences }
 
         val chapterCache = remember { context.appGraph.chapterCache }
+        val downloadManager = remember { context.appGraph.downloadManager }
+        val getFavorites = remember { context.appGraph.getFavorites }
+        var dirsNotInLibrary by remember { mutableStateOf<List<Pair<UniFile, String>>?>(null) }
         var cacheReadableSizeSema by remember { mutableIntStateOf(0) }
         val cacheReadableSize by produceState("", cacheReadableSizeSema) {
             value = chapterCache.readableSize()
+        }
+
+        dirsNotInLibrary?.let { dirs ->
+            DeleteDownloadsNotInLibraryDialog(
+                dirs = dirs,
+                onConfirm = {
+                    scope.launch {
+                        downloadManager.deleteMangaDirs(dirs.map { (dir, _) -> dir })
+                        context.toast(MR.strings.downloads_not_in_library_deleted)
+                    }
+                },
+                onDismissRequest = { dirsNotInLibrary = null },
+            )
         }
 
         return Preference.PreferenceGroup(
@@ -326,6 +346,20 @@ data object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.autoClearChapterCache,
                     title = stringResource(MR.strings.pref_auto_clear_chapter_cache),
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_delete_downloads_not_in_library),
+                    subtitle = stringResource(MR.strings.pref_delete_downloads_not_in_library_summary),
+                    onClick = {
+                        scope.launch {
+                            val dirs = downloadManager.getMangaDirsExcept(getFavorites.await())
+                            if (dirs.isEmpty()) {
+                                context.toast(MR.strings.no_downloads_not_in_library)
+                            } else {
+                                dirsNotInLibrary = dirs
+                            }
+                        }
+                    },
                 ),
             ),
         )
@@ -391,6 +425,43 @@ data object SettingsDataScreen : SearchableSettings {
                     onClick = { showDialog = true },
                 ),
             ),
+        )
+    }
+
+    @Composable
+    private fun DeleteDownloadsNotInLibraryDialog(
+        dirs: List<Pair<UniFile, String>>,
+        onConfirm: () -> Unit,
+        onDismissRequest: () -> Unit,
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text(text = stringResource(MR.strings.pref_delete_downloads_not_in_library)) },
+            text = {
+                Column {
+                    Text(text = stringResource(MR.strings.delete_downloads_not_in_library_confirm))
+                    LazyColumn(modifier = Modifier.padding(top = MaterialTheme.padding.small)) {
+                        items(dirs.map { (_, title) -> title }.sortedWith(String.CASE_INSENSITIVE_ORDER)) {
+                            Text(text = it, style = MaterialTheme.typography.bodyMedium)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onConfirm()
+                        onDismissRequest()
+                    },
+                ) {
+                    Text(text = stringResource(MR.strings.action_delete))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissRequest) {
+                    Text(text = stringResource(MR.strings.action_cancel))
+                }
+            },
         )
     }
 
