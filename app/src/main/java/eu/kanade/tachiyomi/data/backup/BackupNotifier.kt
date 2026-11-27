@@ -7,6 +7,7 @@ import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.Inject
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
+import eu.kanade.tachiyomi.data.backup.restore.WishlistRestoreReport
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.storage.getUriCompat
@@ -71,12 +72,16 @@ class BackupNotifier(
         }
     }
 
-    fun showBackupComplete(file: UniFile) {
+    fun showBackupComplete(file: UniFile, skippedWishlistMappings: Int = 0) {
         context.cancelNotification(Notifications.ID_BACKUP_PROGRESS)
 
         with(completeNotificationBuilder) {
             setContentTitle(context.stringResource(MR.strings.backup_created))
-            setContentText(file.displayablePath)
+            val skippedMessage = "\n${context.stringResource(
+                MR.strings.wishlist_backup_skipped_mappings,
+                skippedWishlistMappings,
+            )}"
+            setContentText(file.displayablePath + skippedMessage)
 
             clearActions()
             addAction(
@@ -85,6 +90,19 @@ class BackupNotifier(
                 NotificationReceiver.shareBackupPendingActivity(context, file.uri),
             )
 
+            show(Notifications.ID_BACKUP_COMPLETE)
+        }
+    }
+
+    fun showAutomaticBackupSkippedMappings(skippedWishlistMappings: Int) {
+        if (!shouldNotifySkippedWishlistMappings(skippedWishlistMappings)) return
+
+        with(completeNotificationBuilder) {
+            setContentTitle(context.stringResource(MR.strings.backup_created))
+            setContentText(
+                context.stringResource(MR.strings.wishlist_backup_skipped_notification, skippedWishlistMappings),
+            )
+            clearActions()
             show(Notifications.ID_BACKUP_COMPLETE)
         }
     }
@@ -134,12 +152,34 @@ class BackupNotifier(
         }
     }
 
+    fun showRestoreError(error: String?, wishlistReport: WishlistRestoreReport?) {
+        context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
+
+        with(completeNotificationBuilder) {
+            setContentTitle(context.stringResource(MR.strings.restoring_backup_error))
+            setContentText(
+                buildString {
+                    error?.let(::append)
+                    wishlistReport?.let {
+                        if (isNotEmpty()) append('\n')
+                        append(context.stringResource(MR.strings.wishlist_restore_incomplete))
+                        append('\n')
+                        append(it.toNotificationText(context))
+                    }
+                },
+            )
+
+            show(Notifications.ID_RESTORE_COMPLETE)
+        }
+    }
+
     fun showRestoreComplete(
         time: Long,
         errorCount: Int,
         path: String?,
         file: String?,
         sync: Boolean,
+        wishlistReport: WishlistRestoreReport? = null,
     ) {
         val contentTitle = if (sync) {
             context.stringResource(MR.strings.library_sync_complete)
@@ -158,12 +198,20 @@ class BackupNotifier(
         with(completeNotificationBuilder) {
             setContentTitle(contentTitle)
             setContentText(
-                context.pluralStringResource(
-                    MR.plurals.restore_completed_message,
-                    errorCount,
-                    timeString,
-                    errorCount,
-                ),
+                buildString {
+                    append(
+                        context.pluralStringResource(
+                            MR.plurals.restore_completed_message,
+                            errorCount,
+                            timeString,
+                            errorCount,
+                        ),
+                    )
+                    wishlistReport?.let {
+                        append('\n')
+                        append(it.toNotificationText(context))
+                    }
+                },
             )
 
             clearActions()
@@ -182,5 +230,22 @@ class BackupNotifier(
 
             show(Notifications.ID_RESTORE_COMPLETE)
         }
+    }
+}
+
+internal fun shouldNotifySkippedWishlistMappings(skippedCount: Int) = skippedCount > 0
+
+private fun WishlistRestoreReport.toNotificationText(context: Context): String = buildString {
+    append(
+        context.stringResource(
+            MR.strings.wishlist_restore_summary,
+            restored,
+            skipped,
+            conflicted,
+        ),
+    )
+    if (categoryWarnings > 0) {
+        append('\n')
+        append(context.stringResource(MR.strings.wishlist_restore_category_warnings, categoryWarnings))
     }
 }

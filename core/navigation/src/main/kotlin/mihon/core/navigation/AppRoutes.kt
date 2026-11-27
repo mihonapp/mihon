@@ -104,6 +104,26 @@ data object OnboardingRoute : NavKey
 data object StatsRoute : NavKey
 
 @Serializable
+data object AnilistWishlistRoute : NavKey
+
+@Serializable
+data class AnilistWishlistSourcesRoute(
+    val mediaId: Long,
+    val query: String,
+    val englishTitle: String? = null,
+    val romajiTitle: String? = null,
+) : NavKey
+
+@Serializable
+data class AnilistWishlistSearchRoute(
+    val mediaId: Long,
+    val sourceId: Long,
+    val query: String,
+    val englishTitle: String? = null,
+    val romajiTitle: String? = null,
+) : NavKey
+
+@Serializable
 data object SupportUsRoute : NavKey
 
 @Serializable

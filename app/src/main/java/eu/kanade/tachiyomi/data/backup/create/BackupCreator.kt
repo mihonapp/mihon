@@ -6,6 +6,7 @@ import com.hippo.unifile.UniFile
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import eu.kanade.domain.anilist.service.AnilistWishlistPreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.BackupWriter
@@ -21,6 +22,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
+import eu.kanade.tachiyomi.data.backup.models.BackupWishlistCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -30,7 +32,9 @@ import okio.gzip
 import okio.sink
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.anilist.repository.AnilistWishlistRepository
 import tachiyomi.domain.backup.service.BackupPreferences
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.repository.MangaRepository
@@ -47,6 +51,9 @@ class BackupCreator(
     private val context: Context,
     private val parser: ProtoBuf,
     private val getFavorites: GetFavorites,
+    private val anilistWishlistRepository: AnilistWishlistRepository,
+    private val anilistWishlistPreferences: AnilistWishlistPreferences,
+    private val getCategories: GetCategories,
     private val backupPreferences: BackupPreferences,
     private val mangaRepository: MangaRepository,
     private val categoriesBackupCreator: CategoriesBackupCreator,
@@ -61,9 +68,13 @@ class BackupCreator(
         fun create(isAutoBackup: Boolean): BackupCreator
     }
 
-    suspend fun backup(uri: Uri, options: BackupOptions): String {
+    suspend fun backup(uri: Uri, options: BackupOptions): BackupCreationResult {
         var file: UniFile? = null
+        var skippedWishlistMappings = 0
         try {
+            val wishlistSnapshot = anilistWishlistRepository.getAllWithMangaIdentity()
+            val backupCategories = backupCategories(options)
+            val wishlistCategory = backupWishlistCategory(options, backupCategories)
             file = if (isAutoBackup) {
                 // Get dir of file and create
                 val dir = UniFile.fromUri(context, uri)
@@ -96,18 +107,27 @@ class BackupCreator(
                 .sink().gzip().buffer().use {
                     val writer = BackupWriter(it, parser)
                     val sourceIds = mutableSetOf<Long>()
+                    val emittedMangaIdentities = mutableSetOf<Pair<Long, String>>()
                     backupManga.collect { manga ->
                         writer.writeEntry(manga)
                         sourceIds += manga.source
+                        emittedMangaIdentities += manga.source to manga.url
                     }
+                    val wishlistBackup = createWishlistBackup(
+                        wishlistSnapshot,
+                        emittedMangaIdentities,
+                        wishlistCategory,
+                    )
+                    skippedWishlistMappings = wishlistBackup.skippedMappings
                     writer.writeMetadata(
                         Backup(
                             backupManga = emptyList(),
-                            backupCategories = backupCategories(options),
+                            backupCategories = backupCategories,
                             backupSources = backupSources(sourceIds),
                             backupPreferences = backupAppPreferences(options),
                             backupExtensionStores = backupExtensionStores(options),
                             backupSourcePreferences = backupSourcePreferences(options),
+                            backupAnilistWishlist = wishlistBackup.metadata,
                         ),
                     )
                     if (writer.isEmpty) {
@@ -123,7 +143,7 @@ class BackupCreator(
                 backupPreferences.lastAutoBackupTimestamp.set(Clock.System.now().toEpochMilliseconds())
             }
 
-            return fileUri.toString()
+            return BackupCreationResult(fileUri.toString(), skippedWishlistMappings)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             file?.delete()
@@ -135,6 +155,21 @@ class BackupCreator(
         if (!options.categories) return emptyList()
 
         return categoriesBackupCreator()
+    }
+
+    private suspend fun backupWishlistCategory(
+        options: BackupOptions,
+        backupCategories: List<BackupCategory>,
+    ): BackupWishlistCategory? {
+        if (!options.appSettings) return null
+        val categoryId = anilistWishlistPreferences.categoryId.get()
+        val category = getCategories.await().singleOrNull { it.id == categoryId } ?: return null
+        val backupCategoryId = if (options.categories) {
+            backupCategories.singleOrNull { it.id == category.id }?.id
+        } else {
+            null
+        }
+        return BackupWishlistCategory(backupCategoryId, category.name)
     }
 
     private fun backupMangas(mangas: List<Manga>, options: BackupOptions): Flow<BackupManga> {
@@ -175,3 +210,8 @@ class BackupCreator(
         }
     }
 }
+
+data class BackupCreationResult(
+    val fileUri: String,
+    val skippedWishlistMappings: Int,
+)

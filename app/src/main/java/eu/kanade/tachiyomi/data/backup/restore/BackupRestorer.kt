@@ -5,8 +5,10 @@ import android.net.Uri
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import eu.kanade.domain.anilist.service.AnilistWishlistPreferences
 import eu.kanade.tachiyomi.data.backup.BackupDecoder
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
+import eu.kanade.tachiyomi.data.backup.models.BackupAnilistWishlist
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionStore
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
@@ -18,15 +20,19 @@ import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.PreferenceRestorer
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.chunked
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.anilist.repository.AnilistWishlistRepository
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.repository.StubSourceRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -51,6 +57,10 @@ class BackupRestorer(
     private val extensionStoreRestorer: ExtensionStoreRestorer,
     private val mangaRestorer: MangaRestorer,
     private val backupDecoder: BackupDecoder,
+    private val anilistWishlistRepository: AnilistWishlistRepository,
+    private val anilistWishlistPreferences: AnilistWishlistPreferences,
+    private val mangaRepository: MangaRepository,
+    private val getCategories: GetCategories,
     private val sourceManager: SourceManager,
     private val stubSourceRepository: StubSourceRepository,
 ) {
@@ -63,6 +73,8 @@ class BackupRestorer(
     private var restoreAmount = 0
     private val restoreProgress = AtomicInt(0)
     private val errors = CopyOnWriteArrayList<Pair<Date, String>>()
+    var wishlistRestoreReport: WishlistRestoreReport? = null
+        private set
 
     /**
      * Mapping of source ID to source name from backup data
@@ -72,7 +84,15 @@ class BackupRestorer(
     suspend fun restore(uri: Uri, options: RestoreOptions) {
         val startTime = System.currentTimeMillis()
 
-        restoreFromFile(uri, options)
+        try {
+            restoreFromFile(uri, options)
+        } catch (e: CancellationException) {
+            wishlistRestoreReport?.complete = false
+            throw e
+        } catch (e: Throwable) {
+            wishlistRestoreReport?.complete = false
+            throw e
+        }
 
         // Invalidate download cache to ensure UI reflects any restored downloads
         if (options.libraryEntries) {
@@ -93,6 +113,7 @@ class BackupRestorer(
             logFile.parent,
             logFile.name,
             isSync,
+            wishlistRestoreReport,
         )
     }
 
@@ -120,31 +141,46 @@ class BackupRestorer(
             restoreAmount += 1
         }
 
+        val restoredCategoryIds = if (options.categories) {
+            restoreCategories(backup.backupCategories)
+        } else {
+            emptyMap()
+        }
+        if (backup.backupAnilistWishlist != null) {
+            restoreWishlistCategoryPreference(
+                backup.backupAnilistWishlist,
+                options.appSettings,
+                options.categories,
+                backup.backupCategories,
+                restoredCategoryIds,
+            )
+        }
+
         coroutineScope {
-            val restoreCategoriesJob = if (options.categories) {
-                restoreCategories(backup.backupCategories)
-            } else {
-                null
-            }
             if (options.appSettings) {
                 restoreAppPreferences(
                     backup.backupPreferences,
                     backup.backupCategories.takeIf { options.categories },
-                    restoreCategoriesJob,
                 )
             }
             if (options.sourceSettings) {
                 restoreSourcePreferences(backup.backupSourcePreferences)
             }
-            if (options.libraryEntries) {
+            val mangaRestoreJob = if (options.libraryEntries) {
                 restoreManga(
                     uri,
                     if (options.categories) backup.backupCategories else emptyList(),
-                    restoreCategoriesJob,
                 )
+            } else {
+                null
             }
             if (options.extensionStores) {
                 restoreExtensionStores(backup.backupExtensionStores)
+            }
+
+            if (shouldRestoreWishlistMappings(options.libraryEntries, backup.backupAnilistWishlist)) {
+                mangaRestoreJob?.join()
+                restoreWishlistMappings(backup.backupAnilistWishlist!!)
             }
 
             // TODO: optionally trigger online library + tracker update
@@ -161,9 +197,9 @@ class BackupRestorer(
             .forEach { stubSourceRepository.upsertStubSource(it.sourceId, lang = "", name = it.name) }
     }
 
-    private fun CoroutineScope.restoreCategories(backupCategories: List<BackupCategory>) = launch {
-        ensureActive()
-        categoriesRestorer(backupCategories)
+    private suspend fun restoreCategories(backupCategories: List<BackupCategory>): Map<Long, Long> {
+        currentCoroutineContext().ensureActive()
+        val restoredCategoryIds = categoriesRestorer(backupCategories)
 
         val progress = restoreProgress.incrementAndFetch()
         notifier.showRestoreProgress(
@@ -172,15 +208,13 @@ class BackupRestorer(
             restoreAmount,
             isSync,
         )
+        return restoredCategoryIds
     }
 
     private fun CoroutineScope.restoreManga(
         uri: Uri,
         backupCategories: List<BackupCategory>,
-        categoriesRestoreJob: Job?,
     ) = launch {
-        categoriesRestoreJob?.join()
-
         backupDecoder.decodeEntries(uri)
             .chunked(100)
             .collect { chunk ->
@@ -219,10 +253,8 @@ class BackupRestorer(
     private fun CoroutineScope.restoreAppPreferences(
         preferences: List<BackupPreference>,
         categories: List<BackupCategory>?,
-        categoriesRestoreJob: Job?,
     ) = launch {
         ensureActive()
-        categoriesRestoreJob?.join()
         preferenceRestorer.restoreApp(
             preferences,
             categories,
@@ -234,6 +266,38 @@ class BackupRestorer(
             progress,
             restoreAmount,
             isSync,
+        )
+    }
+
+    private suspend fun restoreWishlistCategoryPreference(
+        wishlist: BackupAnilistWishlist?,
+        appSettingsEnabled: Boolean,
+        categoriesEnabled: Boolean,
+        backupCategories: List<BackupCategory>,
+        restoredCategoryIds: Map<Long, Long>,
+    ) {
+        if (wishlist == null) return
+        val resolution = resolveWishlistCategory(
+            wishlist.category,
+            appSettingsEnabled,
+            categoriesEnabled,
+            backupCategories,
+            restoredCategoryIds,
+            if (appSettingsEnabled && !categoriesEnabled) getCategories.await() else emptyList(),
+        )
+        resolution.destinationId?.let { anilistWishlistPreferences.categoryId.set(it) }
+        if (!resolution.warning) return
+        val report = wishlistRestoreReport ?: WishlistRestoreReport().also { wishlistRestoreReport = it }
+        report.categoryWarnings++
+    }
+
+    private suspend fun restoreWishlistMappings(wishlist: BackupAnilistWishlist) {
+        val report = wishlistRestoreReport ?: WishlistRestoreReport().also { wishlistRestoreReport = it }
+        processWishlistMappings(
+            wishlist,
+            report,
+            resolveMangaId = { sourceId, url -> mangaRepository.getMangaByUrlAndSourceId(url, sourceId)?.id },
+            insertIfAbsent = anilistWishlistRepository::insertIfAbsent,
         )
     }
 

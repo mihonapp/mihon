@@ -23,6 +23,9 @@ import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.debug.BackupSchemaScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.AnilistWishlistScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.search.AnilistWishlistSearchScreen
+import eu.kanade.tachiyomi.ui.anilistwishlist.sources.AnilistWishlistSourcesScreen
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterScreen
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
@@ -143,6 +146,26 @@ fun EntryProviderScope<NavKey>.appEntries() {
     }
     entry<StatsRoute> {
         StatsScreen()
+    }
+    entry<AnilistWishlistRoute> {
+        AnilistWishlistScreen()
+    }
+    entry<AnilistWishlistSourcesRoute> { route ->
+        AnilistWishlistSourcesScreen(
+            mediaId = route.mediaId,
+            query = route.query,
+            englishTitle = route.englishTitle,
+            romajiTitle = route.romajiTitle,
+        )
+    }
+    entry<AnilistWishlistSearchRoute> { route ->
+        AnilistWishlistSearchScreen(
+            mediaId = route.mediaId,
+            sourceId = route.sourceId,
+            query = route.query,
+            englishTitle = route.englishTitle,
+            romajiTitle = route.romajiTitle,
+        )
     }
     entry<SupportUsRoute>(metadata = TwoPaneSettingsScene.fullScreen()) {
         SupportUsScreen()

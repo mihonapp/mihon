@@ -64,12 +64,17 @@ class BackupCreateWorker(private val context: Context, workerParams: WorkerParam
             ?: BackupOptions()
 
         return try {
-            val location =
+            val backupResult =
                 withContext(Dispatchers.IO) {
                     backupCreatorFactory.create(isAutoBackup = isAutoBackup).backup(uri, options)
                 }
             if (!isAutoBackup) {
-                notifier.showBackupComplete(UniFile.fromUri(context, location.toUri())!!)
+                notifier.showBackupComplete(
+                    UniFile.fromUri(context, backupResult.fileUri.toUri())!!,
+                    backupResult.skippedWishlistMappings,
+                )
+            } else {
+                notifier.showAutomaticBackupSkippedMappings(backupResult.skippedWishlistMappings)
             }
             Result.success()
         } catch (e: Exception) {
