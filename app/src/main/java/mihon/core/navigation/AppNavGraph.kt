@@ -20,6 +20,7 @@ import eu.kanade.presentation.more.settings.screen.appearance.AppLanguageScreen
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoresScreen
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
+import eu.kanade.presentation.more.settings.screen.data.WebDavSyncScreen
 import eu.kanade.presentation.more.settings.screen.debug.BackupSchemaScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.presentation.more.settings.screen.debug.WorkerInfoScreen
@@ -177,6 +178,9 @@ fun EntryProviderScope<NavKey>.appEntries() {
     }
     entry<SettingsSearchRoute> {
         SettingsSearchScreen()
+    }
+    entry<WebDavSyncRoute> {
+        WebDavSyncScreen()
     }
     entry<WorkerInfoRoute> {
         WorkerInfoScreen()

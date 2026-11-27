@@ -25,6 +25,8 @@ import eu.kanade.tachiyomi.data.download.DownloadWorker
 import eu.kanade.tachiyomi.data.library.LibraryUpdateWorker
 import eu.kanade.tachiyomi.data.library.MetadataUpdateWorker
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.sync.webdav.WebDavSyncManager
+import eu.kanade.tachiyomi.data.sync.webdav.WebDavSyncWorker
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -54,6 +56,7 @@ import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.storage.service.StoragePreferences
+import tachiyomi.domain.sync.service.WebDavSyncPreferences
 import tachiyomi.domain.track.interactor.UpsertTrack
 
 @DependencyGraph(
@@ -69,6 +72,7 @@ interface AppGraph : ViewModelGraph {
     fun inject(metadataUpdateWorker: MetadataUpdateWorker)
     fun inject(backupRestoreWorker: BackupRestoreWorker)
     fun inject(backupCreateWorker: BackupCreateWorker)
+    fun inject(webDavSyncWorker: WebDavSyncWorker)
     fun inject(delayedTrackingUpdateWorker: DelayedTrackingUpdateWorker)
     fun inject(downloadWorker: DownloadWorker)
     fun inject(notificationReceiver: NotificationReceiver)
@@ -87,6 +91,7 @@ interface AppGraph : ViewModelGraph {
     val sourcePreferences: SourcePreferences
     val trackPreferences: TrackPreferences
     val backupPreferences: BackupPreferences
+    val webDavSyncPreferences: WebDavSyncPreferences
     val storagePreferences: StoragePreferences
     val privacyPreferences: PrivacyPreferences
     val securityPreferences: SecurityPreferences
@@ -97,6 +102,8 @@ interface AppGraph : ViewModelGraph {
     val downloadManager: DownloadManager
 
     val updateChecker: AppUpdateChecker
+
+    val webDavSyncManager: WebDavSyncManager
 
     val trustExtension: TrustExtension
     val extensionStoreRepository: ExtensionStoreRepository

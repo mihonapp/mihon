@@ -59,6 +59,7 @@ import mihon.app.di.appGraph
 import mihon.core.navigation.CreateBackupRoute
 import mihon.core.navigation.LocalNavigator
 import mihon.core.navigation.RestoreBackupRoute
+import mihon.core.navigation.WebDavSyncRoute
 import mihon.icons.materialsymbols.MaterialSymbols
 import mihon.icons.materialsymbols.automirroredrounded.Help
 import tachiyomi.core.common.i18n.stringResource
@@ -67,6 +68,7 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.storage.service.StoragePreferences
+import tachiyomi.domain.sync.service.WebDavSyncPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.i18n.stringResource
@@ -99,12 +101,14 @@ data object SettingsDataScreen : SearchableSettings {
         val context = LocalContext.current
         val backupPreferences = remember { context.appGraph.backupPreferences }
         val storagePreferences = remember { context.appGraph.storagePreferences }
+        val webDavSyncPreferences = remember { context.appGraph.webDavSyncPreferences }
 
         return listOf(
             getStorageLocationPref(storagePreferences = storagePreferences),
             Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.pref_storage_location_info)),
 
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
+            getWebDavSyncGroup(webDavSyncPreferences = webDavSyncPreferences),
             getDataGroup(),
             getExportGroup(),
         )
@@ -274,6 +278,37 @@ data object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.InfoPreference(
                     stringResource(MR.strings.backup_info) + "\n\n" +
                         stringResource(MR.strings.last_auto_backup_info, relativeTimeSpanString(lastAutoBackup)),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getWebDavSyncGroup(
+        webDavSyncPreferences: WebDavSyncPreferences,
+    ): Preference.PreferenceGroup {
+        val navigator = LocalNavigator.current
+        val enabled by webDavSyncPreferences.syncEnabled.collectAsState()
+        val lastSyncTimestamp by webDavSyncPreferences.lastSyncTimestamp.collectAsState()
+
+        val subtitle = if (enabled) {
+            val timeText = if (lastSyncTimestamp > 0L) {
+                relativeTimeSpanString(lastSyncTimestamp)
+            } else {
+                stringResource(MR.strings.webdav_sync_never)
+            }
+            stringResource(MR.strings.webdav_sync_subtitle_enabled, timeText)
+        } else {
+            stringResource(MR.strings.webdav_sync_subtitle_disabled)
+        }
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.webdav_sync_title),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.webdav_sync_title),
+                    subtitle = subtitle,
+                    onClick = { navigator.push(WebDavSyncRoute) },
                 ),
             ),
         )

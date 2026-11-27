@@ -32,6 +32,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
+import eu.kanade.tachiyomi.data.sync.webdav.WebDavSyncWorker
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -91,6 +92,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.sync.service.WebDavSyncPreferences
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.isLocal
 import kotlin.time.Clock
@@ -127,6 +129,7 @@ class ReaderViewModel(
     private val coverCache: CoverCache,
     private val chapterCache: ChapterCache,
     private val downloadCache: DownloadCache,
+    private val webDavSyncPreferences: WebDavSyncPreferences,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -730,7 +733,16 @@ class ReaderViewModel(
      */
     fun saveHistory() {
         // Immediate so the read time is taken when the reader pauses
-        appScope.launch(Dispatchers.Main.immediate) { updateHistory() }
+        appScope.launch(Dispatchers.Main.immediate) {
+            updateHistory()
+            if (
+                !incognitoMode &&
+                webDavSyncPreferences.syncEnabled.get() &&
+                webDavSyncPreferences.syncOnReaderExit.get()
+            ) {
+                WebDavSyncWorker.enqueueDebounced(context)
+            }
+        }
     }
 
     /**

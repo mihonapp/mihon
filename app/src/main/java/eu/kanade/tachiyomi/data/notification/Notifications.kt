@@ -60,6 +60,15 @@ object Notifications {
     const val ID_RESTORE_COMPLETE = -504
 
     /**
+     * Notification channel and ids used by WebDAV sync.
+     */
+    private const val GROUP_SYNC = "group_sync"
+    const val CHANNEL_SYNC_PROGRESS = "sync_progress_channel"
+    const val ID_SYNC_PROGRESS = -601
+    const val CHANNEL_SYNC_COMPLETE = "sync_complete_channel"
+    const val ID_SYNC_COMPLETE = -602
+
+    /**
      * Notification channel used for Incognito Mode
      */
     const val CHANNEL_INCOGNITO_MODE = "incognito_mode_channel"
@@ -112,6 +121,9 @@ object Notifications {
                 buildNotificationChannelGroup(GROUP_APK_UPDATES) {
                     setName(context.stringResource(MR.strings.label_recent_updates))
                 },
+                buildNotificationChannelGroup(GROUP_SYNC) {
+                    setName(context.stringResource(MR.strings.channel_sync))
+                },
             ),
         )
 
@@ -160,6 +172,16 @@ object Notifications {
                 buildNotificationChannel(CHANNEL_EXTENSIONS_UPDATE, IMPORTANCE_DEFAULT) {
                     setGroup(GROUP_APK_UPDATES)
                     setName(context.stringResource(MR.strings.channel_ext_updates))
+                },
+                buildNotificationChannel(CHANNEL_SYNC_PROGRESS, IMPORTANCE_LOW) {
+                    setGroup(GROUP_SYNC)
+                    setName(context.stringResource(MR.strings.channel_progress))
+                    setShowBadge(false)
+                },
+                buildNotificationChannel(CHANNEL_SYNC_COMPLETE, IMPORTANCE_LOW) {
+                    setGroup(GROUP_SYNC)
+                    setName(context.stringResource(MR.strings.channel_complete))
+                    setShowBadge(false)
                 },
             ),
         )

@@ -84,6 +84,7 @@ import eu.kanade.presentation.more.settings.screen.browse.ExtensionStoreDeepLink
 import eu.kanade.presentation.more.settings.screen.openSettings
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.sync.webdav.WebDavSyncWorker
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.ui.home.TabEvent
@@ -125,6 +126,7 @@ import mihon.core.navigation.OnboardingRoute
 import mihon.core.navigation.RestoreBackupRoute
 import mihon.core.navigation.SupportUsRoute
 import mihon.core.navigation.TrackInfoDialogRoute
+import mihon.core.navigation.WebDavSyncRoute
 import mihon.core.navigation.appEntries
 import mihon.core.navigation.rememberNavigator
 import mihon.core.navigation.rememberOverlaySheetSceneStrategy
@@ -206,6 +208,10 @@ class MainActivity : BaseActivity() {
         if (!isTaskRoot) {
             finish()
             return
+        }
+
+        if (isLaunch) {
+            WebDavSyncWorker.enqueueOnAppStartIfNeeded(this)
         }
 
         setComposeContent {
@@ -666,6 +672,11 @@ class MainActivity : BaseActivity() {
             Constants.SHORTCUT_DOWNLOADS -> {
                 navigator.popToRoot()
                 TabEvent.More(toDownloads = true)
+            }
+            Constants.SHORTCUT_WEBDAV_SYNC -> {
+                navigator.popToRoot()
+                navigator.push(WebDavSyncRoute)
+                null
             }
             Intent.ACTION_APPLICATION_PREFERENCES -> {
                 navigator.popToRoot()
