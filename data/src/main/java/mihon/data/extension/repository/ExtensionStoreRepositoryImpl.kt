@@ -67,6 +67,7 @@ class ExtensionStoreRepositoryImpl(
             contactDiscord = null,
             isLegacy = false,
             extensionListUrl = null,
+            iconUrl = null,
         )
     }
 
@@ -108,6 +109,7 @@ class ExtensionStoreRepositoryImpl(
             contactDiscord = store.contact.discord,
             isLegacy = store.isLegacy,
             extensionListUrl = store.extensionListUrl,
+            iconUrl = store.iconUrl,
         )
     }
 
@@ -159,6 +161,7 @@ class ExtensionStoreRepositoryImpl(
         contactDiscord: String?,
         isLegacy: Boolean,
         extensionListUrl: String?,
+        iconUrl: String?,
     ): ExtensionStore = ExtensionStore(
         indexUrl = indexUrl,
         name = name,
@@ -170,5 +173,6 @@ class ExtensionStoreRepositoryImpl(
         ),
         isLegacy = isLegacy,
         extensionListUrl = extensionListUrl,
+        iconUrl = iconUrl,
     )
 }

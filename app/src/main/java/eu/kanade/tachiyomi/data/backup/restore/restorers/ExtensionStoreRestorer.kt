@@ -25,6 +25,7 @@ class ExtensionStoreRestorer(
                 ),
                 isLegacy = backupStore.isLegacy ?: true,
                 extensionListUrl = backupStore.extensionListUrl,
+                iconUrl = backupStore.iconUrl,
             ),
         )
     }

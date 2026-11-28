@@ -8,7 +8,8 @@ CREATE TABLE extension_store(
     contact_website TEXT NOT NULL,
     contact_discord TEXT,
     is_legacy INTEGER AS Boolean NOT NULL,
-    extension_list_url TEXT
+    extension_list_url TEXT,
+    icon_url TEXT
 );
 
 contains:
@@ -17,7 +18,7 @@ SELECT EXISTS(SELECT 0 FROM extension_store WHERE index_url = :indexUrl);
 getAll:
 SELECT
     index_url, name, badge_label, signing_key,
-    contact_website, contact_discord, is_legacy, extension_list_url
+    contact_website, contact_discord, is_legacy, extension_list_url, icon_url
 FROM extension_store;
 
 getCount:
@@ -27,11 +28,11 @@ FROM extension_store;
 upsert:
 INSERT INTO extension_store(
     index_url, name, badge_label, signing_key, contact_website, contact_discord, is_legacy,
-    extension_list_url
+    extension_list_url, icon_url
 )
 VALUES (
     :indexUrl, :name, :badgeLabel, :signingKey, :contactWebsite, :contactDiscord, :isLegacy,
-    :extensionListUrl
+    :extensionListUrl, :iconUrl
 )
 ON CONFLICT(index_url) DO UPDATE SET
     name = excluded.name,
@@ -40,7 +41,8 @@ ON CONFLICT(index_url) DO UPDATE SET
     contact_website = excluded.contact_website,
     contact_discord = excluded.contact_discord,
     is_legacy = excluded.is_legacy,
-    extension_list_url = excluded.extension_list_url;
+    extension_list_url = excluded.extension_list_url,
+    icon_url = excluded.icon_url;
 
 delete:
 DELETE FROM extension_store

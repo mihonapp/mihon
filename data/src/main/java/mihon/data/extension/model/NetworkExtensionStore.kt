@@ -17,6 +17,7 @@ data class NetworkExtensionStore(
     @ProtoNumber(2) val badgeLabel: String,
     @ProtoNumber(3) val signingKey: String,
     @ProtoNumber(4) val contact: Contact,
+    @ProtoNumber(5) val iconUrl: String?,
     @ProtoNumber(101) val extensionList: ExtensionList?,
     @ProtoNumber(102) val extensionListUrl: String?,
 ) : BaseNetworkExtensionStore {
@@ -89,6 +90,7 @@ data class NetworkExtensionStore(
             ),
             isLegacy = false,
             extensionListUrl = extensionListUrl,
+            iconUrl = iconUrl,
         )
     }
 }
