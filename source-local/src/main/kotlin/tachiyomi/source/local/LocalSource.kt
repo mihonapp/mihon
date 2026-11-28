@@ -48,6 +48,8 @@ import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.io.Archive
 import tachiyomi.source.local.io.Format
 import tachiyomi.source.local.io.LocalSourceFileSystem
+import tachiyomi.source.local.io.getChapterFolders
+import tachiyomi.source.local.io.getImageEntryNames
 import tachiyomi.source.local.metadata.fillMetadata
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
@@ -293,8 +295,8 @@ class LocalSource(
             // Only keep supported formats
             .filterNot { it.name.orEmpty().startsWith('.') }
             .filter { it.isDirectory || Archive.isSupported(it) || it.extension.equals("epub", true) }
-            .map { chapterFile ->
-                SChapter.create().apply {
+            .flatMap { chapterFile ->
+                val chapter = SChapter.create().apply {
                     url = "${manga.url}/${chapterFile.name}"
                     name = if (chapterFile.isDirectory) {
                         chapterFile.name
@@ -323,10 +325,16 @@ class LocalSource(
                         logcat(LogPriority.ERROR, e) { "Failed to read metadata for ${chapterFile.name}" }
                     }
                 }
+                if (Archive.isSupported(chapterFile)) {
+                    getArchiveFolderChapters(chapterFile, chapter, manga)
+                } else {
+                    listOf(chapter to chapter.name)
+                }
             }
-            .sortedWith { c1, c2 ->
-                c2.name.compareToCaseInsensitiveNaturalOrder(c1.name)
+            .sortedWith { (_, key1), (_, key2) ->
+                key2.compareToCaseInsensitiveNaturalOrder(key1)
             }
+            .map { (chapter, _) -> chapter }
 
         // Copy the cover from the first chapter found if not available
         if (manga.thumbnail_url.isNullOrBlank()) {
@@ -338,6 +346,41 @@ class LocalSource(
         chapters
     }
 
+    /**
+     * Returns the chapters of an [archive] that holds a folder per chapter, or its single [chapter] otherwise, each with
+     * the key it's sorted by. A folder's chapter keeps the archive's date and scanlator, but not the title and number of
+     * its ComicInfo.xml, which describe the whole archive.
+     */
+    private fun getArchiveFolderChapters(
+        archive: UniFile,
+        chapter: SChapter,
+        manga: SManga,
+    ): List<Pair<SChapter, String>> {
+        val folders = try {
+            archive.archiveReader(context).use { getChapterFolders(it.getImageEntryNames()) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to read the folders of ${archive.name}" }
+            null
+        }
+            ?: return listOf(chapter to chapter.name)
+
+        return folders.map { folder ->
+            val folderChapter = SChapter.create().apply {
+                url = "${chapter.url}/$folder"
+                name = folder.substringAfterLast('/')
+                date_upload = chapter.date_upload
+                scanlator = chapter.scanlator
+                chapter_number = ChapterRecognition
+                    .parseChapterNumber(manga.title, name, chapter_number.toDouble())
+                    .toFloat()
+            }
+            // Keeps the folders of an archive together, in the archive's place among the other chapters
+            folderChapter to "${chapter.name}/$folder"
+        }
+    }
+
     // Filters
     override fun getFilterList() = FilterList(OrderBy.Popular(context))
 
@@ -346,12 +389,15 @@ class LocalSource(
 
     fun getFormat(chapter: SChapter): Format {
         try {
-            val (mangaDirName, chapterName) = chapter.url.split('/', limit = 2)
-            return fileSystem.getBaseDirectory()
-                ?.findFile(mangaDirName)
-                ?.findFile(chapterName)
+            // A chapter in a folder of an archive has the folder's path after the archive's name
+            val parts = chapter.url.split('/', limit = 3)
+            val format = fileSystem.getBaseDirectory()
+                ?.findFile(parts[0])
+                ?.findFile(parts[1])
                 ?.let(Format.Companion::valueOf)
                 ?: throw Exception(context.stringResource(MR.strings.chapter_not_found))
+            val folder = parts.getOrNull(2)
+            return if (format is Format.Archive && folder != null) format.copy(folder = folder) else format
         } catch (e: Format.UnknownFormatException) {
             throw Exception(context.stringResource(MR.strings.local_invalid_format))
         } catch (e: Exception) {
