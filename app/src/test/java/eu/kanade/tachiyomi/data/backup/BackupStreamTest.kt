@@ -222,6 +222,7 @@ class BackupStreamTest {
                 contactDiscord = null,
                 isLegacy = false,
                 extensionListUrl = null,
+                iconUrl = "https://example.org/icon.png",
             ),
         ),
     )

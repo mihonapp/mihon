@@ -32,6 +32,7 @@ data class NetworkLegacyExtensionRepo(
             ),
             isLegacy = true,
             extensionListUrl = null,
+            iconUrl = null,
         )
     }
 }
