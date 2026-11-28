@@ -32,4 +32,7 @@ dependencies {
     implementation(libs.jsoup)
 
     implementation(libs.kotlinx.datetime)
+
+    testImplementation(libs.bundles.test)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }

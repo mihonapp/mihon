@@ -6,7 +6,7 @@ import tachiyomi.source.local.io.Archive.isSupported as isArchiveSupported
 
 sealed interface Format {
     data class Directory(val file: UniFile) : Format
-    data class Archive(val file: UniFile) : Format
+    data class Archive(val file: UniFile, val folder: String? = null) : Format
     data class Epub(val file: UniFile) : Format
 
     class UnknownFormatException : Exception()
